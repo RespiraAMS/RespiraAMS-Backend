@@ -1,0 +1,30 @@
+<Project Sdk="Aspire.AppHost.Sdk/13.4.6">
+
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<TargetFramework>net10.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<UserSecretsId>2653f19d-e15c-4a82-ab10-bc0b954e0f2d</UserSecretsId>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Aspire.Hosting.JavaScript" />
+		<PackageReference Include="Aspire.Hosting.Redis" />
+		<PackageReference Include="Aspire.Hosting.PostgreSQL" />
+		<PackageReference Include="Aspire.Hosting.RabbitMQ"  />
+		<PackageReference Include="MessagePack" />
+		<PackageReference Include="Aspire.Hosting.Kubernetes" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Respira.Analytics\API\Respira.Analytics.API.csproj" />
+		<ProjectReference Include="..\Respira.Auth\API\Respira.Auth.API.csproj" />
+		<ProjectReference Include="..\Respira.Clinical\API\Respira.Clinical.API.csproj" />
+		<ProjectReference Include="..\Respira.Doctor\API\Respira.Doctor.API.csproj" />
+		<ProjectReference Include="..\Respira.Gateway\Respira.Gateway.csproj" />
+		<ProjectReference Include="..\Respira.Media\API\Respira.Media.API.csproj" />
+		<ProjectReference Include="..\Respira.Patient\API\Respira.Patient.API.csproj" />
+		<ProjectReference Include="..\Respira.SagaAudit\API\Respira.SagaAudit.API.csproj" />
+	</ItemGroup>
+</Project>

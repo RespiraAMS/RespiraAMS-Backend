@@ -1,0 +1,3 @@
+cd src
+dotnet format --verify-no-changes
+dotnet test

@@ -1,0 +1,47 @@
+<Solution>
+  <Folder Name="/Respira.Analytics/">
+    <Project Path="Respira.Analytics/Application/Application.csproj" />
+    <Project Path="Respira.Analytics/Domain/Domain.csproj" />
+    <Project Path="Respira.Analytics/Infrastructure/Infrastructure.csproj" />
+    <Project Path="Respira.Analytics/API/Respira.Analytics.API.csproj" />
+  </Folder>
+  <Folder Name="/Respira.Auth/">
+    <Project Path="Respira.Auth/Application/Application.csproj" />
+    <Project Path="Respira.Auth/Domain/Domain.csproj" />
+    <Project Path="Respira.Auth/Infrastructure/Infrastructure.csproj" />
+    <Project Path="Respira.Auth/API/Respira.Auth.API.csproj" />
+  </Folder>
+  <Folder Name="/Respira.Clinical/">
+    <Project Path="Respira.Clinical/Application/Application.csproj" />
+    <Project Path="Respira.Clinical/Domain/Domain.csproj" />
+    <Project Path="Respira.Clinical/Infrastructure/Infrastructure.csproj" />
+    <Project Path="Respira.Clinical/API/Respira.Clinical.API.csproj" />
+  </Folder>
+  <Folder Name="/Respira.Doctor/">
+    <Project Path="Respira.Doctor/Application/Application.csproj" />
+    <Project Path="Respira.Doctor/Domain/Domain.csproj" />
+    <Project Path="Respira.Doctor/Infrastructure/Infrastructure.csproj" />
+    <Project Path="Respira.Doctor/API/Respira.Doctor.API.csproj" />
+  </Folder>
+  <Folder Name="/Respira.Media/">
+    <Project Path="Respira.Media/Application/Application.csproj" />
+    <Project Path="Respira.Media/Domain/Domain.csproj" />
+    <Project Path="Respira.Media/Infrastructure/Infrastructure.csproj" />
+    <Project Path="Respira.Media/API/Respira.Media.API.csproj" />
+  </Folder>
+  <Folder Name="/Respira.Patient/">
+    <Project Path="Respira.Patient/Application/Application.csproj" />
+    <Project Path="Respira.Patient/Domain/Domain.csproj" />
+    <Project Path="Respira.Patient/Infrastructure/Infrastructure.csproj" />
+    <Project Path="Respira.Patient/API/Respira.Patient.API.csproj" />
+  </Folder>
+  <Folder Name="/Respira.SagaAudit/">
+    <Project Path="Respira.SagaAudit/Application/Application.csproj" />
+    <Project Path="Respira.SagaAudit/Domain/Domain.csproj" />
+    <Project Path="Respira.SagaAudit/Infrastructure/Infrastructure.csproj" />
+    <Project Path="Respira.SagaAudit/API/Respira.SagaAudit.API.csproj" />
+  </Folder>
+  <Project Path="Respira.AppHost/Respira.AppHost.csproj" />
+  <Project Path="Respira.Gateway/Respira.Gateway.csproj" />
+  <Project Path="Respira.ServiceDefaults/Respira.ServiceDefaults.csproj" />
+</Solution>
