@@ -9,6 +9,7 @@ public class PaginationParam
     /// Page index, (1-indexed, default to 1)
     /// </summary>
     public int Page { get; set; } = 1;
+
     /// <summary>
     /// Page size (default to 10)
     /// </summary>
@@ -24,22 +25,27 @@ public class PaginationMetadata
     /// Boolean flag: true if there is next page
     /// </summary>
     public bool HasNextPage { get; set; }
+
     /// <summary>
     /// Boolean flag: true if there is previous page
     /// </summary>
     public bool HasPreviousPage { get; set; }
+
     /// <summary>
     /// Total items (page size * total pages)
     /// </summary>
     public int TotalItemCount { get; set; }
+
     /// <summary>
     /// Total pages
     /// </summary>
     public int PageCount { get; set; }
+
     /// <summary>
     /// Page index (1-based index)
     /// </summary>
     public int CurrentPage { get; set; }
+
     /// <summary>
     /// Total items per page
     /// </summary>
@@ -58,6 +64,7 @@ public class Pagination<T>(PaginationMetadata metadata, IEnumerable<T> items)
     /// Pagination metadata
     /// </summary>
     public PaginationMetadata Metadata { get; set; } = metadata;
+
     /// <summary>
     /// Item list
     /// </summary>

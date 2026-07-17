@@ -5,5 +5,4 @@
 /// </summary>
 public class ServerException() : Exception("Internal server error. Please try again")
 {
-    
 }

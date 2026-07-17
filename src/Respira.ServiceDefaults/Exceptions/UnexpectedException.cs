@@ -7,5 +7,4 @@
 /// <param name="message">Exception message</param>
 public class UnexpectedException(string message) : Exception(message)
 {
-    
 }

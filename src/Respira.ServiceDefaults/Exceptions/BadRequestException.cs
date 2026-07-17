@@ -6,5 +6,4 @@
 /// <param name="message">Exception message</param>
 public class BadRequestException(string message) : Exception(message)
 {
-    
 }
