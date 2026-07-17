@@ -49,8 +49,8 @@ public class Antibiotic : Base
     /// <summary>
     /// List of dosage IDs
     /// </summary>
-    public List<Guid> DosageIds { get; set; } = []; 
-    
+    public List<Guid> DosageIds { get; set; } = [];
+
     /// <summary>
     /// Antibiotic dosages
     /// </summary>
@@ -60,7 +60,7 @@ public class Antibiotic : Base
     /// List of pathogen IDs (which is corresponding to <see cref="AntibioticSpectra"/>)
     /// </summary>
     public List<Guid> PathogenIds { get; set; } = [];
-    
+
     /// <summary>
     /// Antibiotic spectra
     /// </summary>

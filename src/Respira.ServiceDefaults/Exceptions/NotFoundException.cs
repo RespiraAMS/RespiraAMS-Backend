@@ -7,5 +7,4 @@
 /// <param name="id">Identifier</param>
 public class NotFoundException(string entity, Guid id) : Exception($"{entity} with this ID not found: {id}")
 {
-    
 }

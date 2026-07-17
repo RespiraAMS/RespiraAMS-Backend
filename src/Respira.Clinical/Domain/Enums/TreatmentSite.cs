@@ -6,10 +6,9 @@
 [JsonConverter(typeof(JsonStringEnumConverter))]
 public enum TreatmentSite
 {
-    [Display(Name = "Outpatient")]
-    Outpatient,
-    [Display(Name = "Inpatient")]
-    Inpatient, 
+    [Display(Name = "Outpatient")] Outpatient,
+    [Display(Name = "Inpatient")] Inpatient,
+
     [Display(Name = "Intensive Care Unit (ICU)")]
-    IntensiveCareUnit, 
+    IntensiveCareUnit,
 }

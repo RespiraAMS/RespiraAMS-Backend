@@ -11,6 +11,7 @@ public abstract class Criterion : Base
     /// Criterion name
     /// </summary>
     public required string Name { get; set; }
+
     /// <summary>
     /// Criterion type
     /// </summary>
@@ -33,20 +34,9 @@ public class BooleanCriterion : Criterion
 public class NumericCriterion : Criterion
 {
     public override CriterionType Type => CriterionType.Numeric;
+
     /// <summary>
-    /// Metric min threshold
+    /// The range value of this numeric criterion
     /// </summary>
-    public required double Min { get; set; }
-    /// <summary>
-    /// Metric max threshold
-    /// </summary>
-    public required double Max { get; set; }
-    /// <summary>
-    /// Metric's unit
-    /// </summary>
-    public required string Unit { get; set; }
-    /// <summary>
-    /// Boolean flag: true if the min/max bound is exclusive
-    /// </summary>
-    public required bool IsExclusive { get; set; }
-} 
+    public required Range Value { get; set; }
+}

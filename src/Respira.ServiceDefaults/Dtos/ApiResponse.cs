@@ -27,7 +27,7 @@ public class ApiResponse<T>
     /// <summary>
     /// Response data type.
     /// </summary>
-    public T? Data { get; set; } 
+    public T? Data { get; set; }
 
     /// <summary>
     /// Create a success API response 
@@ -46,7 +46,7 @@ public class ApiResponse<T>
             StatusCode = statusCode,
         };
     }
-    
+
     /// <summary>
     /// Create a failure API response 
     /// </summary>

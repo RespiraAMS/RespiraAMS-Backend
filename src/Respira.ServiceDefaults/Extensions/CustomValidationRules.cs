@@ -15,7 +15,8 @@ public static class CustomValidationRules
     /// <param name="ruleBuilder">Fluent rule builder object</param>
     /// <typeparam name="T">Data type of the pagination's item</typeparam>
     /// <returns>Return Fluent IRuleBuilder (for continue chaining validation)</returns>
-    public static IRuleBuilderOptions<T, PaginationParam> IsValidPaginationParam<T>(this IRuleBuilder<T, PaginationParam> ruleBuilder)
+    public static IRuleBuilderOptions<T, PaginationParam> IsValidPaginationParam<T>(
+        this IRuleBuilder<T, PaginationParam> ruleBuilder)
     {
         return ruleBuilder
             .Must(p => p.Page > 0)

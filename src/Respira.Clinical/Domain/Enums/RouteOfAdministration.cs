@@ -6,9 +6,11 @@
 [JsonConverter(typeof(JsonStringEnumConverter))]
 public enum RouteOfAdministration
 {
-    [Display(Name = "Oral")] [Description("Consume through mouth")]
+    [Display(Name = "Oral")]
+    [Description("Consume through mouth")]
     Oral,
 
-    [Display(Name = "Intravenous")] [Description("Consume through vein")]
+    [Display(Name = "Intravenous")]
+    [Description("Consume through vein")]
     Intravenous,
 }
