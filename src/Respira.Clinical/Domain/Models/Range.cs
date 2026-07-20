@@ -8,7 +8,7 @@ public class Range
     /// <summary>
     /// Min value
     /// </summary>
-    public required double Min { get; set; }
+    public required decimal Min { get; set; }
 
     /// <summary>
     /// Boolean flag: true is &lt;=, false is &lt;
@@ -18,7 +18,7 @@ public class Range
     /// <summary>
     /// Max value
     /// </summary>
-    public required double Max { get; set; }
+    public required decimal Max { get; set; }
 
     /// <summary>
     /// Boolean flag: true is &gt;=, false is &gt;
@@ -29,4 +29,18 @@ public class Range
     /// Numeric unit (null means no unit) 
     /// </summary>
     public required string? Unit { get; set; }
+
+    public bool IsInRange(decimal value)
+    {
+        var result = Min < value && value < Max;
+        if (IsMinExclusive)
+        {
+            result = result || value == Min;
+        }
+        if (IsMaxExclusive)
+        {
+            result = result || value == Max;
+        }
+        return result;
+    }
 }

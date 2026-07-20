@@ -12,7 +12,7 @@ namespace Domain.Models;
 /// <summary>
 /// Treatment protocol.
 /// </summary>
-public class TreatmentProtocol : Base
+public class EmpiricTreatmentProtocol : Base
 {
     /// <summary>
     /// Treatment protocol name

@@ -13,6 +13,16 @@ namespace Domain.Models;
 public class Dosage : Base
 {
     /// <summary>
+    /// Foreign key: antibiotic ID
+    /// </summary>
+    public required Guid AntibioticId { get; set; }
+
+    /// <summary>
+    /// Navigation property: antibiotic
+    /// </summary>
+    public Antibiotic Antibiotic { get; set; } = null!;
+
+    /// <summary>
     /// Route of administration
     /// </summary>
     public required RouteOfAdministration RouteOfAdministration { get; set; }
