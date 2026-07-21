@@ -28,22 +28,22 @@ public class Antibiogram : Base
     /// The list of antibiotics that involve with MIC of this antibiogram
     /// </summary>
     public List<Antibiotic> Mics { get; set; } = [];
-    
+
     /// <summary>
     /// First priority antibiotic picked IDs
     /// </summary>
     public List<Guid> FirstPriorityMedicineIds { get; set; } = [];
-    
+
     /// <summary>
     /// First priority antibiotic picked
     /// </summary>
     public List<Antibiotic> FirstPriorityMedicines { get; set; } = [];
-    
+
     /// <summary>
     /// Second priority antibiotic picked IDs
     /// </summary>
     public List<Guid> SecondPriorityMedicineIds { get; set; } = [];
-    
+
     /// <summary>
     /// Second priority antibiotic picked
     /// </summary>

@@ -40,7 +40,7 @@ public class Disease
     /// List of disease's treatment protocols
     /// </summary>
     public List<EmpiricTreatmentProtocol> EmpiricTreatmentProtocols { get; set; } = [];
-    
+
     /// <summary>
     /// Algorithm/Metrics used to assess patient severity
     /// </summary>

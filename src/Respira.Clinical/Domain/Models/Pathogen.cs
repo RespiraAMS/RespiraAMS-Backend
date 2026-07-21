@@ -16,7 +16,7 @@ public class Pathogen : Base
     public required string Description { get; set; }
 
     /// <summary>
-    /// List of antibiotic IDs (which corresponse to <see cref="Medicines"/>)
+    /// List of antibiotic IDs (which correspond to <see cref="Medicines"/>)
     /// </summary>
     public List<Guid> AntibioticIds { get; set; } = [];
 
