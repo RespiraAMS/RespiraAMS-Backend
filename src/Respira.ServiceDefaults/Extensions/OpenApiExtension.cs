@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Respira.ServiceDefaults.Middlewares;
+using Respira.ServiceDefaults.Utils.OpenApiTransformers;
 
 namespace Respira.ServiceDefaults.Extensions;
 
@@ -8,9 +8,13 @@ namespace Respira.ServiceDefaults.Extensions;
 /// </summary>
 public static class OpenApiExtension
 {
-    public static IServiceCollection AddOpenApi(this IServiceCollection services)
+    public static IServiceCollection AddOpenApiExtension(this IServiceCollection services)
     {
-        services.AddOpenApi(options => options.AddDocumentTransformer<BearerSecuritySchemeTransformer>());
+        services.AddOpenApi(options =>
+        {
+            options.AddDocumentTransformer<CustomDocumentTransformer>();
+            options.AddSchemaTransformer<CustomSchemaTransformer>();
+        });
         return services;
     }
 }

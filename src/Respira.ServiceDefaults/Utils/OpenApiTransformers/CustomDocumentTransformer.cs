@@ -2,16 +2,18 @@
 using Microsoft.AspNetCore.OpenApi;
 using Microsoft.OpenApi;
 
-namespace Respira.ServiceDefaults.Middlewares;
+namespace Respira.ServiceDefaults.Utils.OpenApiTransformers;
 
 /// <summary>
 /// OpenAPI document transformer with JWT bearer token support
 /// </summary>
 /// <param name="authenticationSchemeProvider"></param>
-public sealed class BearerSecuritySchemeTransformer(IAuthenticationSchemeProvider authenticationSchemeProvider)
+public sealed class CustomDocumentTransformer(IAuthenticationSchemeProvider authenticationSchemeProvider)
     : IOpenApiDocumentTransformer
 {
-    public async Task TransformAsync(OpenApiDocument document, OpenApiDocumentTransformerContext context,
+    public async Task TransformAsync(
+        OpenApiDocument document,
+        OpenApiDocumentTransformerContext context,
         CancellationToken cancellationToken)
     {
         var authenticationSchemes = await authenticationSchemeProvider.GetAllSchemesAsync();
