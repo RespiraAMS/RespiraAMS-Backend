@@ -3,7 +3,7 @@
 /// <summary>
 /// Disease
 /// </summary>
-public class Disease
+public class Disease : Base
 {
     /// <summary>
     /// Disease name

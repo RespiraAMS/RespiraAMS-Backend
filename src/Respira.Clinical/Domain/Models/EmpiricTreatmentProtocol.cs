@@ -63,7 +63,7 @@ public class EmpiricTreatmentProtocol : Base
     public Guid? SpecialInfectionId { get; set; }
 
     /// <summary>
-    /// Spectial infection pathogen
+    /// Special infection pathogen
     /// </summary>
     public Pathogen? SpecialInfection { get; set; }
 

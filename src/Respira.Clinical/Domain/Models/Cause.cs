@@ -5,7 +5,7 @@ namespace Domain.Models;
 /// <summary>
 /// Disease cause. Basically, this class is the joint table between Disease and Pathogen, with extra properties
 /// </summary>
-public class Cause
+public class Cause : Base
 {
     /// <summary>
     /// Disease ID

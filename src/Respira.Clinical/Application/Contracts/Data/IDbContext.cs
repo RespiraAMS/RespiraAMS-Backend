@@ -6,17 +6,17 @@ namespace Application.Contracts.Data;
 
 public interface IDbContext
 {
-    DbSet<Antibiogram> Antibiograms { get; }
-    DbSet<Antibiotic> Antibiotics { get; }
-    DbSet<AntibioticGroup> AntibioticGroups { get; }
-    DbSet<Cause> Causes { get; }
-    DbSet<Criterion> Criteria { get; }
-    DbSet<Disease> Diseases { get; }
-    DbSet<Dosage> Dosages { get; }
-    DbSet<EmpiricTreatmentProtocol> EmpiricTreatmentProtocols { get; }
-    DbSet<IcuHospitalizeCriterion> IcuHospitalizeCriteria { get; }
-    DbSet<Pathogen> Pathogens { get; }
-    DbSet<ResistanceRiskFactor> ResistanceRiskFactors { get; }
+    DbSet<Antibiogram> Antibiograms { get; set; }
+    DbSet<Antibiotic> Antibiotics { get; set; }
+    DbSet<AntibioticGroup> AntibioticGroups { get; set; }
+    DbSet<Cause> Causes { get; set; }
+    DbSet<Criterion> Criteria { get; set; }
+    DbSet<Disease> Diseases { get; set; }
+    DbSet<Dosage> Dosages { get; set; }
+    DbSet<EmpiricTreatmentProtocol> EmpiricTreatmentProtocols { get; set; }
+    DbSet<IcuHospitalizeCriterion> IcuHospitalizeCriteria { get; set; }
+    DbSet<Pathogen> Pathogens { get; set; }
+    DbSet<ResistanceRiskFactor> ResistanceRiskFactors { get; set; }
 
     /// <summary>
     /// Save all changes to database
