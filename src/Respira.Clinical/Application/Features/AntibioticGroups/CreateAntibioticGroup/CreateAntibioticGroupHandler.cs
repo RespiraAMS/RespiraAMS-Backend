@@ -22,9 +22,9 @@ public class CreateAntibioticGroupHandler(
             {
                 logger.LogDebug("Parent ID not found for antibiotic group: {Id}", command.ParentId);
                 throw new BadRequestException("Parent ID not exists");
-            }            
+            }
         }
-        
+
         // Map command to model
         var group = mapper.ToModel(command);
 

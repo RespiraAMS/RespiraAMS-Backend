@@ -31,10 +31,10 @@ public class UpdateAntibioticGroupHandler(
             logger.LogDebug("Antibiotic group not found: {Id}", command.Id);
             throw new NotFoundException(nameof(AntibioticGroup), command.Id);
         }
-        
+
         // Map from command to model
         mapper.MapModel(group, command);
-        
+
         // Save changes to database
         if (await context.SaveChangesAsync(cancellationToken) <= 0)
         {
