@@ -33,11 +33,11 @@ public class UpdateAntibioticGroupRequestDto
 {
     public string Name { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
-    public Guid ParentId { get; set; }
+    public Guid? ParentId { get; set; }
 
     public UpdateAntibioticGroupCommand ToCommand(Guid id)
     {
-        return new()
+        return new UpdateAntibioticGroupCommand
         {
             Id = id,
             Name = Name,

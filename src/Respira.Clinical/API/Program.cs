@@ -79,5 +79,6 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.ApplyMigrations(app.Environment.IsDevelopment());
+await app.SeedData();
 
 app.Run();

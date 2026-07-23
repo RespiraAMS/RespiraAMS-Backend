@@ -1,7 +1,7 @@
-﻿using Application.Features.AntibioticGroups.CreateAntibioticGroup;
-using Application.Features.AntibioticGroups.DeleteAntibioticGroup;
-using Application.Features.AntibioticGroups.GetAntibioticGroups;
-using Application.Features.AntibioticGroups.GetPagedAntibioticGroup;
+﻿using Application.Features.Pathogens.CreatePathogen;
+using Application.Features.Pathogens.DeletePathogen;
+using Application.Features.Pathogens.GetPagedPathogen;
+using Application.Features.Pathogens.GetPathogens;
 using Asp.Versioning;
 using Microsoft.AspNetCore.Mvc;
 using Respira.Clinical.API.Dtos;
@@ -11,47 +11,48 @@ using Wolverine;
 namespace Respira.Clinical.API.Controllers;
 
 [ApiController]
-[Route("api/{version:apiVersion}/antibiotic-groups")]
+[Route("api/{version:apiVersion}/pathogens")]
 [ApiVersion("1.0")]
-public class AntibioticGroupsController(IMessageBus bus) : ControllerBase
+public class PathogensController(IMessageBus bus) : ControllerBase
 {
     [HttpPost]
-    [ProducesResponseType<ApiResponse<CreateAntibioticGroupResult>>(StatusCodes.Status201Created)]
+    [ProducesResponseType<ApiResponse<CreatePathogenResult>>(StatusCodes.Status201Created)]
     [ProducesResponseType<ApiResponse>(StatusCodes.Status400BadRequest)]
     [ProducesResponseType<ApiResponse>(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType<ApiResponse>(StatusCodes.Status403Forbidden)]
     [ProducesResponseType<ApiResponse>(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> CreateAntibioticGroup([FromBody] CreateAntibioticGroupCommand req)
+    public async Task<IActionResult> CreatePathogen([FromBody] CreatePathogenCommand req)
     {
-        var result = await bus.InvokeAsync<CreateAntibioticGroupResult>(req);
-        var resp = ApiResponse<CreateAntibioticGroupResult>
+        var result = await bus.InvokeAsync<CreatePathogenResult>(req);
+        var resp = ApiResponse<CreatePathogenResult>
             .Ok(result, statusCode: StatusCodes.Status201Created);
         return Created((string?)null, resp);
     }
 
     [HttpGet]
-    [ProducesResponseType<ApiResponse<Pagination<GetPagedAntibioticGroupResult>>>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ApiResponse<Pagination<GetPagedPathogenResult>>>(StatusCodes.Status200OK)]
     [ProducesResponseType<ApiResponse>(StatusCodes.Status400BadRequest)]
     [ProducesResponseType<ApiResponse>(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType<ApiResponse>(StatusCodes.Status403Forbidden)]
     [ProducesResponseType<ApiResponse>(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> GetPagedAntibioticGroup([FromQuery] GetPagedAntibioticGroupRequestDto req)
+    public async Task<IActionResult> GetPathogens([FromQuery] GetPagedPathogenRequestDto req)
     {
-        var result = await bus.InvokeAsync<Pagination<GetPagedAntibioticGroupResult>>(req.ToQuery());
-        var resp = ApiResponse<Pagination<GetPagedAntibioticGroupResult>>.Ok(result);
+        var result = await bus.InvokeAsync<Pagination<GetPagedPathogenResult>>(req.ToQuery());
+        var resp = ApiResponse<Pagination<GetPagedPathogenResult>>.Ok(result);
         return Ok(resp);
     }
 
     [HttpGet]
     [Route("list")]
-    [ProducesResponseType<ApiResponse<IEnumerable<GetAntibioticGroupResult>>>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ApiResponse<IEnumerable<GetPathogensResult>>>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status400BadRequest)]
     [ProducesResponseType<ApiResponse>(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType<ApiResponse>(StatusCodes.Status403Forbidden)]
     [ProducesResponseType<ApiResponse>(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> GetAntibioticGroups()
+    public async Task<IActionResult> GetPathogens()
     {
-        var result = await bus.InvokeAsync<ICollection<GetAntibioticGroupResult>>(new GetAntibioticGroupQuery());
-        var resp = ApiResponse<IEnumerable<GetAntibioticGroupResult>>.Ok(result);
+        var result = await bus.InvokeAsync<ICollection<GetPathogensResult>>(new GetPathogensQuery());
+        var resp = ApiResponse<IEnumerable<GetPathogensResult>>.Ok(result);
         return Ok(resp);
     }
 
@@ -63,7 +64,7 @@ public class AntibioticGroupsController(IMessageBus bus) : ControllerBase
     [ProducesResponseType<ApiResponse>(StatusCodes.Status403Forbidden)]
     [ProducesResponseType<ApiResponse>(StatusCodes.Status404NotFound)]
     [ProducesResponseType<ApiResponse>(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> UpdateAntibioticGroup(Guid id, [FromBody] UpdateAntibioticGroupRequestDto req)
+    public async Task<IActionResult> UpdatePathogen(Guid id, [FromBody] UpdatePathogenRequestDto req)
     {
         await bus.InvokeAsync(req.ToCommand(id));
         return NoContent();
@@ -76,9 +77,9 @@ public class AntibioticGroupsController(IMessageBus bus) : ControllerBase
     [ProducesResponseType<ApiResponse>(StatusCodes.Status403Forbidden)]
     [ProducesResponseType<ApiResponse>(StatusCodes.Status404NotFound)]
     [ProducesResponseType<ApiResponse>(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> DeleteAntibioticGroup(Guid id)
+    public async Task<IActionResult> DeletePathogen(Guid id)
     {
-        await bus.InvokeAsync(new DeleteAntibioticGroupCommand { Id = id });
+        await bus.InvokeAsync(new DeletePathogenCommand(id));
         return NoContent();
     }
 }

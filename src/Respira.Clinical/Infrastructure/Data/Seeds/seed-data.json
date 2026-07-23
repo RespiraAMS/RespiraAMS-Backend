@@ -1,0 +1,105 @@
+{
+  "antibioticGroups": [
+    {
+      "id": "01956b8c-8d75-79e0-8000-000000000001",
+      "name": "Beta-lactam",
+      "description": "Nhóm beta-lactam là một họ kháng sinh rất lớn, bao gồm các kháng sinh có cấu trúc hóa học chứa vòng beta-lactam",
+      "parentId": null
+    },
+    {
+      "id": "01956b8c-8d75-79e0-8000-000000000002",
+      "name": "Penicillin",
+      "description": "Các thuốc kháng sinh nhóm penicillin đều là dẫn xuất của acid 6-aminopenicilanic (viết tắt là A6AP)",
+      "parentId": "01956b8c-8d75-79e0-8000-000000000001"
+    },
+    {
+      "id": "01956b8c-8d75-79e0-8000-000000000003",
+      "name": "Cephalosporin",
+      "description": "Cấu trúc hóa học của các kháng sinh nhóm cephalosporin đều là dẫn xuất của acid 7-aminocephalosporanic (viết tắt là A7AC)",
+      "parentId": "01956b8c-8d75-79e0-8000-000000000001"
+    },
+    {
+      "id": "01956b8c-8d75-79e0-8000-000000000004",
+      "name": "Carbapenem",
+      "description": "Kháng sinh nhóm carbapenem có phổ kháng khuẩn rộng, đặc biệt có hoạt tính rất mạnh trên vi khuẩn Gram-âm",
+      "parentId": "01956b8c-8d75-79e0-8000-000000000001"
+    },
+    {
+      "id": "01956b8c-8d75-79e0-8000-000000000005",
+      "name": "Monobactam",
+      "description": "Kháng sinh monobactam là kháng sinh mà công thức phân tử có chứa beta-lactam đơn vòng",
+      "parentId": "01956b8c-8d75-79e0-8000-000000000001"
+    },
+    {
+      "id": "01956b8c-8d75-79e0-8000-000000000006",
+      "name": "Aminoglycoside",
+      "description": "Các aminoglycoside có thể là sản phẩm tự nhiên phân lập từ môi trường nuôi cấy các chủng vi sinh, cũng có thể là các kháng sinh bán tổng hợp",
+      "parentId": null
+    },
+    {
+      "id": "01956b8c-8d75-79e0-8000-000000000007",
+      "name": "Macrolide",
+      "description": "Các macrolide có thể là sản phẩm tự nhiên phân lập từ môi trường nuôi cấy các chủng vi sinh, cũng có thể là các kháng sinh bán tổng hợp",
+      "parentId": null
+    },
+    {
+      "id": "01956b8c-8d75-79e0-8000-000000000008",
+      "name": "Fluoroquinolone",
+      "description": "Các fluoroquinolone là kháng sinh tổng hợp có hoạt phổ rộng, ức chế enzyme DNA gyrase của vi khuẩn",
+      "parentId": null
+    },
+    {
+      "id": "01956b8c-8d75-79e0-8000-000000000009",
+      "name": "Tetracycline",
+      "description": "Các tetracycline là kháng sinh có phổ rộng, ức chế tổng hợp protein của vi khuẩn",
+      "parentId": null
+    }
+  ],
+  "pathogens": [
+    {
+      "id": "01956b8c-8d75-79e0-8000-000000000010",
+      "name": "Streptococcus pneumoniae",
+      "description": "Streptococcus pneumoniae là cầu khuẩn Gram dương, thường gây viêm phổi, viêm màng não, viêm tai giữa"
+    },
+    {
+      "id": "01956b8c-8d75-79e0-8000-000000000011",
+      "name": "Haemophilus influenzae",
+      "description": "Haemophilus influenzae là trực khuẩn Gram âm, thường gây viêm phổi, viêm màng não, viêm tai giữa"
+    },
+    {
+      "id": "01956b8c-8d75-79e0-8000-000000000012",
+      "name": "Moraxella catarrhalis",
+      "description": "Moraxella catarrhalis là cầu khuẩn Gram âm, thường gây viêm phổi và viêm tai giữa"
+    },
+    {
+      "id": "01956b8c-8d75-79e0-8000-000000000013",
+      "name": "Klebsiella pneumoniae",
+      "description": "Klebsiella pneumoniae là trực khuẩn Gram âm, thường gây viêm phổi bệnh viện"
+    },
+    {
+      "id": "01956b8c-8d75-79e0-8000-000000000014",
+      "name": "Pseudomonas aeruginosa",
+      "description": "Pseudomonas aeruginosa là trực khuẩn Gram âm, thường gây nhiễm trùng bệnh viện nguy hiểm"
+    },
+    {
+      "id": "01956b8c-8d75-79e0-8000-000000000015",
+      "name": "Staphylococcus aureus",
+      "description": "Staphylococcus aureus là cầu khuẩn Gram dương, có thể gây nhiễm trùng da, viêm phổi, nhiễm trùng huyết"
+    },
+    {
+      "id": "01956b8c-8d75-79e0-8000-000000000016",
+      "name": "Mycoplasma pneumoniae",
+      "description": "Mycoplasma pneumoniae là vi khuẩn không có thành tế bào, thường gây viêm phổi không điển hình"
+    },
+    {
+      "id": "01956b8c-8d75-79e0-8000-000000000017",
+      "name": "Legionella pneumophila",
+      "description": "Legionella pneumophila là trực khuẩn Gram âm, gây bệnh Legionnaires (viêm phổi nặng)"
+    },
+    {
+      "id": "01956b8c-8d75-79e0-8000-000000000018",
+      "name": "Chlamydia pneumoniae",
+      "description": "Chlamydia pneumoniae là vi khuẩn nội bào bắt buộc, gây viêm phổi không điển hình"
+    }
+  ]
+}

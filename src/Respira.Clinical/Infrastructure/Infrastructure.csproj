@@ -25,4 +25,8 @@
         <ProjectReference Include="..\Application\Application.csproj"/>
     </ItemGroup>
 
+    <ItemGroup>
+        <EmbeddedResource Include="Data\Seeds\seed-data.json"/>
+    </ItemGroup>
+
 </Project>

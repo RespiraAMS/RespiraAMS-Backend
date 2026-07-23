@@ -2,9 +2,11 @@
 using Application.Contracts.Mappers;
 using Infrastructure.Data;
 using Infrastructure.Mappers;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 
 namespace Infrastructure;
 
@@ -33,6 +35,19 @@ public static class DependencyInjection
             }
 
             context.Database.Migrate();
+        }
+    }
+
+    public static async Task SeedData(this WebApplication app)
+    {
+        // Only seed data in dev environment
+        if (app.Environment.IsDevelopment())
+        {
+            using var scope = app.Services.CreateScope();
+            var provider = scope.ServiceProvider;
+            var context = provider.GetRequiredService<AppDbContext>();
+            var logger = provider.GetRequiredService<ILogger<DbInitializer>>();
+            await DbInitializer.InitializeAsync(context, logger);
         }
     }
 }
