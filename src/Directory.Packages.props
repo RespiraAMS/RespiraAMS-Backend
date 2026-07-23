@@ -1,109 +1,111 @@
 <Project>
-  <PropertyGroup>
-    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
-    <EFCoreVersion>10.0.8</EFCoreVersion>
-    <AspireVersion>13.4.6</AspireVersion>
-    <WolverineVersion>6.19.0</WolverineVersion>
-    <MicrosoftExtensionsVersion>10.0.10</MicrosoftExtensionsVersion>
-  </PropertyGroup>
-  <!-- Aspire -->
-  <ItemGroup>
-    <PackageVersion Include="Aspire.Hosting.RabbitMQ" Version="$(AspireVersion)" />
-    <PackageVersion Include="Aspire.Hosting.Redis" Version="$(AspireVersion)" />
-    <PackageVersion Include="Aspire.Hosting.PostgreSQL" Version="$(AspireVersion)" />
-    <PackageVersion Include="Aspire.Hosting.JavaScript" Version="$(AspireVersion)" />
-    <PackageVersion Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" Version="$(AspireVersion)" />
-    <PackageVersion Include="Aspire.Npgsql" Version="$(AspireVersion)" />
-    <PackageVersion Include="Aspire.StackExchange.Redis" Version="$(AspireVersion)" />
-    <PackageVersion Include="Aspire.RabbitMQ.Client" Version="$(AspireVersion)" />
-    <PackageVersion Include="Aspire.Hosting.Kubernetes" Version="13.4.6-preview.1.26319.6" />
-  </ItemGroup>
-  <!-- Wolverine -->
-  <ItemGroup>
-    <PackageVersion Include="WolverineFx" Version="$(WolverineVersion)" />
-    <PackageVersion Include="WolverineFx.PostgreSQL" Version="$(WolverineVersion)" />
-    <PackageVersion Include="WolverineFx.RabbitMQ" Version="$(WolverineVersion)" />
-    <PackageVersion Include="WolverineFx.EntityFrameworkCore" Version="$(WolverineVersion)" />
-    <PackageVersion Include="WolverineFx.RuntimeCompilation" Version="$(WolverineVersion)" />
-    <PackageVersion Include="WolverineFx.FluentValidation" Version="$(WolverineVersion)" />
-    <PackageVersion Include="WolverineFx.Marten" Version="$(WolverineVersion)" />
-  </ItemGroup>
-  <!-- Microservice utitlities -->
-  <ItemGroup>
-    <!-- Service discovery -->
-    <PackageVersion Include="Microsoft.Extensions.Http.Resilience" Version="10.8.0" />
-    <PackageVersion Include="Microsoft.Extensions.ServiceDiscovery" Version="10.8.0" />
-    <PackageVersion Include="Microsoft.Extensions.ServiceDiscovery.Yarp" Version="10.8.0" />
-    <!-- API gateway -->
-    <PackageVersion Include="Yarp.ReverseProxy" Version="2.3.0" />
-    <!-- Open telemetry -->
-    <PackageVersion Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.16.0" />
-    <PackageVersion Include="OpenTelemetry.Extensions.Hosting" Version="1.16.0" />
-    <PackageVersion Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.16.0" />
-    <PackageVersion Include="OpenTelemetry.Instrumentation.Http" Version="1.16.0" />
-    <PackageVersion Include="OpenTelemetry.Instrumentation.Runtime" Version="1.16.0" />
-    <PackageVersion Include="OpenTelemetry.Instrumentation.EntityFrameworkCore" Version="1.16.0-beta.1" />
-    <!-- Retry -->
-    <PackageVersion Include="Polly" Version="8.7.0" />
-    <PackageVersion Include="Polly.Contrib.WaitAndRetry" Version="1.1.1" />
-    <PackageVersion Include="Polly.Extensions.Http" Version="3.0.0" />
-    <PackageVersion Include="Polly.RateLimiting" Version="8.7.0" />
-  </ItemGroup>
-  <!-- Database/Storage -->
-  <ItemGroup>
-    <!-- EF Core -->
-    <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="$(EFCoreVersion)" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore.Tools" Version="$(EFCoreVersion)" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="$(EFCoreVersion)" />
-    <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="$(EFCoreVersion)" />
-    <PackageVersion Include="Npgsql" Version="10.0.3" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore.Proxies" Version="$(EFCoreVersion)" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore.Relational" Version="$(EFCoreVersion)" />
-    <!-- Marten -->
-    <PackageVersion Include="Marten" Version="9.15.3" />
-    <!-- AWS S3 -->
-    <PackageVersion Include="AWSSDK.Core" Version="4.0.100.5" />
-    <PackageVersion Include="AWSSDK.S3" Version="4.0.101.1" />
-  </ItemGroup>
-  <!-- Caching -->
-  <ItemGroup>
-    <PackageVersion Include="ZiggyCreatures.FusionCache" Version="2.6.0" />
-    <PackageVersion Include="ZiggyCreatures.FusionCache.OpenTelemetry" Version="2.6.0" />
-    <PackageVersion Include="ZiggyCreatures.FusionCache.Serialization.SystemTextJson" Version="2.6.0" />
-  </ItemGroup>
-  <!-- Authentication and security -->
-  <ItemGroup>
-    <PackageVersion Include="System.IdentityModel.Tokens.Jwt" Version="8.19.2" />
-    <PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="$(MicrosoftExtensionsVersion)" />
-    <PackageVersion Include="Microsoft.AspNetCore.Authentication.Google" Version="$(MicrosoftExtensionsVersion)" />
-  </ItemGroup>
-  <!-- Validation -->
-  <ItemGroup>
-    <PackageVersion Include="FluentValidation" Version="12.1.1" />
-    <PackageVersion Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.1" />
-  </ItemGroup>
-  <!-- Utilities -->
-  <ItemGroup>
-    <PackageVersion Include="Microsoft.Extensions.Options" Version="$(MicrosoftExtensionsVersion)" />
-    <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="$(MicrosoftExtensionsVersion)" />
-    <!-- ASP.NET -->
-    <PackageVersion Include="Scalar.AspNetCore" Version="2.16.12" />
-    <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="$(MicrosoftExtensionsVersion)" />
-    <PackageVersion Include="Asp.Versioning.Mvc" Version="10.0.0" />
-    <!-- Pagination -->
-    <PackageVersion Include="X.PagedList.EF" Version="10.5.9" />
-    <PackageVersion Include="X.PagedList" Version="10.5.9" />
-    <!-- Email -->
-    <PackageVersion Include="MailKit" Version="4.16.0" />
-    <PackageVersion Include="MimeKit" Version="4.16.0" />
-    <!-- Excel -->
-    <PackageVersion Include="ClosedXML" Version="0.105.0" />
-  </ItemGroup>
-  <!-- Pinned version for transitive CVE dependencies -->
-  <ItemGroup>
-    <!-- Use internally by Microsoft.AspNetCore.OpenApi. See problems at: https://github.com/advisories/GHSA-v5pm-xwqc-g5wc -->
-    <PackageVersion Include="Microsoft.OpenApi" Version="2.7.5" />
-    <!-- Use internally by Aspire. See problems at: https://github.com/advisories/GHSA-wfr3-xj75-pfwh -->
-    <PackageVersion Include="MessagePack" Version="2.5.302" />
-  </ItemGroup>
+	<PropertyGroup>
+		<ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+		<EFCoreVersion>10.0.8</EFCoreVersion>
+		<AspireVersion>13.4.6</AspireVersion>
+		<WolverineVersion>6.19.0</WolverineVersion>
+		<MicrosoftExtensionsVersion>10.0.10</MicrosoftExtensionsVersion>
+	</PropertyGroup>
+	<!-- Aspire -->
+	<ItemGroup>
+		<PackageVersion Include="Aspire.Hosting.RabbitMQ" Version="$(AspireVersion)" />
+		<PackageVersion Include="Aspire.Hosting.Redis" Version="$(AspireVersion)" />
+		<PackageVersion Include="Aspire.Hosting.PostgreSQL" Version="$(AspireVersion)" />
+		<PackageVersion Include="Aspire.Hosting.JavaScript" Version="$(AspireVersion)" />
+		<PackageVersion Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" Version="$(AspireVersion)" />
+		<PackageVersion Include="Aspire.Npgsql" Version="$(AspireVersion)" />
+		<PackageVersion Include="Aspire.StackExchange.Redis" Version="$(AspireVersion)" />
+		<PackageVersion Include="Aspire.RabbitMQ.Client" Version="$(AspireVersion)" />
+		<PackageVersion Include="Aspire.Hosting.Kubernetes" Version="13.4.6-preview.1.26319.6" />
+		<PackageVersion Include="BCrypt.Net-Next" Version="4.2.1" />
+	</ItemGroup>
+	<!-- Wolverine -->
+	<ItemGroup>
+		<PackageVersion Include="WolverineFx" Version="$(WolverineVersion)" />
+		<PackageVersion Include="WolverineFx.PostgreSQL" Version="$(WolverineVersion)" />
+		<PackageVersion Include="WolverineFx.RabbitMQ" Version="$(WolverineVersion)" />
+		<PackageVersion Include="WolverineFx.EntityFrameworkCore" Version="$(WolverineVersion)" />
+		<PackageVersion Include="WolverineFx.RuntimeCompilation" Version="$(WolverineVersion)" />
+		<PackageVersion Include="WolverineFx.FluentValidation" Version="$(WolverineVersion)" />
+		<PackageVersion Include="WolverineFx.Marten" Version="$(WolverineVersion)" />
+	</ItemGroup>
+	<!-- Microservice utitlities -->
+	<ItemGroup>
+		<!-- Service discovery -->
+		<PackageVersion Include="Microsoft.Extensions.Http.Resilience" Version="10.8.0" />
+		<PackageVersion Include="Microsoft.Extensions.ServiceDiscovery" Version="10.8.0" />
+		<PackageVersion Include="Microsoft.Extensions.ServiceDiscovery.Yarp" Version="10.8.0" />
+		<!-- API gateway -->
+		<PackageVersion Include="Yarp.ReverseProxy" Version="2.3.0" />
+		<!-- Open telemetry -->
+		<PackageVersion Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.16.0" />
+		<PackageVersion Include="OpenTelemetry.Extensions.Hosting" Version="1.16.0" />
+		<PackageVersion Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.16.0" />
+		<PackageVersion Include="OpenTelemetry.Instrumentation.Http" Version="1.16.0" />
+		<PackageVersion Include="OpenTelemetry.Instrumentation.Runtime" Version="1.16.0" />
+		<PackageVersion Include="OpenTelemetry.Instrumentation.EntityFrameworkCore" Version="1.16.0-beta.1" />
+		<!-- Retry -->
+		<PackageVersion Include="Polly" Version="8.7.0" />
+		<PackageVersion Include="Polly.Contrib.WaitAndRetry" Version="1.1.1" />
+		<PackageVersion Include="Polly.Extensions.Http" Version="3.0.0" />
+		<PackageVersion Include="Polly.RateLimiting" Version="8.7.0" />
+	</ItemGroup>
+	<!-- Database/Storage -->
+	<ItemGroup>
+		<!-- EF Core -->
+		<PackageVersion Include="Microsoft.EntityFrameworkCore" Version="10.0.10" />
+		<PackageVersion Include="Microsoft.EntityFrameworkCore.Tools" Version="$(EFCoreVersion)" />
+		<PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="$(EFCoreVersion)" />
+		<PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.3" />
+		<PackageVersion Include="Npgsql" Version="10.0.3" />
+		<PackageVersion Include="Microsoft.EntityFrameworkCore.Proxies" Version="$(EFCoreVersion)" />
+		<PackageVersion Include="Microsoft.EntityFrameworkCore.Relational" Version="$(EFCoreVersion)" />
+		<!-- Marten -->
+		<PackageVersion Include="Marten" Version="9.15.3" />
+		<!-- AWS S3 -->
+		<PackageVersion Include="AWSSDK.Core" Version="4.0.100.5" />
+		<PackageVersion Include="AWSSDK.S3" Version="4.0.101.1" />
+	</ItemGroup>
+	<!-- Caching -->
+	<ItemGroup>
+		<PackageVersion Include="ZiggyCreatures.FusionCache" Version="2.6.0" />
+		<PackageVersion Include="ZiggyCreatures.FusionCache.OpenTelemetry" Version="2.6.0" />
+		<PackageVersion Include="ZiggyCreatures.FusionCache.Serialization.SystemTextJson" Version="2.6.0" />
+	</ItemGroup>
+	<!-- Authentication and security -->
+	<ItemGroup>
+		<PackageVersion Include="System.IdentityModel.Tokens.Jwt" Version="8.19.2" />
+		<PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="$(MicrosoftExtensionsVersion)" />
+		<PackageVersion Include="Microsoft.AspNetCore.Authentication.Google" Version="$(MicrosoftExtensionsVersion)" />
+	</ItemGroup>
+	<!-- Validation -->
+	<ItemGroup>
+		<PackageVersion Include="FluentValidation" Version="12.1.1" />
+		<PackageVersion Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.1" />
+	</ItemGroup>
+	<!-- Utilities -->
+	<ItemGroup>
+		<PackageVersion Include="Microsoft.Extensions.Options" Version="$(MicrosoftExtensionsVersion)" />
+		<PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="$(MicrosoftExtensionsVersion)" />
+		<!-- ASP.NET -->
+		<PackageVersion Include="Scalar.AspNetCore" Version="2.16.12" />
+		<PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="$(MicrosoftExtensionsVersion)" />
+		<PackageVersion Include="Asp.Versioning.Mvc" Version="10.0.0" />
+		<!-- Pagination -->
+		<PackageVersion Include="X.PagedList.EF" Version="10.5.9" />
+		<PackageVersion Include="X.PagedList" Version="10.5.9" />
+		<!-- Email -->
+		<PackageVersion Include="MailKit" Version="4.16.0" />
+		<PackageVersion Include="MimeKit" Version="4.16.0" />
+		<!-- Excel -->
+		<PackageVersion Include="ClosedXML" Version="0.105.0" />
+	</ItemGroup>
+	<!-- Pinned version for transitive CVE dependencies -->
+	<ItemGroup>
+		<!-- Use internally by Microsoft.AspNetCore.OpenApi. See problems at: https://github.com/advisories/GHSA-v5pm-xwqc-g5wc -->
+		<PackageVersion Include="Microsoft.OpenApi" Version="2.7.5" />
+		<!-- Use internally by Aspire. See problems at: https://github.com/advisories/GHSA-wfr3-xj75-pfwh -->
+		<PackageVersion Include="MessagePack" Version="2.5.302" />
+	</ItemGroup>
 </Project>
+
