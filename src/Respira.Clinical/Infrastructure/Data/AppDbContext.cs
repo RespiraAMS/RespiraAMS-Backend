@@ -152,9 +152,9 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             .HasValue<NumericCriterion>("numeric");
         modelBuilder.Entity<NumericCriterion>()
             .OwnsOne(x => x.Value, builder => builder.ToJson());
-        modelBuilder.Entity<NumericCriterion>()
-            .HasIndex(x => x.Value)
-            .HasMethod("gin"); // Use GIN index for better performance with JSONB
+        // modelBuilder.Entity<NumericCriterion>()
+        //     .HasIndex(x => x.Value)
+        //     .HasMethod("gin"); // Use GIN index for better performance with JSONB
 
         // Config on antibiotic group
         modelBuilder.Entity<AntibioticGroup>().ToTable("antibiotic_groups");
@@ -176,9 +176,9 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             .HasConversion<string>();
         modelBuilder.Entity<Dosage>()
             .OwnsOne(x => x.GlomerularFiltrationRate, builder => builder.ToJson());
-        modelBuilder.Entity<Dosage>()
-            .HasIndex(x => x.GlomerularFiltrationRate)
-            .HasMethod("gin"); // Use GIN index for better performance with JSONB
+        // modelBuilder.Entity<Dosage>()
+        //     .HasIndex(x => x.GlomerularFiltrationRate)
+        //     .HasMethod("gin"); // Use GIN index for better performance with JSONB
 
         // Config on antibiotic
         modelBuilder.Entity<Antibiotic>().ToTable("antibiotics");
@@ -266,7 +266,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
         // Config on antibiogram
         modelBuilder.Entity<Antibiogram>().ToTable("antibiograms");
         modelBuilder.Entity<Antibiogram>()
-            .HasOne<Pathogen>()
+            .HasOne<Pathogen>(x => x.Pathogen)
             .WithMany()
             .HasForeignKey(x => x.PathogenId);
         modelBuilder.Entity<Antibiogram>()
