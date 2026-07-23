@@ -7,13 +7,13 @@ var k8s = builder.AddKubernetesEnvironment("k8s");
 var cache = builder.AddRedis("cache");
 var postgres = builder.AddPostgres("postgres").WithPgWeb().WithDataVolume();
 var rabbitmq = builder.AddRabbitMQ("rabbitmq").WithManagementPlugin();
-var analyticsDb = postgres.AddDatabase("analytics-db");
-var authDb = postgres.AddDatabase("auth-db");
-var clinicalDb = postgres.AddDatabase("clinical-db");
-var doctorDb = postgres.AddDatabase("doctor-db");
-var mediaDb = postgres.AddDatabase("media-db");
-var patientDb = postgres.AddDatabase("patient-db");
-var sagaAuditDb = postgres.AddDatabase("saga-audit-db");
+var analyticsDb = postgres.AddDatabase("analyticsDb");
+var authDb = postgres.AddDatabase("authDb");
+var clinicalDb = postgres.AddDatabase("clinicalDb");
+var doctorDb = postgres.AddDatabase("doctorDb");
+var mediaDb = postgres.AddDatabase("mediaDb");
+var patientDb = postgres.AddDatabase("patientDb");
+var sagaAuditDb = postgres.AddDatabase("sagaAuditDb");
 
 // Setup services
 var analyticsService = builder
