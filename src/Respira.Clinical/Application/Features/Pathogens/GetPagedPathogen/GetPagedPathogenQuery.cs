@@ -11,7 +11,7 @@ public class GetPagedPathogenQuery : IQuery
     public PathogenFilter? Filter { get; set; }
 }
 
-public class GetPagedPathogenResult
+public class PagedPathogenItem
 {
     public Guid Id { get; set; }
     public required string Name { get; set; }

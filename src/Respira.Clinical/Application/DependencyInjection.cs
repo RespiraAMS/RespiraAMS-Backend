@@ -1,5 +1,9 @@
 ﻿using Application.Features.AntibioticGroups.CreateAntibioticGroup;
 using Application.Features.AntibioticGroups.UpdateAntibioticGroup;
+using Application.Features.Antibiotics.AddDosage;
+using Application.Features.Antibiotics.CreateAntibiotic;
+using Application.Features.Antibiotics.UpdateAntibiotic;
+using Application.Features.Antibiotics.UpdateDosage;
 using Application.Features.Pathogens.CreatePathogen;
 using Application.Features.Pathogens.UpdatePathogen;
 using Microsoft.Extensions.DependencyInjection;
@@ -20,6 +24,11 @@ public static class DependencyInjection
 
         services.AddScoped<ICreateMapper<Pathogen, CreatePathogenCommand>, CreatePathogenMapper>();
         services.AddScoped<IUpdateMapper<Pathogen, UpdatePathogenCommand>, UpdatePathogenMapper>();
+
+        services.AddScoped<ICreateMapper<Antibiotic, CreateAntibioticCommand>, CreateAntibioticMapper>();
+        services.AddScoped<ICreateMapper<Dosage, AddDosageCommand>, AddDosageMapper>();
+        services.AddScoped<IUpdateMapper<Antibiotic, UpdateAntibioticCommand>, UpdateAntibioticMapper>();
+        services.AddScoped<IUpdateMapper<Dosage, UpdateDosageCommand>, UpdateDosageMapper>();
     }
 
     public static void AddFluentValidators(this IServiceCollection services)

@@ -5,9 +5,9 @@ using X.PagedList.EF;
 namespace Application.Features.AntibioticGroups.GetPagedAntibioticGroup;
 
 public class GetPagedAntibioticGroupHandler(IDbContext context, IPaginationFactory factory)
-    : IQueryHandler<GetPagedAntibioticGroupQuery, Pagination<GetPagedAntibioticGroupResult>>
+    : IQueryHandler<GetPagedAntibioticGroupQuery, Pagination<PagedAntibioticGroupItem>>
 {
-    public async Task<Pagination<GetPagedAntibioticGroupResult>> HandleAsync(GetPagedAntibioticGroupQuery query,
+    public async Task<Pagination<PagedAntibioticGroupItem>> HandleAsync(GetPagedAntibioticGroupQuery query,
         CancellationToken cancellationToken = default)
     {
         // Apply filter
@@ -30,7 +30,9 @@ public class GetPagedAntibioticGroupHandler(IDbContext context, IPaginationFacto
 
         // Get paged result
         var groups = await queryable
-            .Select(x => new GetPagedAntibioticGroupResult
+            .AsNoTracking()
+            .OrderByDescending(x => x.CreatedAt)
+            .Select(x => new PagedAntibioticGroupItem
             {
                 Id = x.Id,
                 Name = x.Name,

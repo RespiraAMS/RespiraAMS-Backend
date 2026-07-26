@@ -5,9 +5,9 @@ using X.PagedList.EF;
 namespace Application.Features.Pathogens.GetPagedPathogen;
 
 public class GetPagedPathogensHandler(IDbContext context, IPaginationFactory factory)
-    : IQueryHandler<GetPagedPathogenQuery, Pagination<GetPagedPathogenResult>>
+    : IQueryHandler<GetPagedPathogenQuery, Pagination<PagedPathogenItem>>
 {
-    public async Task<Pagination<GetPagedPathogenResult>> HandleAsync(GetPagedPathogenQuery query,
+    public async Task<Pagination<PagedPathogenItem>> HandleAsync(GetPagedPathogenQuery query,
         CancellationToken cancellationToken = default)
     {
         // Apply filter
@@ -24,8 +24,9 @@ public class GetPagedPathogensHandler(IDbContext context, IPaginationFactory fac
 
         // Get paged pathogen
         var pathogens = await queryable
+            .AsNoTracking()
             .OrderByDescending(x => x.CreatedAt)
-            .Select(x => new GetPagedPathogenResult()
+            .Select(x => new PagedPathogenItem()
             {
                 Id = x.Id,
                 Name = x.Name,

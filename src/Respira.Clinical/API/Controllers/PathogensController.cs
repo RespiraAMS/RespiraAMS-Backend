@@ -30,29 +30,29 @@ public class PathogensController(IMessageBus bus) : ControllerBase
     }
 
     [HttpGet]
-    [ProducesResponseType<ApiResponse<Pagination<GetPagedPathogenResult>>>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ApiResponse<Pagination<PagedPathogenItem>>>(StatusCodes.Status200OK)]
     [ProducesResponseType<ApiResponse>(StatusCodes.Status400BadRequest)]
     [ProducesResponseType<ApiResponse>(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType<ApiResponse>(StatusCodes.Status403Forbidden)]
     [ProducesResponseType<ApiResponse>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetPathogens([FromQuery] GetPagedPathogenRequestDto req)
     {
-        var result = await bus.InvokeAsync<Pagination<GetPagedPathogenResult>>(req.ToQuery());
-        var resp = ApiResponse<Pagination<GetPagedPathogenResult>>.Ok(result);
+        var result = await bus.InvokeAsync<Pagination<PagedPathogenItem>>(req.ToQuery());
+        var resp = ApiResponse<Pagination<PagedPathogenItem>>.Ok(result);
         return Ok(resp);
     }
 
     [HttpGet]
     [Route("list")]
-    [ProducesResponseType<ApiResponse<IEnumerable<GetPathogensResult>>>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ApiResponse<IEnumerable<PathogenItem>>>(StatusCodes.Status200OK)]
     [ProducesResponseType<ApiResponse>(StatusCodes.Status400BadRequest)]
     [ProducesResponseType<ApiResponse>(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType<ApiResponse>(StatusCodes.Status403Forbidden)]
     [ProducesResponseType<ApiResponse>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetPathogens()
     {
-        var result = await bus.InvokeAsync<ICollection<GetPathogensResult>>(new GetPathogensQuery());
-        var resp = ApiResponse<IEnumerable<GetPathogensResult>>.Ok(result);
+        var result = await bus.InvokeAsync<GetPathogensResult>(new GetPathogensQuery());
+        var resp = ApiResponse<IEnumerable<PathogenItem>>.Ok(result.Pathogens);
         return Ok(resp);
     }
 

@@ -4,17 +4,20 @@ using Microsoft.EntityFrameworkCore;
 namespace Application.Features.AntibioticGroups.GetAntibioticGroups;
 
 public class GetAntibioticGroupsHandler(IDbContext context)
-    : IQueryHandler<GetAntibioticGroupQuery, ICollection<GetAntibioticGroupResult>>
+    : IQueryHandler<GetAntibioticGroupsQuery, GetAntibioticGroupsResult>
 {
-    public async Task<ICollection<GetAntibioticGroupResult>> HandleAsync(GetAntibioticGroupQuery query,
+    public async Task<GetAntibioticGroupsResult> HandleAsync(GetAntibioticGroupsQuery query,
         CancellationToken cancellationToken = default)
     {
-        return await context.AntibioticGroups
-            .Select(x => new GetAntibioticGroupResult
+        var group = await context.AntibioticGroups
+            .AsNoTracking()
+            .OrderBy(x => x.Name)
+            .Select(x => new AntibioticGroupItem()
             {
                 Id = x.Id,
                 Name = x.Name,
             })
             .ToListAsync(cancellationToken);
+        return new GetAntibioticGroupsResult(group);
     }
 }

@@ -30,28 +30,28 @@ public class AntibioticGroupsController(IMessageBus bus) : ControllerBase
     }
 
     [HttpGet]
-    [ProducesResponseType<ApiResponse<Pagination<GetPagedAntibioticGroupResult>>>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ApiResponse<Pagination<PagedAntibioticGroupItem>>>(StatusCodes.Status200OK)]
     [ProducesResponseType<ApiResponse>(StatusCodes.Status400BadRequest)]
     [ProducesResponseType<ApiResponse>(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType<ApiResponse>(StatusCodes.Status403Forbidden)]
     [ProducesResponseType<ApiResponse>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetPagedAntibioticGroup([FromQuery] GetPagedAntibioticGroupRequestDto req)
     {
-        var result = await bus.InvokeAsync<Pagination<GetPagedAntibioticGroupResult>>(req.ToQuery());
-        var resp = ApiResponse<Pagination<GetPagedAntibioticGroupResult>>.Ok(result);
+        var result = await bus.InvokeAsync<Pagination<PagedAntibioticGroupItem>>(req.ToQuery());
+        var resp = ApiResponse<Pagination<PagedAntibioticGroupItem>>.Ok(result);
         return Ok(resp);
     }
 
     [HttpGet]
     [Route("list")]
-    [ProducesResponseType<ApiResponse<IEnumerable<GetAntibioticGroupResult>>>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ApiResponse<IEnumerable<AntibioticGroupItem>>>(StatusCodes.Status200OK)]
     [ProducesResponseType<ApiResponse>(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType<ApiResponse>(StatusCodes.Status403Forbidden)]
     [ProducesResponseType<ApiResponse>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetAntibioticGroups()
     {
-        var result = await bus.InvokeAsync<ICollection<GetAntibioticGroupResult>>(new GetAntibioticGroupQuery());
-        var resp = ApiResponse<IEnumerable<GetAntibioticGroupResult>>.Ok(result);
+        var result = await bus.InvokeAsync<GetAntibioticGroupsResult>(new GetAntibioticGroupsQuery());
+        var resp = ApiResponse<IEnumerable<AntibioticGroupItem>>.Ok(result.AntibioticGroups);
         return Ok(resp);
     }
 

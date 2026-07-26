@@ -1,5 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using Infrastructure.Data.Seeds;
+﻿using Infrastructure.Data.Seeds;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -26,6 +25,12 @@ public class DbInitializer
 
         context.AntibioticGroups.AddRange(seedData.AntibioticGroups);
         context.Pathogens.AddRange(seedData.Pathogens);
+
+        foreach (var antibiotic in seedData.Antibiotics)
+        {
+            context.Antibiotics.Add(antibiotic);
+            context.Dosages.AddRange(antibiotic.Dosages);
+        }
 
         var count = await context.SaveChangesAsync();
         logger.LogInformation("Seeded {Count} records into database", count);

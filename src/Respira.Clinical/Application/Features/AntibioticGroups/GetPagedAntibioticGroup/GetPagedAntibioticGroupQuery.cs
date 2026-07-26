@@ -12,7 +12,7 @@ public class GetPagedAntibioticGroupQuery : IQuery
     public AntibioticGroupFilter? Filter { get; set; }
 }
 
-public class GetPagedAntibioticGroupResult
+public class PagedAntibioticGroupItem
 {
     public required Guid Id { get; set; }
     public required string Name { get; set; }
