@@ -46,7 +46,7 @@ public class ClinicalPicture
     public required int Respiratory { get; set; }
 
     /// <summary>
-    /// Patient's systoloc blood pressure (mmHg)
+    /// Patient's systolic blood pressure (mmHg)
     /// </summary>
     public required decimal SystolicBloodPressure { get; set; }
 

@@ -40,10 +40,4 @@ public class Disease : Base
     /// List of disease's treatment protocols
     /// </summary>
     public List<EmpiricTreatmentProtocol> EmpiricTreatmentProtocols { get; set; } = [];
-
-    /// <summary>
-    /// Algorithm/Metrics used to assess patient severity
-    /// </summary>
-    /// <example>CURB-65, GOLD</example>
-    public required string Algorithm { get; set; }
 }
