@@ -114,6 +114,14 @@
       "description": "Chlamydia pneumoniae là vi khuẩn nội bào bắt buộc, gây viêm phổi không điển hình"
     }
   ],
+  "diseases": [
+    {
+      "id": "01956b8c-8d75-79e0-8000-00000000001b",
+      "name": "Viêm phổi cộng đồng",
+      "description": "Viêm phổi mắc phải tại cộng đồng là tình trạng nhiễm trùng nhu mô phổi xảy ra bên ngoài bệnh viện hoặc trong vòng 48 giờ sau khi nhập viện",
+      "icuScoreThreshold": 3
+    }
+  ],
   "antibiotics": [
     {
       "id": "01956b8c-8d75-79e0-8001-000000000001",

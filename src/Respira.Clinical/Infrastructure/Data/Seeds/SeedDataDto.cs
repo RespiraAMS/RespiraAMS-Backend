@@ -7,6 +7,7 @@ public record SeedDataDto
     public required List<AntibioticGroupDto> AntibioticGroups { get; init; }
     public required List<PathogenDto> Pathogens { get; init; }
     public required List<AntibioticDto> Antibiotics { get; init; }
+    public required List<DiseaseDto> Diseases { get; init; }
 }
 
 public record AntibioticGroupDto
@@ -49,4 +50,12 @@ public record RangeDto
     public required decimal Max { get; init; }
     public required bool IsMaxExclusive { get; init; }
     public string? Unit { get; init; }
+}
+
+public record DiseaseDto
+{
+    public required Guid Id { get; init; }
+    public required string Name { get; init; }
+    public required string Description { get; init; }
+    public required int IcuScoreThreshold { get; init; }
 }

@@ -16,7 +16,7 @@ public static class SeedDataLoader
     public static async Task<SeedData> LoadAsync()
     {
         var assembly = Assembly.GetExecutingAssembly();
-        var resourceName = "Infrastructure.Data.Seeds.seed-data.json";
+        const string resourceName = "Infrastructure.Data.Seeds.seed-data.json";
 
         await using var stream = assembly.GetManifestResourceStream(resourceName)
             ?? throw new InvalidOperationException($"Embedded resource '{resourceName}' not found.");
@@ -78,11 +78,20 @@ public static class SeedDataLoader
             return antibiotic;
         }).ToList();
 
+        var diseases = dto.Diseases.Select(d => new Disease
+        {
+            Id = d.Id,
+            Name = d.Name,
+            Description = d.Description,
+            IcuScoreThreshold = d.IcuScoreThreshold,
+        }).ToList();
+
         return new SeedData
         {
             AntibioticGroups = antibioticGroups,
             Pathogens = pathogens,
             Antibiotics = antibiotics,
+            Diseases = diseases,
         };
     }
 }
@@ -92,4 +101,5 @@ public class SeedData
     public required List<AntibioticGroup> AntibioticGroups { get; init; }
     public required List<Pathogen> Pathogens { get; init; }
     public required List<Antibiotic> Antibiotics { get; init; }
+    public required List<Disease> Diseases { get; init; }
 }

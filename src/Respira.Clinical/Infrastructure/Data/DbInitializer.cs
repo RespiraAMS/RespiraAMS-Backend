@@ -32,6 +32,8 @@ public class DbInitializer
             context.Dosages.AddRange(antibiotic.Dosages);
         }
 
+        context.Diseases.AddRange(seedData.Diseases);
+
         var count = await context.SaveChangesAsync();
         logger.LogInformation("Seeded {Count} records into database", count);
     }
