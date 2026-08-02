@@ -1,7 +1,11 @@
-﻿using Application.Features.Diseases.GetDiseaseById;
+﻿using Application.Features.Causes.CreateCause;
+using Application.Features.Diseases.GetDiseaseById;
 using Application.Features.Diseases.GetDiseaseCriteria;
 using Application.Features.Diseases.GetDiseases;
 using Application.Features.Diseases.GetPagedDisease;
+using Application.Features.EmpiricTreatmentProtocols.CreateEmpiricTreatmentProtocol;
+using Application.Features.IcuHospitalizeCriteria.CreateIcuHospitalizeCriterion;
+using Application.Features.ResistanceRiskFactors.CreateResistanceRiskFactor;
 using Asp.Versioning;
 using Microsoft.AspNetCore.Mvc;
 using Respira.Clinical.API.Dtos;
@@ -81,5 +85,71 @@ public class DiseasesController(IMessageBus bus) : ControllerBase
     {
         await bus.InvokeAsync(req.ToCommand(id));
         return NoContent();
+    }
+
+    [HttpPost]
+    [Route("{id:guid}/causes")]
+    [ProducesResponseType<ApiResponse<CreateCauseResult>>(StatusCodes.Status201Created)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status404NotFound)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> AddCause(Guid id, [FromBody] CreateCauseRequestDto req)
+    {
+        var result = await bus.InvokeAsync<CreateCauseResult>(req.ToCommand(id));
+        var resp = ApiResponse<CreateCauseResult>.Ok(result, statusCode: StatusCodes.Status201Created);
+        return Created((string?)null, resp);
+    }
+
+    [HttpPost]
+    [Route("{id:guid}/icu-hospitalize-criteria")]
+    [ProducesResponseType<ApiResponse<CreateIcuHospitalizeCriterionResult>>(StatusCodes.Status201Created)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status404NotFound)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> AddIcuHospitalizeCriterion(Guid id,
+        [FromBody] CreateIcuHospitalizeCriterionRequestDto req)
+    {
+        var result = await bus.InvokeAsync<CreateIcuHospitalizeCriterionResult>(req.ToCommand(id));
+        var resp = ApiResponse<CreateIcuHospitalizeCriterionResult>
+            .Ok(result, statusCode: StatusCodes.Status201Created);
+        return Created((string?)null, resp);
+    }
+
+    [HttpPost]
+    [Route("{id:guid}/resistance-risk-factors")]
+    [ProducesResponseType<ApiResponse<CreateResistanceRiskFactorResult>>(StatusCodes.Status201Created)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status404NotFound)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> AddResistanceRiskFactor(Guid id,
+        [FromBody] CreateResistanceRiskFactorRequestDto req)
+    {
+        var result = await bus.InvokeAsync<CreateResistanceRiskFactorResult>(req.ToCommand(id));
+        var resp = ApiResponse<CreateResistanceRiskFactorResult>
+            .Ok(result, statusCode: StatusCodes.Status201Created);
+        return Created((string?)null, resp);
+    }
+
+    [HttpPost]
+    [Route("{id:guid}/treatment-protocols")]
+    [ProducesResponseType<ApiResponse<CreateEmpiricTreatmentProtocolResult>>(StatusCodes.Status201Created)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status404NotFound)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> AddTreatmentProtocol(Guid id,
+        [FromBody] CreateEmpiricTreatmentProtocolRequestDto req)
+    {
+        var result = await bus.InvokeAsync<CreateEmpiricTreatmentProtocolResult>(req.ToCommand(id));
+        var resp = ApiResponse<CreateEmpiricTreatmentProtocolResult>
+            .Ok(result, statusCode: StatusCodes.Status201Created);
+        return Created((string?)null, resp);
     }
 }

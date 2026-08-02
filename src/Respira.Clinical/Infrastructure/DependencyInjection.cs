@@ -23,18 +23,19 @@ public static class DependencyInjection
     {
         using var scope = host.Services.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        var logger = scope.ServiceProvider.GetRequiredService<ILogger<DbInitializer>>();
         try
         {
             context.Database.Migrate();
         }
-        catch (Exception)
+        catch (Exception e)
         {
             if (isDevEnv)
             {
                 context.Database.EnsureDeleted();
             }
 
-            context.Database.Migrate();
+            logger.LogCritical("Failed to migrate database: {error}", e.Message);
         }
     }
 
