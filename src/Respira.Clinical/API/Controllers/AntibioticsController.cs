@@ -28,7 +28,7 @@ public class AntibioticsController(IMessageBus bus) : ControllerBase
     public async Task<IActionResult> CreateAntibiotic([FromBody] CreateAntibioticCommand req)
     {
         var result = await bus.InvokeAsync<CreateAntibioticResult>(req);
-        var resp = ApiResponse<CreateAntibioticResult>.Ok(result);
+        var resp = ApiResponse<CreateAntibioticResult>.Ok(result, statusCode: StatusCodes.Status201Created);
         return Created((string?)null, resp);
     }
 
@@ -112,7 +112,7 @@ public class AntibioticsController(IMessageBus bus) : ControllerBase
     public async Task<IActionResult> AddDosage(Guid id, [FromBody] AddDosageRequestDto req)
     {
         var result = await bus.InvokeAsync<AddDosageResult>(req.ToCommand(id));
-        var resp = ApiResponse<AddDosageResult>.Ok(result);
+        var resp = ApiResponse<AddDosageResult>.Ok(result, statusCode: StatusCodes.Status201Created);
         return Created((string?)null, resp);
     }
 

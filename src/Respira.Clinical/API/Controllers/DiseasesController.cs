@@ -28,7 +28,7 @@ public class DiseasesController(IMessageBus bus) : ControllerBase
     public async Task<IActionResult> GetDiseases([FromQuery] GetPagedDiseaseRequestDto req)
     {
         var result = await bus.InvokeAsync<Pagination<PagedDiseaseItem>>(req.ToQuery());
-        var resp = ApiResponse<Pagination<PagedDiseaseItem>>.Ok(result);
+        var resp = ApiResponse<Pagination<PagedDiseaseItem>>.Ok(result, statusCode: StatusCodes.Status201Created);
         return Ok(resp);
     }
 

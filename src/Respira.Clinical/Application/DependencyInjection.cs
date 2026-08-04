@@ -1,4 +1,6 @@
-﻿using Application.Features.AntibioticGroups.CreateAntibioticGroup;
+﻿using Application.Features.Antibiograms.CreateAntibiogram;
+using Application.Features.Antibiograms.UpdateAntibiogram;
+using Application.Features.AntibioticGroups.CreateAntibioticGroup;
 using Application.Features.AntibioticGroups.UpdateAntibioticGroup;
 using Application.Features.Antibiotics.AddDosage;
 using Application.Features.Antibiotics.CreateAntibiotic;
@@ -69,6 +71,9 @@ public static class DependencyInjection
         services.AddScoped<
             IUpdateMapper<EmpiricTreatmentProtocol, UpdateEmpiricTreatmentProtocolCommand>,
             UpdateEmpiricTreatmentProtocolMapper>();
+
+        services.AddScoped<ICreateMapper<Antibiogram, CreateAntibiogramCommand>, CreateAntibiogramMapper>();
+        services.AddScoped<IUpdateMapper<Antibiogram, UpdateAntibiogramCommand>, UpdateAntibiogramMapper>();
     }
 
     public static void AddFluentValidators(this IServiceCollection services)
