@@ -1,0 +1,859 @@
+{
+  "antibioticGroups": [
+    {
+      "id": "01956b8c-8d75-79e0-8000-000000000001",
+      "name": "Beta-lactam",
+      "description": "Nhóm beta-lactam là một họ kháng sinh rất lớn, bao gồm các kháng sinh có cấu trúc hóa học chứa vòng beta-lactam",
+      "parentId": null
+    },
+    {
+      "id": "01956b8c-8d75-79e0-8000-000000000002",
+      "name": "Penicillin",
+      "description": "Các thuốc kháng sinh nhóm penicillin đều là dẫn xuất của acid 6-aminopenicilanic (viết tắt là A6AP)",
+      "parentId": "01956b8c-8d75-79e0-8000-000000000001"
+    },
+    {
+      "id": "01956b8c-8d75-79e0-8000-000000000003",
+      "name": "Cephalosporin",
+      "description": "Cấu trúc hóa học của các kháng sinh nhóm cephalosporin đều là dẫn xuất của acid 7-aminocephalosporanic (viết tắt là A7AC)",
+      "parentId": "01956b8c-8d75-79e0-8000-000000000001"
+    },
+    {
+      "id": "01956b8c-8d75-79e0-8000-000000000004",
+      "name": "Carbapenem",
+      "description": "Kháng sinh nhóm carbapenem có phổ kháng khuẩn rộng, đặc biệt có hoạt tính rất mạnh trên vi khuẩn Gram-âm",
+      "parentId": "01956b8c-8d75-79e0-8000-000000000001"
+    },
+    {
+      "id": "01956b8c-8d75-79e0-8000-000000000005",
+      "name": "Monobactam",
+      "description": "Kháng sinh monobactam là kháng sinh mà công thức phân tử có chứa beta-lactam đơn vòng",
+      "parentId": "01956b8c-8d75-79e0-8000-000000000001"
+    },
+    {
+      "id": "01956b8c-8d75-79e0-8000-000000000006",
+      "name": "Aminoglycoside",
+      "description": "Các aminoglycoside có thể là sản phẩm tự nhiên phân lập từ môi trường nuôi cấy các chủng vi sinh, cũng có thể là các kháng sinh bán tổng hợp",
+      "parentId": null
+    },
+    {
+      "id": "01956b8c-8d75-79e0-8000-000000000007",
+      "name": "Macrolide",
+      "description": "Các macrolide có thể là sản phẩm tự nhiên phân lập từ môi trường nuôi cấy các chủng vi sinh, cũng có thể là các kháng sinh bán tổng hợp",
+      "parentId": null
+    },
+    {
+      "id": "01956b8c-8d75-79e0-8000-000000000008",
+      "name": "Fluoroquinolone",
+      "description": "Các fluoroquinolone là kháng sinh tổng hợp có hoạt phổ rộng, ức chế enzyme DNA gyrase của vi khuẩn",
+      "parentId": null
+    },
+    {
+      "id": "01956b8c-8d75-79e0-8000-000000000009",
+      "name": "Tetracycline",
+      "description": "Các tetracycline là kháng sinh có phổ rộng, ức chế tổng hợp protein của vi khuẩn",
+      "parentId": null
+    },
+    {
+      "id": "01956b8c-8d75-79e0-8000-000000000019",
+      "name": "Glycopeptide",
+      "description": "Các glycopeptide là kháng sinh có cấu trúc phức tạp, ức chế tổng hợp thành tế bào vi khuẩn Gram dương",
+      "parentId": null
+    },
+    {
+      "id": "01956b8c-8d75-79e0-8000-00000000001a",
+      "name": "Oxazolidinone",
+      "description": "Các oxazolidinone là kháng sinh tổng hợp, ức chế tổng hợp protein của vi khuẩn Gram dương",
+      "parentId": null
+    }
+  ],
+  "pathogens": [
+    {
+      "id": "01956b8c-8d75-79e0-8000-000000000010",
+      "name": "Streptococcus pneumoniae",
+      "description": "Streptococcus pneumoniae là cầu khuẩn Gram dương, thường gây viêm phổi, viêm màng não, viêm tai giữa"
+    },
+    {
+      "id": "01956b8c-8d75-79e0-8000-000000000011",
+      "name": "Haemophilus influenzae",
+      "description": "Haemophilus influenzae là trực khuẩn Gram âm, thường gây viêm phổi, viêm màng não, viêm tai giữa"
+    },
+    {
+      "id": "01956b8c-8d75-79e0-8000-000000000012",
+      "name": "Moraxella catarrhalis",
+      "description": "Moraxella catarrhalis là cầu khuẩn Gram âm, thường gây viêm phổi và viêm tai giữa"
+    },
+    {
+      "id": "01956b8c-8d75-79e0-8000-000000000013",
+      "name": "Klebsiella pneumoniae",
+      "description": "Klebsiella pneumoniae là trực khuẩn Gram âm, thường gây viêm phổi bệnh viện"
+    },
+    {
+      "id": "01956b8c-8d75-79e0-8000-000000000014",
+      "name": "Pseudomonas aeruginosa",
+      "description": "Pseudomonas aeruginosa là trực khuẩn Gram âm, thường gây nhiễm trùng bệnh viện nguy hiểm"
+    },
+    {
+      "id": "01956b8c-8d75-79e0-8000-000000000015",
+      "name": "Staphylococcus aureus",
+      "description": "Staphylococcus aureus là cầu khuẩn Gram dương, có thể gây nhiễm trùng da, viêm phổi, nhiễm trùng huyết"
+    },
+    {
+      "id": "01956b8c-8d75-79e0-8000-000000000016",
+      "name": "Mycoplasma pneumoniae",
+      "description": "Mycoplasma pneumoniae là vi khuẩn không có thành tế bào, thường gây viêm phổi không điển hình"
+    },
+    {
+      "id": "01956b8c-8d75-79e0-8000-000000000017",
+      "name": "Legionella pneumophila",
+      "description": "Legionella pneumophila là trực khuẩn Gram âm, gây bệnh Legionnaires (viêm phổi nặng)"
+    },
+    {
+      "id": "01956b8c-8d75-79e0-8000-000000000018",
+      "name": "Chlamydia pneumoniae",
+      "description": "Chlamydia pneumoniae là vi khuẩn nội bào bắt buộc, gây viêm phổi không điển hình"
+    }
+  ],
+  "diseases": [
+    {
+      "id": "01956b8c-8d75-79e0-8000-00000000001b",
+      "name": "Viêm phổi cộng đồng",
+      "description": "Viêm phổi mắc phải tại cộng đồng là tình trạng nhiễm trùng nhu mô phổi xảy ra bên ngoài bệnh viện hoặc trong vòng 48 giờ sau khi nhập viện",
+      "icuScoreThreshold": 3
+    }
+  ],
+  "antibiotics": [
+    {
+      "id": "01956b8c-8d75-79e0-8001-000000000001",
+      "name": "Amikacin",
+      "antibioticGroupId": "01956b8c-8d75-79e0-8000-000000000006",
+      "category": "access",
+      "pathogenIds": [],
+      "dosages": [
+        {
+          "id": "01956b8c-8d75-79e0-8002-000000000001",
+          "routeOfAdministration": "intravenous",
+          "dose": "15-20 mg/kg mỗi 24h",
+          "glomerularFiltrationRate": {
+            "min": 0,
+            "isMinExclusive": true,
+            "max": 999,
+            "isMaxExclusive": true,
+            "unit": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "01956b8c-8d75-79e0-8001-000000000002",
+      "name": "Amoxicillin",
+      "antibioticGroupId": "01956b8c-8d75-79e0-8000-000000000002",
+      "category": "access",
+      "pathogenIds": [],
+      "dosages": [
+        {
+          "id": "01956b8c-8d75-79e0-8002-000000000002",
+          "routeOfAdministration": "oral",
+          "dose": "1g mỗi 8h",
+          "glomerularFiltrationRate": {
+            "min": 0,
+            "isMinExclusive": true,
+            "max": 999,
+            "isMaxExclusive": true,
+            "unit": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "01956b8c-8d75-79e0-8001-000000000003",
+      "name": "Amoxicillin/clavulanat",
+      "antibioticGroupId": "01956b8c-8d75-79e0-8000-000000000002",
+      "category": "access",
+      "pathogenIds": [],
+      "dosages": [
+        {
+          "id": "01956b8c-8d75-79e0-8002-000000000003",
+          "routeOfAdministration": "oral",
+          "dose": "500/125 mg mỗi 8h",
+          "glomerularFiltrationRate": {
+            "min": 0,
+            "isMinExclusive": true,
+            "max": 999,
+            "isMaxExclusive": true,
+            "unit": null
+          }
+        },
+        {
+          "id": "01956b8c-8d75-79e0-8002-000000000004",
+          "routeOfAdministration": "oral",
+          "dose": "875/125 mg mỗi 12h",
+          "glomerularFiltrationRate": {
+            "min": 0,
+            "isMinExclusive": true,
+            "max": 999,
+            "isMaxExclusive": true,
+            "unit": null
+          }
+        },
+        {
+          "id": "01956b8c-8d75-79e0-8002-000000000005",
+          "routeOfAdministration": "oral",
+          "dose": "2g/125 mg mỗi 12h",
+          "glomerularFiltrationRate": {
+            "min": 0,
+            "isMinExclusive": true,
+            "max": 999,
+            "isMaxExclusive": true,
+            "unit": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "01956b8c-8d75-79e0-8001-000000000004",
+      "name": "Ampicillin/sulbactam",
+      "antibioticGroupId": "01956b8c-8d75-79e0-8000-000000000002",
+      "category": "access",
+      "pathogenIds": [],
+      "dosages": [
+        {
+          "id": "01956b8c-8d75-79e0-8002-000000000006",
+          "routeOfAdministration": "intravenous",
+          "dose": "1.5 - 3 g mỗi 6h",
+          "glomerularFiltrationRate": {
+            "min": 0,
+            "isMinExclusive": true,
+            "max": 999,
+            "isMaxExclusive": true,
+            "unit": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "01956b8c-8d75-79e0-8001-000000000005",
+      "name": "Azithromycin",
+      "antibioticGroupId": "01956b8c-8d75-79e0-8000-000000000007",
+      "category": "accessWatch",
+      "pathogenIds": [],
+      "dosages": [
+        {
+          "id": "01956b8c-8d75-79e0-8002-000000000007",
+          "routeOfAdministration": "oral",
+          "dose": "250-500 mg mỗi 24h",
+          "glomerularFiltrationRate": {
+            "min": 0,
+            "isMinExclusive": true,
+            "max": 999,
+            "isMaxExclusive": true,
+            "unit": null
+          }
+        },
+        {
+          "id": "01956b8c-8d75-79e0-8002-000000000008",
+          "routeOfAdministration": "intravenous",
+          "dose": "250-500 mg mỗi 24h",
+          "glomerularFiltrationRate": {
+            "min": 0,
+            "isMinExclusive": true,
+            "max": 999,
+            "isMaxExclusive": true,
+            "unit": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "01956b8c-8d75-79e0-8001-000000000006",
+      "name": "Cefdinir",
+      "antibioticGroupId": "01956b8c-8d75-79e0-8000-000000000003",
+      "category": "unclassified",
+      "pathogenIds": [],
+      "dosages": [
+        {
+          "id": "01956b8c-8d75-79e0-8002-000000000009",
+          "routeOfAdministration": "oral",
+          "dose": "300 mg mỗi 12h",
+          "glomerularFiltrationRate": {
+            "min": 0,
+            "isMinExclusive": true,
+            "max": 999,
+            "isMaxExclusive": true,
+            "unit": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "01956b8c-8d75-79e0-8001-000000000007",
+      "name": "Cefepim",
+      "antibioticGroupId": "01956b8c-8d75-79e0-8000-000000000003",
+      "category": "reserve",
+      "pathogenIds": [],
+      "dosages": [
+        {
+          "id": "01956b8c-8d75-79e0-8002-00000000000a",
+          "routeOfAdministration": "intravenous",
+          "dose": "2 g mỗi 8h",
+          "glomerularFiltrationRate": {
+            "min": 0,
+            "isMinExclusive": true,
+            "max": 999,
+            "isMaxExclusive": true,
+            "unit": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "01956b8c-8d75-79e0-8001-000000000008",
+      "name": "Cefotaxim",
+      "antibioticGroupId": "01956b8c-8d75-79e0-8000-000000000003",
+      "category": "accessWatch",
+      "pathogenIds": [],
+      "dosages": [
+        {
+          "id": "01956b8c-8d75-79e0-8002-00000000000b",
+          "routeOfAdministration": "intravenous",
+          "dose": "1-2 g mỗi 8h",
+          "glomerularFiltrationRate": {
+            "min": 0,
+            "isMinExclusive": true,
+            "max": 999,
+            "isMaxExclusive": true,
+            "unit": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "01956b8c-8d75-79e0-8001-000000000009",
+      "name": "Cefpodoxim",
+      "antibioticGroupId": "01956b8c-8d75-79e0-8000-000000000003",
+      "category": "unclassified",
+      "pathogenIds": [],
+      "dosages": [
+        {
+          "id": "01956b8c-8d75-79e0-8002-00000000000c",
+          "routeOfAdministration": "oral",
+          "dose": "200 mg mỗi 12h",
+          "glomerularFiltrationRate": {
+            "min": 0,
+            "isMinExclusive": true,
+            "max": 999,
+            "isMaxExclusive": true,
+            "unit": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "01956b8c-8d75-79e0-8001-00000000000a",
+      "name": "Cefprozil",
+      "antibioticGroupId": "01956b8c-8d75-79e0-8000-000000000003",
+      "category": "unclassified",
+      "pathogenIds": [],
+      "dosages": [
+        {
+          "id": "01956b8c-8d75-79e0-8002-00000000000d",
+          "routeOfAdministration": "oral",
+          "dose": "500 mg mỗi 12h",
+          "glomerularFiltrationRate": {
+            "min": 0,
+            "isMinExclusive": true,
+            "max": 999,
+            "isMaxExclusive": true,
+            "unit": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "01956b8c-8d75-79e0-8001-00000000000b",
+      "name": "Ceftazidim",
+      "antibioticGroupId": "01956b8c-8d75-79e0-8000-000000000003",
+      "category": "watch",
+      "pathogenIds": [],
+      "dosages": [
+        {
+          "id": "01956b8c-8d75-79e0-8002-00000000000e",
+          "routeOfAdministration": "intravenous",
+          "dose": "2 g mỗi 8h",
+          "glomerularFiltrationRate": {
+            "min": 0,
+            "isMinExclusive": true,
+            "max": 999,
+            "isMaxExclusive": true,
+            "unit": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "01956b8c-8d75-79e0-8001-00000000000c",
+      "name": "Ceftriaxon",
+      "antibioticGroupId": "01956b8c-8d75-79e0-8000-000000000003",
+      "category": "watch",
+      "pathogenIds": [],
+      "dosages": [
+        {
+          "id": "01956b8c-8d75-79e0-8002-00000000000f",
+          "routeOfAdministration": "intravenous",
+          "dose": "1-2 g mỗi 24h",
+          "glomerularFiltrationRate": {
+            "min": 0,
+            "isMinExclusive": true,
+            "max": 999,
+            "isMaxExclusive": true,
+            "unit": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "01956b8c-8d75-79e0-8001-00000000000d",
+      "name": "Cefuroxim",
+      "antibioticGroupId": "01956b8c-8d75-79e0-8000-000000000003",
+      "category": "others",
+      "pathogenIds": [],
+      "dosages": [
+        {
+          "id": "01956b8c-8d75-79e0-8002-000000000010",
+          "routeOfAdministration": "oral",
+          "dose": "500 mg mỗi 12h",
+          "glomerularFiltrationRate": {
+            "min": 0,
+            "isMinExclusive": true,
+            "max": 999,
+            "isMaxExclusive": true,
+            "unit": null
+          }
+        },
+        {
+          "id": "01956b8c-8d75-79e0-8002-000000000011",
+          "routeOfAdministration": "intravenous",
+          "dose": "0,75 - 1,5 g mỗi 8h",
+          "glomerularFiltrationRate": {
+            "min": 0,
+            "isMinExclusive": true,
+            "max": 999,
+            "isMaxExclusive": true,
+            "unit": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "01956b8c-8d75-79e0-8001-00000000000e",
+      "name": "Ciprofloxacin",
+      "antibioticGroupId": "01956b8c-8d75-79e0-8000-000000000008",
+      "category": "access",
+      "pathogenIds": [],
+      "dosages": [
+        {
+          "id": "01956b8c-8d75-79e0-8002-000000000012",
+          "routeOfAdministration": "intravenous",
+          "dose": "400 mg mỗi 8-12h",
+          "glomerularFiltrationRate": {
+            "min": 0,
+            "isMinExclusive": true,
+            "max": 999,
+            "isMaxExclusive": true,
+            "unit": null
+          }
+        },
+        {
+          "id": "01956b8c-8d75-79e0-8002-000000000013",
+          "routeOfAdministration": "oral",
+          "dose": "500-750 mg mỗi 12h",
+          "glomerularFiltrationRate": {
+            "min": 0,
+            "isMinExclusive": true,
+            "max": 999,
+            "isMaxExclusive": true,
+            "unit": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "01956b8c-8d75-79e0-8001-00000000000f",
+      "name": "Clarithromycin",
+      "antibioticGroupId": "01956b8c-8d75-79e0-8000-000000000007",
+      "category": "watch",
+      "pathogenIds": [],
+      "dosages": [
+        {
+          "id": "01956b8c-8d75-79e0-8002-000000000014",
+          "routeOfAdministration": "oral",
+          "dose": "500 mg mỗi 12h",
+          "glomerularFiltrationRate": {
+            "min": 0,
+            "isMinExclusive": true,
+            "max": 999,
+            "isMaxExclusive": true,
+            "unit": null
+          }
+        },
+        {
+          "id": "01956b8c-8d75-79e0-8002-000000000015",
+          "routeOfAdministration": "intravenous",
+          "dose": "500 mg mỗi 12h",
+          "glomerularFiltrationRate": {
+            "min": 0,
+            "isMinExclusive": true,
+            "max": 999,
+            "isMaxExclusive": true,
+            "unit": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "01956b8c-8d75-79e0-8001-000000000010",
+      "name": "Doxycyclin",
+      "antibioticGroupId": "01956b8c-8d75-79e0-8000-000000000009",
+      "category": "watch",
+      "pathogenIds": [],
+      "dosages": [
+        {
+          "id": "01956b8c-8d75-79e0-8002-000000000016",
+          "routeOfAdministration": "oral",
+          "dose": "100 mg mỗi 12h",
+          "glomerularFiltrationRate": {
+            "min": 0,
+            "isMinExclusive": true,
+            "max": 999,
+            "isMaxExclusive": true,
+            "unit": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "01956b8c-8d75-79e0-8001-000000000011",
+      "name": "Ertapenem",
+      "antibioticGroupId": "01956b8c-8d75-79e0-8000-000000000004",
+      "category": "unclassified",
+      "pathogenIds": [],
+      "dosages": [
+        {
+          "id": "01956b8c-8d75-79e0-8002-000000000017",
+          "routeOfAdministration": "intravenous",
+          "dose": "1 g mỗi 24h",
+          "glomerularFiltrationRate": {
+            "min": 0,
+            "isMinExclusive": true,
+            "max": 999,
+            "isMaxExclusive": true,
+            "unit": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "01956b8c-8d75-79e0-8001-000000000012",
+      "name": "Erythromycin",
+      "antibioticGroupId": "01956b8c-8d75-79e0-8000-000000000007",
+      "category": "watch",
+      "pathogenIds": [],
+      "dosages": [
+        {
+          "id": "01956b8c-8d75-79e0-8002-000000000018",
+          "routeOfAdministration": "oral",
+          "dose": "500 mg mỗi 6h, tối đa 4g/ngày",
+          "glomerularFiltrationRate": {
+            "min": 0,
+            "isMinExclusive": true,
+            "max": 999,
+            "isMaxExclusive": true,
+            "unit": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "01956b8c-8d75-79e0-8001-000000000013",
+      "name": "Gentamicin",
+      "antibioticGroupId": "01956b8c-8d75-79e0-8000-000000000006",
+      "category": "watch",
+      "pathogenIds": [],
+      "dosages": [
+        {
+          "id": "01956b8c-8d75-79e0-8002-000000000019",
+          "routeOfAdministration": "intravenous",
+          "dose": "5-7 mg/kg mỗi 24h",
+          "glomerularFiltrationRate": {
+            "min": 0,
+            "isMinExclusive": true,
+            "max": 999,
+            "isMaxExclusive": true,
+            "unit": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "01956b8c-8d75-79e0-8001-000000000014",
+      "name": "Imipenem",
+      "antibioticGroupId": "01956b8c-8d75-79e0-8000-000000000004",
+      "category": "watch",
+      "pathogenIds": [],
+      "dosages": [
+        {
+          "id": "01956b8c-8d75-79e0-8002-00000000001a",
+          "routeOfAdministration": "intravenous",
+          "dose": "500 mg mỗi 6h (trường hợp nặng cân nhắc 1g mỗi 8h, tối đa 1g mỗi 6h)",
+          "glomerularFiltrationRate": {
+            "min": 0,
+            "isMinExclusive": true,
+            "max": 999,
+            "isMaxExclusive": true,
+            "unit": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "01956b8c-8d75-79e0-8001-000000000015",
+      "name": "Levofloxacin",
+      "antibioticGroupId": "01956b8c-8d75-79e0-8000-000000000008",
+      "category": "watch",
+      "pathogenIds": [],
+      "dosages": [
+        {
+          "id": "01956b8c-8d75-79e0-8002-00000000001b",
+          "routeOfAdministration": "oral",
+          "dose": "750 mg mỗi 24h",
+          "glomerularFiltrationRate": {
+            "min": 0,
+            "isMinExclusive": true,
+            "max": 999,
+            "isMaxExclusive": true,
+            "unit": null
+          }
+        },
+        {
+          "id": "01956b8c-8d75-79e0-8002-00000000001c",
+          "routeOfAdministration": "intravenous",
+          "dose": "750 mg mỗi 24h",
+          "glomerularFiltrationRate": {
+            "min": 0,
+            "isMinExclusive": true,
+            "max": 999,
+            "isMaxExclusive": true,
+            "unit": null
+          }
+        },
+        {
+          "id": "01956b8c-8d75-79e0-8002-00000000001d",
+          "routeOfAdministration": "oral",
+          "dose": "500 mg mỗi 12h",
+          "glomerularFiltrationRate": {
+            "min": 0,
+            "isMinExclusive": true,
+            "max": 999,
+            "isMaxExclusive": true,
+            "unit": null
+          }
+        },
+        {
+          "id": "01956b8c-8d75-79e0-8002-00000000001e",
+          "routeOfAdministration": "intravenous",
+          "dose": "500 mg mỗi 12h",
+          "glomerularFiltrationRate": {
+            "min": 0,
+            "isMinExclusive": true,
+            "max": 999,
+            "isMaxExclusive": true,
+            "unit": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "01956b8c-8d75-79e0-8001-000000000016",
+      "name": "Linezolid",
+      "antibioticGroupId": "01956b8c-8d75-79e0-8000-00000000001a",
+      "category": "reserve",
+      "pathogenIds": [],
+      "dosages": [
+        {
+          "id": "01956b8c-8d75-79e0-8002-00000000001f",
+          "routeOfAdministration": "oral",
+          "dose": "600 mg mỗi 12h",
+          "glomerularFiltrationRate": {
+            "min": 0,
+            "isMinExclusive": true,
+            "max": 999,
+            "isMaxExclusive": true,
+            "unit": null
+          }
+        },
+        {
+          "id": "01956b8c-8d75-79e0-8002-000000000020",
+          "routeOfAdministration": "intravenous",
+          "dose": "600 mg mỗi 12h",
+          "glomerularFiltrationRate": {
+            "min": 0,
+            "isMinExclusive": true,
+            "max": 999,
+            "isMaxExclusive": true,
+            "unit": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "01956b8c-8d75-79e0-8001-000000000017",
+      "name": "Meropenem",
+      "antibioticGroupId": "01956b8c-8d75-79e0-8000-000000000004",
+      "category": "accessWatch",
+      "pathogenIds": [],
+      "dosages": [
+        {
+          "id": "01956b8c-8d75-79e0-8002-000000000021",
+          "routeOfAdministration": "intravenous",
+          "dose": "1g mỗi 8h (trường hợp nặng, nhiễm P.aeruginosae giảm nhạy cảm, cân nhắc 2g mỗi 8h)",
+          "glomerularFiltrationRate": {
+            "min": 0,
+            "isMinExclusive": true,
+            "max": 999,
+            "isMaxExclusive": true,
+            "unit": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "01956b8c-8d75-79e0-8001-000000000018",
+      "name": "Moxifloxacin",
+      "antibioticGroupId": "01956b8c-8d75-79e0-8000-000000000008",
+      "category": "watch",
+      "pathogenIds": [],
+      "dosages": [
+        {
+          "id": "01956b8c-8d75-79e0-8002-000000000022",
+          "routeOfAdministration": "oral",
+          "dose": "400 mg mỗi 24h",
+          "glomerularFiltrationRate": {
+            "min": 0,
+            "isMinExclusive": true,
+            "max": 999,
+            "isMaxExclusive": true,
+            "unit": null
+          }
+        },
+        {
+          "id": "01956b8c-8d75-79e0-8002-000000000023",
+          "routeOfAdministration": "intravenous",
+          "dose": "400 mg mỗi 24h",
+          "glomerularFiltrationRate": {
+            "min": 0,
+            "isMinExclusive": true,
+            "max": 999,
+            "isMaxExclusive": true,
+            "unit": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "01956b8c-8d75-79e0-8001-000000000019",
+      "name": "Piperacillin/tazobactam",
+      "antibioticGroupId": "01956b8c-8d75-79e0-8000-000000000002",
+      "category": "accessWatch",
+      "pathogenIds": [],
+      "dosages": [
+        {
+          "id": "01956b8c-8d75-79e0-8002-000000000024",
+          "routeOfAdministration": "intravenous",
+          "dose": "4,5 g mỗi 6h",
+          "glomerularFiltrationRate": {
+            "min": 0,
+            "isMinExclusive": true,
+            "max": 999,
+            "isMaxExclusive": true,
+            "unit": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "01956b8c-8d75-79e0-8001-00000000001a",
+      "name": "Teicoplanin",
+      "antibioticGroupId": "01956b8c-8d75-79e0-8000-000000000019",
+      "category": "watch",
+      "pathogenIds": [],
+      "dosages": [
+        {
+          "id": "01956b8c-8d75-79e0-8002-000000000025",
+          "routeOfAdministration": "intravenous",
+          "dose": "Liều tải: 12 mg/kg mỗi 12h x 3 liều",
+          "glomerularFiltrationRate": {
+            "min": 0,
+            "isMinExclusive": true,
+            "max": 999,
+            "isMaxExclusive": true,
+            "unit": null
+          }
+        },
+        {
+          "id": "01956b8c-8d75-79e0-8002-000000000026",
+          "routeOfAdministration": "intravenous",
+          "dose": "Liều duy trì: 12 mg/kg mỗi 24h",
+          "glomerularFiltrationRate": {
+            "min": 0,
+            "isMinExclusive": true,
+            "max": 999,
+            "isMaxExclusive": true,
+            "unit": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "01956b8c-8d75-79e0-8001-00000000001b",
+      "name": "Tobramycin",
+      "antibioticGroupId": "01956b8c-8d75-79e0-8000-000000000006",
+      "category": "watch",
+      "pathogenIds": [],
+      "dosages": [
+        {
+          "id": "01956b8c-8d75-79e0-8002-000000000027",
+          "routeOfAdministration": "intravenous",
+          "dose": "5-7 mg/kg mỗi 24h",
+          "glomerularFiltrationRate": {
+            "min": 0,
+            "isMinExclusive": true,
+            "max": 999,
+            "isMaxExclusive": true,
+            "unit": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "01956b8c-8d75-79e0-8001-00000000001c",
+      "name": "Vancomycin",
+      "antibioticGroupId": "01956b8c-8d75-79e0-8000-000000000019",
+      "category": "accessWatch",
+      "pathogenIds": [],
+      "dosages": [
+        {
+          "id": "01956b8c-8d75-79e0-8002-000000000028",
+          "routeOfAdministration": "intravenous",
+          "dose": "15-30 mg/kg mỗi 12h (không quá 2g/lần) (cân nhắc liều nạp 25-30mg/kg trong trường hợp nặng)",
+          "glomerularFiltrationRate": {
+            "min": 0,
+            "isMinExclusive": true,
+            "max": 999,
+            "isMaxExclusive": true,
+            "unit": null
+          }
+        }
+      ]
+    }
+  ]
+}
