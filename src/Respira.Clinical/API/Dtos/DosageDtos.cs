@@ -7,9 +7,21 @@ namespace Respira.Clinical.API.Dtos;
 
 public class AddDosageRequestDto
 {
-    public RouteOfAdministration RouteOfAdministration { get; set; }
-    public string Dose { get; set; } = string.Empty;
-    public Range GlomerularFiltrationRate { get; set; } = null!;
+    /// <summary>
+    /// Route of administration
+    /// </summary>
+    public required RouteOfAdministration RouteOfAdministration { get; set; }
+
+    /// <summary>
+    /// Antibiotic dosage. There is no exact format, or content rule for dosage
+    /// </summary>
+    /// <example>500 mg/day</example>
+    public required string Dose { get; set; }
+
+    /// <summary>
+    /// The range of Glomerular Filtration Rate (GFR), used to adjust dose based on patient kidney
+    /// </summary>
+    public required Range GlomerularFiltrationRate { get; set; }
 
     public AddDosageCommand ToCommand(Guid antibioticId)
     {
@@ -25,9 +37,21 @@ public class AddDosageRequestDto
 
 public class UpdateDosageRequestDto
 {
-    public RouteOfAdministration RouteOfAdministration { get; set; }
-    public string Dose { get; set; } = string.Empty;
-    public Range GlomerularFiltrationRate { get; set; } = null!;
+    /// <summary>
+    /// Antibiotic dosage. There is no exact format, or content rule for dosage
+    /// </summary>
+    public required RouteOfAdministration RouteOfAdministration { get; set; }
+
+    /// <summary>
+    /// Dosage
+    /// </summary>
+    /// <example>500 mg/day</example>
+    public required string Dose { get; set; }
+
+    /// <summary>
+    /// The range of Glomerular Filtration Rate (GFR), used to adjust dose based on patient kidney
+    /// </summary>
+    public required Range GlomerularFiltrationRate { get; set; }
 
     public UpdateDosageCommand ToCommand(Guid dosageId)
     {

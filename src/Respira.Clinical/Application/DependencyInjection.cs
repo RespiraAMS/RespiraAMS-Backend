@@ -8,6 +8,7 @@ using Application.Features.Antibiotics.UpdateAntibiotic;
 using Application.Features.Antibiotics.UpdateDosage;
 using Application.Features.Causes.CreateCause;
 using Application.Features.Causes.UpdateCause;
+using Application.Features.Diagnose;
 using Application.Features.Diseases.UpdateDisease;
 using Application.Features.EmpiricTreatmentProtocols.CreateEmpiricTreatmentProtocol;
 using Application.Features.EmpiricTreatmentProtocols.UpdateEmpiricTreatmentProtocol;
@@ -18,6 +19,7 @@ using Application.Features.Pathogens.UpdatePathogen;
 using Application.Features.ResistanceRiskFactors.CreateResistanceRiskFactor;
 using Application.Features.ResistanceRiskFactors.UpdateResistanceRiskFactor;
 using Application.Features.Shared.ManageCriterion;
+using Domain.Services.Dtos;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Application;
@@ -74,6 +76,8 @@ public static class DependencyInjection
 
         services.AddScoped<ICreateMapper<Antibiogram, CreateAntibiogramCommand>, CreateAntibiogramMapper>();
         services.AddScoped<IUpdateMapper<Antibiogram, UpdateAntibiogramCommand>, UpdateAntibiogramMapper>();
+
+        services.AddScoped<ICreateMapper<ClinicalPicture, DiagnoseQuery>, DiagnoseMapper>();
     }
 
     public static void AddFluentValidators(this IServiceCollection services)

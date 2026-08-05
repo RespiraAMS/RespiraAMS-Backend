@@ -6,9 +6,24 @@ namespace Respira.Clinical.API.Dtos;
 
 public class GetPagedAntibioticGroupRequestDto
 {
+    /// <summary>
+    /// Pagination parameter: page index (1-based)
+    /// </summary>
     public int Page { get; set; } = 1;
+
+    /// <summary>
+    /// Pagination parameter: page size
+    /// </summary>
     public int Size { get; set; } = 10;
+
+    /// <summary>
+    /// Antibiotic group name
+    /// </summary>
     public string? Name { get; set; }
+
+    /// <summary>
+    /// Antibiotic group parent ID
+    /// </summary>
     public Guid? ParentId { get; set; }
 
     public GetPagedAntibioticGroupQuery ToQuery()
@@ -31,8 +46,19 @@ public class GetPagedAntibioticGroupRequestDto
 
 public class UpdateAntibioticGroupRequestDto
 {
-    public string Name { get; set; } = string.Empty;
-    public string Description { get; set; } = string.Empty;
+    /// <summary>
+    /// Antibiotic group name
+    /// </summary>
+    public required string Name { get; set; }
+
+    /// <summary>
+    /// Antibiotic group description
+    /// </summary>
+    public required string Description { get; set; }
+
+    /// <summary>
+    /// Antibiotic group parent ID
+    /// </summary>
     public Guid? ParentId { get; set; }
 
     public UpdateAntibioticGroupCommand ToCommand(Guid id)
@@ -44,6 +70,5 @@ public class UpdateAntibioticGroupRequestDto
             Description = Description,
             ParentId = ParentId
         };
-
     }
 }

@@ -7,7 +7,14 @@ namespace Respira.Clinical.API.Dtos;
 
 public class GetPagedPathogenRequestDto
 {
+    /// <summary>
+    /// Pagination parameter: page index (1-based)
+    /// </summary>
     public int Page { get; set; } = 1;
+
+    /// <summary>
+    /// Pagination parameter: page size
+    /// </summary>
     public int Size { get; set; } = 10;
     public string? Name { get; set; }
 

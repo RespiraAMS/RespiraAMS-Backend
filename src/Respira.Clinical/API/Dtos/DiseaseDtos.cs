@@ -6,8 +6,19 @@ namespace Respira.Clinical.API.Dtos;
 
 public class GetPagedDiseaseRequestDto
 {
+    /// <summary>
+    /// Pagination parameter: page index (1-based)
+    /// </summary>
     public int Page { get; set; } = 1;
+
+    /// <summary>
+    /// Pagination parameter: page size
+    /// </summary>
     public int Size { get; set; } = 10;
+
+    /// <summary>
+    /// Disease name
+    /// </summary>
     public string? Name { get; set; }
 
     public GetPagedDiseaseQuery ToQuery()
@@ -29,8 +40,19 @@ public class GetPagedDiseaseRequestDto
 
 public class UpdateDiseaseRequestDto
 {
+    /// <summary>
+    /// Disease name
+    /// </summary>
     public required string Name { get; set; }
+
+    /// <summary>
+    /// Disease description
+    /// </summary>
     public required string Description { get; set; }
+
+    /// <summary>
+    /// Disease's ICU score minimum threshold (&gt;= threshold) to consider needing ICU hospitalization 
+    /// </summary>
     public required int IcuScoreThreshold { get; set; }
 
     public UpdateDiseaseCommand ToCommand(Guid id)
