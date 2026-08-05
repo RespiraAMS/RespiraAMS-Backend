@@ -6,11 +6,6 @@
 public class ClinicalPicture
 {
     /// <summary>
-    /// Patient's name
-    /// </summary>
-    public required string Patient { get; set; }
-
-    /// <summary>
     /// Patient's date of birth
     /// </summary>
     public required DateOnly DateOfBirth { get; set; }
