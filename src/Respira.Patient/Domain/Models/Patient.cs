@@ -1,0 +1,57 @@
+﻿using Respira.ServiceDefaults.Models;
+
+namespace Domain.Models;
+
+public class Patient : Base
+{
+    /// <summary>
+    /// Patient full name
+    /// </summary>
+    public required string FullName { get; set; }
+
+    /// <summary>
+    /// Patient date of birth
+    /// </summary>
+    public required DateOnly DateOfBirth { get; set; }
+
+    /// <summary>
+    /// Patient gender: true if male, false is female
+    /// </summary>
+    public required bool IsMale { get; set; }
+
+    /// <summary>
+    /// Patient medical record code. This code is from the hospital internal procedure that
+    /// was assign to the patient
+    /// </summary>
+    public required string MedicalRecordCode { get; set; }
+
+    /// <summary>
+    /// Patient health insurance card number
+    /// </summary>
+    public required string HealthInsuranceCardNumber { get; set; }
+
+    /// <summary>
+    /// Patient address
+    /// </summary>
+    public required string Address { get; set; }
+
+    /// <summary>
+    /// Patient height, in centimeters
+    /// </summary>
+    public required decimal Height { get; set; }
+
+    /// <summary>
+    /// Patient weight, in kilogram
+    /// </summary>
+    public required decimal Weight { get; set; }
+
+    /// <summary>
+    /// The time that patient was hospitalized
+    /// </summary>
+    public required DateTimeOffset Admission { get; set; }
+
+    /// <summary>
+    /// The time when patient can leave hospital (treatment ended)
+    /// </summary>
+    public required DateTimeOffset Discharge { get; set; }
+}
