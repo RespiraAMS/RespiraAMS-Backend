@@ -4,6 +4,11 @@
         <TargetFramework>net10.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
+
+        <!-- Enable XML documentation export -->
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <!-- Optional: Suppress compiler warnings for missing comments -->
+        <NoWarn>$(NoWarn);1591</NoWarn>
     </PropertyGroup>
 
     <ItemGroup>

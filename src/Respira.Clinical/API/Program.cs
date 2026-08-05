@@ -2,6 +2,7 @@ using Application;
 using Asp.Versioning;
 using Infrastructure;
 using Respira.ServiceDefaults.Extensions;
+using Respira.ServiceDefaults.Utils.OpenApiTransformers;
 using Scalar.AspNetCore;
 using Wolverine;
 using Wolverine.EntityFrameworkCore;
@@ -29,7 +30,11 @@ builder.Services.AddApiVersioning(options =>
 });
 
 // Add OpenAPI support
-builder.Services.AddOpenApiExtension();
+builder.Services.AddOpenApi(options =>
+{
+    options.AddDocumentTransformer<CustomDocumentTransformer>();
+    options.AddSchemaTransformer<CustomSchemaTransformer>();
+});
 
 // Add error handling
 builder.Services.AddCustomErrorHandling();
