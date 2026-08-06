@@ -49,9 +49,10 @@ public class UpdateDosageRequestDto
     public required string Dose { get; set; }
 
     /// <summary>
-    /// The range of Glomerular Filtration Rate (GFR), used to adjust dose based on patient kidney
+    /// The range of Glomerular Filtration Rate (GFR), used to adjust dose based on patient kidney. If null,
+    /// this is the normal/standard dose
     /// </summary>
-    public required Range GlomerularFiltrationRate { get; set; }
+    public required Range? GlomerularFiltrationRate { get; set; }
 
     public UpdateDosageCommand ToCommand(Guid dosageId)
     {
