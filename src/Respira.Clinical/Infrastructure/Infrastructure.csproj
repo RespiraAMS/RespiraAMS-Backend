@@ -26,7 +26,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <EmbeddedResource Include="Data\Seeds\seed-data.json"/>
+        <None Include="Data\Seeds\seed-data.jsonc" CopyToOutputDirectory="PreserveNewest" />
     </ItemGroup>
 
 </Project>

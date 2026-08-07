@@ -7,8 +7,19 @@ namespace Respira.Clinical.API.Dtos;
 
 public class GetPagedAntibiogramRequestDto
 {
+    /// <summary>
+    /// Pagination parameter: page index (1-based)
+    /// </summary>
     public int Page { get; set; } = 1;
+
+    /// <summary>
+    /// Pagination parameter: page size
+    /// </summary>
     public int Size { get; set; } = 10;
+
+    /// <summary>
+    /// Pathogen ID
+    /// </summary>
     public Guid? PathogenId { get; set; }
 
     public GetPagedAntibiogramQuery ToQuery()
@@ -30,9 +41,24 @@ public class GetPagedAntibiogramRequestDto
 
 public class UpdateAntibiogramRequestDto
 {
+    /// <summary>
+    /// Minimum Inhibitory Concentration (MIC) level
+    /// </summary>
     public required MinimumInhibitoryConcentration MicLevel { get; set; }
+
+    /// <summary>
+    /// List of antibiotic IDs that corresponding to MIC level 
+    /// </summary>
     public required List<Guid> MicIds { get; set; }
+
+    /// <summary>
+    /// List of antibiotic IDs that should be first prioritize when using for treatment 
+    /// </summary>
     public required List<Guid> FirstPriorityMedicineIds { get; set; } = [];
+
+    /// <summary>
+    /// List of antibiotic IDs that should be secondary prioritize when using for treatment
+    /// </summary>
     public required List<Guid> SecondPriorityMedicineIds { get; set; } = [];
 
     public UpdateAntibiogramCommand ToCommand(Guid id)

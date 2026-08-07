@@ -12,22 +12,59 @@ namespace Application.Features.Shared.ManageCriterion;
 
 public class CreateCriterionCommand
 {
+    /// <summary>
+    /// Criterion name
+    /// </summary>
     public required string Name { get; set; }
+
+    /// <summary>
+    /// Criterion type
+    /// </summary>
     public required CriterionType Type { get; set; }
+
+    /// <summary>
+    /// Criterion value
+    /// </summary>
     public Range? Value { get; set; }
 }
 
 public class CriterionItem
 {
+    /// <summary>
+    /// Criterion ID
+    /// </summary>
     public required Guid Id { get; set; }
+
+    /// <summary>
+    /// Criterion name
+    /// </summary>
     public required string Name { get; set; }
+
+    /// <summary>
+    /// Criterion type
+    /// </summary>
     public required CriterionType Type { get; set; }
+
+    /// <summary>
+    /// Criterion value
+    /// </summary>
     public Range? Value { get; set; }
 }
 
 public class UpdateCriterionCommand
 {
+    /// <summary>
+    /// Criterion name
+    /// </summary>
     public required string Name { get; set; }
+
+    /// <summary>
+    /// Criterion type
+    /// </summary>
     public required CriterionType Type { get; set; }
+
+    /// <summary>
+    /// Criterion value
+    /// </summary>
     public Range? Value { get; set; }
 }

@@ -1,5 +1,6 @@
 using Application;
 using Asp.Versioning;
+using Domain;
 using Infrastructure;
 using Respira.ServiceDefaults.Extensions;
 using Respira.ServiceDefaults.Utils.OpenApiTransformers;
@@ -47,6 +48,9 @@ builder.Services.AddProfiles();
 
 // Add validators
 builder.Services.AddFluentValidators();
+
+// Add domain services
+builder.Services.AddServices();
 
 // Add infrastructure
 builder.AddInfrastructure();

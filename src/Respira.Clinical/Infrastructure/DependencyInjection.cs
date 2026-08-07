@@ -1,12 +1,14 @@
 ﻿using Application.Contracts.Data;
 using Application.Contracts.Mappers;
 using Infrastructure.Data;
+using Infrastructure.Data.Seeds;
 using Infrastructure.Mappers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace Infrastructure;
 
@@ -17,6 +19,7 @@ public static class DependencyInjection
         builder.AddNpgsqlDbContext<AppDbContext>("clinicalDb");
         builder.Services.AddScoped<IDbContext, AppDbContext>();
         builder.Services.AddScoped<IPaginationFactory, PaginationFactory>();
+        builder.Services.Configure<SeedDataOptions>(builder.Configuration.GetSection(SeedDataOptions.SectionName));
     }
 
     public static void ApplyMigrations(this IHost host, bool isDevEnv)
@@ -47,8 +50,9 @@ public static class DependencyInjection
             using var scope = app.Services.CreateScope();
             var provider = scope.ServiceProvider;
             var context = provider.GetRequiredService<AppDbContext>();
+            var options = provider.GetRequiredService<IOptions<SeedDataOptions>>();
             var logger = provider.GetRequiredService<ILogger<DbInitializer>>();
-            await DbInitializer.InitializeAsync(context, logger);
+            await DbInitializer.InitializeAsync(context, options, logger);
         }
     }
 }

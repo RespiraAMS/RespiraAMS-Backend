@@ -8,14 +8,51 @@ namespace Respira.Clinical.API.Dtos;
 
 public class CreateEmpiricTreatmentProtocolRequestDto
 {
+    /// <summary>
+    /// Empiric treatment protocol name
+    /// </summary>
     public required string Name { get; set; }
+
+    /// <summary>
+    /// Empiric treatment protocol issuer
+    /// </summary>
+    /// <example>WHO, Vietnam Health Ministry</example>
     public required string Issuer { get; set; }
+
+    /// <summary>
+    /// Empiric treatment protocol issue date
+    /// </summary>
+    /// <example>1980-07-21</example>
     public required DateOnly IssueDate { get; set; }
+
+    /// <summary>
+    /// Empiric treatment protocol version
+    /// </summary>
     public required int Version { get; set; }
+
+    /// <summary>
+    /// Severity assigned to this empiric treatment protocol
+    /// </summary>
     public required Severity Severity { get; set; }
+
+    /// <summary>
+    /// Treatment site assigned to this empiric treatment protocol
+    /// </summary>
     public required TreatmentSite TreatmentSite { get; set; }
+
+    /// <summary>
+    /// Special infection (which is Pathogen) ID
+    /// </summary>
     public required Guid? SpecialInfectionId { get; set; }
+
+    /// <summary>
+    /// List of secondary criteria IDs
+    /// </summary>
     public required List<Guid> OtherCriteriaIds { get; set; }
+
+    /// <summary>
+    /// List of antibiotic IDs
+    /// </summary>
     public required List<Guid> MedicineIds { get; set; }
 
     public CreateEmpiricTreatmentProtocolCommand ToCommand(Guid diseaseId)
@@ -38,14 +75,51 @@ public class CreateEmpiricTreatmentProtocolRequestDto
 
 public class UpdateEmpiricTreatmentProtocolRequestDto
 {
+    /// <summary>
+    /// Empiric treatment protocol name
+    /// </summary>
     public required string Name { get; set; }
+
+    /// <summary>
+    /// Empiric treatment protocol issuer
+    /// </summary>
+    /// <example>WHO, Vietnam Health Ministry</example>
     public required string Issuer { get; set; }
+
+    /// <summary>
+    /// Empiric treatment protocol issue date
+    /// </summary>
+    /// <example>1980-07-21</example>
     public required DateOnly IssueDate { get; set; }
+
+    /// <summary>
+    /// Empiric treatment protocol version
+    /// </summary>
     public required int Version { get; set; }
+
+    /// <summary>
+    /// Severity assigned to this empiric treatment protocol
+    /// </summary>
     public required Severity Severity { get; set; }
+
+    /// <summary>
+    /// Treatment site assigned to this empiric treatment protocol
+    /// </summary>
     public required TreatmentSite TreatmentSite { get; set; }
+
+    /// <summary>
+    /// Special infection (which is Pathogen) ID
+    /// </summary>
     public required Guid? SpecialInfectionId { get; set; }
+
+    /// <summary>
+    /// List of secondary criteria IDs
+    /// </summary>
     public required List<Guid> OtherCriteriaIds { get; set; }
+
+    /// <summary>
+    /// List of antibiotic IDs
+    /// </summary>
     public required List<Guid> MedicineIds { get; set; }
 
     public UpdateEmpiricTreatmentProtocolCommand ToCommand(Guid id)
@@ -68,6 +142,9 @@ public class UpdateEmpiricTreatmentProtocolRequestDto
 
 public class AddNewCriteriaRequestDto
 {
+    /// <summary>
+    /// List of new criteria to be added
+    /// </summary>
     public List<CreateCriterionCommand> Criteria { get; set; } = [];
 
     public AddNewCriteriaCommand ToCommand(Guid id)
