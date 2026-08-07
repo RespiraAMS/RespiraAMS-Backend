@@ -50,4 +50,9 @@ public class Patient : Base
     /// Patient current status, like recovered, death,...
     /// </summary>
     public required PatientStatus Status { get; set; } = PatientStatus.InTreatment;
+
+    /// <summary>
+    /// Patient treatment timeline
+    /// </summary>
+    public List<Treatment> Treatments { get; set; } = [];
 }
