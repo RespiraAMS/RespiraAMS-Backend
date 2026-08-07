@@ -66,9 +66,11 @@ public abstract class Treatment : Base
     public abstract TreatmentType TreatmentType { get; }
 
     /// <summary>
-    /// Patient treatment status
+    /// Patient treatment status. This is the patient status after receive the treatment
+    /// (e.g. good response, bad response,...), it's not the same as <see cref="Patient.Status"/>
+    /// (any <see cref="PatientTreatmentStatus"/> correspond to <see cref="PatientStatus.InTreatment"/>, to be exact) 
     /// </summary>
-    public required PatientTreatmentStatus PatientTreatmentStatus { get; set; }
+    public required PatientTreatmentStatus Status { get; set; }
 }
 
 /// <summary>

@@ -1,4 +1,5 @@
-﻿using Respira.ServiceDefaults.Models;
+﻿using Domain.Enums;
+using Respira.ServiceDefaults.Models;
 
 namespace Domain.Models;
 
@@ -44,4 +45,9 @@ public class Patient : Base
     /// The time when patient can leave hospital (treatment ended)
     /// </summary>
     public required DateTimeOffset? Discharge { get; set; }
+
+    /// <summary>
+    /// Patient current status, like recovered, death,...
+    /// </summary>
+    public required PatientStatus Status { get; set; } = PatientStatus.InTreatment;
 }
