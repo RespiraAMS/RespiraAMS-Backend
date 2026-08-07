@@ -8,10 +8,29 @@ namespace Respira.Clinical.API.Dtos;
 
 public class GetPagedAntibioticsRequestDto
 {
+    /// <summary>
+    /// Pagination parameter: page index (1-based)
+    /// </summary>
     public int Page { get; set; } = 1;
+
+    /// <summary>
+    /// Pagination parameter: page size
+    /// </summary>
     public int Size { get; set; } = 10;
+
+    /// <summary>
+    /// Antibiotic name
+    /// </summary>
     public string? Name { get; set; }
+
+    /// <summary>
+    /// Antibiotic group ID
+    /// </summary>
     public Guid? AntibioticGroupId { get; set; }
+
+    /// <summary>
+    /// Antibiotic WHO's AWaRe category
+    /// </summary>
     public AwareCategory? Category { get; set; }
 
     public GetPagedAntibioticQuery ToQuery()
@@ -35,9 +54,20 @@ public class GetPagedAntibioticsRequestDto
 
 public class UpdateAntibioticRequestDto
 {
-    public string Name { get; set; } = string.Empty;
-    public Guid AntibioticGroupId { get; set; }
-    public AwareCategory Category { get; set; }
+    /// <summary>
+    /// Antibiotic name
+    /// </summary>
+    public required string Name { get; set; }
+
+    /// <summary>
+    /// Antibiotic group ID
+    /// </summary>
+    public required Guid AntibioticGroupId { get; set; }
+
+    /// <summary>
+    /// Antibiotic WHO's AWaRe category
+    /// </summary>
+    public required AwareCategory Category { get; set; }
 
     public UpdateAntibioticCommand ToCommand(Guid id)
     {
@@ -53,6 +83,9 @@ public class UpdateAntibioticRequestDto
 
 public class UpdateAntibioticSpectrumRequestDto
 {
+    /// <summary>
+    /// List of pathogen IDs
+    /// </summary>
     public List<Guid> PathogenIds { get; set; } = [];
 
     public UpdateAntibioticSpectrumCommand ToCommand(Guid id)

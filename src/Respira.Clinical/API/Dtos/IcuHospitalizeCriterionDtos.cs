@@ -6,7 +6,14 @@ namespace Respira.Clinical.API.Dtos;
 
 public class CreateIcuHospitalizeCriterionRequestDto
 {
+    /// <summary>
+    /// Criterion
+    /// </summary>
     public required CreateCriterionCommand Criterion { get; set; }
+
+    /// <summary>
+    /// ICU score
+    /// </summary>
     public required int Score { get; set; }
 
     public CreateIcuHospitalizeCriterionCommand ToCommand(Guid diseaseId)
@@ -22,7 +29,14 @@ public class CreateIcuHospitalizeCriterionRequestDto
 
 public class UpdateIcuHospitalizeCriterionRequestDto
 {
+    /// <summary>
+    /// Criterion
+    /// </summary>
     public required UpdateCriterionCommand Criterion { get; set; }
+
+    /// <summary>
+    /// ICU score
+    /// </summary>
     public required int Score { get; set; }
 
     public UpdateIcuHospitalizeCriterionCommand ToCommand(Guid id)

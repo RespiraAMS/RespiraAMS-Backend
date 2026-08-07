@@ -10,6 +10,7 @@ public class DiagnoseQuery : IQuery
     /// <summary>
     /// Patient's date of birth
     /// </summary>
+    /// <example>1980-07-21</example>
     public required DateOnly DateOfBirth { get; set; }
 
     /// <summary>

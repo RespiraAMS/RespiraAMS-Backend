@@ -34,7 +34,7 @@ public class Dosage : Base
 
     /// <summary>
     /// Glomerular filtration rate (GFR: measures how effectively your kidneys filter waste and
-    /// excess fluid from your blood) range value
+    /// excess fluid from your blood) range value. If null, then this is the normal/standard dose
     /// </summary>
-    public required Range GlomerularFiltrationRate { get; set; }
+    public Range? GlomerularFiltrationRate { get; set; }
 }

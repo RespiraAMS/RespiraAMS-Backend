@@ -6,8 +6,19 @@ namespace Respira.Clinical.API.Dtos;
 
 public class CreateResistanceRiskFactorRequestDto
 {
+    /// <summary>
+    /// Pathogen ID
+    /// </summary>
     public required Guid PathogenId { get; set; }
+
+    /// <summary>
+    /// Criterion
+    /// </summary>
     public required CreateCriterionCommand Criterion { get; set; }
+
+    /// <summary>
+    /// Factor name
+    /// </summary>
     public required string Name { get; set; }
 
     public CreateResistanceRiskFactorCommand ToCommand(Guid diseaseId)
@@ -24,8 +35,19 @@ public class CreateResistanceRiskFactorRequestDto
 
 public class UpdateResistanceRiskFactorRequestDto
 {
+    /// <summary>
+    /// Pathogen ID
+    /// </summary>
     public required Guid PathogenId { get; set; }
+
+    /// <summary>
+    /// Criterion
+    /// </summary>
     public required UpdateCriterionCommand Criterion { get; set; }
+
+    /// <summary>
+    /// Factor name
+    /// </summary>
     public required string Name { get; set; }
 
     public UpdateResistanceRiskFactorCommand ToCommand(Guid id)
