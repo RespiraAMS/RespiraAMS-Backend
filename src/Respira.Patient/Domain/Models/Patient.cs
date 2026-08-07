@@ -36,16 +36,6 @@ public class Patient : Base
     public required string Address { get; set; }
 
     /// <summary>
-    /// Patient height, in centimeters
-    /// </summary>
-    public required decimal Height { get; set; }
-
-    /// <summary>
-    /// Patient weight, in kilogram
-    /// </summary>
-    public required decimal Weight { get; set; }
-
-    /// <summary>
     /// The time that patient was hospitalized
     /// </summary>
     public required DateTimeOffset Admission { get; set; }
@@ -53,5 +43,5 @@ public class Patient : Base
     /// <summary>
     /// The time when patient can leave hospital (treatment ended)
     /// </summary>
-    public required DateTimeOffset Discharge { get; set; }
+    public required DateTimeOffset? Discharge { get; set; }
 }

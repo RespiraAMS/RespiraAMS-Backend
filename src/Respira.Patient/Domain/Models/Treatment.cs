@@ -90,7 +90,7 @@ public class EmpiricalTreatment : Treatment
     public required string TreatmentSite { get; set; }
 
     /// <summary>
-    /// Patient diagnosis result: suspected infection probabilties
+    /// Patient diagnosis result: suspected infection probabilities
     /// </summary>
     public List<InfectionProbabilityRecord> InfectionProbabilityRecords { get; set; } = [];
 }
