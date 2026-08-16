@@ -5,6 +5,11 @@ namespace Domain.Services.Dtos;
 
 public class DiagnoseResult
 {
+    public required List<Antibiotic> Medicines { get; set; }
+}
+
+public class EmpiricalDiagnoseResult : DiagnoseResult
+{
     /// <summary>
     /// Diagnose result: severity
     /// </summary>
@@ -23,5 +28,5 @@ public class DiagnoseResult
     /// <summary>
     /// Recommendation treatment protocols
     /// </summary>
-    public List<EmpiricTreatmentProtocol> Recommendations { get; set; } = [];
+    public List<EmpiricTreatmentProtocol> References { get; set; } = [];
 }

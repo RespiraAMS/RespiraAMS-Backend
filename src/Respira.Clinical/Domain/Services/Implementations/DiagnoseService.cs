@@ -12,11 +12,24 @@ public class DiagnoseService(ILogger<DiagnoseService> logger)
     /// </summary>
     /// <param name="age">Patient age (in years)</param>
     /// <param name="weight">Patient weight (in kg)</param>
+    /// <param name="height">Patient's height (in meter)</param>
     /// <param name="scr">Serum creatine (mg/dL)</param>
     /// <param name="isMale">Boolean flag: is the patient male (default) or female</param>
     /// <returns>Creatine clearance (ml/minute)</returns>
-    protected virtual decimal CrCl(int age, decimal weight, decimal scr, bool isMale = true)
+    protected virtual decimal CrCl(int age, decimal weight, decimal height, decimal scr, bool isMale = true)
     {
+        // Calculate patient's BMI
+        var bmi = weight / (height * height);
+
+        // If patient is obesed, use Salazar - Corcoran
+        if (bmi >= 30)
+        {
+            return isMale ?
+                (137 - age) * ((0.285m * weight) + (12.1m * height * height)) / (51 * scr) :
+                (146 - age) * ((0.287m * weight) + (9.74m * height * height)) / (60 * scr);
+        }
+
+        // If not, use Cockcroft-Gault
         var crcl = (140 - age) * weight / (72 * scr);
         return isMale ? crcl : crcl * 0.85m;
     }
@@ -101,5 +114,49 @@ public class DiagnoseService(ILogger<DiagnoseService> logger)
     protected static decimal DataNormalization(decimal value, decimal min, decimal max)
     {
         return max == min ? 0 : (value - min) / (max - min);
+    }
+
+    protected virtual List<Antibiotic> GetAdjustedDosage(List<Antibiotic> antibiotics, decimal crcl)
+    {
+        foreach (var antibiotic in antibiotics)
+        {
+            // Get standard dose and adjusted doses
+            var standard = antibiotic.Dosages.FirstOrDefault(x => x.Crcl == null);
+            var adjusted = antibiotic.Dosages
+                .Where(x => x.Crcl?.IsInRange(crcl) == true)
+                .ToList();
+
+            if (standard is null)
+            {
+                logger.LogDebug("Standard dose not found for antibiotic {Antibiotic}", antibiotic.Name);
+                throw new UnexpectedException($"Standard dose not found for antibiotic {antibiotic.Name}");
+            }
+
+            // If no adjusted dose found, use standard dose
+            antibiotic.Dosages = adjusted.Count == 0 ? [standard] : adjusted;
+        }
+
+        return antibiotics;
+    }
+
+    protected virtual List<Antibiotic> GetRecommendedMedicines(List<Antibiotic> antibiotics)
+    {
+        /*
+         * Rule of picking antibiotic for treatment: for each group, can only pick
+         * one medicine
+         */
+
+        var recommended = new List<Antibiotic>();
+
+        // Group medicine by antibiotic group
+        foreach (var groupedAntibiotics in antibiotics.GroupBy(x => x.AntibioticGroup.Id))
+        {
+            // Sort by AWaRe classification (ascending), picked the first one
+            // Since we group by antibiotic group from the list of antibiotics, the
+            // grouped list must have at least one antibiotic
+            recommended.Add(groupedAntibiotics.OrderBy(x => x.Classification).First());
+        }
+
+        return recommended;
     }
 }

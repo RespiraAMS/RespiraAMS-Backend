@@ -8,5 +8,6 @@ namespace Domain.Services.Contracts;
 /// </summary>
 public interface IDiagnoseService
 {
-    DiagnoseResult Diagnose(Disease disease, ClinicalPicture clinicalPicture);
+    DiagnoseResult EmpiricalDiagnose(Disease disease, PatientInfo info, ClinicalPicture clinicalPicture);
+    DiagnoseResult TargetedDiagnose(PatientInfo info, Antibiogram antibiogram);
 }

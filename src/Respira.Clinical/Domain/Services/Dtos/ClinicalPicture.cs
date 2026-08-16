@@ -1,9 +1,9 @@
 ﻿namespace Domain.Services.Dtos;
 
 /// <summary>
-/// Patient clinical picture
+/// Patient's information, like gender, age, height, weight,...
 /// </summary>
-public class ClinicalPicture
+public class PatientInfo
 {
     /// <summary>
     /// Patient's date of birth
@@ -16,15 +16,26 @@ public class ClinicalPicture
     public required bool IsMale { get; set; }
 
     /// <summary>
-    /// Patient's weight
+    /// Patient's weight in kilogram
     /// </summary>
     public required decimal Weight { get; set; }
+
+    /// <summary>
+    /// Patient's height in meter
+    /// </summary>
+    public required decimal Height { get; set; }
 
     /// <summary>
     /// Serum creatine used for calculate GFR
     /// </summary>
     public required decimal SerumCreatine { get; set; }
+}
 
+/// <summary>
+/// Patient clinical picture used for empirical diagnosis
+/// </summary>
+public class ClinicalPicture
+{
     /// <summary>
     /// Boolean flag: Does patient have a state of decrease consciousness
     /// </summary>
