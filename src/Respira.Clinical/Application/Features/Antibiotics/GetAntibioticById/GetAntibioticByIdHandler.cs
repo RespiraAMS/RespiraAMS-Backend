@@ -33,7 +33,7 @@ public class GetAntibioticByIdHandler(IDbContext context) : IQueryHandler<GetAnt
                     Id = d.Id,
                     RouteOfAdministration = d.RouteOfAdministration,
                     Dose = d.Dose,
-                    GlomerularFiltrationRate = d.GlomerularFiltrationRate
+                    Crcl = d.Crcl
                 }),
             })
             .FirstOrDefaultAsync(x => x.Id == query.Id, cancellationToken);

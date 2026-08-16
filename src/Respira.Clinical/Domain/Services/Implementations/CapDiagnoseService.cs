@@ -134,11 +134,11 @@ public sealed class CapDiagnoseService(ILogger<CapDiagnoseService> logger, IOpti
             .ToList();
 
 
-        // Calculate GFR and filter out medicine dosage
-        var gfr = CrCl(age, clinicalPicture.Weight, clinicalPicture.SerumCreatine, clinicalPicture.IsMale);
+        // Calculate CrCl and filter out medicine dosage
+        var crcl = CrCl(age, clinicalPicture.Weight, clinicalPicture.SerumCreatine, clinicalPicture.IsMale);
         foreach (var protocol in protocols)
         {
-            protocol.Medicines.ForEach(m => m.Dosages = [.. m.Dosages.Where(d => d.GlomerularFiltrationRate!.IsInRange(gfr))]);
+            protocol.Medicines.ForEach(m => m.Dosages = [.. m.Dosages.Where(d => d.Crcl!.IsInRange(crcl))]);
         }
 
         // Construct diagnose result

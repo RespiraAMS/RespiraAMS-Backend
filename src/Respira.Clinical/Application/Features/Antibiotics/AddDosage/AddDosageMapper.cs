@@ -9,7 +9,7 @@ public class AddDosageMapper : ICreateMapper<Dosage, AddDosageCommand>
             AntibioticId = command.AntibioticId,
             RouteOfAdministration = command.RouteOfAdministration,
             Dose = command.Dose,
-            GlomerularFiltrationRate = command.GlomerularFiltrationRate
+            Crcl = command.Crcl
         };
     }
 }

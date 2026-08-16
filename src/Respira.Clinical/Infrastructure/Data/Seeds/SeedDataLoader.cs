@@ -61,7 +61,7 @@ public static class SeedDataLoader
                     AntibioticId = antibioticId,
                     RouteOfAdministration = ParseEnum(d.RouteOfAdministration, RouteOfAdministration.Intravenous),
                     Dose = d.Dose,
-                    GlomerularFiltrationRate = MapRange(d.GlomerularFiltrationRate),
+                    Crcl = MapRange(d.Crcl),
                 }),
             };
 

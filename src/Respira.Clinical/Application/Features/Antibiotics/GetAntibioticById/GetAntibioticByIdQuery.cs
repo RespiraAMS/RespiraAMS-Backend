@@ -72,7 +72,7 @@ public class DosageResult
     /// <summary>
     /// Glomerular Filtration Rate. If null, this is the standard dose
     /// </summary>
-    public required Range? GlomerularFiltrationRate { get; set; }
+    public required Range? Crcl { get; set; }
 }
 
 public class AntibioticResult
