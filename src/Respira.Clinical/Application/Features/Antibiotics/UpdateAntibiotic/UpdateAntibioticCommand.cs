@@ -22,5 +22,5 @@ public class UpdateAntibioticCommand : ICommand
     /// <summary>
     /// Antibiotic WHO's AWaRe category
     /// </summary>
-    public required AwareCategory Category { get; set; }
+    public required AwareClassification Classification { get; set; }
 }

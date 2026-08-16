@@ -53,7 +53,7 @@ public static class SeedDataLoader
                 Id = antibioticId,
                 Name = a.Name,
                 AntibioticGroupId = ParseRequiredId(a.AntibioticGroupId, "antibiotic.antibioticGroupId"),
-                Category = ParseEnum(a.Category, AwareCategory.Unclassified),
+                Classification = ParseEnum(a.Category, AwareClassification.Unclassified),
                 PathogenIds = a.PathogenIds.Select(ParseRequiredId).ToList(),
                 Dosages = a.Dosages.Select(d => new Dosage
                 {

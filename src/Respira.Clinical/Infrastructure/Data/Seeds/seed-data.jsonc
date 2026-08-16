@@ -203,7 +203,7 @@
       "id": "00000000-0000-0000-0000-000000000301",
       "name": "Penicilin G",
       "antibioticGroupId": "00000000-0000-0000-0000-000000000202",
-      "category": "",
+      "classification": "",
       "pathogenIds": [],
       "dosages": [
         {
@@ -245,7 +245,7 @@
       "id": "00000000-0000-0000-0000-000000000302",
       "name": "Ampicilin",
       "antibioticGroupId": "00000000-0000-0000-0000-000000000202",
-      "category": "",
+      "classification": "",
       "pathogenIds": [],
       "dosages": [
         {
@@ -298,7 +298,7 @@
       "id": "00000000-0000-0000-0000-000000000303",
       "name": "Amoxicillin",
       "antibioticGroupId": "00000000-0000-0000-0000-000000000202",
-      "category": "",
+      "classification": "",
       "pathogenIds": [],
       "dosages": [
         {
@@ -340,7 +340,7 @@
       "id": "00000000-0000-0000-0000-000000000304",
       "name": "Amoxicillin/acid clavulanic",
       "antibioticGroupId": "00000000-0000-0000-0000-000000000202",
-      "category": "",
+      "classification": "",
       "pathogenIds": [],
       "dosages": [
         {
@@ -437,7 +437,7 @@
       "id": "00000000-0000-0000-0000-000000000305",
       "name": "Ampicillin/sulbactam",
       "antibioticGroupId": "00000000-0000-0000-0000-000000000202",
-      "category": "",
+      "classification": "",
       "pathogenIds": [],
       "dosages": [
         {
@@ -479,7 +479,7 @@
       "id": "00000000-0000-0000-0000-000000000306",
       "name": "Oxacilin",
       "antibioticGroupId": "00000000-0000-0000-0000-000000000202",
-      "category": "",
+      "classification": "",
       "pathogenIds": [],
       "dosages": [
         {
@@ -494,7 +494,7 @@
       "id": "00000000-0000-0000-0000-000000000307",
       "name": "Cefazolin",
       "antibioticGroupId": "00000000-0000-0000-0000-000000000203",
-      "category": "",
+      "classification": "",
       "pathogenIds": [],
       "dosages": [
         {
@@ -536,7 +536,7 @@
       "id": "00000000-0000-0000-0000-000000000308",
       "name": "Cefalexin",
       "antibioticGroupId": "00000000-0000-0000-0000-000000000203",
-      "category": "",
+      "classification": "",
       "pathogenIds": [],
       "dosages": [
         {
@@ -578,7 +578,7 @@
       "id": "00000000-0000-0000-0000-000000000309",
       "name": "Cefuroxim",
       "antibioticGroupId": "00000000-0000-0000-0000-000000000203",
-      "category": "",
+      "classification": "",
       "pathogenIds": [],
       "dosages": [
         {
@@ -609,7 +609,7 @@
       "id": "00000000-0000-0000-0000-00000000030a",
       "name": "Cefprozil",
       "antibioticGroupId": "00000000-0000-0000-0000-000000000203",
-      "category": "",
+      "classification": "",
       "pathogenIds": [],
       "dosages": [
         {
@@ -651,7 +651,7 @@
       "id": "00000000-0000-0000-0000-00000000030b",
       "name": "Cefpodoxim",
       "antibioticGroupId": "00000000-0000-0000-0000-000000000203",
-      "category": "",
+      "classification": "",
       "pathogenIds": [],
       "dosages": [
         {
@@ -682,7 +682,7 @@
       "id": "00000000-0000-0000-0000-00000000030c",
       "name": "Cefdinir",
       "antibioticGroupId": "00000000-0000-0000-0000-000000000203",
-      "category": "",
+      "classification": "",
       "pathogenIds": [],
       "dosages": [
         {
@@ -713,7 +713,7 @@
       "id": "00000000-0000-0000-0000-00000000030d",
       "name": "Cefditoren",
       "antibioticGroupId": "00000000-0000-0000-0000-000000000203",
-      "category": "",
+      "classification": "",
       "pathogenIds": [],
       "dosages": [
         {
@@ -755,7 +755,7 @@
       "id": "00000000-0000-0000-0000-00000000030e",
       "name": "Cefotaxim",
       "antibioticGroupId": "00000000-0000-0000-0000-000000000203",
-      "category": "",
+      "classification": "",
       "pathogenIds": [],
       "dosages": [
         {
@@ -797,7 +797,7 @@
       "id": "00000000-0000-0000-0000-00000000030f",
       "name": "Ceftriaxon",
       "antibioticGroupId": "00000000-0000-0000-0000-000000000203",
-      "category": "",
+      "classification": "",
       "pathogenIds": [],
       "dosages": [
         {
@@ -812,7 +812,7 @@
       "id": "00000000-0000-0000-0000-000000000310",
       "name": "Ceftazidim",
       "antibioticGroupId": "00000000-0000-0000-0000-000000000203",
-      "category": "",
+      "classification": "",
       "pathogenIds": [],
       "dosages": [
         {
@@ -854,7 +854,7 @@
       "id": "00000000-0000-0000-0000-000000000311",
       "name": "Cefoperazon",
       "antibioticGroupId": "00000000-0000-0000-0000-000000000203",
-      "category": "",
+      "classification": "",
       "pathogenIds": [],
       "dosages": [
         {
@@ -869,7 +869,7 @@
       "id": "00000000-0000-0000-0000-000000000312",
       "name": "Cefoperazon/sulbactam",
       "antibioticGroupId": "00000000-0000-0000-0000-000000000203",
-      "category": "",
+      "classification": "",
       "pathogenIds": [],
       "dosages": [
         {
@@ -911,7 +911,7 @@
       "id": "00000000-0000-0000-0000-000000000313",
       "name": "Cefepim",
       "antibioticGroupId": "00000000-0000-0000-0000-000000000203",
-      "category": "",
+      "classification": "",
       "pathogenIds": [],
       "dosages": [
         {
@@ -964,7 +964,7 @@
       "id": "00000000-0000-0000-0000-000000000314",
       "name": "Ceftarolin",
       "antibioticGroupId": "00000000-0000-0000-0000-000000000203",
-      "category": "",
+      "classification": "",
       "pathogenIds": [],
       "dosages": [
         {
@@ -1017,7 +1017,7 @@
       "id": "00000000-0000-0000-0000-000000000315",
       "name": "Piperacillin/tazobactam",
       "antibioticGroupId": "00000000-0000-0000-0000-000000000202",
-      "category": "",
+      "classification": "",
       "pathogenIds": [],
       "dosages": [
         {
@@ -1059,7 +1059,7 @@
       "id": "00000000-0000-0000-0000-000000000316",
       "name": "Imipenem",
       "antibioticGroupId": "00000000-0000-0000-0000-000000000205",
-      "category": "",
+      "classification": "",
       "pathogenIds": [],
       "dosages": [
         {
@@ -1107,7 +1107,7 @@
       "id": "00000000-0000-0000-0000-000000000317",
       "name": "Meropenem",
       "antibioticGroupId": "00000000-0000-0000-0000-000000000205",
-      "category": "",
+      "classification": "",
       "pathogenIds": [],
       "dosages": [
         {
@@ -1166,7 +1166,7 @@
       "id": "00000000-0000-0000-0000-000000000318",
       "name": "Ertapenem",
       "antibioticGroupId": "00000000-0000-0000-0000-000000000205",
-      "category": "",
+      "classification": "",
       "pathogenIds": [],
       "dosages": [
         {
@@ -1197,7 +1197,7 @@
       "id": "00000000-0000-0000-0000-000000000319",
       "name": "Amikacin",
       "antibioticGroupId": "00000000-0000-0000-0000-000000000208",
-      "category": "",
+      "classification": "",
       "pathogenIds": [],
       "dosages": [
         {
@@ -1278,7 +1278,7 @@
       "id": "00000000-0000-0000-0000-00000000031a",
       "name": "Gentamycin",
       "antibioticGroupId": "00000000-0000-0000-0000-000000000208",
-      "category": "",
+      "classification": "",
       "pathogenIds": [],
       "dosages": [
         {
@@ -1359,7 +1359,7 @@
       "id": "00000000-0000-0000-0000-00000000031b",
       "name": "Tobramycin",
       "antibioticGroupId": "00000000-0000-0000-0000-000000000208",
-      "category": "",
+      "classification": "",
       "pathogenIds": [],
       "dosages": [
         {
@@ -1440,7 +1440,7 @@
       "id": "00000000-0000-0000-0000-00000000031c",
       "name": "Ciprofloxacin",
       "antibioticGroupId": "00000000-0000-0000-0000-000000000215",
-      "category": "",
+      "classification": "",
       "pathogenIds": [],
       "dosages": [
         {
@@ -1515,7 +1515,7 @@
       "id": "00000000-0000-0000-0000-00000000031d",
       "name": "Moxifloxacin",
       "antibioticGroupId": "00000000-0000-0000-0000-000000000215",
-      "category": "",
+      "classification": "",
       "pathogenIds": [],
       "dosages": [
         {
@@ -1536,7 +1536,7 @@
       "id": "00000000-0000-0000-0000-00000000031e",
       "name": "Levofloxacin",
       "antibioticGroupId": "00000000-0000-0000-0000-000000000215",
-      "category": "",
+      "classification": "",
       "pathogenIds": [],
       "dosages": [
         {
@@ -1611,7 +1611,7 @@
       "id": "00000000-0000-0000-0000-00000000031f",
       "name": "Erythromycin",
       "antibioticGroupId": "00000000-0000-0000-0000-000000000209",
-      "category": "",
+      "classification": "",
       "pathogenIds": [],
       "dosages": [
         {
@@ -1626,7 +1626,7 @@
       "id": "00000000-0000-0000-0000-000000000320",
       "name": "Clarithromycin",
       "antibioticGroupId": "00000000-0000-0000-0000-000000000209",
-      "category": "",
+      "classification": "",
       "pathogenIds": [],
       "dosages": [
         {
@@ -1701,7 +1701,7 @@
       "id": "00000000-0000-0000-0000-000000000321",
       "name": "Azithromycin",
       "antibioticGroupId": "00000000-0000-0000-0000-000000000209",
-      "category": "",
+      "classification": "",
       "pathogenIds": [],
       "dosages": [
         {
@@ -1722,7 +1722,7 @@
       "id": "00000000-0000-0000-0000-000000000322",
       "name": "Vancomycin",
       "antibioticGroupId": "00000000-0000-0000-0000-000000000210",
-      "category": "",
+      "classification": "",
       "pathogenIds": [],
       "dosages": [
         {
@@ -1770,7 +1770,7 @@
       "id": "00000000-0000-0000-0000-000000000323",
       "name": "Teicoplanin",
       "antibioticGroupId": "00000000-0000-0000-0000-000000000210",
-      "category": "",
+      "classification": "",
       "pathogenIds": [],
       "dosages": [
         {
@@ -1818,7 +1818,7 @@
       "id": "00000000-0000-0000-0000-000000000324",
       "name": "Linezolid",
       "antibioticGroupId": "00000000-0000-0000-0000-000000000218",
-      "category": "",
+      "classification": "",
       "pathogenIds": [],
       "dosages": [
         {
@@ -1839,7 +1839,7 @@
       "id": "00000000-0000-0000-0000-000000000325",
       "name": "Doxycyclin",
       "antibioticGroupId": "00000000-0000-0000-0000-00000000020e",
-      "category": "",
+      "classification": "",
       "pathogenIds": [],
       "dosages": [
         {
@@ -1854,7 +1854,7 @@
       "id": "00000000-0000-0000-0000-000000000326",
       "name": "Metronidazol",
       "antibioticGroupId": "00000000-0000-0000-0000-000000000219",
-      "category": "",
+      "classification": "",
       "pathogenIds": [],
       "dosages": [
         {
@@ -1907,7 +1907,7 @@
       "id": "00000000-0000-0000-0000-000000000327",
       "name": "Clindamycin",
       "antibioticGroupId": "00000000-0000-0000-0000-00000000020a",
-      "category": "",
+      "classification": "",
       "pathogenIds": [],
       "dosages": [
         {
@@ -1928,7 +1928,7 @@
       "id": "00000000-0000-0000-0000-000000000328",
       "name": "Sulfamethoxazol/trimethoprim",
       "antibioticGroupId": "00000000-0000-0000-0000-000000000217",
-      "category": "",
+      "classification": "",
       "pathogenIds": [],
       "dosages": [
         {

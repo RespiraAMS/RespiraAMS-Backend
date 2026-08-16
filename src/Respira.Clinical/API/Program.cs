@@ -13,11 +13,7 @@ using Wolverine.Postgresql;
 var builder = WebApplication.CreateBuilder(args);
 
 // Get connection string
-var conn = builder.Configuration.GetConnectionString("clinicalDb");
-if (conn is null)
-{
-    throw new InvalidOperationException("No connection string found");
-}
+var conn = builder.Configuration.GetConnectionString("clinicalDb") ?? throw new InvalidOperationException("No connection string found");
 
 // Add API controllers
 builder.Services.AddControllers();

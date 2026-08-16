@@ -1,6 +1,4 @@
-﻿using Domain.Enums;
-
-namespace Application.Features.Antibiotics.CreateAntibiotic;
+﻿namespace Application.Features.Antibiotics.CreateAntibiotic;
 
 public class CreateAntibioticMapper : ICreateMapper<Antibiotic, CreateAntibioticCommand>
 {
@@ -10,7 +8,7 @@ public class CreateAntibioticMapper : ICreateMapper<Antibiotic, CreateAntibiotic
         {
             Name = command.Name,
             AntibioticGroupId = command.AntibioticGroupId,
-            Category = command.Category,
+            Classification = command.Classification
         };
     }
 }

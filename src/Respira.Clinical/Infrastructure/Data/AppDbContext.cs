@@ -187,9 +187,9 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             .WithMany()
             .HasForeignKey(x => x.AntibioticGroupId);
         modelBuilder.Entity<Antibiotic>()
-            .HasIndex(x => new { x.Name, x.Category });
+            .HasIndex(x => new { x.Name, x.Classification });
         modelBuilder.Entity<Antibiotic>()
-            .Property(x => x.Category)
+            .Property(x => x.Classification)
             .HasConversion<string>();
 
         // Config on pathogen

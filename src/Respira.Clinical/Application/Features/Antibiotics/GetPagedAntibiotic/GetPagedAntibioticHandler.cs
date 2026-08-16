@@ -26,9 +26,9 @@ public class GetPagedAntibioticHandler(IDbContext context, IPaginationFactory fa
                 queryable = queryable.Where(x => x.AntibioticGroupId == query.Filter.AntibioticGroupId);
             }
 
-            if (query.Filter.Category is not null)
+            if (query.Filter.Classification is not null)
             {
-                queryable = queryable.Where(x => x.Category == query.Filter.Category);
+                queryable = queryable.Where(x => x.Classification == query.Filter.Classification);
             }
         }
 
@@ -45,7 +45,7 @@ public class GetPagedAntibioticHandler(IDbContext context, IPaginationFactory fa
                     Id = x.AntibioticGroupId,
                     Name = x.AntibioticGroup.Name,
                 },
-                Category = x.Category
+                Classification = x.Classification
             })
             .ToPagedListAsync(query.Param.Page, query.Param.Size);
         return factory.Create(antibiotics);

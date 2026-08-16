@@ -13,7 +13,7 @@ public class UpdateAntibioticValidator : AbstractValidator<UpdateAntibioticComma
         RuleFor(x => x.AntibioticGroupId)
             .NotEmpty()
             .WithMessage("Antibiotic group ID is required");
-        RuleFor(x => x.Category)
+        RuleFor(x => x.Classification)
             .IsInEnum()
             .WithMessage("Antibiotic category is required");
     }

@@ -17,7 +17,7 @@ public class AntibioticFilter
     /// <summary>
     /// Antibiotic AWaRe category
     /// </summary>
-    public AwareCategory? Category { get; set; }
+    public AwareClassification? Classification { get; set; }
 }
 
 public class GetPagedAntibioticQuery : IQuery
@@ -66,5 +66,5 @@ public class PagedAntibioticItem
     /// <summary>
     /// Antibiotic WHO's AWaRe category
     /// </summary>
-    public required AwareCategory Category { get; set; }
+    public required AwareClassification Classification { get; set; }
 }

@@ -22,7 +22,7 @@ public class GetAntibioticByIdHandler(IDbContext context) : IQueryHandler<GetAnt
                     ParentId = x.AntibioticGroupId,
                     ParentName = x.AntibioticGroup.Parent == null ? null : x.AntibioticGroup.Parent.Name
                 },
-                Category = x.Category,
+                Classification = x.Classification,
                 AntibioticSpectrum = x.AntibioticSpectra.Select(a => new PathogenResult
                 {
                     Id = a.Id,
