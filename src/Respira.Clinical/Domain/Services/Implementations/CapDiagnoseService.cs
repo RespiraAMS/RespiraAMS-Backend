@@ -138,21 +138,16 @@ public sealed class CapDiagnoseService(ILogger<CapDiagnoseService> logger, IOpti
         var gfr = CrCl(age, clinicalPicture.Weight, clinicalPicture.SerumCreatine, clinicalPicture.IsMale);
         foreach (var protocol in protocols)
         {
-            protocol.Medicines.ForEach(m =>
-            {
-                m.Dosages = m.Dosages.Where(d => d.GlomerularFiltrationRate.IsInRange(gfr)).ToList();
-            });
+            protocol.Medicines.ForEach(m => m.Dosages = [.. m.Dosages.Where(d => d.GlomerularFiltrationRate!.IsInRange(gfr))]);
         }
 
         // Construct diagnose result
-        var result = new DiagnoseResult()
+        return new DiagnoseResult()
         {
             Severity = severity,
             TreatmentSite = treatmentSite,
-            InfectionProbabilities = probabilities.ToList(),
+            InfectionProbabilities = [.. probabilities],
             Recommendations = sorted,
         };
-
-        return result;
     }
 }

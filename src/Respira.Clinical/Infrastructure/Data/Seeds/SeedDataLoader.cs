@@ -30,22 +30,22 @@ public static class SeedDataLoader
 
     private static SeedData MapToDomain(SeedDataDto dto)
     {
-        var antibioticGroups = dto.AntibioticGroups.Select(g => new AntibioticGroup
+        var antibioticGroups = dto.AntibioticGroups.ConvertAll(g => new AntibioticGroup
         {
             Id = GenerateId(g.Id),
             Name = g.Name,
             Description = g.Description,
             ParentId = ParseNullableId(g.ParentId),
-        }).ToList();
+        });
 
-        var pathogens = dto.Pathogens.Select(p => new Pathogen
+        var pathogens = dto.Pathogens.ConvertAll(p => new Pathogen
         {
             Id = GenerateId(p.Id),
             Name = p.Name,
             Description = p.Description,
-        }).ToList();
+        });
 
-        var antibiotics = dto.Antibiotics.Select(a =>
+        var antibiotics = dto.Antibiotics.ConvertAll(a =>
         {
             var antibioticId = GenerateId(a.Id);
             var antibiotic = new Antibiotic
@@ -54,21 +54,21 @@ public static class SeedDataLoader
                 Name = a.Name,
                 AntibioticGroupId = ParseRequiredId(a.AntibioticGroupId, "antibiotic.antibioticGroupId"),
                 Classification = ParseEnum(a.Category, AwareClassification.Unclassified),
-                PathogenIds = a.PathogenIds.Select(ParseRequiredId).ToList(),
-                Dosages = a.Dosages.Select(d => new Dosage
+                PathogenIds = a.PathogenIds.ConvertAll(ParseRequiredId),
+                Dosages = a.Dosages.ConvertAll(d => new Dosage
                 {
                     Id = GenerateId(d.Id),
                     AntibioticId = antibioticId,
                     RouteOfAdministration = ParseEnum(d.RouteOfAdministration, RouteOfAdministration.Intravenous),
                     Dose = d.Dose,
                     GlomerularFiltrationRate = MapRange(d.GlomerularFiltrationRate),
-                }).ToList(),
+                }),
             };
 
-            antibiotic.DosageIds = antibiotic.Dosages.Select(d => d.Id).ToList();
+            antibiotic.DosageIds = antibiotic.Dosages.ConvertAll(d => d.Id);
 
             return antibiotic;
-        }).ToList();
+        });
 
         var criteria = new List<Criterion>();
         var criterionById = new Dictionary<Guid, Criterion>();
@@ -115,39 +115,39 @@ public static class SeedDataLoader
             AddCriterion(criterion);
         }
 
-        var diseases = dto.Diseases.Select(d =>
+        var diseases = dto.Diseases.ConvertAll(d =>
         {
             var diseaseId = GenerateId(d.Id);
-            var disease = new Disease
+            return new Disease
             {
                 Id = diseaseId,
                 Name = d.Name,
                 Description = d.Description,
                 IcuScoreThreshold = d.IcuScoreThreshold,
-                Causes = d.Causes.Select(c => new Cause
+                Causes = d.Causes.ConvertAll(c => new Cause
                 {
                     Id = GenerateId(c.Id),
                     DiseaseId = diseaseId,
                     PathogenId = ParseRequiredId(c.PathogenId, "cause.pathogenId"),
                     Severity = ParseEnum(c.Severity, Severity.Mild),
                     TreatmentSite = ParseEnum(c.TreatmentSite, TreatmentSite.Outpatient),
-                }).ToList(),
-                IcuHospitalizeCriteria = d.IcuHospitalizeCriteria.Select(i => new IcuHospitalizeCriterion
+                }),
+                IcuHospitalizeCriteria = d.IcuHospitalizeCriteria.ConvertAll(i => new IcuHospitalizeCriterion
                 {
                     Id = GenerateId(i.Id),
                     DiseaseId = diseaseId,
                     CriterionId = ResolveCriterion(i.Criterion, i.CriterionId, "icuHospitalizeCriterion").Id,
                     Score = i.Score,
-                }).ToList(),
-                ResistanceRiskFactors = d.ResistanceRiskFactors.Select(r => new ResistanceRiskFactor
+                }),
+                ResistanceRiskFactors = d.ResistanceRiskFactors.ConvertAll(r => new ResistanceRiskFactor
                 {
                     Id = GenerateId(r.Id),
                     DiseaseId = diseaseId,
                     Name = r.Name,
                     CriterionId = ResolveCriterion(r.Criterion, r.CriterionId, "resistanceRiskFactor").Id,
                     PathogenId = ParseRequiredId(r.PathogenId, "resistanceRiskFactor.pathogenId"),
-                }).ToList(),
-                EmpiricTreatmentProtocols = d.EmpiricTreatmentProtocols.Select(p => new EmpiricTreatmentProtocol
+                }),
+                EmpiricTreatmentProtocols = d.EmpiricTreatmentProtocols.ConvertAll(p => new EmpiricTreatmentProtocol
                 {
                     Id = GenerateId(p.Id),
                     DiseaseId = diseaseId,
@@ -158,27 +158,25 @@ public static class SeedDataLoader
                     Severity = ParseEnum(p.Severity, Severity.Mild),
                     TreatmentSite = ParseEnum(p.TreatmentSite, TreatmentSite.Outpatient),
                     SpecialInfectionId = ParseNullableId(p.SpecialInfectionId),
-                    OtherCriteriaIds = p.OtherCriteria
-                        .Select(c => ResolveCriterion(c, string.Empty, "empiricTreatmentProtocol.otherCriteria").Id)
-                        .Concat(p.OtherCriteriaIds
-                            .Select(id => ResolveCriterion(null, id, "empiricTreatmentProtocol.otherCriteria").Id))
-                        .ToList(),
-                    MedicineIds = p.MedicineIds.Select(ParseRequiredId).ToList(),
-                }).ToList(),
+                    OtherCriteriaIds =
+                    [
+                        .. p.OtherCriteria.Select(c => ResolveCriterion(c, string.Empty, "empiricTreatmentProtocol.otherCriteria").Id),
+                        .. p.OtherCriteriaIds.Select(id => ResolveCriterion(null, id, "empiricTreatmentProtocol.otherCriteria").Id),
+                    ],
+                    MedicineIds = p.MedicineIds.ConvertAll(ParseRequiredId),
+                }),
             };
+        });
 
-            return disease;
-        }).ToList();
-
-        var antibiograms = dto.Antibiograms.Select(a => new Antibiogram
+        var antibiograms = dto.Antibiograms.ConvertAll(a => new Antibiogram
         {
             Id = GenerateId(a.Id),
             PathogenId = ParseRequiredId(a.PathogenId, "antibiogram.pathogenId"),
             MicLevel = ParseEnum(a.MicLevel, MinimumInhibitoryConcentration.Susceptible),
-            MicIds = a.MicIds.Select(ParseRequiredId).ToList(),
-            FirstPriorityMedicineIds = a.FirstPriorityMedicineIds.Select(ParseRequiredId).ToList(),
-            SecondPriorityMedicineIds = a.SecondPriorityMedicineIds.Select(ParseRequiredId).ToList(),
-        }).ToList();
+            MicIds = a.MicIds.ConvertAll(ParseRequiredId),
+            FirstPriorityMedicineIds = a.FirstPriorityMedicineIds.ConvertAll(ParseRequiredId),
+            SecondPriorityMedicineIds = a.SecondPriorityMedicineIds.ConvertAll(ParseRequiredId),
+        });
 
         return new SeedData
         {

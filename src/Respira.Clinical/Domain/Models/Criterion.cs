@@ -29,7 +29,7 @@ public class BooleanCriterion : Criterion
 /// <summary>
 /// Metric-type criterion. Here, if a metric doesn't have a low/high boundary, we can use
 /// the built-in min/max value to signify that it didn't have a low/high boundary.
-/// For example, respiratory &gt;= 30 can be represented as Min = 30, Max = double.MaxValue  
+/// For example, respiratory &gt;= 30 can be represented as Min = 30, Max = double.MaxValue
 /// </summary>
 public class NumericCriterion : Criterion
 {

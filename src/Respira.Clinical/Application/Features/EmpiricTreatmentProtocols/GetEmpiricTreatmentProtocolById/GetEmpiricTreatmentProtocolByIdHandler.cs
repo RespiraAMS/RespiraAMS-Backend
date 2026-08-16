@@ -30,12 +30,12 @@ public class GetEmpiricTreatmentProtocolByIdHandler(IDbContext context, IResultM
                         Id = x.SpecialInfection.Id,
                         Name = x.SpecialInfection.Name,
                     },
-                OtherCriteria = x.OtherCriteria.Select(mapper.ToResult).ToList(),
-                Medicines = x.Medicines.Select(m => new AntibioticResult
+                OtherCriteria = x.OtherCriteria.ConvertAll(mapper.ToResult),
+                Medicines = x.Medicines.ConvertAll(m => new AntibioticResult
                 {
                     Id = m.Id,
                     Name = m.Name
-                }).ToList()
+                })
             })
             .FirstOrDefaultAsync(x => x.Id == query.Id, cancellationToken);
 

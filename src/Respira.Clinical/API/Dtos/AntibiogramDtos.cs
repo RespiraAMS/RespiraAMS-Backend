@@ -47,12 +47,12 @@ public class UpdateAntibiogramRequestDto
     public required MinimumInhibitoryConcentration MicLevel { get; set; }
 
     /// <summary>
-    /// List of antibiotic IDs that corresponding to MIC level 
+    /// List of antibiotic IDs that corresponding to MIC level
     /// </summary>
     public required List<Guid> MicIds { get; set; }
 
     /// <summary>
-    /// List of antibiotic IDs that should be first prioritize when using for treatment 
+    /// List of antibiotic IDs that should be first prioritize when using for treatment
     /// </summary>
     public required List<Guid> FirstPriorityMedicineIds { get; set; } = [];
 

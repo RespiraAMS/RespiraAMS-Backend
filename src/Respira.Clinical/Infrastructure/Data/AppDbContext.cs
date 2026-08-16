@@ -111,8 +111,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
         var newIds = ids.ToHashSet();
 
         // Remove items no longer in the list
-        var toRemove = collection.Where(x => !newIds.Contains(x.Id)).ToList();
-        foreach (var item in toRemove)
+        foreach (var item in collection.Where(x => !newIds.Contains(x.Id)).ToList())
         {
             collection.Remove(item);
         }
@@ -266,7 +265,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
         // Config on antibiogram
         modelBuilder.Entity<Antibiogram>().ToTable("antibiograms");
         modelBuilder.Entity<Antibiogram>()
-            .HasOne<Pathogen>(x => x.Pathogen)
+            .HasOne(x => x.Pathogen)
             .WithMany()
             .HasForeignKey(x => x.PathogenId);
         modelBuilder.Entity<Antibiogram>()

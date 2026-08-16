@@ -75,7 +75,7 @@ app.MapControllers();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
-    app.MapScalarApiReference(opts => { opts.Theme = ScalarTheme.Kepler; });
+    app.MapScalarApiReference(opts => opts.Theme = ScalarTheme.Kepler);
 }
 
 if (!app.Environment.IsDevelopment())

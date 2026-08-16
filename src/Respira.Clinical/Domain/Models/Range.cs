@@ -26,7 +26,7 @@ public class Range
     public required bool IsMaxExclusive { get; set; }
 
     /// <summary>
-    /// Numeric unit (null means no unit) 
+    /// Numeric unit (null means no unit)
     /// </summary>
     public required string? Unit { get; set; }
 
