@@ -18,10 +18,15 @@ public class DiagnoseService(ILogger<DiagnoseService> logger)
     /// <returns>Creatine clearance (ml/minute)</returns>
     protected virtual decimal CrCl(int age, decimal weight, decimal height, decimal scr, bool isMale = true)
     {
+        if (height <= 0 || weight <= 0 || scr <= 0)
+        {
+            throw new BadRequestException("Weight, height and serum creatine must be positive value");
+        }
+
         // Calculate patient's BMI
         var bmi = weight / (height * height);
 
-        // If patient is obesed, use Salazar - Corcoran
+        // If patient is obese, use Salazar - Corcoran
         if (bmi >= 30)
         {
             return isMale ?
@@ -66,19 +71,20 @@ public class DiagnoseService(ILogger<DiagnoseService> logger)
     }
 
     /// <summary>
-    /// Calculate the infection probability based on a list of criteria. If any option didn't exist in criteria,
-    /// that option will be ignored and continue to the next option
+    /// Calculate the infection probability based on a list of criteria.
     /// </summary>
     /// <param name="factors">All the resistance risk factors for assessment</param>
     /// <param name="options">
     /// The list of resistance risk factor IDs that patient had. For example, if resistance risk factors have A and B,
     /// and patient condition match A condition, then options will contain A's ID (ResistanceRiskFactor.CriterionId,
-    /// not ResistanceRiskFactor.Id). See <see cref="ResistanceRiskFactor"/> for more detail
+    /// not ResistanceRiskFactor.Id). See <see cref="ResistanceRiskFactor"/> for more detail.
     /// </param>
     /// <returns>A list of <see cref="InfectionProbability"/> record</returns>
+    /// <exception cref="BadRequestException">Throw if any option didn't exist in ResistanceRiskFactor list</exception>
     protected virtual IEnumerable<InfectionProbability> InfectionProbability(List<ResistanceRiskFactor> factors,
         List<Guid> options)
     {
+        options = [.. options.Distinct()];
         var scores = new Dictionary<Guid, int>();
         foreach (var option in options)
         {
@@ -100,12 +106,12 @@ public class DiagnoseService(ILogger<DiagnoseService> logger)
         }
 
         var probabilities = new List<InfectionProbability>();
-        foreach (var factor in factors.GroupBy(x => x.Pathogen))
+        foreach (var factor in factors.GroupBy(x => x.PathogenId))
         {
             var key = factor.Key;
-            if (!scores.TryGetValue(key.Id, out _)) continue;
-            var value = (decimal)scores[key.Id] / factor.Count();
-            probabilities.Add(new InfectionProbability(key, value));
+            if (!scores.TryGetValue(key, out _)) continue;
+            var value = (decimal)scores[key] / factor.Count();
+            probabilities.Add(new InfectionProbability(factor.First().Pathogen, value));
         }
 
         return probabilities;
@@ -120,20 +126,17 @@ public class DiagnoseService(ILogger<DiagnoseService> logger)
     {
         foreach (var antibiotic in antibiotics)
         {
-            // Get standard dose and adjusted doses
-            var standard = antibiotic.Dosages.FirstOrDefault(x => x.Crcl == null);
+            // Get standard dose and adjusted dose
+            // Standard dose can have many (one per route of administration),
+            // so we get it as a list. For validation (same route but 2 standard dose, empty list,...),
+            // we'll just assume that the data passed to this method is valid
+            var standard = antibiotic.Dosages.Where(x => x.Crcl == null).ToList();
             var adjusted = antibiotic.Dosages
                 .Where(x => x.Crcl?.IsInRange(crcl) == true)
                 .ToList();
 
-            if (standard is null)
-            {
-                logger.LogDebug("Standard dose not found for antibiotic {Antibiotic}", antibiotic.Name);
-                throw new UnexpectedException($"Standard dose not found for antibiotic {antibiotic.Name}");
-            }
-
             // If no adjusted dose found, use standard dose
-            antibiotic.Dosages = adjusted.Count == 0 ? [standard] : adjusted;
+            antibiotic.Dosages = adjusted.Count == 0 ? standard : adjusted;
         }
 
         return antibiotics;

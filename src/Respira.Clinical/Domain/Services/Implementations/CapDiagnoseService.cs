@@ -14,10 +14,19 @@ namespace Domain.Services.Implementations;
 public sealed class CapDiagnoseService(ILogger<CapDiagnoseService> logger, IOptions<TuningCoefficient> coefficient)
     : DiagnoseService(logger), IDiagnoseService
 {
+    /// <summary>
+    /// Empirical diagnosis
+    /// </summary>
+    /// <param name="disease">Disease object. Note that this method will modify this directly</param>
+    /// <param name="info">Patient's information</param>
+    /// <param name="clinicalPicture">Patient's clinical picture</param>
+    /// <returns>Diagnosis result</returns>
+    /// <exception cref="UnexpectedException">Throw if no protocol found for treatment</exception>
     public DiagnoseResult EmpiricalDiagnose(Disease disease, PatientInfo info, ClinicalPicture clinicalPicture)
     {
         // Calculate patient age
         var age = DateTimeOffset.UtcNow.Year - info.DateOfBirth.Year;
+        if (info.DateOfBirth.AddYears(age) > DateOnly.FromDateTime(DateTime.UtcNow)) age--;
 
         // Calculate patient severity and treatment site using CURB-65
         var (severity, treatmentSite) = Curb65(clinicalPicture.Confusion, clinicalPicture.Urea, clinicalPicture.Respiratory, clinicalPicture.SystolicBloodPressure, clinicalPicture.DiastolicBloodPressure, age);
@@ -101,10 +110,19 @@ public sealed class CapDiagnoseService(ILogger<CapDiagnoseService> logger, IOpti
         };
     }
 
+    /// <summary>
+    /// Targeted diagnosis
+    /// </summary>
+    /// <param name="info">Patient's information</param>
+    /// <param name="antibiogram"
+    /// >Antibiogram used for targeted diagnosis. Note that this object will be modified directly
+    /// </param>
+    /// <returns>Diagnosis result</returns>
     public DiagnoseResult TargetedDiagnose(PatientInfo info, Antibiogram antibiogram)
     {
         // Calculate patient age
         var age = DateTimeOffset.UtcNow.Year - info.DateOfBirth.Year;
+        if (info.DateOfBirth.AddYears(age) > DateOnly.FromDateTime(DateTime.UtcNow)) age--;
 
         // Calculate CrCl
         var crcl = CrCl(age, info.Weight, info.Height, info.SerumCreatine, info.IsMale);
@@ -147,7 +165,7 @@ public sealed class CapDiagnoseService(ILogger<CapDiagnoseService> logger, IOpti
         if (systolic < 90 || diastolic < 60) score++;
         if (age >= 65) score++;
 
-        // Return result using CURB-65
+        // Return result using CRB-65
         if (urea is null)
         {
             return score switch
@@ -159,7 +177,7 @@ public sealed class CapDiagnoseService(ILogger<CapDiagnoseService> logger, IOpti
             };
         }
 
-        // Return result using CRB-65
+        // Return result using CURB-65
         return score switch
         {
             >= 0 and <= 1 => (Severity.Mild, TreatmentSite.Outpatient),
