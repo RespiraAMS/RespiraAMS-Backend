@@ -4,6 +4,7 @@ using Application.Features.AntibioticGroups.CreateAntibioticGroup;
 using Application.Features.AntibioticGroups.UpdateAntibioticGroup;
 using Application.Features.Antibiotics.AddDosage;
 using Application.Features.Antibiotics.CreateAntibiotic;
+using Application.Features.Antibiotics.Shared;
 using Application.Features.Antibiotics.UpdateAntibiotic;
 using Application.Features.Antibiotics.UpdateDosage;
 using Application.Features.Causes.CreateCause;
@@ -83,5 +84,10 @@ public static class DependencyInjection
     public static void AddFluentValidators(this IServiceCollection services)
     {
         services.AddValidatorsFromAssemblyContaining<ApplicationMarker>();
+    }
+
+    public static void AddApplicationDependencies(this IServiceCollection services)
+    {
+        services.AddScoped<DosageBusinessChecker>();
     }
 }

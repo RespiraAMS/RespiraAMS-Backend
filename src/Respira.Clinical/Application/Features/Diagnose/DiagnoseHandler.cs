@@ -62,6 +62,10 @@ public class DiagnoseHandler(
         // Extract clinical picture
         var clinicalPicture = mapper.ToModel(query);
 
-        return service.Diagnose(disease, clinicalPicture);
+        // return service.Diagnose(disease, clinicalPicture);
+        return new()
+        {
+            Medicines = [],
+        };
     }
 }

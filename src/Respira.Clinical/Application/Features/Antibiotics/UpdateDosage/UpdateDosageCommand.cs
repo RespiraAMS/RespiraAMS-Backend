@@ -10,6 +10,8 @@ public class UpdateDosageCommand : ICommand
     /// </summary>
     public required Guid Id { get; set; }
 
+    public required Guid AntibioticId { get; set; }
+
     /// <summary>
     /// Antibiotic dosage. There is no exact format, or content rule for dosage
     /// </summary>

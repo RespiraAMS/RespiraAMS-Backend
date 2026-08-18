@@ -4,11 +4,26 @@ public class CreateAntibioticMapper : ICreateMapper<Antibiotic, CreateAntibiotic
 {
     public Antibiotic ToModel(CreateAntibioticCommand command)
     {
-        return new Antibiotic
+        // Create antibiotic
+        var antibiotic = new Antibiotic
         {
             Name = command.Name,
             AntibioticGroupId = command.AntibioticGroupId,
-            Classification = command.Classification
+            Classification = command.Classification,
         };
+
+        // Create standard dose
+        var standardDose = new Dosage
+        {
+            AntibioticId = antibiotic.Id,
+            RouteOfAdministration = command.RouteOfAdministration,
+            Dose = command.StandardDose,
+            Crcl = null
+        };
+
+        // Add standard dose into antibiotic
+        antibiotic.DosageIds.Add(standardDose.Id);
+        antibiotic.Dosages.Add(standardDose);
+        return antibiotic;
     }
 }

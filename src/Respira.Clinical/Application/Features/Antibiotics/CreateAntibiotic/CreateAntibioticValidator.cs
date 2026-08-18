@@ -13,5 +13,11 @@ public class CreateAntibioticValidator : AbstractValidator<CreateAntibioticComma
         RuleFor(x => x.Classification)
             .IsInEnum()
             .WithMessage("Antibiotic category is required");
+        RuleFor(x => x.RouteOfAdministration)
+            .IsInEnum()
+            .WithMessage("Antibiotic standard dose's route of administration is required");
+        RuleFor(x => x.StandardDose)
+            .NotEmpty()
+            .WithMessage("Antibiotic's standard dose is required");
     }
 }
