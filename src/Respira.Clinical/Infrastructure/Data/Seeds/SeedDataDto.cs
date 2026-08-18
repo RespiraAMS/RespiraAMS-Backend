@@ -40,7 +40,7 @@ public record DosageDto
     public string Id { get; init; } = string.Empty;
     public string RouteOfAdministration { get; init; } = string.Empty;
     public string Dose { get; init; } = string.Empty;
-    public RangeDto? GlomerularFiltrationRate { get; init; }
+    public RangeDto? Crcl { get; init; }
 }
 
 public record RangeDto

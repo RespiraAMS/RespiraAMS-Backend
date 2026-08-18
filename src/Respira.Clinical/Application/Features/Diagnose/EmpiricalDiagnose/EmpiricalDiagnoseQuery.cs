@@ -1,6 +1,10 @@
-﻿namespace Application.Features.Diagnose;
+using System.ComponentModel;
+using Application.Features.Diagnose.Shared;
+using Domain.Enums;
 
-public class DiagnoseQuery : IQuery
+namespace Application.Features.Diagnose.EmpiricalDiagnose;
+
+public class EmpiricalDiagnoseQuery : IQuery
 {
     /// <summary>
     /// Disease ID
@@ -22,6 +26,12 @@ public class DiagnoseQuery : IQuery
     /// Patient's weight, in kg
     /// </summary>
     public required decimal Weight { get; set; }
+
+    /// <summary>
+    /// Patient's height in meter
+    /// </summary>
+    public required decimal Height { get; set; }
+
 
     /// <summary>
     /// Serum creatine used for calculate GFR
@@ -69,4 +79,55 @@ public class DiagnoseQuery : IQuery
     /// List of other criteria IDs
     /// </summary>
     public required List<Guid> OtherCriteria { get; set; }
+}
+
+public class InfectionProbability
+{
+    public required Guid PathogenId { get; set; }
+    public required string PathogenName { get; set; }
+    public required decimal Probability { get; set; }
+}
+
+public class EmpiricalTreatmentProtocolResult
+{
+    /// <summary>
+    /// Treatment protocol ID
+    /// </summary>
+    public required Guid Id { get; set; }
+
+    public required DateTimeOffset UpdatedAt { get; set; }
+
+    /// <summary>
+    /// Treatment protocol name
+    /// </summary>
+    public required string Name { get; set; }
+
+    /// <summary>
+    /// Treatment protocol issuer
+    /// </summary>
+    /// <example>
+    /// WHO, VietNam Ministry of Health
+    /// </example>
+    public required string Issuer { get; set; }
+
+    /// <summary>
+    /// Treatment protocol issue date
+    /// </summary>
+    public required DateOnly IssueDate { get; set; }
+
+    /// <summary>
+    /// Treatment protocol version (1-based index)
+    /// </summary>
+    public required int Version { get; set; }
+
+}
+public class EmpiricalDiagnoseResult
+{
+    public required decimal Crcl { get; set; }
+    public required List<AntibioticResult> Recommendations { get; set; } = [];
+    public required List<AntibioticResult> Medicines { get; set; } = [];
+    public required Domain.Enums.Severity Severity { get; set; }
+    public required TreatmentSite TreatmentSite { get; set; }
+    public required List<InfectionProbability> InfectionProbabilities { get; set; }
+    public required List<EmpiricalTreatmentProtocolResult> References { get; set; } = [];
 }

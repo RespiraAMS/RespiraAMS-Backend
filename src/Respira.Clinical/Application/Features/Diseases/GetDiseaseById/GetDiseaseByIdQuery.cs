@@ -25,7 +25,7 @@ public class IcuHospitalizeCriterionResult
     public required CriterionItem Criterion { get; set; }
 
     /// <summary>
-    /// ICU hospitalize criterion score 
+    /// ICU hospitalize criterion score
     /// </summary>
     public required int Score { get; set; }
 }
@@ -128,7 +128,7 @@ public class DiseaseResult
     public required string Description { get; set; }
 
     /// <summary>
-    /// ICU score minimum threshold (&gt;= threshold) to consider needing ICU hospitalization 
+    /// ICU score minimum threshold (&gt;= threshold) to consider needing ICU hospitalization
     /// </summary>
     public required int IcuScoreThreshold { get; set; }
 
@@ -138,7 +138,7 @@ public class DiseaseResult
     public required List<IcuHospitalizeCriterionResult> IcuHospitalizeCriteria { get; init; }
 
     /// <summary>
-    /// Resistance risk factors 
+    /// Resistance risk factors
     /// </summary>
     public required List<ResistanceRiskFactorResult> ResistanceRiskFactors { get; init; }
 

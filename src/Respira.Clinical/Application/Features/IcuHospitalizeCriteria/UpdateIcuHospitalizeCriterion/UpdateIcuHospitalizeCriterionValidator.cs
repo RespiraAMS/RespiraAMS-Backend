@@ -1,5 +1,4 @@
-﻿using Application.Features.IcuHospitalizeCriteria.UpdateIcuHospitalizeCriterion;
-using Application.Features.Shared.ManageCriterion;
+﻿using Application.Features.Shared.ManageCriterion;
 
 namespace Application.Features.IcuHospitalizeCriteria.UpdateIcuHospitalizeCriterion;
 

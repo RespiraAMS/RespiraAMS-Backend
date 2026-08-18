@@ -17,7 +17,7 @@ public class Disease : Base
 
     /// <summary>
     /// ICU score threshold. By default, score threshold is inclusive (for example, if score = 3 then the logic
-    /// check for ICU hospitalizing is &gt;= 3) 
+    /// check for ICU hospitalizing is &gt;= 3)
     /// </summary>
     public required int IcuScoreThreshold { get; set; }
 

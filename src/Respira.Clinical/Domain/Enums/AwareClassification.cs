@@ -15,7 +15,7 @@
 /// Antibiotic categorized metric by WHO
 /// </summary>
 [JsonConverter(typeof(JsonStringEnumConverter))]
-public enum AwareCategory
+public enum AwareClassification
 {
     [Display(Name = "Access")] Access,
     [Display(Name = "Access-Watch")] AccessWatch,

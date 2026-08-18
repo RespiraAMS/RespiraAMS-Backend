@@ -18,7 +18,7 @@ public class AntibioticItem
 public class GetAntibioticsResult(IEnumerable<AntibioticItem> antibiotics)
 {
     /// <summary>
-    /// List of antibiotics 
+    /// List of antibiotics
     /// </summary>
     public IEnumerable<AntibioticItem> Antibiotics { get; set; } = antibiotics;
 }

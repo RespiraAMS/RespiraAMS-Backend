@@ -1,5 +1,5 @@
 ﻿using Application.Contracts.Data;
-using ImTools;
+using Application.Features.Antibiotics.Shared;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -7,6 +7,7 @@ namespace Application.Features.Antibiotics.AddDosage;
 
 public class AddDosageHandler(
     IDbContext context,
+    DosageBusinessChecker checker,
     ICreateMapper<Dosage, AddDosageCommand> mapper,
     ILogger<AddDosageHandler> logger)
     : ICommandHandler<AddDosageCommand, AddDosageResult>
@@ -16,6 +17,7 @@ public class AddDosageHandler(
     {
         // Check if antibiotic exists
         var antibiotic = await context.Antibiotics
+            .Include(x => x.Dosages)
             .FirstOrDefaultAsync(x => x.Id == command.AntibioticId, cancellationToken);
         if (antibiotic is null)
         {
@@ -26,11 +28,25 @@ public class AddDosageHandler(
         // Map from command to entity
         var dosage = mapper.ToModel(command);
 
-        // Add dosage to database
-        await context.Dosages.AddAsync(dosage, cancellationToken);
+        // Try adding dosage into cloned and check for business validation
+        var dosages = antibiotic.Dosages.ConvertAll(d => new Dosage() // Deep copy to avoid EF tracking issue
+        {
+            Id = d.Id,
+            AntibioticId = d.AntibioticId,
+            Dose = d.Dose,
+            RouteOfAdministration = d.RouteOfAdministration,
+            Crcl = d.Crcl // Since this is not an entity registered in EF Core, a direct copy wouldn't cause issues
+        });
+        dosages.Add(dosage);
+        if (!checker.IsValidDosage(dosages))
+        {
+            throw new BadRequestException("Adding dosage violate antibiotic business rule");
+        }
 
-        // Add dosage to antibiotic
-        context.UpdateRelations(antibiotic.Dosages, [dosage.Id]);
+        // Add the new created dosage into database and link it to antibiotic
+        await context.Dosages.AddAsync(dosage, cancellationToken);
+        antibiotic.DosageIds.Add(dosage.Id);
+        antibiotic.Dosages.Add(dosage);
 
         // Save changes to database
         if (await context.SaveChangesAsync(cancellationToken) <= 0)

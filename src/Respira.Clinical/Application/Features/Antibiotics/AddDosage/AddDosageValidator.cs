@@ -15,7 +15,8 @@ public class AddDosageValidator : AbstractValidator<AddDosageCommand>
         RuleFor(x => x.Dose)
             .NotEmpty()
             .WithMessage("Dose is required");
-        RuleFor(x => x.GlomerularFiltrationRate)
-            .SetValidator(new RangeValidator());
+        RuleFor(x => x.Crcl)
+            .SetValidator(new RangeValidator()!)
+            .When(x => x.Crcl != null);
     }
 }

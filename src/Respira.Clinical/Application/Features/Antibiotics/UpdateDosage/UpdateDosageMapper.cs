@@ -6,7 +6,7 @@ public class UpdateDosageMapper : IUpdateMapper<Dosage, UpdateDosageCommand>
     {
         model.RouteOfAdministration = command.RouteOfAdministration;
         model.Dose = command.Dose;
-        model.GlomerularFiltrationRate = command.GlomerularFiltrationRate;
+        model.Crcl = command.Crcl;
         model.UpdatedAt = DateTimeOffset.UtcNow;
     }
 }

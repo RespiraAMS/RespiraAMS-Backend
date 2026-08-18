@@ -22,19 +22,19 @@ public class GetAntibioticByIdHandler(IDbContext context) : IQueryHandler<GetAnt
                     ParentId = x.AntibioticGroupId,
                     ParentName = x.AntibioticGroup.Parent == null ? null : x.AntibioticGroup.Parent.Name
                 },
-                Category = x.Category,
-                AntibioticSpectrum = x.AntibioticSpectra.Select(a => new PathogenResult
+                Classification = x.Classification,
+                AntibioticSpectrum = x.AntibioticSpectra.ConvertAll(a => new PathogenResult
                 {
                     Id = a.Id,
                     Name = a.Name,
-                }).ToList(),
-                Dosages = x.Dosages.Select(d => new DosageResult
+                }),
+                Dosages = x.Dosages.ConvertAll(d => new DosageResult
                 {
                     Id = d.Id,
                     RouteOfAdministration = d.RouteOfAdministration,
                     Dose = d.Dose,
-                    GlomerularFiltrationRate = d.GlomerularFiltrationRate
-                }).ToList(),
+                    Crcl = d.Crcl
+                }),
             })
             .FirstOrDefaultAsync(x => x.Id == query.Id, cancellationToken);
         return antibiotic ?? throw new NotFoundException(nameof(Antibiotic), query.Id);

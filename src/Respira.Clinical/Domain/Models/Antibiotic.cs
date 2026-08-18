@@ -44,7 +44,7 @@ public class Antibiotic : Base
     /// <summary>
     /// Antibiotic AWaRe category
     /// </summary>
-    public required AwareCategory Category { get; set; }
+    public required AwareClassification Classification { get; set; }
 
     /// <summary>
     /// List of dosage IDs

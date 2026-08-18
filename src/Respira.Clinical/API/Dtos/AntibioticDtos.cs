@@ -31,7 +31,7 @@ public class GetPagedAntibioticsRequestDto
     /// <summary>
     /// Antibiotic WHO's AWaRe category
     /// </summary>
-    public AwareCategory? Category { get; set; }
+    public AwareClassification? Classification { get; set; }
 
     public GetPagedAntibioticQuery ToQuery()
     {
@@ -46,7 +46,7 @@ public class GetPagedAntibioticsRequestDto
             {
                 Name = Name,
                 AntibioticGroupId = AntibioticGroupId,
-                Category = Category
+                Classification = Classification
             }
         };
     }
@@ -67,7 +67,7 @@ public class UpdateAntibioticRequestDto
     /// <summary>
     /// Antibiotic WHO's AWaRe category
     /// </summary>
-    public required AwareCategory Category { get; set; }
+    public required AwareClassification Classification { get; set; }
 
     public UpdateAntibioticCommand ToCommand(Guid id)
     {
@@ -76,7 +76,7 @@ public class UpdateAntibioticRequestDto
             Id = id,
             Name = Name,
             AntibioticGroupId = AntibioticGroupId,
-            Category = Category
+            Classification = Classification
         };
     }
 }

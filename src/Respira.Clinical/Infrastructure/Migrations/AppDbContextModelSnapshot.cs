@@ -166,7 +166,7 @@ namespace Infrastructure.Migrations
                     b.Property<Guid>("AntibioticGroupId")
                         .HasColumnType("uuid");
 
-                    b.Property<string>("Category")
+                    b.Property<string>("Classification")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -198,7 +198,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("AntibioticGroupId");
 
-                    b.HasIndex("Name", "Category");
+                    b.HasIndex("Name", "Classification");
 
                     b.ToTable("antibiotics", (string)null);
                 });
@@ -728,7 +728,7 @@ namespace Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.OwnsOne("Domain.Models.Range", "GlomerularFiltrationRate", b1 =>
+                    b.OwnsOne("Domain.Models.Range", "Crcl", b1 =>
                         {
                             b1.Property<Guid>("DosageId");
 
@@ -747,7 +747,7 @@ namespace Infrastructure.Migrations
                             b1.ToTable("dosages");
 
                             b1
-                                .ToJson("GlomerularFiltrationRate")
+                                .ToJson("Crcl")
                                 .HasColumnType("jsonb");
 
                             b1.WithOwner()
@@ -756,7 +756,7 @@ namespace Infrastructure.Migrations
 
                     b.Navigation("Antibiotic");
 
-                    b.Navigation("GlomerularFiltrationRate");
+                    b.Navigation("Crcl");
                 });
 
             modelBuilder.Entity("Domain.Models.EmpiricTreatmentProtocol", b =>

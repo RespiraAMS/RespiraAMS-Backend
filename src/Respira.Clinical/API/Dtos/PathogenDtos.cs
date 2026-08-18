@@ -1,5 +1,4 @@
-﻿using Application.Features.AntibioticGroups.GetPagedAntibioticGroup;
-using Application.Features.Pathogens.GetPagedPathogen;
+﻿using Application.Features.Pathogens.GetPagedPathogen;
 using Application.Features.Pathogens.UpdatePathogen;
 using Respira.ServiceDefaults.Dtos;
 

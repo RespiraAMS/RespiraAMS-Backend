@@ -24,7 +24,7 @@ public class AddNewCriteriaHandler(
         }
 
         // Map request to models
-        var criteria = command.Criteria.Select(mapper.ToModel).ToList();
+        var criteria = command.Criteria.ConvertAll(mapper.ToModel);
 
         // Start transaction
         await context.ExecuteInTransactionAsync(async () =>

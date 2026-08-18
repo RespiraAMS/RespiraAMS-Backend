@@ -72,7 +72,7 @@ public class DosageResult
     /// <summary>
     /// Glomerular Filtration Rate. If null, this is the standard dose
     /// </summary>
-    public required Range? GlomerularFiltrationRate { get; set; }
+    public required Range? Crcl { get; set; }
 }
 
 public class AntibioticResult
@@ -95,10 +95,10 @@ public class AntibioticResult
     /// <summary>
     /// Antibiotic WHO's AWaRe category
     /// </summary>
-    public required AwareCategory Category { get; set; }
+    public required AwareClassification Classification { get; set; }
 
     /// <summary>
-    /// Antibiotic spectrum: list of pathogen that this antibiotic can theoretically affect 
+    /// Antibiotic spectrum: list of pathogen that this antibiotic can theoretically affect
     /// </summary>
     public required List<PathogenResult> AntibioticSpectrum { get; set; }
 

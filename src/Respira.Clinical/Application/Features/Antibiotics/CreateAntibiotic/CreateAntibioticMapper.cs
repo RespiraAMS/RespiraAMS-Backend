@@ -1,16 +1,29 @@
-﻿using Domain.Enums;
-
-namespace Application.Features.Antibiotics.CreateAntibiotic;
+﻿namespace Application.Features.Antibiotics.CreateAntibiotic;
 
 public class CreateAntibioticMapper : ICreateMapper<Antibiotic, CreateAntibioticCommand>
 {
     public Antibiotic ToModel(CreateAntibioticCommand command)
     {
-        return new Antibiotic
+        // Create antibiotic
+        var antibiotic = new Antibiotic
         {
             Name = command.Name,
             AntibioticGroupId = command.AntibioticGroupId,
-            Category = command.Category,
+            Classification = command.Classification,
         };
+
+        // Create standard dose
+        var standardDose = new Dosage
+        {
+            AntibioticId = antibiotic.Id,
+            RouteOfAdministration = command.RouteOfAdministration,
+            Dose = command.StandardDose,
+            Crcl = null
+        };
+
+        // Add standard dose into antibiotic
+        antibiotic.DosageIds.Add(standardDose.Id);
+        antibiotic.Dosages.Add(standardDose);
+        return antibiotic;
     }
 }

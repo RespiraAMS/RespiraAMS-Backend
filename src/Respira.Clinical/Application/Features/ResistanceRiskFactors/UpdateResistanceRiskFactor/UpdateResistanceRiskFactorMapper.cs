@@ -1,5 +1,4 @@
-﻿using Application.Features.ResistanceRiskFactors.UpdateResistanceRiskFactor;
-using Application.Features.Shared.ManageCriterion;
+﻿using Application.Features.Shared.ManageCriterion;
 
 namespace Application.Features.ResistanceRiskFactors.UpdateResistanceRiskFactor;
 

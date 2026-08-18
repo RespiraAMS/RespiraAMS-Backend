@@ -42,17 +42,14 @@ public class GetDiseaseCriteriaHandler(
         var result = new DiseaseCriteriaResult
         {
             IcuHospitalizeCriteria = disease.IcuHospitalizeCriteria
-                .Select(x => mapper.ToResult(x.Criterion))
-                .ToList(),
+                .ConvertAll(x => mapper.ToResult(x.Criterion)),
             ResistanceRiskFactorCriteria = disease.ResistanceRiskFactors
-                .Select(x => mapper.ToResult(x.Criterion))
-                .ToList(),
-            OtherCriteria = disease.EmpiricTreatmentProtocols
+                .ConvertAll(x => mapper.ToResult(x.Criterion)),
+            OtherCriteria = [.. disease.EmpiricTreatmentProtocols
                 .SelectMany(p => p.OtherCriteria) // Flattens the nested lists
                 .Where(c => !existingIds.Contains(c.Id))
                 .DistinctBy(c => c.Id) // Prevents duplicates if multiple protocols share the same criterion
-                .Select(mapper.ToResult)
-                .ToList(),
+                .Select(mapper.ToResult)],
         };
 
         logger.LogDebug("Get disease associated criteria successfully: {result}", new
