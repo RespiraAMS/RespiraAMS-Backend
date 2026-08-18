@@ -102,6 +102,7 @@ public sealed class CapDiagnoseService(ILogger<CapDiagnoseService> logger, IOpti
 
         return new EmpiricalDiagnoseResult()
         {
+            Crcl = crcl,
             Medicines = recommended,
             Severity = severity,
             TreatmentSite = treatmentSite,
@@ -137,6 +138,7 @@ public sealed class CapDiagnoseService(ILogger<CapDiagnoseService> logger, IOpti
         return new DiagnoseResult()
         {
             Medicines = recommended,
+            Crcl = crcl
         };
     }
 

@@ -6,6 +6,7 @@ namespace Domain.Services.Dtos;
 public class DiagnoseResult
 {
     public required List<Antibiotic> Medicines { get; set; }
+    public required decimal Crcl { get; set; }
 }
 
 public class EmpiricalDiagnoseResult : DiagnoseResult
