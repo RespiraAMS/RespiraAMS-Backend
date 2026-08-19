@@ -100,6 +100,16 @@
 		<!-- Excel -->
 		<PackageVersion Include="ClosedXML" Version="0.105.0" />
 	</ItemGroup>
+	
+	<!-- Test package -->
+	<ItemGroup>
+		<PackageVersion Include="xunit.v3" Version="4.0.0" />
+		<PackageVersion Include="xunit.runner.visualstudio" Version="4.0.0" />
+		<PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.9.0" />
+		<PackageVersion Include="coverlet.collector" Version="10.0.1" />
+		<PackageVersion Include="Moq" Version="4.20.72" />
+	</ItemGroup>
+	
 	<!-- Pinned version for transitive CVE dependencies -->
 	<ItemGroup>
 		<!-- Use internally by Microsoft.AspNetCore.OpenApi. See problems at: https://github.com/advisories/GHSA-v5pm-xwqc-g5wc -->

@@ -3,9 +3,12 @@
 ##
 ## Get latest from `dotnet new gitignore`
 
-# Ignore node_modules and .vs
+#Ignore node_modules and .VS
+node_modules/
 *.vs/
-*node_modules/
+# Ignore appsettings.Development.json
+*appsettings.Development.json
+
 # dotenv files
 .env
 
