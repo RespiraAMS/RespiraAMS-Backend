@@ -1,2154 +1,2912 @@
 {
-  "pathogens": [
-    {
-      "id": "00000000-0000-0000-0000-000000000101",
-      "name": "Chlamydia pnuemoniae",
-      "description": "Chlamydia pneumoniae là một loại vi khuẩn nội bào bắt buộc gây nhiễm trùng đường hô hấp ở người như viêm họng, viêm phế quản và viêm phổi không điển hình"
-    },
-    {
-      "id": "00000000-0000-0000-0000-000000000102",
-      "name": "Haemophilus influenzae",
-      "description": "Haemophilus influenzae là một loài trực khuẩn Gram-âm, ký sinh chủ yếu ở đường hô hấp trên của người và có khả năng gây ra nhiều bệnh nhiễm trùng cấp tính nguy hiểm"
-    },
-    {
-      "id": "00000000-0000-0000-0000-000000000103",
-      "name": "Legionella spp",
-      "description": "Legionella spp. (các loài Legionella) là một chi trực khuẩn Gram-âm, ký sinh nội bào bắt buộc, thường cư trú trong môi trường nước và là tác nhân gây ra bệnh nhiễm trùng hô hấp cấp tính nghiêm trọng ở người."
-    },
-    {
-      "id": "00000000-0000-0000-0000-000000000104",
-      "name": "Mycoplasma pneumoniae",
-      "description": "Mycoplasma pneumoniae là một loại vi khuẩn đặc biệt gây nhiễm trùng đường hô hấp, là tác nhân hàng đầu dẫn đến bệnh \"viêm phổi không điển hình\" (atypical pneumonia) ở trẻ em và người trẻ tuổi."
-    },
-    {
-      "id": "00000000-0000-0000-0000-000000000105",
-      "name": "Pseudomonas aeruginosae",
-      "description": "Pseudomonas aeruginosa (Trực khuẩn mủ xanh) là một loài vi khuẩn Gram-âm hình que, có khả năng di động và là một trong những tác nhân gây nhiễm trùng bệnh viện (nosocomial infections) nguy hiểm nhất hiện nay"
-    },
-    {
-      "id": "00000000-0000-0000-0000-000000000106",
-      "name": "Staphylococus aureus",
-      "description": "Staphylococcus aureus (Tụ cầu vàng) là một loài cầu khuẩn Gram-dương, xếp thành hình chùm nho, gây ra phần lớn các ca nhiễm trùng da và mô mềm cả trong cộng đồng lẫn bệnh viện."
-    },
-    {
-      "id": "00000000-0000-0000-0000-000000000107",
-      "name": "Streptococcus pneumoniae",
-      "description": "Streptococcus pneumoniae (Phế cầu khuẩn) là một loài cầu khuẩn Gram-dương, xếp thành cặp hình ngọn giáo (song cầu), là tác nhân hàng đầu gây ra các bệnh nhiễm trùng hô hấp và xâm lấn nguy hiểm ở trẻ em dưới 5 tuổi và người cao tuổi"
-    },
-    {
-      "id": "00000000-0000-0000-0000-000000000108",
-      "name": "Vi khuẩn gram âm đường ruột",
-      "description": "Vi khuẩn Gram-âm đường ruột (chủ yếu thuộc họ Enterobacteriaceae) là nhóm các trực khuẩn cư trú tự nhiên hoặc gây bệnh trong ống tiêu hóa của người và động vật."
-    },
-    {
-      "id": "00000000-0000-0000-0000-000000000109",
-      "name": "Virus hô hấp",
-      "description": "Virus hô hấp là nhóm các virus tấn công vào niêm mạc đường thở của con người, gây ra các tổn thương từ thể nhẹ như cảm lạnh thông thường đến các biến chứng nguy hiểm tính mạng như viêm phổi cấp, suy hô hấp"
-    }
-  ],
-  "antibioticGroups": [
-    {
-      "id": "00000000-0000-0000-0000-000000000201",
-      "name": "Beta-lactam",
-      "description": "Họ kháng sinh lớn nhất, có cấu trúc hóa học chứa vòng beta-lactam. Gồm các phân nhóm: penicilin, cephalosporin và các beta-lactam khác (carbapenem, monobactam, chất ức chế beta-lactamase). ADR đặc trưng: dị ứng (có thể sốc phản vệ), tai biến thần kinh, rối loạn tiêu hóa.",
-      "parentId": null
-    },
-    {
-      "id": "00000000-0000-0000-0000-000000000202",
-      "name": "Penicilin",
-      "description": "Dẫn xuất của acid 6-aminopenicilanic. Chỉ có penicilin G là tự nhiên, còn lại là bán tổng hợp. Chia thành 4 phân nhóm theo phổ kháng khuẩn: phổ hẹp (penicilin G, V), phổ hẹp có tác dụng trên tụ cầu (methicilin, oxacilin...), phổ trung bình (ampicilin, amoxicilin), phổ rộng có tác dụng trên trực khuẩn mủ xanh (carbenicilin, piperacilin...).",
-      "parentId": "00000000-0000-0000-0000-000000000201"
-    },
-    {
-      "id": "00000000-0000-0000-0000-000000000203",
-      "name": "Cephalosporin",
-      "description": "Dẫn xuất của acid 7-aminocephalosporanic, bán tổng hợp, chia thành 4 thế hệ dựa trên phổ kháng khuẩn. Từ thế hệ 1 đến 4, hoạt tính trên Gram-dương giảm dần và trên Gram-âm tăng dần. Hầu như không có tác dụng trên enterococci, Listeria, S. aureus kháng methicilin.",
-      "parentId": "00000000-0000-0000-0000-000000000201"
-    },
-    {
-      "id": "00000000-0000-0000-0000-000000000204",
-      "name": "Các beta-lactam khác",
-      "description": "Nhóm bao gồm carbapenem, monobactam và các chất ức chế beta-lactamase, được tạo ra từ biến đổi cấu trúc của penicilin/cephalosporin.",
-      "parentId": "00000000-0000-0000-0000-000000000201"
-    },
-    {
-      "id": "00000000-0000-0000-0000-000000000205",
-      "name": "Carbapenem",
-      "description": "Phổ kháng khuẩn rất rộng, hoạt tính mạnh trên vi khuẩn Gram-âm, cả hiếu khí và kỵ khí. Đại diện: imipenem (cần phối hợp cilastatin), meropenem, doripenem, ertapenem.",
-      "parentId": "00000000-0000-0000-0000-000000000204"
-    },
-    {
-      "id": "00000000-0000-0000-0000-000000000206",
-      "name": "Monobactam",
-      "description": "Chứa beta-lactam đơn vòng, đại diện là aztreonam. Chỉ có tác dụng trên vi khuẩn Gram-âm (mạnh trên Enterobacteriaceae và P. aeruginosa), không có tác dụng trên Gram-dương và kỵ khí.",
-      "parentId": "00000000-0000-0000-0000-000000000204"
-    },
-    {
-      "id": "00000000-0000-0000-0000-000000000207",
-      "name": "Chất ức chế beta-lactamase",
-      "description": "Có cấu trúc beta-lactam nhưng không có hoạt tính kháng khuẩn, chỉ ức chế enzym beta-lactamase của vi khuẩn. Gồm acid clavulanic, sulbactam, tazobactam, thường phối hợp với penicilin phổ trung bình.",
-      "parentId": "00000000-0000-0000-0000-000000000204"
-    },
-    {
-      "id": "00000000-0000-0000-0000-000000000208",
-      "name": "Aminoglycosid",
-      "description": "Kháng sinh tự nhiên hoặc bán tổng hợp (kanamycin, gentamycin, tobramycin, amikacin...), phổ tác dụng chủ yếu trên trực khuẩn Gram-âm. ADR thường gặp: giảm thính lực, suy thận, nhược cơ; chỉ dùng đường tiêm bắp hoặc truyền tĩnh mạch.",
-      "parentId": null
-    },
-    {
-      "id": "00000000-0000-0000-0000-000000000209",
-      "name": "Macrolid",
-      "description": "Kháng sinh tự nhiên hoặc bán tổng hợp, chia theo cấu trúc 14/15/16 carbon (erythromycin, azithromycin, spiramycin...). Phổ hẹp, chủ yếu trên Gram-dương và một số vi khuẩn nội bào. ADR chính: rối loạn tiêu hóa, viêm gan/ứ mật.",
-      "parentId": null
-    },
-    {
-      "id": "00000000-0000-0000-0000-00000000020a",
-      "name": "Lincosamid",
-      "description": "Gồm lincomycin (tự nhiên) và clindamycin (bán tổng hợp). Phổ tương tự macrolid trên Gram-dương, nhưng có tác dụng tốt trên vi khuẩn kỵ khí (B. fragilis). ADR đáng chú ý: tiêu chảy, viêm đại tràng giả mạc do C. difficile.",
-      "parentId": null
-    },
-    {
-      "id": "00000000-0000-0000-0000-00000000020b",
-      "name": "Phenicol",
-      "description": "Gồm cloramphenicol (tự nhiên) và thiamphenicol (tổng hợp). Phổ rộng nhưng tỷ lệ kháng thuốc cao và độc tính nghiêm trọng trên tủy xương (bất sản tủy) nên ít dùng. Có thể gây hội chứng xám ở trẻ sơ sinh.",
-      "parentId": null
-    },
-    {
-      "id": "00000000-0000-0000-0000-00000000020c",
-      "name": "Tetracyclin (Cyclin)",
-      "description": "Gồm kháng sinh tự nhiên và bán tổng hợp (tetracyclin, doxycyclin, minocyclin...). Phổ rộng trên Gram-âm, Gram-dương, vi khuẩn không điển hình và một số xoắn khuẩn. ADR đặc trưng: gắn vào xương/răng gây hỏng răng ở trẻ nhỏ, mẫn cảm ánh sáng.",
-      "parentId": null
-    },
-    {
-      "id": "00000000-0000-0000-0000-00000000020d",
-      "name": "Tetracyclin thế hệ 1",
-      "description": "Nhóm tetracyclin thế hệ đầu (chlortetracyclin, oxytetracyclin, demeclocyclin, methacyclin), tỷ lệ kháng thuốc hiện nay cao.",
-      "parentId": "00000000-0000-0000-0000-00000000020c"
-    },
-    {
-      "id": "00000000-0000-0000-0000-00000000020e",
-      "name": "Tetracyclin thế hệ 2",
-      "description": "Gồm doxycyclin và minocyclin, vẫn còn tác dụng trên một số chủng vi khuẩn đã kháng tetracyclin thế hệ 1.",
-      "parentId": "00000000-0000-0000-0000-00000000020c"
-    },
-    {
-      "id": "00000000-0000-0000-0000-00000000020f",
-      "name": "Peptid",
-      "description": "Nhóm kháng sinh có cấu trúc peptid, gồm 3 phân nhóm: glycopeptid, polypeptid và lipopeptid.",
-      "parentId": null
-    },
-    {
-      "id": "00000000-0000-0000-0000-000000000210",
-      "name": "Glycopeptid",
-      "description": "Gồm vancomycin và teicoplanin, tác dụng chủ yếu trên Gram-dương, dùng điều trị S. aureus kháng methicilin. ADR: viêm tĩnh mạch, hội chứng người đỏ (red-man), độc tính trên tai và thận.",
-      "parentId": "00000000-0000-0000-0000-00000000020f"
-    },
-    {
-      "id": "00000000-0000-0000-0000-000000000211",
-      "name": "Polypeptid",
-      "description": "Gồm polymyxin B và colistin, chỉ tác dụng trên trực khuẩn Gram-âm. Độc tính cao trên thận và thần kinh nên chỉ dùng ngoài (polymyxin) hoặc hạn chế trong trường hợp đa kháng (colistin).",
-      "parentId": "00000000-0000-0000-0000-00000000020f"
-    },
-    {
-      "id": "00000000-0000-0000-0000-000000000212",
-      "name": "Lipopeptid",
-      "description": "Đại diện là daptomycin, chiết xuất tự nhiên, tác dụng trên Gram-dương kể cả chủng kháng vancomycin. ADR đặc trưng: tổn thương cơ xương, tăng creatin kinase, hiếm gặp tiêu cơ vân.",
-      "parentId": "00000000-0000-0000-0000-00000000020f"
-    },
-    {
-      "id": "00000000-0000-0000-0000-000000000213",
-      "name": "Quinolon",
-      "description": "Kháng sinh tổng hợp hóa học hoàn toàn, chia thành các thế hệ theo phổ kháng khuẩn (thế hệ 1 và các fluoroquinolon thế hệ 2-4). ADR đặc trưng: viêm gân/đứt gân Asin, ảnh hưởng sụn tiếp hợp ở trẻ em, tác dụng trên thần kinh trung ương.",
-      "parentId": null
-    },
-    {
-      "id": "00000000-0000-0000-0000-000000000214",
-      "name": "Quinolon thế hệ 1",
-      "description": "Gồm acid nalidixic và cinoxacin, tác dụng trung bình trên trực khuẩn Gram-âm họ Enterobacteriaceae, không có nhóm flo trong cấu trúc.",
-      "parentId": "00000000-0000-0000-0000-000000000213"
-    },
-    {
-      "id": "00000000-0000-0000-0000-000000000215",
-      "name": "Fluoroquinolon (thế hệ 2, 3, 4)",
-      "description": "Các quinolon có flo trong cấu trúc. Thế hệ 2 (norfloxacin, ciprofloxacin...) tập trung trên Gram-âm; thế hệ 3 (levofloxacin, moxifloxacin...) mở rộng thêm trên phế cầu (quinolon hô hấp); thế hệ 4 (trovafloxacin) phổ rộng nhất, bao gồm cả vi khuẩn kỵ khí.",
-      "parentId": "00000000-0000-0000-0000-000000000213"
-    },
-    {
-      "id": "00000000-0000-0000-0000-000000000216",
-      "name": "Các nhóm kháng sinh khác",
-      "description": "Nhóm tổng hợp các kháng sinh không thuộc các họ chính, gồm sulfonamid (co-trimoxazol), oxazolidinon và 5-nitroimidazol.",
-      "parentId": null
-    },
-    {
-      "id": "00000000-0000-0000-0000-000000000217",
-      "name": "Sulfonamid (Co-trimoxazol)",
-      "description": "Phối hợp sulfamethoxazol và trimethoprim, ức chế tổng hợp acid folic của vi khuẩn. Phổ rộng nhưng tỷ lệ kháng thuốc hiện nay cao. ADR đặc trưng: dị ứng nặng (hội chứng Stevens-Johnson, Lyell), độc tính gan thận, thiếu máu tan máu ở người thiếu G6PD.",
-      "parentId": "00000000-0000-0000-0000-000000000216"
-    },
-    {
-      "id": "00000000-0000-0000-0000-000000000218",
-      "name": "Oxazolidinon",
-      "description": "Kháng sinh tổng hợp, đại diện là linezolid, tác dụng trên Gram-dương kể cả chủng đa kháng (kháng vancomycin, kháng methicilin). ADR đáng lưu ý: ức chế tủy xương gây thiếu máu, giảm bạch cầu, giảm tiểu cầu.",
-      "parentId": "00000000-0000-0000-0000-000000000216"
-    },
-    {
-      "id": "00000000-0000-0000-0000-000000000219",
-      "name": "5-nitro-imidazol",
-      "description": "Dẫn xuất tổng hợp hóa học của 5-nitro imidazol (metronidazol, tinidazol, ornidazol...), chỉ định trong điều trị đơn bào và vi khuẩn kỵ khí. ADR: rối loạn tiêu hóa, nước tiểu sẫm màu, tác dụng giống disulfiram nên không dùng cùng rượu.",
-      "parentId": "00000000-0000-0000-0000-000000000216"
-    }
-  ],
-  "antibiotics": [
-    {
-      "id": "00000000-0000-0000-0000-000000000301",
-      "name": "Penicilin G",
-      "antibioticGroupId": "00000000-0000-0000-0000-000000000202",
-      "classification": "",
-      "pathogenIds": [],
-      "dosages": [
+    "pathogens": [
         {
-          "id": "00000000-0000-0000-0000-000000000401",
-          "routeOfAdministration": "intravenous",
-          "dose": "2 triệu đơn vị (hoặc 1,2 g) mỗi 4 giờ",
-          "glomerularFiltrationRate": {
-            "min": 50,
-            "isMinExclusive": true,
-            "max": null,
-            "isMaxExclusive": false
-          }
+            "id": "00000000-0000-0000-0000-000000000101",
+            "name": "Chlamydia pnuemoniae",
+            "description": "Chlamydia pneumoniae là một loại vi khuẩn nội bào bắt buộc gây nhiễm trùng đường hô hấp ở người như viêm họng, viêm phế quản và viêm phổi không điển hình"
         },
         {
-          "id": "00000000-0000-0000-0000-000000000402",
-          "routeOfAdministration": "intravenous",
-          "dose": "2 triệu đơn vị mỗi 8 giờ",
-          "glomerularFiltrationRate": {
-            "min": 10,
-            "isMinExclusive": false,
-            "max": 50,
-            "isMaxExclusive": false
-          }
+            "id": "00000000-0000-0000-0000-000000000102",
+            "name": "Haemophilus influenzae",
+            "description": "Haemophilus influenzae là một loài trực khuẩn Gram-âm, ký sinh chủ yếu ở đường hô hấp trên của người và có khả năng gây ra nhiều bệnh nhiễm trùng cấp tính nguy hiểm"
         },
         {
-          "id": "00000000-0000-0000-0000-000000000403",
-          "routeOfAdministration": "intravenous",
-          "dose": "2 triệu đơn vị mỗi 12 giờ",
-          "glomerularFiltrationRate": {
-            "min": 0,
-            "isMinExclusive": false,
-            "max": 10,
-            "isMaxExclusive": true
-          }
+            "id": "00000000-0000-0000-0000-000000000103",
+            "name": "Legionella spp",
+            "description": "Legionella spp. (các loài Legionella) là một chi trực khuẩn Gram-âm, ký sinh nội bào bắt buộc, thường cư trú trong môi trường nước và là tác nhân gây ra bệnh nhiễm trùng hô hấp cấp tính nghiêm trọng ở người."
+        },
+        {
+            "id": "00000000-0000-0000-0000-000000000104",
+            "name": "Mycoplasma pneumoniae",
+            "description": "Mycoplasma pneumoniae là một loại vi khuẩn đặc biệt gây nhiễm trùng đường hô hấp, là tác nhân hàng đầu dẫn đến bệnh \"viêm phổi không điển hình\" (atypical pneumonia) ở trẻ em và người trẻ tuổi."
+        },
+        {
+            "id": "00000000-0000-0000-0000-000000000105",
+            "name": "Pseudomonas aeruginosae",
+            "description": "Pseudomonas aeruginosa (Trực khuẩn mủ xanh) là một loài vi khuẩn Gram-âm hình que, có khả năng di động và là một trong những tác nhân gây nhiễm trùng bệnh viện (nosocomial infections) nguy hiểm nhất hiện nay"
+        },
+        {
+            "id": "00000000-0000-0000-0000-000000000106",
+            "name": "Staphylococus aureus",
+            "description": "Staphylococcus aureus (Tụ cầu vàng) là một loài cầu khuẩn Gram-dương, xếp thành hình chùm nho, gây ra phần lớn các ca nhiễm trùng da và mô mềm cả trong cộng đồng lẫn bệnh viện."
+        },
+        {
+            "id": "00000000-0000-0000-0000-000000000107",
+            "name": "Streptococcus pneumoniae",
+            "description": "Streptococcus pneumoniae (Phế cầu khuẩn) là một loài cầu khuẩn Gram-dương, xếp thành cặp hình ngọn giáo (song cầu), là tác nhân hàng đầu gây ra các bệnh nhiễm trùng hô hấp và xâm lấn nguy hiểm ở trẻ em dưới 5 tuổi và người cao tuổi"
+        },
+        {
+            "id": "00000000-0000-0000-0000-000000000108",
+            "name": "Vi khuẩn gram âm đường ruột",
+            "description": "Vi khuẩn Gram-âm đường ruột (chủ yếu thuộc họ Enterobacteriaceae) là nhóm các trực khuẩn cư trú tự nhiên hoặc gây bệnh trong ống tiêu hóa của người và động vật."
+        },
+        {
+            "id": "00000000-0000-0000-0000-000000000109",
+            "name": "Virus hô hấp",
+            "description": "Virus hô hấp là nhóm các virus tấn công vào niêm mạc đường thở của con người, gây ra các tổn thương từ thể nhẹ như cảm lạnh thông thường đến các biến chứng nguy hiểm tính mạng như viêm phổi cấp, suy hô hấp"
         }
-      ]
-    },
-    {
-      "id": "00000000-0000-0000-0000-000000000302",
-      "name": "Ampicilin",
-      "antibioticGroupId": "00000000-0000-0000-0000-000000000202",
-      "classification": "",
-      "pathogenIds": [],
-      "dosages": [
+    ],
+    "antibioticGroups": [
         {
-          "id": "00000000-0000-0000-0000-000000000404",
-          "routeOfAdministration": "intravenous",
-          "dose": "2 g mỗi 6 giờ",
-          "glomerularFiltrationRate": {
-            "min": 50,
-            "isMinExclusive": true,
-            "max": null,
-            "isMaxExclusive": false
-          }
+            "id": "00000000-0000-0000-0000-000000000201",
+            "name": "Beta-lactam",
+            "description": "Họ kháng sinh lớn nhất, có cấu trúc hóa học chứa vòng beta-lactam. Gồm các phân nhóm: penicilin, cephalosporin và các beta-lactam khác (carbapenem, monobactam, chất ức chế beta-lactamase). ADR đặc trưng: dị ứng (có thể sốc phản vệ), tai biến thần kinh, rối loạn tiêu hóa.",
+            "parentId": null
         },
         {
-          "id": "00000000-0000-0000-0000-000000000405",
-          "routeOfAdministration": "intravenous",
-          "dose": "2 g mỗi 6-8 giờ",
-          "glomerularFiltrationRate": {
-            "min": 30,
-            "isMinExclusive": true,
-            "max": 50,
-            "isMaxExclusive": false
-          }
+            "id": "00000000-0000-0000-0000-000000000202",
+            "name": "Penicilin",
+            "description": "Dẫn xuất của acid 6-aminopenicilanic. Chỉ có penicilin G là tự nhiên, còn lại là bán tổng hợp. Chia thành 4 phân nhóm theo phổ kháng khuẩn: phổ hẹp (penicilin G, V), phổ hẹp có tác dụng trên tụ cầu (methicilin, oxacilin...), phổ trung bình (ampicilin, amoxicilin), phổ rộng có tác dụng trên trực khuẩn mủ xanh (carbenicilin, piperacilin...).",
+            "parentId": "00000000-0000-0000-0000-000000000201"
         },
         {
-          "id": "00000000-0000-0000-0000-000000000406",
-          "routeOfAdministration": "intravenous",
-          "dose": "2 g mỗi 8-12 giờ",
-          "glomerularFiltrationRate": {
-            "min": 10,
-            "isMinExclusive": false,
-            "max": 30,
-            "isMaxExclusive": false
-          }
+            "id": "00000000-0000-0000-0000-000000000203",
+            "name": "Cephalosporin",
+            "description": "Dẫn xuất của acid 7-aminocephalosporanic, bán tổng hợp, chia thành 4 thế hệ dựa trên phổ kháng khuẩn. Từ thế hệ 1 đến 4, hoạt tính trên Gram-dương giảm dần và trên Gram-âm tăng dần. Hầu như không có tác dụng trên enterococci, Listeria, S. aureus kháng methicilin.",
+            "parentId": "00000000-0000-0000-0000-000000000201"
         },
         {
-          "id": "00000000-0000-0000-0000-000000000407",
-          "routeOfAdministration": "intravenous",
-          "dose": "2 g mỗi 12 giờ",
-          "glomerularFiltrationRate": {
-            "min": 0,
-            "isMinExclusive": false,
-            "max": 10,
-            "isMaxExclusive": true
-          }
+            "id": "00000000-0000-0000-0000-000000000204",
+            "name": "Các beta-lactam khác",
+            "description": "Nhóm bao gồm carbapenem, monobactam và các chất ức chế beta-lactamase, được tạo ra từ biến đổi cấu trúc của penicilin/cephalosporin.",
+            "parentId": "00000000-0000-0000-0000-000000000201"
+        },
+        {
+            "id": "00000000-0000-0000-0000-000000000205",
+            "name": "Carbapenem",
+            "description": "Phổ kháng khuẩn rất rộng, hoạt tính mạnh trên vi khuẩn Gram-âm, cả hiếu khí và kỵ khí. Đại diện: imipenem (cần phối hợp cilastatin), meropenem, doripenem, ertapenem.",
+            "parentId": "00000000-0000-0000-0000-000000000204"
+        },
+        {
+            "id": "00000000-0000-0000-0000-000000000206",
+            "name": "Monobactam",
+            "description": "Chứa beta-lactam đơn vòng, đại diện là aztreonam. Chỉ có tác dụng trên vi khuẩn Gram-âm (mạnh trên Enterobacteriaceae và P. aeruginosa), không có tác dụng trên Gram-dương và kỵ khí.",
+            "parentId": "00000000-0000-0000-0000-000000000204"
+        },
+        {
+            "id": "00000000-0000-0000-0000-000000000207",
+            "name": "Chất ức chế beta-lactamase",
+            "description": "Có cấu trúc beta-lactam nhưng không có hoạt tính kháng khuẩn, chỉ ức chế enzym beta-lactamase của vi khuẩn. Gồm acid clavulanic, sulbactam, tazobactam, thường phối hợp với penicilin phổ trung bình.",
+            "parentId": "00000000-0000-0000-0000-000000000204"
+        },
+        {
+            "id": "00000000-0000-0000-0000-000000000208",
+            "name": "Aminoglycosid",
+            "description": "Kháng sinh tự nhiên hoặc bán tổng hợp (kanamycin, gentamycin, tobramycin, amikacin...), phổ tác dụng chủ yếu trên trực khuẩn Gram-âm. ADR thường gặp: giảm thính lực, suy thận, nhược cơ; chỉ dùng đường tiêm bắp hoặc truyền tĩnh mạch.",
+            "parentId": null
+        },
+        {
+            "id": "00000000-0000-0000-0000-000000000209",
+            "name": "Macrolid",
+            "description": "Kháng sinh tự nhiên hoặc bán tổng hợp, chia theo cấu trúc 14/15/16 carbon (erythromycin, azithromycin, spiramycin...). Phổ hẹp, chủ yếu trên Gram-dương và một số vi khuẩn nội bào. ADR chính: rối loạn tiêu hóa, viêm gan/ứ mật.",
+            "parentId": null
+        },
+        {
+            "id": "00000000-0000-0000-0000-00000000020a",
+            "name": "Lincosamid",
+            "description": "Gồm lincomycin (tự nhiên) và clindamycin (bán tổng hợp). Phổ tương tự macrolid trên Gram-dương, nhưng có tác dụng tốt trên vi khuẩn kỵ khí (B. fragilis). ADR đáng chú ý: tiêu chảy, viêm đại tràng giả mạc do C. difficile.",
+            "parentId": null
+        },
+        {
+            "id": "00000000-0000-0000-0000-00000000020b",
+            "name": "Phenicol",
+            "description": "Gồm cloramphenicol (tự nhiên) và thiamphenicol (tổng hợp). Phổ rộng nhưng tỷ lệ kháng thuốc cao và độc tính nghiêm trọng trên tủy xương (bất sản tủy) nên ít dùng. Có thể gây hội chứng xám ở trẻ sơ sinh.",
+            "parentId": null
+        },
+        {
+            "id": "00000000-0000-0000-0000-00000000020c",
+            "name": "Tetracyclin (Cyclin)",
+            "description": "Gồm kháng sinh tự nhiên và bán tổng hợp (tetracyclin, doxycyclin, minocyclin...). Phổ rộng trên Gram-âm, Gram-dương, vi khuẩn không điển hình và một số xoắn khuẩn. ADR đặc trưng: gắn vào xương/răng gây hỏng răng ở trẻ nhỏ, mẫn cảm ánh sáng.",
+            "parentId": null
+        },
+        {
+            "id": "00000000-0000-0000-0000-00000000020d",
+            "name": "Tetracyclin thế hệ 1",
+            "description": "Nhóm tetracyclin thế hệ đầu (chlortetracyclin, oxytetracyclin, demeclocyclin, methacyclin), tỷ lệ kháng thuốc hiện nay cao.",
+            "parentId": "00000000-0000-0000-0000-00000000020c"
+        },
+        {
+            "id": "00000000-0000-0000-0000-00000000020e",
+            "name": "Tetracyclin thế hệ 2",
+            "description": "Gồm doxycyclin và minocyclin, vẫn còn tác dụng trên một số chủng vi khuẩn đã kháng tetracyclin thế hệ 1.",
+            "parentId": "00000000-0000-0000-0000-00000000020c"
+        },
+        {
+            "id": "00000000-0000-0000-0000-00000000020f",
+            "name": "Peptid",
+            "description": "Nhóm kháng sinh có cấu trúc peptid, gồm 3 phân nhóm: glycopeptid, polypeptid và lipopeptid.",
+            "parentId": null
+        },
+        {
+            "id": "00000000-0000-0000-0000-000000000210",
+            "name": "Glycopeptid",
+            "description": "Gồm vancomycin và teicoplanin, tác dụng chủ yếu trên Gram-dương, dùng điều trị S. aureus kháng methicilin. ADR: viêm tĩnh mạch, hội chứng người đỏ (red-man), độc tính trên tai và thận.",
+            "parentId": "00000000-0000-0000-0000-00000000020f"
+        },
+        {
+            "id": "00000000-0000-0000-0000-000000000211",
+            "name": "Polypeptid",
+            "description": "Gồm polymyxin B và colistin, chỉ tác dụng trên trực khuẩn Gram-âm. Độc tính cao trên thận và thần kinh nên chỉ dùng ngoài (polymyxin) hoặc hạn chế trong trường hợp đa kháng (colistin).",
+            "parentId": "00000000-0000-0000-0000-00000000020f"
+        },
+        {
+            "id": "00000000-0000-0000-0000-000000000212",
+            "name": "Lipopeptid",
+            "description": "Đại diện là daptomycin, chiết xuất tự nhiên, tác dụng trên Gram-dương kể cả chủng kháng vancomycin. ADR đặc trưng: tổn thương cơ xương, tăng creatin kinase, hiếm gặp tiêu cơ vân.",
+            "parentId": "00000000-0000-0000-0000-00000000020f"
+        },
+        {
+            "id": "00000000-0000-0000-0000-000000000213",
+            "name": "Quinolon",
+            "description": "Kháng sinh tổng hợp hóa học hoàn toàn, chia thành các thế hệ theo phổ kháng khuẩn (thế hệ 1 và các fluoroquinolon thế hệ 2-4). ADR đặc trưng: viêm gân/đứt gân Asin, ảnh hưởng sụn tiếp hợp ở trẻ em, tác dụng trên thần kinh trung ương.",
+            "parentId": null
+        },
+        {
+            "id": "00000000-0000-0000-0000-000000000214",
+            "name": "Quinolon thế hệ 1",
+            "description": "Gồm acid nalidixic và cinoxacin, tác dụng trung bình trên trực khuẩn Gram-âm họ Enterobacteriaceae, không có nhóm flo trong cấu trúc.",
+            "parentId": "00000000-0000-0000-0000-000000000213"
+        },
+        {
+            "id": "00000000-0000-0000-0000-000000000215",
+            "name": "Fluoroquinolon (thế hệ 2, 3, 4)",
+            "description": "Các quinolon có flo trong cấu trúc. Thế hệ 2 (norfloxacin, ciprofloxacin...) tập trung trên Gram-âm; thế hệ 3 (levofloxacin, moxifloxacin...) mở rộng thêm trên phế cầu (quinolon hô hấp); thế hệ 4 (trovafloxacin) phổ rộng nhất, bao gồm cả vi khuẩn kỵ khí.",
+            "parentId": "00000000-0000-0000-0000-000000000213"
+        },
+        {
+            "id": "00000000-0000-0000-0000-000000000216",
+            "name": "Các nhóm kháng sinh khác",
+            "description": "Nhóm tổng hợp các kháng sinh không thuộc các họ chính, gồm sulfonamid (co-trimoxazol), oxazolidinon và 5-nitroimidazol.",
+            "parentId": null
+        },
+        {
+            "id": "00000000-0000-0000-0000-000000000217",
+            "name": "Sulfonamid (Co-trimoxazol)",
+            "description": "Phối hợp sulfamethoxazol và trimethoprim, ức chế tổng hợp acid folic của vi khuẩn. Phổ rộng nhưng tỷ lệ kháng thuốc hiện nay cao. ADR đặc trưng: dị ứng nặng (hội chứng Stevens-Johnson, Lyell), độc tính gan thận, thiếu máu tan máu ở người thiếu G6PD.",
+            "parentId": "00000000-0000-0000-0000-000000000216"
+        },
+        {
+            "id": "00000000-0000-0000-0000-000000000218",
+            "name": "Oxazolidinon",
+            "description": "Kháng sinh tổng hợp, đại diện là linezolid, tác dụng trên Gram-dương kể cả chủng đa kháng (kháng vancomycin, kháng methicilin). ADR đáng lưu ý: ức chế tủy xương gây thiếu máu, giảm bạch cầu, giảm tiểu cầu.",
+            "parentId": "00000000-0000-0000-0000-000000000216"
+        },
+        {
+            "id": "00000000-0000-0000-0000-000000000219",
+            "name": "5-nitro-imidazol",
+            "description": "Dẫn xuất tổng hợp hóa học của 5-nitro imidazol (metronidazol, tinidazol, ornidazol...), chỉ định trong điều trị đơn bào và vi khuẩn kỵ khí. ADR: rối loạn tiêu hóa, nước tiểu sẫm màu, tác dụng giống disulfiram nên không dùng cùng rượu.",
+            "parentId": "00000000-0000-0000-0000-000000000216"
         }
-      ]
-    },
-    {
-      "id": "00000000-0000-0000-0000-000000000303",
-      "name": "Amoxicillin",
-      "antibioticGroupId": "00000000-0000-0000-0000-000000000202",
-      "classification": "",
-      "pathogenIds": [],
-      "dosages": [
+    ],
+    "antibiotics": [
         {
-          "id": "00000000-0000-0000-0000-000000000408",
-          "routeOfAdministration": "oral",
-          "dose": "500 mg mỗi 8 giờ",
-          "glomerularFiltrationRate": {
-            "min": 50,
-            "isMinExclusive": true,
-            "max": null,
-            "isMaxExclusive": false
-          }
+            "id": "00000000-0000-0000-0000-000000000301",
+            "name": "Penicilin G (Benzylpenicillin)",
+            "antibioticGroupId": "00000000-0000-0000-0000-000000000202",
+            "category": "access",
+            "pathogenIds": [],
+            "dosages": [
+                {
+                    "id": "00000000-0000-0000-0000-000000000401",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "2 MIU (hoặc 1,2 g) mỗi 4 giờ",
+                    "crcl": null
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000402",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "2 MIU mỗi 4 giờ",
+                    "crcl": {
+                        "min": 50,
+                        "isMinExclusive": false,
+                        "max": 90,
+                        "isMaxExclusive": true
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000403",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "2 MIU mỗi 8 giờ",
+                    "crcl": {
+                        "min": 10,
+                        "isMinExclusive": true,
+                        "max": 50,
+                        "isMaxExclusive": true
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000404",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "2 MIU mỗi 12 giờ",
+                    "crcl": {
+                        "min": 0,
+                        "isMinExclusive": true,
+                        "max": 10,
+                        "isMaxExclusive": false
+                    }
+                }
+            ]
         },
         {
-          "id": "00000000-0000-0000-0000-000000000409",
-          "routeOfAdministration": "oral",
-          "dose": "500 mg mỗi 12 giờ",
-          "glomerularFiltrationRate": {
-            "min": 10,
-            "isMinExclusive": false,
-            "max": 50,
-            "isMaxExclusive": false
-          }
+            "id": "00000000-0000-0000-0000-000000000302",
+            "name": "Ampicilin",
+            "antibioticGroupId": "00000000-0000-0000-0000-000000000202",
+            "category": "access",
+            "pathogenIds": [],
+            "dosages": [
+                {
+                    "id": "00000000-0000-0000-0000-000000000405",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "2 g mỗi 6 giờ",
+                    "crcl": null
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000406",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "2 g mỗi 6 giờ",
+                    "crcl": {
+                        "min": 50,
+                        "isMinExclusive": false,
+                        "max": 90,
+                        "isMaxExclusive": true
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000407",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "2 g mỗi 6-8 giờ",
+                    "crcl": {
+                        "min": 30,
+                        "isMinExclusive": false,
+                        "max": 50,
+                        "isMaxExclusive": true
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000408",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "2 g mỗi 8-12 giờ",
+                    "crcl": {
+                        "min": 10,
+                        "isMinExclusive": true,
+                        "max": 30,
+                        "isMaxExclusive": true
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000409",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "2 g mỗi 12 giờ",
+                    "crcl": {
+                        "min": 0,
+                        "isMinExclusive": true,
+                        "max": 10,
+                        "isMaxExclusive": false
+                    }
+                }
+            ]
         },
         {
-          "id": "00000000-0000-0000-0000-000000000410",
-          "routeOfAdministration": "oral",
-          "dose": "500 mg mỗi 24 giờ",
-          "glomerularFiltrationRate": {
-            "min": 0,
-            "isMinExclusive": false,
-            "max": 10,
-            "isMaxExclusive": true
-          }
+            "id": "00000000-0000-0000-0000-000000000303",
+            "name": "Amoxicillin",
+            "antibioticGroupId": "00000000-0000-0000-0000-000000000202",
+            "category": "access",
+            "pathogenIds": [],
+            "dosages": [
+                {
+                    "id": "00000000-0000-0000-0000-000000000410",
+                    "routeOfAdministration": "oral",
+                    "dose": "1 g mỗi 8h",
+                    "crcl": null
+                }, 
+                {
+                    "id": "00000000-0000-0000-0000-000000000411",
+                    "routeOfAdministration": "oral",
+                    "dose": "500 mg mỗi 8 giờ",
+                    "crcl": {
+                        "min": 50,
+                        "isMinExclusive": false,
+                        "max": 90,
+                        "isMaxExclusive": true
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000412",
+                    "routeOfAdministration": "oral",
+                    "dose": "500 mg mỗi 12 giờ",
+                    "crcl": {
+                        "min": 10,
+                        "isMinExclusive": true,
+                        "max": 50,
+                        "isMaxExclusive": true
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000413",
+                    "routeOfAdministration": "oral",
+                    "dose": "500 mg mỗi 24 giờ",
+                    "crcl": {
+                        "min": 0,
+                        "isMinExclusive": true,
+                        "max": 10,
+                        "isMaxExclusive": false
+                    }
+                }
+            ]
+        },
+        {
+            "id": "00000000-0000-0000-0000-000000000304",
+            "name": "Amoxicillin/acid clavulanic",
+            "antibioticGroupId": "00000000-0000-0000-0000-000000000202",
+            "category": "access",
+            "pathogenIds": [],
+            "dosages": [
+                {
+                    "id": "00000000-0000-0000-0000-000000000414",
+                    "routeOfAdministration": "oral",
+                    "dose": "875 mg mỗi 12 giờ",
+                    "crcl": null
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000415",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "1g mỗi 8h ",
+                    "crcl": null
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000416",
+                    "routeOfAdministration": "oral",
+                    "dose": "875 mg mỗi 12 giờ",
+                    "crcl": {
+                        "min": 50,
+                        "isMinExclusive": false,
+                        "max": 90,
+                        "isMaxExclusive": true
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000417",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "1g mỗi 8h",
+                    "crcl": {
+                        "min": 50,
+                        "isMinExclusive": false,
+                        "max": 90,
+                        "isMaxExclusive": true
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000418",
+                    "routeOfAdministration": "oral",
+                    "dose": "875 mg mỗi 12 giờ",
+                    "crcl": {
+                        "min": 30,
+                        "isMinExclusive": false,
+                        "max": 50,
+                        "isMaxExclusive": true
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000419",
+                    "routeOfAdministration": "oral",
+                    "dose": "500 mg mỗi 12 giờ",
+                    "crcl": {
+                        "min": 10,
+                        "isMinExclusive": true,
+                        "max": 30,
+                        "isMaxExclusive": true
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000420",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "1g mỗi 8 giờ",
+                    "crcl": {
+                        "min": 30,
+                        "isMinExclusive": false,
+                        "max": 50,
+                        "isMaxExclusive": true
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000421",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "1 g x 1 lần, sau đó, 500 mg mỗi 12h",
+                    "crcl": {
+                        "min": 10,
+                        "isMinExclusive": true,
+                        "max": 30,
+                        "isMaxExclusive": true
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000422",
+                    "routeOfAdministration": "oral",
+                    "dose": "500 mg mỗi 24h",
+                    "crcl": {
+                        "min": 0,
+                        "isMinExclusive": true,
+                        "max": 10,
+                        "isMaxExclusive": false
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000423",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "1 g x 1 lần, sau đó, 500 mg mỗi 24h",
+                    "crcl": {
+                        "min": 0,
+                        "isMinExclusive": true,
+                        "max": 10,
+                        "isMaxExclusive": false
+                    }
+                }
+            ]
+        },
+        {
+            "id": "00000000-0000-0000-0000-000000000305",
+            "name": "Ampicillin/sulbactam",
+            "antibioticGroupId": "00000000-0000-0000-0000-000000000202",
+            "category": "access",
+            "pathogenIds": [],
+            "dosages": [
+                {
+                    "id": "00000000-0000-0000-0000-000000000424",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "1,5-3 g mỗi 6 giờ",
+                    "crcl": null
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000425",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "1,5-3 g mỗi 6 giờ",
+                    "crcl": {
+                        "min": 50,
+                        "isMinExclusive": false,
+                        "max": 90,
+                        "isMaxExclusive": true
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000426",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "1,5-3 g mỗi 8-12 giờ",
+                    "crcl": {
+                        "min": 10,
+                        "isMinExclusive": true,
+                        "max": 50,
+                        "isMaxExclusive": true
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000427",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "1,5-3 g mỗi 24 giờ",
+                    "crcl": {
+                        "min": 0,
+                        "isMinExclusive": true,
+                        "max": 10,
+                        "isMaxExclusive": false
+                    }
+                }
+            ]
+        },
+        {
+            "id": "00000000-0000-0000-0000-000000000306",
+            "name": "Oxacilin",
+            "antibioticGroupId": "00000000-0000-0000-0000-000000000202",
+            "category": "access",
+            "pathogenIds": [],
+            "dosages": [
+                {
+                    "id": "00000000-0000-0000-0000-000000000428",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "2 g mỗi 4 giờ (cân nhắc giảm liều ở bệnh nhân suy thận nặng)",
+                    "crcl": null
+                }
+            ]
+        },
+        {
+            "id": "00000000-0000-0000-0000-000000000307",
+            "name": "Cefazolin",
+            "antibioticGroupId": "00000000-0000-0000-0000-000000000203",
+            "category": "access",
+            "pathogenIds": [],
+            "dosages": [
+                {
+                    "id": "00000000-0000-0000-0000-000000000429",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "2 g mỗi 8 giờ",
+                    "crcl": null
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000430",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "2 g mỗi 8 giờ",
+                    "crcl": {
+                        "min": 50,
+                        "isMinExclusive": false,
+                        "max": 90,
+                        "isMaxExclusive": true
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000431",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "2 g mỗi 12 giờ",
+                    "crcl": {
+                        "min": 10,
+                        "isMinExclusive": true,
+                        "max": 50,
+                        "isMaxExclusive": true
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000432",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "2 g mỗi 24-48 giờ",
+                    "crcl": {
+                        "min": 0,
+                        "isMinExclusive": true,
+                        "max": 10,
+                        "isMaxExclusive": false
+                    }
+                }
+            ]
+        },
+        {
+            "id": "00000000-0000-0000-0000-000000000308",
+            "name": "Cefalexin",
+            "antibioticGroupId": "00000000-0000-0000-0000-000000000203",
+            "category": "access",
+            "pathogenIds": [],
+            "dosages": [
+                {
+                    "id": "00000000-0000-0000-0000-000000000433",
+                    "routeOfAdministration": "oral",
+                    "dose": "500 mg mỗi 6 giờ",
+                    "crcl": null
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000434",
+                    "routeOfAdministration": "oral",
+                    "dose": "500 mg mỗi 6 giờ",
+                    "crcl": {
+                        "min": 50,
+                        "isMinExclusive": false,
+                        "max": 90,
+                        "isMaxExclusive": true
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000435",
+                    "routeOfAdministration": "oral",
+                    "dose": "500 mg mỗi 12 giờ",
+                    "crcl": {
+                        "min": 10,
+                        "isMinExclusive": true,
+                        "max": 50,
+                        "isMaxExclusive": true
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000436",
+                    "routeOfAdministration": "oral",
+                    "dose": "250 mg mỗi 12 giờ",
+                    "crcl": {
+                        "min": 0,
+                        "isMinExclusive": true,
+                        "max": 10,
+                        "isMaxExclusive": false
+                    }
+                }
+            ]
+        },
+        {
+            "id": "00000000-0000-0000-0000-000000000309",
+            "name": "Cefuroxim",
+            "antibioticGroupId": "00000000-0000-0000-0000-000000000203",
+            "category": "watch",
+            "pathogenIds": [],
+            "dosages": [
+                {
+                    "id": "00000000-0000-0000-0000-000000000437",
+                    "routeOfAdministration": "oral",
+                    "dose": "500 mg mỗi 12 giờ",
+                    "crcl": null
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000438",
+                    "routeOfAdministration": "oral",
+                    "dose": "500 mg mỗi 12 giờ",
+                    "crcl": {
+                        "min": 50,
+                        "isMinExclusive": false,
+                        "max": 90,
+                        "isMaxExclusive": true
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000439",
+                    "routeOfAdministration": "oral",
+                    "dose": "500 mg mỗi 12 giờ",
+                    "crcl": {
+                        "min": 10,
+                        "isMinExclusive": true,
+                        "max": 50,
+                        "isMaxExclusive": true
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000440",
+                    "routeOfAdministration": "oral",
+                    "dose": "250 mg mỗi 24 giờ",
+                    "crcl": {
+                        "min": 0,
+                        "isMinExclusive": true,
+                        "max": 10,
+                        "isMaxExclusive": false
+                    }
+                }
+            ]
+        },
+        {
+            "id": "00000000-0000-0000-0000-00000000030a",
+            "name": "Cefprozil",
+            "antibioticGroupId": "00000000-0000-0000-0000-000000000203",
+            "category": "watch",
+            "pathogenIds": [],
+            "dosages": [
+                {
+                    "id": "00000000-0000-0000-0000-000000000441",
+                    "routeOfAdministration": "oral",
+                    "dose": "500 mg mỗi 12 giờ",
+                    "crcl": null
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000442",
+                    "routeOfAdministration": "oral",
+                    "dose": "500 mg mỗi 12 giờ",
+                    "crcl": {
+                        "min": 50,
+                        "isMinExclusive": false,
+                        "max": 90,
+                        "isMaxExclusive": true
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000443",
+                    "routeOfAdministration": "oral",
+                    "dose": "500 mg mỗi 24 giờ",
+                    "crcl": {
+                        "min": 10,
+                        "isMinExclusive": true,
+                        "max": 50,
+                        "isMaxExclusive": true
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000444",
+                    "routeOfAdministration": "oral",
+                    "dose": "250 mg mỗi 12 giờ",
+                    "crcl": {
+                        "min": 0,
+                        "isMinExclusive": true,
+                        "max": 10,
+                        "isMaxExclusive": false
+                    }
+                }
+            ]
+        },
+        {
+            "id": "00000000-0000-0000-0000-00000000030b",
+            "name": "Cefpodoxim",
+            "antibioticGroupId": "00000000-0000-0000-0000-000000000203",
+            "category": "watch",
+            "pathogenIds": [],
+            "dosages": [
+                {
+                    "id": "00000000-0000-0000-0000-000000000445",
+                    "routeOfAdministration": "oral",
+                    "dose": "200 mg mỗi 12 giờ",
+                    "crcl": null
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000446",
+                    "routeOfAdministration": "oral",
+                    "dose": "200 mg mỗi 12 giờ",
+                    "crcl": {
+                        "min": 50,
+                        "isMinExclusive": false,
+                        "max": 90,
+                        "isMaxExclusive": true
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000447",
+                    "routeOfAdministration": "oral",
+                    "dose": "200 mg mỗi 12 giờ",
+                    "crcl": {
+                        "min": 10,
+                        "isMinExclusive": true,
+                        "max": 50,
+                        "isMaxExclusive": true
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000448",
+                    "routeOfAdministration": "oral",
+                    "dose": "200 mg mỗi 24 giờ",
+                    "crcl": {
+                        "min": 0,
+                        "isMinExclusive": true,
+                        "max": 10,
+                        "isMaxExclusive": false
+                    }
+                }
+            ]
+        },
+        {
+            "id": "00000000-0000-0000-0000-00000000030c",
+            "name": "Cefdinir",
+            "antibioticGroupId": "00000000-0000-0000-0000-000000000203",
+            "category": "watch",
+            "pathogenIds": [],
+            "dosages": [
+                {
+                    "id": "00000000-0000-0000-0000-000000000449",
+                    "routeOfAdministration": "oral",
+                    "dose": "300 mg mỗi 12 giờ",
+                    "crcl": null
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000450",
+                    "routeOfAdministration": "oral",
+                    "dose": "300 mg mỗi 12 giờ",
+                    "crcl": {
+                        "min": 50,
+                        "isMinExclusive": false,
+                        "max": 90,
+                        "isMaxExclusive": true
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000451",
+                    "routeOfAdministration": "oral",
+                    "dose": "300 mg mỗi 12 giờ",
+                    "crcl": {
+                        "min": 10,
+                        "isMinExclusive": true,
+                        "max": 50,
+                        "isMaxExclusive": true
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000452",
+                    "routeOfAdministration": "oral",
+                    "dose": "300 mg mỗi 24 giờ",
+                    "crcl": {
+                        "min": 0,
+                        "isMinExclusive": true,
+                        "max": 10,
+                        "isMaxExclusive": false
+                    }
+                }
+            ]
+        },
+        {
+            "id": "00000000-0000-0000-0000-00000000030d",
+            "name": "Cefditoren",
+            "antibioticGroupId": "00000000-0000-0000-0000-000000000203",
+            "category": "watch",
+            "pathogenIds": [],
+            "dosages": [
+                {
+                    "id": "00000000-0000-0000-0000-000000000453",
+                    "routeOfAdministration": "oral",
+                    "dose": "400 mg mỗi 12 giờ",
+                    "crcl": null
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000454",
+                    "routeOfAdministration": "oral",
+                    "dose": "400 mg mỗi 12 giờ",
+                    "crcl": {
+                        "min": 50,
+                        "isMinExclusive": false,
+                        "max": 90,
+                        "isMaxExclusive": true
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000455",
+                    "routeOfAdministration": "oral",
+                    "dose": "200 mg mỗi 12 giờ",
+                    "crcl": {
+                        "min": 10,
+                        "isMinExclusive": true,
+                        "max": 50,
+                        "isMaxExclusive": true
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000456",
+                    "routeOfAdministration": "oral",
+                    "dose": "200 mg mỗi 24 giờ",
+                    "crcl": {
+                        "min": 0,
+                        "isMinExclusive": true,
+                        "max": 10,
+                        "isMaxExclusive": false
+                    }
+                }
+            ]
+        },
+        {
+            "id": "00000000-0000-0000-0000-00000000030e",
+            "name": "Cefotaxim",
+            "antibioticGroupId": "00000000-0000-0000-0000-000000000203",
+            "category": "watch",
+            "pathogenIds": [],
+            "dosages": [
+                {
+                    "id": "00000000-0000-0000-0000-000000000457",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "1-2 g mỗi 8 giờ",
+                    "crcl": null
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000458",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "1-2 g mỗi 8-12 giờ",
+                    "crcl": {
+                        "min": 50,
+                        "isMinExclusive": false,
+                        "max": 90,
+                        "isMaxExclusive": true
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000459",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "1-2 g mỗi 12-24 giờ",
+                    "crcl": {
+                        "min": 10,
+                        "isMinExclusive": true,
+                        "max": 50,
+                        "isMaxExclusive": true
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000460",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "1-2 g mỗi 24 giờ",
+                    "crcl": {
+                        "min": 0,
+                        "isMinExclusive": true,
+                        "max": 10,
+                        "isMaxExclusive": false
+                    }
+                }
+            ]
+        },
+        {
+            "id": "00000000-0000-0000-0000-00000000030f",
+            "name": "Ceftriaxon",
+            "antibioticGroupId": "00000000-0000-0000-0000-000000000203",
+            "category": "watch",
+            "pathogenIds": [],
+            "dosages": [
+                {
+                    "id": "00000000-0000-0000-0000-000000000461",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "1-2 g mỗi 24 giờ (không cần hiệu chỉnh liều theo chức năng thận)",
+                    "crcl": null
+                }
+            ]
+        },
+        {
+            "id": "00000000-0000-0000-0000-000000000310",
+            "name": "Ceftazidim",
+            "antibioticGroupId": "00000000-0000-0000-0000-000000000203",
+            "category": "watch",
+            "pathogenIds": [],
+            "dosages": [
+                {
+                    "id": "00000000-0000-0000-0000-000000000462",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "2 g mỗi 8 giờ",
+                    "crcl": null
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000463",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "2 g mỗi 8-12 giờ",
+                    "crcl": {
+                        "min": 50,
+                        "isMinExclusive": false,
+                        "max": 90,
+                        "isMaxExclusive": true
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000464",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "2 g mỗi 12-24 giờ",
+                    "crcl": {
+                        "min": 10,
+                        "isMinExclusive": true,
+                        "max": 50,
+                        "isMaxExclusive": true
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000465",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "2 g mỗi 24-48 giờ",
+                    "crcl": {
+                        "min": 0,
+                        "isMinExclusive": true,
+                        "max": 10,
+                        "isMaxExclusive": false
+                    }
+                }
+            ]
+        },
+        {
+            "id": "00000000-0000-0000-0000-000000000311",
+            "name": "Cefoperazon",
+            "antibioticGroupId": "00000000-0000-0000-0000-000000000203",
+            "category": "watch",
+            "pathogenIds": [],
+            "dosages": [
+                {
+                    "id": "00000000-0000-0000-0000-000000000466",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "2 g mỗi 12 giờ (không cần hiệu chỉnh liều theo chức năng thận)",
+                    "crcl": null
+                }
+            ]
+        },
+        {
+            "id": "00000000-0000-0000-0000-000000000312",
+            "name": "Cefoperazon/sulbactam",
+            "antibioticGroupId": "00000000-0000-0000-0000-000000000203",
+            "category": "watch",
+            "pathogenIds": [],
+            "dosages": [
+                {
+                    "id": "00000000-0000-0000-0000-000000000467",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "1-2 g cefoperazon mỗi 12 giờ, có thể tăng lên 2-4 g mỗi 12 giờ",
+                    "crcl": null
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000468",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "1-2 g cefoperazon mỗi 12 giờ, có thể tăng lên 2-4 g mỗi 12 giờ",
+                    "crcl": {
+                        "min": 30,
+                        "isMinExclusive": true,
+                        "max": null,
+                        "isMaxExclusive": false
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000469",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "Tối đa 1 g sulbactam mỗi 12 giờ",
+                    "crcl": {
+                        "min": 15,
+                        "isMinExclusive": false,
+                        "max": 30,
+                        "isMaxExclusive": false
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000470",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "Tối đa 500 mg sulbactam mỗi 12 giờ",
+                    "crcl": {
+                        "min": 0,
+                        "isMinExclusive": false,
+                        "max": 15,
+                        "isMaxExclusive": true
+                    }
+                }
+            ]
+        },
+        {
+            "id": "00000000-0000-0000-0000-000000000313",
+            "name": "Cefepim",
+            "antibioticGroupId": "00000000-0000-0000-0000-000000000203",
+            "category": "watch",
+            "pathogenIds": [],
+            "dosages": [
+                {
+                    "id": "00000000-0000-0000-0000-000000000471",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "2 g mỗi 8 giờ",
+                    "crcl": null
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000472",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "2 g mỗi 8-12 giờ",
+                    "crcl": {
+                        "min": 60,
+                        "isMinExclusive": true,
+                        "max": null,
+                        "isMaxExclusive": false
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000473",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "2 g mỗi 12 giờ",
+                    "crcl": {
+                        "min": 30,
+                        "isMinExclusive": false,
+                        "max": 60,
+                        "isMaxExclusive": false
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000474",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "2 g mỗi 24 giờ",
+                    "crcl": {
+                        "min": 11,
+                        "isMinExclusive": false,
+                        "max": 29,
+                        "isMaxExclusive": false
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000475",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "1 g mỗi 24 giờ",
+                    "crcl": {
+                        "min": 0,
+                        "isMinExclusive": true,
+                        "max": 10,
+                        "isMaxExclusive": false
+                    }
+                }
+            ]
+        },
+        {
+            "id": "00000000-0000-0000-0000-000000000314",
+            "name": "Ceftarolin",
+            "antibioticGroupId": "00000000-0000-0000-0000-000000000203",
+            "category": "reserve",
+            "pathogenIds": [],
+            "dosages": [
+                {
+                    "id": "00000000-0000-0000-0000-000000000476",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "600 mg mỗi 12 giờ",
+                    "crcl": null
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000477",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "600 mg mỗi 12 giờ",
+                    "crcl": {
+                        "min": 50,
+                        "isMinExclusive": true,
+                        "max": null,
+                        "isMaxExclusive": false
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000478",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "400 mg mỗi 12 giờ",
+                    "crcl": {
+                        "min": 30,
+                        "isMinExclusive": true,
+                        "max": 50,
+                        "isMaxExclusive": false
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000479",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "300 mg mỗi 12 giờ",
+                    "crcl": {
+                        "min": 15,
+                        "isMinExclusive": false,
+                        "max": 30,
+                        "isMaxExclusive": false
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000480",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "200 mg mỗi 12 giờ",
+                    "crcl": {
+                        "min": 0,
+                        "isMinExclusive": false,
+                        "max": 15,
+                        "isMaxExclusive": true
+                    }
+                }
+            ]
+        },
+        {
+            "id": "00000000-0000-0000-0000-000000000315",
+            "name": "Piperacillin/tazobactam",
+            "antibioticGroupId": "00000000-0000-0000-0000-000000000202",
+            "category": "watch",
+            "pathogenIds": [],
+            "dosages": [
+                {
+                    "id": "00000000-0000-0000-0000-000000000481",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "4,5 g mỗi 6 giờ",
+                    "crcl": null
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000482",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "4,5 g mỗi 6 giờ",
+                    "crcl": {
+                        "min": 40,
+                        "isMinExclusive": true,
+                        "max": null,
+                        "isMaxExclusive": false
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000483",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "3,375 g mỗi 6 giờ",
+                    "crcl": {
+                        "min": 20,
+                        "isMinExclusive": false,
+                        "max": 40,
+                        "isMaxExclusive": false
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000484",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "2,25 g mỗi 6 giờ",
+                    "crcl": {
+                        "min": 0,
+                        "isMinExclusive": false,
+                        "max": 20,
+                        "isMaxExclusive": true
+                    }
+                }
+            ]
+        },
+        {
+            "id": "00000000-0000-0000-0000-000000000316",
+            "name": "Imipenem",
+            "antibioticGroupId": "00000000-0000-0000-0000-000000000205",
+            "category": "watch",
+            "pathogenIds": [],
+            "dosages": [
+                {
+                    "id": "00000000-0000-0000-0000-000000000485",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "500 mg mỗi 6 giờ (trường hợp nặng cân nhắc 1 g mỗi 8 giờ, tối đa 1 g mỗi 6 giờ)",
+                    "crcl": null
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000486",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "250-500 mg mỗi 6-8 giờ",
+                    "crcl": {
+                        "min": 50,
+                        "isMinExclusive": false,
+                        "max": 90,
+                        "isMaxExclusive": true
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000487",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "250 mg mỗi 8-12 giờ",
+                    "crcl": {
+                        "min": 10,
+                        "isMinExclusive": true,
+                        "max": 50,
+                        "isMaxExclusive": true
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000488",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "125-250 mg mỗi 12 giờ",
+                    "crcl": {
+                        "min": 0,
+                        "isMinExclusive": true,
+                        "max": 10,
+                        "isMaxExclusive": false
+                    }
+                }
+            ]
+        },
+        {
+            "id": "00000000-0000-0000-0000-000000000317",
+            "name": "Meropenem",
+            "antibioticGroupId": "00000000-0000-0000-0000-000000000205",
+            "category": "watch",
+            "pathogenIds": [],
+            "dosages": [
+                {
+                    "id": "00000000-0000-0000-0000-000000000489",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "1 g mỗi 8 giờ (trường hợp nặng, nhiễm P. aeruginosa giảm nhạy cảm, cân nhắc 2 g mỗi 8 giờ)",
+                    "crcl": null
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000490",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "1 g mỗi 8 giờ",
+                    "crcl": {
+                        "min": 50,
+                        "isMinExclusive": false,
+                        "max": 90,
+                        "isMaxExclusive": true
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000491",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "1 g mỗi 12 giờ",
+                    "crcl": {
+                        "min": 25,
+                        "isMinExclusive": false,
+                        "max": 50,
+                        "isMaxExclusive": false
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000492",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "500 mg mỗi 12 giờ",
+                    "crcl": {
+                        "min": 10,
+                        "isMinExclusive": false,
+                        "max": 25,
+                        "isMaxExclusive": false
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000493",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "500 mg mỗi 24 giờ",
+                    "crcl": {
+                        "min": 0,
+                        "isMinExclusive": true,
+                        "max": 10,
+                        "isMaxExclusive": false
+                    }
+                }
+            ]
+        },
+        {
+            "id": "00000000-0000-0000-0000-000000000318",
+            "name": "Ertapenem",
+            "antibioticGroupId": "00000000-0000-0000-0000-000000000205",
+            "category": "watch",
+            "pathogenIds": [],
+            "dosages": [
+                {
+                    "id": "00000000-0000-0000-0000-000000000494",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "1 g mỗi 24 giờ",
+                    "crcl": null
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000495",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "1 g mỗi 24 giờ",
+                    "crcl": {
+                        "min": 30,
+                        "isMinExclusive": true,
+                        "max": null,
+                        "isMaxExclusive": false
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000496",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "500 mg mỗi 24 giờ",
+                    "crcl": {
+                        "min": 0,
+                        "isMinExclusive": false,
+                        "max": 30,
+                        "isMaxExclusive": true
+                    }
+                }
+            ]
+        },
+        {
+            "id": "00000000-0000-0000-0000-000000000319",
+            "name": "Amikacin",
+            "antibioticGroupId": "00000000-0000-0000-0000-000000000208",
+            "category": "access",
+            "pathogenIds": [],
+            "dosages": [
+                {
+                    "id": "00000000-0000-0000-0000-000000000497",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "15-20 mg/kg mỗi 24 giờ",
+                    "crcl": null
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000498",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "12 mg/kg mỗi 24 giờ",
+                    "crcl": {
+                        "min": 60,
+                        "isMinExclusive": false,
+                        "max": 80,
+                        "isMaxExclusive": false
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000499",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "7,5 mg/kg mỗi 24 giờ",
+                    "crcl": {
+                        "min": 40,
+                        "isMinExclusive": false,
+                        "max": 60,
+                        "isMaxExclusive": true
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000004100",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "4 mg/kg mỗi 24 giờ",
+                    "crcl": {
+                        "min": 30,
+                        "isMinExclusive": false,
+                        "max": 40,
+                        "isMaxExclusive": true
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000004101",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "7,5 mg/kg mỗi 48 giờ",
+                    "crcl": {
+                        "min": 20,
+                        "isMinExclusive": false,
+                        "max": 30,
+                        "isMaxExclusive": true
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000004102",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "4 mg/kg mỗi 48 giờ",
+                    "crcl": {
+                        "min": 10,
+                        "isMinExclusive": false,
+                        "max": 20,
+                        "isMaxExclusive": true
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000004103",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "3 mg/kg mỗi 72 giờ (sau lọc máu)",
+                    "crcl": {
+                        "min": 0,
+                        "isMinExclusive": false,
+                        "max": 10,
+                        "isMaxExclusive": true
+                    }
+                }
+            ]
+        },
+        {
+            "id": "00000000-0000-0000-0000-00000000031a",
+            "name": "Gentamycin",
+            "antibioticGroupId": "00000000-0000-0000-0000-000000000208",
+            "category": "access",
+            "pathogenIds": [],
+            "dosages": [
+                {
+                    "id": "00000000-0000-0000-0000-000000004104",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "5-7 mg/kg mỗi 24 giờ",
+                    "crcl": null
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000004105",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "4 mg/kg mỗi 24 giờ",
+                    "crcl": {
+                        "min": 60,
+                        "isMinExclusive": false,
+                        "max": 80,
+                        "isMaxExclusive": false
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000004106",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "3,5 mg/kg mỗi 24 giờ",
+                    "crcl": {
+                        "min": 40,
+                        "isMinExclusive": false,
+                        "max": 60,
+                        "isMaxExclusive": true
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000004107",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "2,5 mg/kg mỗi 24 giờ",
+                    "crcl": {
+                        "min": 30,
+                        "isMinExclusive": false,
+                        "max": 40,
+                        "isMaxExclusive": true
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000004108",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "4 mg/kg mỗi 48 giờ",
+                    "crcl": {
+                        "min": 20,
+                        "isMinExclusive": false,
+                        "max": 30,
+                        "isMaxExclusive": true
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000004109",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "3 mg/kg mỗi 48 giờ",
+                    "crcl": {
+                        "min": 10,
+                        "isMinExclusive": false,
+                        "max": 20,
+                        "isMaxExclusive": true
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000004110",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "2 mg/kg mỗi 72 giờ (sau lọc máu)",
+                    "crcl": {
+                        "min": 0,
+                        "isMinExclusive": false,
+                        "max": 10,
+                        "isMaxExclusive": true
+                    }
+                }
+            ]
+        },
+        {
+            "id": "00000000-0000-0000-0000-00000000031b",
+            "name": "Tobramycin",
+            "antibioticGroupId": "00000000-0000-0000-0000-000000000208",
+            "category": "watch",
+            "pathogenIds": [],
+            "dosages": [
+                {
+                    "id": "00000000-0000-0000-0000-000000004111",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "5-7 mg/kg mỗi 24 giờ",
+                    "crcl": null
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000004112",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "4 mg/kg mỗi 24 giờ",
+                    "crcl": {
+                        "min": 60,
+                        "isMinExclusive": false,
+                        "max": 80,
+                        "isMaxExclusive": false
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000004113",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "3,5 mg/kg mỗi 24 giờ",
+                    "crcl": {
+                        "min": 40,
+                        "isMinExclusive": false,
+                        "max": 60,
+                        "isMaxExclusive": true
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000004114",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "2,5 mg/kg mỗi 24 giờ",
+                    "crcl": {
+                        "min": 30,
+                        "isMinExclusive": false,
+                        "max": 40,
+                        "isMaxExclusive": true
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000004115",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "4 mg/kg mỗi 48 giờ",
+                    "crcl": {
+                        "min": 20,
+                        "isMinExclusive": false,
+                        "max": 30,
+                        "isMaxExclusive": true
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000004116",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "3 mg/kg mỗi 48 giờ",
+                    "crcl": {
+                        "min": 10,
+                        "isMinExclusive": false,
+                        "max": 20,
+                        "isMaxExclusive": true
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000004117",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "2 mg/kg mỗi 72 giờ (sau lọc máu)",
+                    "crcl": {
+                        "min": 0,
+                        "isMinExclusive": false,
+                        "max": 10,
+                        "isMaxExclusive": true
+                    }
+                }
+            ]
+        },
+        {
+            "id": "00000000-0000-0000-0000-00000000031c",
+            "name": "Ciprofloxacin",
+            "antibioticGroupId": "00000000-0000-0000-0000-000000000215",
+            "category": "watch",
+            "pathogenIds": [],
+            "dosages": [
+                {
+                    "id": "00000000-0000-0000-0000-000000004118",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "400 mg mỗi 8-12 giờ",
+                    "crcl": null
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000004119",
+                    "routeOfAdministration": "oral",
+                    "dose": "500-750 mg mỗi 12 giờ",
+                    "crcl": null
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000004120",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "400 mg mỗi 8-12 giờ",
+                    "crcl": {
+                        "min": 50,
+                        "isMinExclusive": false,
+                        "max": 90,
+                        "isMaxExclusive": true
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000004121",
+                    "routeOfAdministration": "oral",
+                    "dose": "500-750 mg mỗi 12 giờ",
+                    "crcl": {
+                        "min": 50,
+                        "isMinExclusive": false,
+                        "max": 90,
+                        "isMaxExclusive": true
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000004122",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "400 mg mỗi 12 giờ",
+                    "crcl": {
+                        "min": 30,
+                        "isMinExclusive": false,
+                        "max": 50,
+                        "isMaxExclusive": true
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000004123",
+                    "routeOfAdministration": "oral",
+                    "dose": "250-500 mg mỗi 12 giờ",
+                    "crcl": {
+                        "min": 10,
+                        "isMinExclusive": true,
+                        "max": 50,
+                        "isMaxExclusive": true
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000004124",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "400 mg mỗi 24 giờ",
+                    "crcl": {
+                        "min": 0,
+                        "isMinExclusive": false,
+                        "max": 30,
+                        "isMaxExclusive": true
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000004125",
+                    "routeOfAdministration": "oral",
+                    "dose": "250-500 mg mỗi 24 giờ",
+                    "crcl": {
+                        "min": 0,
+                        "isMinExclusive": true,
+                        "max": 10,
+                        "isMaxExclusive": false
+                    }
+                }
+            ]
+        },
+        {
+            "id": "00000000-0000-0000-0000-00000000031d",
+            "name": "Moxifloxacin",
+            "antibioticGroupId": "00000000-0000-0000-0000-000000000215",
+            "category": "watch",
+            "pathogenIds": [],
+            "dosages": [
+                {
+                    "id": "00000000-0000-0000-0000-000000004126",
+                    "routeOfAdministration": "oral",
+                    "dose": "400 mg mỗi 24 giờ (không cần hiệu chỉnh liều theo chức năng thận)",
+                    "crcl": null
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000004127",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "400 mg mỗi 24 giờ (không cần hiệu chỉnh liều theo chức năng thận)",
+                    "crcl": null
+                }
+            ]
+        },
+        {
+            "id": "00000000-0000-0000-0000-00000000031e",
+            "name": "Levofloxacin",
+            "antibioticGroupId": "00000000-0000-0000-0000-000000000215",
+            "category": "watch",
+            "pathogenIds": [],
+            "dosages": [
+                {
+                    "id": "00000000-0000-0000-0000-000000004128",
+                    "routeOfAdministration": "oral",
+                    "dose": "750 mg mỗi 24 giờ hoặc 500 mg mỗi 12 giờ",
+                    "crcl": null
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000004129",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "750 mg mỗi 24 giờ hoặc 500 mg mỗi 12 giờ",
+                    "crcl": null
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000004130",
+                    "routeOfAdministration": "oral",
+                    "dose": "750 mg mỗi 24 giờ hoặc liều đầu 500 mg, các liều sau 250 mg mỗi 12 giờ",
+                    "crcl": {
+                        "min": 50,
+                        "isMinExclusive": true,
+                        "max": null,
+                        "isMaxExclusive": false
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000004131",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "750 mg mỗi 24 giờ hoặc liều đầu 500 mg, các liều sau 250 mg mỗi 12 giờ",
+                    "crcl": {
+                        "min": 50,
+                        "isMinExclusive": true,
+                        "max": null,
+                        "isMaxExclusive": false
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000004132",
+                    "routeOfAdministration": "oral",
+                    "dose": "750 mg mỗi 48 giờ hoặc liều đầu 500 mg, các liều sau 125 mg mỗi 12 giờ",
+                    "crcl": {
+                        "min": 20,
+                        "isMinExclusive": false,
+                        "max": 49,
+                        "isMaxExclusive": false
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000004133",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "750 mg mỗi 48 giờ hoặc liều đầu 500 mg, các liều sau 125 mg mỗi 12 giờ",
+                    "crcl": {
+                        "min": 20,
+                        "isMinExclusive": false,
+                        "max": 49,
+                        "isMaxExclusive": false
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000004134",
+                    "routeOfAdministration": "oral",
+                    "dose": "750 mg x 1 liều, sau đó 500 mg mỗi 48 giờ hoặc liều đầu 500 mg, các liều sau 250 mg mỗi 12 giờ",
+                    "crcl": {
+                        "min": 0,
+                        "isMinExclusive": false,
+                        "max": 20,
+                        "isMaxExclusive": true
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000004135",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "750 mg x 1 liều, sau đó 500 mg mỗi 48 giờ hoặc liều đầu 500 mg, các liều sau 250 mg mỗi 12 giờ",
+                    "crcl": {
+                        "min": 0,
+                        "isMinExclusive": false,
+                        "max": 20,
+                        "isMaxExclusive": true
+                    }
+                }
+            ]
+        },
+        {
+            "id": "00000000-0000-0000-0000-00000000031f",
+            "name": "Erythromycin",
+            "antibioticGroupId": "00000000-0000-0000-0000-000000000209",
+            "category": "access",
+            "pathogenIds": [],
+            "dosages": [
+                {
+                    "id": "00000000-0000-0000-0000-000000004136",
+                    "routeOfAdministration": "oral",
+                    "dose": "500 mg mỗi 6 giờ, tối đa 4 g/ngày (không cần hiệu chỉnh liều theo chức năng thận)",
+                    "crcl": null
+                }
+            ]
+        },
+        {
+            "id": "00000000-0000-0000-0000-000000000320",
+            "name": "Clarithromycin",
+            "antibioticGroupId": "00000000-0000-0000-0000-000000000209",
+            "category": "watch",
+            "pathogenIds": [],
+            "dosages": [
+                {
+                    "id": "00000000-0000-0000-0000-000000004137",
+                    "routeOfAdministration": "oral",
+                    "dose": "500 mg mỗi 12 giờ",
+                    "crcl": null
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000004138",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "500 mg mỗi 12 giờ",
+                    "crcl": null
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000004139",
+                    "routeOfAdministration": "oral",
+                    "dose": "500 mg mỗi 12 giờ",
+                    "crcl": {
+                        "min": 50,
+                        "isMinExclusive": false,
+                        "max": 90,
+                        "isMaxExclusive": true
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000004140",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "500 mg mỗi 12 giờ",
+                    "crcl": {
+                        "min": 50,
+                        "isMinExclusive": false,
+                        "max": 90,
+                        "isMaxExclusive": true
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000004141",
+                    "routeOfAdministration": "oral",
+                    "dose": "500 mg mỗi 12-24 giờ",
+                    "crcl": {
+                        "min": 10,
+                        "isMinExclusive": true,
+                        "max": 50,
+                        "isMaxExclusive": true
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000004142",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "500 mg mỗi 12-24 giờ",
+                    "crcl": {
+                        "min": 10,
+                        "isMinExclusive": true,
+                        "max": 50,
+                        "isMaxExclusive": true
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000004143",
+                    "routeOfAdministration": "oral",
+                    "dose": "500 mg mỗi 24 giờ",
+                    "crcl": {
+                        "min": 0,
+                        "isMinExclusive": true,
+                        "max": 10,
+                        "isMaxExclusive": false
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000004144",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "500 mg mỗi 24 giờ",
+                    "crcl": {
+                        "min": 0,
+                        "isMinExclusive": true,
+                        "max": 10,
+                        "isMaxExclusive": false
+                    }
+                }
+            ]
+        },
+        {
+            "id": "00000000-0000-0000-0000-000000000321",
+            "name": "Azithromycin",
+            "antibioticGroupId": "00000000-0000-0000-0000-000000000209",
+            "category": "watch",
+            "pathogenIds": [],
+            "dosages": [
+                {
+                    "id": "00000000-0000-0000-0000-000000004145",
+                    "routeOfAdministration": "oral",
+                    "dose": "250-500 mg mỗi 24 giờ (không cần hiệu chỉnh liều theo chức năng thận)",
+                    "crcl": null
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000004146",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "250-500 mg mỗi 24 giờ (không cần hiệu chỉnh liều theo chức năng thận)",
+                    "crcl": null
+                }
+            ]
+        },
+        {
+            "id": "00000000-0000-0000-0000-000000000322",
+            "name": "Vancomycin",
+            "antibioticGroupId": "00000000-0000-0000-0000-000000000210",
+            "category": "watch",
+            "pathogenIds": [],
+            "dosages": [
+                {
+                    "id": "00000000-0000-0000-0000-000000004147",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "15-30 mg/kg mỗi 12 giờ (không quá 2 g/lần; cân nhắc liều nạp 25-30 mg/kg trong trường hợp nặng)",
+                    "crcl": null
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000004148",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "15-30 mg/kg mỗi 12 giờ",
+                    "crcl": {
+                        "min": 50,
+                        "isMinExclusive": false,
+                        "max": 90,
+                        "isMaxExclusive": true
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000004149",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "15 mg/kg mỗi 24-96 giờ",
+                    "crcl": {
+                        "min": 10,
+                        "isMinExclusive": true,
+                        "max": 50,
+                        "isMaxExclusive": true
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000004150",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "7,5 mg/kg mỗi 48-72 giờ",
+                    "crcl": {
+                        "min": 0,
+                        "isMinExclusive": true,
+                        "max": 10,
+                        "isMaxExclusive": false
+                    }
+                }
+            ]
+        },
+        {
+            "id": "00000000-0000-0000-0000-000000000323",
+            "name": "Teicoplanin",
+            "antibioticGroupId": "00000000-0000-0000-0000-000000000210",
+            "category": "watch",
+            "pathogenIds": [],
+            "dosages": [
+                {
+                    "id": "00000000-0000-0000-0000-000000004151",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "Liều tải: 12 mg/kg mỗi 12 giờ x 3 liều; liều duy trì: 12 mg/kg mỗi 24 giờ",
+                    "crcl": null
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000004152",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "Liều duy trì: 12 mg/kg mỗi 24 giờ",
+                    "crcl": {
+                        "min": 50,
+                        "isMinExclusive": false,
+                        "max": 90,
+                        "isMaxExclusive": true
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000004153",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "Liều duy trì: 12 mg/kg mỗi 48 giờ",
+                    "crcl": {
+                        "min": 10,
+                        "isMinExclusive": true,
+                        "max": 50,
+                        "isMaxExclusive": true
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000004154",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "Liều duy trì: 12 mg/kg mỗi 72 giờ",
+                    "crcl": {
+                        "min": 0,
+                        "isMinExclusive": true,
+                        "max": 10,
+                        "isMaxExclusive": false
+                    }
+                }
+            ]
+        },
+        {
+            "id": "00000000-0000-0000-0000-000000000324",
+            "name": "Linezolid",
+            "antibioticGroupId": "00000000-0000-0000-0000-000000000218",
+            "category": "reserve",
+            "pathogenIds": [],
+            "dosages": [
+                {
+                    "id": "00000000-0000-0000-0000-000000004155",
+                    "routeOfAdministration": "oral",
+                    "dose": "600 mg mỗi 12 giờ (không cần hiệu chỉnh liều theo chức năng thận)",
+                    "crcl": null
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000004156",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "600 mg mỗi 12 giờ (không cần hiệu chỉnh liều theo chức năng thận)",
+                    "crcl": null
+                }
+            ]
+        },
+        {
+            "id": "00000000-0000-0000-0000-000000000325",
+            "name": "Doxycyclin",
+            "antibioticGroupId": "00000000-0000-0000-0000-00000000020e",
+            "category": "access",
+            "pathogenIds": [],
+            "dosages": [
+                {
+                    "id": "00000000-0000-0000-0000-000000004157",
+                    "routeOfAdministration": "oral",
+                    "dose": "100 mg mỗi 12 giờ (không cần hiệu chỉnh liều theo chức năng thận)",
+                    "crcl": null
+                }
+            ]
+        },
+        {
+            "id": "00000000-0000-0000-0000-000000000326",
+            "name": "Metronidazol",
+            "antibioticGroupId": "00000000-0000-0000-0000-000000000219",
+            "category": "access",
+            "pathogenIds": [],
+            "dosages": [
+                {
+                    "id": "00000000-0000-0000-0000-000000004158",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "500 mg mỗi 8 giờ",
+                    "crcl": null
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000004159",
+                    "routeOfAdministration": "oral",
+                    "dose": "500 mg mỗi 8 giờ",
+                    "crcl": null
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000004160",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "500 mg mỗi 8 giờ",
+                    "crcl": {
+                        "min": 50,
+                        "isMinExclusive": false,
+                        "max": 90,
+                        "isMaxExclusive": true
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000004161",
+                    "routeOfAdministration": "oral",
+                    "dose": "500 mg mỗi 8 giờ",
+                    "crcl": {
+                        "min": 50,
+                        "isMinExclusive": false,
+                        "max": 90,
+                        "isMaxExclusive": true
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000004162",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "500 mg mỗi 8 giờ",
+                    "crcl": {
+                        "min": 10,
+                        "isMinExclusive": true,
+                        "max": 50,
+                        "isMaxExclusive": true
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000004163",
+                    "routeOfAdministration": "oral",
+                    "dose": "500 mg mỗi 8 giờ",
+                    "crcl": {
+                        "min": 10,
+                        "isMinExclusive": true,
+                        "max": 50,
+                        "isMaxExclusive": true
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000004164",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "500 mg mỗi 24 giờ",
+                    "crcl": {
+                        "min": 0,
+                        "isMinExclusive": true,
+                        "max": 10,
+                        "isMaxExclusive": false
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000004165",
+                    "routeOfAdministration": "oral",
+                    "dose": "250 mg mỗi 12 giờ",
+                    "crcl": {
+                        "min": 0,
+                        "isMinExclusive": true,
+                        "max": 10,
+                        "isMaxExclusive": false
+                    }
+                }
+            ]
+        },
+        {
+            "id": "00000000-0000-0000-0000-000000000327",
+            "name": "Clindamycin",
+            "antibioticGroupId": "00000000-0000-0000-0000-00000000020a",
+            "category": "access",
+            "pathogenIds": [],
+            "dosages": [
+                {
+                    "id": "00000000-0000-0000-0000-000000004166",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "600 mg mỗi 8 giờ (không cần hiệu chỉnh liều theo chức năng thận)",
+                    "crcl": null
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000004167",
+                    "routeOfAdministration": "oral",
+                    "dose": "300-450 mg mỗi 6 giờ (không cần hiệu chỉnh liều theo chức năng thận)",
+                    "crcl": null
+                }
+            ]
+        },
+        {
+            "id": "00000000-0000-0000-0000-000000000328",
+            "name": "Sulfamethoxazol/trimethoprim",
+            "antibioticGroupId": "00000000-0000-0000-0000-000000000217",
+            "category": "access",
+            "pathogenIds": [],
+            "dosages": [
+                {
+                    "id": "00000000-0000-0000-0000-000000004168",
+                    "routeOfAdministration": "oral",
+                    "dose": "5-20 mg/kg/ngày (tính theo trimethoprim, chia liều mỗi 6-12 giờ)",
+                    "crcl": null
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000004169",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "5-20 mg/kg/ngày (tính theo trimethoprim, chia liều mỗi 6-12 giờ)",
+                    "crcl": null
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000004170",
+                    "routeOfAdministration": "oral",
+                    "dose": "5-20 mg/kg/ngày (chia liều mỗi 6-12 giờ)",
+                    "crcl": {
+                        "min": 30,
+                        "isMinExclusive": true,
+                        "max": null,
+                        "isMaxExclusive": false
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000004171",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "5-20 mg/kg/ngày (chia liều mỗi 6-12 giờ)",
+                    "crcl": {
+                        "min": 30,
+                        "isMinExclusive": true,
+                        "max": null,
+                        "isMaxExclusive": false
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000004172",
+                    "routeOfAdministration": "oral",
+                    "dose": "5-10 mg/kg/ngày (chia liều mỗi 12 giờ)",
+                    "crcl": {
+                        "min": 10,
+                        "isMinExclusive": false,
+                        "max": 29,
+                        "isMaxExclusive": false
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000004173",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "5-10 mg/kg/ngày (chia liều mỗi 12 giờ)",
+                    "crcl": {
+                        "min": 10,
+                        "isMinExclusive": false,
+                        "max": 29,
+                        "isMaxExclusive": false
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000004174",
+                    "routeOfAdministration": "oral",
+                    "dose": "Không khuyến cáo (nếu sử dụng: 5-10 mg/kg mỗi 24 giờ)",
+                    "crcl": {
+                        "min": 0,
+                        "isMinExclusive": true,
+                        "max": 10,
+                        "isMaxExclusive": false
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000004175",
+                    "routeOfAdministration": "intravenous",
+                    "dose": "Không khuyến cáo (nếu sử dụng: 5-10 mg/kg mỗi 24 giờ)",
+                    "crcl": {
+                        "min": 0,
+                        "isMinExclusive": true,
+                        "max": 10,
+                        "isMaxExclusive": false
+                    }
+                }
+            ]
         }
-      ]
-    },
-    {
-      "id": "00000000-0000-0000-0000-000000000304",
-      "name": "Amoxicillin/acid clavulanic",
-      "antibioticGroupId": "00000000-0000-0000-0000-000000000202",
-      "classification": "",
-      "pathogenIds": [],
-      "dosages": [
+    ],
+    "antibiograms": [
         {
-          "id": "00000000-0000-0000-0000-000000000411",
-          "routeOfAdministration": "oral",
-          "dose": "875 mg (tính theo amoxicilin) mỗi 12 giờ",
-          "glomerularFiltrationRate": {
-            "min": 50,
-            "isMinExclusive": true,
-            "max": null,
-            "isMaxExclusive": false
-          }
+            "id": "00000000-0000-0000-0000-000000000501",
+            "pathogenId": "00000000-0000-0000-0000-000000000107",
+            "micLevel": "susceptible",
+            "micIds": [
+                "00000000-0000-0000-0000-000000000301",
+                "00000000-0000-0000-0000-000000000302",
+                "00000000-0000-0000-0000-000000000303",
+                "00000000-0000-0000-0000-000000000304",
+                "00000000-0000-0000-0000-000000000305",
+                "00000000-0000-0000-0000-000000000306",
+                "00000000-0000-0000-0000-000000000315"
+            ],
+            "firstPriorityMedicineIds": [
+                "00000000-0000-0000-0000-000000000301",
+                "00000000-0000-0000-0000-00000000030e",
+                "00000000-0000-0000-0000-00000000030f",
+                "00000000-0000-0000-0000-000000000303",
+                "00000000-0000-0000-0000-000000000325"
+            ],
+            "secondPriorityMedicineIds": [
+                "00000000-0000-0000-0000-00000000031d",
+                "00000000-0000-0000-0000-00000000031e",
+                "00000000-0000-0000-0000-000000000324",
+                "00000000-0000-0000-0000-000000000327"
+            ]
         },
         {
-          "id": "00000000-0000-0000-0000-000000000412",
-          "routeOfAdministration": "oral",
-          "dose": "875 mg mỗi 12 giờ",
-          "glomerularFiltrationRate": {
-            "min": 30,
-            "isMinExclusive": true,
-            "max": 50,
-            "isMaxExclusive": false
-          }
+            "id": "00000000-0000-0000-0000-000000000502",
+            "pathogenId": "00000000-0000-0000-0000-000000000107",
+            "micLevel": "intermediate",
+            "micIds": [
+                "00000000-0000-0000-0000-000000000301",
+                "00000000-0000-0000-0000-000000000302",
+                "00000000-0000-0000-0000-000000000303",
+                "00000000-0000-0000-0000-000000000304",
+                "00000000-0000-0000-0000-000000000305",
+                "00000000-0000-0000-0000-000000000306",
+                "00000000-0000-0000-0000-000000000315"
+            ],
+            "firstPriorityMedicineIds": [
+                "00000000-0000-0000-0000-000000000322",
+                "00000000-0000-0000-0000-000000000314"
+            ],
+            "secondPriorityMedicineIds": [
+                "00000000-0000-0000-0000-00000000031d",
+                "00000000-0000-0000-0000-00000000031e",
+                "00000000-0000-0000-0000-000000000324",
+                "00000000-0000-0000-0000-000000000327"
+            ]
         },
         {
-          "id": "00000000-0000-0000-0000-000000000413",
-          "routeOfAdministration": "oral",
-          "dose": "500 mg mỗi 12 giờ",
-          "glomerularFiltrationRate": {
-            "min": 10,
-            "isMinExclusive": false,
-            "max": 30,
-            "isMaxExclusive": false
-          }
+            "id": "00000000-0000-0000-0000-000000000503",
+            "pathogenId": "00000000-0000-0000-0000-000000000107",
+            "micLevel": "resistance",
+            "micIds": [
+                "00000000-0000-0000-0000-000000000301",
+                "00000000-0000-0000-0000-000000000302",
+                "00000000-0000-0000-0000-000000000303",
+                "00000000-0000-0000-0000-000000000304",
+                "00000000-0000-0000-0000-000000000305",
+                "00000000-0000-0000-0000-000000000306",
+                "00000000-0000-0000-0000-000000000315"
+            ],
+            "firstPriorityMedicineIds": [
+                "00000000-0000-0000-0000-000000000322",
+                "00000000-0000-0000-0000-000000000314"
+            ],
+            "secondPriorityMedicineIds": [
+                "00000000-0000-0000-0000-00000000031d",
+                "00000000-0000-0000-0000-00000000031e",
+                "00000000-0000-0000-0000-000000000324",
+                "00000000-0000-0000-0000-000000000327"
+            ]
         },
         {
-          "id": "00000000-0000-0000-0000-000000000414",
-          "routeOfAdministration": "oral",
-          "dose": "500 mg mỗi 24 giờ",
-          "glomerularFiltrationRate": {
-            "min": 0,
-            "isMinExclusive": false,
-            "max": 10,
-            "isMaxExclusive": true
-          }
+            "id": "00000000-0000-0000-0000-000000000504",
+            "pathogenId": "00000000-0000-0000-0000-000000000102",
+            "micLevel": "susceptible",
+            "micIds": [
+                "00000000-0000-0000-0000-000000000302",
+                "00000000-0000-0000-0000-000000000303"
+            ],
+            "firstPriorityMedicineIds": [
+                "00000000-0000-0000-0000-000000000302",
+                "00000000-0000-0000-0000-000000000303"
+            ],
+            "secondPriorityMedicineIds": [
+                "00000000-0000-0000-0000-000000000325",
+                "00000000-0000-0000-0000-000000000321",
+                "00000000-0000-0000-0000-00000000031c",
+                "00000000-0000-0000-0000-00000000031e"
+            ]
         },
         {
-          "id": "00000000-0000-0000-0000-000000000415",
-          "routeOfAdministration": "intravenous",
-          "dose": "1 g (tính theo amoxicilin) mỗi 8 giờ",
-          "glomerularFiltrationRate": {
-            "min": 50,
-            "isMinExclusive": true,
-            "max": null,
-            "isMaxExclusive": false
-          }
-        },
-        {
-          "id": "00000000-0000-0000-0000-000000000416",
-          "routeOfAdministration": "intravenous",
-          "dose": "1 g mỗi 8 giờ",
-          "glomerularFiltrationRate": {
-            "min": 30,
-            "isMinExclusive": true,
-            "max": 50,
-            "isMaxExclusive": false
-          }
-        },
-        {
-          "id": "00000000-0000-0000-0000-000000000417",
-          "routeOfAdministration": "intravenous",
-          "dose": "1 g x 1 lần, sau đó 500 mg mỗi 12 giờ",
-          "glomerularFiltrationRate": {
-            "min": 10,
-            "isMinExclusive": false,
-            "max": 30,
-            "isMaxExclusive": false
-          }
-        },
-        {
-          "id": "00000000-0000-0000-0000-000000000418",
-          "routeOfAdministration": "intravenous",
-          "dose": "1 g x 1 lần, sau đó 500 mg mỗi 24 giờ",
-          "glomerularFiltrationRate": {
-            "min": 0,
-            "isMinExclusive": false,
-            "max": 10,
-            "isMaxExclusive": true
-          }
+            "id": "00000000-0000-0000-0000-000000000505",
+            "pathogenId": "00000000-0000-0000-0000-000000000102",
+            "micLevel": "resistance",
+            "micIds": [
+                "00000000-0000-0000-0000-000000000302",
+                "00000000-0000-0000-0000-000000000303"
+            ],
+            "firstPriorityMedicineIds": [
+                "00000000-0000-0000-0000-00000000030f",
+                "00000000-0000-0000-0000-000000000304"
+            ],
+            "secondPriorityMedicineIds": [
+                "00000000-0000-0000-0000-000000000325",
+                "00000000-0000-0000-0000-000000000321",
+                "00000000-0000-0000-0000-00000000031c",
+                "00000000-0000-0000-0000-00000000031e"
+            ]
         }
-      ]
-    },
-    {
-      "id": "00000000-0000-0000-0000-000000000305",
-      "name": "Ampicillin/sulbactam",
-      "antibioticGroupId": "00000000-0000-0000-0000-000000000202",
-      "classification": "",
-      "pathogenIds": [],
-      "dosages": [
-        {
-          "id": "00000000-0000-0000-0000-000000000419",
-          "routeOfAdministration": "intravenous",
-          "dose": "1,5-3 g mỗi 6 giờ",
-          "glomerularFiltrationRate": {
-            "min": 50,
-            "isMinExclusive": true,
-            "max": null,
-            "isMaxExclusive": false
-          }
-        },
-        {
-          "id": "00000000-0000-0000-0000-000000000420",
-          "routeOfAdministration": "intravenous",
-          "dose": "1,5-3 g mỗi 8-12 giờ",
-          "glomerularFiltrationRate": {
-            "min": 10,
-            "isMinExclusive": false,
-            "max": 50,
-            "isMaxExclusive": false
-          }
-        },
-        {
-          "id": "00000000-0000-0000-0000-000000000421",
-          "routeOfAdministration": "intravenous",
-          "dose": "1,5-3 g mỗi 24 giờ",
-          "glomerularFiltrationRate": {
-            "min": 0,
-            "isMinExclusive": false,
-            "max": 10,
-            "isMaxExclusive": true
-          }
-        }
-      ]
-    },
-    {
-      "id": "00000000-0000-0000-0000-000000000306",
-      "name": "Oxacilin",
-      "antibioticGroupId": "00000000-0000-0000-0000-000000000202",
-      "classification": "",
-      "pathogenIds": [],
-      "dosages": [
-        {
-          "id": "00000000-0000-0000-0000-000000000422",
-          "routeOfAdministration": "intravenous",
-          "dose": "2 g mỗi 4 giờ (cân nhắc giảm liều ở bệnh nhân suy thận nặng)",
-          "glomerularFiltrationRate": null
-        }
-      ]
-    },
-    {
-      "id": "00000000-0000-0000-0000-000000000307",
-      "name": "Cefazolin",
-      "antibioticGroupId": "00000000-0000-0000-0000-000000000203",
-      "classification": "",
-      "pathogenIds": [],
-      "dosages": [
-        {
-          "id": "00000000-0000-0000-0000-000000000423",
-          "routeOfAdministration": "intravenous",
-          "dose": "2 g mỗi 8 giờ",
-          "glomerularFiltrationRate": {
-            "min": 50,
-            "isMinExclusive": true,
-            "max": null,
-            "isMaxExclusive": false
-          }
-        },
-        {
-          "id": "00000000-0000-0000-0000-000000000424",
-          "routeOfAdministration": "intravenous",
-          "dose": "2 g mỗi 12 giờ",
-          "glomerularFiltrationRate": {
-            "min": 10,
-            "isMinExclusive": false,
-            "max": 50,
-            "isMaxExclusive": false
-          }
-        },
-        {
-          "id": "00000000-0000-0000-0000-000000000425",
-          "routeOfAdministration": "intravenous",
-          "dose": "2 g mỗi 24-48 giờ",
-          "glomerularFiltrationRate": {
-            "min": 0,
-            "isMinExclusive": false,
-            "max": 10,
-            "isMaxExclusive": true
-          }
-        }
-      ]
-    },
-    {
-      "id": "00000000-0000-0000-0000-000000000308",
-      "name": "Cefalexin",
-      "antibioticGroupId": "00000000-0000-0000-0000-000000000203",
-      "classification": "",
-      "pathogenIds": [],
-      "dosages": [
-        {
-          "id": "00000000-0000-0000-0000-000000000426",
-          "routeOfAdministration": "oral",
-          "dose": "500 mg mỗi 6 giờ",
-          "glomerularFiltrationRate": {
-            "min": 50,
-            "isMinExclusive": true,
-            "max": null,
-            "isMaxExclusive": false
-          }
-        },
-        {
-          "id": "00000000-0000-0000-0000-000000000427",
-          "routeOfAdministration": "oral",
-          "dose": "500 mg mỗi 12 giờ",
-          "glomerularFiltrationRate": {
-            "min": 10,
-            "isMinExclusive": false,
-            "max": 50,
-            "isMaxExclusive": false
-          }
-        },
-        {
-          "id": "00000000-0000-0000-0000-000000000428",
-          "routeOfAdministration": "oral",
-          "dose": "250 mg mỗi 12 giờ",
-          "glomerularFiltrationRate": {
-            "min": 0,
-            "isMinExclusive": false,
-            "max": 10,
-            "isMaxExclusive": true
-          }
-        }
-      ]
-    },
-    {
-      "id": "00000000-0000-0000-0000-000000000309",
-      "name": "Cefuroxim",
-      "antibioticGroupId": "00000000-0000-0000-0000-000000000203",
-      "classification": "",
-      "pathogenIds": [],
-      "dosages": [
-        {
-          "id": "00000000-0000-0000-0000-000000000429",
-          "routeOfAdministration": "oral",
-          "dose": "500 mg mỗi 12 giờ",
-          "glomerularFiltrationRate": {
-            "min": 10,
-            "isMinExclusive": false,
-            "max": null,
-            "isMaxExclusive": false
-          }
-        },
-        {
-          "id": "00000000-0000-0000-0000-000000000430",
-          "routeOfAdministration": "oral",
-          "dose": "250 mg mỗi 24 giờ",
-          "glomerularFiltrationRate": {
-            "min": 0,
-            "isMinExclusive": false,
-            "max": 10,
-            "isMaxExclusive": true
-          }
-        }
-      ]
-    },
-    {
-      "id": "00000000-0000-0000-0000-00000000030a",
-      "name": "Cefprozil",
-      "antibioticGroupId": "00000000-0000-0000-0000-000000000203",
-      "classification": "",
-      "pathogenIds": [],
-      "dosages": [
-        {
-          "id": "00000000-0000-0000-0000-000000000431",
-          "routeOfAdministration": "oral",
-          "dose": "500 mg mỗi 12 giờ",
-          "glomerularFiltrationRate": {
-            "min": 50,
-            "isMinExclusive": true,
-            "max": null,
-            "isMaxExclusive": false
-          }
-        },
-        {
-          "id": "00000000-0000-0000-0000-000000000432",
-          "routeOfAdministration": "oral",
-          "dose": "500 mg mỗi 24 giờ",
-          "glomerularFiltrationRate": {
-            "min": 10,
-            "isMinExclusive": false,
-            "max": 50,
-            "isMaxExclusive": false
-          }
-        },
-        {
-          "id": "00000000-0000-0000-0000-000000000433",
-          "routeOfAdministration": "oral",
-          "dose": "250 mg mỗi 12 giờ",
-          "glomerularFiltrationRate": {
-            "min": 0,
-            "isMinExclusive": false,
-            "max": 10,
-            "isMaxExclusive": true
-          }
-        }
-      ]
-    },
-    {
-      "id": "00000000-0000-0000-0000-00000000030b",
-      "name": "Cefpodoxim",
-      "antibioticGroupId": "00000000-0000-0000-0000-000000000203",
-      "classification": "",
-      "pathogenIds": [],
-      "dosages": [
-        {
-          "id": "00000000-0000-0000-0000-000000000434",
-          "routeOfAdministration": "oral",
-          "dose": "200 mg mỗi 12 giờ",
-          "glomerularFiltrationRate": {
-            "min": 10,
-            "isMinExclusive": false,
-            "max": null,
-            "isMaxExclusive": false
-          }
-        },
-        {
-          "id": "00000000-0000-0000-0000-000000000435",
-          "routeOfAdministration": "oral",
-          "dose": "200 mg mỗi 24 giờ",
-          "glomerularFiltrationRate": {
-            "min": 0,
-            "isMinExclusive": false,
-            "max": 10,
-            "isMaxExclusive": true
-          }
-        }
-      ]
-    },
-    {
-      "id": "00000000-0000-0000-0000-00000000030c",
-      "name": "Cefdinir",
-      "antibioticGroupId": "00000000-0000-0000-0000-000000000203",
-      "classification": "",
-      "pathogenIds": [],
-      "dosages": [
-        {
-          "id": "00000000-0000-0000-0000-000000000436",
-          "routeOfAdministration": "oral",
-          "dose": "300 mg mỗi 12 giờ",
-          "glomerularFiltrationRate": {
-            "min": 10,
-            "isMinExclusive": false,
-            "max": null,
-            "isMaxExclusive": false
-          }
-        },
-        {
-          "id": "00000000-0000-0000-0000-000000000437",
-          "routeOfAdministration": "oral",
-          "dose": "300 mg mỗi 24 giờ",
-          "glomerularFiltrationRate": {
-            "min": 0,
-            "isMinExclusive": false,
-            "max": 10,
-            "isMaxExclusive": true
-          }
-        }
-      ]
-    },
-    {
-      "id": "00000000-0000-0000-0000-00000000030d",
-      "name": "Cefditoren",
-      "antibioticGroupId": "00000000-0000-0000-0000-000000000203",
-      "classification": "",
-      "pathogenIds": [],
-      "dosages": [
-        {
-          "id": "00000000-0000-0000-0000-000000000438",
-          "routeOfAdministration": "oral",
-          "dose": "400 mg mỗi 12 giờ",
-          "glomerularFiltrationRate": {
-            "min": 50,
-            "isMinExclusive": true,
-            "max": null,
-            "isMaxExclusive": false
-          }
-        },
-        {
-          "id": "00000000-0000-0000-0000-000000000439",
-          "routeOfAdministration": "oral",
-          "dose": "200 mg mỗi 12 giờ",
-          "glomerularFiltrationRate": {
-            "min": 10,
-            "isMinExclusive": false,
-            "max": 50,
-            "isMaxExclusive": false
-          }
-        },
-        {
-          "id": "00000000-0000-0000-0000-000000000440",
-          "routeOfAdministration": "oral",
-          "dose": "200 mg mỗi 24 giờ",
-          "glomerularFiltrationRate": {
-            "min": 0,
-            "isMinExclusive": false,
-            "max": 10,
-            "isMaxExclusive": true
-          }
-        }
-      ]
-    },
-    {
-      "id": "00000000-0000-0000-0000-00000000030e",
-      "name": "Cefotaxim",
-      "antibioticGroupId": "00000000-0000-0000-0000-000000000203",
-      "classification": "",
-      "pathogenIds": [],
-      "dosages": [
-        {
-          "id": "00000000-0000-0000-0000-000000000441",
-          "routeOfAdministration": "intravenous",
-          "dose": "1-2 g mỗi 8-12 giờ",
-          "glomerularFiltrationRate": {
-            "min": 50,
-            "isMinExclusive": true,
-            "max": null,
-            "isMaxExclusive": false
-          }
-        },
-        {
-          "id": "00000000-0000-0000-0000-000000000442",
-          "routeOfAdministration": "intravenous",
-          "dose": "1-2 g mỗi 12-24 giờ",
-          "glomerularFiltrationRate": {
-            "min": 10,
-            "isMinExclusive": false,
-            "max": 50,
-            "isMaxExclusive": false
-          }
-        },
-        {
-          "id": "00000000-0000-0000-0000-000000000443",
-          "routeOfAdministration": "intravenous",
-          "dose": "1-2 g mỗi 24 giờ",
-          "glomerularFiltrationRate": {
-            "min": 0,
-            "isMinExclusive": false,
-            "max": 10,
-            "isMaxExclusive": true
-          }
-        }
-      ]
-    },
-    {
-      "id": "00000000-0000-0000-0000-00000000030f",
-      "name": "Ceftriaxon",
-      "antibioticGroupId": "00000000-0000-0000-0000-000000000203",
-      "classification": "",
-      "pathogenIds": [],
-      "dosages": [
-        {
-          "id": "00000000-0000-0000-0000-000000000444",
-          "routeOfAdministration": "intravenous",
-          "dose": "1-2 g mỗi 24 giờ (không cần hiệu chỉnh liều theo chức năng thận)",
-          "glomerularFiltrationRate": null
-        }
-      ]
-    },
-    {
-      "id": "00000000-0000-0000-0000-000000000310",
-      "name": "Ceftazidim",
-      "antibioticGroupId": "00000000-0000-0000-0000-000000000203",
-      "classification": "",
-      "pathogenIds": [],
-      "dosages": [
-        {
-          "id": "00000000-0000-0000-0000-000000000445",
-          "routeOfAdministration": "intravenous",
-          "dose": "2 g mỗi 8-12 giờ",
-          "glomerularFiltrationRate": {
-            "min": 50,
-            "isMinExclusive": true,
-            "max": null,
-            "isMaxExclusive": false
-          }
-        },
-        {
-          "id": "00000000-0000-0000-0000-000000000446",
-          "routeOfAdministration": "intravenous",
-          "dose": "2 g mỗi 12-24 giờ",
-          "glomerularFiltrationRate": {
-            "min": 10,
-            "isMinExclusive": false,
-            "max": 50,
-            "isMaxExclusive": false
-          }
-        },
-        {
-          "id": "00000000-0000-0000-0000-000000000447",
-          "routeOfAdministration": "intravenous",
-          "dose": "2 g mỗi 24-48 giờ",
-          "glomerularFiltrationRate": {
-            "min": 0,
-            "isMinExclusive": false,
-            "max": 10,
-            "isMaxExclusive": true
-          }
-        }
-      ]
-    },
-    {
-      "id": "00000000-0000-0000-0000-000000000311",
-      "name": "Cefoperazon",
-      "antibioticGroupId": "00000000-0000-0000-0000-000000000203",
-      "classification": "",
-      "pathogenIds": [],
-      "dosages": [
-        {
-          "id": "00000000-0000-0000-0000-000000000448",
-          "routeOfAdministration": "intravenous",
-          "dose": "2 g mỗi 12 giờ (không cần hiệu chỉnh liều theo chức năng thận)",
-          "glomerularFiltrationRate": null
-        }
-      ]
-    },
-    {
-      "id": "00000000-0000-0000-0000-000000000312",
-      "name": "Cefoperazon/sulbactam",
-      "antibioticGroupId": "00000000-0000-0000-0000-000000000203",
-      "classification": "",
-      "pathogenIds": [],
-      "dosages": [
-        {
-          "id": "00000000-0000-0000-0000-000000000449",
-          "routeOfAdministration": "intravenous",
-          "dose": "1-2 g cefoperazon mỗi 12 giờ, có thể tăng lên 2-4 g mỗi 12 giờ",
-          "glomerularFiltrationRate": {
-            "min": 30,
-            "isMinExclusive": true,
-            "max": null,
-            "isMaxExclusive": false
-          }
-        },
-        {
-          "id": "00000000-0000-0000-0000-000000000450",
-          "routeOfAdministration": "intravenous",
-          "dose": "Tối đa 1 g sulbactam mỗi 12 giờ",
-          "glomerularFiltrationRate": {
-            "min": 15,
-            "isMinExclusive": false,
-            "max": 30,
-            "isMaxExclusive": false
-          }
-        },
-        {
-          "id": "00000000-0000-0000-0000-000000000451",
-          "routeOfAdministration": "intravenous",
-          "dose": "Tối đa 500 mg sulbactam mỗi 12 giờ",
-          "glomerularFiltrationRate": {
-            "min": 0,
-            "isMinExclusive": false,
-            "max": 15,
-            "isMaxExclusive": true
-          }
-        }
-      ]
-    },
-    {
-      "id": "00000000-0000-0000-0000-000000000313",
-      "name": "Cefepim",
-      "antibioticGroupId": "00000000-0000-0000-0000-000000000203",
-      "classification": "",
-      "pathogenIds": [],
-      "dosages": [
-        {
-          "id": "00000000-0000-0000-0000-000000000452",
-          "routeOfAdministration": "intravenous",
-          "dose": "2 g mỗi 8-12 giờ",
-          "glomerularFiltrationRate": {
-            "min": 60,
-            "isMinExclusive": true,
-            "max": null,
-            "isMaxExclusive": false
-          }
-        },
-        {
-          "id": "00000000-0000-0000-0000-000000000453",
-          "routeOfAdministration": "intravenous",
-          "dose": "2 g mỗi 12 giờ",
-          "glomerularFiltrationRate": {
-            "min": 30,
-            "isMinExclusive": false,
-            "max": 60,
-            "isMaxExclusive": false
-          }
-        },
-        {
-          "id": "00000000-0000-0000-0000-000000000454",
-          "routeOfAdministration": "intravenous",
-          "dose": "2 g mỗi 24 giờ",
-          "glomerularFiltrationRate": {
-            "min": 11,
-            "isMinExclusive": false,
-            "max": 29,
-            "isMaxExclusive": false
-          }
-        },
-        {
-          "id": "00000000-0000-0000-0000-000000000455",
-          "routeOfAdministration": "intravenous",
-          "dose": "1 g mỗi 24 giờ",
-          "glomerularFiltrationRate": {
-            "min": 0,
-            "isMinExclusive": false,
-            "max": 10,
-            "isMaxExclusive": true
-          }
-        }
-      ]
-    },
-    {
-      "id": "00000000-0000-0000-0000-000000000314",
-      "name": "Ceftarolin",
-      "antibioticGroupId": "00000000-0000-0000-0000-000000000203",
-      "classification": "",
-      "pathogenIds": [],
-      "dosages": [
-        {
-          "id": "00000000-0000-0000-0000-000000000456",
-          "routeOfAdministration": "intravenous",
-          "dose": "600 mg mỗi 12 giờ",
-          "glomerularFiltrationRate": {
-            "min": 50,
-            "isMinExclusive": true,
-            "max": null,
-            "isMaxExclusive": false
-          }
-        },
-        {
-          "id": "00000000-0000-0000-0000-000000000457",
-          "routeOfAdministration": "intravenous",
-          "dose": "400 mg mỗi 12 giờ",
-          "glomerularFiltrationRate": {
-            "min": 30,
-            "isMinExclusive": true,
-            "max": 50,
-            "isMaxExclusive": false
-          }
-        },
-        {
-          "id": "00000000-0000-0000-0000-000000000458",
-          "routeOfAdministration": "intravenous",
-          "dose": "300 mg mỗi 12 giờ",
-          "glomerularFiltrationRate": {
-            "min": 15,
-            "isMinExclusive": false,
-            "max": 30,
-            "isMaxExclusive": false
-          }
-        },
-        {
-          "id": "00000000-0000-0000-0000-000000000459",
-          "routeOfAdministration": "intravenous",
-          "dose": "200 mg mỗi 12 giờ",
-          "glomerularFiltrationRate": {
-            "min": 0,
-            "isMinExclusive": false,
-            "max": 15,
-            "isMaxExclusive": true
-          }
-        }
-      ]
-    },
-    {
-      "id": "00000000-0000-0000-0000-000000000315",
-      "name": "Piperacillin/tazobactam",
-      "antibioticGroupId": "00000000-0000-0000-0000-000000000202",
-      "classification": "",
-      "pathogenIds": [],
-      "dosages": [
-        {
-          "id": "00000000-0000-0000-0000-000000000460",
-          "routeOfAdministration": "intravenous",
-          "dose": "4,5 g mỗi 6 giờ",
-          "glomerularFiltrationRate": {
-            "min": 40,
-            "isMinExclusive": true,
-            "max": null,
-            "isMaxExclusive": false
-          }
-        },
-        {
-          "id": "00000000-0000-0000-0000-000000000461",
-          "routeOfAdministration": "intravenous",
-          "dose": "3,375 g mỗi 6 giờ",
-          "glomerularFiltrationRate": {
-            "min": 20,
-            "isMinExclusive": false,
-            "max": 40,
-            "isMaxExclusive": false
-          }
-        },
-        {
-          "id": "00000000-0000-0000-0000-000000000462",
-          "routeOfAdministration": "intravenous",
-          "dose": "2,25 g mỗi 6 giờ",
-          "glomerularFiltrationRate": {
-            "min": 0,
-            "isMinExclusive": false,
-            "max": 20,
-            "isMaxExclusive": true
-          }
-        }
-      ]
-    },
-    {
-      "id": "00000000-0000-0000-0000-000000000316",
-      "name": "Imipenem",
-      "antibioticGroupId": "00000000-0000-0000-0000-000000000205",
-      "classification": "",
-      "pathogenIds": [],
-      "dosages": [
-        {
-          "id": "00000000-0000-0000-0000-000000000463",
-          "routeOfAdministration": "intravenous",
-          "dose": "500 mg mỗi 6 giờ (trường hợp nặng cân nhắc 1 g mỗi 8 giờ, tối đa 1 g mỗi 6 giờ)",
-          "glomerularFiltrationRate": null
-        },
-        {
-          "id": "00000000-0000-0000-0000-000000000464",
-          "routeOfAdministration": "intravenous",
-          "dose": "250-500 mg mỗi 6-8 giờ",
-          "glomerularFiltrationRate": {
-            "min": 50,
-            "isMinExclusive": true,
-            "max": null,
-            "isMaxExclusive": false
-          }
-        },
-        {
-          "id": "00000000-0000-0000-0000-000000000465",
-          "routeOfAdministration": "intravenous",
-          "dose": "250 mg mỗi 8-12 giờ",
-          "glomerularFiltrationRate": {
-            "min": 10,
-            "isMinExclusive": false,
-            "max": 50,
-            "isMaxExclusive": false
-          }
-        },
-        {
-          "id": "00000000-0000-0000-0000-000000000466",
-          "routeOfAdministration": "intravenous",
-          "dose": "125-250 mg mỗi 12 giờ",
-          "glomerularFiltrationRate": {
-            "min": 0,
-            "isMinExclusive": false,
-            "max": 10,
-            "isMaxExclusive": true
-          }
-        }
-      ]
-    },
-    {
-      "id": "00000000-0000-0000-0000-000000000317",
-      "name": "Meropenem",
-      "antibioticGroupId": "00000000-0000-0000-0000-000000000205",
-      "classification": "",
-      "pathogenIds": [],
-      "dosages": [
-        {
-          "id": "00000000-0000-0000-0000-000000000467",
-          "routeOfAdministration": "intravenous",
-          "dose": "1 g mỗi 8 giờ (trường hợp nặng, nhiễm P. aeruginosa giảm nhạy cảm, cân nhắc 2 g mỗi 8 giờ)",
-          "glomerularFiltrationRate": null
-        },
-        {
-          "id": "00000000-0000-0000-0000-000000000468",
-          "routeOfAdministration": "intravenous",
-          "dose": "1 g mỗi 8 giờ",
-          "glomerularFiltrationRate": {
-            "min": 50,
-            "isMinExclusive": true,
-            "max": null,
-            "isMaxExclusive": false
-          }
-        },
-        {
-          "id": "00000000-0000-0000-0000-000000000469",
-          "routeOfAdministration": "intravenous",
-          "dose": "1 g mỗi 12 giờ",
-          "glomerularFiltrationRate": {
-            "min": 25,
-            "isMinExclusive": false,
-            "max": 50,
-            "isMaxExclusive": false
-          }
-        },
-        {
-          "id": "00000000-0000-0000-0000-000000000470",
-          "routeOfAdministration": "intravenous",
-          "dose": "500 mg mỗi 12 giờ",
-          "glomerularFiltrationRate": {
-            "min": 10,
-            "isMinExclusive": false,
-            "max": 25,
-            "isMaxExclusive": false
-          }
-        },
-        {
-          "id": "00000000-0000-0000-0000-000000000471",
-          "routeOfAdministration": "intravenous",
-          "dose": "500 mg mỗi 24 giờ",
-          "glomerularFiltrationRate": {
-            "min": 0,
-            "isMinExclusive": false,
-            "max": 10,
-            "isMaxExclusive": true
-          }
-        }
-      ]
-    },
-    {
-      "id": "00000000-0000-0000-0000-000000000318",
-      "name": "Ertapenem",
-      "antibioticGroupId": "00000000-0000-0000-0000-000000000205",
-      "classification": "",
-      "pathogenIds": [],
-      "dosages": [
-        {
-          "id": "00000000-0000-0000-0000-000000000472",
-          "routeOfAdministration": "intravenous",
-          "dose": "1 g mỗi 24 giờ",
-          "glomerularFiltrationRate": {
-            "min": 30,
-            "isMinExclusive": true,
-            "max": null,
-            "isMaxExclusive": false
-          }
-        },
-        {
-          "id": "00000000-0000-0000-0000-000000000473",
-          "routeOfAdministration": "intravenous",
-          "dose": "500 mg mỗi 24 giờ",
-          "glomerularFiltrationRate": {
-            "min": 0,
-            "isMinExclusive": false,
-            "max": 30,
-            "isMaxExclusive": false
-          }
-        }
-      ]
-    },
-    {
-      "id": "00000000-0000-0000-0000-000000000319",
-      "name": "Amikacin",
-      "antibioticGroupId": "00000000-0000-0000-0000-000000000208",
-      "classification": "",
-      "pathogenIds": [],
-      "dosages": [
-        {
-          "id": "00000000-0000-0000-0000-000000000474",
-          "routeOfAdministration": "intravenous",
-          "dose": "15-20 mg/kg mỗi 24 giờ",
-          "glomerularFiltrationRate": null
-        },
-        {
-          "id": "00000000-0000-0000-0000-000000000475",
-          "routeOfAdministration": "intravenous",
-          "dose": "12 mg/kg mỗi 24 giờ",
-          "glomerularFiltrationRate": {
-            "min": 60,
-            "isMinExclusive": false,
-            "max": 80,
-            "isMaxExclusive": false
-          }
-        },
-        {
-          "id": "00000000-0000-0000-0000-000000000476",
-          "routeOfAdministration": "intravenous",
-          "dose": "7,5 mg/kg mỗi 24 giờ",
-          "glomerularFiltrationRate": {
-            "min": 40,
-            "isMinExclusive": false,
-            "max": 60,
-            "isMaxExclusive": true
-          }
-        },
-        {
-          "id": "00000000-0000-0000-0000-000000000477",
-          "routeOfAdministration": "intravenous",
-          "dose": "4 mg/kg mỗi 24 giờ",
-          "glomerularFiltrationRate": {
-            "min": 30,
-            "isMinExclusive": false,
-            "max": 40,
-            "isMaxExclusive": true
-          }
-        },
-        {
-          "id": "00000000-0000-0000-0000-000000000478",
-          "routeOfAdministration": "intravenous",
-          "dose": "7,5 mg/kg mỗi 48 giờ",
-          "glomerularFiltrationRate": {
-            "min": 20,
-            "isMinExclusive": false,
-            "max": 30,
-            "isMaxExclusive": true
-          }
-        },
-        {
-          "id": "00000000-0000-0000-0000-000000000479",
-          "routeOfAdministration": "intravenous",
-          "dose": "4 mg/kg mỗi 48 giờ",
-          "glomerularFiltrationRate": {
-            "min": 10,
-            "isMinExclusive": false,
-            "max": 20,
-            "isMaxExclusive": true
-          }
-        },
-        {
-          "id": "00000000-0000-0000-0000-000000000480",
-          "routeOfAdministration": "intravenous",
-          "dose": "3 mg/kg mỗi 72 giờ (sau lọc máu)",
-          "glomerularFiltrationRate": {
-            "min": 0,
-            "isMinExclusive": false,
-            "max": 10,
-            "isMaxExclusive": true
-          }
-        }
-      ]
-    },
-    {
-      "id": "00000000-0000-0000-0000-00000000031a",
-      "name": "Gentamycin",
-      "antibioticGroupId": "00000000-0000-0000-0000-000000000208",
-      "classification": "",
-      "pathogenIds": [],
-      "dosages": [
-        {
-          "id": "00000000-0000-0000-0000-000000000481",
-          "routeOfAdministration": "intravenous",
-          "dose": "5-7 mg/kg mỗi 24 giờ",
-          "glomerularFiltrationRate": null
-        },
-        {
-          "id": "00000000-0000-0000-0000-000000000482",
-          "routeOfAdministration": "intravenous",
-          "dose": "4 mg/kg mỗi 24 giờ",
-          "glomerularFiltrationRate": {
-            "min": 60,
-            "isMinExclusive": false,
-            "max": 80,
-            "isMaxExclusive": false
-          }
-        },
-        {
-          "id": "00000000-0000-0000-0000-000000000483",
-          "routeOfAdministration": "intravenous",
-          "dose": "3,5 mg/kg mỗi 24 giờ",
-          "glomerularFiltrationRate": {
-            "min": 40,
-            "isMinExclusive": false,
-            "max": 60,
-            "isMaxExclusive": true
-          }
-        },
-        {
-          "id": "00000000-0000-0000-0000-000000000484",
-          "routeOfAdministration": "intravenous",
-          "dose": "2,5 mg/kg mỗi 24 giờ",
-          "glomerularFiltrationRate": {
-            "min": 30,
-            "isMinExclusive": false,
-            "max": 40,
-            "isMaxExclusive": true
-          }
-        },
-        {
-          "id": "00000000-0000-0000-0000-000000000485",
-          "routeOfAdministration": "intravenous",
-          "dose": "4 mg/kg mỗi 48 giờ",
-          "glomerularFiltrationRate": {
-            "min": 20,
-            "isMinExclusive": false,
-            "max": 30,
-            "isMaxExclusive": true
-          }
-        },
-        {
-          "id": "00000000-0000-0000-0000-000000000486",
-          "routeOfAdministration": "intravenous",
-          "dose": "3 mg/kg mỗi 48 giờ",
-          "glomerularFiltrationRate": {
-            "min": 10,
-            "isMinExclusive": false,
-            "max": 20,
-            "isMaxExclusive": true
-          }
-        },
-        {
-          "id": "00000000-0000-0000-0000-000000000487",
-          "routeOfAdministration": "intravenous",
-          "dose": "2 mg/kg mỗi 72 giờ (sau lọc máu)",
-          "glomerularFiltrationRate": {
-            "min": 0,
-            "isMinExclusive": false,
-            "max": 10,
-            "isMaxExclusive": true
-          }
-        }
-      ]
-    },
-    {
-      "id": "00000000-0000-0000-0000-00000000031b",
-      "name": "Tobramycin",
-      "antibioticGroupId": "00000000-0000-0000-0000-000000000208",
-      "classification": "",
-      "pathogenIds": [],
-      "dosages": [
-        {
-          "id": "00000000-0000-0000-0000-000000000488",
-          "routeOfAdministration": "intravenous",
-          "dose": "5-7 mg/kg mỗi 24 giờ",
-          "glomerularFiltrationRate": null
-        },
-        {
-          "id": "00000000-0000-0000-0000-000000000489",
-          "routeOfAdministration": "intravenous",
-          "dose": "4 mg/kg mỗi 24 giờ",
-          "glomerularFiltrationRate": {
-            "min": 60,
-            "isMinExclusive": false,
-            "max": 80,
-            "isMaxExclusive": false
-          }
-        },
-        {
-          "id": "00000000-0000-0000-0000-000000000490",
-          "routeOfAdministration": "intravenous",
-          "dose": "3,5 mg/kg mỗi 24 giờ",
-          "glomerularFiltrationRate": {
-            "min": 40,
-            "isMinExclusive": false,
-            "max": 60,
-            "isMaxExclusive": true
-          }
-        },
-        {
-          "id": "00000000-0000-0000-0000-000000000491",
-          "routeOfAdministration": "intravenous",
-          "dose": "2,5 mg/kg mỗi 24 giờ",
-          "glomerularFiltrationRate": {
-            "min": 30,
-            "isMinExclusive": false,
-            "max": 40,
-            "isMaxExclusive": true
-          }
-        },
-        {
-          "id": "00000000-0000-0000-0000-000000000492",
-          "routeOfAdministration": "intravenous",
-          "dose": "4 mg/kg mỗi 48 giờ",
-          "glomerularFiltrationRate": {
-            "min": 20,
-            "isMinExclusive": false,
-            "max": 30,
-            "isMaxExclusive": true
-          }
-        },
-        {
-          "id": "00000000-0000-0000-0000-000000000493",
-          "routeOfAdministration": "intravenous",
-          "dose": "3 mg/kg mỗi 48 giờ",
-          "glomerularFiltrationRate": {
-            "min": 10,
-            "isMinExclusive": false,
-            "max": 20,
-            "isMaxExclusive": true
-          }
-        },
-        {
-          "id": "00000000-0000-0000-0000-000000000494",
-          "routeOfAdministration": "intravenous",
-          "dose": "2 mg/kg mỗi 72 giờ (sau lọc máu)",
-          "glomerularFiltrationRate": {
-            "min": 0,
-            "isMinExclusive": false,
-            "max": 10,
-            "isMaxExclusive": true
-          }
-        }
-      ]
-    },
-    {
-      "id": "00000000-0000-0000-0000-00000000031c",
-      "name": "Ciprofloxacin",
-      "antibioticGroupId": "00000000-0000-0000-0000-000000000215",
-      "classification": "",
-      "pathogenIds": [],
-      "dosages": [
-        {
-          "id": "00000000-0000-0000-0000-000000000495",
-          "routeOfAdministration": "intravenous",
-          "dose": "400 mg mỗi 8-12 giờ",
-          "glomerularFiltrationRate": {
-            "min": 50,
-            "isMinExclusive": true,
-            "max": null,
-            "isMaxExclusive": false
-          }
-        },
-        {
-          "id": "00000000-0000-0000-0000-000000000496",
-          "routeOfAdministration": "intravenous",
-          "dose": "400 mg mỗi 12 giờ",
-          "glomerularFiltrationRate": {
-            "min": 30,
-            "isMinExclusive": false,
-            "max": 50,
-            "isMaxExclusive": false
-          }
-        },
-        {
-          "id": "00000000-0000-0000-0000-000000000497",
-          "routeOfAdministration": "intravenous",
-          "dose": "400 mg mỗi 24 giờ",
-          "glomerularFiltrationRate": {
-            "min": 0,
-            "isMinExclusive": false,
-            "max": 30,
-            "isMaxExclusive": true
-          }
-        },
-        {
-          "id": "00000000-0000-0000-0000-000000000498",
-          "routeOfAdministration": "oral",
-          "dose": "500-750 mg mỗi 12 giờ",
-          "glomerularFiltrationRate": {
-            "min": 50,
-            "isMinExclusive": true,
-            "max": null,
-            "isMaxExclusive": false
-          }
-        },
-        {
-          "id": "00000000-0000-0000-0000-000000000499",
-          "routeOfAdministration": "oral",
-          "dose": "250-500 mg mỗi 12 giờ",
-          "glomerularFiltrationRate": {
-            "min": 10,
-            "isMinExclusive": false,
-            "max": 50,
-            "isMaxExclusive": false
-          }
-        },
-        {
-          "id": "00000000-0000-0000-0000-000000000500",
-          "routeOfAdministration": "oral",
-          "dose": "250-500 mg mỗi 24 giờ",
-          "glomerularFiltrationRate": {
-            "min": 0,
-            "isMinExclusive": false,
-            "max": 10,
-            "isMaxExclusive": true
-          }
-        }
-      ]
-    },
-    {
-      "id": "00000000-0000-0000-0000-00000000031d",
-      "name": "Moxifloxacin",
-      "antibioticGroupId": "00000000-0000-0000-0000-000000000215",
-      "classification": "",
-      "pathogenIds": [],
-      "dosages": [
-        {
-          "id": "00000000-0000-0000-0000-000000000501",
-          "routeOfAdministration": "oral",
-          "dose": "400 mg mỗi 24 giờ (không cần hiệu chỉnh liều theo chức năng thận)",
-          "glomerularFiltrationRate": null
-        },
-        {
-          "id": "00000000-0000-0000-0000-000000000502",
-          "routeOfAdministration": "intravenous",
-          "dose": "400 mg mỗi 24 giờ (không cần hiệu chỉnh liều theo chức năng thận)",
-          "glomerularFiltrationRate": null
-        }
-      ]
-    },
-    {
-      "id": "00000000-0000-0000-0000-00000000031e",
-      "name": "Levofloxacin",
-      "antibioticGroupId": "00000000-0000-0000-0000-000000000215",
-      "classification": "",
-      "pathogenIds": [],
-      "dosages": [
-        {
-          "id": "00000000-0000-0000-0000-000000000503",
-          "routeOfAdministration": "oral",
-          "dose": "750 mg mỗi 24 giờ hoặc liều đầu 500 mg, các liều sau 250 mg mỗi 12 giờ",
-          "glomerularFiltrationRate": {
-            "min": 50,
-            "isMinExclusive": true,
-            "max": null,
-            "isMaxExclusive": false
-          }
-        },
-        {
-          "id": "00000000-0000-0000-0000-000000000504",
-          "routeOfAdministration": "oral",
-          "dose": "750 mg mỗi 48 giờ hoặc liều đầu 500 mg, các liều sau 125 mg mỗi 12 giờ",
-          "glomerularFiltrationRate": {
-            "min": 20,
-            "isMinExclusive": false,
-            "max": 49,
-            "isMaxExclusive": false
-          }
-        },
-        {
-          "id": "00000000-0000-0000-0000-000000000505",
-          "routeOfAdministration": "oral",
-          "dose": "750 mg x 1 liều sau đó 500 mg mỗi 48 giờ hoặc liều đầu 500 mg, các liều sau 250 mg mỗi 12 giờ",
-          "glomerularFiltrationRate": {
-            "min": 0,
-            "isMinExclusive": false,
-            "max": 20,
-            "isMaxExclusive": true
-          }
-        },
-        {
-          "id": "00000000-0000-0000-0000-000000000506",
-          "routeOfAdministration": "intravenous",
-          "dose": "750 mg mỗi 24 giờ hoặc liều đầu 500 mg, các liều sau 250 mg mỗi 12 giờ",
-          "glomerularFiltrationRate": {
-            "min": 50,
-            "isMinExclusive": true,
-            "max": null,
-            "isMaxExclusive": false
-          }
-        },
-        {
-          "id": "00000000-0000-0000-0000-000000000507",
-          "routeOfAdministration": "intravenous",
-          "dose": "750 mg mỗi 48 giờ hoặc liều đầu 500 mg, các liều sau 125 mg mỗi 12 giờ",
-          "glomerularFiltrationRate": {
-            "min": 20,
-            "isMinExclusive": false,
-            "max": 49,
-            "isMaxExclusive": false
-          }
-        },
-        {
-          "id": "00000000-0000-0000-0000-000000000508",
-          "routeOfAdministration": "intravenous",
-          "dose": "750 mg x 1 liều sau đó 500 mg mỗi 48 giờ hoặc liều đầu 500 mg, các liều sau 250 mg mỗi 12 giờ",
-          "glomerularFiltrationRate": {
-            "min": 0,
-            "isMinExclusive": false,
-            "max": 20,
-            "isMaxExclusive": true
-          }
-        }
-      ]
-    },
-    {
-      "id": "00000000-0000-0000-0000-00000000031f",
-      "name": "Erythromycin",
-      "antibioticGroupId": "00000000-0000-0000-0000-000000000209",
-      "classification": "",
-      "pathogenIds": [],
-      "dosages": [
-        {
-          "id": "00000000-0000-0000-0000-000000000509",
-          "routeOfAdministration": "oral",
-          "dose": "500 mg mỗi 6 giờ, tối đa 4 g/ngày (không cần hiệu chỉnh liều theo chức năng thận)",
-          "glomerularFiltrationRate": null
-        }
-      ]
-    },
-    {
-      "id": "00000000-0000-0000-0000-000000000320",
-      "name": "Clarithromycin",
-      "antibioticGroupId": "00000000-0000-0000-0000-000000000209",
-      "classification": "",
-      "pathogenIds": [],
-      "dosages": [
-        {
-          "id": "00000000-0000-0000-0000-000000000510",
-          "routeOfAdministration": "oral",
-          "dose": "500 mg mỗi 12 giờ",
-          "glomerularFiltrationRate": {
-            "min": 50,
-            "isMinExclusive": true,
-            "max": null,
-            "isMaxExclusive": false
-          }
-        },
-        {
-          "id": "00000000-0000-0000-0000-000000000511",
-          "routeOfAdministration": "oral",
-          "dose": "500 mg mỗi 12-24 giờ",
-          "glomerularFiltrationRate": {
-            "min": 10,
-            "isMinExclusive": false,
-            "max": 50,
-            "isMaxExclusive": false
-          }
-        },
-        {
-          "id": "00000000-0000-0000-0000-000000000512",
-          "routeOfAdministration": "oral",
-          "dose": "500 mg mỗi 24 giờ",
-          "glomerularFiltrationRate": {
-            "min": 0,
-            "isMinExclusive": false,
-            "max": 10,
-            "isMaxExclusive": true
-          }
-        },
-        {
-          "id": "00000000-0000-0000-0000-000000000513",
-          "routeOfAdministration": "intravenous",
-          "dose": "500 mg mỗi 12 giờ",
-          "glomerularFiltrationRate": {
-            "min": 50,
-            "isMinExclusive": true,
-            "max": null,
-            "isMaxExclusive": false
-          }
-        },
-        {
-          "id": "00000000-0000-0000-0000-000000000514",
-          "routeOfAdministration": "intravenous",
-          "dose": "500 mg mỗi 12-24 giờ",
-          "glomerularFiltrationRate": {
-            "min": 10,
-            "isMinExclusive": false,
-            "max": 50,
-            "isMaxExclusive": false
-          }
-        },
-        {
-          "id": "00000000-0000-0000-0000-000000000515",
-          "routeOfAdministration": "intravenous",
-          "dose": "500 mg mỗi 24 giờ",
-          "glomerularFiltrationRate": {
-            "min": 0,
-            "isMinExclusive": false,
-            "max": 10,
-            "isMaxExclusive": true
-          }
-        }
-      ]
-    },
-    {
-      "id": "00000000-0000-0000-0000-000000000321",
-      "name": "Azithromycin",
-      "antibioticGroupId": "00000000-0000-0000-0000-000000000209",
-      "classification": "",
-      "pathogenIds": [],
-      "dosages": [
-        {
-          "id": "00000000-0000-0000-0000-000000000516",
-          "routeOfAdministration": "oral",
-          "dose": "250-500 mg mỗi 24 giờ (không cần hiệu chỉnh liều theo chức năng thận)",
-          "glomerularFiltrationRate": null
-        },
-        {
-          "id": "00000000-0000-0000-0000-000000000517",
-          "routeOfAdministration": "intravenous",
-          "dose": "250-500 mg mỗi 24 giờ (không cần hiệu chỉnh liều theo chức năng thận)",
-          "glomerularFiltrationRate": null
-        }
-      ]
-    },
-    {
-      "id": "00000000-0000-0000-0000-000000000322",
-      "name": "Vancomycin",
-      "antibioticGroupId": "00000000-0000-0000-0000-000000000210",
-      "classification": "",
-      "pathogenIds": [],
-      "dosages": [
-        {
-          "id": "00000000-0000-0000-0000-000000000518",
-          "routeOfAdministration": "intravenous",
-          "dose": "15-30 mg/kg mỗi 12 giờ (không quá 2 g/lần; cân nhắc liều nạp 25-30 mg/kg trong trường hợp nặng)",
-          "glomerularFiltrationRate": null
-        },
-        {
-          "id": "00000000-0000-0000-0000-000000000519",
-          "routeOfAdministration": "intravenous",
-          "dose": "15-30 mg/kg mỗi 12 giờ",
-          "glomerularFiltrationRate": {
-            "min": 50,
-            "isMinExclusive": true,
-            "max": null,
-            "isMaxExclusive": false
-          }
-        },
-        {
-          "id": "00000000-0000-0000-0000-000000000520",
-          "routeOfAdministration": "intravenous",
-          "dose": "15 mg/kg mỗi 24-96 giờ",
-          "glomerularFiltrationRate": {
-            "min": 10,
-            "isMinExclusive": false,
-            "max": 50,
-            "isMaxExclusive": false
-          }
-        },
-        {
-          "id": "00000000-0000-0000-0000-000000000521",
-          "routeOfAdministration": "intravenous",
-          "dose": "7,5 mg/kg mỗi 48-72 giờ",
-          "glomerularFiltrationRate": {
-            "min": 0,
-            "isMinExclusive": false,
-            "max": 10,
-            "isMaxExclusive": true
-          }
-        }
-      ]
-    },
-    {
-      "id": "00000000-0000-0000-0000-000000000323",
-      "name": "Teicoplanin",
-      "antibioticGroupId": "00000000-0000-0000-0000-000000000210",
-      "classification": "",
-      "pathogenIds": [],
-      "dosages": [
-        {
-          "id": "00000000-0000-0000-0000-000000000522",
-          "routeOfAdministration": "intravenous",
-          "dose": "Liều tải: 12 mg/kg mỗi 12 giờ x 3 liều; liều duy trì: 12 mg/kg mỗi 24 giờ",
-          "glomerularFiltrationRate": null
-        },
-        {
-          "id": "00000000-0000-0000-0000-000000000523",
-          "routeOfAdministration": "intravenous",
-          "dose": "Liều duy trì: 12 mg/kg mỗi 24 giờ",
-          "glomerularFiltrationRate": {
-            "min": 50,
-            "isMinExclusive": true,
-            "max": null,
-            "isMaxExclusive": false
-          }
-        },
-        {
-          "id": "00000000-0000-0000-0000-000000000524",
-          "routeOfAdministration": "intravenous",
-          "dose": "Liều duy trì: 12 mg/kg mỗi 48 giờ",
-          "glomerularFiltrationRate": {
-            "min": 10,
-            "isMinExclusive": false,
-            "max": 50,
-            "isMaxExclusive": false
-          }
-        },
-        {
-          "id": "00000000-0000-0000-0000-000000000525",
-          "routeOfAdministration": "intravenous",
-          "dose": "Liều duy trì: 12 mg/kg mỗi 72 giờ",
-          "glomerularFiltrationRate": {
-            "min": 0,
-            "isMinExclusive": false,
-            "max": 10,
-            "isMaxExclusive": true
-          }
-        }
-      ]
-    },
-    {
-      "id": "00000000-0000-0000-0000-000000000324",
-      "name": "Linezolid",
-      "antibioticGroupId": "00000000-0000-0000-0000-000000000218",
-      "classification": "",
-      "pathogenIds": [],
-      "dosages": [
-        {
-          "id": "00000000-0000-0000-0000-000000000526",
-          "routeOfAdministration": "oral",
-          "dose": "600 mg mỗi 12 giờ (không cần hiệu chỉnh liều theo chức năng thận)",
-          "glomerularFiltrationRate": null
-        },
-        {
-          "id": "00000000-0000-0000-0000-000000000527",
-          "routeOfAdministration": "intravenous",
-          "dose": "600 mg mỗi 12 giờ (không cần hiệu chỉnh liều theo chức năng thận)",
-          "glomerularFiltrationRate": null
-        }
-      ]
-    },
-    {
-      "id": "00000000-0000-0000-0000-000000000325",
-      "name": "Doxycyclin",
-      "antibioticGroupId": "00000000-0000-0000-0000-00000000020e",
-      "classification": "",
-      "pathogenIds": [],
-      "dosages": [
-        {
-          "id": "00000000-0000-0000-0000-000000000528",
-          "routeOfAdministration": "oral",
-          "dose": "100 mg mỗi 12 giờ (không cần hiệu chỉnh liều theo chức năng thận)",
-          "glomerularFiltrationRate": null
-        }
-      ]
-    },
-    {
-      "id": "00000000-0000-0000-0000-000000000326",
-      "name": "Metronidazol",
-      "antibioticGroupId": "00000000-0000-0000-0000-000000000219",
-      "classification": "",
-      "pathogenIds": [],
-      "dosages": [
-        {
-          "id": "00000000-0000-0000-0000-000000000529",
-          "routeOfAdministration": "intravenous",
-          "dose": "500 mg mỗi 8 giờ",
-          "glomerularFiltrationRate": {
-            "min": 10,
-            "isMinExclusive": false,
-            "max": null,
-            "isMaxExclusive": false
-          }
-        },
-        {
-          "id": "00000000-0000-0000-0000-000000000530",
-          "routeOfAdministration": "intravenous",
-          "dose": "500 mg mỗi 24 giờ",
-          "glomerularFiltrationRate": {
-            "min": 0,
-            "isMinExclusive": false,
-            "max": 10,
-            "isMaxExclusive": true
-          }
-        },
-        {
-          "id": "00000000-0000-0000-0000-000000000531",
-          "routeOfAdministration": "oral",
-          "dose": "500 mg mỗi 8 giờ",
-          "glomerularFiltrationRate": {
-            "min": 10,
-            "isMinExclusive": false,
-            "max": null,
-            "isMaxExclusive": false
-          }
-        },
-        {
-          "id": "00000000-0000-0000-0000-000000000532",
-          "routeOfAdministration": "oral",
-          "dose": "250 mg mỗi 12 giờ",
-          "glomerularFiltrationRate": {
-            "min": 0,
-            "isMinExclusive": false,
-            "max": 10,
-            "isMaxExclusive": true
-          }
-        }
-      ]
-    },
-    {
-      "id": "00000000-0000-0000-0000-000000000327",
-      "name": "Clindamycin",
-      "antibioticGroupId": "00000000-0000-0000-0000-00000000020a",
-      "classification": "",
-      "pathogenIds": [],
-      "dosages": [
-        {
-          "id": "00000000-0000-0000-0000-000000000533",
-          "routeOfAdministration": "intravenous",
-          "dose": "600 mg mỗi 8 giờ (không cần hiệu chỉnh liều theo chức năng thận)",
-          "glomerularFiltrationRate": null
-        },
-        {
-          "id": "00000000-0000-0000-0000-000000000534",
-          "routeOfAdministration": "oral",
-          "dose": "300-450 mg mỗi 6 giờ (không cần hiệu chỉnh liều theo chức năng thận)",
-          "glomerularFiltrationRate": null
-        }
-      ]
-    },
-    {
-      "id": "00000000-0000-0000-0000-000000000328",
-      "name": "Sulfamethoxazol/trimethoprim",
-      "antibioticGroupId": "00000000-0000-0000-0000-000000000217",
-      "classification": "",
-      "pathogenIds": [],
-      "dosages": [
-        {
-          "id": "00000000-0000-0000-0000-000000000535",
-          "routeOfAdministration": "oral",
-          "dose": "5-20 mg/kg/ngày (tính theo trimethoprim, chia liều mỗi 6-12 giờ)",
-          "glomerularFiltrationRate": {
-            "min": 30,
-            "isMinExclusive": true,
-            "max": null,
-            "isMaxExclusive": false
-          }
-        },
-        {
-          "id": "00000000-0000-0000-0000-000000000536",
-          "routeOfAdministration": "oral",
-          "dose": "5-10 mg/kg/ngày (chia liều mỗi 12 giờ)",
-          "glomerularFiltrationRate": {
-            "min": 10,
-            "isMinExclusive": false,
-            "max": 29,
-            "isMaxExclusive": false
-          }
-        },
-        {
-          "id": "00000000-0000-0000-0000-000000000537",
-          "routeOfAdministration": "oral",
-          "dose": "Không khuyến cáo (nếu sử dụng: 5-10 mg/kg mỗi 24 giờ)",
-          "glomerularFiltrationRate": {
-            "min": 0,
-            "isMinExclusive": false,
-            "max": 10,
-            "isMaxExclusive": true
-          }
-        },
-        {
-          "id": "00000000-0000-0000-0000-000000000538",
-          "routeOfAdministration": "intravenous",
-          "dose": "5-20 mg/kg/ngày (tính theo trimethoprim, chia liều mỗi 6-12 giờ)",
-          "glomerularFiltrationRate": {
-            "min": 30,
-            "isMinExclusive": true,
-            "max": null,
-            "isMaxExclusive": false
-          }
-        },
-        {
-          "id": "00000000-0000-0000-0000-000000000539",
-          "routeOfAdministration": "intravenous",
-          "dose": "5-10 mg/kg/ngày (chia liều mỗi 12 giờ)",
-          "glomerularFiltrationRate": {
-            "min": 10,
-            "isMinExclusive": false,
-            "max": 29,
-            "isMaxExclusive": false
-          }
-        },
-        {
-          "id": "00000000-0000-0000-0000-000000000540",
-          "routeOfAdministration": "intravenous",
-          "dose": "Không khuyến cáo (nếu sử dụng: 5-10 mg/kg mỗi 24 giờ)",
-          "glomerularFiltrationRate": {
-            "min": 0,
-            "isMinExclusive": false,
-            "max": 10,
-            "isMaxExclusive": true
-          }
-        }
-      ]
-    }
-  ],
-  "antibiograms": [
-    {
-      "id": "00000000-0000-0000-0000-000000000501",
-      "pathogenId": "00000000-0000-0000-0000-000000000101",
-      "micLevel": "",
-      // susceptible, intermediate, resistance
-      "micIds": [
-        "00000000-0000-0000-0000-000000000301"
-      ],
-      "firstPriorityMedicineIds": [
-        "00000000-0000-0000-0000-000000000301"
-      ],
-      "secondPriorityMedicineIds": [
-        "00000000-0000-0000-0000-000000000302"
-      ]
-    }
-  ],
-  "criteria": [
-    {
-      "id": "00000000-0000-0000-0000-000000000601",
-      "name": "",
-      "type": "boolean",
-      // numeric, boolean
-      "value": null
-    },
-    {
-      "id": "00000000-0000-0000-0000-000000000602",
-      "name": "",
-      "type": "numeric",
-      // numeric, boolean
-      "value": {
-        "min": 0,
-        "isMinExclusive": true,
-        "max": 2,
-        "isMaxExclusive": false
-      }
-    }
-  ],
-  "diseases": [
-    {
-      "id": "00000000-0000-0000-0000-000000000701",
-      "name": "",
-      "description": "",
-      "icuScoreThreshold": 0,
-      "causes": [
-        {
-          "id": "00000000-0000-0000-0000-000000000801",
-          "pathogenId": "00000000-0000-0000-0000-000000000101",
-          "severity": "",
-          // mild, moderate, severe
-          "treatmentSite": ""
-          // outpatient, inpatient, intensiveCareUnit
-        }
-      ],
-      "icuHospitalizeCriteria": [
-        {
-          "id": "00000000-0000-0000-0000-000000000901",
-          // Single-use criterion: defined inline
-          "criterion": {
-            "name": "",
+    ],
+    "criteria": [
+        {
+            "id": "00000000-0000-0000-0000-000000000601",
+            "name": "Nhập viện gần đây",
             "type": "boolean",
-            // numeric, boolean
             "value": null
-          },
-          "score": 1
         },
         {
-          "id": "00000000-0000-0000-0000-000000000902",
-          // Reused criterion: references the top-level criteria list
-          "criterionId": "00000000-0000-0000-0000-000000000601",
-          "score": 2
-        }
-      ],
-      "resistanceRiskFactors": [
-        {
-          "id": "00000000-0000-0000-0000-000000000a01",
-          // Single-use criterion: defined inline
-          "criterion": {
-            "name": "",
-            "type": "numeric",
-            // numeric, boolean
-            "value": {
-              "min": 0,
-              "isMinExclusive": true,
-              "max": 2,
-              "isMaxExclusive": false
-            }
-          },
-          "pathogenId": "00000000-0000-0000-0000-000000000102",
-          "name": ""
+            "id": "00000000-0000-0000-0000-000000000602",
+            "name": "Vừa mới điều trị kháng sinh",
+            "type": "boolean",
+            "value": null
         },
         {
-          "id": "00000000-0000-0000-0000-000000000a02",
-          // Reused criterion: references the top-level criteria list
-          "criterionId": "00000000-0000-0000-0000-000000000602",
-          "pathogenId": "00000000-0000-0000-0000-000000000102",
-          "name": ""
-        }
-      ],
-      "empiricTreatmentProtocols": [
-        {
-          "id": "00000000-0000-0000-0000-000000000b01",
-          "name": "",
-          "issuer": "",
-          // example: WHO, Vietnam Health Ministry
-          "issueDate": "",
-          // example: 2018-04-21
-          "version": 0,
-          "severity": "",
-          // mild, moderate, severe
-          "treatmentSite": "",
-          // outpatient, inpatient, intensiveCareUnit
-          "specialInfectionId": "00000000-0000-0000-0000-000000000101",
-          // pathogen ID
-          "otherCriteriaIds": [
-            "00000000-0000-0000-0000-000000000601"
-          ],
-          // Refer to criteria
-          "medicineIds": [
-            "00000000-0000-0000-0000-000000000301"
-          ]
-          // antibiotic ID
+            "id": "00000000-0000-0000-0000-000000000603",
+            "name": "Suy giảm miễn dịch",
+            "type": "boolean",
+            "value": null
         },
         {
-          "id": "00000000-0000-0000-0000-000000000b02",
-          "name": "",
-          "issuer": "",
-          // example: WHO, Vietnam Health Ministry
-          "issueDate": "",
-          // example: 2018-04-21
-          "version": 0,
-          "severity": "",
-          // mild, moderate, severe
-          "treatmentSite": "",
-          // outpatient, inpatient, intensiveCareUnit
-          "specialInfectionId": null,
-          "otherCriteria": [
-            {
-              // Single-use criterion: defined inline
-              "name": "",
-              "type": "boolean",
-              // numeric, boolean
-              "value": null
-            }
-          ],
-          "medicineIds": []
-          // antibiotic ID
+            "id": "00000000-0000-0000-0000-000000000604",
+            "name": "Có bệnh phổi nền (xơ hoá nang, dãn phế quản, đợt cấp COPD nhập viện đòi hỏi sử dụng corticosteroid và kháng sinh thường xuyên) ",
+            "type": "boolean",
+            "value": null
+        },
+        {
+            "id": "00000000-0000-0000-0000-000000000605",
+            "name": "Có nhiều bệnh đồng mắc (tiểu đường, nghiện rượu)",
+            "type": "boolean",
+            "value": null
         }
-      ]
-    }
-  ]
+    ],
+    "diseases": [
+        {
+            "id": "00000000-0000-0000-0000-000000000701",
+            "name": "Viêm phổi cộng đồng - CAP",
+            "description": "Viêm phổi cộng đồng (VPCĐ) là tình trạng nhiễm trùng của nhu mô phổi xảy ra ở cộng đồng, bên ngoài bệnh viện, bao gồm viêm phế nang, ống và túi phế nang, tiểu phế quản tận hoặc viêm tổ chức kẽ của phổi.",
+            "icuScoreThreshold": 3,
+            "causes": [
+                {
+                    "id": "00000000-0000-0000-0000-000000000801",
+                    "pathogenId": "00000000-0000-0000-0000-000000000104",
+                    "severity": "mild",
+                    "treatmentSite": "outpatient"
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000802",
+                    "pathogenId": "00000000-0000-0000-0000-000000000107",
+                    "severity": "mild",
+                    "treatmentSite": "outpatient"
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000803",
+                    "pathogenId": "00000000-0000-0000-0000-000000000101",
+                    "severity": "mild",
+                    "treatmentSite": "outpatient"
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000804",
+                    "pathogenId": "00000000-0000-0000-0000-000000000102",
+                    "severity": "mild",
+                    "treatmentSite": "outpatient"
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000805",
+                    "pathogenId": "00000000-0000-0000-0000-000000000109",
+                    "severity": "mild",
+                    "treatmentSite": "outpatient"
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000806",
+                    "pathogenId": "00000000-0000-0000-0000-000000000107",
+                    "severity": "moderate",
+                    "treatmentSite": "inpatient"
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000807",
+                    "pathogenId": "00000000-0000-0000-0000-000000000104",
+                    "severity": "moderate",
+                    "treatmentSite": "inpatient"
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000808",
+                    "pathogenId": "00000000-0000-0000-0000-000000000101",
+                    "severity": "moderate",
+                    "treatmentSite": "inpatient"
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000809",
+                    "pathogenId": "00000000-0000-0000-0000-000000000102",
+                    "severity": "moderate",
+                    "treatmentSite": "inpatient"
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000810",
+                    "pathogenId": "00000000-0000-0000-0000-000000000108",
+                    "severity": "moderate",
+                    "treatmentSite": "inpatient"
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000811",
+                    "pathogenId": "00000000-0000-0000-0000-000000000104",
+                    "severity": "moderate",
+                    "treatmentSite": "inpatient"
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000812",
+                    "pathogenId": "00000000-0000-0000-0000-000000000107",
+                    "severity": "severe",
+                    "treatmentSite": "intensiveCareUnit"
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000813",
+                    "pathogenId": "00000000-0000-0000-0000-000000000108",
+                    "severity": "severe",
+                    "treatmentSite": "intensiveCareUnit"
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000814",
+                    "pathogenId": "00000000-0000-0000-0000-000000000106",
+                    "severity": "severe",
+                    "treatmentSite": "intensiveCareUnit"
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000815",
+                    "pathogenId": "00000000-0000-0000-0000-000000000103",
+                    "severity": "severe",
+                    "treatmentSite": "intensiveCareUnit"
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000816",
+                    "pathogenId": "00000000-0000-0000-0000-000000000104",
+                    "severity": "severe",
+                    "treatmentSite": "intensiveCareUnit"
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000817",
+                    "pathogenId": "00000000-0000-0000-0000-000000000109",
+                    "severity": "severe",
+                    "treatmentSite": "intensiveCareUnit"
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000818",
+                    "pathogenId": "00000000-0000-0000-0000-000000000105",
+                    "severity": "severe",
+                    "treatmentSite": "intensiveCareUnit"
+                }
+            ],
+            "icuHospitalizeCriteria": [
+                {
+                    "id": "00000000-0000-0000-0000-000000000901",
+                    "criterion": {
+                        "name": "Cần thở máy xâm lấn",
+                        "type": "boolean",
+                        "value": null
+                    },
+                    "score": 3
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000902",
+                    "criterion": {
+                        "name": "Sốc nhiễm khuẩn cần sử dụng thuốc vận mạch",
+                        "type": "boolean",
+                        "value": null
+                    },
+                    "score": 3
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000903",
+                    "criterion": {
+                        "name": "Nhịp thở",
+                        "type": "numeric",
+                        "value": {
+                            "min": 30,
+                            "isMinExclusive": true,
+                            "max": null,
+                            "isMaxExclusive": false
+                        }
+                    },
+                    "score": 1
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000904",
+                    "criterion": {
+                        "name": "Tỉ lệ PaO2/FiO2",
+                        "type": "numeric",
+                        "value": {
+                            "min": 0,
+                            "isMinExclusive": true,
+                            "max": 250,
+                            "isMaxExclusive": true
+                        }
+                    },
+                    "score": 1
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000905",
+                    "criterion": {
+                        "name": "Tổn thương nhiều thuỳ phổi",
+                        "type": "boolean",
+                        "value": null
+                    },
+                    "score": 1
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000906",
+                    "criterion": {
+                        "name": "Giảm tri giác",
+                        "type": "boolean",
+                        "value": null
+                    },
+                    "score": 1
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000907",
+                    "criterion": {
+                        "name": "BUN (Blood Urea Nitrogen)",
+                        "type": "numeric",
+                        "value": {
+                            "min": 20,
+                            "isMinExclusive": true,
+                            "max": null,
+                            "isMaxExclusive": true,
+                            "unit": "mg/dL"
+                        }
+                    },
+                    "score": 1
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000908",
+                    "criterion": {
+                        "name": "Bạch cầu / mm3",
+                        "type": "numeric",
+                        "value": {
+                            "min": 0,
+                            "isMinExclusive": true,
+                            "max": 4000,
+                            "isMaxExclusive": false
+                        }
+                    },
+                    "score": 1
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000909",
+                    "criterion": {
+                        "name": "Tiểu cầu / mm3",
+                        "type": "numeric",
+                        "value": {
+                            "min": 0,
+                            "isMinExclusive": true,
+                            "max": 10000,
+                            "isMaxExclusive": false
+                        }
+                    },
+                    "score": 1
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000910",
+                    "criterion": {
+                        "name": "Thân nhiệt",
+                        "type": "numeric",
+                        "value": {
+                            "min": 0,
+                            "isMinExclusive": true,
+                            "max": 36,
+                            "isMaxExclusive": false
+                        }
+                    },
+                    "score": 1
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000911",
+                    "criterion": {
+                        "name": "Tụt huyết áp (cần truyền dịch tích cực) ",
+                        "type": "boolean",
+                        "value": null
+                    },
+                    "score": 1
+                }
+            ],
+            "resistanceRiskFactors": [
+                {
+                    "id": "00000000-0000-0000-0000-000000000a01",
+                    "criterion": {
+                        "name": "Tuổi",
+                        "type": "numeric",
+                        "value": {
+                            "min": 65,
+                            "isMinExclusive": false,
+                            "max": null,
+                            "isMaxExclusive": false
+                        }
+                    },
+                    "pathogenId": "00000000-0000-0000-0000-000000000107",
+                    "name": "S. pneumoniae kháng thuốc (DRSP – Drug Resistance Streptococcus pneumonia)"
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000a02",
+                    "criterion": {
+                        "name": "Có sử dụng Beta-lactam trong 3 tháng gần đây",
+                        "type": "boolean",
+                        "value": null
+                    },
+                    "pathogenId": "00000000-0000-0000-0000-000000000107",
+                    "name": "S. pneumoniae kháng thuốc (DRSP – Drug Resistance Streptococcus pneumonia)"
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000a03",
+                    "criterion": {
+                        "name": "Nghiện rượu",
+                        "type": "boolean",
+                        "value": null
+                    },
+                    "pathogenId": "00000000-0000-0000-0000-000000000107",
+                    "name": "S. pneumoniae kháng thuốc (DRSP – Drug Resistance Streptococcus pneumonia)"
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000a04",
+                    "criterion": {
+                        "name": "Suy giảm miễn dịch do bệnh lý hay dùng thuốc",
+                        "type": "boolean",
+                        "value": null
+                    },
+                    "pathogenId": "00000000-0000-0000-0000-000000000107",
+                    "name": "S. pneumoniae kháng thuốc (DRSP – Drug Resistance Streptococcus pneumonia)"
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000a05",
+                    "criterion": {
+                        "name": "Nhiều bệnh nội khoa kết hợp (bệnh tim, thận mạn)",
+                        "type": "boolean",
+                        "value": null
+                    },
+                    "pathogenId": "00000000-0000-0000-0000-000000000107",
+                    "name": "S. pneumoniae kháng thuốc (DRSP – Drug Resistance Streptococcus pneumonia)"
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000a06",
+                    "criterionId": "00000000-0000-0000-0000-000000000601",
+                    "pathogenId": "00000000-0000-0000-0000-000000000105",
+                    "name": "Nghi ngờ nhiễm P. aeruginosa"
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000a07",
+                    "criterionId": "00000000-0000-0000-0000-000000000601",
+                    "pathogenId": "00000000-0000-0000-0000-000000000108",
+                    "name": "Nghi ngờ nhiễm Trực khuẩn Gram âm"
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000a08",
+                    "criterionId": "00000000-0000-0000-0000-000000000602",
+                    "pathogenId": "00000000-0000-0000-0000-000000000105",
+                    "name": "Nghi ngờ nhiễm P. aeruginosa"
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000a09",
+                    "criterionId": "00000000-0000-0000-0000-000000000602",
+                    "pathogenId": "00000000-0000-0000-0000-000000000108",
+                    "name": "Nghi ngờ nhiễm Trực khuẩn Gram âm"
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000a10",
+                    "criterionId": "00000000-0000-0000-0000-000000000603",
+                    "pathogenId": "00000000-0000-0000-0000-000000000105",
+                    "name": "Nghi ngờ nhiễm P. aeruginosa"
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000a11",
+                    "criterionId": "00000000-0000-0000-0000-000000000603",
+                    "pathogenId": "00000000-0000-0000-0000-000000000108",
+                    "name": "Nghi ngờ nhiễm Trực khuẩn Gram âm"
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000a12",
+                    "criterionId": "00000000-0000-0000-0000-000000000604",
+                    "pathogenId": "00000000-0000-0000-0000-000000000105",
+                    "name": "Nghi ngờ nhiễm P. aeruginosa"
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000a13",
+                    "criterionId": "00000000-0000-0000-0000-000000000604",
+                    "pathogenId": "00000000-0000-0000-0000-000000000108",
+                    "name": "Nghi ngờ nhiễm Trực khuẩn Gram âm"
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000a14",
+                    "criterionId": "00000000-0000-0000-0000-000000000605",
+                    "pathogenId": "00000000-0000-0000-0000-000000000105",
+                    "name": "Nghi ngờ nhiễm P. aeruginosa"
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000a15",
+                    "criterionId": "00000000-0000-0000-0000-000000000605",
+                    "pathogenId": "00000000-0000-0000-0000-000000000108",
+                    "name": "Nghi ngờ nhiễm Trực khuẩn Gram âm"
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000a16",
+                    "criterion": {
+                        "name": "Viêm phổi nặng, bao gồm sốc nhiễm trùng và đòi hỏi thông khí cơ học",
+                        "type": "boolean",
+                        "value": null
+                    },
+                    "pathogenId": "00000000-0000-0000-0000-000000000106",
+                    "name": "Staphylococcus aureus kháng methicillin mắc phải cộng đồng (CA-MRSA)"
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000a17",
+                    "criterion": {
+                        "name": "Viêm phổi hoại tử hoặc tạo hang và biến chứng mủ màng phổi",
+                        "type": "boolean",
+                        "value": null
+                    },
+                    "pathogenId": "00000000-0000-0000-0000-000000000106",
+                    "name": "Staphylococcus aureus kháng methicillin mắc phải cộng đồng (CA-MRSA)"
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000a18",
+                    "criterion": {
+                        "name": "Bệnh thận giai đoạn cuối",
+                        "type": "boolean",
+                        "value": null
+                    },
+                    "pathogenId": "00000000-0000-0000-0000-000000000106",
+                    "name": "Staphylococcus aureus kháng methicillin mắc phải cộng đồng (CA-MRSA)"
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000a19",
+                    "criterion": {
+                        "name": "Sử dụng thuốc đường tiêm",
+                        "type": "boolean",
+                        "value": null
+                    },
+                    "pathogenId": "00000000-0000-0000-0000-000000000106",
+                    "name": "Staphylococcus aureus kháng methicillin mắc phải cộng đồng (CA-MRSA)"
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000a20",
+                    "criterion": {
+                        "name": "Sống trong môi trường đông đúc",
+                        "type": "boolean",
+                        "value": null
+                    },
+                    "pathogenId": "00000000-0000-0000-0000-000000000106",
+                    "name": "Staphylococcus aureus kháng methicillin mắc phải cộng đồng (CA-MRSA)"
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000a21",
+                    "criterion": {
+                        "name": "Sau cảm cúm",
+                        "type": "boolean",
+                        "value": null
+                    },
+                    "pathogenId": "00000000-0000-0000-0000-000000000106",
+                    "name": "Staphylococcus aureus kháng methicillin mắc phải cộng đồng (CA-MRSA)"
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000a22",
+                    "criterion": {
+                        "name": "Điều trị kháng sinh trong 3 tháng gần đây",
+                        "type": "boolean",
+                        "value": null
+                    },
+                    "pathogenId": "00000000-0000-0000-0000-000000000106",
+                    "name": "Staphylococcus aureus kháng methicillin mắc phải cộng đồng (CA-MRSA)"
+                }
+            ],
+            "empiricTreatmentProtocols": [
+                {
+                    "id": "00000000-0000-0000-0000-000000000b01",
+                    "name": "Phác đồ điều trị VPCĐ - Nặng - ICU",
+                    "issuer": "Bộ Y tế Việt Nam",
+                    "issueDate": "2024-06-28",
+                    "version": 1,
+                    "severity": "severe",
+                    // mild, moderate, severe
+                    "treatmentSite": "intensiveCareUnit",
+                    // outpatient, inpatient, intensiveCareUnit
+                    "specialInfectionId": null,
+                    "otherCriteriaIds": [],
+                    "medicineIds": [
+                        "00000000-0000-0000-0000-000000000318",
+                        "00000000-0000-0000-0000-000000000310",
+                        "00000000-0000-0000-0000-00000000030f",
+                        "00000000-0000-0000-0000-000000000313",
+                        "00000000-0000-0000-0000-000000000314",
+                        "00000000-0000-0000-0000-00000000031f",
+                        "00000000-0000-0000-0000-000000000320",
+                        "00000000-0000-0000-0000-000000000321",
+                        "00000000-0000-0000-0000-00000000031c",
+                        "00000000-0000-0000-0000-00000000031d",
+                        "00000000-0000-0000-0000-00000000031e"
+                    ]
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000b02",
+                    "name": "Phác đồ điều trị VPCĐ - Nặng - ICU - Pseudomonas",
+                    "issuer": "Bộ Y tế Việt Nam",
+                    "issueDate": "2024-06-28",
+                    "version": 1,
+                    "severity": "severe",
+                    // mild, moderate, severe
+                    "treatmentSite": "intensiveCareUnit",
+                    // outpatient, inpatient, intensiveCareUnit
+                    "specialInfectionId": "00000000-0000-0000-0000-000000000105",
+                    "otherCriteriaIds": [],
+                    "medicineIds": [
+                        "00000000-0000-0000-0000-000000000318",
+                        "00000000-0000-0000-0000-000000000310",
+                        "00000000-0000-0000-0000-00000000030f",
+                        "00000000-0000-0000-0000-000000000313",
+                        "00000000-0000-0000-0000-000000000314",
+                        "00000000-0000-0000-0000-00000000031f",
+                        "00000000-0000-0000-0000-000000000320",
+                        "00000000-0000-0000-0000-000000000321",
+                        "00000000-0000-0000-0000-00000000031c",
+                        "00000000-0000-0000-0000-00000000031d",
+                        "00000000-0000-0000-0000-00000000031e",
+                        "00000000-0000-0000-0000-000000000315",
+                        "00000000-0000-0000-0000-000000000316",
+                        "00000000-0000-0000-0000-000000000317",
+                        "00000000-0000-0000-0000-000000000319",
+                        "00000000-0000-0000-0000-00000000031a",
+                        "00000000-0000-0000-0000-00000000031b",
+                        "00000000-0000-0000-0000-000000000321"
+                    ]
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000b03",
+                    "name": "Phác đồ điều trị VPCĐ - Nặng - ICU - CA-MRSA",
+                    "issuer": "Bộ Y tế Việt Nam",
+                    "issueDate": "2024-06-28",
+                    "version": 1,
+                    "severity": "severe",
+                    // mild, moderate, severe
+                    "treatmentSite": "intensiveCareUnit",
+                    // outpatient, inpatient, intensiveCareUnit
+                    "specialInfectionId": "00000000-0000-0000-0000-000000000106",
+                    "otherCriteriaIds": [],
+                    "medicineIds": [
+                        "00000000-0000-0000-0000-000000000318",
+                        "00000000-0000-0000-0000-000000000310",
+                        "00000000-0000-0000-0000-00000000030f",
+                        "00000000-0000-0000-0000-000000000313",
+                        "00000000-0000-0000-0000-000000000314",
+                        "00000000-0000-0000-0000-00000000031f",
+                        "00000000-0000-0000-0000-000000000320",
+                        "00000000-0000-0000-0000-000000000321",
+                        "00000000-0000-0000-0000-00000000031c",
+                        "00000000-0000-0000-0000-00000000031d",
+                        "00000000-0000-0000-0000-00000000031e",
+                        "00000000-0000-0000-0000-000000000322",
+                        "00000000-0000-0000-0000-000000000323",
+                        "00000000-0000-0000-0000-000000000324"
+                    ]
+                }
+            ]
+        }
+    ]
 }
