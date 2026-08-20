@@ -2,6 +2,8 @@ using Application.Features.Authentication.Login.Queries;
 using Application.Features.Authentication.Login.Result;
 using Application.Features.Authentication.Logout;
 using Application.Features.Authentication.Refresh.Queries;
+using Application.Features.Authentication.SendEmailVerification;
+using Application.Features.Authentication.VerifyEmail;
 using Asp.Versioning;
 using Microsoft.AspNetCore.Mvc;
 using Respira.ServiceDefaults.Dtos;
@@ -64,5 +66,39 @@ public class AuthController(IMessageBus bus) : ControllerBase
         var revoked = await bus.InvokeAsync<bool>(command);
         var message = revoked ? "Logout successful" : "Already logged out";
         return Ok(ApiResponse.Ok(message));
+    }
+
+    /// <summary>
+    /// Confirms a doctor's email using the verification token from the email link.
+    /// Called as a GET from the verification link (no body, token/email in query).
+    /// </summary>
+    /// <param name="command">Verification token and email from the query string</param>
+    [HttpGet]
+    [Route("verify-email")]
+    [ProducesResponseType<ApiResponse<bool>>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> VerifyEmail([FromQuery] VerifyEmailCommand command)
+    {
+        var result = await bus.InvokeAsync<ApiResponse<bool>>(command);
+        return StatusCode(result.StatusCode, result);
+    }
+
+    /// <summary>
+    /// (Re)sends the email verification link for a registered doctor account.
+    /// Generates and persists a fresh verification token, then emails the link.
+    /// </summary>
+    /// <param name="command">Email of the account to verify</param>
+    [HttpPost]
+    [Route("resend-verification-email")]
+    [ProducesResponseType<ApiResponse<bool>>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> ResendVerificationEmail(
+        [FromBody] RequestEmailVerificationCommand command
+    )
+    {
+        var result = await bus.InvokeAsync<ApiResponse<bool>>(command);
+        return StatusCode(result.StatusCode, result);
     }
 }

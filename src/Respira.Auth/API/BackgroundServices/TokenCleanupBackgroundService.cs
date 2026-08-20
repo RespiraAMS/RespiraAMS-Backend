@@ -41,7 +41,10 @@ public class TokenCleanupBackgroundService(
     {
         try
         {
-            var removed = await bus.InvokeAsync<int>(new RemoveExpiredTokensCommand(), stoppingToken);
+            var removed = await bus.InvokeAsync<int>(
+                new RemoveExpiredTokensCommand(),
+                stoppingToken
+            );
             if (removed > 0)
             {
                 logger.LogInformation("Expired-token cleanup removed {Count} rows", removed);
