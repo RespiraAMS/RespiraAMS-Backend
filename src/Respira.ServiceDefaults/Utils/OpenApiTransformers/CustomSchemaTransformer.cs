@@ -15,10 +15,9 @@ public sealed class CustomSchemaTransformer : IOpenApiSchemaTransformer
         if (context.JsonTypeInfo.Type.IsEnum)
         {
             schema.Type = JsonSchemaType.String;
-            schema.Enum = Enum
+            schema.Enum = [.. Enum
                 .GetNames(context.JsonTypeInfo.Type)
-                .Select(JsonNode (name) => JsonValue.Create(name))
-                .ToList();
+                .Select(JsonNode (name) => JsonValue.Create(name))];
         }
 
         return Task.CompletedTask;

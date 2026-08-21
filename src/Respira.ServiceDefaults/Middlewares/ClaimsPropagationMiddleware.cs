@@ -6,7 +6,6 @@ namespace Respira.ServiceDefaults.Middlewares;
 /// <summary>
 /// Extract identity from bearer token and downstream credential as request header from API gateway to service
 /// </summary>
-/// <param name="next"></param>
 public class ClaimsPropagationMiddleware(RequestDelegate next)
 {
     public async Task InvokeAsync(HttpContext context)

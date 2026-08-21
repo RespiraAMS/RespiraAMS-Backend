@@ -30,7 +30,7 @@ public class ApiResponse<T>
     public T? Data { get; set; }
 
     /// <summary>
-    /// Create a success API response 
+    /// Create a success API response
     /// </summary>
     /// <param name="data">The result data</param>
     /// <param name="message">Success message (if any)</param>
@@ -48,7 +48,7 @@ public class ApiResponse<T>
     }
 
     /// <summary>
-    /// Create a failure API response 
+    /// Create a failure API response
     /// </summary>
     /// <param name="message">Error message (required)</param>
     /// <param name="statusCode">Failure status code</param>
@@ -85,7 +85,7 @@ public class ApiResponse
     public string? Message { get; set; }
 
     /// <summary>
-    /// Create a success API response 
+    /// Create a success API response
     /// </summary>
     /// <param name="message">Success message (if any)</param>
     /// <param name="statusCode">Success status code, default to 200</param>
@@ -101,7 +101,7 @@ public class ApiResponse
     }
 
     /// <summary>
-    /// Create a failure API response 
+    /// Create a failure API response
     /// </summary>
     /// <param name="message">Error message (required)</param>
     /// <param name="statusCode">Failure status code</param>

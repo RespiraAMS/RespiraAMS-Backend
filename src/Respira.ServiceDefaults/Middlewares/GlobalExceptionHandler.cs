@@ -11,7 +11,6 @@ namespace Respira.ServiceDefaults.Middlewares;
 /// <summary>
 /// Global exception handler, used for all microservices for consistency error returned
 /// </summary>
-/// <param name="logger"></param>
 public class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger) : IExceptionHandler
 {
     public async ValueTask<bool> TryHandleAsync(

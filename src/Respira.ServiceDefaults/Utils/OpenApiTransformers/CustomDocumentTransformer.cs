@@ -7,7 +7,6 @@ namespace Respira.ServiceDefaults.Utils.OpenApiTransformers;
 /// <summary>
 /// OpenAPI document transformer with JWT bearer token support
 /// </summary>
-/// <param name="authenticationSchemeProvider"></param>
 public sealed class CustomDocumentTransformer(IAuthenticationSchemeProvider authenticationSchemeProvider)
     : IOpenApiDocumentTransformer
 {
@@ -46,7 +45,7 @@ public sealed class CustomDocumentTransformer(IAuthenticationSchemeProvider auth
             // Apply the requirement to all operations
             foreach (var operation in document.Paths.Values.SelectMany(p => p.Operations!))
             {
-                operation.Value.Security ??= new List<OpenApiSecurityRequirement>();
+                operation.Value.Security ??= [];
                 operation.Value.Security.Add(securityRequirement);
             }
         }
