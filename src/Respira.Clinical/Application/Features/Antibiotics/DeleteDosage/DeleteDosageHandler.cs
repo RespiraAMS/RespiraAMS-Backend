@@ -42,9 +42,29 @@ public class DeleteDosageHandler(
         dosages.RemoveAll(d => d.Id == command.Id);
 
         // Check for business logic
-        if (!checker.IsValidDosage(dosages))
+        try
         {
-            throw new BadRequestException("Update dosage violate antibiotic business rule");
+            checker.IsValidDosage(dosages);
+        }
+        catch (DosageEmptyException e)
+        {
+            logger.LogDebug("Dosage validation failed: {msg}", e.Message);
+            throw new BadRequestException("Delete this dosage violate business rule: antibiotic must have at least 1 dosage");
+        }
+        catch (StandardDoseInvalidException e)
+        {
+            logger.LogDebug("Dosage validation failed: {msg}", e.Message);
+            throw new BadRequestException("Delete this dosage violate business rule: each route of administration must have 1 and only 1 standard dose");
+        }
+        catch (OverlappedCrclException e)
+        {
+            logger.LogDebug("Dosage validation failed: {msg}", e.Message);
+            throw new BadRequestException("Delete this dosage violate business rule: all dosages in each route of administration must not have overlapping CrCl range");
+        }
+        catch (Exception e)
+        {
+            logger.LogError("Failed to validate dosage: {exception}", e);
+            throw new ServerException();
         }
 
         // Since we hard delete in the memory clone while our db delete is soft delete, 

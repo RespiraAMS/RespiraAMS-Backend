@@ -48,6 +48,7 @@
   </Folder>
   <Folder Name="/test/" />
   <Folder Name="/test/Respira.Clinical.Test/">
+    <Project Path="test/Respira.Clinical.Test/Application.Test/Application.Test.csproj" />
     <Project Path="test/Respira.Clinical.Test/Domain.Test/Domain.Test.csproj" />
   </Folder>
 </Solution>

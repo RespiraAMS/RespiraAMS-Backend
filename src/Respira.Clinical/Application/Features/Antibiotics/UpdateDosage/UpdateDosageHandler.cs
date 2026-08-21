@@ -44,9 +44,24 @@ public class UpdateDosageHandler(
         mapper.MapModel(dosage, command);
 
         // Check for business logic
-        if (!checker.IsValidDosage(dosages))
+        try
         {
-            throw new BadRequestException("Update dosage violate antibiotic business rule");
+            checker.IsValidDosage(dosages);
+        }
+        catch (StandardDoseInvalidException e)
+        {
+            logger.LogDebug("Dosage validation failed: {msg}", e.Message);
+            throw new BadRequestException("Update this dosage violate business rule: each route of administration must have 1 and only 1 standard dose");
+        }
+        catch (OverlappedCrclException e)
+        {
+            logger.LogDebug("Dosage validation failed: {msg}", e.Message);
+            throw new BadRequestException("Update this dosage violate business rule: all dosages in each route of administration must not have overlapping CrCl range");
+        }
+        catch (Exception e)
+        {
+            logger.LogError("Failed to validate dosage: {exception}", e);
+            throw new ServerException();
         }
 
         // Update dosage to database

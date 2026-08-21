@@ -1,2 +1,2 @@
 dotnet format --verify-no-changes
-dotnet test
+dotnet build

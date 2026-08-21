@@ -64,4 +64,9 @@ public class Range
 
         return true;
     }
+
+    public override string ToString()
+    {
+        return $"{(IsMinExclusive ? "(" : "[")}{Min}, {(Max == decimal.MaxValue ? "∞" : Max)}{(IsMaxExclusive ? ")" : "]")}";
+    }
 }
