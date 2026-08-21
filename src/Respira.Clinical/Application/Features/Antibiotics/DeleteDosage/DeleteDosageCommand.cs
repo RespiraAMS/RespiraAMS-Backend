@@ -6,4 +6,9 @@ public class DeleteDosageCommand : ICommand
     /// Dosage ID
     /// </summary>
     public required Guid Id { get; set; }
+
+    /// <summary>
+    /// Antibiotic ID
+    /// </summary>
+    public required Guid AntibioticId { get; set; }
 }

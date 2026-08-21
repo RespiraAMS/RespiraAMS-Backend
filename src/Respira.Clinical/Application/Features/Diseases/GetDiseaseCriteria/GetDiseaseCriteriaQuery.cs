@@ -23,7 +23,7 @@ public class DiseaseCriteriaResult
     public required IEnumerable<CriterionItem> ResistanceRiskFactorCriteria { get; set; }
 
     /// <summary>
-    /// List of other secondary criteria in empiric treatment protocols assigned to the queried disease 
+    /// List of other secondary criteria in empiric treatment protocols assigned to the queried disease
     /// </summary>
     public required IEnumerable<CriterionItem> OtherCriteria { get; set; }
 }

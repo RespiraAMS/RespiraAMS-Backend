@@ -1,6 +1,0 @@
-{
-  "appHost": {
-    "path": "Respira.AppHost/Respira.AppHost.csproj"
-  },
-  "channel": "stable"
-}

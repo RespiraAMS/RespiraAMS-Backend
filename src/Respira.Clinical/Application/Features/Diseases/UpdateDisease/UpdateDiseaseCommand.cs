@@ -18,7 +18,7 @@ public class UpdateDiseaseCommand : ICommand
     public required string Description { get; set; }
 
     /// <summary>
-    /// Disease's ICU score minimum threshold (&gt;= threshold) to consider needing ICU hospitalization 
+    /// Disease's ICU score minimum threshold (&gt;= threshold) to consider needing ICU hospitalization
     /// </summary>
     public required int IcuScoreThreshold { get; set; }
 }

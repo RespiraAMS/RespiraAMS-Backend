@@ -10,7 +10,7 @@ public static class CustomValidationRules
 {
     /// <summary>
     /// Validate if pagination query parameters are valid.
-    /// Valid parameters must have page index &gt;= 1 and 0 &lt; page size &lt;= 100   
+    /// Valid parameters must have page index &gt;= 1 and 0 &lt; page size &lt;= 100
     /// </summary>
     /// <param name="ruleBuilder">Fluent rule builder object</param>
     /// <typeparam name="T">Data type of the pagination's item</typeparam>

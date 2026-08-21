@@ -1,4 +1,4 @@
 namespace Respira.ServiceDefaults.Constracts.CQRS
 {
-    public interface IQuery { }
+    public interface IQuery;
 }

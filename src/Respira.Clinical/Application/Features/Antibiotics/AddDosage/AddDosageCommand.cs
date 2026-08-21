@@ -25,7 +25,7 @@ public class AddDosageCommand : ICommand
     /// The range of Glomerular Filtration Rate (GFR), used to adjust dose based on patient kidney.
     /// If null, this is the standard dose
     /// </summary>
-    public required Range? GlomerularFiltrationRate { get; set; }
+    public required Range? Crcl { get; set; }
 }
 
 public class AddDosageResult(Guid id)

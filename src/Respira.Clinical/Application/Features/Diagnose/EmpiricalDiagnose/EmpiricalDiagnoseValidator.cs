@@ -1,21 +1,24 @@
-﻿namespace Application.Features.Diagnose;
+namespace Application.Features.Diagnose.EmpiricalDiagnose;
 
-public class DiagnoseValidator : AbstractValidator<DiagnoseQuery>
+public class EmpiricalDiagnoseValidator : AbstractValidator<EmpiricalDiagnoseQuery>
 {
-    public DiagnoseValidator()
+    public EmpiricalDiagnoseValidator()
     {
         RuleFor(x => x.DiseaseId)
             .NotEmpty()
             .WithMessage("Disease ID is required");
-        RuleFor(x => x.DateOfBirth)
-            .LessThan(DateOnly.FromDateTime(DateTime.Today))
-            .WithMessage("Date of birth must not be later than today");
         RuleFor(x => x.Weight)
             .GreaterThan(0)
-            .WithMessage("Weight must be greater than 0");
+            .WithMessage("Patient's weight (kg) must be greater than 0");
+        RuleFor(x => x.Height)
+            .GreaterThan(0)
+            .WithMessage("Patient's height (m) must be greater than 0");
         RuleFor(x => x.SerumCreatine)
             .GreaterThan(0)
-            .WithMessage("Serum creatine must be greater than 0");
+            .WithMessage("Serum creatine used for patient must be greater than 0");
+        RuleFor(x => x.DateOfBirth)
+            .LessThanOrEqualTo(DateOnly.FromDateTime(DateTime.Today))
+            .WithMessage("Patient's date of birth must not exceed today");
         RuleFor(x => x.Urea)
             .GreaterThan(0)
             .When(x => x.Urea != null)

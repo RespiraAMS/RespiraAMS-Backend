@@ -111,8 +111,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
         var newIds = ids.ToHashSet();
 
         // Remove items no longer in the list
-        var toRemove = collection.Where(x => !newIds.Contains(x.Id)).ToList();
-        foreach (var item in toRemove)
+        foreach (var item in collection.Where(x => !newIds.Contains(x.Id)).ToList())
         {
             collection.Remove(item);
         }
@@ -152,9 +151,6 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             .HasValue<NumericCriterion>("numeric");
         modelBuilder.Entity<NumericCriterion>()
             .OwnsOne(x => x.Value, builder => builder.ToJson());
-        // modelBuilder.Entity<NumericCriterion>()
-        //     .HasIndex(x => x.Value)
-        //     .HasMethod("gin"); // Use GIN index for better performance with JSONB
 
         // Config on antibiotic group
         modelBuilder.Entity<AntibioticGroup>().ToTable("antibiotic_groups");
@@ -175,10 +171,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             .Property(x => x.RouteOfAdministration)
             .HasConversion<string>();
         modelBuilder.Entity<Dosage>()
-            .OwnsOne(x => x.GlomerularFiltrationRate, builder => builder.ToJson());
-        // modelBuilder.Entity<Dosage>()
-        //     .HasIndex(x => x.GlomerularFiltrationRate)
-        //     .HasMethod("gin"); // Use GIN index for better performance with JSONB
+            .OwnsOne(x => x.Crcl, builder => builder.ToJson());
 
         // Config on antibiotic
         modelBuilder.Entity<Antibiotic>().ToTable("antibiotics");
@@ -187,9 +180,9 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             .WithMany()
             .HasForeignKey(x => x.AntibioticGroupId);
         modelBuilder.Entity<Antibiotic>()
-            .HasIndex(x => new { x.Name, x.Category });
+            .HasIndex(x => new { x.Name, x.Classification });
         modelBuilder.Entity<Antibiotic>()
-            .Property(x => x.Category)
+            .Property(x => x.Classification)
             .HasConversion<string>();
 
         // Config on pathogen
@@ -266,7 +259,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
         // Config on antibiogram
         modelBuilder.Entity<Antibiogram>().ToTable("antibiograms");
         modelBuilder.Entity<Antibiogram>()
-            .HasOne<Pathogen>(x => x.Pathogen)
+            .HasOne(x => x.Pathogen)
             .WithMany()
             .HasForeignKey(x => x.PathogenId);
         modelBuilder.Entity<Antibiogram>()

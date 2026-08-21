@@ -124,9 +124,9 @@ public class AntibioticsController(IMessageBus bus) : ControllerBase
     [ProducesResponseType<ApiResponse>(StatusCodes.Status403Forbidden)]
     [ProducesResponseType<ApiResponse>(StatusCodes.Status404NotFound)]
     [ProducesResponseType<ApiResponse>(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> UpdateDosage(Guid dosageId, [FromBody] UpdateDosageRequestDto req)
+    public async Task<IActionResult> UpdateDosage(Guid id, Guid dosageId, [FromBody] UpdateDosageRequestDto req)
     {
-        await bus.InvokeAsync(req.ToCommand(dosageId));
+        await bus.InvokeAsync(req.ToCommand(dosageId, id));
         return NoContent();
     }
 
@@ -139,7 +139,7 @@ public class AntibioticsController(IMessageBus bus) : ControllerBase
     [ProducesResponseType<ApiResponse>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> DeleteDosage(Guid id, Guid dosageId)
     {
-        await bus.InvokeAsync(new DeleteDosageCommand { Id = dosageId });
+        await bus.InvokeAsync(new DeleteDosageCommand { Id = dosageId, AntibioticId = id });
         return NoContent();
     }
 

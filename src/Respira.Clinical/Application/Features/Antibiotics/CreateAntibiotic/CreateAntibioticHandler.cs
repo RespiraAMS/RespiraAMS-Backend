@@ -1,5 +1,4 @@
 ﻿using Application.Contracts.Data;
-using Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 

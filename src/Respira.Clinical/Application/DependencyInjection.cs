@@ -4,11 +4,13 @@ using Application.Features.AntibioticGroups.CreateAntibioticGroup;
 using Application.Features.AntibioticGroups.UpdateAntibioticGroup;
 using Application.Features.Antibiotics.AddDosage;
 using Application.Features.Antibiotics.CreateAntibiotic;
+using Application.Features.Antibiotics.Shared;
 using Application.Features.Antibiotics.UpdateAntibiotic;
 using Application.Features.Antibiotics.UpdateDosage;
 using Application.Features.Causes.CreateCause;
 using Application.Features.Causes.UpdateCause;
-using Application.Features.Diagnose;
+using Application.Features.Diagnose.EmpiricalDiagnose;
+using Application.Features.Diagnose.TargetedDiagnose;
 using Application.Features.Diseases.UpdateDisease;
 using Application.Features.EmpiricTreatmentProtocols.CreateEmpiricTreatmentProtocol;
 using Application.Features.EmpiricTreatmentProtocols.UpdateEmpiricTreatmentProtocol;
@@ -77,7 +79,9 @@ public static class DependencyInjection
         services.AddScoped<ICreateMapper<Antibiogram, CreateAntibiogramCommand>, CreateAntibiogramMapper>();
         services.AddScoped<IUpdateMapper<Antibiogram, UpdateAntibiogramCommand>, UpdateAntibiogramMapper>();
 
-        services.AddScoped<ICreateMapper<ClinicalPicture, DiagnoseQuery>, DiagnoseMapper>();
+        services.AddScoped<IMapper<TargetedDiagnoseQuery, PatientInfo>, TargetedDiagnoseMapper>();
+        services.AddScoped<IMapper<EmpiricalDiagnoseQuery, PatientInfo>, EmpiricalDiagnosePatientInfoMapper>();
+        services.AddScoped<IMapper<EmpiricalDiagnoseQuery, ClinicalPicture>, EmpiricalDiagnoseClinicalPictureMapper>();
     }
 
     public static void AddFluentValidators(this IServiceCollection services)

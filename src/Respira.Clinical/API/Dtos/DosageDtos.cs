@@ -21,7 +21,7 @@ public class AddDosageRequestDto
     /// <summary>
     /// The range of Glomerular Filtration Rate (GFR), used to adjust dose based on patient kidney
     /// </summary>
-    public required Range GlomerularFiltrationRate { get; set; }
+    public required Range? Crcl { get; set; }
 
     public AddDosageCommand ToCommand(Guid antibioticId)
     {
@@ -30,7 +30,7 @@ public class AddDosageRequestDto
             AntibioticId = antibioticId,
             RouteOfAdministration = RouteOfAdministration,
             Dose = Dose,
-            GlomerularFiltrationRate = GlomerularFiltrationRate,
+            Crcl = Crcl,
         };
     }
 }
@@ -52,16 +52,17 @@ public class UpdateDosageRequestDto
     /// The range of Glomerular Filtration Rate (GFR), used to adjust dose based on patient kidney. If null,
     /// this is the normal/standard dose
     /// </summary>
-    public required Range? GlomerularFiltrationRate { get; set; }
+    public required Range? Crcl { get; set; }
 
-    public UpdateDosageCommand ToCommand(Guid dosageId)
+    public UpdateDosageCommand ToCommand(Guid dosageId, Guid antibioticId)
     {
         return new UpdateDosageCommand
         {
             Id = dosageId,
+            AntibioticId = antibioticId,
             RouteOfAdministration = RouteOfAdministration,
             Dose = Dose,
-            GlomerularFiltrationRate = GlomerularFiltrationRate
+            Crcl = Crcl
         };
     }
 }

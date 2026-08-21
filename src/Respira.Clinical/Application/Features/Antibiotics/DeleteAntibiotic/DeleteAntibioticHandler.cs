@@ -26,7 +26,9 @@ public class DeleteAntibioticHandler(IDbContext context, ILogger<DeleteAntibioti
             antibiotic.DeletedAt = DateTimeOffset.UtcNow;
 
             // Cascade delete all dosage belong to this antibiotic
-            var count = await context.Dosages.ExecuteUpdateAsync(x => x
+            var count = await context.Dosages
+                .Where(d => d.AntibioticId == command.Id)
+                .ExecuteUpdateAsync(x => x
                     .SetProperty(d => d.IsDeleted, true)
                     .SetProperty(d => d.DeletedAt, DateTimeOffset.UtcNow), cancellationToken);
 

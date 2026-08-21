@@ -33,8 +33,8 @@ public class Dosage : Base
     public required string Dose { get; set; }
 
     /// <summary>
-    /// Glomerular filtration rate (GFR: measures how effectively your kidneys filter waste and
+    /// Creatine clearance (CrCl: measures how effectively your kidneys filter waste and
     /// excess fluid from your blood) range value. If null, then this is the normal/standard dose
     /// </summary>
-    public Range? GlomerularFiltrationRate { get; set; }
+    public Range? Crcl { get; set; }
 }

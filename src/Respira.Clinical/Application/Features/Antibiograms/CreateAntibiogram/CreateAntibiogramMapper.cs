@@ -1,6 +1,4 @@
-﻿using Domain.Enums;
-
-namespace Application.Features.Antibiograms.CreateAntibiogram;
+﻿namespace Application.Features.Antibiograms.CreateAntibiogram;
 
 public class CreateAntibiogramMapper : ICreateMapper<Antibiogram, CreateAntibiogramCommand>
 {

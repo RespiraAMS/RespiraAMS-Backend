@@ -17,7 +17,17 @@ public class CreateAntibioticCommand : ICommand
     /// <summary>
     /// Antibiotic WHO's AWaRe category
     /// </summary>
-    public required AwareCategory Category { get; set; }
+    public required AwareClassification Classification { get; set; }
+
+    /// <summary>
+    /// Route of administration of antibiotic's standard dose
+    /// </summary>
+    public required RouteOfAdministration RouteOfAdministration { get; set; }
+
+    /// <summary>
+    /// Standard dose
+    /// </summary>
+    public required string StandardDose { get; set; }
 }
 
 public class CreateAntibioticResult(Guid id)

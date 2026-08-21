@@ -1,5 +1,4 @@
 ﻿using Application.Contracts.Data;
-using Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 using X.PagedList.EF;
 
@@ -31,21 +30,21 @@ public class GetPagedAntibiogramHandler(IDbContext context, IPaginationFactory f
                     Name = x.Pathogen.Name
                 },
                 MicLevel = x.MicLevel,
-                Mics = x.Mics.Select(m => new AntibioticResult
+                Mics = x.Mics.ConvertAll(m => new AntibioticResult
                 {
                     Id = m.Id,
                     Name = m.Name
-                }).ToList(),
-                FirstPriorityMedicines = x.FirstPriorityMedicines.Select(m => new AntibioticResult
+                }),
+                FirstPriorityMedicines = x.FirstPriorityMedicines.ConvertAll(m => new AntibioticResult
                 {
                     Id = m.Id,
                     Name = m.Name
-                }).ToList(),
-                SecondPriorityMedicines = x.SecondPriorityMedicines.Select(m => new AntibioticResult
+                }),
+                SecondPriorityMedicines = x.SecondPriorityMedicines.ConvertAll(m => new AntibioticResult
                 {
                     Id = m.Id,
                     Name = m.Name
-                }).ToList(),
+                }),
             })
             .ToPagedListAsync(query.Param.Page, query.Param.Size);
         return factory.Create(antibiograms);

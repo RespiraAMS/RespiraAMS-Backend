@@ -1,5 +1,4 @@
-﻿using Domain.Models;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Respira.ServiceDefaults.Models;
 
 namespace Application.Contracts.Data;
