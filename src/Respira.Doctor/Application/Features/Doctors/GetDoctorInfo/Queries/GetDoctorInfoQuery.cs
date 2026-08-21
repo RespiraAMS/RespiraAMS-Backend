@@ -1,6 +1,6 @@
 using Respira.ServiceDefaults.Constracts.CQRS;
 
-namespace Application.Features.Doctor.GetDoctorInfo.Queries
+namespace Application.Features.Doctors.GetDoctorInfo.Queries
 {
     public record GetDoctorInfoQuery : IQuery
     {

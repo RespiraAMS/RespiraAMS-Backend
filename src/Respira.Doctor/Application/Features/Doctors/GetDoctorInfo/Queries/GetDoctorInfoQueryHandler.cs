@@ -1,13 +1,13 @@
 using Application.Abstracts.Caching;
 using Application.Abstracts.Data;
-using Application.Features.Doctor.GetDoctorInfo.Results;
+using Application.Features.Doctors.GetDoctorInfo.Results;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Respira.ServiceDefaults.Constracts.CQRS;
 using Respira.ServiceDefaults.Dtos;
 
-namespace Application.Features.Doctor.GetDoctorInfo.Queries;
+namespace Application.Features.Doctors.GetDoctorInfo.Queries;
 
 /// <summary>
 /// Returns a doctor's profile information, using a cache-aside strategy:

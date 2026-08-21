@@ -1,6 +1,5 @@
 using Application.Abstracts.Authentication;
 using Application.Abstracts.Data;
-using Application.Features.Tokens;
 using Microsoft.Extensions.Logging;
 using Respira.ServiceDefaults.Constracts.CQRS;
 using Respira.ServiceDefaults.Exceptions;

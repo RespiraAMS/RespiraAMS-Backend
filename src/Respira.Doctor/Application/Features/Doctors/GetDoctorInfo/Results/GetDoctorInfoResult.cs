@@ -1,6 +1,6 @@
 using Domain.Enums;
 
-namespace Application.Features.Doctor.GetDoctorInfo.Results
+namespace Application.Features.Doctors.GetDoctorInfo.Results
 {
     /// <summary>
     /// Doctor profile information returned by <see cref="Queries.GetDoctorInfoQuery"/>.
