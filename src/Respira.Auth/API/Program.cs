@@ -1,23 +1,95 @@
+// Entry point for the Respira Auth API: configures controllers, OpenAPI,
+// Wolverine messaging, EF Core persistence and the auth infrastructure.
+using Application;
+using Respira.Auth.API.BackgroundServices;
+using Application.Abstracts.Email;
+using Asp.Versioning;
+using Infrastructure;
+using Respira.ServiceDefaults.Extensions;
+using Respira.ServiceDefaults.Utils.OpenApiTransformers;
+using Scalar.AspNetCore;
+using Wolverine;
+using Wolverine.EntityFrameworkCore;
+using Wolverine.FluentValidation;
+using Wolverine.Postgresql;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Get connection string
+var conn =
+    builder.Configuration.GetConnectionString("authDb")
+    ?? throw new InvalidOperationException("No connection string found");
 
+// Add API controllers
 builder.Services.AddControllers();
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+
+// Add API versioning
+builder.Services.AddApiVersioning(options =>
+{
+    options.DefaultApiVersion = new ApiVersion(1, 0);
+    options.AssumeDefaultVersionWhenUnspecified = true;
+    options.ReportApiVersions = true;
+});
+
+// Add OpenAPI support
+builder.Services.AddOpenApi(options =>
+{
+    options.AddDocumentTransformer<CustomDocumentTransformer>();
+    options.AddSchemaTransformer<CustomSchemaTransformer>();
+});
+
+// Add error handling
+builder.Services.AddCustomErrorHandling();
+
+// Add service discovery
+builder.AddServiceDefaults();
+
+// Add validators
+builder.Services.AddFluentValidators();
+
+// Add infrastructure
+builder.AddInfrastructure();
+
+// Verify-email link base comes from the gateway's endpoint injected by Aspire (WithReference(gateway))
+var gatewayUrl = builder.Configuration["services__gateway__http__0"]
+    ?? builder.Configuration["services__gateway__https__0"]
+    ?? throw new InvalidOperationException("Gateway URL not found");
+builder.Services.AddOptions<VerifyEmailOption>()
+    .Configure(o => o.LinkTemplate =
+        $"{gatewayUrl}/api/v1/auth/verify-email?token={{token}}&email={{email}}");
+
+// Add Wolverine
+builder.Services.AddHostedService<TokenCleanupBackgroundService>();
+builder.Host.UseWolverine(opts =>
+{
+    opts.RestoreV5Defaults();
+    opts.Discovery.IncludeAssembly(typeof(ApplicationMarker).Assembly);
+
+    opts.PersistMessagesWithPostgresql(conn, "auth_db");
+    opts.UseEntityFrameworkCoreTransactions();
+
+    opts.UseFluentValidation(RegistrationBehavior.ExplicitRegistration);
+
+    opts.Durability.Mode = DurabilityMode.Solo;
+});
 
 var app = builder.Build();
+
+app.UseCustomErrorHandling();
+app.MapControllers();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    app.MapScalarApiReference(opts => opts.Theme = ScalarTheme.Kepler);
 }
 
-app.UseHttpsRedirection();
+if (!app.Environment.IsDevelopment())
+{
+    app.UseHttpsRedirection();
+}
 
-app.UseAuthorization();
-
-app.MapControllers();
+app.ApplyMigrations(app.Environment.IsDevelopment());
 
 app.Run();
