@@ -48,9 +48,6 @@ builder.Services.AddFluentValidators();
 // Add domain services
 builder.Services.AddServices();
 
-// Add other Application dependencies
-builder.Services.AddApplicationDependencies();
-
 // Add infrastructure
 builder.AddInfrastructure();
 

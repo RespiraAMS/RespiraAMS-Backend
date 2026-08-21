@@ -1,9 +1,11 @@
 using Domain.Enums;
-using Microsoft.Extensions.Logging;
 using Range = Domain.Models.Range;
 
 namespace Application.Features.Antibiotics.Shared;
 
+/// <summary>
+/// Custom exception for DosageBusinessChecker: used when dosage is empty
+/// </summary>
 public class DosageEmptyException : Exception
 {
     public DosageEmptyException() : base("Dosage is empty")
@@ -19,6 +21,9 @@ public class DosageEmptyException : Exception
     }
 }
 
+/// <summary>
+/// Custom exception for DosageBusinessChecker: used when violating business rule with standard dose
+/// </summary>
 public class StandardDoseInvalidException : Exception
 {
     public StandardDoseInvalidException(RouteOfAdministration route) : base($"Standard dose for route {route} is not 1")
@@ -38,6 +43,9 @@ public class StandardDoseInvalidException : Exception
     }
 }
 
+/// <summary>
+/// Custom exception for DosageBusinessChecker: used when dosage violate rule "do not have overlapped CrCl range"
+/// </summary>
 public class OverlappedCrclException : Exception
 {
     public OverlappedCrclException()
@@ -56,9 +64,12 @@ public class OverlappedCrclException : Exception
     }
 }
 
-public class DosageBusinessChecker(ILogger<DosageBusinessChecker> logger)
+/// <summary>
+/// Dosage business checker
+/// </summary>
+public static class DosageBusinessChecker
 {
-    public void IsValidDosage(List<Dosage> dosages)
+    public static void IsValidDosage(List<Dosage> dosages)
     {
         // Antibiotic dosage should adhere to these rules
         // 1. There must be at least 1 dosage regardless of route of administration
@@ -71,7 +82,6 @@ public class DosageBusinessChecker(ILogger<DosageBusinessChecker> logger)
         // Check rule 1
         if (!dosages.Any())
         {
-            logger.LogDebug("Dosage is empty, dosage must not empty");
             throw new DosageEmptyException();
         }
 
@@ -84,7 +94,6 @@ public class DosageBusinessChecker(ILogger<DosageBusinessChecker> logger)
             // Check rule 2
             if (dosagePerRoute.Count(d => d.Crcl == null) != 1)
             {
-                logger.LogDebug("Standard dose for route {route} is not 1", route);
                 throw new StandardDoseInvalidException(route);
             }
 
@@ -99,7 +108,6 @@ public class DosageBusinessChecker(ILogger<DosageBusinessChecker> logger)
                     if (dosagePerRoute[j].Crcl is null) continue;
                     if (dosagePerRoute[i].Crcl!.IsRangeOverlapped(dosagePerRoute[j].Crcl))
                     {
-                        logger.LogDebug("Route {route} has dosage CrCl overlapped", route);
                         throw new OverlappedCrclException(route, dosagePerRoute[i].Crcl!, dosagePerRoute[j].Crcl!);
                     }
                 }

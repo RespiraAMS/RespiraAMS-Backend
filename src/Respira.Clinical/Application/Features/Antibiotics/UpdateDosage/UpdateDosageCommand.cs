@@ -6,10 +6,14 @@ namespace Application.Features.Antibiotics.UpdateDosage;
 public class UpdateDosageCommand : ICommand
 {
     /// <summary>
-    /// Antibiotic ID
+    /// Dosage ID
     /// </summary>
     public required Guid Id { get; set; }
 
+
+    /// <summary>
+    /// Antibiotic ID
+    /// </summary>
     public required Guid AntibioticId { get; set; }
 
     /// <summary>

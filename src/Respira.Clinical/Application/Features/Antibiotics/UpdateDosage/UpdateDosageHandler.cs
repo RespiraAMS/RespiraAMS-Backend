@@ -7,7 +7,6 @@ namespace Application.Features.Antibiotics.UpdateDosage;
 
 public class UpdateDosageHandler(
     IDbContext context,
-    DosageBusinessChecker checker,
     IUpdateMapper<Dosage, UpdateDosageCommand> mapper,
     ILogger<UpdateDosageHandler> logger)
     : ICommandHandler<UpdateDosageCommand>
@@ -46,7 +45,7 @@ public class UpdateDosageHandler(
         // Check for business logic
         try
         {
-            checker.IsValidDosage(dosages);
+            DosageBusinessChecker.IsValidDosage(dosages);
         }
         catch (StandardDoseInvalidException e)
         {

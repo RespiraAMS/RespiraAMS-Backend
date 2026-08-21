@@ -1,6 +1,6 @@
-using System.ComponentModel;
 using Application.Features.Diagnose.Shared;
 using Domain.Enums;
+using Severity = Domain.Enums.Severity;
 
 namespace Application.Features.Diagnose.EmpiricalDiagnose;
 
@@ -83,8 +83,19 @@ public class EmpiricalDiagnoseQuery : IQuery
 
 public class InfectionProbability
 {
+    /// <summary>
+    /// Pathogen ID
+    /// </summary>
     public required Guid PathogenId { get; set; }
+
+    /// <summary>
+    /// Pathogen name
+    /// </summary>
     public required string PathogenName { get; set; }
+
+    /// <summary>
+    /// Infection probability, from 0 to 1
+    /// </summary>
     public required decimal Probability { get; set; }
 }
 
@@ -95,6 +106,9 @@ public class EmpiricalTreatmentProtocolResult
     /// </summary>
     public required Guid Id { get; set; }
 
+    /// <summary>
+    /// Treatment protocol updated timestamp
+    /// </summary>
     public required DateTimeOffset UpdatedAt { get; set; }
 
     /// <summary>
@@ -123,11 +137,40 @@ public class EmpiricalTreatmentProtocolResult
 }
 public class EmpiricalDiagnoseResult
 {
+    /// <summary>
+    /// Patient's creatine clearance calculated
+    /// </summary>
     public required decimal Crcl { get; set; }
+
+    /// <summary>
+    /// List of recommended medicines
+    /// </summary>
     public required List<AntibioticResult> Recommendations { get; set; } = [];
+
+    /// <summary>
+    /// List of all medicines that are relevent with patient's symptoms.
+    /// Even if doctors disagree with the Recommendations list,
+    /// they should only picked medicines from this list
+    /// </summary>
     public required List<AntibioticResult> Medicines { get; set; } = [];
-    public required Domain.Enums.Severity Severity { get; set; }
+
+    /// <summary>
+    /// Patient's severity
+    /// </summary>
+    public required Severity Severity { get; set; }
+
+    /// <summary>
+    /// Patient's treatment site
+    /// </summary>
     public required TreatmentSite TreatmentSite { get; set; }
+
+    /// <summary>
+    /// Patient's infection probability
+    /// </summary>
     public required List<InfectionProbability> InfectionProbabilities { get; set; }
+
+    /// <summary>
+    /// List of treatment protocols used for reference when diagnosing
+    /// </summary>
     public required List<EmpiricalTreatmentProtocolResult> References { get; set; } = [];
 }

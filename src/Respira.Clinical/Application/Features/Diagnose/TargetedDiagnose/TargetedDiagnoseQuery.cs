@@ -38,7 +38,20 @@ public class TargetedDiagnoseQuery : IQuery
 
 public class TargetedDiagnoseResult
 {
+    /// <summary>
+    /// Patient's creatine clearance calculated
+    /// </summary>
     public required decimal Crcl { get; set; }
+
+    /// <summary>
+    /// List of recommended medicines
+    /// </summary>
     public required List<AntibioticResult> Recommendations { get; set; } = [];
+
+    /// <summary>
+    /// List of all medicines that are relevent with patient's symptoms.
+    /// Even if doctors disagree with the Recommendations list,
+    /// they should only picked medicines from this list
+    /// </summary>
     public required List<AntibioticResult> Medicines { get; set; } = [];
 }

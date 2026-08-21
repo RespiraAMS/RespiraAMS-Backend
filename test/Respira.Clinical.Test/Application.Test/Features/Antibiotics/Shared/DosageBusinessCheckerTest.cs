@@ -1,23 +1,10 @@
 using Application.Features.Antibiotics.Shared;
 using Domain.Models;
-using Microsoft.Extensions.Logging;
-using Moq;
 
 namespace Application.Test.Features.Antibiotics.Shared;
 
 public class DosageBusinessCheckerTest
 {
-    private readonly DosageBusinessChecker _checker;
-
-    public DosageBusinessCheckerTest()
-    {
-        // Create dependency
-        var logger = new Mock<ILogger<DosageBusinessChecker>>().Object;
-
-        _checker = new DosageBusinessChecker(logger);
-    }
-
-
     /*=== TEST RULE 1 ===*/
 
     public static readonly TheoryData<List<Dosage>> EmptyDosage =
@@ -31,7 +18,7 @@ public class DosageBusinessCheckerTest
 #pragma warning restore xUnit1045 // Avoid using TheoryData type arguments that might not be serializable
     public void IsValidDosage_Rule1_Fail(List<Dosage> dosages)
     {
-        Assert.Throws<DosageEmptyException>(() => _checker.IsValidDosage(dosages));
+        Assert.Throws<DosageEmptyException>(() => DosageBusinessChecker.IsValidDosage(dosages));
     }
 
     /*=== TEST RULE 2 ===*/
@@ -80,6 +67,6 @@ public class DosageBusinessCheckerTest
 #pragma warning restore xUnit1045 // Avoid using TheoryData type arguments that might not be serializable
     public void IsValidDosage_Rule2_Fail(List<Dosage> dosages)
     {
-        Assert.Throws<StandardDoseInvalidException>(() => _checker.IsValidDosage(dosages));
+        Assert.Throws<StandardDoseInvalidException>(() => DosageBusinessChecker.IsValidDosage(dosages));
     }
 }

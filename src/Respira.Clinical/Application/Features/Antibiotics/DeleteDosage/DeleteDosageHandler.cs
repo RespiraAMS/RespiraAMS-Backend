@@ -7,7 +7,6 @@ namespace Application.Features.Antibiotics.DeleteDosage;
 
 public class DeleteDosageHandler(
     IDbContext context,
-    DosageBusinessChecker checker,
     ILogger<DeleteDosageHandler> logger)
     : ICommandHandler<DeleteDosageCommand>
 {
@@ -44,7 +43,7 @@ public class DeleteDosageHandler(
         // Check for business logic
         try
         {
-            checker.IsValidDosage(dosages);
+            DosageBusinessChecker.IsValidDosage(dosages);
         }
         catch (DosageEmptyException e)
         {

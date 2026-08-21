@@ -7,7 +7,6 @@ namespace Application.Features.Antibiotics.AddDosage;
 
 public class AddDosageHandler(
     IDbContext context,
-    DosageBusinessChecker checker,
     ICreateMapper<Dosage, AddDosageCommand> mapper,
     ILogger<AddDosageHandler> logger)
     : ICommandHandler<AddDosageCommand, AddDosageResult>
@@ -40,7 +39,7 @@ public class AddDosageHandler(
         dosages.Add(dosage);
         try
         {
-            checker.IsValidDosage(dosages);
+            DosageBusinessChecker.IsValidDosage(dosages);
         }
         catch (StandardDoseInvalidException e)
         {

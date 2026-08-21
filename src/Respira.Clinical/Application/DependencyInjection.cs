@@ -88,9 +88,4 @@ public static class DependencyInjection
     {
         services.AddValidatorsFromAssemblyContaining<ApplicationMarker>();
     }
-
-    public static void AddApplicationDependencies(this IServiceCollection services)
-    {
-        services.AddScoped<DosageBusinessChecker>();
-    }
 }
