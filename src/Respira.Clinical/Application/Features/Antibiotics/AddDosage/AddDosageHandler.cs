@@ -38,9 +38,24 @@ public class AddDosageHandler(
             Crcl = d.Crcl // Since this is not an entity registered in EF Core, a direct copy wouldn't cause issues
         });
         dosages.Add(dosage);
-        if (!checker.IsValidDosage(dosages))
+        try
         {
-            throw new BadRequestException("Adding dosage violate antibiotic business rule");
+            checker.IsValidDosage(dosages);
+        }
+        catch (StandardDoseInvalidException e)
+        {
+            logger.LogDebug("Dosage validation failed: {msg}", e.Message);
+            throw new BadRequestException("Adding this dosage violate business rule: each route of administration must have 1 and only 1 standard dose");
+        }
+        catch (OverlappedCrclException e)
+        {
+            logger.LogDebug("Dosage validation failed: {msg}", e.Message);
+            throw new BadRequestException("Adding this dosage violate business rule: all dosages in each route of administration must not have overlapping CrCl range");
+        }
+        catch (Exception e)
+        {
+            logger.LogError("Failed to validate dosage: {exception}", e);
+            throw new ServerException();
         }
 
         // Add the new created dosage into database and link it to antibiotic
