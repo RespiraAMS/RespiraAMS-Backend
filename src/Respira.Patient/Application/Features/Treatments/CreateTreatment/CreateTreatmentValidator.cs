@@ -42,6 +42,9 @@ public class CreateTreatmentValidator : AbstractValidator<CreateTreatmentCommand
         RuleFor(x => x.DoctorId)
             .NotEmpty()
             .WithMessage("Doctor ID is required");
+        RuleFor(x => x.Crcl)
+            .GreaterThan(0)
+            .WithMessage("Crcl must be greater than 0");
         RuleFor(x => x.MedicineRecords)
             .NotEmpty()
             .WithMessage("Medicine records are required");
@@ -52,15 +55,18 @@ public class CreateTreatmentValidator : AbstractValidator<CreateTreatmentCommand
             .WithMessage("Treatment type is required");
         RuleFor(x => x.Severity)
             .NotEmpty()
+            .When(x => x.Severity != null)
             .WithMessage("Severity is required");
         RuleFor(x => x.TreatmentSite)
             .NotEmpty()
+            .When(x => x.TreatmentSite != null)
             .WithMessage("Treatment site is required");
         RuleForEach(x => x.InfectionProbabilityRecords)
             .SetValidator(new InfectionProbabilityValidator())
-            .When(x => x.InfectionProbabilityRecords.Count > 0);
+            .When(x => x.InfectionProbabilityRecords?.Count > 0);
         RuleFor(x => x.Pathogen)
             .NotEmpty()
+            .When(x => x.Pathogen != null)
             .WithMessage("Pathogen is required");
     }
 }

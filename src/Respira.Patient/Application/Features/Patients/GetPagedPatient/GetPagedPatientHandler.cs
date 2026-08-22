@@ -1,5 +1,4 @@
 ﻿using Application.Contracts.Data;
-using Application.Features.Patients.Shared;
 using Microsoft.EntityFrameworkCore;
 using X.PagedList.EF;
 
@@ -8,6 +7,13 @@ namespace Application.Features.Patients.GetPagedPatient;
 public class GetPagedPatientHandler(IDbContext context, IPaginationFactory factory)
     : IQueryHandler<GetPagedPatientQuery, Pagination<PagedPatientItem>>
 {
+    private static int CalculateAge(DateOnly dob)
+    {
+        var age = DateTimeOffset.UtcNow.Year - dob.Year;
+        if (dob.AddYears(age) > DateOnly.FromDateTime(DateTime.UtcNow)) age--;
+        return age;
+    }
+
     public async Task<Pagination<PagedPatientItem>> HandleAsync(GetPagedPatientQuery query,
         CancellationToken cancellationToken = default)
     {
@@ -28,6 +34,7 @@ public class GetPagedPatientHandler(IDbContext context, IPaginationFactory facto
             }
         }
 
+        // Get paged patients
         var patients = await queryable
             .AsNoTracking()
             .OrderByDescending(x => x.CreatedAt)
@@ -35,6 +42,8 @@ public class GetPagedPatientHandler(IDbContext context, IPaginationFactory facto
             {
                 Id = x.Id,
                 FullName = x.FullName,
+                Age = CalculateAge(x.DateOfBirth),
+                IsMale = x.IsMale,
                 MedicalRecordCode = x.MedicalRecordCode,
                 Status = x.Status,
             })

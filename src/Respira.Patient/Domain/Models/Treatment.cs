@@ -57,6 +57,13 @@ public abstract class Treatment : Base
     public Patient Patient { get; set; } = null!;
 
     /// <summary>
+    /// Patient's creatine clearance level (in mg/dL) measured
+    /// at the time of treatment. This can be used to audit for
+    /// antibiotic dosage
+    /// </summary>
+    public required decimal Crcl { get; set; }
+
+    /// <summary>
     /// List of medicines used for this treatment. This list must not empty
     /// </summary>
     public required List<MedicineRecord> MedicineRecords { get; set; }

@@ -11,19 +11,25 @@ public class CreateTreatmentMapper : ICreateMapper<Treatment, CreateTreatmentCom
             {
                 PatientId = command.PatientId,
                 DoctorId = command.DoctorId,
+                Crcl = command.Crcl,
                 MedicineRecords = command.MedicineRecords,
                 Status = PatientTreatmentStatus.FavorableResponse,
-                Pathogen = command.Pathogen
+                Pathogen = command.Pathogen ??
+                    throw new UnexpectedException("Failed to map targeted therapy for create treatment: pathogen unexpectedly null"),
             } :
             new EmpiricalTreatment
             {
                 PatientId = command.PatientId,
                 DoctorId = command.DoctorId,
+                Crcl = command.Crcl,
                 MedicineRecords = command.MedicineRecords,
                 Status = PatientTreatmentStatus.FavorableResponse,
-                Severity = command.Severity,
-                TreatmentSite = command.TreatmentSite,
-                InfectionProbabilityRecords = command.InfectionProbabilityRecords
+                Severity = command.Severity ??
+                    throw new UnexpectedException("Failed to map empirical therapy for create treatment: severity unexpectedly null"),
+                TreatmentSite = command.TreatmentSite ??
+                    throw new UnexpectedException("Failed to map empirical therapy for create treatment: treatment site unexpectedly null"),
+                InfectionProbabilityRecords = command.InfectionProbabilityRecords ??
+                    throw new UnexpectedException("Failed to map empirical therapy for create treatment: infection probability records unexpectedly null"),
             };
     }
 }
