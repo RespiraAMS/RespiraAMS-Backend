@@ -24,7 +24,7 @@ namespace Application.Features.Doctors.Rollback.Commands.UpdateDoctor
                 var doctor = await dbContext.Doctors.FindAsync(command.DoctorId);
                 if (doctor is null)
                 {
-                    logger.LogWarning("Doctor {DoctorId} not found for rollback", command.DoctorId);
+                    logger.LogWarning($"Doctor {command.DoctorId} not found for rollback");
                     await bus.PublishAsync(
                         new RollbackUpdateDoctorFailure
                         {
@@ -53,9 +53,10 @@ namespace Application.Features.Doctors.Rollback.Commands.UpdateDoctor
                         && doctorCreator.Subordinates.Any(s => s.Id == doctor.Id)
                     )
                     {
-                        doctorCreator.Subordinates = doctorCreator
-                            .Subordinates.Where(s => s.Id != doctor.Id)
-                            .ToList();
+                        doctorCreator.Subordinates =
+                        [
+                            .. doctorCreator.Subordinates.Where(s => s.Id != doctor.Id),
+                        ];
                     }
                 }
 

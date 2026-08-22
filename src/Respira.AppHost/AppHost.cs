@@ -15,6 +15,13 @@ var mediaDb = postgres.AddDatabase("mediaDb");
 var patientDb = postgres.AddDatabase("patientDb");
 var sagaAuditDb = postgres.AddDatabase("sagaAuditDb");
 
+// Cloudflare R2 (object storage) parameters
+var r2Endpoint = builder.AddParameter("r2-endpoint");
+var r2AccessKey = builder.AddParameter("r2-access-key");
+var r2SecretKey = builder.AddParameter("r2-secret-key");
+var r2Bucket = builder.AddParameter("r2-bucket");
+var r2PublicUrl = builder.AddParameter("r2-public-url");
+
 // Auth service parameters (values come from AppHost config: Parameters:* section)
 var jwtSecret = builder.AddParameter("jwt-secret");
 var jwtIssuer = builder.AddParameter("jwt-issuer");
@@ -69,7 +76,12 @@ var mediaService = builder
     .WithReference(cache)
     .WaitFor(cache)
     .WithReference(rabbitmq)
-    .WaitFor(rabbitmq);
+    .WaitFor(rabbitmq)
+    .WithEnvironment("R2__Endpoint", r2Endpoint)
+    .WithEnvironment("R2__AccessKey", r2AccessKey)
+    .WithEnvironment("R2__SecretKey", r2SecretKey)
+    .WithEnvironment("R2__BucketName", r2Bucket)
+    .WithEnvironment("R2__PublicBaseUrl", r2PublicUrl);
 var patientService = builder
     .AddProject<Projects.Respira_Patient_API>("patient-service")
     .WithReference(patientDb)

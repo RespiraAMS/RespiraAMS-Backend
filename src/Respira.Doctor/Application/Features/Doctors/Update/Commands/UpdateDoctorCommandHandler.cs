@@ -31,7 +31,7 @@ namespace Application.Features.Doctors.Update.Commands
                 );
                 if (doctor is null)
                 {
-                    logger.LogWarning("Doctor {DoctorId} not found for update", command.DoctorId);
+                    logger.LogWarning($"Doctor {command.DoctorId} not found for update");
                     await bus.PublishAsync(
                         new UpdateDoctorFailureEvent
                         {
@@ -55,10 +55,12 @@ namespace Application.Features.Doctors.Update.Commands
 
                 if (command.DoctorCreatorId is not null)
                 {
-                    var doctorCreator = await dbContext.Doctors.FirstOrDefaultAsync(
-                        x => x.Id == command.DoctorCreatorId,
-                        cancellationToken
-                    );
+                    var doctorCreator = await dbContext.Doctors
+                        .Include(x => x.Subordinates)
+                        .FirstOrDefaultAsync(
+                            x => x.Id == command.DoctorCreatorId,
+                            cancellationToken
+                        );
                     if (
                         doctorCreator is not null
                         && doctorCreator.Subordinates?.Any(s => s.Id == doctor.Id) == false
