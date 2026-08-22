@@ -50,7 +50,7 @@ public class GetDoctorInfoQueryHandler(
 
         if (doctor is null)
         {
-            logger.LogDebug("Doctor {DoctorId} not found", query.DoctorId);
+            logger.LogDebug($"Doctor {query.DoctorId} not found in cache or database");
             return ApiResponse<GetDoctorInfoResult>.Fail(
                 message: "Doctor not found",
                 statusCode: StatusCodes.Status404NotFound
