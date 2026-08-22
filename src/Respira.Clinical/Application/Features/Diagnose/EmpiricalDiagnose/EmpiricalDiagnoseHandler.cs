@@ -84,7 +84,12 @@ public class EmpiricalDiagnoseHandler
                 Name = m.Name,
                 AntibioticGroupId = m.AntibioticGroupId,
                 AntibioticGroupName = m.AntibioticGroup.Name,
-                Dose = m.Dosages[0].Dose,
+                Classification = m.Classification,
+                Dosages = m.Dosages.ConvertAll(d => new DosageResult
+                {
+                    RouteOfAdministration = d.RouteOfAdministration,
+                    Dose = d.Dose,
+                }),
             }),
             Recommendations = recommendations.ConvertAll(r => new AntibioticResult
             {
@@ -92,7 +97,12 @@ public class EmpiricalDiagnoseHandler
                 Name = r.Name,
                 AntibioticGroupId = r.AntibioticGroupId,
                 AntibioticGroupName = r.AntibioticGroup.Name,
-                Dose = r.Dosages[0].Dose,
+                Classification = r.Classification,
+                Dosages = r.Dosages.ConvertAll(d => new DosageResult
+                {
+                    RouteOfAdministration = d.RouteOfAdministration,
+                    Dose = d.Dose,
+                }),
             }),
             Severity = result.Severity,
             TreatmentSite = result.TreatmentSite,

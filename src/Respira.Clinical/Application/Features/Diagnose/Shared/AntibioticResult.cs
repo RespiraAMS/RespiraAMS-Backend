@@ -1,3 +1,5 @@
+using Domain.Enums;
+
 namespace Application.Features.Diagnose.Shared;
 
 public class AntibioticResult
@@ -23,7 +25,12 @@ public class AntibioticResult
     public required string AntibioticGroupName { get; set; }
 
     /// <summary>
-    /// Antibiotic adjusted dose, based on patient's CrCl calculated when diagnosing
+    /// Antibiotic classification (WHO's AWaRe classification)
     /// </summary>
-    public required string Dose { get; set; }
+    public required AwareClassification Classification { get; set; }
+
+    /// <summary>
+    /// Antibiotic dosages (already adjusted)
+    /// </summary>
+    public required List<DosageResult> Dosages { get; set; }
 }

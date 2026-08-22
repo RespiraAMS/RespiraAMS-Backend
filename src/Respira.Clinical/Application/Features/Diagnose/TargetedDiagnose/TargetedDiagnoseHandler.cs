@@ -52,7 +52,13 @@ public class TargetedDiagnoseHandler(
                 Name = m.Name,
                 AntibioticGroupId = m.AntibioticGroupId,
                 AntibioticGroupName = m.AntibioticGroup.Name,
-                Dose = m.Dosages[0].Dose,
+                Classification = m.Classification,
+                Dosages = m.Dosages.ConvertAll(d => new DosageResult
+                {
+                    RouteOfAdministration = d.RouteOfAdministration,
+                    Dose = d.Dose,
+                }),
+
             }),
             Recommendations = [.. antibiogram.FirstPriorityMedicines
                 .Append(antibiogram.SecondPriorityMedicines)
@@ -62,7 +68,12 @@ public class TargetedDiagnoseHandler(
                     Name = m.Name,
                     AntibioticGroupId = m.AntibioticGroupId,
                     AntibioticGroupName = m.AntibioticGroup.Name,
-                    Dose = m.Dosages[0].Dose,
+                    Classification = m.Classification,
+                    Dosages = m.Dosages.ConvertAll(d => new DosageResult
+                    {
+                        RouteOfAdministration = d.RouteOfAdministration,
+                        Dose = d.Dose,
+                    }),
                 })],
         };
     }
