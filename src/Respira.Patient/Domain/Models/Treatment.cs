@@ -20,11 +20,12 @@ namespace Domain.Models;
 /// An immutable record of medicine used for treatment
 /// </summary>
 /// <param name="Name">Antibiotic name</param>
+/// <param name="Classification">Antibiotic classification (WHO's AWaRe classification)</param>
 /// <param name="RouteOfAdministration">Antibiotic route of administration</param>
 /// <param name="Dose">
 /// Actual dosage that was diagnosed for this patient, based on patient's GFR
 /// </param>
-public record MedicineRecord(string Name, string RouteOfAdministration, string Dose);
+public record MedicineRecord(string Name, string Classification, string RouteOfAdministration, string Dose);
 
 /// <summary>
 /// An immutable record of infection probability when doing empiric therapy
@@ -56,7 +57,7 @@ public abstract class Treatment : Base
     public Patient Patient { get; set; } = null!;
 
     /// <summary>
-    /// List of medicines used for this treatment. This list must not empty 
+    /// List of medicines used for this treatment. This list must not empty
     /// </summary>
     public required List<MedicineRecord> MedicineRecords { get; set; }
 
@@ -68,14 +69,14 @@ public abstract class Treatment : Base
     /// <summary>
     /// Patient treatment status. This is the patient status after receive the treatment
     /// (e.g. good response, bad response,...), it's not the same as <see cref="Patient.Status"/>
-    /// (any <see cref="PatientTreatmentStatus"/> correspond to <see cref="PatientStatus.InTreatment"/>, to be exact) 
+    /// (any <see cref="PatientTreatmentStatus"/> correspond to <see cref="PatientStatus.InTreatment"/>, to be exact)
     /// </summary>
     public required PatientTreatmentStatus Status { get; set; }
 }
 
 /// <summary>
 /// Empirical treatment, which relied on patient symptoms and empiric treatment protocol
-/// to treat patient without microbiological test 
+/// to treat patient without microbiological test
 /// </summary>
 public class EmpiricalTreatment : Treatment
 {
@@ -106,7 +107,7 @@ public class TargetedTreatment : Treatment
     public override TreatmentType TreatmentType => TreatmentType.TargetedTherapy;
 
     /// <summary>
-    /// Name of the pathogen that cause patient to got disease 
+    /// Name of the pathogen that cause patient to got disease
     /// </summary>
     public required string Pathogen { get; set; }
 }

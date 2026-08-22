@@ -53,9 +53,12 @@ public class PatientsController(IMessageBus bus) : ControllerBase
         return Ok(resp);
     }
 
+    /// <summary>
+    /// UpdatePatient
+    /// </summary>
     /// <remarks>
-    /// If a patient already receive treatment, then <code>dateOfBirth</code>
-    /// and <code>isMale</code> won't be updated (others information still update normally).
+    /// If a patient already receive treatment, then <c>dateOfBirth</c>
+    /// and <c>isMale</c> won't be updated (others information still update normally).
     /// If patient hasn't received any treatment, then all information can be updated normally
     /// </remarks>
     [HttpPut]
@@ -72,8 +75,11 @@ public class PatientsController(IMessageBus bus) : ControllerBase
         return NoContent();
     }
 
+    /// <summary>
+    /// DischargePatient
+    /// </summary>
     /// <remarks>
-    /// Only patient that has received atleast 1 treatment can be discharge 
+    /// Only patient that has received atleast 1 treatment can be discharge
     /// </remarks>
     [HttpPut]
     [Route("{id:guid}/discharge")]
@@ -88,6 +94,9 @@ public class PatientsController(IMessageBus bus) : ControllerBase
         return NoContent();
     }
 
+    /// <summary>
+    /// DeletePatient
+    /// </summary>
     /// <remarks>
     /// Only patient that hasn't received any treatment can be deleted
     /// </remarks>

@@ -12,11 +12,7 @@ using Wolverine.Postgresql;
 var builder = WebApplication.CreateBuilder(args);
 
 // Get connection string
-var conn = builder.Configuration.GetConnectionString("patientDb");
-if (conn is null)
-{
-    throw new InvalidOperationException("No connection string found");
-}
+var conn = builder.Configuration.GetConnectionString("patientDb") ?? throw new InvalidOperationException("No connection string found");
 
 // Add API controllers
 builder.Services.AddControllers();
@@ -75,7 +71,7 @@ app.MapControllers();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
-    app.MapScalarApiReference(opts => { opts.Theme = ScalarTheme.Kepler; });
+    app.MapScalarApiReference(opts => opts.Theme = ScalarTheme.Kepler);
 }
 
 if (!app.Environment.IsDevelopment())
