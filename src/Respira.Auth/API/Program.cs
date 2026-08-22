@@ -12,6 +12,7 @@ using Wolverine;
 using Wolverine.EntityFrameworkCore;
 using Wolverine.FluentValidation;
 using Wolverine.Postgresql;
+using Wolverine.RabbitMQ;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -60,6 +61,10 @@ builder.Services.AddOptions<VerifyEmailOption>()
 
 // Add Wolverine
 builder.Services.AddHostedService<TokenCleanupBackgroundService>();
+
+var rabbitConn = builder.Configuration.GetConnectionString("rabbitmq")
+    ?? throw new InvalidOperationException("No rabbitmq connection string");
+
 builder.Host.UseWolverine(opts =>
 {
     opts.RestoreV5Defaults();
@@ -69,6 +74,10 @@ builder.Host.UseWolverine(opts =>
     opts.UseEntityFrameworkCoreTransactions();
 
     opts.UseFluentValidation(RegistrationBehavior.ExplicitRegistration);
+
+    // Route messages across service boundaries through RabbitMQ
+    opts.UseRabbitMq(rabbitConn).AutoProvision().UseConventionalRouting();
+    opts.Policies.DisableConventionalLocalRouting();
 
     opts.Durability.Mode = DurabilityMode.Solo;
 });

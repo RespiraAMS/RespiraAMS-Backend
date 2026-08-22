@@ -15,7 +15,8 @@
 	</ItemGroup>
 
 	<PropertyGroup>
-		<TargetFramework>net10.0</TargetFramework>
+        <TargetFramework>net10.0</TargetFramework>
+        <AssemblyName>Respira.Doctor.Application</AssemblyName>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 	</PropertyGroup>
