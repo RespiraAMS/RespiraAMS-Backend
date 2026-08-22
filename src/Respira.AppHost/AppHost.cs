@@ -15,6 +15,15 @@ var mediaDb = postgres.AddDatabase("mediaDb");
 var patientDb = postgres.AddDatabase("patientDb");
 var sagaAuditDb = postgres.AddDatabase("sagaAuditDb");
 
+// Auth service parameters (values come from AppHost config: Parameters:* section)
+var jwtSecret = builder.AddParameter("jwt-secret");
+var jwtIssuer = builder.AddParameter("jwt-issuer");
+var jwtAudience = builder.AddParameter("jwt-audience");
+var smtpHost = builder.AddParameter("smtp-host");
+var smtpPort = builder.AddParameter("smtp-port");
+var smtpUsername = builder.AddParameter("smtp-username");
+var smtpPassword = builder.AddParameter("smtp-password");
+
 // Setup services
 var analyticsService = builder
     .AddProject<Projects.Respira_Analytics_API>("analytics-service")
@@ -29,7 +38,17 @@ var authService = builder
     .WithReference(cache)
     .WaitFor(cache)
     .WithReference(rabbitmq)
-    .WaitFor(rabbitmq);
+    .WaitFor(rabbitmq)
+    .WithEnvironment("Jwt__Secret", jwtSecret)
+    .WithEnvironment("Jwt__Issuer", jwtIssuer)
+    .WithEnvironment("Jwt__Audience", jwtAudience)
+    .WithEnvironment("Jwt__AccessTokenExpired", "15")
+    .WithEnvironment("Jwt__RefreshTokenExpired", "10080")
+    .WithEnvironment("Email__Host", smtpHost)
+    .WithEnvironment("Email__Port", smtpPort)
+    .WithEnvironment("Email__Username", smtpUsername)
+    .WithEnvironment("Email__Password", smtpPassword)
+    .WithEnvironment("Email__EnableSsl", "true");
 var clinicalService = builder
     .AddProject<Projects.Respira_Clinical_API>("clinical-service")
     .WithReference(clinicalDb)

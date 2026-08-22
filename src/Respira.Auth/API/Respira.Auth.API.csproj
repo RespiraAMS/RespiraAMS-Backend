@@ -8,10 +8,15 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\Respira.ServiceDefaults\Respira.ServiceDefaults.csproj" />
+      <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
+      <ProjectReference Include="..\Application\Application.csproj" />
+      <ProjectReference Include="..\Domain\Domain.csproj" />
     </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
+      <PackageReference Include="Asp.Versioning.Mvc" />
+      <PackageReference Include="Scalar.AspNetCore" />
     </ItemGroup>
     
 </Project>
