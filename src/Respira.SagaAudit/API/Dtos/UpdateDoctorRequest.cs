@@ -41,11 +41,9 @@ public record UpdateDoctorRequest
     public DateTimeOffset? OldDateOfBirth { get; init; }
     public required string OldAddress { get; init; }
 
+    /// <summary>When true, the avatar is replaced with the media uploaded via the Media upload endpoint.</summary>
     public bool HasNewMedia { get; init; }
-    public string? NewMediaFileName { get; init; }
-    public string? NewMediaContentType { get; init; }
-    public long NewMediaSize { get; init; }
-    public byte[]? NewMediaData { get; init; }
+    public Guid? NewMediaId { get; init; }
 }
 
 public record DeleteDoctorRequest

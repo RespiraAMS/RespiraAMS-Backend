@@ -1,18 +1,11 @@
 namespace Domain.Enums
 {
     /// <summary>
-    /// Status type for the AuthDoctor
+    /// Account status. Inactive accounts cannot authenticate.
     /// </summary>
     public enum StatusType
     {
-        /// <summary>
-        /// Active status
-        /// </summary>
         Active,
-
-        /// <summary>
-        /// Inactive status
-        /// </summary>
         Inactive,
     }
 }

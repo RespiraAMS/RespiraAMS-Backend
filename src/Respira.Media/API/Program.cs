@@ -8,6 +8,7 @@ using Wolverine.EntityFrameworkCore;
 using Wolverine.FluentValidation;
 using Wolverine.Postgresql;
 using Wolverine.RabbitMQ;
+using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -55,9 +56,11 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    app.MapScalarApiReference(opts => opts.Theme = ScalarTheme.Kepler);
 }
 
 app.UseHttpsRedirection();
+app.UseClaimsPropagation();
 app.UseAuthorization();
 app.MapControllers();
 

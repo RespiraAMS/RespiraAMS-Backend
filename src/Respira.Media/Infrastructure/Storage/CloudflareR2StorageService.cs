@@ -1,15 +1,14 @@
-using Amazon;
-using Amazon.S3;
-using Amazon.S3.Model;
+using Cloudflare.NET.R2;
 using Application.Abstracts.Storage;
 using Microsoft.Extensions.Options;
 
 namespace Infrastructure.Storage;
 
 /// <summary>
-/// Stores objects in a Cloudflare R2 bucket (S3-compatible API).
+/// Stores objects in a Cloudflare R2 bucket using the <c>Cloudflare.NET.R2</c> client,
+/// which wraps the S3-compatible R2 API (intelligent uploads, payload-signing handling, retries).
 /// </summary>
-public class CloudflareR2StorageService(IOptions<R2Options> options) : IStorageService
+public class CloudflareR2StorageService(IR2Client r2Client, IOptions<R2Options> options) : IStorageService
 {
     private readonly R2Options _options = options.Value;
 
@@ -20,20 +19,23 @@ public class CloudflareR2StorageService(IOptions<R2Options> options) : IStorageS
         CancellationToken cancellationToken = default
     )
     {
-        var config = BuildConfig();
-        using var client = new AmazonS3Client(_options.AccessKey, _options.SecretKey, config);
-
-        var objectKey = $"{Guid.CreateVersion7()}-{Sanitize(fileName)}";
         await using var stream = new MemoryStream(data);
-        var request = new PutObjectRequest
-        {
-            BucketName = _options.BucketName,
-            Key = objectKey,
-            InputStream = stream,
-            ContentType = contentType,
-        };
+        return await UploadAsync(fileName, contentType, stream, cancellationToken);
+    }
 
-        await client.PutObjectAsync(request, cancellationToken);
+    public async Task<StorageResult> UploadAsync(
+        string fileName,
+        string contentType,
+        Stream stream,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var objectKey = $"{Guid.CreateVersion7()}-{Sanitize(fileName)}";
+
+        // UploadSinglePartAsync works with arbitrary (including non-seekable, e.g. HTTP upload)
+        // streams and issues a single PUT, matching the previous behaviour. The library picks
+        // multipart automatically when given a seekable stream above its size threshold.
+        await r2Client.UploadSinglePartAsync(_options.BucketName, objectKey, stream, cancellationToken);
 
         var url = string.IsNullOrWhiteSpace(_options.PublicBaseUrl)
             ? $"{_options.Endpoint.TrimEnd('/')}/{_options.BucketName}/{objectKey}"
@@ -49,18 +51,8 @@ public class CloudflareR2StorageService(IOptions<R2Options> options) : IStorageS
 
     public async Task DeleteAsync(string objectKey, CancellationToken cancellationToken = default)
     {
-        var config = BuildConfig();
-        using var client = new AmazonS3Client(_options.AccessKey, _options.SecretKey, config);
-        await client.DeleteObjectAsync(_options.BucketName, objectKey, cancellationToken);
+        await r2Client.DeleteObjectAsync(_options.BucketName, objectKey, cancellationToken);
     }
-
-    private AmazonS3Config BuildConfig() =>
-        new()
-        {
-            ServiceURL = _options.Endpoint,
-            ForcePathStyle = true,
-            RegionEndpoint = RegionEndpoint.USEast1,
-        };
 
     private static string Sanitize(string fileName) =>
         string.Concat((fileName ?? "file").Where(c => !Path.GetInvalidFileNameChars().Contains(c)))

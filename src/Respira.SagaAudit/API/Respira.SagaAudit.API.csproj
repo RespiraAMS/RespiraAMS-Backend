@@ -8,14 +8,17 @@
 
     <ItemGroup>
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
+        <PackageReference Include="Scalar.AspNetCore" />
         <PackageReference Include="WolverineFx" />
         <PackageReference Include="WolverineFx.Postgresql" />
         <PackageReference Include="WolverineFx.RabbitMQ" />
+        <PackageReference Include="WolverineFx.RuntimeCompilation" />
     </ItemGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\..\Respira.ServiceDefaults\Respira.ServiceDefaults.csproj" />
         <ProjectReference Include="..\Application\Application.csproj" />
+        <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
     </ItemGroup>
 
 </Project>

@@ -1,6 +1,5 @@
 using Application.Abstracts.Email;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Respira.ServiceDefaults.Constracts.CQRS;
 
 namespace Application.Features.Authentication.SendEmailVerification
@@ -10,11 +9,11 @@ namespace Application.Features.Authentication.SendEmailVerification
     /// </summary>
     /// <param name="logger">Logger</param>
     /// <param name="emailService">Email sending service</param>
-    /// <param name="verifyEmailOption">Verification link configuration</param>
+    /// <param name="linkBuilder">Verification link builder</param>
     public class SendEmailVerificationCommandHandler(
         ILogger<SendEmailVerificationCommandHandler> logger,
         ISendEmailService emailService,
-        IOptions<VerifyEmailOption> verifyEmailOption
+        IVerifyEmailLinkBuilder linkBuilder
     ) : ICommandHandler<SendEmaiLVerificationCommand, bool>
     {
         /// <summary>
@@ -31,9 +30,7 @@ namespace Application.Features.Authentication.SendEmailVerification
         {
             try
             {
-                var link = verifyEmailOption
-                    .Value.LinkTemplate.Replace("{token}", Uri.EscapeDataString(command.Token))
-                    .Replace("{email}", Uri.EscapeDataString(command.Email));
+                var link = linkBuilder.Build(command.Token, command.Email);
 
                 const string subject = "Verify your email";
                 var body = $"""

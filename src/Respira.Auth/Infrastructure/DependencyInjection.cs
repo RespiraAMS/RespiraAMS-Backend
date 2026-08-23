@@ -36,6 +36,7 @@ namespace Infrastructure
             builder.Services.AddScoped<IHashService, HashService>();
             builder.Services.AddScoped<ISendEmailService, SendEmailService>();
             builder.Services.AddScoped<ICacheService, CacheService>();
+            builder.Services.AddScoped<Application.Abstracts.Email.IVerifyEmailLinkBuilder, VerifyEmailLinkBuilder>();
 
             builder.Services.Configure<JwtOption>(builder.Configuration.GetSection("Jwt"));
             builder.Services.Configure<EmailOption>(builder.Configuration.GetSection("Email"));

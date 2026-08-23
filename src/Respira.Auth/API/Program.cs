@@ -51,14 +51,6 @@ builder.Services.AddFluentValidators();
 // Add infrastructure
 builder.AddInfrastructure();
 
-// Verify-email link base comes from the gateway's endpoint injected by Aspire (WithReference(gateway))
-var gatewayUrl = builder.Configuration["services__gateway__http__0"]
-    ?? builder.Configuration["services__gateway__https__0"]
-    ?? throw new InvalidOperationException("Gateway URL not found");
-builder.Services.AddOptions<VerifyEmailOption>()
-    .Configure(o => o.LinkTemplate =
-        $"{gatewayUrl}/api/v1/auth/verify-email?token={{token}}&email={{email}}");
-
 // Add Wolverine
 builder.Services.AddHostedService<TokenCleanupBackgroundService>();
 
@@ -85,6 +77,7 @@ builder.Host.UseWolverine(opts =>
 var app = builder.Build();
 
 app.UseCustomErrorHandling();
+app.UseClaimsPropagation();
 app.MapControllers();
 
 // Configure the HTTP request pipeline.
