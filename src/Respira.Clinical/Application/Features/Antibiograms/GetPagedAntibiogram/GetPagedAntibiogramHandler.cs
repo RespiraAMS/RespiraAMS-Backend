@@ -18,6 +18,7 @@ public class GetPagedAntibiogramHandler(IDbContext context, IPaginationFactory f
         }
 
         // Get paged antibiogram
+#pragma warning disable RCS1077 // Optimize LINQ method call: ConvertAll won't work with EF Core SQL translation
         var antibiograms = await queryable
             .AsNoTracking()
             .OrderByDescending(x => x.CreatedAt)
@@ -30,23 +31,24 @@ public class GetPagedAntibiogramHandler(IDbContext context, IPaginationFactory f
                     Name = x.Pathogen.Name
                 },
                 MicLevel = x.MicLevel,
-                Mics = x.Mics.ConvertAll(m => new AntibioticResult
+                Mics = x.Mics.Select(m => new AntibioticResult
                 {
                     Id = m.Id,
                     Name = m.Name
-                }),
-                FirstPriorityMedicines = x.FirstPriorityMedicines.ConvertAll(m => new AntibioticResult
+                }).ToList(),
+                FirstPriorityMedicines = x.FirstPriorityMedicines.Select(m => new AntibioticResult
                 {
                     Id = m.Id,
                     Name = m.Name
-                }),
-                SecondPriorityMedicines = x.SecondPriorityMedicines.ConvertAll(m => new AntibioticResult
+                }).ToList(),
+                SecondPriorityMedicines = x.SecondPriorityMedicines.Select(m => new AntibioticResult
                 {
                     Id = m.Id,
                     Name = m.Name
-                }),
+                }).ToList(),
             })
             .ToPagedListAsync(query.Param.Page, query.Param.Size);
+#pragma warning restore RCS1077 // Optimize LINQ method call
         return factory.Create(antibiograms);
     }
 }
