@@ -10,6 +10,7 @@ public class GetEmpiricTreatmentProtocolByIdHandler(IDbContext context, IResultM
     public async Task<EmpiricTreatmentProtocolResult> HandleAsync(GetEmpiricTreatmentProtocolByIdQuery query,
         CancellationToken cancellationToken = default)
     {
+#pragma warning disable RCS1077 // Optimize LINQ method call: ConvertAll won't work with EF Core SQL translation
         var protocol = await context.EmpiricTreatmentProtocols
             .AsNoTracking()
             .AsSplitQuery()
@@ -30,14 +31,15 @@ public class GetEmpiricTreatmentProtocolByIdHandler(IDbContext context, IResultM
                         Id = x.SpecialInfection.Id,
                         Name = x.SpecialInfection.Name,
                     },
-                OtherCriteria = x.OtherCriteria.ConvertAll(mapper.ToResult),
-                Medicines = x.Medicines.ConvertAll(m => new AntibioticResult
+                OtherCriteria = x.OtherCriteria.Select(mapper.ToResult).ToList(),
+                Medicines = x.Medicines.Select(m => new AntibioticResult
                 {
                     Id = m.Id,
                     Name = m.Name
-                })
+                }).ToList()
             })
             .FirstOrDefaultAsync(x => x.Id == query.Id, cancellationToken);
+#pragma warning restore RCS1077 // Optimize LINQ method call
 
         return protocol ?? throw new NotFoundException(nameof(EmpiricTreatmentProtocol), query.Id);
     }

@@ -8,6 +8,7 @@ public class GetAntibioticByIdHandler(IDbContext context) : IQueryHandler<GetAnt
     public async Task<AntibioticResult> HandleAsync(GetAntibioticByIdQuery query,
         CancellationToken cancellationToken = default)
     {
+#pragma warning disable RCS1077 // Optimize LINQ method call: ConvertAll won't work with EF Core SQL translation
         var antibiotic = await context.Antibiotics
             .AsNoTracking()
             .Select(x => new AntibioticResult
@@ -23,20 +24,21 @@ public class GetAntibioticByIdHandler(IDbContext context) : IQueryHandler<GetAnt
                     ParentName = x.AntibioticGroup.Parent == null ? null : x.AntibioticGroup.Parent.Name
                 },
                 Classification = x.Classification,
-                AntibioticSpectrum = x.AntibioticSpectra.ConvertAll(a => new PathogenResult
+                AntibioticSpectrum = x.AntibioticSpectra.Select(a => new PathogenResult
                 {
                     Id = a.Id,
                     Name = a.Name,
-                }),
-                Dosages = x.Dosages.ConvertAll(d => new DosageResult
+                }).ToList(),
+                Dosages = x.Dosages.Select(d => new DosageResult
                 {
                     Id = d.Id,
                     RouteOfAdministration = d.RouteOfAdministration,
                     Dose = d.Dose,
                     Crcl = d.Crcl
-                }),
+                }).ToList(),
             })
             .FirstOrDefaultAsync(x => x.Id == query.Id, cancellationToken);
+#pragma warning restore RCS1077 // Optimize LINQ method call
         return antibiotic ?? throw new NotFoundException(nameof(Antibiotic), query.Id);
     }
 }
