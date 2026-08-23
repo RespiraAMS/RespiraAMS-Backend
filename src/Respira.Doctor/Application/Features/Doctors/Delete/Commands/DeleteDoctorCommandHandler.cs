@@ -8,6 +8,10 @@ using Wolverine;
 
 namespace Application.Features.Doctors.Delete.Commands
 {
+    /// <summary>
+    /// Handles soft-deletion of a doctor profile and emits success/failure events to the
+    /// DeleteDoctor saga, detaching the doctor from its creator's subordinates and cache.
+    /// </summary>
     public class DeleteDoctorCommandHandler(
         ILogger<DeleteDoctorCommand> logger,
         IDoctorDbContext dbContext,
@@ -15,6 +19,12 @@ namespace Application.Features.Doctors.Delete.Commands
         IMessageBus bus
     ) : ICommandHandler<DeleteDoctorCommand>
     {
+        /// <summary>
+        /// Soft-deletes the doctor profile, updates the creator's subordinate list and cache,
+        /// then publishes a success or failure event back to the saga.
+        /// </summary>
+        /// <param name="command">Delete doctor command</param>
+        /// <param name="cancellationToken">Cancellation token</param>
         public async Task HandleAsync(
             DeleteDoctorCommand command,
             CancellationToken cancellationToken = default
@@ -28,10 +38,7 @@ namespace Application.Features.Doctors.Delete.Commands
                 );
                 if (doctor is null)
                 {
-                    logger.LogWarning(
-                        "Doctor {DoctorId} not found for delete",
-                        command.DoctorId
-                    );
+                    logger.LogWarning("Doctor {DoctorId} not found for delete", command.DoctorId);
                     await bus.PublishAsync(
                         new DeleteDoctorSuccess
                         {
@@ -44,13 +51,16 @@ namespace Application.Features.Doctors.Delete.Commands
 
                 if (command.DoctorCreatorId is not null)
                 {
-                    var creator = await dbContext.Doctors
-                        .Include(c => c.Subordinates)
+                    var creator = await dbContext
+                        .Doctors.Include(c => c.Subordinates)
                         .FirstOrDefaultAsync(
                             c => c.Id == command.DoctorCreatorId,
                             cancellationToken
                         );
-                    if (creator is not null && creator.Subordinates?.Any(s => s.Id == doctor.Id) == true)
+                    if (
+                        creator is not null
+                        && creator.Subordinates?.Any(s => s.Id == doctor.Id) == true
+                    )
                     {
                         creator.Subordinates =
                         [
@@ -69,11 +79,7 @@ namespace Application.Features.Doctors.Delete.Commands
                 await cacheService.RemoveAsync("doctor:info" + doctor.Id);
 
                 await bus.PublishAsync(
-                    new DeleteDoctorSuccess
-                    {
-                        SagaId = command.SagaId,
-                        DoctorId = command.DoctorId,
-                    }
+                    new DeleteDoctorSuccess { SagaId = command.SagaId, DoctorId = command.DoctorId }
                 );
             }
             catch (Exception e)

@@ -13,6 +13,12 @@ using Wolverine;
 
 namespace Respira.SagaAudit.API.Controllers;
 
+/// <summary>
+/// Doctor lifecycle endpoints. Manager/Admin only. Each endpoint starts the
+/// corresponding Wolverine saga (Create/Update/Delete doctor) which orchestrates
+/// the cross-service workflow; the request is accepted (HTTP 202) and tracked
+/// asynchronously via <see cref="ProcessTrackerService"/>.
+/// </summary>
 [ApiController]
 [Route("api/v1/doctors")]
 public class DoctorController(

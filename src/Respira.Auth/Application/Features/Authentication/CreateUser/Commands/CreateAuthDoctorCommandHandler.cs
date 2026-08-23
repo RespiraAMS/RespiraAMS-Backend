@@ -8,6 +8,11 @@ using Wolverine;
 
 namespace Application.Features.Authentication.CreateUser.Commands;
 
+/// <summary>
+/// Handles <see cref="CreateAuthDoctorCommand"/>: creates the auth doctor account
+/// (hashed password, default role/status) and emits <c>CreateAuthDoctorSuccess</c> or
+/// <c>CreateAuthDoctorFailure</c> to drive the CreateUser saga forward or compensate.
+/// </summary>
 public class CreateAuthDoctorCommandHandler(
     ILogger<CreateAuthDoctorCommand> logger,
     IAuthDbContext dbContext,
@@ -15,6 +20,11 @@ public class CreateAuthDoctorCommandHandler(
     IMessageBus bus
 ) : ICommandHandler<CreateAuthDoctorCommand>
 {
+    /// <summary>
+    /// Creates the auth doctor account and publishes the corresponding saga outcome event.
+    /// </summary>
+    /// <param name="command">Create auth doctor command with the new account details.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
     public async Task HandleAsync(
         CreateAuthDoctorCommand command,
         CancellationToken cancellationToken = default

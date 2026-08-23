@@ -129,6 +129,8 @@ public class ProcessTrackerService(ISagaAuditDbContext dbContext)
 /// </summary>
 public class StepRecord
 {
+    /// <summary>Name of the step executed (or a status marker such as "Completed"/"Failed").</summary>
     public required string Step { get; set; }
+    /// <summary>UTC time at which the step was recorded.</summary>
     public DateTimeOffset Timestamp { get; set; }
 }

@@ -7,6 +7,9 @@ namespace Application.Features.Media.Remove.Commands;
 /// </summary>
 public record RemoveMediaCommand : ICommand
 {
+    /// <summary>Identifier of the saga orchestrating the media removal.</summary>
     public required Guid SagaId { get; init; }
+
+    /// <summary>Identifier of the media asset to remove.</summary>
     public required Guid MediaId { get; init; }
 }

@@ -10,8 +10,15 @@ namespace Respira.SagaAudit.Infrastructure.Persistence.Database;
 public class SagaAuditDbContext(DbContextOptions<SagaAuditDbContext> options)
     : DbContext(options), ISagaAuditDbContext
 {
+    /// <summary>Process tracker rows recording saga execution progress and status.</summary>
     public DbSet<ProcessTracker> ProcessTrackers { get; set; }
 
+    /// <summary>
+    /// Persists pending changes, normalizing all <see cref="DateTimeOffset"/> values
+    /// to UTC before saving.
+    /// </summary>
+    /// <param name="cancellationToken">A token to cancel the operation.</param>
+    /// <returns>The number of rows affected.</returns>
     public new async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
         NormalizeDateTimeOffsets();

@@ -9,8 +9,13 @@ namespace Application.Features.Doctors.LinkAvatar.Commands
     /// </summary>
     public record UpdateDoctorLinkAvatarCommand : ICommand
     {
+        /// <summary>Saga identifier coordinating the avatar link</summary>
         public required Guid SagaId { get; init; }
+
+        /// <summary>Identifier of the doctor profile to link the avatar to</summary>
         public required Guid DoctorId { get; init; }
+
+        /// <summary>Identifier of the uploaded avatar media</summary>
         public required Guid MediaId { get; init; }
     }
 }

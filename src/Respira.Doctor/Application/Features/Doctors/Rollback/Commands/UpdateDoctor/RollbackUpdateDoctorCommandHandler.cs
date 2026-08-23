@@ -7,6 +7,10 @@ using Wolverine;
 
 namespace Application.Features.Doctors.Rollback.Commands.UpdateDoctor
 {
+    /// <summary>
+    /// Compensates a failed UpdateDoctor step by reverting the profile to its previous values
+    /// and refreshing the cache.
+    /// </summary>
     public class RollbackUpdateDoctorCommandHandler(
         ILogger<RollbackUpdateDoctorCommandHandler> logger,
         IDoctorDbContext dbContext,
@@ -14,6 +18,12 @@ namespace Application.Features.Doctors.Rollback.Commands.UpdateDoctor
         IMessageBus bus
     ) : ICommandHandler<RollbackUpdateDoctorCommand>
     {
+        /// <summary>
+        /// Restores the doctor profile to its previous property values, updates the cache and
+        /// publishes a success/failure event for the rollback.
+        /// </summary>
+        /// <param name="command">Rollback update command</param>
+        /// <param name="cancellationToken">Cancellation token</param>
         public async Task HandleAsync(
             RollbackUpdateDoctorCommand command,
             CancellationToken cancellationToken = default

@@ -8,6 +8,12 @@ using Wolverine;
 
 namespace Application.Features.Media.Remove.Commands;
 
+/// <summary>
+/// Handles <see cref="RemoveMediaCommand"/>. Soft-deletes the media asset, deletes its object
+/// from storage, and publishes a <see cref="RemoveMediaSuccess"/> or <see cref="RemoveMediaFailure"/>
+/// event so the originating saga can continue or compensate. If the asset is already missing, a
+/// success is published to avoid blocking the saga.
+/// </summary>
 public class RemoveMediaCommandHandler(
     ILogger<RemoveMediaCommand> logger,
     IMediaDbContext dbContext,
@@ -15,6 +21,12 @@ public class RemoveMediaCommandHandler(
     IMessageBus bus
 ) : ICommandHandler<RemoveMediaCommand>
 {
+    /// <summary>
+    /// Executes the removal: loads the asset, deletes the stored object, marks the asset as
+    /// deleted, and publishes the outcome event.
+    /// </summary>
+    /// <param name="command">The remove command carrying the saga and media identifiers.</param>
+    /// <param name="cancellationToken">Token to cancel the operation.</param>
     public async Task HandleAsync(
         RemoveMediaCommand command,
         CancellationToken cancellationToken = default

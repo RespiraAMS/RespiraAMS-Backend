@@ -36,6 +36,13 @@ namespace Respira.SagaAudit.Application.Features.CreateDoctor.Saga
         public Guid? DoctorId { get; set; }
         public Guid MediaId { get; set; }
 
+        /// <summary>
+        /// Initializes the saga state from the manager command and emits the first
+        /// <see cref="CreateAuthDoctorCommand"/> to provision the auth account.
+        /// </summary>
+        /// <param name="cmd">The manager-initiated command that started the saga.</param>
+        /// <param name="logger">Logger used to record saga start.</param>
+        /// <returns>The initialized saga and the first auth command to dispatch.</returns>
         public static (CreateDoctorSaga, CreateAuthDoctorCommand) Start(
             CreateDoctorByManagerCommand cmd,
             ILogger<CreateDoctorSaga> logger
@@ -77,6 +84,14 @@ namespace Respira.SagaAudit.Application.Features.CreateDoctor.Saga
             return (saga, authCommand);
         }
 
+        /// <summary>
+        /// Step 1 — records the created auth user and emits the
+        /// <see cref="CreateDoctorCommand"/> to create the doctor profile.
+        /// </summary>
+        /// <param name="success">Confirmation that the auth account was created.</param>
+        /// <param name="logger">Logger used to record step progress.</param>
+        /// <param name="tracker">Process tracker used to record the Auth:Created step.</param>
+        /// <returns>The command that creates the doctor profile.</returns>
         public async Task<CreateDoctorCommand> Handle(
             CreateAuthDoctorSuccess success,
             ILogger<CreateDoctorSaga> logger,
@@ -104,6 +119,13 @@ namespace Respira.SagaAudit.Application.Features.CreateDoctor.Saga
             };
         }
 
+        /// <summary>
+        /// Auth step failed. Marks the saga as failed and completed; no compensation
+        /// is needed since nothing had been created yet.
+        /// </summary>
+        /// <param name="failure">Details of the auth failure.</param>
+        /// <param name="logger">Logger used to record the failure.</param>
+        /// <param name="tracker">Process tracker used to record the failure.</param>
         public async Task Handle(
             CreateAuthDoctorFailure failure,
             ILogger<CreateDoctorSaga> logger,
@@ -119,6 +141,14 @@ namespace Respira.SagaAudit.Application.Features.CreateDoctor.Saga
             MarkCompleted();
         }
 
+        /// <summary>
+        /// Step 2 — records the created doctor and emits the
+        /// <see cref="LinkDoctorAvatarCommand"/> to link the uploaded avatar.
+        /// </summary>
+        /// <param name="success">Confirmation that the doctor profile was created.</param>
+        /// <param name="logger">Logger used to record step progress.</param>
+        /// <param name="tracker">Process tracker used to record the Doctor:Created step.</param>
+        /// <returns>The command that links the avatar to the doctor.</returns>
         public async Task<LinkDoctorAvatarCommand> Handle(
             CreateDoctorSuccess success,
             ILogger<CreateDoctorSaga> logger,
@@ -137,6 +167,15 @@ namespace Respira.SagaAudit.Application.Features.CreateDoctor.Saga
             };
         }
 
+        /// <summary>
+        /// Doctor step failed. Triggers compensation by emitting a
+        /// <see cref="RollbackCreateAuthDoctorCommand"/> to remove the auth account
+        /// (reverse order), then marks the saga completed (terminal).
+        /// </summary>
+        /// <param name="failure">Details of the doctor creation failure.</param>
+        /// <param name="logger">Logger used to record the failure.</param>
+        /// <param name="tracker">Process tracker used to record compensation.</param>
+        /// <returns>The command that rolls back the auth account.</returns>
         public async Task<RollbackCreateAuthDoctorCommand> Handle(
             CreateDoctorFailure failure,
             ILogger<CreateDoctorSaga> logger,
@@ -157,6 +196,12 @@ namespace Respira.SagaAudit.Application.Features.CreateDoctor.Saga
             };
         }
 
+        /// <summary>
+        /// Final step — avatar linked successfully. Marks the saga as completed.
+        /// </summary>
+        /// <param name="success">Confirmation that the avatar was linked.</param>
+        /// <param name="logger">Logger used to record completion.</param>
+        /// <param name="tracker">Process tracker used to record completion.</param>
         public async Task Handle(
             LinkDoctorAvatarSuccessEvent success,
             ILogger<CreateDoctorSaga> logger,
@@ -168,6 +213,15 @@ namespace Respira.SagaAudit.Application.Features.CreateDoctor.Saga
             MarkCompleted();
         }
 
+        /// <summary>
+        /// Avatar linking failed. Triggers compensation in reverse order by emitting
+        /// commands to remove the media, roll back the doctor profile, and roll back
+        /// the auth account; then marks the saga completed (terminal).
+        /// </summary>
+        /// <param name="failure">Details of the avatar linking failure.</param>
+        /// <param name="logger">Logger used to record the cleanup.</param>
+        /// <param name="tracker">Process tracker used to record compensation.</param>
+        /// <returns>The compensation commands (RemoveMedia, RollbackDoctor, RollbackAuth).</returns>
         public async Task<object[]> Handle(
             LinkDoctorAvatarFailureEvent failure,
             ILogger<CreateDoctorSaga> logger,
@@ -184,6 +238,13 @@ namespace Respira.SagaAudit.Application.Features.CreateDoctor.Saga
             };
         }
 
+        /// <summary>
+        /// Auth rollback completed after a failed avatar link. Marks the saga as
+        /// failed (compensation completed).
+        /// </summary>
+        /// <param name="success">Confirmation that the auth rollback succeeded.</param>
+        /// <param name="logger">Logger used to record completion.</param>
+        /// <param name="tracker">Process tracker used to record the failure.</param>
         public async Task Handle(
             RollbackCreateAuthDoctorSuccess success,
             ILogger<CreateDoctorSaga> logger,
@@ -195,6 +256,13 @@ namespace Respira.SagaAudit.Application.Features.CreateDoctor.Saga
             MarkCompleted();
         }
 
+        /// <summary>
+        /// Auth rollback failed after a failed avatar link. Marks the saga as failed
+        /// (compensation also failed).
+        /// </summary>
+        /// <param name="failure">Details of the auth rollback failure.</param>
+        /// <param name="logger">Logger used to record the failure.</param>
+        /// <param name="tracker">Process tracker used to record the failure.</param>
         public async Task Handle(
             RollbackCreateAuthDoctorFailure failure,
             ILogger<CreateDoctorSaga> logger,
@@ -206,47 +274,57 @@ namespace Respira.SagaAudit.Application.Features.CreateDoctor.Saga
             MarkCompleted();
         }
 
+        /// <summary>Wolverine fallback when no running saga matches the incoming message; logs a warning.</summary>
         public static void NotFound(
             CreateAuthDoctorSuccess msg,
             ILogger<CreateDoctorSaga> logger
         ) => logger.LogWarning("CreateDoctor saga not found for {SagaId}", msg.SagaId);
 
+        /// <summary>Wolverine fallback when no running saga matches the incoming message; logs a warning.</summary>
         public static void NotFound(
             CreateAuthDoctorFailure msg,
             ILogger<CreateDoctorSaga> logger
         ) => logger.LogWarning("CreateDoctor saga not found for {SagaId}", msg.SagaId);
 
+        /// <summary>Wolverine fallback when no running saga matches the incoming message; logs a warning.</summary>
         public static void NotFound(CreateDoctorSuccess msg, ILogger<CreateDoctorSaga> logger) =>
             logger.LogWarning("CreateDoctor saga not found for {SagaId}", msg.SagaId);
 
+        /// <summary>Wolverine fallback when no running saga matches the incoming message; logs a warning.</summary>
         public static void NotFound(CreateDoctorFailure msg, ILogger<CreateDoctorSaga> logger) =>
             logger.LogWarning("CreateDoctor saga not found for {SagaId}", msg.SagaId);
 
+        /// <summary>Wolverine fallback when no running saga matches the incoming message; logs a warning.</summary>
         public static void NotFound(
             LinkDoctorAvatarSuccessEvent msg,
             ILogger<CreateDoctorSaga> logger
         ) => logger.LogWarning("CreateDoctor saga not found for {SagaId}", msg.SagaId);
 
+        /// <summary>Wolverine fallback when no running saga matches the incoming message; logs a warning.</summary>
         public static void NotFound(
             LinkDoctorAvatarFailureEvent msg,
             ILogger<CreateDoctorSaga> logger
         ) => logger.LogWarning("CreateDoctor saga not found for {SagaId}", msg.SagaId);
 
+        /// <summary>Wolverine fallback when no running saga matches the incoming message; logs a warning.</summary>
         public static void NotFound(
             RollbackCreateDoctorSuccess msg,
             ILogger<CreateDoctorSaga> logger
         ) => logger.LogWarning("CreateDoctor saga not found for {SagaId}", msg.SagaId);
 
+        /// <summary>Wolverine fallback when no running saga matches the incoming message; logs a warning.</summary>
         public static void NotFound(
             RollbackCreateDoctorFailure msg,
             ILogger<CreateDoctorSaga> logger
         ) => logger.LogWarning("CreateDoctor saga not found for {SagaId}", msg.SagaId);
 
+        /// <summary>Wolverine fallback when no running saga matches the incoming message; logs a warning.</summary>
         public static void NotFound(
             RollbackCreateAuthDoctorSuccess msg,
             ILogger<CreateDoctorSaga> logger
         ) => logger.LogWarning("CreateDoctor saga not found for {SagaId}", msg.SagaId);
 
+        /// <summary>Wolverine fallback when no running saga matches the incoming message; logs a warning.</summary>
         public static void NotFound(
             RollbackCreateAuthDoctorFailure msg,
             ILogger<CreateDoctorSaga> logger

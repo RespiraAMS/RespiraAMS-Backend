@@ -7,6 +7,7 @@ namespace Application.Features.Doctors.GetDoctorInfo.Queries
     /// </summary>
     public record GetDoctorInfoQuery : IQuery
     {
+        /// <summary>Identifier of the doctor to retrieve</summary>
         public required Guid DoctorId { get; set; }
     }
 }
