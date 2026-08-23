@@ -22,9 +22,14 @@ public class CreateTreatmentCommand : ICommand
     public required decimal Crcl { get; set; }
 
     /// <summary>
-    /// List of medicines used for this treatment. This list must not empty
+    /// System recommended medicines
     /// </summary>
-    public required List<MedicineRecord> MedicineRecords { get; set; }
+    public required List<MedicineRecord> SystemRecommendedMedicines { get; set; }
+
+    /// <summary>
+    /// Actual medicines used for treatment chosen by doctor
+    /// </summary>
+    public required List<MedicineRecord> DoctorChosenMedicines { get; set; }
 
     /// <summary>
     /// Treatment type

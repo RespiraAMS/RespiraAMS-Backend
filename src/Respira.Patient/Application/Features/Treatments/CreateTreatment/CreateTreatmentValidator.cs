@@ -45,10 +45,15 @@ public class CreateTreatmentValidator : AbstractValidator<CreateTreatmentCommand
         RuleFor(x => x.Crcl)
             .GreaterThan(0)
             .WithMessage("Crcl must be greater than 0");
-        RuleFor(x => x.MedicineRecords)
+        RuleFor(x => x.SystemRecommendedMedicines)
             .NotEmpty()
-            .WithMessage("Medicine records are required");
-        RuleForEach(x => x.MedicineRecords)
+            .WithMessage("System recommended medicines records are required");
+        RuleForEach(x => x.SystemRecommendedMedicines)
+            .SetValidator(new MedicalRecordValidator());
+        RuleFor(x => x.DoctorChosenMedicines)
+            .NotEmpty()
+            .WithMessage("Doctor chosen medicine records are required");
+        RuleForEach(x => x.DoctorChosenMedicines)
             .SetValidator(new MedicalRecordValidator());
         RuleFor(x => x.TreatmentType)
             .NotEmpty()
