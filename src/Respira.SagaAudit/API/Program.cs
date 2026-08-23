@@ -1,3 +1,11 @@
+/// <summary>
+/// Entry point for the Respira SagaAudit API. This microservice owns the saga
+/// orchestration for doctor lifecycle workflows (Create/Update/Delete across the
+/// Auth, Doctor and Media services over RabbitMQ) and exposes the audit/process
+/// tracking endpoints. This file wires up controllers, the Media upload HTTP
+/// client, infrastructure (DB context + ProcessTracker), and the Wolverine
+/// saga host (PostgreSQL durable messaging + RabbitMQ routing).
+/// </summary>
 // Entry point for the Respira SagaAudit API: hosts the Wolverine sagas that
 // orchestrate cross-service workflows (Auth -> Doctor -> Media) over RabbitMQ.
 using Respira.SagaAudit.Application;

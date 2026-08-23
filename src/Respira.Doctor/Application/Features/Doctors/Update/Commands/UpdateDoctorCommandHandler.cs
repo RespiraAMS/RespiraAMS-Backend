@@ -8,6 +8,9 @@ using Wolverine;
 
 namespace Application.Features.Doctors.Update.Commands
 {
+    /// <summary>
+    /// Handles doctor profile updates and emits success/failure events to the UpdateDoctor saga.
+    /// </summary>
     public class UpdateDoctorCommandHandler(
         ILogger<UpdateDoctorCommand> logger,
         IDoctorDbContext dbContext,
@@ -18,6 +21,12 @@ namespace Application.Features.Doctors.Update.Commands
         private const string CacheKeyPrefix = "doctor:info";
         private static readonly TimeSpan CacheTtl = TimeSpan.FromMinutes(15);
 
+        /// <summary>
+        /// Applies the profile changes, refreshes the doctor and creator caches, then publishes a
+        /// success (with updated fields) or failure event back to the saga.
+        /// </summary>
+        /// <param name="command">Update doctor command</param>
+        /// <param name="cancellationToken">Cancellation token</param>
         public async Task HandleAsync(
             UpdateDoctorCommand command,
             CancellationToken cancellationToken = default
@@ -55,8 +64,8 @@ namespace Application.Features.Doctors.Update.Commands
 
                 if (command.DoctorCreatorId is not null)
                 {
-                    var doctorCreator = await dbContext.Doctors
-                        .Include(x => x.Subordinates)
+                    var doctorCreator = await dbContext
+                        .Doctors.Include(x => x.Subordinates)
                         .FirstOrDefaultAsync(
                             x => x.Id == command.DoctorCreatorId,
                             cancellationToken

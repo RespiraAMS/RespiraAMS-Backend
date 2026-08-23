@@ -8,6 +8,9 @@ using Wolverine;
 
 namespace Application.Features.Doctors.Create.Commands
 {
+    /// <summary>
+    /// Handles doctor profile creation and emits success/failure events to the CreateDoctor saga.
+    /// </summary>
     public class CreateDoctorCommandHandler(
         ILogger<CreateDoctorCommand> logger,
         IDoctorDbContext dbContext,
@@ -15,6 +18,12 @@ namespace Application.Features.Doctors.Create.Commands
         IMessageBus bus
     ) : ICommandHandler<CreateDoctorCommand>
     {
+        /// <summary>
+        /// Creates the doctor profile, links it to its creator (if any), refreshes the creator
+        /// cache, then publishes a success or failure event back to the saga.
+        /// </summary>
+        /// <param name="command">Create doctor command</param>
+        /// <param name="cancellationToken">Cancellation token</param>
         public async Task HandleAsync(
             CreateDoctorCommand command,
             CancellationToken cancellationToken = default

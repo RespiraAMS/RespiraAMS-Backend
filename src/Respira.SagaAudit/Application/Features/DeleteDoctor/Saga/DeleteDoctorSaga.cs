@@ -25,6 +25,13 @@ public class DeleteDoctorSaga : Wolverine.Saga
     public Guid DoctorId { get; set; }
     public Guid MediaId { get; set; }
 
+    /// <summary>
+    /// Initializes the saga state from the manager command and emits the first
+    /// <see cref="RemoveMediaCommand"/> to delete the avatar.
+    /// </summary>
+    /// <param name="cmd">The manager-initiated command that started the saga.</param>
+    /// <param name="logger">Logger used to record saga start.</param>
+    /// <returns>The initialized saga and the first media removal command to dispatch.</returns>
     public static (DeleteDoctorSaga, RemoveMediaCommand) Start(
         DeleteDoctorByManagerCommand cmd,
         ILogger<DeleteDoctorSaga> logger)
@@ -47,6 +54,13 @@ public class DeleteDoctorSaga : Wolverine.Saga
         });
     }
 
+    /// <summary>
+    /// Step 1 — avatar removed; emits the <see cref="DeleteDoctorCommand"/> to delete
+    /// the doctor profile.
+    /// </summary>
+    /// <param name="success">Confirmation that the media was removed.</param>
+    /// <param name="logger">Logger used to record step progress.</param>
+    /// <returns>The command that deletes the doctor profile.</returns>
     public DeleteDoctorCommand Handle(RemoveMediaSuccess success, ILogger<DeleteDoctorSaga> logger)
     {
         logger.LogInformation("DeleteDoctor saga {SagaId}: media removed", Id);
@@ -58,12 +72,25 @@ public class DeleteDoctorSaga : Wolverine.Saga
         };
     }
 
+    /// <summary>
+    /// Media step failed. Marks the saga completed; deletion is terminal, so no
+    /// compensation is attempted.
+    /// </summary>
+    /// <param name="failure">Details of the media removal failure.</param>
+    /// <param name="logger">Logger used to record the failure.</param>
     public void Handle(RemoveMediaFailure failure, ILogger<DeleteDoctorSaga> logger)
     {
         logger.LogWarning("DeleteDoctor saga {SagaId}: media step failed - {Message}", Id, failure.Message);
         MarkCompleted();
     }
 
+    /// <summary>
+    /// Step 2 — doctor profile removed; emits the <see cref="DeleteAuthDoctorCommand"/>
+    /// to delete the auth account.
+    /// </summary>
+    /// <param name="success">Confirmation that the doctor profile was deleted.</param>
+    /// <param name="logger">Logger used to record step progress.</param>
+    /// <returns>The command that deletes the auth account.</returns>
     public DeleteAuthDoctorCommand Handle(DeleteDoctorSuccess success, ILogger<DeleteDoctorSaga> logger)
     {
         logger.LogInformation("DeleteDoctor saga {SagaId}: doctor removed", Id);
@@ -74,34 +101,57 @@ public class DeleteDoctorSaga : Wolverine.Saga
         };
     }
 
+    /// <summary>
+    /// Doctor step failed. Marks the saga completed; deletion is terminal, so no
+    /// compensation is attempted.
+    /// </summary>
+    /// <param name="failure">Details of the doctor deletion failure.</param>
+    /// <param name="logger">Logger used to record the failure.</param>
     public void Handle(DeleteDoctorFailure failure, ILogger<DeleteDoctorSaga> logger)
     {
         logger.LogWarning("DeleteDoctor saga {SagaId}: doctor step failed - {Message}", Id, failure.Message);
         MarkCompleted();
     }
 
+    /// <summary>
+    /// Final step — auth account removed. Marks the saga completed.
+    /// </summary>
+    /// <param name="success">Confirmation that the auth account was deleted.</param>
+    /// <param name="logger">Logger used to record completion.</param>
     public void Handle(DeleteAuthDoctorSuccess success, ILogger<DeleteDoctorSaga> logger)
     {
         logger.LogInformation("DeleteDoctor saga {SagaId}: completed (auth {AuthUserId} removed)", Id, success.AuthUserId);
         MarkCompleted();
     }
 
+    /// <summary>
+    /// Auth step failed. Marks the saga completed; deletion is terminal, so no
+    /// compensation is attempted.
+    /// </summary>
+    /// <param name="failure">Details of the auth deletion failure.</param>
+    /// <param name="logger">Logger used to record the failure.</param>
     public void Handle(DeleteAuthDoctorFailure failure, ILogger<DeleteDoctorSaga> logger)
     {
         logger.LogWarning("DeleteDoctor saga {SagaId}: auth step failed - {Message}", Id, failure.Message);
         MarkCompleted();
     }
 
+    /// <summary>Wolverine fallback when no running saga matches the incoming message; logs a warning.</summary>
     public static void NotFound(RemoveMediaSuccess msg, ILogger<DeleteDoctorSaga> logger) =>
         logger.LogWarning("DeleteDoctor saga not found for {SagaId}", msg.SagaId);
+    /// <summary>Wolverine fallback when no running saga matches the incoming message; logs a warning.</summary>
     public static void NotFound(RemoveMediaFailure msg, ILogger<DeleteDoctorSaga> logger) =>
         logger.LogWarning("DeleteDoctor saga not found for {SagaId}", msg.SagaId);
+    /// <summary>Wolverine fallback when no running saga matches the incoming message; logs a warning.</summary>
     public static void NotFound(DeleteDoctorSuccess msg, ILogger<DeleteDoctorSaga> logger) =>
         logger.LogWarning("DeleteDoctor saga not found for {SagaId}", msg.SagaId);
+    /// <summary>Wolverine fallback when no running saga matches the incoming message; logs a warning.</summary>
     public static void NotFound(DeleteDoctorFailure msg, ILogger<DeleteDoctorSaga> logger) =>
         logger.LogWarning("DeleteDoctor saga not found for {SagaId}", msg.SagaId);
+    /// <summary>Wolverine fallback when no running saga matches the incoming message; logs a warning.</summary>
     public static void NotFound(DeleteAuthDoctorSuccess msg, ILogger<DeleteDoctorSaga> logger) =>
         logger.LogWarning("DeleteDoctor saga not found for {SagaId}", msg.SagaId);
+    /// <summary>Wolverine fallback when no running saga matches the incoming message; logs a warning.</summary>
     public static void NotFound(DeleteAuthDoctorFailure msg, ILogger<DeleteDoctorSaga> logger) =>
         logger.LogWarning("DeleteDoctor saga not found for {SagaId}", msg.SagaId);
 }

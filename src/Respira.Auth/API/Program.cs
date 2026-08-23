@@ -1,5 +1,8 @@
-// Entry point for the Respira Auth API: configures controllers, OpenAPI,
-// Wolverine messaging, EF Core persistence and the auth infrastructure.
+/// <summary>
+/// Entry point for the Respira Auth API. Configures controllers, API versioning,
+/// OpenAPI, Wolverine messaging, EF Core persistence and the auth infrastructure,
+/// then starts the host.
+/// </summary>
 using Application;
 using Respira.Auth.API.BackgroundServices;
 using Application.Abstracts.Email;

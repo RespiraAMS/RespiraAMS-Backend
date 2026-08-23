@@ -6,9 +6,11 @@ namespace Respira.SagaAudit.API.Clients;
 /// <summary>Result returned by the Media service <c>POST /api/v1/media/upload</c> endpoint.</summary>
 public class MediaUploadResult
 {
+    /// <summary>Identifier of the media record created by the Media service.</summary>
     [JsonPropertyName("mediaId")]
     public Guid MediaId { get; set; }
 
+    /// <summary>Public URL of the uploaded file, if returned by the Media service.</summary>
     [JsonPropertyName("url")]
     public string? Url { get; set; }
 }
@@ -20,6 +22,13 @@ public class MediaUploadResult
 /// </summary>
 public class MediaUploadClient(HttpClient http)
 {
+    /// <summary>
+    /// Streams the supplied avatar <paramref name="file"/> to the Media service's
+    /// <c>POST /api/v1/media/upload</c> endpoint and returns the created media id.
+    /// </summary>
+    /// <param name="file">The avatar file to upload.</param>
+    /// <param name="cancellationToken">A token to cancel the upload.</param>
+    /// <returns>The <see cref="Guid"/> of the uploaded media record.</returns>
     public async Task<Guid> UploadAsync(IFormFile file, CancellationToken cancellationToken)
     {
         using var content = new MultipartFormDataContent();

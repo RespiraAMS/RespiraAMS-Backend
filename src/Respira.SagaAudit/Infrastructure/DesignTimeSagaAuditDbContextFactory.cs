@@ -9,6 +9,12 @@ namespace Respira.SagaAudit.Infrastructure;
 /// </summary>
 public class DesignTimeSagaAuditDbContextFactory : IDesignTimeDbContextFactory<SagaAuditDbContext>
 {
+    /// <summary>
+    /// Builds a <see cref="SagaAuditDbContext"/> for EF Core design-time tooling
+    /// (migrations) using a local PostgreSQL connection string.
+    /// </summary>
+    /// <param name="args">Command-line arguments passed by the EF tooling.</param>
+    /// <returns>A configured <see cref="SagaAuditDbContext"/> instance.</returns>
     public SagaAuditDbContext CreateDbContext(string[] args)
     {
         var optionsBuilder = new DbContextOptionsBuilder<SagaAuditDbContext>();

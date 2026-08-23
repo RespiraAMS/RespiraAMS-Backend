@@ -7,12 +7,22 @@ using Wolverine;
 
 namespace Application.Features.Authentication.DeleteUser.Commands;
 
+/// <summary>
+/// Handles <see cref="DeleteAuthDoctorCommand"/>: removes the auth doctor account (terminal
+/// step of the DeleteUser saga, no compensation) and emits <c>DeleteAuthDoctorSuccess</c> or
+/// <c>DeleteAuthDoctorFailure</c>.
+/// </summary>
 public class DeleteAuthDoctorCommandHandler(
     ILogger<DeleteAuthDoctorCommand> logger,
     IAuthDbContext dbContext,
     IMessageBus bus
 ) : ICommandHandler<DeleteAuthDoctorCommand>
 {
+    /// <summary>
+    /// Deletes the auth doctor account (if present) and publishes the saga outcome.
+    /// </summary>
+    /// <param name="command">Delete command identifying the account to remove.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
     public async Task HandleAsync(
         DeleteAuthDoctorCommand command,
         CancellationToken cancellationToken = default

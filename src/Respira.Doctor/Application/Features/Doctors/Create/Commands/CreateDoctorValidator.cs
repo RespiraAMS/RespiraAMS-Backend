@@ -3,6 +3,10 @@ using FluentValidation;
 
 namespace Application.Features.Doctors.Create.Commands;
 
+/// <summary>
+/// Validates <see cref="CreateDoctorCommand"/>, enforcing a well-formed Vietnam
+/// citizen identification number (CCCD/CMND).
+/// </summary>
 public class CreateDoctorValidator : AbstractValidator<CreateDoctorCommand>
 {
     public CreateDoctorValidator()

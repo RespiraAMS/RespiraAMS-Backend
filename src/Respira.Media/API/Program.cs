@@ -1,5 +1,8 @@
-// Entry point for the Respira Media API: configures controllers, OpenAPI,
-// Wolverine messaging, EF Core persistence, Cloudflare R2 storage and the media infrastructure.
+/// <summary>
+/// Entry point for the Respira Media API. Wires up controllers, OpenAPI/Scalar,
+/// Wolverine messaging (PostgreSQL durability + RabbitMQ routing), EF Core persistence,
+/// Cloudflare R2 storage and the media infrastructure, and exposes the upload/read endpoints.
+/// </summary>
 using Application;
 using Infrastructure;
 using Respira.ServiceDefaults.Extensions;

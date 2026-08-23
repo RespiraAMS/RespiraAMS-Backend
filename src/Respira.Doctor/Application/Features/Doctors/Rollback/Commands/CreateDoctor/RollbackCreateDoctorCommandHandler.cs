@@ -8,6 +8,10 @@ using Wolverine;
 
 namespace Application.Features.Doctors.Rollback.Commands.CreateDoctor
 {
+    /// <summary>
+    /// Compensates a failed CreateDoctor step by hard-deleting the created doctor profile,
+    /// detaching it from its creator and clearing the relevant caches.
+    /// </summary>
     public class RollbackCreateDoctorCommandHandler(
         ILogger<RollbackCreateDoctorCommandHandler> logger,
         IDoctorDbContext dbContext,
@@ -15,6 +19,12 @@ namespace Application.Features.Doctors.Rollback.Commands.CreateDoctor
         IMessageBus bus
     ) : ICommandHandler<RollbackCreateDoctorCommand>
     {
+        /// <summary>
+        /// Removes the created doctor profile (and its creator linkage) and publishes a
+        /// success/failure event for the rollback.
+        /// </summary>
+        /// <param name="command">Rollback create command</param>
+        /// <param name="cancellationToken">Cancellation token</param>
         public async Task HandleAsync(
             RollbackCreateDoctorCommand command,
             CancellationToken cancellationToken = default

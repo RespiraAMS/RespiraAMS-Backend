@@ -7,12 +7,22 @@ using Wolverine;
 
 namespace Application.Features.Authentication.CreateUser.Rollback.Commands;
 
+/// <summary>
+/// Handles <see cref="RollbackCreateAuthDoctorCommand"/>: deletes the previously created
+/// auth doctor account and emits <c>RollbackCreateAuthDoctorSuccess</c> or
+/// <c>RollbackCreateAuthDoctorFailure</c> to complete the CreateUser saga compensation.
+/// </summary>
 public class RollbackCreateAuthDoctorCommandHandler(
     ILogger<RollbackCreateAuthDoctorCommand> logger,
     IAuthDbContext dbContext,
     IMessageBus bus
 ) : ICommandHandler<RollbackCreateAuthDoctorCommand>
 {
+    /// <summary>
+    /// Removes the auth doctor account (if present) and publishes the rollback outcome.
+    /// </summary>
+    /// <param name="command">Rollback command identifying the account to remove.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
     public async Task HandleAsync(
         RollbackCreateAuthDoctorCommand command,
         CancellationToken cancellationToken = default

@@ -1,5 +1,7 @@
-// Entry point for the Respira Doctor API: configures controllers, OpenAPI,
-// Wolverine messaging, EF Core persistence and the doctor infrastructure (caching + DB).
+/// <summary>
+/// Entry point for the Respira Doctor API. Configures controllers, OpenAPI,
+/// Wolverine messaging, EF Core persistence and the doctor infrastructure (caching + DB).
+/// </summary>
 using Application;
 using Infrastructure;
 using Respira.Doctor.API.Clients;

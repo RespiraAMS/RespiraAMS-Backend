@@ -10,6 +10,12 @@ namespace Infrastructure.Design;
 /// </summary>
 public class MediaDbContextFactory : IDesignTimeDbContextFactory<MediaDbContext>
 {
+    /// <summary>
+    /// Builds a <see cref="MediaDbContext"/> using a local development connection string for
+    /// EF Core design-time operations (migrations, scaffolding).
+    /// </summary>
+    /// <param name="args">Command-line arguments passed by the EF Core tooling.</param>
+    /// <returns>A configured <see cref="MediaDbContext"/> instance.</returns>
     public MediaDbContext CreateDbContext(string[] args)
     {
         var optionsBuilder = new DbContextOptionsBuilder<MediaDbContext>();

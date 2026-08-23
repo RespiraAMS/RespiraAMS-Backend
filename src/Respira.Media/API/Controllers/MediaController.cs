@@ -20,6 +20,15 @@ public class MediaController(
 {
     private const long MaxFileSize = 10 * 1024 * 1024; // 10 MB
 
+    /// <summary>
+    /// Uploads a single image file (multipart/form-data) and persists a media asset record.
+    /// The raw bytes are streamed straight to object storage so they never traverse the
+    /// Wolverine/RabbitMQ message bus. Returns <c>200 OK</c> with <c>mediaId</c> and <c>url</c>
+    /// on success, or <c>400 BadRequest</c> when the file is missing, exceeds 10 MB, or is not
+    /// an image.
+    /// </summary>
+    /// <param name="file">The image file sent in the form body.</param>
+    /// <param name="cancellationToken">Token to cancel the streaming/DB work.</param>
     [HttpPost("upload")]
     [RequestSizeLimit(MaxFileSize)]
     public async Task<IActionResult> Upload([FromForm] IFormFile file, CancellationToken cancellationToken)

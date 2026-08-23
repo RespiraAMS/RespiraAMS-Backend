@@ -8,6 +8,11 @@ using Wolverine;
 
 namespace Respira.Auth.API.BackgroundServices;
 
+/// <summary>
+/// Background service that periodically revokes expired tokens by dispatching
+/// <c>RemoveExpiredTokensCommand</c> on a configurable interval. Waits for host
+/// startup before the first run.
+/// </summary>
 public class TokenCleanupBackgroundService(
     IServiceScopeFactory scopeFactory,
     ILogger<TokenCleanupBackgroundService> logger,

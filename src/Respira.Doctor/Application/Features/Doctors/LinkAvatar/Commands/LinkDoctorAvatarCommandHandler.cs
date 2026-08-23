@@ -23,39 +23,57 @@ namespace Application.Features.Doctors.LinkAvatar.Commands
     {
         private const string CacheKeyPrefix = "doctor:info";
 
+        /// <summary>
+        /// Links the avatar media to the doctor profile in the CreateDoctor saga flow and
+        /// publishes the create-flow success/failure event pair.
+        /// </summary>
+        /// <param name="command">Link avatar command</param>
+        /// <param name="cancellationToken">Cancellation token</param>
         public Task HandleAsync(
             LinkDoctorAvatarCommand command,
             CancellationToken cancellationToken = default
-        ) => LinkAsync(command.SagaId, command.DoctorId, command.MediaId, // published events
-            success: (sagaId, doctorId, mediaId) => new LinkDoctorAvatarSuccessEvent
-            {
-                SagaId = sagaId,
-                DoctorId = doctorId,
-                MediaId = mediaId,
-            },
-            failure: (sagaId, doctorId) => new LinkDoctorAvatarFailureEvent
-            {
-                SagaId = sagaId,
-                DoctorId = doctorId,
-            },
-            cancellationToken);
+        ) =>
+            LinkAsync(
+                command.SagaId,
+                command.DoctorId,
+                command.MediaId, // published events
+                success: (sagaId, doctorId, mediaId) =>
+                    new LinkDoctorAvatarSuccessEvent
+                    {
+                        SagaId = sagaId,
+                        DoctorId = doctorId,
+                        MediaId = mediaId,
+                    },
+                failure: (sagaId, doctorId) =>
+                    new LinkDoctorAvatarFailureEvent { SagaId = sagaId, DoctorId = doctorId },
+                cancellationToken
+            );
 
+        /// <summary>
+        /// Links the avatar media to the doctor profile in the UpdateDoctor saga flow and
+        /// publishes the update-flow success/failure event pair.
+        /// </summary>
+        /// <param name="command">Update link avatar command</param>
+        /// <param name="cancellationToken">Cancellation token</param>
         public Task HandleAsync(
             UpdateDoctorLinkAvatarCommand command,
             CancellationToken cancellationToken = default
-        ) => LinkAsync(command.SagaId, command.DoctorId, command.MediaId,
-            success: (sagaId, doctorId, mediaId) => new UpdateDoctorLinkAvatarSuccessEvent
-            {
-                SagaId = sagaId,
-                DoctorId = doctorId,
-                MediaId = mediaId,
-            },
-            failure: (sagaId, doctorId) => new UpdateDoctorLinkAvatarFailureEvent
-            {
-                SagaId = sagaId,
-                DoctorId = doctorId,
-            },
-            cancellationToken);
+        ) =>
+            LinkAsync(
+                command.SagaId,
+                command.DoctorId,
+                command.MediaId,
+                success: (sagaId, doctorId, mediaId) =>
+                    new UpdateDoctorLinkAvatarSuccessEvent
+                    {
+                        SagaId = sagaId,
+                        DoctorId = doctorId,
+                        MediaId = mediaId,
+                    },
+                failure: (sagaId, doctorId) =>
+                    new UpdateDoctorLinkAvatarFailureEvent { SagaId = sagaId, DoctorId = doctorId },
+                cancellationToken
+            );
 
         private async Task LinkAsync(
             Guid sagaId,
@@ -63,7 +81,8 @@ namespace Application.Features.Doctors.LinkAvatar.Commands
             Guid mediaId,
             Func<Guid, Guid, Guid?, object> success,
             Func<Guid, Guid, object> failure,
-            CancellationToken cancellationToken)
+            CancellationToken cancellationToken
+        )
         {
             try
             {
