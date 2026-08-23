@@ -34,7 +34,9 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             .HasValue<EmpiricalTreatment>("empirical_treatment")
             .HasValue<TargetedTreatment>("targeted_treatment");
         modelBuilder.Entity<Treatment>()
-            .OwnsMany(x => x.MedicineRecords, builder => builder.ToJson());
+            .OwnsMany(x => x.SystemRecommendedMedicines, builder => builder.ToJson());
+        modelBuilder.Entity<Treatment>()
+            .OwnsMany(x => x.DoctorChosenMedicines, builder => builder.ToJson());
         modelBuilder.Entity<EmpiricalTreatment>()
             .OwnsMany(x => x.InfectionProbabilityRecords, builder => builder.ToJson());
     }

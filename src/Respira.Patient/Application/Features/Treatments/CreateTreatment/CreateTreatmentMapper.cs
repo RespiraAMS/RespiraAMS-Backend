@@ -12,7 +12,8 @@ public class CreateTreatmentMapper : ICreateMapper<Treatment, CreateTreatmentCom
                 PatientId = command.PatientId,
                 DoctorId = command.DoctorId,
                 Crcl = command.Crcl,
-                MedicineRecords = command.MedicineRecords,
+                SystemRecommendedMedicines = command.SystemRecommendedMedicines,
+                DoctorChosenMedicines = command.DoctorChosenMedicines,
                 Status = PatientTreatmentStatus.FavorableResponse,
                 Pathogen = command.Pathogen ??
                     throw new UnexpectedException("Failed to map targeted therapy for create treatment: pathogen unexpectedly null"),
@@ -22,7 +23,8 @@ public class CreateTreatmentMapper : ICreateMapper<Treatment, CreateTreatmentCom
                 PatientId = command.PatientId,
                 DoctorId = command.DoctorId,
                 Crcl = command.Crcl,
-                MedicineRecords = command.MedicineRecords,
+                SystemRecommendedMedicines = command.SystemRecommendedMedicines,
+                DoctorChosenMedicines = command.DoctorChosenMedicines,
                 Status = PatientTreatmentStatus.FavorableResponse,
                 Severity = command.Severity ??
                     throw new UnexpectedException("Failed to map empirical therapy for create treatment: severity unexpectedly null"),
