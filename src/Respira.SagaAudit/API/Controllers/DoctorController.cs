@@ -1,57 +1,106 @@
 using System.Security.Claims;
+using System.Text.Json;
 using Domain.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Respira.SagaAudit.API.Clients;
 using Respira.SagaAudit.API.Dtos;
 using Respira.SagaAudit.Application.Features.CreateDoctor.Commands;
 using Respira.SagaAudit.Application.Features.DeleteDoctor.Commands;
 using Respira.SagaAudit.Application.Features.UpdateDoctor.Commands;
+using Respira.SagaAudit.Application.Services;
 using Wolverine;
 
 namespace Respira.SagaAudit.API.Controllers;
 
 [ApiController]
 [Route("api/v1/doctors")]
-public class DoctorController(IMessageBus bus) : ControllerBase
+public class DoctorController(
+    IMessageBus bus,
+    MediaUploadClient mediaUpload,
+    ProcessTrackerService trackerService
+) : ControllerBase
 {
     private bool IsManager() =>
         User.FindFirstValue(ClaimTypes.Role) is var role
         && (role == RoleType.Manager.ToString() || role == RoleType.Admin.ToString());
 
-    /// <summary>Starts the CreateDoctor saga (Auth -> Doctor -> Media). Manager/Admin only.</summary>
+    /// <summary>
+    /// Starts the CreateDoctor saga (Auth -> Doctor -> Media). Manager/Admin only.
+    /// Accepts multipart/form-data: the avatar as <c>file</c> and the metadata as a
+    /// JSON string in the <c>request</c> field. The avatar is uploaded to the Media
+    /// service first; the returned media id is then used to start the saga.
+    /// </summary>
     [HttpPost]
     [Route("create")]
-    public async Task<IActionResult> Create([FromBody] CreateDoctorRequest request)
+    [Consumes("multipart/form-data")]
+    public async Task<IActionResult> Create(
+        [FromForm] IFormFile file,
+        [FromForm] string request,
+        CancellationToken cancellationToken
+    )
     {
         if (!IsManager())
         {
             return Forbid();
         }
 
+        if (file is null || file.Length == 0)
+        {
+            return BadRequest("Avatar file is required");
+        }
+
+        CreateDoctorRequest? dto;
+        try
+        {
+            dto = JsonSerializer.Deserialize<CreateDoctorRequest>(
+                request,
+                JsonSerializerOptions.Web
+            );
+        }
+        catch (JsonException)
+        {
+            return BadRequest("Invalid request payload");
+        }
+
+        if (dto is null)
+        {
+            return BadRequest("Invalid request payload");
+        }
+
+        var mediaId = await mediaUpload.UploadAsync(file, cancellationToken);
+
+        var sagaId = Guid.NewGuid();
+        await trackerService.CreateAsync(
+            sagaId,
+            "CreateDoctor",
+            dto.ManagerDoctorId,
+            null,
+            cancellationToken
+        );
+
         var command = new CreateDoctorByManagerCommand
         {
-            ManagerDoctorId = request.ManagerDoctorId,
-            Email = request.Email,
-            Password = request.Password,
-            Phone = request.Phone,
-            Role = request.Role,
-            FirstName = request.FirstName,
-            LastName = request.LastName,
-            Degrees = request.Degrees,
-            AcademicTitle = request.AcademicTitle,
-            Position = request.Position,
-            Gender = request.Gender,
-            CitizenIdentificationNumber = request.CitizenIdentificationNumber,
-            DateOfBirth = request.DateOfBirth,
-            Address = request.Address,
-            MediaFileName = request.MediaFileName,
-            MediaContentType = request.MediaContentType,
-            MediaSize = request.MediaSize,
-            MediaData = request.MediaData,
+            SagaId = sagaId,
+            ManagerDoctorId = dto.ManagerDoctorId,
+            Email = dto.Email,
+            Password = dto.Password,
+            Phone = dto.Phone,
+            Role = dto.Role,
+            FirstName = dto.FirstName,
+            LastName = dto.LastName,
+            Degrees = dto.Degrees,
+            AcademicTitle = dto.AcademicTitle,
+            Position = dto.Position,
+            Gender = dto.Gender,
+            CitizenIdentificationNumber = dto.CitizenIdentificationNumber,
+            DateOfBirth = dto.DateOfBirth,
+            Address = dto.Address,
+            MediaId = mediaId,
         };
 
-        await bus.SendAsync(command);
-        return Accepted(new { sagaId = command.ManagerDoctorId });
+        await bus.InvokeAsync(command, cancellationToken);
+        return Accepted(new { sagaId });
     }
 
     /// <summary>Starts the UpdateDoctor saga (Auth -> Doctor -> Media). Manager/Admin only.</summary>
@@ -95,10 +144,7 @@ public class DoctorController(IMessageBus bus) : ControllerBase
             OldDateOfBirth = request.OldDateOfBirth,
             OldAddress = request.OldAddress,
             HasNewMedia = request.HasNewMedia,
-            NewMediaFileName = request.NewMediaFileName,
-            NewMediaContentType = request.NewMediaContentType,
-            NewMediaSize = request.NewMediaSize,
-            NewMediaData = request.NewMediaData,
+            NewMediaId = request.NewMediaId,
         };
 
         await bus.SendAsync(command);

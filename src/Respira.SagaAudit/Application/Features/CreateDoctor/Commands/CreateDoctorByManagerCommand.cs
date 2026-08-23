@@ -10,6 +10,8 @@ namespace Respira.SagaAudit.Application.Features.CreateDoctor.Commands;
 /// </summary>
 public record CreateDoctorByManagerCommand : ICommand
 {
+    public required Guid SagaId { get; init; }
+
     /// <summary>Id of the manager/admin doctor that initiated the provisioning</summary>
     public required Guid ManagerDoctorId { get; init; }
 
@@ -30,9 +32,6 @@ public record CreateDoctorByManagerCommand : ICommand
     public DateTimeOffset? DateOfBirth { get; init; }
     public required string Address { get; init; }
 
-    // --- Avatar (required media step) ---
-    public required string MediaFileName { get; init; }
-    public required string MediaContentType { get; init; }
-    public long MediaSize { get; init; }
-    public required byte[] MediaData { get; init; }
+    // --- Avatar (pre-uploaded via the Media upload endpoint) ---
+    public required Guid MediaId { get; init; }
 }

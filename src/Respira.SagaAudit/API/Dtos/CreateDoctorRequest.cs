@@ -21,9 +21,4 @@ public record CreateDoctorRequest
     public required string CitizenIdentificationNumber { get; init; }
     public DateTimeOffset? DateOfBirth { get; init; }
     public required string Address { get; init; }
-
-    public required string MediaFileName { get; init; }
-    public required string MediaContentType { get; init; }
-    public long MediaSize { get; init; }
-    public required byte[] MediaData { get; init; }
 }

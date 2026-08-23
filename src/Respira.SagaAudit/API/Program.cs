@@ -1,10 +1,12 @@
 // Entry point for the Respira SagaAudit API: hosts the Wolverine sagas that
 // orchestrate cross-service workflows (Auth -> Doctor -> Media) over RabbitMQ.
 using Respira.SagaAudit.Application;
+using Respira.SagaAudit.Infrastructure;
 using Respira.ServiceDefaults.Extensions;
 using Wolverine;
 using Wolverine.Postgresql;
 using Wolverine.RabbitMQ;
+using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,7 +20,17 @@ var rabbitConn =
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
+// Typed client used by the Create doctor endpoint to pre-upload the avatar to the
+// Media service (resolved via Aspire service discovery configured in AddServiceDefaults).
+builder.Services.AddHttpClient<Respira.SagaAudit.API.Clients.MediaUploadClient>(client =>
+{
+    client.BaseAddress = new Uri("http://media-service");
+});
+
 builder.AddServiceDefaults();
+
+// Add infrastructure (DB context, ProcessTracker)
+builder.AddInfrastructure();
 
 // Add Wolverine as the saga host
 builder.Host.UseWolverine(opts =>
@@ -40,10 +52,14 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    app.MapScalarApiReference(opts => opts.Theme = ScalarTheme.Kepler);
 }
 
 app.UseHttpsRedirection();
+app.UseClaimsPropagation();
 app.UseAuthorization();
 app.MapControllers();
+
+app.ApplyMigrations(app.Environment.IsDevelopment());
 
 app.Run();

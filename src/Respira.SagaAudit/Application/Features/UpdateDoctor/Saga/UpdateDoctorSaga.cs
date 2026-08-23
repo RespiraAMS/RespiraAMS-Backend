@@ -2,12 +2,13 @@ using Application.Features.Authentication.UpdateUser.Commands;
 using Application.Features.Authentication.UpdateUser.Events;
 using Application.Features.Authentication.UpdateUser.Rollback.Commands;
 using Application.Features.Authentication.UpdateUser.Rollback.Events;
+using Application.Features.Doctors.LinkAvatar.Commands;
+using Application.Features.Doctors.LinkAvatar.Events;
 using Application.Features.Doctors.Rollback.Commands.UpdateDoctor;
 using Application.Features.Doctors.Rollback.Events;
 using Application.Features.Doctors.Update.Commands;
 using Application.Features.Doctors.Update.Events;
-using Application.Features.Media.Update.Commands;
-using Application.Features.Media.Update.Events;
+using Application.Features.Media.Remove.Commands;
 using Microsoft.Extensions.Logging;
 using Respira.SagaAudit.Application.Features.UpdateDoctor.Commands;
 using Wolverine;
@@ -15,9 +16,8 @@ using Wolverine;
 namespace Respira.SagaAudit.Application.Features.UpdateDoctor.Saga;
 
 /// <summary>
-/// Long-running saga that updates a doctor on behalf of a manager/admin doctor.
-/// Flow: Auth -> Doctor -> Media (avatar, optional). Any step failure reverts the
-/// already-applied steps to their previous values.
+/// Orchestrates the update of an existing doctor: Auth → Doctor → LinkAvatar (optional).
+/// Carries both new and old values to enable compensation on failure.
 /// </summary>
 public class UpdateDoctorSaga : Wolverine.Saga
 {
@@ -57,10 +57,7 @@ public class UpdateDoctorSaga : Wolverine.Saga
     public DateTimeOffset? OldDateOfBirth { get; set; }
     public string OldAddress { get; set; } = string.Empty;
 
-    public string? NewMediaFileName { get; set; }
-    public string? NewMediaContentType { get; set; }
-    public long NewMediaSize { get; set; }
-    public byte[]? NewMediaData { get; set; }
+    public Guid? NewMediaId { get; set; }
 
     public static (UpdateDoctorSaga, UpdateAuthDoctorCommand) Start(
         UpdateDoctorByManagerCommand cmd,
@@ -98,10 +95,7 @@ public class UpdateDoctorSaga : Wolverine.Saga
             OldCitizenIdentificationNumber = cmd.OldCitizenIdentificationNumber,
             OldDateOfBirth = cmd.OldDateOfBirth,
             OldAddress = cmd.OldAddress,
-            NewMediaFileName = cmd.NewMediaFileName,
-            NewMediaContentType = cmd.NewMediaContentType,
-            NewMediaSize = cmd.NewMediaSize,
-            NewMediaData = cmd.NewMediaData,
+            NewMediaId = cmd.NewMediaId,
         };
 
         logger.LogInformation("UpdateDoctor saga {SagaId} started by manager {ManagerId}", saga.Id, cmd.ManagerDoctorId);
@@ -151,7 +145,7 @@ public class UpdateDoctorSaga : Wolverine.Saga
     public object[] Handle(UpdateDoctorSuccessEvent success, ILogger<UpdateDoctorSaga> logger)
     {
         logger.LogInformation("UpdateDoctor saga {SagaId}: doctor updated", Id);
-        if (!HasNewMedia || NewMediaData is null)
+        if (!HasNewMedia || NewMediaId is null)
         {
             MarkCompleted();
             return Array.Empty<object>();
@@ -159,14 +153,11 @@ public class UpdateDoctorSaga : Wolverine.Saga
 
         return new object[]
         {
-            new UpdateMediaCommand
+            new UpdateDoctorLinkAvatarCommand
             {
                 SagaId = Id,
-                MediaId = MediaId,
-                FileName = NewMediaFileName!,
-                ContentType = NewMediaContentType!,
-                Size = NewMediaSize,
-                Data = NewMediaData,
+                DoctorId = DoctorId,
+                MediaId = NewMediaId.Value,
             },
         };
     }
@@ -185,18 +176,18 @@ public class UpdateDoctorSaga : Wolverine.Saga
         };
     }
 
-    public void Handle(UpdateMediaSuccess success, ILogger<UpdateDoctorSaga> logger)
+    public void Handle(UpdateDoctorLinkAvatarSuccessEvent success, ILogger<UpdateDoctorSaga> logger)
     {
-        logger.LogInformation("UpdateDoctor saga {SagaId}: completed (media {MediaId})", Id, success.MediaId);
+        logger.LogInformation("UpdateDoctor saga {SagaId}: completed (avatar linked)", Id);
         MarkCompleted();
     }
 
-    public object[] Handle(UpdateMediaFailure failure, ILogger<UpdateDoctorSaga> logger)
+    public object[] Handle(UpdateDoctorLinkAvatarFailureEvent failure, ILogger<UpdateDoctorSaga> logger)
     {
-        logger.LogWarning("UpdateDoctor saga {SagaId}: media step failed - reverting doctor & auth", Id);
-        MarkCompleted();
+        logger.LogWarning("UpdateDoctor saga {SagaId}: linking step failed - cleaning up", Id);
         return new object[]
         {
+            new RemoveMediaCommand { SagaId = Id, MediaId = NewMediaId!.Value },
             new RollbackUpdateDoctorCommand
             {
                 SagaId = Id,
@@ -224,6 +215,18 @@ public class UpdateDoctorSaga : Wolverine.Saga
         };
     }
 
+    public void Handle(RollbackUpdateAuthDoctorSuccess success, ILogger<UpdateDoctorSaga> logger)
+    {
+        logger.LogInformation("UpdateDoctor saga {SagaId}: auth rollback completed", Id);
+        MarkCompleted();
+    }
+
+    public void Handle(RollbackUpdateAuthDoctorFailure failure, ILogger<UpdateDoctorSaga> logger)
+    {
+        logger.LogWarning("UpdateDoctor saga {SagaId}: auth rollback failed", Id);
+        MarkCompleted();
+    }
+
     public static void NotFound(UpdateAuthDoctorSuccess msg, ILogger<UpdateDoctorSaga> logger) =>
         logger.LogWarning("UpdateDoctor saga not found for {SagaId}", msg.SagaId);
     public static void NotFound(UpdateAuthDoctorFailure msg, ILogger<UpdateDoctorSaga> logger) =>
@@ -232,9 +235,9 @@ public class UpdateDoctorSaga : Wolverine.Saga
         logger.LogWarning("UpdateDoctor saga not found for {SagaId}", msg.SagaId);
     public static void NotFound(UpdateDoctorFailureEvent msg, ILogger<UpdateDoctorSaga> logger) =>
         logger.LogWarning("UpdateDoctor saga not found for {SagaId}", msg.SagaId);
-    public static void NotFound(UpdateMediaSuccess msg, ILogger<UpdateDoctorSaga> logger) =>
+    public static void NotFound(UpdateDoctorLinkAvatarSuccessEvent msg, ILogger<UpdateDoctorSaga> logger) =>
         logger.LogWarning("UpdateDoctor saga not found for {SagaId}", msg.SagaId);
-    public static void NotFound(UpdateMediaFailure msg, ILogger<UpdateDoctorSaga> logger) =>
+    public static void NotFound(UpdateDoctorLinkAvatarFailureEvent msg, ILogger<UpdateDoctorSaga> logger) =>
         logger.LogWarning("UpdateDoctor saga not found for {SagaId}", msg.SagaId);
     public static void NotFound(RollbackUpdateDoctorSuccess msg, ILogger<UpdateDoctorSaga> logger) =>
         logger.LogWarning("UpdateDoctor saga not found for {SagaId}", msg.SagaId);

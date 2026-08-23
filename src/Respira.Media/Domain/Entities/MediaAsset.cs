@@ -2,6 +2,9 @@ using Respira.ServiceDefaults.Models;
 
 namespace Domain.Entities
 {
+    /// <summary>
+    /// Represents an uploaded media file (image, document, etc.) stored in object storage.
+    /// </summary>
     public class MediaAsset : Base
     {
         public required string FileName { get; set; }

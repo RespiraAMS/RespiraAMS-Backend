@@ -45,10 +45,7 @@ public record UpdateDoctorByManagerCommand : ICommand
     public DateTimeOffset? OldDateOfBirth { get; init; }
     public required string OldAddress { get; init; }
 
-    // --- Optional new avatar ---
+    // --- Optional new avatar (pre-uploaded via Media upload endpoint) ---
     public bool HasNewMedia { get; init; }
-    public string? NewMediaFileName { get; init; }
-    public string? NewMediaContentType { get; init; }
-    public long NewMediaSize { get; init; }
-    public byte[]? NewMediaData { get; init; }
+    public Guid? NewMediaId { get; init; }
 }

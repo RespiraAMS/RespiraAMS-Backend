@@ -16,6 +16,7 @@
         <ProjectReference Include="..\..\Respira.Auth\Application\Application.csproj" />
         <ProjectReference Include="..\..\Respira.Doctor\Application\Application.csproj" />
         <ProjectReference Include="..\..\Respira.Media\Application\Application.csproj" />
+        <ProjectReference Include="..\Domain\Domain.csproj" />
     </ItemGroup>
 
 </Project>
