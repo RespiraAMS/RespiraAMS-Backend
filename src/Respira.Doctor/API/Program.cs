@@ -2,12 +2,14 @@
 // Wolverine messaging, EF Core persistence and the doctor infrastructure (caching + DB).
 using Application;
 using Infrastructure;
+using Respira.Doctor.API.Clients;
 using Respira.ServiceDefaults.Extensions;
 using Wolverine;
 using Wolverine.EntityFrameworkCore;
 using Wolverine.FluentValidation;
 using Wolverine.Postgresql;
 using Wolverine.RabbitMQ;
+using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,6 +29,16 @@ builder.Services.AddFluentValidators();
 
 // Add infrastructure (DB context, FusionCache)
 builder.AddInfrastructure();
+
+// Add typed HTTP clients for cross-service communication
+builder.Services.AddHttpClient<AuthClient>(client =>
+{
+    client.BaseAddress = new Uri("http://auth-service");
+});
+builder.Services.AddHttpClient<MediaClient>(client =>
+{
+    client.BaseAddress = new Uri("http://media-service");
+});
 
 // Add Wolverine
 var rabbitConn = builder.Configuration.GetConnectionString("rabbitmq")
@@ -54,9 +66,11 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    app.MapScalarApiReference(opts => opts.Theme = ScalarTheme.Kepler);
 }
 
 app.UseHttpsRedirection();
+app.UseClaimsPropagation();
 app.UseAuthorization();
 app.MapControllers();
 

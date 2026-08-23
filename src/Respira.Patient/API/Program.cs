@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 using Application;
 using Asp.Versioning;
 using Infrastructure;
@@ -61,6 +62,8 @@ builder.Host.UseWolverine(opts =>
     opts.Durability.Mode = DurabilityMode.Solo;
 });
 
+builder.AddServiceDefaults();
+
 var app = builder.Build();
 
 app.UseCustomErrorHandling();
@@ -74,11 +77,9 @@ if (app.Environment.IsDevelopment())
     app.MapScalarApiReference(opts => opts.Theme = ScalarTheme.Kepler);
 }
 
-if (!app.Environment.IsDevelopment())
-{
-    app.UseHttpsRedirection();
-}
-
-app.ApplyMigrations(app.Environment.IsDevelopment());
+app.UseHttpsRedirection();
+app.UseClaimsPropagation();
+app.UseAuthorization();
+app.MapControllers();
 
 app.Run();

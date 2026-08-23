@@ -95,7 +95,8 @@ var sagaAuditService = builder
     .WithReference(cache)
     .WaitFor(cache)
     .WithReference(rabbitmq)
-    .WaitFor(rabbitmq);
+    .WaitFor(rabbitmq)
+    .WithReference(mediaService);
 var gateway = builder
     .AddProject<Projects.Respira_Gateway>("gateway")
     .WithReference(analyticsService)
@@ -105,6 +106,9 @@ var gateway = builder
     .WithReference(mediaService)
     .WithReference(patientService)
     .WithReference(sagaAuditService)
+    .WithEnvironment("Jwt__Secret", jwtSecret)
+    .WithEnvironment("Jwt__Issuer", jwtIssuer)
+    .WithEnvironment("Jwt__Audience", jwtAudience)
     .WithExternalHttpEndpoints();
 
 // Make services depend on gateway

@@ -3,6 +3,9 @@ using Respira.ServiceDefaults.Constracts.CQRS;
 
 namespace Application.Features.Doctors.Create.Commands
 {
+    /// <summary>
+    /// Creates a new doctor profile as part of the CreateDoctor saga.
+    /// </summary>
     public record CreateDoctorCommand : ICommand
     {
         public required Guid SagaId { get; set; }

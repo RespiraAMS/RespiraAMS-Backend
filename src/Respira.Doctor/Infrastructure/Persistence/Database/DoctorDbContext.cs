@@ -23,7 +23,29 @@ namespace Infrastructure.Persistence.Database
         /// Saves changes without a cancellation token (required by <see cref="IDoctorDbContext"/>)
         /// </summary>
         /// <returns>Number of affected rows</returns>
-        public Task<int> SaveChangesAsync() => base.SaveChangesAsync();
+        public Task<int> SaveChangesAsync() => SaveChangesAsync(default);
+
+        public override async Task<int> SaveChangesAsync(
+            CancellationToken cancellationToken = default
+        )
+        {
+            NormalizeDateTimeOffsets();
+            return await base.SaveChangesAsync(cancellationToken);
+        }
+
+        private void NormalizeDateTimeOffsets()
+        {
+            foreach (var entry in ChangeTracker.Entries())
+            {
+                foreach (var property in entry.Properties)
+                {
+                    if (property.CurrentValue is DateTimeOffset dto && dto.Offset != TimeSpan.Zero)
+                    {
+                        property.CurrentValue = dto.ToUniversalTime();
+                    }
+                }
+            }
+        }
 
         /// <summary>
         /// Configures entity mappings: table names, indexes, soft-delete filters, enum conversions

@@ -2,6 +2,9 @@ using System.Text.Json.Serialization;
 
 namespace Domain.Enums
 {
+    /// <summary>
+    /// Hospital positions in hierarchical order (lowest to highest).
+    /// </summary>
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum PositionType
     {

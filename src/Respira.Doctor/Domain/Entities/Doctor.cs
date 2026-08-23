@@ -3,6 +3,9 @@ using Respira.ServiceDefaults.Models;
 
 namespace Domain.Entities
 {
+    /// <summary>
+    /// Doctor profile containing professional information and hierarchical relationships.
+    /// </summary>
     public class Doctor : Base
     {
         public required string FirstName { get; set; }
