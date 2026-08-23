@@ -49,7 +49,7 @@ namespace Application.Features.Doctors.Update.Commands
                 doctor.Position = command.Position;
                 doctor.Gender = command.Gender;
                 doctor.CitizenIdentificationNumber = command.CitizenIdentificationNumber;
-                doctor.DateOfBirth = command.DateOfBirth;
+                doctor.DateOfBirth = command.DateOfBirth?.ToUniversalTime();
                 doctor.Address = command.Address;
                 doctor.MediaId = command.MediaId;
 

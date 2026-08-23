@@ -2,6 +2,9 @@ using Respira.ServiceDefaults.Constracts.CQRS;
 
 namespace Application.Features.Doctors.Rollback.Commands.CreateDoctor
 {
+    /// <summary>
+    /// Compensates a failed CreateDoctor step by hard-deleting the created doctor profile.
+    /// </summary>
     public record RollbackCreateDoctorCommand : ICommand
     {
         public required Guid SagaId { get; init; }

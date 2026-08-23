@@ -71,8 +71,8 @@ builder.Host.UseWolverine(opts =>
 var app = builder.Build();
 
 app.UseCustomErrorHandling();
+app.UseClaimsPropagation();
 app.MapControllers();
-// app.UseClaimsPropagation();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

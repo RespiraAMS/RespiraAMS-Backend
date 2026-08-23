@@ -52,7 +52,7 @@ namespace Application.Features.Doctors.Create.Commands
                     Position = command.Position,
                     Gender = command.Gender,
                     CitizenIdentificationNumber = command.CitizenIdentificationNumber,
-                    DateOfBirth = command.DateOfBirth,
+                    DateOfBirth = command.DateOfBirth?.ToUniversalTime(),
                     Address = command.Address,
                     MediaId = command.MediaId,
                 };

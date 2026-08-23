@@ -62,9 +62,11 @@
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Relational" Version="$(EFCoreVersion)" />
     <!-- Marten -->
     <PackageVersion Include="Marten" Version="9.15.3" />
-    <!-- AWS S3 -->
+    <!-- AWS S3 (transitive dependency of Cloudflare.NET.R2) -->
     <PackageVersion Include="AWSSDK.Core" Version="4.0.100.5" />
     <PackageVersion Include="AWSSDK.S3" Version="4.0.101.1" />
+    <!-- Cloudflare R2 object storage -->
+    <PackageVersion Include="Cloudflare.NET.R2" Version="2.0.1" />
   </ItemGroup>
   <!-- Caching -->
   <ItemGroup>

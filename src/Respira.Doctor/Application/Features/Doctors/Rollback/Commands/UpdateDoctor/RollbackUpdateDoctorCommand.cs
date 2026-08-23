@@ -3,6 +3,9 @@ using Respira.ServiceDefaults.Constracts.CQRS;
 
 namespace Application.Features.Doctors.Rollback.Commands.UpdateDoctor
 {
+    /// <summary>
+    /// Compensates a failed UpdateDoctor step by reverting the profile to its previous values.
+    /// </summary>
     public record RollbackUpdateDoctorCommand : ICommand
     {
         public Guid SagaId { get; init; }
