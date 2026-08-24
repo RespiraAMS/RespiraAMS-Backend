@@ -122,8 +122,7 @@ public class DoctorController(
         var command = new UpdateDoctorByManagerCommand
         {
             ManagerDoctorId = request.ManagerDoctorId,
-            AuthUserId = request.AuthUserId,
-            DoctorId = request.DoctorId,
+            EntityId = request.EntityId,
             MediaId = request.MediaId,
             Email = request.Email,
             Phone = request.Phone,
@@ -154,7 +153,7 @@ public class DoctorController(
         };
 
         await bus.SendAsync(command);
-        return Accepted(new { sagaId = command.ManagerDoctorId });
+        return Accepted(new { sagaId = command.EntityId });
     }
 
     /// <summary>Starts the DeleteDoctor saga (Media -> Doctor -> Auth). Manager/Admin only.</summary>
@@ -170,12 +169,11 @@ public class DoctorController(
         var command = new DeleteDoctorByManagerCommand
         {
             ManagerDoctorId = request.ManagerDoctorId,
-            AuthUserId = request.AuthUserId,
-            DoctorId = request.DoctorId,
+            EntityId = request.EntityId,
             MediaId = request.MediaId,
         };
 
         await bus.SendAsync(command);
-        return Accepted(new { sagaId = command.ManagerDoctorId });
+        return Accepted(new { sagaId = command.EntityId });
     }
 }

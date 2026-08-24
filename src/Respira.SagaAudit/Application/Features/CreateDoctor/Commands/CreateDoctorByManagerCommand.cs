@@ -12,6 +12,9 @@ public record CreateDoctorByManagerCommand : ICommand
 {
     public required Guid SagaId { get; init; }
 
+    /// <summary>The shared entity ID — same for both Auth and Doctor tables.</summary>
+    public Guid EntityId => SagaId;
+
     /// <summary>Id of the manager/admin doctor that initiated the provisioning</summary>
     public required Guid ManagerDoctorId { get; init; }
 

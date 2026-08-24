@@ -10,10 +10,10 @@ public record UpdateDoctorRequest
 {
     /// <summary>Id of the manager/admin doctor initiating the update.</summary>
     public required Guid ManagerDoctorId { get; init; }
-    /// <summary>Auth account id of the doctor being updated.</summary>
-    public required Guid AuthUserId { get; init; }
-    /// <summary>Doctor profile id being updated.</summary>
-    public required Guid DoctorId { get; init; }
+
+    /// <summary>The shared entity ID — same for both Auth and Doctor tables (AuthUserId == DoctorId).</summary>
+    public required Guid EntityId { get; init; }
+
     /// <summary>Current avatar media id of the doctor.</summary>
     public required Guid MediaId { get; init; }
 
@@ -80,10 +80,10 @@ public record DeleteDoctorRequest
 {
     /// <summary>Id of the manager/admin doctor initiating the deletion.</summary>
     public required Guid ManagerDoctorId { get; init; }
-    /// <summary>Auth account id of the doctor to delete.</summary>
-    public required Guid AuthUserId { get; init; }
-    /// <summary>Doctor profile id to delete.</summary>
-    public required Guid DoctorId { get; init; }
+
+    /// <summary>The shared entity ID — same for both Auth and Doctor tables.</summary>
+    public required Guid EntityId { get; init; }
+
     /// <summary>Avatar media id to remove.</summary>
     public required Guid MediaId { get; init; }
 }

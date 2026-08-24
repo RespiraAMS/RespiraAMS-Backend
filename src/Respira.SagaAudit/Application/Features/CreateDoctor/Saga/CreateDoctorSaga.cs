@@ -62,6 +62,9 @@ namespace Respira.SagaAudit.Application.Features.CreateDoctor.Saga
                 CitizenIdentificationNumber = cmd.CitizenIdentificationNumber,
                 DateOfBirth = cmd.DateOfBirth,
                 Address = cmd.Address,
+                // AuthUserId and DoctorId are the SAME person — use shared Id
+                AuthUserId = cmd.EntityId,
+                DoctorId = cmd.EntityId,
             };
 
             logger.LogInformation(
@@ -74,7 +77,7 @@ namespace Respira.SagaAudit.Application.Features.CreateDoctor.Saga
             var authCommand = new CreateAuthDoctorCommand
             {
                 SagaId = saga.Id,
-                AuthUserId = Guid.NewGuid(),
+                AuthUserId = cmd.EntityId,
                 Email = cmd.Email,
                 Password = cmd.Password,
                 Phone = cmd.Phone,
@@ -98,14 +101,14 @@ namespace Respira.SagaAudit.Application.Features.CreateDoctor.Saga
             ProcessTrackerService tracker
         )
         {
-            AuthUserId = success.AuthUserId;
+            // AuthUserId already set in Start() — remains constant throughout saga
             logger.LogInformation("CreateDoctor saga {SagaId}: auth account created", Id);
             await tracker.UpdateStepAsync(Id, "Auth:Created");
 
             return new CreateDoctorCommand
             {
                 SagaId = Id,
-                DoctorId = Guid.NewGuid(),
+                DoctorId = DoctorId!.Value,
                 FirstName = FirstName,
                 LastName = LastName,
                 Degrees = Degrees,
@@ -155,7 +158,7 @@ namespace Respira.SagaAudit.Application.Features.CreateDoctor.Saga
             ProcessTrackerService tracker
         )
         {
-            DoctorId = success.DoctorId;
+            // DoctorId already set in Start() — remains constant
             logger.LogInformation("CreateDoctor saga {SagaId}: doctor profile created", Id);
             await tracker.UpdateStepAsync(Id, "Doctor:Created");
 

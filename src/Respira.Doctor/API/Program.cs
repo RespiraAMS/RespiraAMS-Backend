@@ -4,7 +4,6 @@
 /// </summary>
 using Application;
 using Infrastructure;
-using Respira.Doctor.API.Clients;
 using Respira.ServiceDefaults.Extensions;
 using Wolverine;
 using Wolverine.EntityFrameworkCore;
@@ -32,12 +31,20 @@ builder.Services.AddFluentValidators();
 // Add infrastructure (DB context, FusionCache)
 builder.AddInfrastructure();
 
-// Add typed HTTP clients for cross-service communication
-builder.Services.AddHttpClient<AuthClient>(client =>
+// Typed HTTP client for calling Auth service (resolved via Aspire Service Discovery).
+builder.Services.AddHttpClient<Application.Clients.IAuthClient, Application.Clients.AuthClient>(client =>
 {
     client.BaseAddress = new Uri("http://auth-service");
 });
-builder.Services.AddHttpClient<MediaClient>(client =>
+
+// Typed HTTP client for calling Media service (resolved via Aspire Service Discovery).
+builder.Services.AddHttpClient<Application.Clients.IMediaClient, Application.Clients.MediaClient>(client =>
+{
+    client.BaseAddress = new Uri("http://media-service");
+});
+
+// Typed HTTP client for calling Media service (resolved via Aspire Service Discovery).
+builder.Services.AddHttpClient<Application.Clients.IMediaClient, Application.Clients.MediaClient>(client =>
 {
     client.BaseAddress = new Uri("http://media-service");
 });

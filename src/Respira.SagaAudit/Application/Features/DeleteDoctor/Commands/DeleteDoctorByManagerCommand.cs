@@ -10,10 +10,19 @@ public record DeleteDoctorByManagerCommand : ICommand
 {
     /// <summary>Id of the manager/admin doctor initiating the deletion.</summary>
     public required Guid ManagerDoctorId { get; init; }
-    /// <summary>Auth account id of the doctor to delete.</summary>
-    public required Guid AuthUserId { get; init; }
-    /// <summary>Doctor profile id to delete.</summary>
-    public required Guid DoctorId { get; init; }
+
+    /// <summary>The shared entity ID — same for both Auth and Doctor tables (AuthUserId == DoctorId).</summary>
+    public required Guid EntityId { get; init; }
+
+    // Deprecated: derived from EntityId
+    /// <summary>Deprecated — always equals EntityId.</summary>
+    [Obsolete("Use EntityId instead")]
+    public Guid AuthUserId => EntityId;
+
+    /// <summary>Deprecated — always equals EntityId.</summary>
+    [Obsolete("Use EntityId instead")]
+    public Guid DoctorId => EntityId;
+
     /// <summary>Avatar media id to remove.</summary>
     public required Guid MediaId { get; init; }
 }
