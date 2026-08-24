@@ -1,6 +1,7 @@
 using Application.Features.Doctors.Get.Queries;
 using Application.Features.Doctors.Get.Results;
 using Microsoft.AspNetCore.Mvc;
+using Respira.ServiceDefaults.Dtos;
 using Wolverine;
 
 namespace Respira.Doctor.API.Controllers;
@@ -13,9 +14,11 @@ namespace Respira.Doctor.API.Controllers;
 public class DoctorInfoController(IMessageBus messageBus) : ControllerBase
 {
     [HttpGet("{id}")]
-    public async Task<ActionResult<DoctorQueryResult>> GetDoctorAsync(Guid id)
+    public async Task<ActionResult<ApiResponse<DoctorQueryResult>>> GetDoctorAsync(Guid id)
     {
-        var result = await messageBus.InvokeAsync<DoctorQueryResult>(new DoctorQuery { Id = id });
-        return Ok(result);
+        var result = await messageBus.InvokeAsync<ApiResponse<DoctorQueryResult>>(
+            new DoctorQuery { Id = id }
+        );
+        return StatusCode(result.StatusCode, result);
     }
 }

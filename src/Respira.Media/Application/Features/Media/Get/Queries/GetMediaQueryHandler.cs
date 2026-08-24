@@ -1,19 +1,18 @@
 using Application.Abstracts.Data;
-using Domain.Entities;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Respira.ServiceDefaults.Constracts.CQRS;
-using Respira.ServiceDefaults.Exceptions;
-using Respira.ServiceDefaults.Messages;
+using Respira.ServiceDefaults.Dtos;
 
 namespace Application.Features.Media.Get.Queries
 {
     public class GetMediaQueryHandler(
         IMediaDbContext dbContext,
         ILogger<GetMediaQueryHandler> logger
-    ) : IQueryHandler<GetMediaQuery, GetMediaResult>
+    ) : IQueryHandler<GetMediaQuery, ApiResponse<GetMediaResult>>
     {
-        public async Task<GetMediaResult> HandleAsync(
+        public async Task<ApiResponse<GetMediaResult>> HandleAsync(
             GetMediaQuery query,
             CancellationToken cancellationToken = default
         )
@@ -24,15 +23,24 @@ namespace Application.Features.Media.Get.Queries
                     .MediaAssets.AsNoTracking()
                     .FirstOrDefaultAsync(x => x.Id == query.Id, cancellationToken);
 
-                return new GetMediaResult
+                if (media is null)
                 {
-                    Url = media?.Url ?? string.Empty,
-                };
+                    return ApiResponse<GetMediaResult>.Fail(
+                        "Media not found",
+                        StatusCodes.Status404NotFound
+                    );
+                }
+
+                return ApiResponse<GetMediaResult>.Ok(
+                    new GetMediaResult { Url = media.Url ?? string.Empty }
+                );
             }
             catch (Exception ex)
             {
                 logger.LogError(ex, "Error retrieving media asset");
-                throw new ServerException(ex);
+                return ApiResponse<GetMediaResult>.Fail(
+                    "Error retrieving media asset"
+                );
             }
         }
     }

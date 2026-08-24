@@ -4,11 +4,10 @@ using Application.Features.Authentication.Logout;
 using Application.Features.Authentication.Refresh.Queries;
 using Application.Features.Authentication.SendEmailVerification;
 using Application.Features.Authentication.VerifyEmail;
+using Application.Features.Authentication.GetUser.Queries;
 using Asp.Versioning;
 using Microsoft.AspNetCore.Mvc;
 using Respira.ServiceDefaults.Dtos;
-using Respira.ServiceDefaults.Exceptions;
-using Respira.ServiceDefaults.Messages;
 using Wolverine;
 
 namespace Respira.Auth.API.Controllers;
@@ -19,25 +18,19 @@ namespace Respira.Auth.API.Controllers;
 public class AuthController(IMessageBus bus) : ControllerBase
 {
     /// <summary>
-    /// Retrieves authenticated doctor information by ID. Called by other services via HTTP REST.
+    /// Retrieves authenticated doctor information by ID. Called by other services via Wolverine messaging.
     /// </summary>
     /// <param name="id">The doctor identifier.</param>
     [HttpGet]
     [Route("doctors/{id}")]
-    [ProducesResponseType<GetAuthDoctorResult>(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> GetDoctor(Guid id)
+    [ProducesResponseType<ApiResponse<GetAuthDoctorResult>>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status404NotFound)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult<ApiResponse<GetAuthDoctorResult>>> GetDoctor(Guid id)
     {
         var query = new GetUserQuery { Id = id };
-        try
-        {
-            var result = await bus.InvokeAsync<GetAuthDoctorResult>(query);
-            return Ok(result);
-        }
-        catch (NotFoundException)
-        {
-            return NotFound();
-        }
+        var result = await bus.InvokeAsync<ApiResponse<GetAuthDoctorResult>>(query);
+        return StatusCode(result.StatusCode, result);
     }
 
     /// <summary>

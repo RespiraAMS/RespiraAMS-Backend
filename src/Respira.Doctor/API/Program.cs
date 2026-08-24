@@ -31,24 +31,6 @@ builder.Services.AddFluentValidators();
 // Add infrastructure (DB context, FusionCache)
 builder.AddInfrastructure();
 
-// Typed HTTP client for calling Auth service (resolved via Aspire Service Discovery).
-builder.Services.AddHttpClient<Application.Clients.IAuthClient, Application.Clients.AuthClient>(client =>
-{
-    client.BaseAddress = new Uri("http://auth-service");
-});
-
-// Typed HTTP client for calling Media service (resolved via Aspire Service Discovery).
-builder.Services.AddHttpClient<Application.Clients.IMediaClient, Application.Clients.MediaClient>(client =>
-{
-    client.BaseAddress = new Uri("http://media-service");
-});
-
-// Typed HTTP client for calling Media service (resolved via Aspire Service Discovery).
-builder.Services.AddHttpClient<Application.Clients.IMediaClient, Application.Clients.MediaClient>(client =>
-{
-    client.BaseAddress = new Uri("http://media-service");
-});
-
 // Add Wolverine
 var rabbitConn = builder.Configuration.GetConnectionString("rabbitmq")
     ?? throw new InvalidOperationException("No rabbitmq connection string");

@@ -1,24 +1,35 @@
 using Application.Abstracts.Data;
-using Application.Clients;
+using Application.Contracts.Messages;
 using Application.Features.Doctors.Get.Results;
 using Microsoft.EntityFrameworkCore;
 using Respira.ServiceDefaults.Constracts.CQRS;
+using Respira.ServiceDefaults.Dtos;
 using Respira.ServiceDefaults.Exceptions;
+using Wolverine;
 
 namespace Application.Features.Doctors.Get.Queries
 {
     public class DoctorQueryHandler(
         IDoctorDbContext dbContext,
-        IAuthClient authClient,
-        IMediaClient mediaClient
-    ) : IQueryHandler<DoctorQuery, DoctorQueryResult>
+        IMessageBus bus
+    ) : IQueryHandler<DoctorQuery, ApiResponse<DoctorQueryResult>>
     {
-        public async Task<DoctorQueryResult> HandleAsync(
+        public async Task<ApiResponse<DoctorQueryResult>> HandleAsync(
             DoctorQuery query,
             CancellationToken cancellationToken = default
         )
         {
-            var authDoctor = await authClient.GetDoctorAsync(query.Id, cancellationToken);
+            var authDoctor = await bus.InvokeAsync<ApiResponse<GetAuthDoctorResult>>(
+                new GetUserQuery { Id = query.Id },
+                cancellationToken
+            );
+            if (!authDoctor.Success)
+            {
+                return ApiResponse<DoctorQueryResult>.Fail(
+                    authDoctor.Message ?? "Auth service error",
+                    authDoctor.StatusCode
+                );
+            }
 
             var doctor =
                 await dbContext
@@ -28,11 +39,11 @@ namespace Application.Features.Doctors.Get.Queries
 
             var result = new DoctorQueryResult
             {
-                Email = authDoctor.Email,
-                Phone = authDoctor.Phone,
-                Role = authDoctor.Role,
-                IsEmailConfirmed = authDoctor.IsEmailConfirmed,
-                Status = authDoctor.Status,
+                Email = authDoctor.Data!.Email,
+                Phone = authDoctor.Data.Phone,
+                Role = authDoctor.Data.Role,
+                IsEmailConfirmed = authDoctor.Data.IsEmailConfirmed,
+                Status = authDoctor.Data.Status,
                 FirstName = doctor.FirstName,
                 LastName = doctor.LastName,
                 Degrees = [.. doctor.Degrees.Select(d => d.ToString())],
@@ -49,10 +60,22 @@ namespace Application.Features.Doctors.Get.Queries
 
             if (doctor.MediaId.HasValue)
             {
-                result.Url = await mediaClient.GetUrlAsync(doctor.MediaId.Value, cancellationToken);
+                var media = await bus.InvokeAsync<ApiResponse<GetMediaResult>>(
+                    new GetMediaQuery { Id = doctor.MediaId.Value },
+                    cancellationToken
+                );
+                if (!media.Success)
+                {
+                    return ApiResponse<DoctorQueryResult>.Fail(
+                        media.Message ?? "Media service error",
+                        media.StatusCode
+                    );
+                }
+
+                result.Url = media.Data?.Url;
             }
 
-            return result;
+            return ApiResponse<DoctorQueryResult>.Ok(result);
         }
     }
 }
