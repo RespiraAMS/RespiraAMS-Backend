@@ -1,9 +1,17 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
     <PropertyGroup>
         <TargetFramework>net10.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+        <PackageReference Include="ClosedXML" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="../Application/Application.csproj" />
+        <ProjectReference Include="../../Respira.ServiceDefaults/Respira.ServiceDefaults.csproj" />
+    </ItemGroup>
 </Project>
