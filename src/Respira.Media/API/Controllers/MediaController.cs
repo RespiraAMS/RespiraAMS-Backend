@@ -73,4 +73,22 @@ public class MediaController(
 
         return Ok(new { mediaId = asset.Id, url = asset.Url });
     }
+
+    /// <summary>
+    /// Retrieves a media asset by ID. Called by other services via HTTP REST.
+    /// </summary>
+    /// <param name="id">The media identifier.</param>
+    [HttpGet("{id}")]
+    [ProducesResponseType<string>(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public IActionResult GetMedia(Guid id)
+    {
+        var media = dbContext.MediaAssets.FirstOrDefault(x => x.Id == id);
+        if (media is null)
+        {
+            return NotFound();
+        }
+
+        return Ok(media.Url);
+    }
 }

@@ -63,13 +63,6 @@ var clinicalService = builder
     .WaitFor(cache)
     .WithReference(rabbitmq)
     .WaitFor(rabbitmq);
-var doctorService = builder
-    .AddProject<Projects.Respira_Doctor_API>("doctor-service")
-    .WithReference(doctorDb)
-    .WithReference(cache)
-    .WaitFor(cache)
-    .WithReference(rabbitmq)
-    .WaitFor(rabbitmq);
 var mediaService = builder
     .AddProject<Projects.Respira_Media_API>("media-service")
     .WithReference(mediaDb)
@@ -82,6 +75,17 @@ var mediaService = builder
     .WithEnvironment("R2__SecretKey", r2SecretKey)
     .WithEnvironment("R2__BucketName", r2Bucket)
     .WithEnvironment("R2__PublicBaseUrl", r2PublicUrl);
+var doctorService = builder
+    .AddProject<Projects.Respira_Doctor_API>("doctor-service")
+    .WithReference(doctorDb)
+    .WithReference(cache)
+    .WaitFor(cache)
+    .WithReference(authService)
+    .WaitFor(authService)
+    .WithReference(mediaService)
+    .WaitFor(mediaService)
+    .WithReference(rabbitmq)
+    .WaitFor(rabbitmq);
 var patientService = builder
     .AddProject<Projects.Respira_Patient_API>("patient-service")
     .WithReference(patientDb)

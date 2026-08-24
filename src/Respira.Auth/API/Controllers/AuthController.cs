@@ -7,6 +7,8 @@ using Application.Features.Authentication.VerifyEmail;
 using Asp.Versioning;
 using Microsoft.AspNetCore.Mvc;
 using Respira.ServiceDefaults.Dtos;
+using Respira.ServiceDefaults.Exceptions;
+using Respira.ServiceDefaults.Messages;
 using Wolverine;
 
 namespace Respira.Auth.API.Controllers;
@@ -16,6 +18,28 @@ namespace Respira.Auth.API.Controllers;
 [ApiVersion("1.0")]
 public class AuthController(IMessageBus bus) : ControllerBase
 {
+    /// <summary>
+    /// Retrieves authenticated doctor information by ID. Called by other services via HTTP REST.
+    /// </summary>
+    /// <param name="id">The doctor identifier.</param>
+    [HttpGet]
+    [Route("doctors/{id}")]
+    [ProducesResponseType<GetAuthDoctorResult>(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetDoctor(Guid id)
+    {
+        var query = new GetUserQuery { Id = id };
+        try
+        {
+            var result = await bus.InvokeAsync<GetAuthDoctorResult>(query);
+            return Ok(result);
+        }
+        catch (NotFoundException)
+        {
+            return NotFound();
+        }
+    }
+
     /// <summary>
     /// Authenticates a doctor with email/password and returns JWT access and refresh tokens.
     /// </summary>

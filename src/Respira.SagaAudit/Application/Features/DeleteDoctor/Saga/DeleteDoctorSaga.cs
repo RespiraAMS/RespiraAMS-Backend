@@ -21,8 +21,8 @@ public class DeleteDoctorSaga : Wolverine.Saga
     public Guid Id { get; set; }
 
     public Guid ManagerDoctorId { get; set; }
-    public Guid AuthUserId { get; set; }
-    public Guid DoctorId { get; set; }
+    // Shared entity ID — same for both Auth and Doctor tables
+    public Guid EntityId { get; set; }
     public Guid MediaId { get; set; }
 
     /// <summary>
@@ -40,8 +40,7 @@ public class DeleteDoctorSaga : Wolverine.Saga
         {
             Id = Guid.NewGuid(),
             ManagerDoctorId = cmd.ManagerDoctorId,
-            AuthUserId = cmd.AuthUserId,
-            DoctorId = cmd.DoctorId,
+            EntityId = cmd.EntityId,
             MediaId = cmd.MediaId,
         };
 
@@ -67,7 +66,7 @@ public class DeleteDoctorSaga : Wolverine.Saga
         return new DeleteDoctorCommand
         {
             SagaId = Id,
-            DoctorId = DoctorId,
+            DoctorId = EntityId,
             DoctorCreatorId = ManagerDoctorId,
         };
     }
@@ -97,7 +96,7 @@ public class DeleteDoctorSaga : Wolverine.Saga
         return new DeleteAuthDoctorCommand
         {
             SagaId = Id,
-            AuthUserId = AuthUserId,
+            AuthUserId = EntityId,
         };
     }
 

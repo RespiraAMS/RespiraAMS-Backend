@@ -10,10 +10,18 @@ public record UpdateDoctorByManagerCommand : ICommand
 {
     /// <summary>Id of the manager/admin doctor initiating the update.</summary>
     public required Guid ManagerDoctorId { get; init; }
-    /// <summary>Auth account id of the doctor being updated.</summary>
-    public required Guid AuthUserId { get; init; }
-    /// <summary>Doctor profile id being updated.</summary>
-    public required Guid DoctorId { get; init; }
+
+    /// <summary>The shared entity ID — same for both Auth and Doctor tables (AuthUserId == DoctorId).</summary>
+    public required Guid EntityId { get; init; }
+
+    // Deprecated: use EntityId instead
+    /// <summary>Deprecated — always equals EntityId.</summary>
+    [Obsolete("Use EntityId instead")]
+    public Guid AuthUserId => EntityId;
+
+    /// <summary>Deprecated — always equals EntityId.</summary>
+    [Obsolete("Use EntityId instead")]
+    public Guid DoctorId => EntityId;
     /// <summary>Current avatar media id of the doctor.</summary>
     public required Guid MediaId { get; init; }
 

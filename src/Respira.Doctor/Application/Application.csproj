@@ -1,6 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<ItemGroup>
 		<ProjectReference Include="..\Domain\Domain.csproj" />
+		<ProjectReference Include="..\..\Respira.ServiceDefaults\Respira.ServiceDefaults.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -16,7 +17,7 @@
 
 	<PropertyGroup>
         <TargetFramework>net10.0</TargetFramework>
-        <AssemblyName>Respira.Doctor.Application</AssemblyName>
+		<AssemblyName>Respira.Doctor.Application</AssemblyName>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 	</PropertyGroup>

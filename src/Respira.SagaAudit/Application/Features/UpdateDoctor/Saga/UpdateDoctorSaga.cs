@@ -24,8 +24,8 @@ public class UpdateDoctorSaga : Wolverine.Saga
     public Guid Id { get; set; }
 
     public Guid ManagerDoctorId { get; set; }
-    public Guid AuthUserId { get; set; }
-    public Guid DoctorId { get; set; }
+    // Shared entity ID — Auth & Doctor use the SAME Id (same person)
+    public Guid EntityId { get; set; }
     public Guid MediaId { get; set; }
     public bool HasNewMedia { get; set; }
 
@@ -74,8 +74,8 @@ public class UpdateDoctorSaga : Wolverine.Saga
         {
             Id = Guid.NewGuid(),
             ManagerDoctorId = cmd.ManagerDoctorId,
-            AuthUserId = cmd.AuthUserId,
-            DoctorId = cmd.DoctorId,
+            // AuthUserId & DoctorId are the SAME person — use shared EntityId
+            EntityId = cmd.EntityId,
             MediaId = cmd.MediaId,
             HasNewMedia = cmd.HasNewMedia,
             Email = cmd.Email,
@@ -110,7 +110,7 @@ public class UpdateDoctorSaga : Wolverine.Saga
         var authCommand = new UpdateAuthDoctorCommand
         {
             SagaId = saga.Id,
-            AuthUserId = saga.AuthUserId,
+            AuthUserId = cmd.EntityId,
             Email = saga.Email,
             Phone = saga.Phone,
             Role = saga.Role,
@@ -135,7 +135,7 @@ public class UpdateDoctorSaga : Wolverine.Saga
         return new UpdateDoctorCommand
         {
             SagaId = Id,
-            DoctorId = DoctorId,
+            DoctorId = EntityId,
             FirstName = FirstName,
             LastName = LastName,
             Degrees = Degrees,
@@ -183,7 +183,7 @@ public class UpdateDoctorSaga : Wolverine.Saga
             new UpdateDoctorLinkAvatarCommand
             {
                 SagaId = Id,
-                DoctorId = DoctorId,
+                DoctorId = EntityId,
                 MediaId = NewMediaId.Value,
             },
         };
@@ -204,7 +204,7 @@ public class UpdateDoctorSaga : Wolverine.Saga
         return new RollbackUpdateAuthDoctorCommand
         {
             SagaId = Id,
-            AuthUserId = AuthUserId,
+            AuthUserId = EntityId,
             OldEmail = OldEmail,
             OldPhone = OldPhone,
             OldRole = OldRole,
@@ -239,7 +239,7 @@ public class UpdateDoctorSaga : Wolverine.Saga
             new RollbackUpdateDoctorCommand
             {
                 SagaId = Id,
-                DoctorId = DoctorId,
+                DoctorId = EntityId,
                 FirstName = OldFirstName,
                 LastName = OldLastName,
                 Degrees = OldDegrees,
@@ -255,7 +255,7 @@ public class UpdateDoctorSaga : Wolverine.Saga
             new RollbackUpdateAuthDoctorCommand
             {
                 SagaId = Id,
-                AuthUserId = AuthUserId,
+                AuthUserId = EntityId,
                 OldEmail = OldEmail,
                 OldPhone = OldPhone,
                 OldRole = OldRole,
