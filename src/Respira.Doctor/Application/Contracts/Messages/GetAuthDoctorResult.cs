@@ -1,5 +1,8 @@
-namespace Respira.ServiceDefaults.Messages;
+namespace Application.Contracts.Messages;
 
+/// <summary>
+/// Reply payload from the Auth service for a <see cref="GetUserQuery"/>.
+/// </summary>
 public record GetAuthDoctorResult
 {
     public required string Email { get; set; }
