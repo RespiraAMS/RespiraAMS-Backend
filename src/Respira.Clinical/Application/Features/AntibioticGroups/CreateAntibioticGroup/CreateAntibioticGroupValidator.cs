@@ -10,9 +10,9 @@ public class CreateAntibioticGroupValidator : AbstractValidator<CreateAntibiotic
         RuleFor(x => x.Description)
             .NotEmpty()
             .WithMessage("Antibiotic group description is required.");
+        // NotEmpty check in Fluent validation check both null and empty case
         RuleFor(x => x.ParentId)
-            .NotEmpty()
-            .WithMessage("Antibiotic group parent ID is required.")
-            .When(x => x.ParentId != null);
+            .Must(x => x == null || x != Guid.Empty)
+            .WithMessage("Antibiotic group must either be null or non empty UUID");
     }
 }
