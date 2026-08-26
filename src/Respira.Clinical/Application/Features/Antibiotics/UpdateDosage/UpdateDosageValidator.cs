@@ -9,6 +9,9 @@ public class UpdateDosageValidator : AbstractValidator<UpdateDosageCommand>
         RuleFor(x => x.Id)
             .NotEmpty()
             .WithMessage("Dosage ID is required");
+        RuleFor(x => x.AntibioticId)
+            .NotEmpty()
+            .WithMessage("Antibiotic ID is required");
         RuleFor(x => x.RouteOfAdministration)
             .IsInEnum()
             .WithMessage("Route of administration is invalid");

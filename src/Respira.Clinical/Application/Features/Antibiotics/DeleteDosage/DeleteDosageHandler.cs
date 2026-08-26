@@ -71,8 +71,8 @@ public class DeleteDosageHandler(
         var dosage = antibiotic.Dosages.First(d => d.Id == command.Id);
         dosage.IsDeleted = true;
         dosage.DeletedAt = DateTimeOffset.UtcNow;
-        antibiotic.DosageIds.RemoveAll(d => d == command.Id);
-        antibiotic.Dosages.RemoveAll(d => d.Id == command.Id);
+        // antibiotic.DosageIds.RemoveAll(d => d == command.Id);
+        // antibiotic.Dosages.RemoveAll(d => d.Id == command.Id);
         if (await context.SaveChangesAsync(cancellationToken) <= 0)
         {
             logger.LogError("Failed to delete antibiotic dosage");
