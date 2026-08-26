@@ -8,6 +8,7 @@
     <ItemGroup>
         <PackageReference Include="ClosedXML" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
+        <PackageReference Include="MailKit" />
     </ItemGroup>
 
     <ItemGroup>
