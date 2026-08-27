@@ -56,4 +56,9 @@ public interface IDbContext
     /// <param name="ids">The list of IDs to be added</param>
     /// <typeparam name="T">Type of the item</typeparam>
     void UpdateRelations<T>(ICollection<T> collection, IEnumerable<Guid>? ids) where T : Base;
+
+    /// <summary>
+    /// Dispose the context
+    /// </summary>
+    ValueTask DisposeAsync();
 }

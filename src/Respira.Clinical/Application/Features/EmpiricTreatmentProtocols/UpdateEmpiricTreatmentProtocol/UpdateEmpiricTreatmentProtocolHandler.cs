@@ -56,7 +56,6 @@ public class UpdateEmpiricTreatmentProtocolHandler(
         context.UpdateRelations(protocol.OtherCriteria, command.OtherCriteriaIds);
 
         // Save changes to database
-        await context.EmpiricTreatmentProtocols.AddAsync(protocol, cancellationToken);
         if (await context.SaveChangesAsync(cancellationToken) <= 0)
         {
             logger.LogError("Failed to save empiric treatment protocol");

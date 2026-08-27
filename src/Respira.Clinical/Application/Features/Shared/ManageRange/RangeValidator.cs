@@ -10,8 +10,7 @@ public class RangeValidator : AbstractValidator<Range>
             .Must(x => x.Min <= x.Max)
             .WithMessage("Min must be less than or equal to max");
         RuleFor(x => x.Unit)
-            .NotEmpty()
-            .WithMessage("Unit must not be empty")
-            .When(x => !string.IsNullOrEmpty(x.Unit));
+            .Must(x => x == null || x.Trim() != "")
+            .WithMessage("Unit must not be an empty string");
     }
 }

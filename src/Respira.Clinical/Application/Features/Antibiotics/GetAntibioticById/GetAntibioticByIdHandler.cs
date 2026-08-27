@@ -20,7 +20,7 @@ public class GetAntibioticByIdHandler(IDbContext context) : IQueryHandler<GetAnt
                     Id = x.AntibioticGroup.Id,
                     Name = x.AntibioticGroup.Name,
                     Description = x.AntibioticGroup.Description,
-                    ParentId = x.AntibioticGroupId,
+                    ParentId = x.AntibioticGroup.ParentId,
                     ParentName = x.AntibioticGroup.Parent == null ? null : x.AntibioticGroup.Parent.Name
                 },
                 Classification = x.Classification,

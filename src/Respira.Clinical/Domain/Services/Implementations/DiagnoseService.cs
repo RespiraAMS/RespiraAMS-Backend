@@ -8,7 +8,7 @@ namespace Domain.Services.Implementations;
 public class DiagnoseService(ILogger<DiagnoseService> logger)
 {
     /// <summary>
-    /// Calculate creatine clearance using Cockcroft-Gault equation
+    /// Calculate creatine clearance
     /// </summary>
     /// <param name="age">Patient age (in years)</param>
     /// <param name="weight">Patient weight (in kg)</param>
@@ -117,13 +117,32 @@ public class DiagnoseService(ILogger<DiagnoseService> logger)
         return probabilities;
     }
 
+    /// <summary>
+    /// Data normalization
+    /// </summary>
+    /// <param name="value">value for normalization</param>
+    /// <param name="min">The minimum value that <c>value</c> can reach</param>
+    /// <param name="max">The maximum value that <c>value</c> can reach</param>
+    /// <returns>Normalized value</returns>
     protected static decimal DataNormalization(decimal value, decimal min, decimal max)
     {
         return max == min ? 0 : (value - min) / (max - min);
     }
 
+    /// <summary>
+    /// Get adjusted dosage based on patient's creatine clearance
+    /// </summary>
+    /// <param name="antibiotics">The list of antibiotic for dosage filtered</param>
+    /// <param name="crcl">Patient's creatine clearance</param>
+    /// <returns>The list of antibiotics with their adjusted dosages</returns>
+    /// <exception cref="BadRequestException">
+    /// Throw if <c>antibiotics</c> is empty, or <c>crcl</c> is non-positive
+    /// </exception>
     protected virtual List<Antibiotic> GetAdjustedDosage(List<Antibiotic> antibiotics, decimal crcl)
     {
+        if (crcl <= 0) throw new BadRequestException("Invalid value for CrCl: CrCl should be positive number");
+        if (antibiotics.Count == 0) throw new BadRequestException("Invalid value for antibiotics: empty list given");
+
         foreach (var antibiotic in antibiotics)
         {
             // Get standard dose and adjusted dose
@@ -142,10 +161,18 @@ public class DiagnoseService(ILogger<DiagnoseService> logger)
         return antibiotics;
     }
 
+    /// <summary>
+    /// Get recommended antibiotics for treatment
+    /// </summary>
+    /// <param name="antibiotics">The list of antibiotics</param>
+    /// <returns>The list of recommended antibiotics</returns>
+    /// <exception cref="BadRequestException">Throw if <c>antibiotics</c> is empty</exception>
     protected virtual List<Antibiotic> GetRecommendedMedicines(List<Antibiotic> antibiotics)
     {
+        if (antibiotics.Count == 0) throw new BadRequestException("Invalid value for antibiotics: empty list given");
+
         /*
-         * Rule of picking antibiotic for treatment: for each group, can only pick
+         * Rule of picking antibiotic for treatment: for each antibiotic group, we can only pick
          * one medicine
          */
 

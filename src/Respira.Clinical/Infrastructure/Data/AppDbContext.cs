@@ -280,4 +280,9 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             .Property(x => x.MicLevel)
             .HasConversion<string>();
     }
+
+    public override async ValueTask DisposeAsync()
+    {
+        await base.DisposeAsync();
+    }
 }

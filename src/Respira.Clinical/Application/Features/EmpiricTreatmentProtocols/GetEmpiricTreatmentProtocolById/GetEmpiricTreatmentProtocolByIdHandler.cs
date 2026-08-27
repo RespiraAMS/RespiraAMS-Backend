@@ -31,7 +31,9 @@ public class GetEmpiricTreatmentProtocolByIdHandler(IDbContext context, IResultM
                         Id = x.SpecialInfection.Id,
                         Name = x.SpecialInfection.Name,
                     },
-                OtherCriteria = x.OtherCriteria.Select(mapper.ToResult).ToList(),
+                // NOTE: don't translate this using Select(mapper.ToResult) because it will cause
+                // an EF SQL translate error
+                OtherCriteria = x.OtherCriteria.Select(y => mapper.ToResult(y)).ToList(),
                 Medicines = x.Medicines.Select(m => new AntibioticResult
                 {
                     Id = m.Id,

@@ -9,15 +9,15 @@ namespace Application.Test.Features.Pathogens.CreatePathogen;
 
 public class CreatePathogenHandlerTest : IClassFixture<PostgresFixture>, IAsyncLifetime
 {
+    private readonly DbContextOptions<AppDbContext> _options;
     private readonly CreatePathogenHandler _handler;
     private readonly IDbContext _context;
 
     public CreatePathogenHandlerTest(PostgresFixture fixture)
     {
         // Create handler dependencies
-        var options = new DbContextOptionsBuilder<AppDbContext>()
-            .UseNpgsql(fixture.ConnectionString).Options;
-        _context = new AppDbContext(options);
+        _options = new DbContextOptionsBuilder<AppDbContext>().UseNpgsql(fixture.ConnectionString).Options;
+        _context = new AppDbContext(_options);
         var mapper = new CreatePathogenMapper();
         var logger = new Mock<ILogger<CreatePathogenHandler>>().Object;
 
@@ -25,17 +25,19 @@ public class CreatePathogenHandlerTest : IClassFixture<PostgresFixture>, IAsyncL
         _handler = new(_context, mapper, logger);
     }
 
-    public ValueTask DisposeAsync()
+    public async ValueTask DisposeAsync()
     {
-        return ValueTask.CompletedTask;
+        await _context.DisposeAsync();
     }
 
     public async ValueTask InitializeAsync()
     {
-        // Clear leftover data so the Count == 1 assertion is deterministic across runs
+        // Clear leftover data so the SingleAsync assertion is deterministic across runs
         await _context.Pathogens.ExecuteDeleteAsync(TestContext.Current.CancellationToken);
 
     }
+
+    # region Happy path
 
     [Theory]
     [InlineData("Pseudomonas arguresia", "blablabla")]
@@ -52,7 +54,15 @@ public class CreatePathogenHandlerTest : IClassFixture<PostgresFixture>, IAsyncL
         Assert.NotNull(result);
         Assert.True(result.Id != Guid.Empty);
 
-        // Check if it added to database success
-        Assert.Equal(1, await _context.Pathogens.CountAsync(p => p.Name.Equals(name) && p.Description.Equals(description), TestContext.Current.CancellationToken));
+        // Verify through a fresh context so the change tracker of the saving context
+        // cannot mask whether the row was truly committed
+        await using var freshContext = new AppDbContext(_options);
+        var saved = await freshContext.Pathogens.SingleAsync(
+            p => p.Name == name && p.Description == description,
+            TestContext.Current.CancellationToken);
+
+        Assert.Equal(result.Id, saved.Id);
     }
+
+    # endregion
 }
