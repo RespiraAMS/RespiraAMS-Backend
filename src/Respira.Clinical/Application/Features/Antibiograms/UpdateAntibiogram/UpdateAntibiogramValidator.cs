@@ -25,7 +25,7 @@ public class UpdateAntibiogramValidator : AbstractValidator<UpdateAntibiogramCom
         RuleFor(x => x.SecondPriorityMedicineIds)
             .NotEmpty()
             .WithMessage("Second priority medicine IDs is required");
-        RuleFor(x => x.SecondPriorityMedicineIds)
+        RuleForEach(x => x.SecondPriorityMedicineIds)
             .NotEmpty()
             .WithMessage("Second priority medicine ID is required");
     }
