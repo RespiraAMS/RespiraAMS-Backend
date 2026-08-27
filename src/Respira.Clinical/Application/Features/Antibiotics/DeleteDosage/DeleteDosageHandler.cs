@@ -71,8 +71,12 @@ public class DeleteDosageHandler(
         var dosage = antibiotic.Dosages.First(d => d.Id == command.Id);
         dosage.IsDeleted = true;
         dosage.DeletedAt = DateTimeOffset.UtcNow;
-        antibiotic.DosageIds.RemoveAll(d => d == command.Id);
-        antibiotic.Dosages.RemoveAll(d => d.Id == command.Id);
+
+        // No need to clean up the DosageIds and Dosages: since this is reference
+        // by FK, if using RemoveAll, EF Core will try to hard delete the record,
+        // which is incorrect with our soft delete setup. The global query filter
+        // will just hide the soft deleted dosage anyway
+
         if (await context.SaveChangesAsync(cancellationToken) <= 0)
         {
             logger.LogError("Failed to delete antibiotic dosage");

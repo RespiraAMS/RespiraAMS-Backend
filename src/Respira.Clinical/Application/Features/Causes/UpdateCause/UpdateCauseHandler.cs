@@ -24,6 +24,7 @@ public class UpdateCauseHandler(
         // Check if the new severity/treatment site will cause a duplicate problem
         var hasDuplicate = await context.Causes
             .Where(x =>
+                x.Id != command.Id &&
                 x.DiseaseId == cause.DiseaseId &&
                 x.PathogenId == cause.PathogenId &&
                 x.Severity == command.Severity &&

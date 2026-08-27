@@ -23,7 +23,10 @@ public class CreateAntibiogramHandler(
         }
 
         // Check if all antibiotics exists
-        var ids = command.MicIds.Concat(command.FirstPriorityMedicineIds).Concat(command.SecondPriorityMedicineIds);
+        var ids = command.MicIds
+            .Concat(command.FirstPriorityMedicineIds)
+            .Concat(command.SecondPriorityMedicineIds)
+            .Distinct();
         var allAntibioticsExist = await context.Antibiotics
             .CountAsync(x => ids.Contains(x.Id), cancellationToken) == ids.Count();
         if (!allAntibioticsExist)

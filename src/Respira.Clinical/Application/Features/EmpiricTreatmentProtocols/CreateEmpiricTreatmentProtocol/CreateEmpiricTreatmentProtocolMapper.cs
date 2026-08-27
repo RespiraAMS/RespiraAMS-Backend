@@ -13,7 +13,8 @@ public class CreateEmpiricTreatmentProtocolMapper
             Version = command.Version,
             DiseaseId = command.DiseaseId,
             Severity = command.Severity,
-            TreatmentSite = command.TreatmentSite
+            TreatmentSite = command.TreatmentSite,
+            SpecialInfectionId = command.SpecialInfectionId
             // The 2 IDs list are ignore by EF Core, it should be added via navigation
         };
     }

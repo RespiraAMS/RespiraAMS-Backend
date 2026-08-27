@@ -33,6 +33,9 @@ public class EmpiricalDiagnoseHandler
             .Include(x => x.EmpiricTreatmentProtocols)
             .ThenInclude(e => e.Medicines)
             .ThenInclude(m => m.Dosages)
+            .Include(x => x.EmpiricTreatmentProtocols)
+            .ThenInclude(e => e.Medicines)
+            .ThenInclude(m => m.AntibioticGroup)
             .FirstOrDefaultAsync(x => x.Id == query.DiseaseId, cancellationToken);
 
         if (disease is null)
