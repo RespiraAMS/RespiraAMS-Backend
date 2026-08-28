@@ -97,8 +97,14 @@ public class GetAntibioticByIdHandlerTest : IClassFixture<PostgresFixture>, IAsy
             AntibioticId = amoxicillin.Id,
             RouteOfAdministration = RouteOfAdministration.Intravenous,
             Dose = "1 g IV every 12 hours",
-            Crcl = new Range { Min = 30m, Max = 60m, IsMinExclusive = false,
-                IsMaxExclusive = false, Unit = "ml/min" },
+            Crcl = new Range
+            {
+                Min = 30m,
+                Max = 60m,
+                IsMinExclusive = false,
+                IsMaxExclusive = false,
+                Unit = "ml/min"
+            },
         });
 
         await _context.AntibioticGroups.AddRangeAsync([root, subgroup], TestContext.Current.CancellationToken);

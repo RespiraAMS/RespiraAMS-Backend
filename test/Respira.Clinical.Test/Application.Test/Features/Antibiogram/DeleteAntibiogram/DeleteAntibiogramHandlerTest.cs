@@ -9,6 +9,7 @@ using Moq;
 using Respira.ServiceDefaults.Exceptions;
 
 namespace Application.Test.Features.Antibiogram.DeleteAntibiogram;
+
 using Antibiogram = Domain.Models.Antibiogram;
 
 public class DeleteAntibiogramHandlerTest : IClassFixture<PostgresFixture>, IAsyncLifetime

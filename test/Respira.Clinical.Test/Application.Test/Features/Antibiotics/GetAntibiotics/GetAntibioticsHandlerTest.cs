@@ -94,14 +94,17 @@ public class GetAntibioticsHandlerTest : IClassFixture<PostgresFixture>, IAsyncL
         };
         var alive = new Antibiotic
         {
-            Name = "Azithromycin", AntibioticGroupId = group.Id,
+            Name = "Azithromycin",
+            AntibioticGroupId = group.Id,
             Classification = Domain.Enums.AwareClassification.Watch,
         };
         var softDeleted = new Antibiotic
         {
-            Name = "Telithromycin", AntibioticGroupId = group.Id,
+            Name = "Telithromycin",
+            AntibioticGroupId = group.Id,
             Classification = Domain.Enums.AwareClassification.Others,
-            IsDeleted = true, DeletedAt = DateTimeOffset.UtcNow,
+            IsDeleted = true,
+            DeletedAt = DateTimeOffset.UtcNow,
         };
         await _context.AntibioticGroups.AddAsync(group, TestContext.Current.CancellationToken);
         await _context.Antibiotics.AddRangeAsync([alive, softDeleted], TestContext.Current.CancellationToken);
