@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
-using Respira.SagaAudit.Infrastructure.Persistence.Database;
+using Infrastructure.Persistence.Database;
 
 namespace Respira.SagaAudit.Infrastructure;
 

@@ -64,6 +64,16 @@ public class CreateAuthDoctorCommandHandler(
             dbContext.AuthDoctors.Add(authDoctor);
             await dbContext.SaveChangesAsync();
 
+            // Trigger the verification email as a decoupled side effect (consumed
+            // by AuthDoctorCreatedEventHandler, which dispatches the verification request).
+            await bus.PublishAsync(
+                new AuthDoctorCreatedEvent
+                {
+                    AuthUserId = authDoctor.Id,
+                    Email = email,
+                }
+            );
+
             await bus.PublishAsync(
                 new CreateAuthDoctorSuccess
                 {

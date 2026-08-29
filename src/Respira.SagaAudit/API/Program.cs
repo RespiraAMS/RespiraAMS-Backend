@@ -52,7 +52,7 @@ builder.Host.UseWolverine(opts =>
     opts.UseRabbitMq(rabbitConn).AutoProvision().UseConventionalRouting();
     opts.Policies.DisableConventionalLocalRouting();
 
-    opts.Durability.Mode = DurabilityMode.Solo;
+    opts.Durability.Mode = DurabilityMode.Balanced;
 });
 
 var app = builder.Build();

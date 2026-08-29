@@ -1,17 +1,19 @@
+using Application.Abstracts.Data;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
-using Respira.SagaAudit.Application.Abstracts.Data;
 
-namespace Respira.SagaAudit.Infrastructure.Persistence.Database;
+namespace Infrastructure.Persistence.Database;
 
 /// <summary>
 /// EF Core DbContext for the SagaAudit database.
 /// </summary>
 public class SagaAuditDbContext(DbContextOptions<SagaAuditDbContext> options)
-    : DbContext(options), ISagaAuditDbContext
+    : DbContext(options),
+        ISagaAuditDbContext
 {
     /// <summary>Process tracker rows recording saga execution progress and status.</summary>
     public DbSet<ProcessTracker> ProcessTrackers { get; set; }
+    public DbSet<Audit> Audits { get; set; }
 
     /// <summary>
     /// Persists pending changes, normalizing all <see cref="DateTimeOffset"/> values

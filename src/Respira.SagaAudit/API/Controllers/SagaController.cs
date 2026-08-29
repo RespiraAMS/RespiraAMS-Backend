@@ -1,7 +1,7 @@
 using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Respira.SagaAudit.Application.Abstracts.Data;
+using Application.Abstracts.Data;
 
 namespace Respira.SagaAudit.API.Controllers;
 
