@@ -11,13 +11,13 @@ public class ValidateDiagnosisHandler(IDbContext context, ILogger<ValidateDiagno
     public async Task<ValidateDiagnosisResult> HandleAsync(ValidateDiagnosisQuery query, CancellationToken cancellationToken = default)
     {
         // Validate if severity and treatment site enums are valid
-        if (query.Severity is not null && !Enum.TryParse<Domain.Enums.Severity>(query.Severity, ignoreCase: true, out var _))
+        if (query.Severity is not null && (!Enum.TryParse<Domain.Enums.Severity>(query.Severity, ignoreCase: true, out var severity) || !Enum.IsDefined(severity)))
         {
             logger.LogInformation("Invalid severity: {severity}", query.Severity);
             return new ValidateDiagnosisResult(false);
         }
 
-        if (query.TreatmentSite is not null && !Enum.TryParse<TreatmentSite>(query.TreatmentSite, ignoreCase: true, out var _))
+        if (query.TreatmentSite is not null && (!Enum.TryParse<TreatmentSite>(query.TreatmentSite, ignoreCase: true, out var treatmentSite) || !Enum.IsDefined(treatmentSite)))
         {
             logger.LogInformation("Invalid treatment site: {treatmentSite}", query.TreatmentSite);
             return new ValidateDiagnosisResult(false);
@@ -77,7 +77,7 @@ public class ValidateDiagnosisHandler(IDbContext context, ILogger<ValidateDiagno
             }
 
             // Check if the route of administration valid and match db record
-            if (!Enum.TryParse<RouteOfAdministration>(antibiotic.RouteOfAdministration, ignoreCase: true, out var route))
+            if (!Enum.TryParse<RouteOfAdministration>(antibiotic.RouteOfAdministration, ignoreCase: true, out var route) || !Enum.IsDefined(route))
             {
                 logger.LogInformation("Invalid route of administration: {detail}", new
                 {
@@ -87,7 +87,7 @@ public class ValidateDiagnosisHandler(IDbContext context, ILogger<ValidateDiagno
                 return new ValidateDiagnosisResult(false);
             }
 
-            if (!Enum.TryParse<AwareClassification>(antibiotic.Classification, ignoreCase: true, out var classification))
+            if (!Enum.TryParse<AwareClassification>(antibiotic.Classification, ignoreCase: true, out var classification) || !Enum.IsDefined(classification))
             {
                 logger.LogInformation("Invalid antibiotic classification: {detail}", new
                 {
