@@ -30,7 +30,7 @@ public record AntibioticDto
     public string Id { get; init; } = string.Empty;
     public string Name { get; init; } = string.Empty;
     public string AntibioticGroupId { get; init; } = string.Empty;
-    public string Category { get; init; } = string.Empty;
+    public string Classification { get; init; } = string.Empty;
     public List<string> PathogenIds { get; init; } = [];
     public List<DosageDto> Dosages { get; init; } = [];
 }
