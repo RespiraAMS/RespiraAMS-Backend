@@ -36,4 +36,9 @@ public class UpdatePatientCommand : ICommand
     /// Patient's address
     /// </summary>
     public required string Address { get; set; }
+
+    public required string City { get; set; }
+
+    public required string Country { get; set; }
+
 }

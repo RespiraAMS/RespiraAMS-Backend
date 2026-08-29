@@ -24,5 +24,11 @@ public class UpdatePatientValidator : AbstractValidator<UpdatePatientCommand>
         RuleFor(x => x.Address)
             .NotEmpty()
             .WithMessage("Patient address is required");
+        RuleFor(x => x.City)
+            .NotEmpty()
+            .WithMessage("Patient city is required");
+        RuleFor(x => x.Country)
+            .NotEmpty()
+            .WithMessage("Patient country is required");
     }
 }

@@ -2,6 +2,7 @@
 using Application.Features.Patients.DeletePatient;
 using Application.Features.Patients.GetPagedPatient;
 using Application.Features.Patients.GetPatientById;
+using Application.Features.Treatments.CreateTreatment;
 using Microsoft.AspNetCore.Mvc;
 using Respira.Patient.API.Dtos;
 using Respira.ServiceDefaults.Dtos;
@@ -106,5 +107,16 @@ public class PatientsController(IMessageBus bus) : ControllerBase
     {
         await bus.InvokeAsync(new DeletePatientCommand { Id = id });
         return NoContent();
+    }
+
+    [Route("{id:guid}/treatments")]
+    [HttpPost]
+    public async Task<IActionResult> CreatePatientTreatment(CreateTreatmentCommand req)
+    {
+        // NOTE: change from directly using command to use a DTO for request object.
+        // Patient ID from path paramater, while doctor ID from request header (stream down from API gateway)
+        var result = await bus.InvokeAsync<CreateTreatmentResult>(req);
+        var resp = ApiResponse<CreateTreatmentResult>.Ok(result, statusCode: StatusCodes.Status201Created);
+        return CreatedAtAction(nameof(GetPatient), new { id = result.Id }, resp);
     }
 }

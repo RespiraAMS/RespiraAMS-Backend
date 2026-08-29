@@ -1,4 +1,5 @@
 using Application;
+using Application.Features.Diagnose.ValidateDiagnosis;
 using Asp.Versioning;
 using Domain;
 using Infrastructure;
@@ -9,6 +10,7 @@ using Wolverine;
 using Wolverine.EntityFrameworkCore;
 using Wolverine.FluentValidation;
 using Wolverine.Postgresql;
+using Wolverine.RabbitMQ;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -61,6 +63,12 @@ builder.Host.UseWolverine(opts =>
     opts.UseEntityFrameworkCoreTransactions();
 
     opts.UseFluentValidation(RegistrationBehavior.ExplicitRegistration);
+
+    // Setup queue
+    opts.UseRabbitMqUsingNamedConnection("rabbitmq").AutoProvision();
+
+    opts.ListenToRabbitQueue("validate-diagnosis-query-queue");
+    opts.PublishMessage<ValidateDiagnosisResult>().ToRabbitQueue("validate-diagnosis-result-queue");
 
     opts.Durability.Mode = DurabilityMode.Solo;
 });

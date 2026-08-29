@@ -33,11 +33,30 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             .HasDiscriminator<string>("type")
             .HasValue<EmpiricalTreatment>("empirical_treatment")
             .HasValue<TargetedTreatment>("targeted_treatment");
+        // modelBuilder.Entity<Treatment>()
+        //     .OwnsOne(x => x.DiagnosisRecord, builder => builder.ToJson());
+        // modelBuilder.Entity<EmpiricalTreatment>()
+        //     .OwnsOne(x => x.EmpiricalDiagnosisRecord, builder => builder.ToJson());
+        // modelBuilder.Entity<TargetedTreatment>()
+        //     .OwnsOne(x => x.TargetedDiagnosisRecord, builder => builder.ToJson());
+
         modelBuilder.Entity<Treatment>()
-            .OwnsMany(x => x.SystemRecommendedMedicines, builder => builder.ToJson());
-        modelBuilder.Entity<Treatment>()
-            .OwnsMany(x => x.DoctorChosenMedicines, builder => builder.ToJson());
+            .Ignore(x => x.DiagnosisRecord);
         modelBuilder.Entity<EmpiricalTreatment>()
-            .OwnsMany(x => x.InfectionProbabilityRecords, builder => builder.ToJson());
+            .OwnsOne(x => x.EmpiricalDiagnosisRecord, owned =>
+            {
+                owned.ToJson();
+                owned.OwnsMany(d => d.SystemRecommendedMedicines);
+                owned.OwnsMany(d => d.DoctorChosenMedicines);
+                owned.OwnsMany(d => d.InfectionProbabilityRecords, ip => ip.OwnsOne(x => x.Pathogen));
+            });
+        modelBuilder.Entity<TargetedTreatment>()
+            .OwnsOne(x => x.TargetedDiagnosisRecord, owned =>
+            {
+                owned.ToJson();
+                owned.OwnsMany(d => d.SystemRecommendedMedicines);
+                owned.OwnsMany(d => d.DoctorChosenMedicines);
+                owned.OwnsOne(d => d.Pathogen);
+            });
     }
 }

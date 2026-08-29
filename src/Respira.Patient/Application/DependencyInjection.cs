@@ -1,5 +1,6 @@
 ﻿using Application.Features.Patients.CreatePatient;
 using Application.Features.Patients.DischargePatient;
+using Application.Features.Treatments.CreateTreatment;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Application;
@@ -15,6 +16,8 @@ public static class DependencyInjection
     {
         services.AddScoped<ICreateMapper<Patient, CreatePatientCommand>, CreatePatientMapper>();
         services.AddScoped<IUpdateMapper<Patient, DischargePatientCommand>, DischargePatientMapper>();
+        services.AddScoped<ICreateMapper<Treatment, CreateTreatmentCommand>, CreateTreatmentMapper>();
+        services.AddScoped<IMapper<DiagnosisRecord, ValidateDiagnosisQuery>, ValidateDiagnosisMapper>();
     }
 
     public static void AddFluentValidators(this IServiceCollection services)
