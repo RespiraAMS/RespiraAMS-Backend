@@ -19,6 +19,8 @@ public class GetPatientByIdHandler(IDbContext context) : IQueryHandler<GetPatien
                 MedicalRecordCode = x.MedicalRecordCode,
                 HealthInsuranceCardNumber = x.HealthInsuranceCardNumber,
                 Address = x.Address,
+                City = x.City,
+                Country = x.Country,
                 Admission = x.Admission,
                 Discharge = x.Discharge,
                 Status = x.Status,

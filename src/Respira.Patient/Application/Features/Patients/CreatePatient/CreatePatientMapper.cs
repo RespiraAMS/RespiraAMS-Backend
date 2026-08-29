@@ -15,6 +15,8 @@ public class CreatePatientMapper : ICreateMapper<Patient, CreatePatientCommand>
             MedicalRecordCode = command.MedicalRecordCode,
             HealthInsuranceCardNumber = command.HealthInsuranceCardNumber,
             Address = command.Address,
+            City = command.City,
+            Country = command.Country,
             Admission = DateTimeOffset.UtcNow,
             Discharge = null,
             Status = PatientStatus.InTreatment

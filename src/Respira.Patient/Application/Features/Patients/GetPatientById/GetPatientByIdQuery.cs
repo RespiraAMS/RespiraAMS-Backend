@@ -70,6 +70,10 @@ public class PatientResult
     /// </summary>
     public required string Address { get; set; }
 
+    public required string City { get; set; }
+
+    public required string Country { get; set; }
+
     /// <summary>
     /// Patient's admission time
     /// </summary>

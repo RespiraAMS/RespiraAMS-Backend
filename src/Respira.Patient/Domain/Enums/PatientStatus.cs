@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 namespace Domain.Enums;
 
 /// <summary>
-/// This enum is the patient status on the whole treatment process 
+/// This enum is the patient status on the whole treatment process
 /// </summary>
 [JsonConverter(typeof(JsonStringEnumConverter))]
 public enum PatientStatus

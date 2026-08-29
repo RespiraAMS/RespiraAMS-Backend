@@ -11,28 +11,7 @@ namespace Domain.Models;
  * not the time it was queried. That's why, this service wouldn't reference Clinical service to get
  * data, but instead store duplicate data like name (Doctor ID is an exception, it should still
  * reference the Doctor service to get doctor data)
- * 3. For validation, we will trust the caller (client) to send valid data (since diagnosis result
- * is not stored anyway -> no way to check if the data is actually correct, so it's no point to
- * check for validity)
  */
-
-/// <summary>
-/// An immutable record of medicine used for treatment
-/// </summary>
-/// <param name="Name">Antibiotic name</param>
-/// <param name="Classification">Antibiotic classification (WHO's AWaRe classification)</param>
-/// <param name="RouteOfAdministration">Antibiotic route of administration</param>
-/// <param name="Dose">
-/// Actual dosage that was diagnosed for this patient, based on patient's GFR
-/// </param>
-public record MedicineRecord(string Name, string Classification, string RouteOfAdministration, string Dose);
-
-/// <summary>
-/// An immutable record of infection probability when doing empiric therapy
-/// </summary>
-/// <param name="Pathogen">Pathogen name</param>
-/// <param name="Probability">Probability (from 0 to 1)</param>
-public record InfectionProbabilityRecord(string Pathogen, double Probability);
 
 /// <summary>
 /// Patient treatment. This class is a node in the patient treatment timeline. We can simply
@@ -57,23 +36,6 @@ public abstract class Treatment : Base
     public Patient Patient { get; set; } = null!;
 
     /// <summary>
-    /// Patient's creatine clearance level (in mg/dL) measured
-    /// at the time of treatment. This can be used to audit for
-    /// antibiotic dosage
-    /// </summary>
-    public required decimal Crcl { get; set; }
-
-    /// <summary>
-    /// System recommended medicines
-    /// </summary>
-    public required List<MedicineRecord> SystemRecommendedMedicines { get; set; }
-
-    /// <summary>
-    /// Actual medicines used for treatment chosen by doctor
-    /// </summary>
-    public required List<MedicineRecord> DoctorChosenMedicines { get; set; }
-
-    /// <summary>
     /// Treatment type
     /// </summary>
     public abstract TreatmentType TreatmentType { get; }
@@ -84,6 +46,9 @@ public abstract class Treatment : Base
     /// (any <see cref="PatientTreatmentStatus"/> correspond to <see cref="PatientStatus.InTreatment"/>, to be exact)
     /// </summary>
     public required PatientTreatmentStatus Status { get; set; }
+
+    // Polymorphic, read-only view of the common diagnosis fields
+    public abstract DiagnosisRecord DiagnosisRecord { get; }
 }
 
 /// <summary>
@@ -94,20 +59,10 @@ public class EmpiricalTreatment : Treatment
 {
     public override TreatmentType TreatmentType => TreatmentType.EmpiricalTherapy;
 
-    /// <summary>
-    /// Patient diagnosis result: severity
-    /// </summary>
-    public required string Severity { get; set; }
+    public required EmpiricalDiagnosisRecord EmpiricalDiagnosisRecord { get; set; }
 
-    /// <summary>
-    /// Patient diagnosis result: treatment site
-    /// </summary>
-    public required string TreatmentSite { get; set; }
+    public override DiagnosisRecord DiagnosisRecord => EmpiricalDiagnosisRecord;
 
-    /// <summary>
-    /// Patient diagnosis result: suspected infection probabilities
-    /// </summary>
-    public List<InfectionProbabilityRecord> InfectionProbabilityRecords { get; set; } = [];
 }
 
 /// <summary>
@@ -118,8 +73,7 @@ public class TargetedTreatment : Treatment
 {
     public override TreatmentType TreatmentType => TreatmentType.TargetedTherapy;
 
-    /// <summary>
-    /// Name of the pathogen that cause patient to got disease
-    /// </summary>
-    public required string Pathogen { get; set; }
+    public required TargetedDiagnosisRecord TargetedDiagnosisRecord { get; set; }
+
+    public override DiagnosisRecord DiagnosisRecord => TargetedDiagnosisRecord;
 }

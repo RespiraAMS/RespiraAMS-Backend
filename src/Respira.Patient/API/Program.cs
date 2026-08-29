@@ -1,6 +1,8 @@
 using Application;
+using Application.Features.Treatments.CreateTreatment;
 using Asp.Versioning;
 using Infrastructure;
+using Respira.Patient.API.Converters;
 using Respira.ServiceDefaults.Extensions;
 using Respira.ServiceDefaults.Utils.OpenApiTransformers;
 using Scalar.AspNetCore;
@@ -8,6 +10,7 @@ using Wolverine;
 using Wolverine.EntityFrameworkCore;
 using Wolverine.FluentValidation;
 using Wolverine.Postgresql;
+using Wolverine.RabbitMQ;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,7 +20,8 @@ var conn =
     ?? throw new InvalidOperationException("No connection string found");
 
 // Add API controllers
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(o => o.JsonSerializerOptions.Converters.Add(new DiagnosisRecordJsonConverter()));
 
 // Add API versioning
 builder.Services.AddApiVersioning(options =>
@@ -60,6 +64,12 @@ builder.Host.UseWolverine(opts =>
     opts.UseEntityFrameworkCoreTransactions();
 
     opts.UseFluentValidation(RegistrationBehavior.ExplicitRegistration);
+
+    // Setup queue
+    opts.UseRabbitMqUsingNamedConnection("rabbitmq").AutoProvision();
+
+    opts.ListenToRabbitQueue("validate-diagnosis-result-queue");
+    opts.PublishMessage<ValidateDiagnosisQuery>().ToRabbitQueue("validate-diagnosis-query-queue");
 
     opts.Durability.Mode = DurabilityMode.Solo;
 });

@@ -2,17 +2,28 @@ using Application.Contracts.Data;
 using Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Wolverine;
 
 namespace Application.Features.Treatments.CreateTreatment;
 
 public class CreateTreatmentHandler(
+    IMessageBus bus,
     IDbContext context,
     ICreateMapper<Treatment, CreateTreatmentCommand> mapper,
+    IMapper<DiagnosisRecord, ValidateDiagnosisQuery> validateDiagnoseResultMapper,
     ILogger<CreateTreatmentHandler> logger)
     : ICommandHandler<CreateTreatmentCommand, CreateTreatmentResult>
 {
     public async Task<CreateTreatmentResult> HandleAsync(CreateTreatmentCommand command, CancellationToken cancellationToken = default)
     {
+        // Validate the diagnosis record with Clinical service
+        var validateResult = await bus.InvokeAsync<ValidateDiagnosisResult>(validateDiagnoseResultMapper.Map(command.DiagnosisRecord));
+        if (!validateResult.IsValid)
+        {
+            logger.LogInformation("Invalid diagnosis record");
+            throw new BadRequestException("Invalid diagnosis record");
+        }
+
         // When a treatment is created, there are 2 cases:
         // 1. This is the first treatment for this patient: proceed as normal
         // 2. There are already treatments for this patient: then we need to

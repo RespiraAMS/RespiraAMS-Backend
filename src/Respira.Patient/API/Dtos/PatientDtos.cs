@@ -2,7 +2,6 @@
 using Application.Features.Patients.GetPagedPatient;
 using Application.Features.Patients.UpdatePatient;
 using Domain.Enums;
-using ImTools;
 using Respira.ServiceDefaults.Dtos;
 
 namespace Respira.Patient.API.Dtos;
@@ -79,6 +78,10 @@ public class UpdatePatientRequestDto
     /// </summary>
     public required string Address { get; set; }
 
+    public required string City { get; set; }
+
+    public required string Country { get; set; }
+
     public UpdatePatientCommand ToCommand(Guid id)
     {
         return new UpdatePatientCommand
@@ -89,7 +92,9 @@ public class UpdatePatientRequestDto
             IsMale = IsMale,
             MedicalRecordCode = MedicalRecordCode,
             HealthInsuranceCardNumber = HealthInsuranceCardNumber,
-            Address = Address
+            Address = Address,
+            City = City,
+            Country = Country
         };
     }
 }

@@ -26,17 +26,7 @@ public class UpdatePatientHandler(IDbContext context, ILogger<UpdatePatientHandl
         // to keep data consistency, we won't update these values. If no treatment actually started
         // (for example, doctor enter wrong data and immediately notice), dob and gender can still be updated.
         // This is also why this feature doesn't have a mapper
-        if (await context.Treatments.AnyAsync(x => x.PatientId == patient.Id, cancellationToken))
-        {
-            logger.LogWarning("Patient {Id} already have treatment, date of birth and gender won't update", patient.Id);
-
-            // Map command to model
-            patient.FullName = PatientNameNormalizer.Normalize(command.FullName);
-            patient.MedicalRecordCode = command.MedicalRecordCode;
-            patient.HealthInsuranceCardNumber = command.HealthInsuranceCardNumber;
-            patient.Address = command.Address;
-        }
-        else
+        if (!await context.Treatments.AnyAsync(x => x.PatientId == patient.Id, cancellationToken))
         {
             logger.LogDebug("Patient {Id} does not have treatment, update normally", patient.Id);
 
@@ -44,13 +34,20 @@ public class UpdatePatientHandler(IDbContext context, ILogger<UpdatePatientHandl
             patient.FullName = PatientNameNormalizer.Normalize(command.FullName);
             patient.DateOfBirth = command.DateOfBirth;
             patient.IsMale = command.IsMale;
-            patient.MedicalRecordCode = command.MedicalRecordCode;
-            patient.HealthInsuranceCardNumber = command.HealthInsuranceCardNumber;
-            patient.Address = command.Address;
+        }
+        else
+        {
+            logger.LogWarning("Patient {Id} already have treatment, date of birth and gender won't update", patient.Id);
         }
 
-        // Save changes to database
+        patient.MedicalRecordCode = command.MedicalRecordCode;
+        patient.HealthInsuranceCardNumber = command.HealthInsuranceCardNumber;
+        patient.Address = command.Address;
+        patient.City = command.City;
+        patient.Country = command.Country;
         patient.UpdatedAt = DateTimeOffset.UtcNow;
+
+        // Save changes to database
         if (await context.SaveChangesAsync(cancellationToken) <= 0)
         {
             logger.LogError("Failed to save patient to database");

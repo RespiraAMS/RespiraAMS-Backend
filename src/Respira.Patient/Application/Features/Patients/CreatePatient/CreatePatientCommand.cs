@@ -23,7 +23,7 @@ public class CreatePatientCommand : ICommand
     public required string MedicalRecordCode { get; set; }
 
     /// <summary>
-    /// Patient's health insurance card number. Only accept the new card (10 digits), not the old one (15 digits) 
+    /// Patient's health insurance card number. Only accept the new card (10 digits), not the old one (15 digits)
     /// </summary>
     public required string HealthInsuranceCardNumber { get; set; }
 
@@ -31,6 +31,11 @@ public class CreatePatientCommand : ICommand
     /// Patient's address
     /// </summary>
     public required string Address { get; set; }
+
+    public required string City { get; set; }
+
+    public required string Country { get; set; }
+
 }
 
 public class CreatePatientResult(Guid id)

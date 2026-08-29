@@ -36,6 +36,10 @@ public class Patient : Base
     /// </summary>
     public required string Address { get; set; }
 
+    public required string City { get; set; }
+
+    public required string Country { get; set; }
+
     /// <summary>
     /// The time that patient was hospitalized
     /// </summary>
