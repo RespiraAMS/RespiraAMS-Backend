@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 using Application;
 using Asp.Versioning;
 using Infrastructure;
@@ -13,7 +12,9 @@ using Wolverine.Postgresql;
 var builder = WebApplication.CreateBuilder(args);
 
 // Get connection string
-var conn = builder.Configuration.GetConnectionString("patientDb") ?? throw new InvalidOperationException("No connection string found");
+var conn =
+    builder.Configuration.GetConnectionString("patientDb")
+    ?? throw new InvalidOperationException("No connection string found");
 
 // Add API controllers
 builder.Services.AddControllers();
@@ -68,6 +69,7 @@ var app = builder.Build();
 
 app.UseCustomErrorHandling();
 app.MapControllers();
+
 // app.UseClaimsPropagation();
 
 // Configure the HTTP request pipeline.
