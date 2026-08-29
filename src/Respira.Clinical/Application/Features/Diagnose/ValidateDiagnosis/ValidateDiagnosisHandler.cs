@@ -53,6 +53,7 @@ public class ValidateDiagnosisHandler(IDbContext context, ILogger<ValidateDiagno
         var antibioticIds = query.Antibiotics.ConvertAll(a => a.Id);
         var antibiotics = await context.Antibiotics
             .AsNoTracking()
+            .AsSplitQuery()
             .Include(a => a.Dosages)
             .Where(a => antibioticIds.Contains(a.Id))
             .ToDictionaryAsync(a => a.Id, a => a, cancellationToken);
