@@ -63,8 +63,6 @@ builder.Host.UseWolverine(opts =>
     opts.Durability.Mode = DurabilityMode.Solo;
 });
 
-builder.AddServiceDefaults();
-
 var app = builder.Build();
 
 app.UseCustomErrorHandling();
