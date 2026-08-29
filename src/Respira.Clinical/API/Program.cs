@@ -65,7 +65,7 @@ builder.Host.UseWolverine(opts =>
 
     opts.UseFluentValidation(RegistrationBehavior.ExplicitRegistration);
 
-    opts.Durability.Mode = DurabilityMode.Solo;
+    opts.Durability.Mode = DurabilityMode.Balanced;
 });
 
 var app = builder.Build();

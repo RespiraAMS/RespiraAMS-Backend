@@ -1,6 +1,7 @@
 using Application.Features.Doctors.Get.Queries;
 using Application.Features.Doctors.Get.Results;
 using Microsoft.AspNetCore.Mvc;
+using Respira.Doctor.API.Dtos;
 using Respira.ServiceDefaults.Dtos;
 using Wolverine;
 
@@ -20,5 +21,17 @@ public class DoctorInfoController(IMessageBus messageBus) : ControllerBase
             new DoctorQuery { Id = id }
         );
         return StatusCode(result.StatusCode, result);
+    }
+
+    [HttpGet]
+    [ProducesResponseType<ApiResponse<Pagination<DoctorListItemResult>>>(StatusCodes.Status200OK)]
+    public async Task<ActionResult<ApiResponse<Pagination<DoctorListItemResult>>>> GetDoctorsAsync(
+        [FromQuery] GetDoctorsRequestDto request
+    )
+    {
+        var result = await messageBus.InvokeAsync<Pagination<DoctorListItemResult>>(
+            request.ToQuery()
+        );
+        return Ok(ApiResponse<Pagination<DoctorListItemResult>>.Ok(result));
     }
 }

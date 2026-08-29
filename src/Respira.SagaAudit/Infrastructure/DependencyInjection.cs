@@ -1,47 +1,48 @@
+using Application.Abstracts.Data;
+using Infrastructure.Persistence.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Respira.SagaAudit.Application.Abstracts.Data;
 using Respira.SagaAudit.Application.Services;
-using Respira.SagaAudit.Infrastructure.Persistence.Database;
 
-namespace Respira.SagaAudit.Infrastructure;
-
-/// <summary>
-/// DI registration for SagaAudit infrastructure layer.
-/// </summary>
-public static class DependencyInjection
+namespace Respira.SagaAudit.Infrastructure
 {
     /// <summary>
-    /// Registers the SagaAudit database context and services.
+    /// DI registration for SagaAudit infrastructure layer.
     /// </summary>
-    public static void AddInfrastructure(this IHostApplicationBuilder builder)
+    public static class DependencyInjection
     {
-        builder.AddNpgsqlDbContext<SagaAuditDbContext>("sagaAuditDb");
-        builder.Services.AddScoped<ISagaAuditDbContext, SagaAuditDbContext>();
-        builder.Services.AddScoped<ProcessTrackerService>();
-    }
-
-    /// <summary>
-    /// Applies pending EF migrations. In dev, drops the database if migration fails.
-    /// </summary>
-    public static void ApplyMigrations(this IHost host, bool isDevEnv)
-    {
-        using var scope = host.Services.CreateScope();
-        var context = scope.ServiceProvider.GetRequiredService<SagaAuditDbContext>();
-        var logger = scope.ServiceProvider.GetRequiredService<ILogger<SagaAuditDbContext>>();
-        try
+        /// <summary>
+        /// Registers the SagaAudit database context and services.
+        /// </summary>
+        public static void AddInfrastructure(this IHostApplicationBuilder builder)
         {
-            context.Database.Migrate();
+            builder.AddNpgsqlDbContext<SagaAuditDbContext>("sagaAuditDb");
+            builder.Services.AddScoped<ISagaAuditDbContext, SagaAuditDbContext>();
+            builder.Services.AddScoped<ProcessTrackerService>();
         }
-        catch (Exception e)
+
+        /// <summary>
+        /// Applies pending EF migrations. In dev, drops the database if migration fails.
+        /// </summary>
+        public static void ApplyMigrations(this IHost host, bool isDevEnv)
         {
-            if (isDevEnv)
+            using var scope = host.Services.CreateScope();
+            var context = scope.ServiceProvider.GetRequiredService<SagaAuditDbContext>();
+            var logger = scope.ServiceProvider.GetRequiredService<ILogger<SagaAuditDbContext>>();
+            try
             {
-                context.Database.EnsureDeleted();
+                context.Database.Migrate();
             }
-            logger.LogCritical("Failed to migrate database: {error}", e.Message);
+            catch (Exception e)
+            {
+                if (isDevEnv)
+                {
+                    context.Database.EnsureDeleted();
+                }
+                logger.LogCritical("Failed to migrate database: {error}", e.Message);
+            }
         }
     }
 }

@@ -1,7 +1,7 @@
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace Respira.SagaAudit.Application.Abstracts.Data;
+namespace Application.Abstracts.Data;
 
 /// <summary>
 /// Persistence abstraction for the SagaAudit database.
@@ -10,6 +10,7 @@ public interface ISagaAuditDbContext
 {
     /// <summary>Process tracker rows recording saga execution progress and status.</summary>
     DbSet<ProcessTracker> ProcessTrackers { get; set; }
+    DbSet<Audit> Audits { get; set; }
 
     /// <summary>Persists pending changes to the SagaAudit database.</summary>
     /// <param name="cancellationToken">A token to cancel the operation.</param>

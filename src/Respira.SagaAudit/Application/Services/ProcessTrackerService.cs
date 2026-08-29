@@ -1,7 +1,7 @@
 using System.Text.Json;
+using Application.Abstracts.Data;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
-using Respira.SagaAudit.Application.Abstracts.Data;
 
 namespace Respira.SagaAudit.Application.Services;
 
