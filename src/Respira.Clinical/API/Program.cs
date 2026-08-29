@@ -26,7 +26,8 @@ builder.Services.AddApiVersioning(options =>
     options.DefaultApiVersion = new ApiVersion(1, 0);
     options.AssumeDefaultVersionWhenUnspecified = true;
     options.ReportApiVersions = true;
-});
+    options.ApiVersionReader = new UrlSegmentApiVersionReader();
+}).AddMvc();
 
 // Add OpenAPI support
 builder.Services.AddOpenApi(options =>
@@ -70,14 +71,14 @@ builder.Host.UseWolverine(opts =>
     opts.ListenToRabbitQueue("validate-diagnosis-query-queue");
     opts.PublishMessage<ValidateDiagnosisResult>().ToRabbitQueue("validate-diagnosis-result-queue");
 
-    opts.Durability.Mode = DurabilityMode.Solo;
+    opts.Durability.Mode = DurabilityMode.Balanced;
 });
 
 var app = builder.Build();
 
 app.UseCustomErrorHandling();
+app.UseClaimsPropagation();
 app.MapControllers();
-// app.UseClaimsPropagation();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

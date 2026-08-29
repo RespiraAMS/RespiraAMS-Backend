@@ -11,7 +11,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using ZiggyCreatures.Caching.Fusion;
 
 namespace Infrastructure
 {
@@ -36,11 +35,16 @@ namespace Infrastructure
             builder.Services.AddScoped<IHashService, HashService>();
             builder.Services.AddScoped<ISendEmailService, SendEmailService>();
             builder.Services.AddScoped<ICacheService, CacheService>();
+            builder.Services.AddScoped<IVerifyEmailLinkBuilder, VerifyEmailLinkBuilder>();
 
             builder.Services.Configure<JwtOption>(builder.Configuration.GetSection("Jwt"));
             builder.Services.Configure<EmailOption>(builder.Configuration.GetSection("Email"));
-            builder.Services.Configure<VerifyEmailOption>(builder.Configuration.GetSection("VerifyEmail"));
-            builder.Services.Configure<TokenCleanupOption>(builder.Configuration.GetSection("TokenCleanup"));
+            builder.Services.Configure<VerifyEmailOption>(
+                builder.Configuration.GetSection("VerifyEmail")
+            );
+            builder.Services.Configure<TokenCleanupOption>(
+                builder.Configuration.GetSection("TokenCleanup")
+            );
         }
 
         /// <summary>

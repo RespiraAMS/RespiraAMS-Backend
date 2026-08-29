@@ -1,0 +1,53 @@
+using Application.Abstracts.Data;
+using Domain.Entities;
+using Microsoft.EntityFrameworkCore;
+
+namespace Infrastructure.Persistence.Database;
+
+/// <summary>
+/// EF Core DbContext for the SagaAudit database.
+/// </summary>
+public class SagaAuditDbContext(DbContextOptions<SagaAuditDbContext> options)
+    : DbContext(options),
+        ISagaAuditDbContext
+{
+    /// <summary>Process tracker rows recording saga execution progress and status.</summary>
+    public DbSet<ProcessTracker> ProcessTrackers { get; set; }
+    public DbSet<Audit> Audits { get; set; }
+
+    /// <summary>
+    /// Persists pending changes, normalizing all <see cref="DateTimeOffset"/> values
+    /// to UTC before saving.
+    /// </summary>
+    /// <param name="cancellationToken">A token to cancel the operation.</param>
+    /// <returns>The number of rows affected.</returns>
+    public new async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    {
+        NormalizeDateTimeOffsets();
+        return await base.SaveChangesAsync(cancellationToken);
+    }
+
+    private void NormalizeDateTimeOffsets()
+    {
+        foreach (var entry in ChangeTracker.Entries())
+        {
+            foreach (var property in entry.Properties)
+            {
+                if (property.CurrentValue is DateTimeOffset dto && dto.Offset != TimeSpan.Zero)
+                {
+                    property.CurrentValue = dto.ToUniversalTime();
+                }
+            }
+        }
+    }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<ProcessTracker>().ToTable("process_trackers");
+        modelBuilder.Entity<ProcessTracker>().HasIndex(x => x.SagaId).IsUnique();
+        modelBuilder.Entity<ProcessTracker>().HasIndex(x => x.Status);
+        modelBuilder.Entity<ProcessTracker>().Property(x => x.Status).HasConversion<string>();
+    }
+}

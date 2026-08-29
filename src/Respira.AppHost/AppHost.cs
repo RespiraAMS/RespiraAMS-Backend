@@ -15,6 +15,13 @@ var mediaDb = postgres.AddDatabase("mediaDb");
 var patientDb = postgres.AddDatabase("patientDb");
 var sagaAuditDb = postgres.AddDatabase("sagaAuditDb");
 
+// Cloudflare R2 (object storage) parameters
+var r2Endpoint = builder.AddParameter("r2-endpoint");
+var r2AccessKey = builder.AddParameter("r2-access-key");
+var r2SecretKey = builder.AddParameter("r2-secret-key");
+var r2Bucket = builder.AddParameter("r2-bucket");
+var r2PublicUrl = builder.AddParameter("r2-public-url");
+
 // Auth service parameters (values come from AppHost config: Parameters:* section)
 var jwtSecret = builder.AddParameter("jwt-secret");
 var jwtIssuer = builder.AddParameter("jwt-issuer");
@@ -56,18 +63,27 @@ var clinicalService = builder
     .WaitFor(cache)
     .WithReference(rabbitmq)
     .WaitFor(rabbitmq);
-var doctorService = builder
-    .AddProject<Projects.Respira_Doctor_API>("doctor-service")
-    .WithReference(doctorDb)
-    .WithReference(cache)
-    .WaitFor(cache)
-    .WithReference(rabbitmq)
-    .WaitFor(rabbitmq);
 var mediaService = builder
     .AddProject<Projects.Respira_Media_API>("media-service")
     .WithReference(mediaDb)
     .WithReference(cache)
     .WaitFor(cache)
+    .WithReference(rabbitmq)
+    .WaitFor(rabbitmq)
+    .WithEnvironment("R2__Endpoint", r2Endpoint)
+    .WithEnvironment("R2__AccessKey", r2AccessKey)
+    .WithEnvironment("R2__SecretKey", r2SecretKey)
+    .WithEnvironment("R2__BucketName", r2Bucket)
+    .WithEnvironment("R2__PublicBaseUrl", r2PublicUrl);
+var doctorService = builder
+    .AddProject<Projects.Respira_Doctor_API>("doctor-service")
+    .WithReference(doctorDb)
+    .WithReference(cache)
+    .WaitFor(cache)
+    .WithReference(authService)
+    .WaitFor(authService)
+    .WithReference(mediaService)
+    .WaitFor(mediaService)
     .WithReference(rabbitmq)
     .WaitFor(rabbitmq);
 var patientService = builder
@@ -83,7 +99,8 @@ var sagaAuditService = builder
     .WithReference(cache)
     .WaitFor(cache)
     .WithReference(rabbitmq)
-    .WaitFor(rabbitmq);
+    .WaitFor(rabbitmq)
+    .WithReference(mediaService);
 var gateway = builder
     .AddProject<Projects.Respira_Gateway>("gateway")
     .WithReference(analyticsService)
@@ -93,6 +110,9 @@ var gateway = builder
     .WithReference(mediaService)
     .WithReference(patientService)
     .WithReference(sagaAuditService)
+    .WithEnvironment("Jwt__Secret", jwtSecret)
+    .WithEnvironment("Jwt__Issuer", jwtIssuer)
+    .WithEnvironment("Jwt__Audience", jwtAudience)
     .WithExternalHttpEndpoints();
 
 // Make services depend on gateway

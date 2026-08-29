@@ -3,29 +3,21 @@ using System.Text.Json.Serialization;
 namespace Domain.Enums
 {
     /// <summary>
-    /// Token type for the AuthDoctor
+    /// Types of tokens issued to authenticated users.
     /// </summary>
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum TokenType
     {
-        /// <summary>
-        /// Refresh token
-        /// </summary>
+        /// <summary>Long-lived token used to obtain new access tokens.</summary>
         RefreshToken,
 
-        /// <summary>
-        /// Access token
-        /// </summary>
+        /// <summary>Short-lived token authorizing API access.</summary>
         AccessToken,
 
-        /// <summary>
-        /// Email verification token
-        /// </summary>
+        /// <summary>Token used to confirm a doctor's email address.</summary>
         EmailVerificationToken,
 
-        /// <summary>
-        /// Password reset token
-        /// </summary>
+        /// <summary>Token used to authorize a password reset.</summary>
         PasswordResetToken,
     }
 }

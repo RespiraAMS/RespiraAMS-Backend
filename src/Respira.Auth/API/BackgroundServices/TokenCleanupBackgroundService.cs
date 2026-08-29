@@ -1,5 +1,6 @@
 using Application.Abstracts;
 using Application.Features.Tokens.Commands.RemoveExpiredTokens;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -8,26 +9,23 @@ using Wolverine;
 namespace Respira.Auth.API.BackgroundServices;
 
 /// <summary>
-/// Background service that periodically invokes <see cref="RemoveExpiredTokensCommand"/>
-/// to delete expired tokens (and expired blacklist entries) from the database.
+/// Background service that periodically revokes expired tokens by dispatching
+/// <c>RemoveExpiredTokensCommand</c> on a configurable interval. Waits for host
+/// startup before the first run.
 /// </summary>
-/// <param name="bus">Wolverine message bus used to dispatch the cleanup command</param>
-/// <param name="logger">Logger</param>
-/// <param name="options">Cleanup interval configuration</param>
 public class TokenCleanupBackgroundService(
-    IMessageBus bus,
+    IServiceScopeFactory scopeFactory,
     ILogger<TokenCleanupBackgroundService> logger,
-    IOptions<TokenCleanupOption> options
+    IOptions<TokenCleanupOption> options,
+    IHostApplicationLifetime lifetime
 ) : BackgroundService
 {
     private readonly TimeSpan _interval = TimeSpan.FromMinutes(options.Value.IntervalMinutes);
 
-    /// <summary>
-    /// Runs an initial cleanup, then repeats on a fixed interval until the host stops.
-    /// </summary>
-    /// <param name="stoppingToken">Token cancelled when the host is shutting down</param>
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
+        await WaitForHostStartupAsync(stoppingToken);
+
         await CleanupAsync(stoppingToken);
 
         using var timer = new PeriodicTimer(_interval);
@@ -37,10 +35,25 @@ public class TokenCleanupBackgroundService(
         }
     }
 
+    private async Task WaitForHostStartupAsync(CancellationToken stoppingToken)
+    {
+        if (lifetime.ApplicationStarted.IsCancellationRequested)
+        {
+            return;
+        }
+
+        var tcs = new TaskCompletionSource();
+        await using var registration = lifetime.ApplicationStarted.Register(() => tcs.TrySetResult());
+        await Task.WhenAny(tcs.Task, Task.Delay(Timeout.Infinite, stoppingToken));
+    }
+
     private async Task CleanupAsync(CancellationToken stoppingToken)
     {
         try
         {
+            await using var scope = scopeFactory.CreateAsyncScope();
+            var bus = scope.ServiceProvider.GetRequiredService<IMessageBus>();
+
             var removed = await bus.InvokeAsync<int>(
                 new RemoveExpiredTokensCommand(),
                 stoppingToken

@@ -1,33 +1,26 @@
 namespace Application.Abstracts.Caching
 {
     /// <summary>
-    /// Cache service interface
+    /// Abstraction over the distributed cache (Redis via FusionCache).
+    /// Used to speed up doctor profile lookups.
     /// </summary>
     public interface ICacheService
     {
-        /// <summary>
-        /// Get an item from cache (Redis)
-        /// </summary>
-        /// <typeparam name="T">T is the type of the object</typeparam>
-        /// <param name="key">the key</param>
-        /// <returns>Task of the object</returns>
+        /// <summary>Reads a cached value by key</summary>
+        /// <typeparam name="T">Type of the cached value</typeparam>
+        /// <param name="key">Cache key</param>
+        /// <returns>The cached value, or default if not present</returns>
         public Task<T> GetAsync<T>(string key);
 
-        /// <summary>
-        /// Set an item in cache (Redis)
-        /// </summary>
-        /// <typeparam name="T">T is the type of the object</typeparam>
-        /// <param name="key">the key</param>
-        /// <param name="value">the value</param>
-        /// <param name="expiration">the expiration</param>
-        /// <returns>Task</returns>
+        /// <summary>Stores a value in the cache</summary>
+        /// <typeparam name="T">Type of the value</typeparam>
+        /// <param name="key">Cache key</param>
+        /// <param name="value">Value to store</param>
+        /// <param name="expiration">Optional expiration window</param>
         public Task SetAsync<T>(string key, T value, TimeSpan? expiration = null);
 
-        /// <summary>
-        /// Remove an item from cache (Redis)
-        /// </summary>
-        /// <param name="key">the key</param>
-        /// <returns>Task</returns>
+        /// <summary>Removes a value from the cache</summary>
+        /// <param name="key">Cache key</param>
         public Task RemoveAsync(string key);
     }
 }

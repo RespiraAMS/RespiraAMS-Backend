@@ -1,5 +1,8 @@
-// Entry point for the Respira Auth API: configures controllers, OpenAPI,
-// Wolverine messaging, EF Core persistence and the auth infrastructure.
+/// <summary>
+/// Entry point for the Respira Auth API. Configures controllers, API versioning,
+/// OpenAPI, Wolverine messaging, EF Core persistence and the auth infrastructure,
+/// then starts the host.
+/// </summary>
 using Application;
 using Respira.Auth.API.BackgroundServices;
 using Application.Abstracts.Email;
@@ -12,6 +15,7 @@ using Wolverine;
 using Wolverine.EntityFrameworkCore;
 using Wolverine.FluentValidation;
 using Wolverine.Postgresql;
+using Wolverine.RabbitMQ;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,7 +33,8 @@ builder.Services.AddApiVersioning(options =>
     options.DefaultApiVersion = new ApiVersion(1, 0);
     options.AssumeDefaultVersionWhenUnspecified = true;
     options.ReportApiVersions = true;
-});
+    options.ApiVersionReader = new UrlSegmentApiVersionReader();
+}).AddMvc();
 
 // Add OpenAPI support
 builder.Services.AddOpenApi(options =>
@@ -50,16 +55,12 @@ builder.Services.AddFluentValidators();
 // Add infrastructure
 builder.AddInfrastructure();
 
-// Verify-email link base comes from the gateway's endpoint injected by Aspire (WithReference(gateway))
-var gatewayUrl = builder.Configuration["services__gateway__http__0"]
-    ?? builder.Configuration["services__gateway__https__0"]
-    ?? throw new InvalidOperationException("Gateway URL not found");
-builder.Services.AddOptions<VerifyEmailOption>()
-    .Configure(o => o.LinkTemplate =
-        $"{gatewayUrl}/api/v1/auth/verify-email?token={{token}}&email={{email}}");
-
 // Add Wolverine
 builder.Services.AddHostedService<TokenCleanupBackgroundService>();
+
+var rabbitConn = builder.Configuration.GetConnectionString("rabbitmq")
+    ?? throw new InvalidOperationException("No rabbitmq connection string");
+
 builder.Host.UseWolverine(opts =>
 {
     opts.RestoreV5Defaults();
@@ -70,12 +71,17 @@ builder.Host.UseWolverine(opts =>
 
     opts.UseFluentValidation(RegistrationBehavior.ExplicitRegistration);
 
-    opts.Durability.Mode = DurabilityMode.Solo;
+    // Route messages across service boundaries through RabbitMQ
+    opts.UseRabbitMq(rabbitConn).AutoProvision().UseConventionalRouting();
+    opts.Policies.DisableConventionalLocalRouting();
+
+    opts.Durability.Mode = DurabilityMode.Balanced;
 });
 
 var app = builder.Build();
 
 app.UseCustomErrorHandling();
+app.UseClaimsPropagation();
 app.MapControllers();
 
 // Configure the HTTP request pipeline.

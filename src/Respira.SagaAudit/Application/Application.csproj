@@ -2,8 +2,21 @@
 
     <PropertyGroup>
         <TargetFramework>net10.0</TargetFramework>
+        <AssemblyName>Respira.SagaAudit.Application</AssemblyName>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
     </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="WolverineFx" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\Respira.ServiceDefaults\Respira.ServiceDefaults.csproj" />
+        <ProjectReference Include="..\..\Respira.Auth\Application\Application.csproj" />
+        <ProjectReference Include="..\..\Respira.Doctor\Application\Application.csproj" />
+        <ProjectReference Include="..\..\Respira.Media\Application\Application.csproj" />
+        <ProjectReference Include="..\Domain\Domain.csproj" />
+    </ItemGroup>
 
 </Project>

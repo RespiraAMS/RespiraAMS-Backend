@@ -13,7 +13,7 @@ namespace Respira.Clinical.API.Controllers;
 public class DiagnoseController(IMessageBus bus) : ControllerBase
 {
     [HttpPost]
-    [Route("/empirical")]
+    [Route("empirical")]
     [ProducesResponseType<ApiResponse<EmpiricalDiagnoseResult>>(StatusCodes.Status200OK)]
     [ProducesResponseType<ApiResponse>(StatusCodes.Status400BadRequest)]
     [ProducesResponseType<ApiResponse>(StatusCodes.Status401Unauthorized)]
@@ -28,7 +28,7 @@ public class DiagnoseController(IMessageBus bus) : ControllerBase
     }
 
     [HttpPost]
-    [Route("/target")]
+    [Route("target")]
     [ProducesResponseType<ApiResponse<TargetedDiagnoseResult>>(StatusCodes.Status200OK)]
     [ProducesResponseType<ApiResponse>(StatusCodes.Status400BadRequest)]
     [ProducesResponseType<ApiResponse>(StatusCodes.Status401Unauthorized)]
@@ -41,5 +41,4 @@ public class DiagnoseController(IMessageBus bus) : ControllerBase
         var resp = ApiResponse<TargetedDiagnoseResult>.Ok(result);
         return Ok(resp);
     }
-
 }

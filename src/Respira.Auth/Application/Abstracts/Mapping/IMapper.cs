@@ -1,12 +1,13 @@
 namespace Application.Abstracts.Mapping
 {
     /// <summary>
-    /// Interface for the mapper
+    /// Generic mapper interface for transforming between DTOs and domain models.
     /// </summary>
-    /// <typeparam name="In">The type of the input</typeparam>
-    /// <typeparam name="Out">The type of the output want to transform</typeparam>
     public interface IMapper<In, Out>
     {
+        /// <summary>Transforms an input of type <typeparamref name="In"/> into an <typeparamref name="Out"/>.</summary>
+        /// <param name="input">The source value to transform.</param>
+        /// <returns>The transformed output.</returns>
         Out Transform(In input);
     }
 }

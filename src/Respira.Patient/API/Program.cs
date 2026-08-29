@@ -15,7 +15,9 @@ using Wolverine.RabbitMQ;
 var builder = WebApplication.CreateBuilder(args);
 
 // Get connection string
-var conn = builder.Configuration.GetConnectionString("patientDb") ?? throw new InvalidOperationException("No connection string found");
+var conn =
+    builder.Configuration.GetConnectionString("patientDb")
+    ?? throw new InvalidOperationException("No connection string found");
 
 // Add API controllers
 builder.Services.AddControllers()
@@ -27,7 +29,8 @@ builder.Services.AddApiVersioning(options =>
     options.DefaultApiVersion = new ApiVersion(1, 0);
     options.AssumeDefaultVersionWhenUnspecified = true;
     options.ReportApiVersions = true;
-});
+    options.ApiVersionReader = new UrlSegmentApiVersionReader();
+}).AddMvc();
 
 // Add OpenAPI support
 builder.Services.AddOpenApi(options =>
@@ -75,6 +78,7 @@ var app = builder.Build();
 
 app.UseCustomErrorHandling();
 app.MapControllers();
+
 // app.UseClaimsPropagation();
 
 // Configure the HTTP request pipeline.
@@ -84,11 +88,9 @@ if (app.Environment.IsDevelopment())
     app.MapScalarApiReference(opts => opts.Theme = ScalarTheme.Kepler);
 }
 
-if (!app.Environment.IsDevelopment())
-{
-    app.UseHttpsRedirection();
-}
-
-app.ApplyMigrations(app.Environment.IsDevelopment());
+app.UseHttpsRedirection();
+app.UseClaimsPropagation();
+app.UseAuthorization();
+app.MapControllers();
 
 app.Run();
