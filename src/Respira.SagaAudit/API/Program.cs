@@ -8,15 +8,24 @@
 /// </summary>
 // Entry point for the Respira SagaAudit API: hosts the Wolverine sagas that
 // orchestrate cross-service workflows (Auth -> Doctor -> Media) over RabbitMQ.
+using Asp.Versioning;
 using Respira.SagaAudit.Application;
 using Respira.SagaAudit.Infrastructure;
 using Respira.ServiceDefaults.Extensions;
+using Scalar.AspNetCore;
 using Wolverine;
 using Wolverine.Postgresql;
 using Wolverine.RabbitMQ;
-using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddApiVersioning(options =>
+{
+    options.DefaultApiVersion = new ApiVersion(1, 0);
+    options.AssumeDefaultVersionWhenUnspecified = true;
+    options.ReportApiVersions = true;
+    options.ApiVersionReader = new UrlSegmentApiVersionReader();
+}).AddMvc();
 
 var sagaConn =
     builder.Configuration.GetConnectionString("sagaAuditDb")
@@ -31,9 +40,8 @@ builder.Services.AddOpenApi();
 // Typed client used by the Create doctor endpoint to pre-upload the avatar to the
 // Media service (resolved via Aspire service discovery configured in AddServiceDefaults).
 builder.Services.AddHttpClient<Respira.SagaAudit.API.Clients.MediaUploadClient>(client =>
-{
-    client.BaseAddress = new Uri("http://media-service");
-});
+    client.BaseAddress = new Uri("http://media-service")
+);
 
 builder.AddServiceDefaults();
 

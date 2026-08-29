@@ -1,7 +1,7 @@
 using System.Security.Claims;
 using System.Text.Json;
+using Asp.Versioning;
 using Domain.Enums;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Respira.SagaAudit.API.Clients;
 using Respira.SagaAudit.API.Dtos;
@@ -20,7 +20,8 @@ namespace Respira.SagaAudit.API.Controllers;
 /// asynchronously via <see cref="ProcessTrackerService"/>.
 /// </summary>
 [ApiController]
-[Route("api/v1/doctors")]
+[Route("api/{version:apiVersion}/sagas/doctors")]
+[ApiVersion("1.0")]
 public class DoctorController(
     IMessageBus bus,
     MediaUploadClient mediaUpload,
@@ -29,7 +30,7 @@ public class DoctorController(
 {
     private bool IsManager() =>
         User.FindFirstValue(ClaimTypes.Role) is var role
-        && (role == RoleType.Manager.ToString() || role == RoleType.Admin.ToString());
+        && (role == nameof(RoleType.Manager) || role == nameof(RoleType.Admin));
 
     /// <summary>
     /// Starts the CreateDoctor saga (Auth -> Doctor -> Media). Manager/Admin only.

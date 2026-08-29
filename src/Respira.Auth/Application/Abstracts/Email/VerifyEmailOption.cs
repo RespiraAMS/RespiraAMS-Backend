@@ -7,7 +7,7 @@ namespace Application.Abstracts.Email
     {
         /// <summary>
         /// Link template to verify email, supports {token} and {email} placeholders.
-        /// Example: https://gateway.example.com/api/v1/auth/verify-email?token={token}&email={email}
+        /// Example: https://gateway.example.com/api/1/auth/verify-email?token={token}&email={email}
         /// </summary>
         public required string LinkTemplate { get; set; }
     }

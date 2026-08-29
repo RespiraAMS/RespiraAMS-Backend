@@ -17,6 +17,7 @@
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
       <PackageReference Include="WolverineFx.RuntimeCompilation" />
       <PackageReference Include="Scalar.AspNetCore" />
+      <PackageReference Include="Asp.Versioning.Mvc" />
     </ItemGroup>
     
 </Project>

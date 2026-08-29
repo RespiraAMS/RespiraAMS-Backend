@@ -24,7 +24,8 @@ builder.Services.AddApiVersioning(options =>
     options.DefaultApiVersion = new ApiVersion(1, 0);
     options.AssumeDefaultVersionWhenUnspecified = true;
     options.ReportApiVersions = true;
-});
+    options.ApiVersionReader = new UrlSegmentApiVersionReader();
+}).AddMvc();
 
 // Add OpenAPI support
 builder.Services.AddOpenApi(options =>

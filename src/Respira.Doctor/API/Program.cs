@@ -3,6 +3,7 @@
 /// Wolverine messaging, EF Core persistence and the doctor infrastructure (caching + DB).
 /// </summary>
 using Application;
+using Asp.Versioning;
 using Infrastructure;
 using Respira.ServiceDefaults.Extensions;
 using Wolverine;
@@ -20,6 +21,13 @@ var conn =
     ?? throw new InvalidOperationException("No connection string found");
 
 builder.Services.AddControllers();
+builder.Services.AddApiVersioning(options =>
+{
+    options.DefaultApiVersion = new ApiVersion(1, 0);
+    options.AssumeDefaultVersionWhenUnspecified = true;
+    options.ReportApiVersions = true;
+    options.ApiVersionReader = new UrlSegmentApiVersionReader();
+}).AddMvc();
 builder.Services.AddOpenApi();
 
 // Add service discovery / telemetry defaults

@@ -18,7 +18,7 @@ namespace Domain.Enums
         DepartmentDeputyHead = 3,
 
         /// <summary>Department head</summary>
-        DepartmentHead = 4,
+        HeadOfDepartment = 4,
 
         /// <summary>Deputy director</summary>
         DeputyDirector = 5,

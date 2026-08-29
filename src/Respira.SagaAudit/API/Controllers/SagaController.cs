@@ -1,7 +1,8 @@
+using Application.Abstracts.Data;
+using Asp.Versioning;
 using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Application.Abstracts.Data;
 
 namespace Respira.SagaAudit.API.Controllers;
 
@@ -9,7 +10,8 @@ namespace Respira.SagaAudit.API.Controllers;
 /// Query saga execution history and status.
 /// </summary>
 [ApiController]
-[Route("api/v1/sagas")]
+[Route("api/{version:apiVersion}/sagas")]
+[ApiVersion("1.0")]
 public class SagaController(ISagaAuditDbContext dbContext) : ControllerBase
 {
     /// <summary>
@@ -18,8 +20,8 @@ public class SagaController(ISagaAuditDbContext dbContext) : ControllerBase
     [HttpGet("{sagaId:guid}")]
     public async Task<IActionResult> GetById(Guid sagaId, CancellationToken cancellationToken)
     {
-        var tracker = await dbContext.ProcessTrackers
-            .AsNoTracking()
+        var tracker = await dbContext
+            .ProcessTrackers.AsNoTracking()
             .FirstOrDefaultAsync(x => x.SagaId == sagaId, cancellationToken);
 
         if (tracker is null)
@@ -27,19 +29,23 @@ public class SagaController(ISagaAuditDbContext dbContext) : ControllerBase
             return NotFound();
         }
 
-        return Ok(new
-        {
-            tracker.SagaId,
-            tracker.SagaType,
-            Status = tracker.Status.ToString(),
-            tracker.CurrentStep,
-            Steps = System.Text.Json.JsonSerializer.Deserialize<object[]>(tracker.StepsJson ?? "[]"),
-            tracker.FailureReason,
-            tracker.ManagerId,
-            tracker.TargetDoctorId,
-            tracker.CreatedAt,
-            tracker.UpdatedAt,
-        });
+        return Ok(
+            new
+            {
+                tracker.SagaId,
+                tracker.SagaType,
+                Status = tracker.Status.ToString(),
+                tracker.CurrentStep,
+                Steps = System.Text.Json.JsonSerializer.Deserialize<object[]>(
+                    tracker.StepsJson ?? "[]"
+                ),
+                tracker.FailureReason,
+                tracker.ManagerId,
+                tracker.TargetDoctorId,
+                tracker.CreatedAt,
+                tracker.UpdatedAt,
+            }
+        );
     }
 
     /// <summary>
@@ -49,7 +55,8 @@ public class SagaController(ISagaAuditDbContext dbContext) : ControllerBase
     public async Task<IActionResult> List(
         [FromQuery] SagaStatus? status,
         [FromQuery] int limit = 20,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default
+    )
     {
         var query = dbContext.ProcessTrackers.AsNoTracking().AsQueryable();
 

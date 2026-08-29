@@ -1,5 +1,6 @@
 using Application.Features.Doctors.Get.Queries;
 using Application.Features.Doctors.Get.Results;
+using Asp.Versioning;
 using Microsoft.AspNetCore.Mvc;
 using Respira.Doctor.API.Dtos;
 using Respira.ServiceDefaults.Dtos;
@@ -11,7 +12,8 @@ namespace Respira.Doctor.API.Controllers;
 /// Admin endpoints for viewing doctor information across services.
 /// </summary>
 [ApiController]
-[Route("api/v1/doctors")]
+[Route("api/{version:apiVersion}/doctors")]
+[ApiVersion("1.0")]
 public class DoctorInfoController(IMessageBus messageBus) : ControllerBase
 {
     [HttpGet("{id}")]

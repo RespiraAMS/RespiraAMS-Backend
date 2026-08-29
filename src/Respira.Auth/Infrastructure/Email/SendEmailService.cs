@@ -31,13 +31,15 @@ namespace Infrastructure.Email
             };
 
             using var client = new SmtpClient();
-            await client.ConnectAsync(
-                option.Host,
-                option.Port,
-                option.EnableSsl
-                    ? SecureSocketOptions.SslOnConnect
-                    : SecureSocketOptions.StartTlsWhenAvailable
-            );
+            var secureSocketOptions = option.Port switch
+            {
+                465 => SecureSocketOptions.SslOnConnect,
+                587 or 25 or 2525 => SecureSocketOptions.StartTls,
+                _ => option.EnableSsl
+                    ? SecureSocketOptions.StartTls
+                    : SecureSocketOptions.None,
+            };
+            await client.ConnectAsync(option.Host, option.Port, secureSocketOptions);
             await client.AuthenticateAsync(option.Username, option.Password);
             await client.SendAsync(message);
             await client.DisconnectAsync(quit: true);

@@ -1,5 +1,6 @@
 using Application.Abstracts.Data;
 using Application.Abstracts.Storage;
+using Asp.Versioning;
 using Domain.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -12,7 +13,8 @@ namespace Respira.Media.API.Controllers;
 /// raw bytes never travel through the Wolverine/RabbitMQ message bus.
 /// </summary>
 [ApiController]
-[Route("api/v1/media")]
+[Route("api/{version:apiVersion}/media")]
+[ApiVersion("1.0")]
 public class MediaController(
     IStorageService storageService,
     IMediaDbContext dbContext

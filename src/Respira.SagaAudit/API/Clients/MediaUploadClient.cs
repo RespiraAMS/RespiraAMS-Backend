@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace Respira.SagaAudit.API.Clients;
 
-/// <summary>Result returned by the Media service <c>POST /api/v1/media/upload</c> endpoint.</summary>
+/// <summary>Result returned by the Media service <c>POST /api/1/media/upload</c> endpoint.</summary>
 public class MediaUploadResult
 {
     /// <summary>Identifier of the media record created by the Media service.</summary>
@@ -24,7 +24,7 @@ public class MediaUploadClient(HttpClient http)
 {
     /// <summary>
     /// Streams the supplied avatar <paramref name="file"/> to the Media service's
-    /// <c>POST /api/v1/media/upload</c> endpoint and returns the created media id.
+    /// <c>POST /api/1/media/upload</c> endpoint and returns the created media id.
     /// </summary>
     /// <param name="file">The avatar file to upload.</param>
     /// <param name="cancellationToken">A token to cancel the upload.</param>
@@ -40,7 +40,7 @@ public class MediaUploadClient(HttpClient http)
         }
         content.Add(streamContent, "file", file.FileName);
 
-        using var response = await http.PostAsync("api/v1/media/upload", content, cancellationToken);
+        using var response = await http.PostAsync("api/1/media/upload", content, cancellationToken);
         response.EnsureSuccessStatusCode();
 
         var result = await response.Content.ReadFromJsonAsync<MediaUploadResult>(

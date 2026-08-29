@@ -5,35 +5,36 @@ using Microsoft.Extensions.Logging;
 namespace Infrastructure.Email
 {
     /// <summary>
-    /// Resolves the public gateway base URL from the Aspire service discovery
-    /// environment variables (injected by <c>WithReference(gateway)</c>), falling back to the
-    /// <c>VerifyEmail:BaseUrl</c> configuration value when running outside Aspire
+    /// Resolves the Auth service base URL from the <c>VerifyEmail:BaseUrl</c> configuration
+    /// (set this to the Auth service port when running outside Aspire), falling back to the
+    /// Auth service Aspire service discovery endpoint, then the gateway.
     /// </summary>
-    public sealed class VerifyEmailLinkBuilder : IVerifyEmailLinkBuilder
+    public sealed class VerifyEmailLinkBuilder(
+        IConfiguration configuration,
+        ILogger<VerifyEmailLinkBuilder> logger
+    ) : IVerifyEmailLinkBuilder
     {
-        private readonly IConfiguration _configuration;
-        private readonly ILogger<VerifyEmailLinkBuilder> _logger;
-
-        public VerifyEmailLinkBuilder(IConfiguration configuration, ILogger<VerifyEmailLinkBuilder> logger)
-        {
-            _configuration = configuration;
-            _logger = logger;
-        }
+        private readonly IConfiguration _configuration = configuration;
+        private readonly ILogger<VerifyEmailLinkBuilder> _logger = logger;
 
         public string Build(string token, string email)
         {
-            var gateway = _configuration["services__gateway__http__0"]
+            var baseUrl =
+                _configuration["VerifyEmail:BaseUrl"]
+                ?? _configuration["services__auth-service__https__0"]
+                ?? _configuration["services__auth-service__http__0"]
                 ?? _configuration["services__gateway__https__0"]
-                ?? _configuration["VerifyEmail:BaseUrl"];
+                ?? _configuration["services__gateway__http__0"];
 
-            if (string.IsNullOrWhiteSpace(gateway))
+            if (string.IsNullOrWhiteSpace(baseUrl))
             {
                 _logger.LogWarning(
-                    "Gateway base URL not found in service discovery or configuration; verify-email links will be unusable");
-                gateway = "http://gateway";
+                    "Auth service base URL not found in service discovery or configuration; verify-email links will be unusable"
+                );
+                baseUrl = "https://localhost:7050";
             }
 
-            return $"{gateway.TrimEnd('/')}/api/v1/auth/verify-email?token={Uri.EscapeDataString(token)}&email={Uri.EscapeDataString(email)}";
+            return $"{baseUrl.TrimEnd('/')}/api/1/auth/verify-email?token={Uri.EscapeDataString(token)}&email={Uri.EscapeDataString(email)}";
         }
     }
 }
