@@ -93,4 +93,7 @@ app.UseClaimsPropagation();
 app.UseAuthorization();
 app.MapControllers();
 
+// Auto apply migrations
+app.ApplyMigrations(app.Environment.IsDevelopment());
+
 app.Run();
