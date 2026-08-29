@@ -27,6 +27,7 @@ public class TargetedDiagnoseHandler(
         // Get antibiogram for this pathogen
         var antibiogram = await context.Antibiograms
             .AsNoTracking()
+            .AsSplitQuery()
             .Include(a => a.FirstPriorityMedicines)
             .ThenInclude(m => m.AntibioticGroup)
             .Include(a => a.FirstPriorityMedicines)

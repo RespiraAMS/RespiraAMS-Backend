@@ -21,6 +21,7 @@ public class GetPagedAntibiogramHandler(IDbContext context, IPaginationFactory f
 #pragma warning disable RCS1077 // Optimize LINQ method call: ConvertAll won't work with EF Core SQL translation
         var antibiograms = await queryable
             .AsNoTracking()
+            .AsSplitQuery()
             .OrderByDescending(x => x.CreatedAt)
             .Select(x => new PagedAntibiogramItem
             {
