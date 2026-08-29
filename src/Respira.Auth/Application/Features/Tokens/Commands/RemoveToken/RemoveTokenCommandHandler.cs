@@ -7,16 +7,16 @@ using Respira.ServiceDefaults.Exceptions;
 namespace Application.Features.Tokens.Commands.RemoveToken
 {
     /// <summary>
-/// Handles <see cref="RemoveTokenCommand"/>: revokes a token by moving it to the blacklist and
-/// removing the issued-token row (via <see cref="TokenRevoker"/>). Used for logout/password-reset
-/// revocation. Returns true when a revocation was persisted.
-/// </summary>
-public class RemoveTokenCommandHandler(
-        IAuthDbContext dbContext,
-        TokenRevoker tokenRevoker,
-        ILogger<RemoveTokenCommand> logger,
-        IHashService hashService
-    ) : ICommandHandler<RemoveTokenCommand, bool>
+    /// Handles <see cref="RemoveTokenCommand"/>: revokes a token by moving it to the blacklist and
+    /// removing the issued-token row (via <see cref="TokenRevoker"/>). Used for logout/password-reset
+    /// revocation. Returns true when a revocation was persisted.
+    /// </summary>
+    public class RemoveTokenCommandHandler(
+            IAuthDbContext dbContext,
+            TokenRevoker tokenRevoker,
+            ILogger<RemoveTokenCommand> logger,
+            IHashService hashService
+        ) : ICommandHandler<RemoveTokenCommand, bool>
     {
         /// <summary>
         /// Stages and persists revocation of the supplied token.
