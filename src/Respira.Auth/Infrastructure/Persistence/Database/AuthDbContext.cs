@@ -1,5 +1,6 @@
 using Application.Abstracts.Data;
 using Domain.Entities;
+using Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Persistence.Database
@@ -86,6 +87,41 @@ namespace Infrastructure.Persistence.Database
             modelBuilder.Entity<BlacklistToken>().ToTable("blacklist_tokens");
             modelBuilder.Entity<BlacklistToken>().HasIndex(x => x.HashToken).IsUnique();
             modelBuilder.Entity<BlacklistToken>().HasIndex(x => x.ExpirationDate);
+
+            SeedAdminAccount(modelBuilder);
+        }
+
+        /// <summary>
+        /// Seeds a bootstrap administrator account so the manager/admin flows (e.g. the
+        /// Create/Update/Delete saga endpoints) can be exercised without first registering an
+        /// account out-of-band. Idempotent: the row is keyed by a fixed Id, so re-running the
+        /// migration only ever touches this one record.
+        /// </summary>
+        /// <param name="modelBuilder">Model builder.</param>
+        private void SeedAdminAccount(ModelBuilder modelBuilder)
+        {
+            const string adminEmail = "admin@respira.ams";
+            var adminId = Guid.Parse("11111111-1111-1111-1111-111111111111");
+
+            modelBuilder
+                .Entity<AuthDoctor>()
+                .HasData(
+                    new AuthDoctor
+                    {
+                        Id = adminId,
+                        Email = adminEmail,
+                        // BCrypt hash of "Admin@123" (work factor 12), generated with BCrypt.Net-Next.
+                        HashPassword = "$2a$12$RYGvxowi6VHTYi6qMXQ7ROTagbu9XS58dlqtQdSjp1AMWQ1T6dR4C",
+                        Phone = "0000000000",
+                        Role = RoleType.Admin,
+                        IsEmailConfirmed = true,
+                        Status = StatusType.Active,
+                        CreatedAt = new DateTimeOffset(2025, 1, 1, 0, 0, 0, TimeSpan.Zero),
+                        UpdatedAt = new DateTimeOffset(2025, 1, 1, 0, 0, 0, TimeSpan.Zero),
+                        IsDeleted = false,
+                        DeletedAt = null,
+                    }
+                );
         }
     }
 }

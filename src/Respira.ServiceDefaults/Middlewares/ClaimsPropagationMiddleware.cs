@@ -38,6 +38,36 @@ public class ClaimsPropagationMiddleware(RequestDelegate next)
                 context.User = new ClaimsPrincipal(identity);
             }
         }
+        else
+        {
+            context.Request.Headers.TryGetValue("X-Role", out var roleValues);
+            context.Request.Headers.TryGetValue("X-Email", out var emailValues);
+
+            // The gateway only forwards these headers for an authenticated caller. Some
+            // tokens (e.g. the seeded admin) carry no sub/NameIdentifier claim, so X-ID is
+            // absent — but role/email are still enough to reconstruct the identity for
+            // downstream authorization checks.
+            var claims = new List<Claim>();
+
+            if (!string.IsNullOrEmpty(roleValues.ToString()))
+            {
+                var roles = roleValues
+                    .ToString()
+                    .Split(',', StringSplitOptions.RemoveEmptyEntries);
+                claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role.Trim())));
+            }
+
+            if (!string.IsNullOrEmpty(emailValues.ToString()))
+            {
+                claims.Add(new Claim(ClaimTypes.Email, emailValues.ToString()));
+            }
+
+            if (claims.Count > 0)
+            {
+                var identity = new ClaimsIdentity(claims, "GatewayAuth");
+                context.User = new ClaimsPrincipal(identity);
+            }
+        }
 
         await next(context);
     }

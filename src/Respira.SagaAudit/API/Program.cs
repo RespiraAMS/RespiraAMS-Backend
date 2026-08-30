@@ -71,7 +71,6 @@ if (app.Environment.IsDevelopment())
     app.MapScalarApiReference(opts => opts.Theme = ScalarTheme.Kepler);
 }
 
-app.UseHttpsRedirection();
 app.UseClaimsPropagation();
 app.UseAuthorization();
 app.MapControllers();
