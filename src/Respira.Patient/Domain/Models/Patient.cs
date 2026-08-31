@@ -59,4 +59,11 @@ public class Patient : Base
     /// Patient treatment timeline
     /// </summary>
     public List<Treatment> Treatments { get; set; } = [];
+
+    public int Age()
+    {
+        var age = DateTimeOffset.UtcNow.Year - DateOfBirth.Year;
+        if (DateOfBirth.AddYears(age) > DateOnly.FromDateTime(DateTime.UtcNow)) age--;
+        return age;
+    }
 }

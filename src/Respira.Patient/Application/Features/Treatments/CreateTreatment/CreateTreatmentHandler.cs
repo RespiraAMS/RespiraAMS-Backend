@@ -31,6 +31,7 @@ public class CreateTreatmentHandler(
         // the patient has poor response that we would want to change medicines
         // (even if we have microbiological test result)
         var lastTreatment = await context.Treatments
+            .Where(x => x.PatientId == command.PatientId)
             .OrderByDescending(t => t.CreatedAt)
             .FirstOrDefaultAsync(cancellationToken);
         if (lastTreatment is not null)
