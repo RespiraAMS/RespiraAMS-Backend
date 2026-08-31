@@ -12,6 +12,8 @@ using Wolverine.FluentValidation;
 using Wolverine.Postgresql;
 using Wolverine.RabbitMQ;
 using Scalar.AspNetCore;
+using Application.Features.Doctors.Get.Results;
+using Respira.ServiceDefaults.Dtos;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -56,6 +58,9 @@ builder.Host.UseWolverine(opts =>
     // Route messages across service boundaries through RabbitMQ
     opts.UseRabbitMq(rabbitConn).AutoProvision().UseConventionalRouting();
     opts.Policies.DisableConventionalLocalRouting();
+
+    opts.ListenToRabbitQueue("doctor-query-queue");
+    opts.PublishMessage<ApiResponse<DoctorQueryResult>>().ToRabbitQueue("doctor-result-queue");
 
     opts.Durability.Mode = DurabilityMode.Balanced;
 });

@@ -1,7 +1,9 @@
 using Domain.Enums;
+using Wolverine.Attributes;
 
 namespace Application.Features.Doctors.Get.Results
 {
+    [MessageIdentity("doctor-result")]
     public record DoctorQueryResult
     {
         public required string Email { get; set; }

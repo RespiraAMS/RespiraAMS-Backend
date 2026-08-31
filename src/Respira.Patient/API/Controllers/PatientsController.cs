@@ -3,6 +3,7 @@ using Application.Features.Patients.DeletePatient;
 using Application.Features.Patients.GetPagedPatient;
 using Application.Features.Patients.GetPatientById;
 using Application.Features.Treatments.CreateTreatment;
+using Application.Features.Treatments.GetTreatmentById;
 using Microsoft.AspNetCore.Mvc;
 using Respira.Patient.API.Dtos;
 using Respira.ServiceDefaults.Dtos;
@@ -12,7 +13,7 @@ namespace Respira.Patient.API.Controllers;
 
 [ApiController]
 [Route("api/{version:apiVersion}/patients")]
-public class PatientsController(IMessageBus bus) : ControllerBase
+public class PatientsController(IMessageBus bus, ILogger<PatientsController> logger) : ControllerBase
 {
     [HttpPost]
     [ProducesResponseType<ApiResponse<CreatePatientResult>>(StatusCodes.Status201Created)]
@@ -109,14 +110,26 @@ public class PatientsController(IMessageBus bus) : ControllerBase
         return NoContent();
     }
 
-    [Route("{id:guid}/treatments")]
+    [Route("{patientId:guid}/treatments")]
     [HttpPost]
-    public async Task<IActionResult> CreatePatientTreatment(CreateTreatmentCommand req)
+    public async Task<IActionResult> CreatePatientTreatment(Guid patientId, CreateTreatmentRequestDto req)
     {
-        // NOTE: change from directly using command to use a DTO for request object.
-        // Patient ID from path paramater, while doctor ID from request header (stream down from API gateway)
-        var result = await bus.InvokeAsync<CreateTreatmentResult>(req);
+        // Get doctor ID from request header. The auth middleware will check for this ID if it exist
+        // and valid UUID, so we just need to get the ID here
+
+        var parse = Guid.TryParse(Request.Headers["X-ID"], out var doctorId);
+        logger.LogDebug("Doctor ID: {doctorId} {success}", doctorId, parse);
+        var result = await bus.InvokeAsync<CreateTreatmentResult>(req.ToCommand(patientId, doctorId));
         var resp = ApiResponse<CreateTreatmentResult>.Ok(result, statusCode: StatusCodes.Status201Created);
         return CreatedAtAction(nameof(GetPatient), new { id = result.Id }, resp);
+    }
+
+    [HttpGet]
+    [Route("{patientId:guid}/treatments/{treatmentId:guid}")]
+    public async Task<IActionResult> GetPatientTreatment(Guid patientId, Guid treatmentId)
+    {
+        var result = await bus.InvokeAsync<TreatmentInfo>(new GetTreatmentByIdQuery(treatmentId, patientId));
+        var resp = ApiResponse<TreatmentInfo>.Ok(result);
+        return Ok(resp);
     }
 }

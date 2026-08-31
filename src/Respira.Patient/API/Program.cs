@@ -1,8 +1,8 @@
 using Application;
 using Application.Features.Treatments.CreateTreatment;
+using Application.Features.Treatments.GetTreatmentById;
 using Asp.Versioning;
 using Infrastructure;
-using Respira.Patient.API.Converters;
 using Respira.ServiceDefaults.Extensions;
 using Respira.ServiceDefaults.Utils.OpenApiTransformers;
 using Scalar.AspNetCore;
@@ -20,8 +20,7 @@ var conn =
     ?? throw new InvalidOperationException("No connection string found");
 
 // Add API controllers
-builder.Services.AddControllers()
-    .AddJsonOptions(o => o.JsonSerializerOptions.Converters.Add(new DiagnosisRecordJsonConverter()));
+builder.Services.AddControllers();
 
 // Add API versioning
 builder.Services.AddApiVersioning(options =>
@@ -71,6 +70,9 @@ builder.Host.UseWolverine(opts =>
     opts.ListenToRabbitQueue("validate-diagnosis-result-queue");
     opts.PublishMessage<ValidateDiagnosisQuery>().ToRabbitQueue("validate-diagnosis-query-queue");
 
+    opts.ListenToRabbitQueue("doctor-result-queue");
+    opts.PublishMessage<GetDoctorByIdQuery>().ToRabbitQueue("doctor-query-queue");
+
     opts.Durability.Mode = DurabilityMode.Solo;
 });
 
@@ -78,8 +80,6 @@ var app = builder.Build();
 
 app.UseCustomErrorHandling();
 app.MapControllers();
-
-// app.UseClaimsPropagation();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
