@@ -101,8 +101,8 @@ namespace Application.Features.Authentication.Login.Queries
                     );
                 }
 
-                var accessToken = jwtService.GenerateToken(user.Email, user.Role);
-                var refreshToken = jwtService.GenerateRefreshToken(user.Email, user.Role);
+                var accessToken = jwtService.GenerateToken(user.Email, user.Role, user.Id.ToString());
+                var refreshToken = jwtService.GenerateRefreshToken(user.Email, user.Role, user.Id.ToString());
 
                 var cacheTtl = TimeSpan.FromMinutes(jwtOption.Value.AccessTokenExpired);
                 await CacheUserByEmailAsync(user, cacheTtl);

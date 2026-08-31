@@ -24,16 +24,18 @@ namespace Infrastructure.Authentication
     ) : IJwtService
     {
         private const string TokenTypeClaim = "token_type";
+        private const string UserIdClaim = "X-ID";
 
         /// <summary>
         /// Generates an access token for the given user
         /// </summary>
         /// <param name="email">Email of the user</param>
         /// <param name="role">Role of the user</param>
+        /// <param name="userId">Id of the user (exposed as the "X-ID" claim)</param>
         /// <returns>Signed JWT access token</returns>
-        public string GenerateToken(string email, RoleType role)
+        public string GenerateToken(string email, RoleType role, string userId)
         {
-            return GenerateToken(email, role, TokenType.AccessToken, jwtOption.Value.AccessTokenExpired);
+            return GenerateToken(email, role, userId, TokenType.AccessToken, jwtOption.Value.AccessTokenExpired);
         }
 
         /// <summary>
@@ -41,10 +43,11 @@ namespace Infrastructure.Authentication
         /// </summary>
         /// <param name="email">Email of the user</param>
         /// <param name="role">Role of the user</param>
+        /// <param name="userId">Id of the user (exposed as the "X-ID" claim)</param>
         /// <returns>Signed JWT refresh token</returns>
-        public string GenerateRefreshToken(string email, RoleType role)
+        public string GenerateRefreshToken(string email, RoleType role, string userId)
         {
-            return GenerateToken(email, role, TokenType.RefreshToken, jwtOption.Value.RefreshTokenExpired);
+            return GenerateToken(email, role, userId, TokenType.RefreshToken, jwtOption.Value.RefreshTokenExpired);
         }
 
         /// <summary>
@@ -69,13 +72,14 @@ namespace Infrastructure.Authentication
             return await ValidateToken(token, TokenType.RefreshToken);
         }
 
-        private string GenerateToken(string email, RoleType role, TokenType tokenType, int expiredInMinutes)
+        private string GenerateToken(string email, RoleType role, string userId, TokenType tokenType, int expiredInMinutes)
         {
             var option = jwtOption.Value;
             var claims = new List<Claim>
             {
                 new(JwtRegisteredClaimNames.Email, email),
                 new(ClaimTypes.Role, role.ToString()),
+                new(UserIdClaim, userId),
                 new(TokenTypeClaim, tokenType.ToString()),
                 new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             };

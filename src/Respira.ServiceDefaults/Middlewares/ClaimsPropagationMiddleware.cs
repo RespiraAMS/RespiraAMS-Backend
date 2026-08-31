@@ -1,4 +1,5 @@
 ﻿using System.Security.Claims;
+
 using Microsoft.AspNetCore.Http;
 
 namespace Respira.ServiceDefaults.Middlewares;
@@ -34,7 +35,7 @@ public class ClaimsPropagationMiddleware(RequestDelegate next)
                     claims.Add(new Claim(ClaimTypes.Email, emailValues.ToString()));
                 }
 
-                var identity = new ClaimsIdentity(claims, "GatewayAuth");
+                var identity = new ClaimsIdentity(claims, "Bearer");
                 context.User = new ClaimsPrincipal(identity);
             }
         }
@@ -64,7 +65,7 @@ public class ClaimsPropagationMiddleware(RequestDelegate next)
 
             if (claims.Count > 0)
             {
-                var identity = new ClaimsIdentity(claims, "GatewayAuth");
+                var identity = new ClaimsIdentity(claims, "Bearer");
                 context.User = new ClaimsPrincipal(identity);
             }
         }

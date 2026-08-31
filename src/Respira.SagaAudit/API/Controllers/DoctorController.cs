@@ -5,27 +5,27 @@ using Domain.Enums;
 using Microsoft.AspNetCore.Mvc;
 using Respira.SagaAudit.API.Clients;
 using Respira.SagaAudit.API.Dtos;
+using Respira.SagaAudit.Application.Features.Common;
 using Respira.SagaAudit.Application.Features.CreateDoctor.Commands;
 using Respira.SagaAudit.Application.Features.DeleteDoctor.Commands;
 using Respira.SagaAudit.Application.Features.UpdateDoctor.Commands;
-using Respira.SagaAudit.Application.Services;
+using Respira.ServiceDefaults.Dtos;
 using Wolverine;
 
 namespace Respira.SagaAudit.API.Controllers;
 
 /// <summary>
-/// Doctor lifecycle endpoints. Manager/Admin only. Each endpoint starts the
-/// corresponding Wolverine saga (Create/Update/Delete doctor) which orchestrates
-/// the cross-service workflow; the request is accepted (HTTP 202) and tracked
-/// asynchronously via <see cref="ProcessTrackerService"/>.
+/// Doctor lifecycle endpoints. Manager/Admin only. Each endpoint dispatches the
+/// corresponding start-saga command (Create/Update/Delete doctor), which registers
+/// the saga that orchestrates the cross-service workflow; the request is accepted
+/// (HTTP 202) and tracked asynchronously.
 /// </summary>
 [ApiController]
 [Route("api/{version:apiVersion}/sagas/doctors")]
 [ApiVersion("1.0")]
 public class DoctorController(
     IMessageBus bus,
-    MediaUploadClient mediaUpload,
-    ProcessTrackerService trackerService
+    MediaUploadClient mediaUpload
 ) : ControllerBase
 {
     private bool IsManager() =>
@@ -49,12 +49,15 @@ public class DoctorController(
     {
         if (!IsManager())
         {
-            return Forbid();
+            return StatusCode(
+                StatusCodes.Status403Forbidden,
+                ApiResponse.Fail("You do not have permission to perform this action", StatusCodes.Status403Forbidden)
+            );
         }
 
         if (file is null || file.Length == 0)
         {
-            return BadRequest("Avatar file is required");
+            return BadRequest(ApiResponse.Fail("Avatar file is required", StatusCodes.Status400BadRequest));
         }
 
         CreateDoctorRequest? dto;
@@ -67,47 +70,39 @@ public class DoctorController(
         }
         catch (JsonException)
         {
-            return BadRequest("Invalid request payload");
+            return BadRequest(ApiResponse.Fail("Invalid request payload", StatusCodes.Status400BadRequest));
         }
 
         if (dto is null)
         {
-            return BadRequest("Invalid request payload");
+            return BadRequest(ApiResponse.Fail("Invalid request payload", StatusCodes.Status400BadRequest));
         }
 
         var mediaId = await mediaUpload.UploadAsync(file, cancellationToken);
 
-        var sagaId = Guid.NewGuid();
-        await trackerService.CreateAsync(
-            sagaId,
-            "CreateDoctor",
-            dto.ManagerDoctorId,
-            null,
+        var result = await bus.InvokeAsync<ApiResponse<StartSagaResult>>(
+            new StartCreateDoctorSagaCommand
+            {
+                ManagerDoctorId = dto.ManagerDoctorId,
+                Email = dto.Email,
+                Password = dto.Password,
+                Phone = dto.Phone,
+                Role = dto.Role,
+                FirstName = dto.FirstName,
+                LastName = dto.LastName,
+                Degrees = dto.Degrees,
+                AcademicTitle = dto.AcademicTitle,
+                Position = dto.Position,
+                Gender = dto.Gender,
+                CitizenIdentificationNumber = dto.CitizenIdentificationNumber,
+                DateOfBirth = dto.DateOfBirth,
+                Address = dto.Address,
+                MediaId = mediaId,
+            },
             cancellationToken
         );
 
-        var command = new CreateDoctorByManagerCommand
-        {
-            SagaId = sagaId,
-            ManagerDoctorId = dto.ManagerDoctorId,
-            Email = dto.Email,
-            Password = dto.Password,
-            Phone = dto.Phone,
-            Role = dto.Role,
-            FirstName = dto.FirstName,
-            LastName = dto.LastName,
-            Degrees = dto.Degrees,
-            AcademicTitle = dto.AcademicTitle,
-            Position = dto.Position,
-            Gender = dto.Gender,
-            CitizenIdentificationNumber = dto.CitizenIdentificationNumber,
-            DateOfBirth = dto.DateOfBirth,
-            Address = dto.Address,
-            MediaId = mediaId,
-        };
-
-        await bus.InvokeAsync(command, cancellationToken);
-        return Accepted(new { sagaId });
+        return StatusCode(result.StatusCode, result);
     }
 
     /// <summary>Starts the UpdateDoctor saga (Auth -> Doctor -> Media). Manager/Admin only.</summary>
@@ -117,44 +112,48 @@ public class DoctorController(
     {
         if (!IsManager())
         {
-            return Forbid();
+            return StatusCode(
+                StatusCodes.Status403Forbidden,
+                ApiResponse.Fail("You do not have permission to perform this action", StatusCodes.Status403Forbidden)
+            );
         }
 
-        var command = new UpdateDoctorByManagerCommand
-        {
-            ManagerDoctorId = request.ManagerDoctorId,
-            EntityId = request.EntityId,
-            MediaId = request.MediaId,
-            Email = request.Email,
-            Phone = request.Phone,
-            Role = request.Role,
-            OldEmail = request.OldEmail,
-            OldPhone = request.OldPhone,
-            OldRole = request.OldRole,
-            FirstName = request.FirstName,
-            LastName = request.LastName,
-            Degrees = request.Degrees,
-            AcademicTitle = request.AcademicTitle,
-            Position = request.Position,
-            Gender = request.Gender,
-            CitizenIdentificationNumber = request.CitizenIdentificationNumber,
-            DateOfBirth = request.DateOfBirth,
-            Address = request.Address,
-            OldFirstName = request.OldFirstName,
-            OldLastName = request.OldLastName,
-            OldDegrees = request.OldDegrees,
-            OldAcademicTitle = request.OldAcademicTitle,
-            OldPosition = request.OldPosition,
-            OldGender = request.OldGender,
-            OldCitizenIdentificationNumber = request.OldCitizenIdentificationNumber,
-            OldDateOfBirth = request.OldDateOfBirth,
-            OldAddress = request.OldAddress,
-            HasNewMedia = request.HasNewMedia,
-            NewMediaId = request.NewMediaId,
-        };
+        var result = await bus.InvokeAsync<ApiResponse<StartSagaResult>>(
+            new StartUpdateDoctorSagaCommand
+            {
+                ManagerDoctorId = request.ManagerDoctorId,
+                EntityId = request.EntityId,
+                MediaId = request.MediaId,
+                Email = request.Email,
+                Phone = request.Phone,
+                Role = request.Role,
+                OldEmail = request.OldEmail,
+                OldPhone = request.OldPhone,
+                OldRole = request.OldRole,
+                FirstName = request.FirstName,
+                LastName = request.LastName,
+                Degrees = request.Degrees,
+                AcademicTitle = request.AcademicTitle,
+                Position = request.Position,
+                Gender = request.Gender,
+                CitizenIdentificationNumber = request.CitizenIdentificationNumber,
+                DateOfBirth = request.DateOfBirth,
+                Address = request.Address,
+                OldFirstName = request.OldFirstName,
+                OldLastName = request.OldLastName,
+                OldDegrees = request.OldDegrees,
+                OldAcademicTitle = request.OldAcademicTitle,
+                OldPosition = request.OldPosition,
+                OldGender = request.OldGender,
+                OldCitizenIdentificationNumber = request.OldCitizenIdentificationNumber,
+                OldDateOfBirth = request.OldDateOfBirth,
+                OldAddress = request.OldAddress,
+                HasNewMedia = request.HasNewMedia,
+                NewMediaId = request.NewMediaId,
+            }
+        );
 
-        await bus.SendAsync(command);
-        return Accepted(new { sagaId = command.EntityId });
+        return StatusCode(result.StatusCode, result);
     }
 
     /// <summary>Starts the DeleteDoctor saga (Media -> Doctor -> Auth). Manager/Admin only.</summary>
@@ -164,17 +163,21 @@ public class DoctorController(
     {
         if (!IsManager())
         {
-            return Forbid();
+            return StatusCode(
+                StatusCodes.Status403Forbidden,
+                ApiResponse.Fail("You do not have permission to perform this action", StatusCodes.Status403Forbidden)
+            );
         }
 
-        var command = new DeleteDoctorByManagerCommand
-        {
-            ManagerDoctorId = request.ManagerDoctorId,
-            EntityId = request.EntityId,
-            MediaId = request.MediaId,
-        };
+        var result = await bus.InvokeAsync<ApiResponse<StartSagaResult>>(
+            new StartDeleteDoctorSagaCommand
+            {
+                ManagerDoctorId = request.ManagerDoctorId,
+                EntityId = request.EntityId,
+                MediaId = request.MediaId,
+            }
+        );
 
-        await bus.SendAsync(command);
-        return Accepted(new { sagaId = command.EntityId });
+        return StatusCode(result.StatusCode, result);
     }
 }

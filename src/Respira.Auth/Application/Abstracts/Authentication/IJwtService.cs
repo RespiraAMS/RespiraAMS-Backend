@@ -10,8 +10,9 @@ namespace Application.Abstracts.Authentication
         /// <summary>Generates a signed JWT access token for the given user</summary>
         /// <param name="email">User email (used as the subject claim)</param>
         /// <param name="role">User role (used as the role claim)</param>
+        /// <param name="userId">User id (exposed as the "X-ID" claim)</param>
         /// <returns>Signed JWT access token</returns>
-        public string GenerateToken(string email, RoleType role);
+        public string GenerateToken(string email, RoleType role, string userId);
 
         /// <summary>Validates an access token and returns the user's email and role</summary>
         /// <param name="token">Access token to validate</param>
@@ -21,8 +22,9 @@ namespace Application.Abstracts.Authentication
         /// <summary>Generates a signed JWT refresh token for the given user</summary>
         /// <param name="email">User email (used as the subject claim)</param>
         /// <param name="role">User role (used as the role claim)</param>
+        /// <param name="userId">User id (exposed as the "X-ID" claim)</param>
         /// <returns>Signed JWT refresh token</returns>
-        public string GenerateRefreshToken(string email, RoleType role);
+        public string GenerateRefreshToken(string email, RoleType role, string userId);
 
         /// <summary>Validates a refresh token and returns the user's email and role</summary>
         /// <param name="token">Refresh token to validate</param>

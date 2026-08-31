@@ -81,8 +81,8 @@ public class RefreshCommandHandler(
             }
 
             // 3. Issue new tokens.
-            var accessToken = jwtService.GenerateToken(email, role);
-            var refreshToken = jwtService.GenerateRefreshToken(email, role);
+            var accessToken = jwtService.GenerateToken(email, role, storedToken.AuthUserId.ToString());
+            var refreshToken = jwtService.GenerateRefreshToken(email, role, storedToken.AuthUserId.ToString());
 
             // 4. Persist the new refresh token.
             var token = new Token
