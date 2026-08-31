@@ -4,7 +4,6 @@ using Application.Features.AntibioticGroups.CreateAntibioticGroup;
 using Application.Features.AntibioticGroups.UpdateAntibioticGroup;
 using Application.Features.Antibiotics.AddDosage;
 using Application.Features.Antibiotics.CreateAntibiotic;
-using Application.Features.Antibiotics.Shared;
 using Application.Features.Antibiotics.UpdateAntibiotic;
 using Application.Features.Antibiotics.UpdateDosage;
 using Application.Features.Causes.CreateCause;

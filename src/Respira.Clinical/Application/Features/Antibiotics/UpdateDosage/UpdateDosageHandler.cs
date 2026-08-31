@@ -1,5 +1,5 @@
 ﻿using Application.Contracts.Data;
-using Application.Features.Antibiotics.Shared;
+using Domain.Exceptions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -45,7 +45,7 @@ public class UpdateDosageHandler(
         // Check for business logic
         try
         {
-            DosageBusinessChecker.IsValidDosage(dosages);
+            Antibiotic.IsAntibioticDosageValid(dosages);
         }
         catch (StandardDoseInvalidException e)
         {
