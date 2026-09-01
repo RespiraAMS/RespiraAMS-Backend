@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Respira.ServiceDefaults.Constracts.CQRS;
+using Respira.ServiceDefaults.Contracts.CQRS;
 using Respira.ServiceDefaults.Dtos;
 using Respira.ServiceDefaults.Exceptions;
 

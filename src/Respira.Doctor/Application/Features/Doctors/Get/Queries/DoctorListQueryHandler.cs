@@ -3,7 +3,7 @@ using Application.Contracts.Messages;
 using Application.Features.Doctors.Get.Results;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
-using Respira.ServiceDefaults.Constracts.CQRS;
+using Respira.ServiceDefaults.Contracts.CQRS;
 using Respira.ServiceDefaults.Dtos;
 using Respira.ServiceDefaults.Exceptions;
 using Wolverine;

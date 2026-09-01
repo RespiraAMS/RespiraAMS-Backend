@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Respira.SagaAudit.Application.Features.Common;
 using Respira.SagaAudit.Application.Services;
-using Respira.ServiceDefaults.Constracts.CQRS;
+using Respira.ServiceDefaults.Contracts.CQRS;
 using Respira.ServiceDefaults.Dtos;
 using Wolverine;
 

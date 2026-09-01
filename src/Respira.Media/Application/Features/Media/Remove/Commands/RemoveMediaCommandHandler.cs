@@ -3,7 +3,7 @@ using Application.Abstracts.Storage;
 using Application.Features.Media.Remove.Events;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Respira.ServiceDefaults.Constracts.CQRS;
+using Respira.ServiceDefaults.Contracts.CQRS;
 using Wolverine;
 
 namespace Application.Features.Media.Remove.Commands;

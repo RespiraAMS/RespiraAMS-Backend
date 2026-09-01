@@ -4,7 +4,7 @@ using Domain.Enums;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Respira.ServiceDefaults.Constracts.CQRS;
+using Respira.ServiceDefaults.Contracts.CQRS;
 using Respira.ServiceDefaults.Dtos;
 using Respira.ServiceDefaults.Exceptions;
 using Wolverine;

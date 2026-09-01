@@ -1,7 +1,7 @@
 using Application.Abstracts.Data;
 using Domain.Entities;
 using Microsoft.Extensions.Logging;
-using Respira.ServiceDefaults.Constracts.CQRS;
+using Respira.ServiceDefaults.Contracts.CQRS;
 using Respira.ServiceDefaults.Dtos;
 using Respira.ServiceDefaults.Exceptions;
 

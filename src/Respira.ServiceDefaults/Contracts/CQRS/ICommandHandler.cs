@@ -1,4 +1,4 @@
-namespace Respira.ServiceDefaults.Constracts.CQRS
+namespace Respira.ServiceDefaults.Contracts.CQRS
 {
     public interface ICommandHandler<in TCommand>
         where TCommand : ICommand

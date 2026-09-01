@@ -3,7 +3,7 @@ using Application.Abstracts.Data;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Respira.ServiceDefaults.Constracts.CQRS;
+using Respira.ServiceDefaults.Contracts.CQRS;
 
 namespace Application.Features.Tokens.Commands.CreateToken
 {

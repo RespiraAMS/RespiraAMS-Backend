@@ -1,4 +1,4 @@
-using Respira.ServiceDefaults.Constracts.CQRS;
+using Respira.ServiceDefaults.Contracts.CQRS;
 
 namespace Application.Features.Authentication.SendEmailVerification
 {

@@ -1,6 +1,6 @@
 using Application.Features.Authentication.SendEmailVerification;
 using Microsoft.Extensions.Logging;
-using Respira.ServiceDefaults.Constracts.CQRS;
+using Respira.ServiceDefaults.Contracts.CQRS;
 using Wolverine;
 
 namespace Application.Features.Authentication.CreateUser.Events;

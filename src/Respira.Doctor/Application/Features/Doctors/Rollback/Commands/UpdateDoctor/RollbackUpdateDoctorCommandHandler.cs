@@ -2,7 +2,7 @@ using Application.Abstracts.Caching;
 using Application.Abstracts.Data;
 using Application.Features.Doctors.Rollback.Events;
 using Microsoft.Extensions.Logging;
-using Respira.ServiceDefaults.Constracts.CQRS;
+using Respira.ServiceDefaults.Contracts.CQRS;
 using Wolverine;
 
 namespace Application.Features.Doctors.Rollback.Commands.UpdateDoctor

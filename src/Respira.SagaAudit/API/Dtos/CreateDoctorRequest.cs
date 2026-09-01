@@ -1,5 +1,4 @@
 using Domain.Enums;
-using Respira.ServiceDefaults.Constracts.CQRS;
 
 namespace Respira.SagaAudit.API.Dtos;
 

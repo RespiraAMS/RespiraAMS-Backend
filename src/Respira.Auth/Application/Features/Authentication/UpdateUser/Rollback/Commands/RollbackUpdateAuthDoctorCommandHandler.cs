@@ -1,7 +1,7 @@
 using Application.Abstracts.Data;
 using Application.Features.Authentication.UpdateUser.Rollback.Events;
 using Microsoft.Extensions.Logging;
-using Respira.ServiceDefaults.Constracts.CQRS;
+using Respira.ServiceDefaults.Contracts.CQRS;
 using Wolverine;
 
 namespace Application.Features.Authentication.UpdateUser.Rollback.Commands;

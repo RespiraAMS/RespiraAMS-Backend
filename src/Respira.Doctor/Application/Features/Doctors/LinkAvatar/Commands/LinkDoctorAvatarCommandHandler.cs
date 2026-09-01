@@ -3,7 +3,7 @@ using Application.Abstracts.Data;
 using Application.Features.Doctors.LinkAvatar.Events;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Respira.ServiceDefaults.Constracts.CQRS;
+using Respira.ServiceDefaults.Contracts.CQRS;
 using Wolverine;
 
 namespace Application.Features.Doctors.LinkAvatar.Commands

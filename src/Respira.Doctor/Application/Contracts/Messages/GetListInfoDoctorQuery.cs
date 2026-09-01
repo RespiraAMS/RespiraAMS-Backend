@@ -1,4 +1,4 @@
-using Respira.ServiceDefaults.Constracts.CQRS;
+using Respira.ServiceDefaults.Contracts.CQRS;
 using Wolverine.Attributes;
 
 namespace Application.Contracts.Messages;

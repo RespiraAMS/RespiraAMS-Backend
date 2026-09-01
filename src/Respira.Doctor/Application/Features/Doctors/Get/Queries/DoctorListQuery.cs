@@ -1,4 +1,4 @@
-using Respira.ServiceDefaults.Constracts.CQRS;
+using Respira.ServiceDefaults.Contracts.CQRS;
 using Respira.ServiceDefaults.Dtos;
 
 namespace Application.Features.Doctors.Get.Queries;

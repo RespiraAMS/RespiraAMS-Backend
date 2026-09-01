@@ -1,7 +1,7 @@
 using Application.Abstracts.Authentication;
 using Application.Abstracts.Data;
 using Microsoft.Extensions.Logging;
-using Respira.ServiceDefaults.Constracts.CQRS;
+using Respira.ServiceDefaults.Contracts.CQRS;
 using Respira.ServiceDefaults.Exceptions;
 
 namespace Application.Features.Tokens.Commands.RemoveToken
