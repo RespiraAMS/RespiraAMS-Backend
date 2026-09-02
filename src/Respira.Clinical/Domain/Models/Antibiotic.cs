@@ -1,5 +1,5 @@
 ﻿using Domain.Enums;
-using Domain.Exceptions;
+using Respira.ServiceDefaults.Contracts.Results;
 
 namespace Domain.Models;
 
@@ -68,16 +68,11 @@ public class Antibiotic : Base
     public List<Pathogen> AntibioticSpectra { get; set; } = [];
 
     /// <summary>
-    /// Validate if antibiotic dosage is valid
+    /// Validate if antibiotic's dosage is valid according to business rules
     /// </summary>
-    /// <exception cref="DosageEmptyException">Throw if antibiotic dosage is empty</exception>
-    /// <exception cref="StandardDoseInvalidException">
-    /// Throw if violate rule "standard dose for route of administration is 1"
-    /// </exception>
-    /// <exception cref="OverlappedCrclException">
-    /// Throw if violate rule "CrCl range is overlapped"
-    /// </exception>
-    public static void IsAntibioticDosageValid(List<Dosage> dosages)
+    /// <param name="dosages">Antibiotic dosage</param>
+    /// <returns>Result object of boolean</returns>
+    public static Result<bool> IsAntibioticDosageValid(List<Dosage> dosages)
     {
         // Antibiotic dosage should adhere to these rules
         // 1. There must be at least 1 dosage regardless of route of administration
@@ -88,7 +83,7 @@ public class Antibiotic : Base
         // Check rule 1
         if (!dosages.Any())
         {
-            throw new DosageEmptyException();
+            return Result<bool>.Failure(new Error(Status.BusinessRuleViolation, "Dosage list is empty"));
         }
 
         foreach (var route in dosages.Select(d => d.RouteOfAdministration).Distinct().ToList())
@@ -100,7 +95,8 @@ public class Antibiotic : Base
             // Check rule 2
             if (dosagePerRoute.Count(d => d.Crcl == null) != 1)
             {
-                throw new StandardDoseInvalidException(route);
+                var msg = $"Route {route} has more than 1 standard dose";
+                return Result<bool>.Failure(new Error(Status.BusinessRuleViolation, msg));
             }
 
             // Check rule 3
@@ -114,10 +110,17 @@ public class Antibiotic : Base
                     if (dosagePerRoute[j].Crcl is null) continue;
                     if (dosagePerRoute[i].Crcl!.IsRangeOverlapped(dosagePerRoute[j].Crcl))
                     {
-                        throw new OverlappedCrclException(route, dosagePerRoute[i].Crcl!, dosagePerRoute[j].Crcl!);
+                        var msg = $"Route {route} has overlapped CrCl ranges";
+                        return Result<bool>.Failure(new Error(Status.BusinessRuleViolation, msg, new
+                        {
+                            Range1 = dosagePerRoute[i].Crcl!,
+                            Range2 = dosagePerRoute[j].Crcl!
+                        }));
                     }
                 }
             }
         }
+
+        return Result<bool>.Success(Status.Success, true);
     }
 }

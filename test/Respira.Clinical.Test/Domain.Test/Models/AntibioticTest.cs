@@ -1,16 +1,13 @@
-using Domain.Exceptions;
 using Domain.Models;
 using Domain.Enums;
 using Range = Domain.Models.Range;
+using Respira.ServiceDefaults.Contracts.Results;
 
 namespace Domain.Test.Models
 {
     public class AntibioticTest
     {
-        private static Dosage CreateDosage(
-            RouteOfAdministration route,
-            string dose = "500mg",
-            Range? crcl = null)
+        private static Dosage CreateDosage(RouteOfAdministration route, string dose = "500mg", Range? crcl = null)
         {
             return new Dosage
             {
@@ -21,11 +18,7 @@ namespace Domain.Test.Models
             };
         }
 
-        private static Range CreateCrclRange(
-            decimal min,
-            decimal max,
-            bool isMinExclusive = false,
-            bool isMaxExclusive = false)
+        private static Range CreateCrclRange(decimal min, decimal max, bool isMinExclusive = false, bool isMaxExclusive = false)
         {
             return new Range
             {
@@ -48,9 +41,12 @@ namespace Domain.Test.Models
 #pragma warning disable xUnit1045 // Avoid using TheoryData type arguments that might not be serializable
         [MemberData(nameof(EmptyDosage))]
 #pragma warning restore xUnit1045 // Avoid using TheoryData type arguments that might not be serializable
-        public void IsAntibioticDosageValid_EmptyDosage_ThrowsDosageEmptyException(List<Dosage> dosages)
+        public void IsAntibioticDosageValid_EmptyDosage_Fail(List<Dosage> dosages)
         {
-            Assert.Throws<DosageEmptyException>(() => Antibiotic.IsAntibioticDosageValid(dosages));
+            var result = Antibiotic.IsAntibioticDosageValid(dosages);
+            Assert.Equal(Status.BusinessRuleViolation, result.StatusCode);
+            Assert.True(result.IsFailure);
+            Assert.NotNull(result.Error);
         }
 
         #endregion
@@ -79,21 +75,17 @@ namespace Domain.Test.Models
             new List<Dosage>
             {
                 CreateDosage(RouteOfAdministration.Oral, "500mg"),
-                CreateDosage(RouteOfAdministration.Oral, "250mg",
-                    CreateCrclRange(15, 30, isMaxExclusive: true)),
-                CreateDosage(RouteOfAdministration.Oral, "125mg",
-                    CreateCrclRange(30, 60, isMaxExclusive: true))
+                CreateDosage(RouteOfAdministration.Oral, "250mg",CreateCrclRange(15, 30, isMaxExclusive: true)),
+                CreateDosage(RouteOfAdministration.Oral, "125mg",CreateCrclRange(30, 60, isMaxExclusive: true))
             },
 
             // Multiple routes, each with exactly 1 standard dose
             new List<Dosage>
             {
                 CreateDosage(RouteOfAdministration.Oral, "500mg"),
-                CreateDosage(RouteOfAdministration.Oral, "250mg",
-                    CreateCrclRange(15, 30, isMaxExclusive: true)),
+                CreateDosage(RouteOfAdministration.Oral, "250mg", CreateCrclRange(15, 30, isMaxExclusive: true)),
                 CreateDosage(RouteOfAdministration.Intravenous, "1g"),
-                CreateDosage(RouteOfAdministration.Intravenous, "500mg",
-                    CreateCrclRange(15, 30, isMaxExclusive: true))
+                CreateDosage(RouteOfAdministration.Intravenous, "500mg", CreateCrclRange(15, 30, isMaxExclusive: true))
             }
         ];
 
@@ -101,10 +93,13 @@ namespace Domain.Test.Models
 #pragma warning disable xUnit1045 // Avoid using TheoryData type arguments that might not be serializable
         [MemberData(nameof(ValidStandardDoseCases))]
 #pragma warning restore xUnit1045 // Avoid using TheoryData type arguments that might not be serializable
-        public void IsAntibioticDosageValid_ValidStandardDose_DoesNotThrow(List<Dosage> dosages)
+        public void IsAntibioticDosageValid_ValidStandardDose_Success(List<Dosage> dosages)
         {
-            var exception = Record.Exception(() => Antibiotic.IsAntibioticDosageValid(dosages));
-            Assert.Null(exception);
+            var result = Antibiotic.IsAntibioticDosageValid(dosages);
+            Assert.True(result.IsSuccess);
+            Assert.True(result.Data);
+            Assert.Null(result.Error);
+            Assert.Equal(Status.Success, result.StatusCode);
         }
 
         #endregion
@@ -116,20 +111,16 @@ namespace Domain.Test.Models
             // Single route, all doses have CrCl (no standard dose)
             new List<Dosage>
             {
-                CreateDosage(RouteOfAdministration.Oral, "250mg",
-                    CreateCrclRange(15, 30, isMaxExclusive: true)),
-                CreateDosage(RouteOfAdministration.Oral, "125mg",
-                    CreateCrclRange(30, 60, isMaxExclusive: true))
+                CreateDosage(RouteOfAdministration.Oral, "250mg", CreateCrclRange(15, 30, isMaxExclusive: true)),
+                CreateDosage(RouteOfAdministration.Oral, "125mg", CreateCrclRange(30, 60, isMaxExclusive: true))
             },
 
             // Multiple routes, one route has no standard dose
             new List<Dosage>
             {
                 CreateDosage(RouteOfAdministration.Oral, "500mg"),
-                CreateDosage(RouteOfAdministration.Intravenous, "1g",
-                    CreateCrclRange(15, 30, isMaxExclusive: true)),
-                CreateDosage(RouteOfAdministration.Intravenous, "500mg",
-                    CreateCrclRange(30, 60, isMaxExclusive: true))
+                CreateDosage(RouteOfAdministration.Intravenous, "1g", CreateCrclRange(15, 30, isMaxExclusive: true)),
+                CreateDosage(RouteOfAdministration.Intravenous, "500mg", CreateCrclRange(30, 60, isMaxExclusive: true))
             }
         ];
 
@@ -137,9 +128,12 @@ namespace Domain.Test.Models
 #pragma warning disable xUnit1045 // Avoid using TheoryData type arguments that might not be serializable
         [MemberData(nameof(NoStandardDose))]
 #pragma warning restore xUnit1045 // Avoid using TheoryData type arguments that might not be serializable
-        public void IsAntibioticDosageValid_NoStandardDose_ThrowsStandardDoseInvalidException(List<Dosage> dosages)
+        public void IsAntibioticDosageValid_NoStandardDose_Fail(List<Dosage> dosages)
         {
-            Assert.Throws<StandardDoseInvalidException>(() => Antibiotic.IsAntibioticDosageValid(dosages));
+            var result = Antibiotic.IsAntibioticDosageValid(dosages);
+            Assert.Equal(Status.BusinessRuleViolation, result.StatusCode);
+            Assert.True(result.IsFailure);
+            Assert.NotNull(result.Error);
         }
 
         #endregion
@@ -187,7 +181,10 @@ namespace Domain.Test.Models
 #pragma warning restore xUnit1045 // Avoid using TheoryData type arguments that might not be serializable
         public void IsAntibioticDosageValid_MoreThanOneStandardDose_ThrowsStandardDoseInvalidException(List<Dosage> dosages)
         {
-            Assert.Throws<StandardDoseInvalidException>(() => Antibiotic.IsAntibioticDosageValid(dosages));
+            var result = Antibiotic.IsAntibioticDosageValid(dosages);
+            Assert.Equal(Status.BusinessRuleViolation, result.StatusCode);
+            Assert.True(result.IsFailure);
+            Assert.NotNull(result.Error);
         }
 
         #endregion
@@ -205,10 +202,8 @@ namespace Domain.Test.Models
             new List<Dosage>
             {
                 CreateDosage(RouteOfAdministration.Oral, "500mg"),
-                CreateDosage(RouteOfAdministration.Oral, "250mg",
-                    CreateCrclRange(15, 30, isMaxExclusive: true)),
-                CreateDosage(RouteOfAdministration.Oral, "125mg",
-                    CreateCrclRange(30, 60, isMaxExclusive: true))
+                CreateDosage(RouteOfAdministration.Oral, "250mg", CreateCrclRange(15, 30, isMaxExclusive: true)),
+                CreateDosage(RouteOfAdministration.Oral, "125mg", CreateCrclRange(30, 60, isMaxExclusive: true))
             },
 
             // Single route, standard + 3 non-overlapping adjusted doses
@@ -216,12 +211,9 @@ namespace Domain.Test.Models
             new List<Dosage>
             {
                 CreateDosage(RouteOfAdministration.Oral, "500mg"),
-                CreateDosage(RouteOfAdministration.Oral, "250mg",
-                    CreateCrclRange(15, 30, isMaxExclusive: true)),
-                CreateDosage(RouteOfAdministration.Oral, "125mg",
-                    CreateCrclRange(30, 60, isMaxExclusive: true)),
-                CreateDosage(RouteOfAdministration.Oral, "62.5mg",
-                    CreateCrclRange(60, 90, isMaxExclusive: true))
+                CreateDosage(RouteOfAdministration.Oral, "250mg", CreateCrclRange(15, 30, isMaxExclusive: true)),
+                CreateDosage(RouteOfAdministration.Oral, "125mg", CreateCrclRange(30, 60, isMaxExclusive: true)),
+                CreateDosage(RouteOfAdministration.Oral, "62.5mg", CreateCrclRange(60, 90, isMaxExclusive: true))
             },
 
             // Single route, standard + 2 adjusted doses with a gap between them
@@ -229,10 +221,8 @@ namespace Domain.Test.Models
             new List<Dosage>
             {
                 CreateDosage(RouteOfAdministration.Oral, "500mg"),
-                CreateDosage(RouteOfAdministration.Oral, "250mg",
-                    CreateCrclRange(15, 30, isMaxExclusive: true)),
-                CreateDosage(RouteOfAdministration.Oral, "125mg",
-                    CreateCrclRange(60, 90, isMaxExclusive: true))
+                CreateDosage(RouteOfAdministration.Oral, "250mg", CreateCrclRange(15, 30, isMaxExclusive: true)),
+                CreateDosage(RouteOfAdministration.Oral, "125mg", CreateCrclRange(60, 90, isMaxExclusive: true))
             },
 
             // Single route, standard + 2 adjusted doses that are open on both sides at boundary
@@ -240,25 +230,19 @@ namespace Domain.Test.Models
             new List<Dosage>
             {
                 CreateDosage(RouteOfAdministration.Oral, "500mg"),
-                CreateDosage(RouteOfAdministration.Oral, "250mg",
-                    CreateCrclRange(15, 30, isMinExclusive: true, isMaxExclusive: true)),
-                CreateDosage(RouteOfAdministration.Oral, "125mg",
-                    CreateCrclRange(30, 60, isMinExclusive: true, isMaxExclusive: true))
+                CreateDosage(RouteOfAdministration.Oral, "250mg", CreateCrclRange(15, 30, isMinExclusive: true, isMaxExclusive: true)),
+                CreateDosage(RouteOfAdministration.Oral, "125mg", CreateCrclRange(30, 60, isMinExclusive: true, isMaxExclusive: true))
             },
 
             // Multiple routes, each with non-overlapping adjusted doses
             new List<Dosage>
             {
                 CreateDosage(RouteOfAdministration.Oral, "500mg"),
-                CreateDosage(RouteOfAdministration.Oral, "250mg",
-                    CreateCrclRange(15, 30, isMaxExclusive: true)),
-                CreateDosage(RouteOfAdministration.Oral, "125mg",
-                    CreateCrclRange(30, 60, isMaxExclusive: true)),
+                CreateDosage(RouteOfAdministration.Oral, "250mg", CreateCrclRange(15, 30, isMaxExclusive: true)),
+                CreateDosage(RouteOfAdministration.Oral, "125mg", CreateCrclRange(30, 60, isMaxExclusive: true)),
                 CreateDosage(RouteOfAdministration.Intravenous, "1g"),
-                CreateDosage(RouteOfAdministration.Intravenous, "500mg",
-                    CreateCrclRange(15, 30, isMaxExclusive: true)),
-                CreateDosage(RouteOfAdministration.Intravenous, "250mg",
-                    CreateCrclRange(30, 60, isMaxExclusive: true))
+                CreateDosage(RouteOfAdministration.Intravenous, "500mg", CreateCrclRange(15, 30, isMaxExclusive: true)),
+                CreateDosage(RouteOfAdministration.Intravenous, "250mg", CreateCrclRange(30, 60, isMaxExclusive: true))
             },
 
             // Standard dose (CrCl null) is skipped in overlap check,
@@ -266,8 +250,7 @@ namespace Domain.Test.Models
             new List<Dosage>
             {
                 CreateDosage(RouteOfAdministration.Oral, "500mg"),
-                CreateDosage(RouteOfAdministration.Oral, "250mg",
-                    CreateCrclRange(15, 30, isMaxExclusive: true))
+                CreateDosage(RouteOfAdministration.Oral, "250mg", CreateCrclRange(15, 30, isMaxExclusive: true))
             }
         ];
 
@@ -275,10 +258,13 @@ namespace Domain.Test.Models
 #pragma warning disable xUnit1045 // Avoid using TheoryData type arguments that might not be serializable
         [MemberData(nameof(NonOverlappingCrclRanges))]
 #pragma warning restore xUnit1045 // Avoid using TheoryData type arguments that might not be serializable
-        public void IsAntibioticDosageValid_NonOverlappingCrcl_DoesNotThrow(List<Dosage> dosages)
+        public void IsAntibioticDosageValid_NonOverlappingCrcl_Success(List<Dosage> dosages)
         {
-            var exception = Record.Exception(() => Antibiotic.IsAntibioticDosageValid(dosages));
-            Assert.Null(exception);
+            var result = Antibiotic.IsAntibioticDosageValid(dosages);
+            Assert.True(result.IsSuccess);
+            Assert.True(result.Data);
+            Assert.Null(result.Error);
+            Assert.Equal(Status.Success, result.StatusCode);
         }
 
         #endregion
@@ -291,30 +277,24 @@ namespace Domain.Test.Models
             new List<Dosage>
             {
                 CreateDosage(RouteOfAdministration.Oral, "500mg"),
-                CreateDosage(RouteOfAdministration.Oral, "250mg",
-                    CreateCrclRange(15, 60, isMaxExclusive: true)),
-                CreateDosage(RouteOfAdministration.Oral, "125mg",
-                    CreateCrclRange(30, 90, isMaxExclusive: true))
+                CreateDosage(RouteOfAdministration.Oral, "250mg", CreateCrclRange(15, 60, isMaxExclusive: true)),
+                CreateDosage(RouteOfAdministration.Oral, "125mg", CreateCrclRange(30, 90, isMaxExclusive: true))
             },
 
             // Two adjusted doses, one contained in the other: [15, 90) contains [30, 60)
             new List<Dosage>
             {
                 CreateDosage(RouteOfAdministration.Oral, "500mg"),
-                CreateDosage(RouteOfAdministration.Oral, "250mg",
-                    CreateCrclRange(15, 90, isMaxExclusive: true)),
-                CreateDosage(RouteOfAdministration.Oral, "125mg",
-                    CreateCrclRange(30, 60, isMaxExclusive: true))
+                CreateDosage(RouteOfAdministration.Oral, "250mg", CreateCrclRange(15, 90, isMaxExclusive: true)),
+                CreateDosage(RouteOfAdministration.Oral, "125mg", CreateCrclRange(30, 60, isMaxExclusive: true))
             },
 
             // Two identical adjusted doses: [15, 30) and [15, 30)
             new List<Dosage>
             {
                 CreateDosage(RouteOfAdministration.Oral, "500mg"),
-                CreateDosage(RouteOfAdministration.Oral, "250mg",
-                    CreateCrclRange(15, 30, isMaxExclusive: true)),
-                CreateDosage(RouteOfAdministration.Oral, "250mg",
-                    CreateCrclRange(15, 30, isMaxExclusive: true))
+                CreateDosage(RouteOfAdministration.Oral, "250mg", CreateCrclRange(15, 30, isMaxExclusive: true)),
+                CreateDosage(RouteOfAdministration.Oral, "250mg", CreateCrclRange(15, 30, isMaxExclusive: true))
             },
 
             // Adjacent ranges that overlap at boundary: [15, 30] and [30, 60)
@@ -322,10 +302,8 @@ namespace Domain.Test.Models
             new List<Dosage>
             {
                 CreateDosage(RouteOfAdministration.Oral, "500mg"),
-                CreateDosage(RouteOfAdministration.Oral, "250mg",
-                    CreateCrclRange(15, 30, isMaxExclusive: false)),
-                CreateDosage(RouteOfAdministration.Oral, "125mg",
-                    CreateCrclRange(30, 60, isMinExclusive: false, isMaxExclusive: true))
+                CreateDosage(RouteOfAdministration.Oral, "250mg", CreateCrclRange(15, 30, isMaxExclusive: false)),
+                CreateDosage(RouteOfAdministration.Oral, "125mg", CreateCrclRange(30, 60, isMinExclusive: false, isMaxExclusive: true))
             },
 
             // Adjacent ranges that overlap at boundary: [15, 30) and [30, 60]
@@ -336,25 +314,19 @@ namespace Domain.Test.Models
             new List<Dosage>
             {
                 CreateDosage(RouteOfAdministration.Oral, "500mg"),
-                CreateDosage(RouteOfAdministration.Oral, "250mg",
-                    CreateCrclRange(15, 30)),
-                CreateDosage(RouteOfAdministration.Oral, "125mg",
-                    CreateCrclRange(30, 60))
+                CreateDosage(RouteOfAdministration.Oral, "250mg", CreateCrclRange(15, 30)),
+                CreateDosage(RouteOfAdministration.Oral, "125mg", CreateCrclRange(30, 60))
             },
 
             // Multiple routes, one route has overlap
             new List<Dosage>
             {
                 CreateDosage(RouteOfAdministration.Oral, "500mg"),
-                CreateDosage(RouteOfAdministration.Oral, "250mg",
-                    CreateCrclRange(15, 60, isMaxExclusive: true)),
-                CreateDosage(RouteOfAdministration.Oral, "125mg",
-                    CreateCrclRange(30, 90, isMaxExclusive: true)),
+                CreateDosage(RouteOfAdministration.Oral, "250mg", CreateCrclRange(15, 60, isMaxExclusive: true)),
+                CreateDosage(RouteOfAdministration.Oral, "125mg", CreateCrclRange(30, 90, isMaxExclusive: true)),
                 CreateDosage(RouteOfAdministration.Intravenous, "1g"),
-                CreateDosage(RouteOfAdministration.Intravenous, "500mg",
-                    CreateCrclRange(15, 30, isMaxExclusive: true)),
-                CreateDosage(RouteOfAdministration.Intravenous, "250mg",
-                    CreateCrclRange(30, 60, isMaxExclusive: true))
+                CreateDosage(RouteOfAdministration.Intravenous, "500mg", CreateCrclRange(15, 30, isMaxExclusive: true)),
+                CreateDosage(RouteOfAdministration.Intravenous, "250mg", CreateCrclRange(30, 60, isMaxExclusive: true))
             }
         ];
 
@@ -362,9 +334,12 @@ namespace Domain.Test.Models
 #pragma warning disable xUnit1045 // Avoid using TheoryData type arguments that might not be serializable
         [MemberData(nameof(OverlappingCrclRanges))]
 #pragma warning restore xUnit1045 // Avoid using TheoryData type arguments that might not be serializable
-        public void IsAntibioticDosageValid_OverlappingCrcl_ThrowsOverlappedCrclException(List<Dosage> dosages)
+        public void IsAntibioticDosageValid_OverlappingCrcl_Fail(List<Dosage> dosages)
         {
-            Assert.Throws<OverlappedCrclException>(() => Antibiotic.IsAntibioticDosageValid(dosages));
+            var result = Antibiotic.IsAntibioticDosageValid(dosages);
+            Assert.Equal(Status.BusinessRuleViolation, result.StatusCode);
+            Assert.True(result.IsFailure);
+            Assert.NotNull(result.Error);
         }
 
         #endregion
