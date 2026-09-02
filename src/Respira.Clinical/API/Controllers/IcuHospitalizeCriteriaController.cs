@@ -14,11 +14,11 @@ public class IcuHospitalizeCriteriaController(IMessageBus bus) : ControllerBase
 {
     [HttpPut]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [ProducesResponseType<ApiResponse>(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType<ApiResponse>(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType<ApiResponse>(StatusCodes.Status403Forbidden)]
-    [ProducesResponseType<ApiResponse>(StatusCodes.Status404NotFound)]
-    [ProducesResponseType<ApiResponse>(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType<Result>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<Result>(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType<Result>(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType<Result>(StatusCodes.Status404NotFound)]
+    [ProducesResponseType<Result>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> UpdateIcuHospitalizeCriterion(Guid id,
         [FromBody] UpdateIcuHospitalizeCriterionRequestDto req)
     {
@@ -28,10 +28,10 @@ public class IcuHospitalizeCriteriaController(IMessageBus bus) : ControllerBase
 
     [HttpDelete]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [ProducesResponseType<ApiResponse>(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType<ApiResponse>(StatusCodes.Status403Forbidden)]
-    [ProducesResponseType<ApiResponse>(StatusCodes.Status404NotFound)]
-    [ProducesResponseType<ApiResponse>(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType<Result>(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType<Result>(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType<Result>(StatusCodes.Status404NotFound)]
+    [ProducesResponseType<Result>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> RemoveIcuHospitalizeCriterion(Guid id)
     {
         await bus.InvokeAsync(new DeleteIcuHospitalizeCriterionCommand { Id = id });

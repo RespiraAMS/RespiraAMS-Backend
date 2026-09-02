@@ -66,7 +66,7 @@ public class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger) : IE
         // Create API response 
         httpContext.Response.StatusCode = statusCode;
         httpContext.Response.ContentType = "application/json";
-        var errorResponse = ApiResponse<object>.Fail(message, statusCode);
+        var errorResponse = Result<object>.Fail(message, statusCode);
         var jsonOptions = new JsonSerializerOptions
         {
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase,

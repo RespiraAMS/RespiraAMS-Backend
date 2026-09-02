@@ -15,40 +15,40 @@ namespace Respira.Clinical.API.Controllers;
 public class AntibiogramsController(IMessageBus bus) : ControllerBase
 {
     [HttpPost]
-    [ProducesResponseType<ApiResponse<CreateAntibiogramResult>>(StatusCodes.Status201Created)]
-    [ProducesResponseType<ApiResponse>(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType<ApiResponse>(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType<ApiResponse>(StatusCodes.Status403Forbidden)]
-    [ProducesResponseType<ApiResponse>(StatusCodes.Status404NotFound)]
-    [ProducesResponseType<ApiResponse>(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType<Result<CreateAntibiogramResult>>(StatusCodes.Status201Created)]
+    [ProducesResponseType<Result>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<Result>(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType<Result>(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType<Result>(StatusCodes.Status404NotFound)]
+    [ProducesResponseType<Result>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> CreateAntibiogram([FromBody] CreateAntibiogramCommand req)
     {
         var result = await bus.InvokeAsync<CreateAntibiogramResult>(req);
-        var resp = ApiResponse<CreateAntibiogramResult>.Ok(result, statusCode: StatusCodes.Status201Created);
+        var resp = Result<CreateAntibiogramResult>.Ok(result, statusCode: StatusCodes.Status201Created);
         return Created((string?)null, resp);
     }
 
     [HttpGet]
-    [ProducesResponseType<ApiResponse<Pagination<PagedAntibiogramItem>>>(StatusCodes.Status200OK)]
-    [ProducesResponseType<ApiResponse>(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType<ApiResponse>(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType<ApiResponse>(StatusCodes.Status403Forbidden)]
-    [ProducesResponseType<ApiResponse>(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType<Result<Pagination<PagedAntibiogramItem>>>(StatusCodes.Status200OK)]
+    [ProducesResponseType<Result>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<Result>(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType<Result>(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType<Result>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetPagedAntibiogram([FromQuery] GetPagedAntibiogramRequestDto req)
     {
         var result = await bus.InvokeAsync<Pagination<PagedAntibiogramItem>>(req.ToQuery());
-        var resp = ApiResponse<Pagination<PagedAntibiogramItem>>.Ok(result);
+        var resp = Result<Pagination<PagedAntibiogramItem>>.Ok(result);
         return Ok(resp);
     }
 
     [HttpPut]
     [Route("{id:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [ProducesResponseType<ApiResponse>(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType<ApiResponse>(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType<ApiResponse>(StatusCodes.Status403Forbidden)]
-    [ProducesResponseType<ApiResponse>(StatusCodes.Status404NotFound)]
-    [ProducesResponseType<ApiResponse>(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType<Result>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<Result>(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType<Result>(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType<Result>(StatusCodes.Status404NotFound)]
+    [ProducesResponseType<Result>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> UpdateAntibiogram(Guid id, [FromBody] UpdateAntibiogramRequestDto req)
     {
         await bus.InvokeAsync(req.ToCommand(id));
@@ -58,11 +58,11 @@ public class AntibiogramsController(IMessageBus bus) : ControllerBase
     [HttpDelete]
     [Route("{id:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [ProducesResponseType<ApiResponse>(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType<ApiResponse>(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType<ApiResponse>(StatusCodes.Status403Forbidden)]
-    [ProducesResponseType<ApiResponse>(StatusCodes.Status404NotFound)]
-    [ProducesResponseType<ApiResponse>(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType<Result>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<Result>(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType<Result>(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType<Result>(StatusCodes.Status404NotFound)]
+    [ProducesResponseType<Result>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> DeleteAntibiogram(Guid id)
     {
         await bus.InvokeAsync(new DeleteAntibiogramCommand { Id = id });

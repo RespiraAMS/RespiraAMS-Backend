@@ -3,10 +3,10 @@
 namespace Respira.ServiceDefaults.Dtos;
 
 /// <summary>
-/// API response
+/// Result pattern (https://milanjovanovic.tech/blog/functional-error-handling-in-dotnet-with-the-result-pattern)
 /// </summary>
 /// <typeparam name="T">Response data type</typeparam>
-public class ApiResponse<T>
+public class Result<T>
 {
     /// <summary>
     /// Response status code.
@@ -35,10 +35,10 @@ public class ApiResponse<T>
     /// <param name="data">The result data</param>
     /// <param name="message">Success message (if any)</param>
     /// <param name="statusCode">Success status code, default to 200</param>
-    /// <returns>ApiResponse object</returns>
-    public static ApiResponse<T> Ok(T data, string? message = null, int statusCode = StatusCodes.Status200OK)
+    /// <returns>Result object</returns>
+    public static Result<T> Ok(T data, string? message = null, int statusCode = StatusCodes.Status200OK)
     {
-        return new ApiResponse<T>
+        return new Result<T>
         {
             Success = true,
             Message = message,
@@ -52,10 +52,10 @@ public class ApiResponse<T>
     /// </summary>
     /// <param name="message">Error message (required)</param>
     /// <param name="statusCode">Failure status code</param>
-    /// <returns>ApiResponse object</returns>
-    public static ApiResponse<T> Fail(string message, int statusCode = StatusCodes.Status500InternalServerError)
+    /// <returns>Result object</returns>
+    public static Result<T> Fail(string message, int statusCode = StatusCodes.Status500InternalServerError)
     {
-        return new ApiResponse<T>
+        return new Result<T>
         {
             StatusCode = statusCode,
             Success = false,
@@ -65,9 +65,10 @@ public class ApiResponse<T>
 }
 
 /// <summary>
-/// API response
+/// Result pattern (non-generic with no data object)
+/// (https://milanjovanovic.tech/blog/functional-error-handling-in-dotnet-with-the-result-pattern)
 /// </summary>
-public class ApiResponse
+public class Result
 {
     /// <summary>
     /// Response status code.
@@ -89,10 +90,10 @@ public class ApiResponse
     /// </summary>
     /// <param name="message">Success message (if any)</param>
     /// <param name="statusCode">Success status code, default to 200</param>
-    /// <returns>ApiResponse object</returns>
-    public static ApiResponse Ok(string? message = null, int statusCode = StatusCodes.Status200OK)
+    /// <returns>Result object</returns>
+    public static Result Ok(string? message = null, int statusCode = StatusCodes.Status200OK)
     {
-        return new ApiResponse
+        return new Result
         {
             Success = true,
             Message = message,
@@ -105,10 +106,10 @@ public class ApiResponse
     /// </summary>
     /// <param name="message">Error message (required)</param>
     /// <param name="statusCode">Failure status code</param>
-    /// <returns>ApiResponse object</returns>
-    public static ApiResponse Fail(string? message = null, int statusCode = StatusCodes.Status500InternalServerError)
+    /// <returns>Result object</returns>
+    public static Result Fail(string? message = null, int statusCode = StatusCodes.Status500InternalServerError)
     {
-        return new ApiResponse
+        return new Result
         {
             StatusCode = statusCode,
             Success = false,

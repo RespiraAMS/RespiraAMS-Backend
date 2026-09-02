@@ -14,31 +14,31 @@ public class DiagnoseController(IMessageBus bus) : ControllerBase
 {
     [HttpPost]
     [Route("empirical")]
-    [ProducesResponseType<ApiResponse<EmpiricalDiagnoseResult>>(StatusCodes.Status200OK)]
-    [ProducesResponseType<ApiResponse>(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType<ApiResponse>(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType<ApiResponse>(StatusCodes.Status403Forbidden)]
-    [ProducesResponseType<ApiResponse>(StatusCodes.Status404NotFound)]
-    [ProducesResponseType<ApiResponse>(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType<Result<EmpiricalDiagnoseResult>>(StatusCodes.Status200OK)]
+    [ProducesResponseType<Result>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<Result>(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType<Result>(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType<Result>(StatusCodes.Status404NotFound)]
+    [ProducesResponseType<Result>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> EmpiricalDiagnose([FromBody] EmpiricalDiagnoseQuery req)
     {
         var result = await bus.InvokeAsync<EmpiricalDiagnoseResult>(req);
-        var resp = ApiResponse<EmpiricalDiagnoseResult>.Ok(result);
+        var resp = Result<EmpiricalDiagnoseResult>.Ok(result);
         return Ok(resp);
     }
 
     [HttpPost]
     [Route("target")]
-    [ProducesResponseType<ApiResponse<TargetedDiagnoseResult>>(StatusCodes.Status200OK)]
-    [ProducesResponseType<ApiResponse>(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType<ApiResponse>(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType<ApiResponse>(StatusCodes.Status403Forbidden)]
-    [ProducesResponseType<ApiResponse>(StatusCodes.Status404NotFound)]
-    [ProducesResponseType<ApiResponse>(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType<Result<TargetedDiagnoseResult>>(StatusCodes.Status200OK)]
+    [ProducesResponseType<Result>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<Result>(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType<Result>(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType<Result>(StatusCodes.Status404NotFound)]
+    [ProducesResponseType<Result>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> TargetedDiagnose([FromBody] TargetedDiagnoseQuery req)
     {
         var result = await bus.InvokeAsync<TargetedDiagnoseResult>(req);
-        var resp = ApiResponse<TargetedDiagnoseResult>.Ok(result);
+        var resp = Result<TargetedDiagnoseResult>.Ok(result);
         return Ok(resp);
     }
 }

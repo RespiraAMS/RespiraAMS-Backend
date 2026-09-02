@@ -15,9 +15,9 @@ namespace Respira.SagaAudit.Application.Features.UpdateDoctor.Commands
     public class StartUpdateDoctorSagaCommandHandler(
         IMessageBus bus,
         ILogger<StartUpdateDoctorSagaCommandHandler> logger
-    ) : ICommandHandler<StartUpdateDoctorSagaCommand, ApiResponse<StartSagaResult>>
+    ) : ICommandHandler<StartUpdateDoctorSagaCommand, Result<StartSagaResult>>
     {
-        public async Task<ApiResponse<StartSagaResult>> HandleAsync(
+        public async Task<Result<StartSagaResult>> HandleAsync(
             StartUpdateDoctorSagaCommand command,
             CancellationToken cancellationToken = default
         )
@@ -59,7 +59,7 @@ namespace Respira.SagaAudit.Application.Features.UpdateDoctor.Commands
 
                 await bus.SendAsync(sagaCommand);
 
-                return ApiResponse<StartSagaResult>.Ok(
+                return Result<StartSagaResult>.Ok(
                     new StartSagaResult(command.EntityId),
                     "Saga started",
                     StatusCodes.Status202Accepted
@@ -68,7 +68,7 @@ namespace Respira.SagaAudit.Application.Features.UpdateDoctor.Commands
             catch (Exception ex)
             {
                 logger.LogError(ex, "Failed to start UpdateDoctor saga for {EntityId}", command.EntityId);
-                return ApiResponse<StartSagaResult>.Fail("Failed to start saga");
+                return Result<StartSagaResult>.Fail("Failed to start saga");
             }
         }
     }

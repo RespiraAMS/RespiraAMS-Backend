@@ -60,7 +60,7 @@ builder.Host.UseWolverine(opts =>
     opts.Policies.DisableConventionalLocalRouting();
 
     opts.ListenToRabbitQueue("doctor-query-queue");
-    opts.PublishMessage<ApiResponse<DoctorQueryResult>>().ToRabbitQueue("doctor-result-queue");
+    opts.PublishMessage<Result<DoctorQueryResult>>().ToRabbitQueue("doctor-result-queue");
 
     opts.Durability.Mode = DurabilityMode.Balanced;
 });

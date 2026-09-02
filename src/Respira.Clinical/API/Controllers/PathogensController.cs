@@ -16,54 +16,54 @@ namespace Respira.Clinical.API.Controllers;
 public class PathogensController(IMessageBus bus) : ControllerBase
 {
     [HttpPost]
-    [ProducesResponseType<ApiResponse<CreatePathogenResult>>(StatusCodes.Status201Created)]
-    [ProducesResponseType<ApiResponse>(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType<ApiResponse>(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType<ApiResponse>(StatusCodes.Status403Forbidden)]
-    [ProducesResponseType<ApiResponse>(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType<Result<CreatePathogenResult>>(StatusCodes.Status201Created)]
+    [ProducesResponseType<Result>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<Result>(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType<Result>(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType<Result>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> CreatePathogen([FromBody] CreatePathogenCommand req)
     {
         var result = await bus.InvokeAsync<CreatePathogenResult>(req);
-        var resp = ApiResponse<CreatePathogenResult>
+        var resp = Result<CreatePathogenResult>
             .Ok(result, statusCode: StatusCodes.Status201Created);
         return Created((string?)null, resp);
     }
 
     [HttpGet]
-    [ProducesResponseType<ApiResponse<Pagination<PagedPathogenItem>>>(StatusCodes.Status200OK)]
-    [ProducesResponseType<ApiResponse>(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType<ApiResponse>(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType<ApiResponse>(StatusCodes.Status403Forbidden)]
-    [ProducesResponseType<ApiResponse>(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType<Result<Pagination<PagedPathogenItem>>>(StatusCodes.Status200OK)]
+    [ProducesResponseType<Result>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<Result>(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType<Result>(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType<Result>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetPathogens([FromQuery] GetPagedPathogenRequestDto req)
     {
         var result = await bus.InvokeAsync<Pagination<PagedPathogenItem>>(req.ToQuery());
-        var resp = ApiResponse<Pagination<PagedPathogenItem>>.Ok(result);
+        var resp = Result<Pagination<PagedPathogenItem>>.Ok(result);
         return Ok(resp);
     }
 
     [HttpGet]
     [Route("list")]
-    [ProducesResponseType<ApiResponse<IEnumerable<PathogenItem>>>(StatusCodes.Status200OK)]
-    [ProducesResponseType<ApiResponse>(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType<ApiResponse>(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType<ApiResponse>(StatusCodes.Status403Forbidden)]
-    [ProducesResponseType<ApiResponse>(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType<Result<IEnumerable<PathogenItem>>>(StatusCodes.Status200OK)]
+    [ProducesResponseType<Result>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<Result>(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType<Result>(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType<Result>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetPathogens()
     {
         var result = await bus.InvokeAsync<GetPathogensResult>(new GetPathogensQuery());
-        var resp = ApiResponse<IEnumerable<PathogenItem>>.Ok(result.Pathogens);
+        var resp = Result<IEnumerable<PathogenItem>>.Ok(result.Pathogens);
         return Ok(resp);
     }
 
     [HttpPut]
     [Route("{id:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [ProducesResponseType<ApiResponse>(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType<ApiResponse>(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType<ApiResponse>(StatusCodes.Status403Forbidden)]
-    [ProducesResponseType<ApiResponse>(StatusCodes.Status404NotFound)]
-    [ProducesResponseType<ApiResponse>(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType<Result>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<Result>(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType<Result>(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType<Result>(StatusCodes.Status404NotFound)]
+    [ProducesResponseType<Result>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> UpdatePathogen(Guid id, [FromBody] UpdatePathogenRequestDto req)
     {
         await bus.InvokeAsync(req.ToCommand(id));
@@ -73,10 +73,10 @@ public class PathogensController(IMessageBus bus) : ControllerBase
     [HttpDelete]
     [Route("{id:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [ProducesResponseType<ApiResponse>(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType<ApiResponse>(StatusCodes.Status403Forbidden)]
-    [ProducesResponseType<ApiResponse>(StatusCodes.Status404NotFound)]
-    [ProducesResponseType<ApiResponse>(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType<Result>(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType<Result>(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType<Result>(StatusCodes.Status404NotFound)]
+    [ProducesResponseType<Result>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> DeletePathogen(Guid id)
     {
         await bus.InvokeAsync(new DeletePathogenCommand(id));

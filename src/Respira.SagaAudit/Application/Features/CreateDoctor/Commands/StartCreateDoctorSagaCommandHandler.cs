@@ -16,9 +16,9 @@ namespace Respira.SagaAudit.Application.Features.CreateDoctor.Commands
         IMessageBus bus,
         ProcessTrackerService trackerService,
         ILogger<StartCreateDoctorSagaCommandHandler> logger
-    ) : ICommandHandler<StartCreateDoctorSagaCommand, ApiResponse<StartSagaResult>>
+    ) : ICommandHandler<StartCreateDoctorSagaCommand, Result<StartSagaResult>>
     {
-        public async Task<ApiResponse<StartSagaResult>> HandleAsync(
+        public async Task<Result<StartSagaResult>> HandleAsync(
             StartCreateDoctorSagaCommand command,
             CancellationToken cancellationToken = default
         )
@@ -56,7 +56,7 @@ namespace Respira.SagaAudit.Application.Features.CreateDoctor.Commands
 
                 await bus.InvokeAsync(sagaCommand, cancellationToken);
 
-                return ApiResponse<StartSagaResult>.Ok(
+                return Result<StartSagaResult>.Ok(
                     new StartSagaResult(sagaId),
                     "Saga started",
                     StatusCodes.Status202Accepted
@@ -65,7 +65,7 @@ namespace Respira.SagaAudit.Application.Features.CreateDoctor.Commands
             catch (Exception ex)
             {
                 logger.LogError(ex, "Failed to start CreateDoctor saga");
-                return ApiResponse<StartSagaResult>.Fail("Failed to start saga");
+                return Result<StartSagaResult>.Fail("Failed to start saga");
             }
         }
     }

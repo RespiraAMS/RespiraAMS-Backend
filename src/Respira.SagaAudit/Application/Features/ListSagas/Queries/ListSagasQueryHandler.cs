@@ -12,9 +12,9 @@ namespace Respira.SagaAudit.Application.Features.ListSagas.Queries
     public class ListSagasQueryHandler(
         ISagaAuditDbContext dbContext,
         ILogger<ListSagasQueryHandler> logger
-    ) : IQueryHandler<ListSagasQuery, ApiResponse<List<ListSagasResult>>>
+    ) : IQueryHandler<ListSagasQuery, Result<List<ListSagasResult>>>
     {
-        public async Task<ApiResponse<List<ListSagasResult>>> HandleAsync(
+        public async Task<Result<List<ListSagasResult>>> HandleAsync(
             ListSagasQuery query,
             CancellationToken cancellationToken = default
         )
@@ -41,12 +41,12 @@ namespace Respira.SagaAudit.Application.Features.ListSagas.Queries
                     })
                     .ToListAsync(cancellationToken);
 
-                return ApiResponse<List<ListSagasResult>>.Ok(sagas);
+                return Result<List<ListSagasResult>>.Ok(sagas);
             }
             catch (Exception ex)
             {
                 logger.LogError(ex, "Error listing sagas");
-                return ApiResponse<List<ListSagasResult>>.Fail("Error listing sagas");
+                return Result<List<ListSagasResult>>.Fail("Error listing sagas");
             }
         }
     }

@@ -15,9 +15,9 @@ namespace Respira.SagaAudit.Application.Features.DeleteDoctor.Commands
     public class StartDeleteDoctorSagaCommandHandler(
         IMessageBus bus,
         ILogger<StartDeleteDoctorSagaCommandHandler> logger
-    ) : ICommandHandler<StartDeleteDoctorSagaCommand, ApiResponse<StartSagaResult>>
+    ) : ICommandHandler<StartDeleteDoctorSagaCommand, Result<StartSagaResult>>
     {
-        public async Task<ApiResponse<StartSagaResult>> HandleAsync(
+        public async Task<Result<StartSagaResult>> HandleAsync(
             StartDeleteDoctorSagaCommand command,
             CancellationToken cancellationToken = default
         )
@@ -33,7 +33,7 @@ namespace Respira.SagaAudit.Application.Features.DeleteDoctor.Commands
 
                 await bus.SendAsync(sagaCommand);
 
-                return ApiResponse<StartSagaResult>.Ok(
+                return Result<StartSagaResult>.Ok(
                     new StartSagaResult(command.EntityId),
                     "Saga started",
                     StatusCodes.Status202Accepted
@@ -42,7 +42,7 @@ namespace Respira.SagaAudit.Application.Features.DeleteDoctor.Commands
             catch (Exception ex)
             {
                 logger.LogError(ex, "Failed to start DeleteDoctor saga for {EntityId}", command.EntityId);
-                return ApiResponse<StartSagaResult>.Fail("Failed to start saga");
+                return Result<StartSagaResult>.Fail("Failed to start saga");
             }
         }
     }

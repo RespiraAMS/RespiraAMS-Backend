@@ -69,7 +69,7 @@ public class DoctorListQueryHandler(
         var authById = new Dictionary<Guid, GetAuthDoctorListResult>();
         if (allIds.Count > 0)
         {
-            var authReply = await bus.InvokeAsync<ApiResponse<IEnumerable<GetAuthDoctorListResult>>>(
+            var authReply = await bus.InvokeAsync<Result<IEnumerable<GetAuthDoctorListResult>>>(
                 new GetListInfoDoctorQuery { Ids = allIds },
                 cancellationToken
             );

@@ -10,9 +10,9 @@ namespace Application.Features.Media.Get.Queries
     public class GetMediaQueryHandler(
         IMediaDbContext dbContext,
         ILogger<GetMediaQueryHandler> logger
-    ) : IQueryHandler<GetMediaQuery, ApiResponse<GetMediaResult>>
+    ) : IQueryHandler<GetMediaQuery, Result<GetMediaResult>>
     {
-        public async Task<ApiResponse<GetMediaResult>> HandleAsync(
+        public async Task<Result<GetMediaResult>> HandleAsync(
             GetMediaQuery query,
             CancellationToken cancellationToken = default
         )
@@ -25,20 +25,20 @@ namespace Application.Features.Media.Get.Queries
 
                 if (media is null)
                 {
-                    return ApiResponse<GetMediaResult>.Fail(
+                    return Result<GetMediaResult>.Fail(
                         "Media not found",
                         StatusCodes.Status404NotFound
                     );
                 }
 
-                return ApiResponse<GetMediaResult>.Ok(
+                return Result<GetMediaResult>.Ok(
                     new GetMediaResult { Url = media.Url ?? string.Empty }
                 );
             }
             catch (Exception ex)
             {
                 logger.LogError(ex, "Error retrieving media asset");
-                return ApiResponse<GetMediaResult>.Fail(
+                return Result<GetMediaResult>.Fail(
                     "Error retrieving media asset"
                 );
             }

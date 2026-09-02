@@ -10,9 +10,9 @@ namespace Application.Features.CreateAudit
     public class CreateAuditCommandHandler(
         ISagaAuditDbContext dbContext,
         ILogger<CreateAuditCommandHandler> logger
-    ) : ICommandHandler<CreateAuditCommand, ApiResponse<bool>>
+    ) : ICommandHandler<CreateAuditCommand, Result<bool>>
     {
-        public async Task<ApiResponse<bool>> HandleAsync(
+        public async Task<Result<bool>> HandleAsync(
             CreateAuditCommand command,
             CancellationToken cancellationToken = default
         )
@@ -29,7 +29,7 @@ namespace Application.Features.CreateAudit
                 };
                 await dbContext.Audits.AddAsync(newAudit);
                 await dbContext.SaveChangesAsync(cancellationToken);
-                return ApiResponse<bool>.Ok(true);
+                return Result<bool>.Ok(true);
             }
             catch (Exception e)
             {

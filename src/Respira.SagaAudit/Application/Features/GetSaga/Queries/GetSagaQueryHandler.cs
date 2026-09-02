@@ -14,9 +14,9 @@ namespace Respira.SagaAudit.Application.Features.GetSaga.Queries
     public class GetSagaQueryHandler(
         ISagaAuditDbContext dbContext,
         ILogger<GetSagaQueryHandler> logger
-    ) : IQueryHandler<GetSagaQuery, ApiResponse<GetSagaResult>>
+    ) : IQueryHandler<GetSagaQuery, Result<GetSagaResult>>
     {
-        public async Task<ApiResponse<GetSagaResult>> HandleAsync(
+        public async Task<Result<GetSagaResult>> HandleAsync(
             GetSagaQuery query,
             CancellationToken cancellationToken = default
         )
@@ -29,13 +29,13 @@ namespace Respira.SagaAudit.Application.Features.GetSaga.Queries
 
                 if (tracker is null)
                 {
-                    return ApiResponse<GetSagaResult>.Fail(
+                    return Result<GetSagaResult>.Fail(
                         "Saga not found",
                         StatusCodes.Status404NotFound
                     );
                 }
 
-                return ApiResponse<GetSagaResult>.Ok(
+                return Result<GetSagaResult>.Ok(
                     new GetSagaResult
                     {
                         SagaId = tracker.SagaId,
@@ -54,7 +54,7 @@ namespace Respira.SagaAudit.Application.Features.GetSaga.Queries
             catch (Exception ex)
             {
                 logger.LogError(ex, "Error retrieving saga {SagaId}", query.SagaId);
-                return ApiResponse<GetSagaResult>.Fail("Error retrieving saga");
+                return Result<GetSagaResult>.Fail("Error retrieving saga");
             }
         }
     }
