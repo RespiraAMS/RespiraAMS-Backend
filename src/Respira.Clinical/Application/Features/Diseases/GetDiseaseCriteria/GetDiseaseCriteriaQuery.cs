@@ -2,15 +2,15 @@
 
 namespace Application.Features.Diseases.GetDiseaseCriteria;
 
-public class GetDiseaseCriteriaQuery : IQuery
+public record GetDiseaseCriteriaQuery(Guid Id) : IQuery
 {
     /// <summary>
     /// Disease ID
     /// </summary>
-    public required Guid Id { get; set; }
+    public Guid Id { get; set; } = Id;
 }
 
-public class DiseaseCriteriaResult
+public record DiseaseCriteriaResult
 {
     /// <summary>
     /// List of ICU hospitalize criteria belong to the queried disease

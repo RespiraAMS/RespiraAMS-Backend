@@ -22,7 +22,7 @@ public class RequestEmailVerificationCommandHandler(
     IAuthDbContext dbContext,
     IMessageBus messageBus,
     ILogger<RequestEmailVerificationCommandHandler> logger
-) : ICommandHandler<RequestEmailVerificationCommand, Result<bool>>
+) : ICommandHandler<RequestEmailVerificationCommand, ApiResponse<bool>>
 {
     /// <summary>
     /// Generates a verification token, persists it and sends the verification email.
@@ -31,7 +31,7 @@ public class RequestEmailVerificationCommandHandler(
     /// <param name="command">Request holding the target email</param>
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>Success response, or a failure response on invalid request</returns>
-    public async Task<Result<bool>> HandleAsync(
+    public async Task<ApiResponse<bool>> HandleAsync(
         RequestEmailVerificationCommand command,
         CancellationToken cancellationToken = default
     )
@@ -46,7 +46,7 @@ public class RequestEmailVerificationCommandHandler(
 
             if (doctor is null)
             {
-                return Result<bool>.Fail(
+                return ApiResponse<bool>.Fail(
                     message: "Invalid request",
                     statusCode: StatusCodes.Status400BadRequest
                 );
@@ -55,7 +55,7 @@ public class RequestEmailVerificationCommandHandler(
             // Already confirmed: nothing to do.
             if (doctor.IsEmailConfirmed)
             {
-                return Result<bool>.Ok(true);
+                return ApiResponse<bool>.Ok(true);
             }
 
             var token = GenerateVerificationToken();
@@ -83,7 +83,7 @@ public class RequestEmailVerificationCommandHandler(
                 throw new ServerException();
             }
 
-            return Result<bool>.Ok(true);
+            return ApiResponse<bool>.Ok(true);
         }
         catch (Exception e)
         {

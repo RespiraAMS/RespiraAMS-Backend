@@ -2,6 +2,7 @@
 using Asp.Versioning;
 using Microsoft.AspNetCore.Mvc;
 using Respira.Clinical.API.Dtos;
+using Respira.ServiceDefaults.Contracts.Results;
 using Wolverine;
 
 namespace Respira.Clinical.API.Controllers;
@@ -13,26 +14,26 @@ public class CausesController(IMessageBus bus) : ControllerBase
 {
     [HttpPut]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(StatusCodes.Status403Forbidden)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType<Result>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<Result>(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType<Result>(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType<Result>(StatusCodes.Status404NotFound)]
+    [ProducesResponseType<Result>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> UpdateCause(Guid id, [FromBody] UpdateCauseRequestDto req)
     {
-        await bus.InvokeAsync(req.ToCommand(id));
-        return NoContent();
+        var result = await bus.InvokeAsync<Result>(req.ToCommand(id));
+        return result.ToApiResponse();
     }
 
     [HttpDelete]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(StatusCodes.Status403Forbidden)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType<Result>(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType<Result>(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType<Result>(StatusCodes.Status404NotFound)]
+    [ProducesResponseType<Result>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> RemoveCause(Guid id)
     {
-        await bus.InvokeAsync(new DeleteCauseCommand { Id = id });
-        return NoContent();
+        var result = await bus.InvokeAsync<Result>(new DeleteCauseCommand(id));
+        return result.ToApiResponse();
     }
 }

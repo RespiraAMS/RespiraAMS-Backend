@@ -2,7 +2,7 @@
 
 namespace Application.Features.Antibiograms.CreateAntibiogram;
 
-public class CreateAntibiogramCommand : ICommand
+public record CreateAntibiogramCommand : ICommand
 {
     /// <summary>
     /// Pathogen ID
@@ -30,10 +30,10 @@ public class CreateAntibiogramCommand : ICommand
     public required List<Guid> SecondPriorityMedicineIds { get; set; } = [];
 }
 
-public class CreateAntibiogramResult(Guid id)
+public record CreateAntibiogramResult(Guid Id)
 {
     /// <summary>
     /// The created antibiogram ID
     /// </summary>
-    public Guid Id { get; set; } = id;
+    public Guid Id { get; set; } = Id;
 }

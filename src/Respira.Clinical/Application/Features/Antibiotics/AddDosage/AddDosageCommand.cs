@@ -3,7 +3,7 @@ using Range = Domain.Models.Range;
 
 namespace Application.Features.Antibiotics.AddDosage;
 
-public class AddDosageCommand : ICommand
+public record AddDosageCommand : ICommand
 {
     /// <summary>
     /// Antibiotic ID
@@ -28,10 +28,10 @@ public class AddDosageCommand : ICommand
     public required Range? Crcl { get; set; }
 }
 
-public class AddDosageResult(Guid id)
+public record AddDosageResult(Guid Id)
 {
     /// <summary>
     /// Dosage ID
     /// </summary>
-    public Guid Id { get; set; } = id;
+    public Guid Id { get; set; } = Id;
 }

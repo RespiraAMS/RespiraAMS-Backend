@@ -52,13 +52,13 @@ public class ManagerController(
         {
             return StatusCode(
                 StatusCodes.Status403Forbidden,
-                Result.Fail("You do not have permission to perform this action", StatusCodes.Status403Forbidden)
+                ApiResponse.Fail("You do not have permission to perform this action", StatusCodes.Status403Forbidden)
             );
         }
 
         if (file is null || file.Length == 0)
         {
-            return BadRequest(Result.Fail("Avatar file is required", StatusCodes.Status400BadRequest));
+            return BadRequest(ApiResponse.Fail("Avatar file is required", StatusCodes.Status400BadRequest));
         }
 
         CreateManagerRequest? dto;
@@ -68,17 +68,17 @@ public class ManagerController(
         }
         catch (JsonException)
         {
-            return BadRequest(Result.Fail("Invalid request payload", StatusCodes.Status400BadRequest));
+            return BadRequest(ApiResponse.Fail("Invalid request payload", StatusCodes.Status400BadRequest));
         }
 
         if (dto is null)
         {
-            return BadRequest(Result.Fail("Invalid request payload", StatusCodes.Status400BadRequest));
+            return BadRequest(ApiResponse.Fail("Invalid request payload", StatusCodes.Status400BadRequest));
         }
 
         var mediaId = await mediaUpload.UploadAsync(file, cancellationToken);
 
-        var result = await bus.InvokeAsync<Result<StartSagaResult>>(
+        var result = await bus.InvokeAsync<ApiResponse<StartSagaResult>>(
             new StartCreateDoctorSagaCommand
             {
                 ManagerDoctorId = dto.ManagerDoctorId,
@@ -112,11 +112,11 @@ public class ManagerController(
         {
             return StatusCode(
                 StatusCodes.Status403Forbidden,
-                Result.Fail("You do not have permission to perform this action", StatusCodes.Status403Forbidden)
+                ApiResponse.Fail("You do not have permission to perform this action", StatusCodes.Status403Forbidden)
             );
         }
 
-        var result = await bus.InvokeAsync<Result<StartSagaResult>>(
+        var result = await bus.InvokeAsync<ApiResponse<StartSagaResult>>(
             new StartUpdateDoctorSagaCommand
             {
                 ManagerDoctorId = request.ManagerDoctorId,
@@ -163,11 +163,11 @@ public class ManagerController(
         {
             return StatusCode(
                 StatusCodes.Status403Forbidden,
-                Result.Fail("You do not have permission to perform this action", StatusCodes.Status403Forbidden)
+                ApiResponse.Fail("You do not have permission to perform this action", StatusCodes.Status403Forbidden)
             );
         }
 
-        var result = await bus.InvokeAsync<Result<StartSagaResult>>(
+        var result = await bus.InvokeAsync<ApiResponse<StartSagaResult>>(
             new StartDeleteDoctorSagaCommand
             {
                 ManagerDoctorId = request.ManagerDoctorId,

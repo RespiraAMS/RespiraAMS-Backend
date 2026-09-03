@@ -4,7 +4,7 @@ using Application.Features.Shared.ManageCriterion;
 
 namespace Respira.Clinical.API.Dtos;
 
-public class CreateResistanceRiskFactorRequestDto
+public record CreateResistanceRiskFactorRequestDto
 {
     /// <summary>
     /// Pathogen ID
@@ -33,7 +33,7 @@ public class CreateResistanceRiskFactorRequestDto
     }
 }
 
-public class UpdateResistanceRiskFactorRequestDto
+public record UpdateResistanceRiskFactorRequestDto
 {
     /// <summary>
     /// Pathogen ID

@@ -2,7 +2,7 @@
 
 namespace Application.Features.Antibiotics.CreateAntibiotic;
 
-public class CreateAntibioticCommand : ICommand
+public record CreateAntibioticCommand : ICommand
 {
     /// <summary>
     /// Antibiotic name
@@ -30,10 +30,10 @@ public class CreateAntibioticCommand : ICommand
     public required string StandardDose { get; set; }
 }
 
-public class CreateAntibioticResult(Guid id)
+public record CreateAntibioticResult(Guid Id)
 {
     /// <summary>
     /// Antibiotic ID
     /// </summary>
-    public Guid Id { get; set; } = id;
+    public Guid Id { get; set; } = Id;
 }

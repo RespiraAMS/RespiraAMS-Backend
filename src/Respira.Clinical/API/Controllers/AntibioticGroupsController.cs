@@ -5,6 +5,7 @@ using Application.Features.AntibioticGroups.GetPagedAntibioticGroup;
 using Asp.Versioning;
 using Microsoft.AspNetCore.Mvc;
 using Respira.Clinical.API.Dtos;
+using Respira.ServiceDefaults.Contracts.Results;
 using Respira.ServiceDefaults.Dtos;
 using Wolverine;
 
@@ -23,10 +24,8 @@ public class AntibioticGroupsController(IMessageBus bus) : ControllerBase
     [ProducesResponseType<Result>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> CreateAntibioticGroup([FromBody] CreateAntibioticGroupCommand req)
     {
-        var result = await bus.InvokeAsync<CreateAntibioticGroupResult>(req);
-        var resp = Result<CreateAntibioticGroupResult>
-            .Ok(result, statusCode: StatusCodes.Status201Created);
-        return Created((string?)null, resp);
+        var result = await bus.InvokeAsync<Result<CreateAntibioticGroupResult>>(req);
+        return result.ToApiResponse();
     }
 
     [HttpGet]
@@ -37,22 +36,20 @@ public class AntibioticGroupsController(IMessageBus bus) : ControllerBase
     [ProducesResponseType<Result>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetPagedAntibioticGroup([FromQuery] GetPagedAntibioticGroupRequestDto req)
     {
-        var result = await bus.InvokeAsync<Pagination<PagedAntibioticGroupItem>>(req.ToQuery());
-        var resp = Result<Pagination<PagedAntibioticGroupItem>>.Ok(result);
-        return Ok(resp);
+        var result = await bus.InvokeAsync<Result<Pagination<PagedAntibioticGroupItem>>>(req.ToQuery());
+        return result.ToApiResponse();
     }
 
     [HttpGet]
     [Route("list")]
-    [ProducesResponseType<Result<IEnumerable<AntibioticGroupItem>>>(StatusCodes.Status200OK)]
+    [ProducesResponseType<Result<GetAntibioticGroupsResult>>(StatusCodes.Status200OK)]
     [ProducesResponseType<Result>(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType<Result>(StatusCodes.Status403Forbidden)]
     [ProducesResponseType<Result>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetAntibioticGroups()
     {
-        var result = await bus.InvokeAsync<GetAntibioticGroupsResult>(new GetAntibioticGroupsQuery());
-        var resp = Result<IEnumerable<AntibioticGroupItem>>.Ok(result.AntibioticGroups);
-        return Ok(resp);
+        var result = await bus.InvokeAsync<Result<GetAntibioticGroupsResult>>(new GetAntibioticGroupsQuery());
+        return result.ToApiResponse();
     }
 
     [HttpPut]
@@ -65,8 +62,8 @@ public class AntibioticGroupsController(IMessageBus bus) : ControllerBase
     [ProducesResponseType<Result>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> UpdateAntibioticGroup(Guid id, [FromBody] UpdateAntibioticGroupRequestDto req)
     {
-        await bus.InvokeAsync(req.ToCommand(id));
-        return NoContent();
+        var result = await bus.InvokeAsync<Result>(req.ToCommand(id));
+        return result.ToApiResponse();
     }
 
     [HttpDelete]
@@ -78,7 +75,7 @@ public class AntibioticGroupsController(IMessageBus bus) : ControllerBase
     [ProducesResponseType<Result>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> DeleteAntibioticGroup(Guid id)
     {
-        await bus.InvokeAsync(new DeleteAntibioticGroupCommand { Id = id });
-        return NoContent();
+        var result = await bus.InvokeAsync<Result>(new DeleteAntibioticGroupCommand(id));
+        return result.ToApiResponse();
     }
 }

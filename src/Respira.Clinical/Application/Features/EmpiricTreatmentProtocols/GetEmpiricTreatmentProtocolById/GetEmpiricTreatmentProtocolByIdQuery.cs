@@ -4,15 +4,15 @@ using Severity = Domain.Enums.Severity;
 
 namespace Application.Features.EmpiricTreatmentProtocols.GetEmpiricTreatmentProtocolById;
 
-public class GetEmpiricTreatmentProtocolByIdQuery : IQuery
+public record GetEmpiricTreatmentProtocolByIdQuery(Guid Id) : IQuery
 {
     /// <summary>
     /// Empiric treatment protocol ID
     /// </summary>
-    public required Guid Id { get; set; }
+    public Guid Id { get; set; } = Id;
 }
 
-public class PathogenResult
+public record PathogenResult
 {
     /// <summary>
     /// Pathogen ID
@@ -25,7 +25,7 @@ public class PathogenResult
     public required string Name { get; set; }
 }
 
-public class AntibioticResult
+public record AntibioticResult
 {
     /// <summary>
     /// Antibiotic ID
@@ -38,7 +38,7 @@ public class AntibioticResult
     public required string Name { get; set; }
 }
 
-public class EmpiricTreatmentProtocolResult
+public record EmpiricTreatmentProtocolResult
 {
     /// <summary>
     /// Empiric treatment protocol ID

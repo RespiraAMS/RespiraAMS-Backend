@@ -132,12 +132,12 @@ public class DeleteAntibiogramHandlerTest : IClassFixture<PostgresFixture>, IAsy
     [Fact]
     public async Task DeleteAntibiogram_WithRelations_Success()
     {
-        // Upper boundary of the delete: an antibiogram holding relations in all
+        // Upper boundary of delete: an antibiogram holding relations in all
         // three join tables
         var target = await SeedAsync(antibioticCount: 3);
 
-        var result = await _handler.HandleAsync(new DeleteAntibiogramCommand { Id = target.Id }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        var result = await _handler.HandleAsync(new DeleteAntibiogramCommand(target.Id), TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.Equal(Status.Deleted, result.StatusCode);
 
@@ -174,8 +174,8 @@ public class DeleteAntibiogramHandlerTest : IClassFixture<PostgresFixture>, IAsy
          */
         var target = await SeedAsync(antibioticCount: 3);
 
-        var result = await _handler.HandleAsync(new DeleteAntibiogramCommand { Id = target.Id }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        var result = await _handler.HandleAsync(new DeleteAntibiogramCommand(target.Id), TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.Equal(Status.Deleted, result.StatusCode);
 
@@ -214,8 +214,8 @@ public class DeleteAntibiogramHandlerTest : IClassFixture<PostgresFixture>, IAsy
         var unknownId = Guid.CreateVersion7();
 
         var result = await _handler.HandleAsync(
-            new DeleteAntibiogramCommand { Id = unknownId }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsFailure);
+            new DeleteAntibiogramCommand(unknownId), TestContext.Current.CancellationToken);
+        Assert.True(result.IsFailure());
         Assert.NotNull(result.Error);
         Assert.Equal(Status.BadRequest, result.StatusCode);
 
@@ -232,8 +232,8 @@ public class DeleteAntibiogramHandlerTest : IClassFixture<PostgresFixture>, IAsy
         var deletedTarget = await SeedAsync(antibioticCount: 3, softDeletedTarget: true);
 
         var result = await _handler.HandleAsync(
-            new DeleteAntibiogramCommand { Id = deletedTarget.Id }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsFailure);
+            new DeleteAntibiogramCommand(deletedTarget.Id), TestContext.Current.CancellationToken);
+        Assert.True(result.IsFailure());
         Assert.NotNull(result.Error);
         Assert.Equal(Status.BadRequest, result.StatusCode);
 

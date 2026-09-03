@@ -5,9 +5,9 @@ using X.PagedList.EF;
 namespace Application.Features.Antibiotics.GetPagedAntibiotic;
 
 public class GetPagedAntibioticHandler(IDbContext context, IPaginationFactory factory)
-    : IQueryHandler<GetPagedAntibioticQuery, Respira.ServiceDefaults.Contracts.Results.Result<Pagination<PagedAntibioticItem>>>
+    : IQueryHandler<GetPagedAntibioticQuery, Result<Pagination<PagedAntibioticItem>>>
 {
-    public async Task<Respira.ServiceDefaults.Contracts.Results.Result<Pagination<PagedAntibioticItem>>> HandleAsync(GetPagedAntibioticQuery query, CancellationToken cancellationToken = default)
+    public async Task<Result<Pagination<PagedAntibioticItem>>> HandleAsync(GetPagedAntibioticQuery query, CancellationToken cancellationToken = default)
     {
         // Apply filter
         var queryable = context.Antibiotics.AsQueryable();
@@ -15,8 +15,7 @@ public class GetPagedAntibioticHandler(IDbContext context, IPaginationFactory fa
         {
             if (query.Filter.Name is not null)
             {
-                queryable = queryable
-                    .Where(x => EF.Functions.ILike(x.Name, $"%{query.Filter.Name}%"));
+                queryable = queryable.Where(x => EF.Functions.ILike(x.Name, $"%{query.Filter.Name}%"));
             }
 
             if (query.Filter.AntibioticGroupId is not null)
@@ -46,6 +45,6 @@ public class GetPagedAntibioticHandler(IDbContext context, IPaginationFactory fa
                 Classification = x.Classification
             })
             .ToPagedListAsync(query.Param.Page, query.Param.Size);
-        return Respira.ServiceDefaults.Contracts.Results.Result<Pagination<PagedAntibioticItem>>.Success(Status.Success, factory.Create(antibiotics));
+        return Result<Pagination<PagedAntibioticItem>>.Success(Status.Success, factory.Create(antibiotics));
     }
 }

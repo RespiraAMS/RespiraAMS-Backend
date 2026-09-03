@@ -131,9 +131,9 @@ public class GetEmpiricTreatmentProtocolByIdHandlerTest : IClassFixture<Postgres
         var seeded = await SeedProtocolAsync(withSpecialInfection: true, withRelations: true);
 
         var result = await _handler.HandleAsync(
-            new GetEmpiricTreatmentProtocolByIdQuery { Id = seeded.Id },
+            new GetEmpiricTreatmentProtocolByIdQuery(seeded.Id),
             TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.Equal(Status.Success, result.StatusCode);
         Assert.NotNull(result.Data);
@@ -173,9 +173,9 @@ public class GetEmpiricTreatmentProtocolByIdHandlerTest : IClassFixture<Postgres
         var seeded = await SeedProtocolAsync(withSpecialInfection: false, withRelations: false);
 
         var result = await _handler.HandleAsync(
-            new GetEmpiricTreatmentProtocolByIdQuery { Id = seeded.Id },
+            new GetEmpiricTreatmentProtocolByIdQuery(seeded.Id),
             TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.Equal(Status.Success, result.StatusCode);
         Assert.NotNull(result.Data);
@@ -201,9 +201,9 @@ public class GetEmpiricTreatmentProtocolByIdHandlerTest : IClassFixture<Postgres
         var unknownId = Guid.CreateVersion7();
 
         var result = await _handler.HandleAsync(
-            new GetEmpiricTreatmentProtocolByIdQuery { Id = unknownId },
+            new GetEmpiricTreatmentProtocolByIdQuery(unknownId),
             TestContext.Current.CancellationToken);
-        Assert.True(result.IsFailure);
+        Assert.True(result.IsFailure());
         Assert.NotNull(result.Error);
         Assert.Equal(Status.ResourceNotFound, result.StatusCode);
     }
@@ -217,9 +217,9 @@ public class GetEmpiricTreatmentProtocolByIdHandlerTest : IClassFixture<Postgres
         // Business rule: soft-deleted protocols are hidden by the query filter and must
         // be reported as not found
         var result = await _handler.HandleAsync(
-            new GetEmpiricTreatmentProtocolByIdQuery { Id = seeded.Id },
+            new GetEmpiricTreatmentProtocolByIdQuery(seeded.Id),
             TestContext.Current.CancellationToken);
-        Assert.True(result.IsFailure);
+        Assert.True(result.IsFailure());
         Assert.NotNull(result.Error);
         Assert.Equal(Status.ResourceNotFound, result.StatusCode);
     }

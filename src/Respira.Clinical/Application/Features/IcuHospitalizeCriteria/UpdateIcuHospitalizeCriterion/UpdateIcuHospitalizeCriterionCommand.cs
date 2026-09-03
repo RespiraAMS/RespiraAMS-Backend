@@ -2,7 +2,7 @@
 
 namespace Application.Features.IcuHospitalizeCriteria.UpdateIcuHospitalizeCriterion;
 
-public class UpdateIcuHospitalizeCriterionCommand : ICommand
+public record UpdateIcuHospitalizeCriterionCommand : ICommand
 {
     /// <summary>
     /// ICU hospitalize criterion ID

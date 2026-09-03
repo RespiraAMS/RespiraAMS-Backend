@@ -59,7 +59,7 @@ public class GetAntibioticGroupsHandlerTest : IClassFixture<PostgresFixture>, IA
 
         var result = await _handler.HandleAsync(new GetAntibioticGroupsQuery(),
             TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.Equal(Status.Success, result.StatusCode);
         Assert.NotNull(result.Data);
@@ -99,7 +99,7 @@ public class GetAntibioticGroupsHandlerTest : IClassFixture<PostgresFixture>, IA
 
         var result = await _handler.HandleAsync(new GetAntibioticGroupsQuery(),
             TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.Equal(Status.Success, result.StatusCode);
         Assert.NotNull(result.Data);
@@ -115,7 +115,7 @@ public class GetAntibioticGroupsHandlerTest : IClassFixture<PostgresFixture>, IA
     {
         var result = await _handler.HandleAsync(new GetAntibioticGroupsQuery(),
             TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.Equal(Status.Success, result.StatusCode);
         Assert.NotNull(result.Data);

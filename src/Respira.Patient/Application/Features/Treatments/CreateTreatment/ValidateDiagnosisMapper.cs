@@ -30,7 +30,8 @@ public class ValidateDiagnosisMapper : IMapper<DiagnosisRecord, ValidateDiagnosi
                 TreatmentSite = empirical.TreatmentSite,
             };
         }
-        else if (source is TargetedDiagnosisRecord targeted)
+
+        if (source is TargetedDiagnosisRecord targeted)
         {
             return new ValidateDiagnosisQuery
             {

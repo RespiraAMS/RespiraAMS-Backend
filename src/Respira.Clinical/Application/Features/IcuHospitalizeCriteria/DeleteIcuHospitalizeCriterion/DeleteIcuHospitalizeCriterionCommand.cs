@@ -1,9 +1,9 @@
 ﻿namespace Application.Features.IcuHospitalizeCriteria.DeleteIcuHospitalizeCriterion;
 
-public class DeleteIcuHospitalizeCriterionCommand : ICommand
+public record DeleteIcuHospitalizeCriterionCommand(Guid Id) : ICommand
 {
     /// <summary>
     /// ICU hospitalize criterion ID
     /// </summary>
-    public required Guid Id { get; set; }
+    public Guid Id { get; set; } = Id;
 }

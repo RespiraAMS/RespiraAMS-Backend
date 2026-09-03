@@ -35,7 +35,7 @@ namespace Application.Features.Authentication.Login.Queries
         IHashService hashService,
         IOptions<JwtOption> jwtOption,
         IMessageBus messageBus
-    ) : IQueryHandler<LoginQuery, Result<LoginResult>>
+    ) : IQueryHandler<LoginQuery, ApiResponse<LoginResult>>
     {
         // Used to keep the verification cost equal when the user does not exist,
         // avoiding timing-based user enumeration
@@ -49,7 +49,7 @@ namespace Application.Features.Authentication.Login.Queries
         /// <param name="query">Login credentials</param>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <returns>API response with access/refresh tokens, or a failure response</returns>
-        public async Task<Result<LoginResult>> HandleAsync(
+        public async Task<ApiResponse<LoginResult>> HandleAsync(
             LoginQuery query,
             CancellationToken cancellationToken = default
         )
@@ -65,7 +65,7 @@ namespace Application.Features.Authentication.Login.Queries
                 {
                     hashService.VerifyPassword(query.Password, DummyPasswordHash);
                     logger.LogDebug("Login failed for email {Email}: user not found", email);
-                    return Result<LoginResult>.Fail(
+                    return ApiResponse<LoginResult>.Fail(
                         message: "Email or password is incorrect",
                         statusCode: StatusCodes.Status401Unauthorized
                     );
@@ -74,7 +74,7 @@ namespace Application.Features.Authentication.Login.Queries
                 if (!hashService.VerifyPassword(query.Password, user.HashPassword))
                 {
                     logger.LogDebug("Login failed for email {Email}: invalid password", email);
-                    return Result<LoginResult>.Fail(
+                    return ApiResponse<LoginResult>.Fail(
                         message: "Email or password is incorrect",
                         statusCode: StatusCodes.Status401Unauthorized
                     );
@@ -83,7 +83,7 @@ namespace Application.Features.Authentication.Login.Queries
                 if (user.Status != StatusType.Active)
                 {
                     logger.LogDebug("Login failed for email {Email}: account is not active", email);
-                    return Result<LoginResult>.Fail(
+                    return ApiResponse<LoginResult>.Fail(
                         message: "Account is not active",
                         statusCode: StatusCodes.Status403Forbidden
                     );
@@ -95,7 +95,7 @@ namespace Application.Features.Authentication.Login.Queries
                         "Login failed for email {Email}: email is not confirmed",
                         email
                     );
-                    return Result<LoginResult>.Fail(
+                    return ApiResponse<LoginResult>.Fail(
                         message: "Email is not confirmed",
                         statusCode: StatusCodes.Status403Forbidden
                     );
@@ -123,7 +123,7 @@ namespace Application.Features.Authentication.Login.Queries
                 {
                     throw new ServerException();
                 }
-                return Result<LoginResult>.Ok(
+                return ApiResponse<LoginResult>.Ok(
                     new LoginResult { AccessToken = accessToken, RefreshToken = refreshToken }
                 );
             }

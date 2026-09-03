@@ -2,7 +2,9 @@
 using FluentValidation;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Respira.ServiceDefaults.Contracts.Results;
 using Respira.ServiceDefaults.Dtos;
 using Respira.ServiceDefaults.Exceptions;
 
@@ -13,73 +15,51 @@ namespace Respira.ServiceDefaults.Middlewares;
 /// </summary>
 public class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger) : IExceptionHandler
 {
-    public async ValueTask<bool> TryHandleAsync(
-        HttpContext httpContext,
-        Exception exception,
-        CancellationToken cancellationToken)
+    private readonly JsonSerializerOptions _jsonOptions = new JsonSerializerOptions
     {
-        // Log the error
-        logger.LogError(
-            exception,
-            "Error occurred while handling request {RequestMethod} {RequestPath}: {ExceptionMessage}",
-            httpContext.Request.Method,
-            httpContext.Request.Path,
-            exception.Message);
+        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+        WriteIndented = false,
+    };
 
-        // Decide status code and error message based on exception type
-        var (statusCode, message) = exception switch
+    public async ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception, CancellationToken cancellationToken)
+    {
+        logger.LogInformation("Unhandled exception: {Message}", exception.Message);
+
+        // Since Wolverine built in Fluent validation middleware throw exception instead of our Result,
+        // we'll handle that exception separately to other exceptions, to follow the Result pattern
+        // correctly
+        if (exception is ValidationException valEx)
         {
-            ValidationException validationException => (
-                StatusCodes.Status400BadRequest,
-                string.Join("; ", validationException.Errors.Select(e => e.ErrorMessage))
-            ),
-            UnauthorizedAccessException => (
-                StatusCodes.Status401Unauthorized,
-                "You do not have permission to access this resource."
-            ),
-            KeyNotFoundException => (
-                StatusCodes.Status404NotFound,
-                "The requested resource was not found."
-            ),
-            BadRequestException => (
-                StatusCodes.Status400BadRequest,
-                $"Bad request: {exception.Message}"
-            ),
-            NotFoundException => (
-                StatusCodes.Status404NotFound,
-                "The requested resource was not found."
-            ),
-            UnexpectedException => (
-                StatusCodes.Status500InternalServerError,
-                "An unexpected error occurred."
-            ),
-            ServerException => (
-                StatusCodes.Status500InternalServerError,
-                "An unexpected system error occurred. Please try again later."
-            ),
-            _ => (
-                StatusCodes.Status500InternalServerError,
-                "An unexpected system error occurred. Please contact support."
-            ),
-        };
+            logger.LogError("Validation exception: {Message}", valEx.Message);
+
+            // Create result object
+            var msg = string.Join("; ", valEx.Errors.Select(e => e.ErrorMessage));
+            var result = Result.Failure(new Error(Status.BadRequest, msg));
+
+            httpContext.Response.StatusCode = Status.ToHttpStatusCode(result.StatusCode);
+            httpContext.Response.ContentType = "application/json";
+
+            // Write response
+            await httpContext.Response.WriteAsJsonAsync(result, _jsonOptions, cancellationToken);
+            return true;
+        }
+
+        // Handle other exception normally
+        var path = $"{httpContext.Request.Method} {httpContext.Request.Path}";
+        logger.LogError("Unexpected error occured: {Detail}", new
+        {
+            Path = path,
+            exception.Message,
+            exception.StackTrace,
+        });
 
         // Create API response 
-        httpContext.Response.StatusCode = statusCode;
+        httpContext.Response.StatusCode = StatusCodes.Status500InternalServerError;
         httpContext.Response.ContentType = "application/json";
-        var errorResponse = Result<object>.Fail(message, statusCode);
-        var jsonOptions = new JsonSerializerOptions
-        {
-            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-            WriteIndented = false,
-        };
+        var res = Result.Failure(new Error(Status.ServerError, exception.Message));
 
         // Write response
-        await httpContext.Response.WriteAsJsonAsync(
-            errorResponse,
-            jsonOptions,
-            cancellationToken
-        );
-
+        await httpContext.Response.WriteAsJsonAsync(res, _jsonOptions, cancellationToken);
         return true;
     }
 }

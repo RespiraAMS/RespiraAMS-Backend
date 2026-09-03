@@ -11,10 +11,7 @@ public class DeleteEmpiricTreatmentProtocolValidatorTest
     [Fact]
     public async Task DeleteEmpiricTreatmentProtocol_ValidId_Success()
     {
-        var result = await _validator.ValidateAsync(
-            new DeleteEmpiricTreatmentProtocolCommand { Id = Guid.CreateVersion7() },
-            TestContext.Current.CancellationToken);
-
+        var result = await _validator.ValidateAsync(new DeleteEmpiricTreatmentProtocolCommand(Guid.CreateVersion7()), TestContext.Current.CancellationToken);
         Assert.Empty(result.Errors);
     }
 
@@ -26,10 +23,7 @@ public class DeleteEmpiricTreatmentProtocolValidatorTest
     public async Task DeleteEmpiricTreatmentProtocol_EmptyId_Fail()
     {
         // Boundary: Guid.Empty is treated as empty by NotEmpty
-        var result = await _validator.ValidateAsync(
-            new DeleteEmpiricTreatmentProtocolCommand { Id = Guid.Empty },
-            TestContext.Current.CancellationToken);
-
+        var result = await _validator.ValidateAsync(new DeleteEmpiricTreatmentProtocolCommand(Guid.Empty), TestContext.Current.CancellationToken);
         _ = Assert.Single(result.Errors);
         Assert.Equal("Id", result.Errors[0].PropertyName);
     }

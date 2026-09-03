@@ -3,6 +3,7 @@ using Application.Features.EmpiricTreatmentProtocols.GetEmpiricTreatmentProtocol
 using Asp.Versioning;
 using Microsoft.AspNetCore.Mvc;
 using Respira.Clinical.API.Dtos;
+using Respira.ServiceDefaults.Contracts.Results;
 using Respira.ServiceDefaults.Dtos;
 using Wolverine;
 
@@ -21,10 +22,8 @@ public class EmpiricTreatmentProtocolsController(IMessageBus bus) : ControllerBa
     [ProducesResponseType<Result>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetProtocol(Guid id)
     {
-        var result = await bus
-            .InvokeAsync<EmpiricTreatmentProtocolResult>(new GetEmpiricTreatmentProtocolByIdQuery { Id = id });
-        var resp = Result<EmpiricTreatmentProtocolResult>.Ok(result);
-        return Ok(resp);
+        var result = await bus.InvokeAsync<Result<EmpiricTreatmentProtocolResult>>(new GetEmpiricTreatmentProtocolByIdQuery(id));
+        return result.ToApiResponse();
     }
 
     [HttpPut]
@@ -36,8 +35,8 @@ public class EmpiricTreatmentProtocolsController(IMessageBus bus) : ControllerBa
     [ProducesResponseType<Result>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> UpdateProtocol(Guid id, [FromBody] UpdateEmpiricTreatmentProtocolRequestDto req)
     {
-        await bus.InvokeAsync(req.ToCommand(id));
-        return NoContent();
+        var result = await bus.InvokeAsync<Result>(req.ToCommand(id));
+        return result.ToApiResponse();
     }
 
     [HttpPut]
@@ -50,8 +49,8 @@ public class EmpiricTreatmentProtocolsController(IMessageBus bus) : ControllerBa
     [ProducesResponseType<Result>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> AddNewCriteria(Guid id, [FromBody] AddNewCriteriaRequestDto req)
     {
-        await bus.InvokeAsync(req.ToCommand(id));
-        return NoContent();
+        var result = await bus.InvokeAsync<Result>(req.ToCommand(id));
+        return result.ToApiResponse();
     }
 
     [HttpDelete]
@@ -62,7 +61,7 @@ public class EmpiricTreatmentProtocolsController(IMessageBus bus) : ControllerBa
     [ProducesResponseType<Result>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> DeleteTreatmentProtocol(Guid id)
     {
-        await bus.InvokeAsync(new DeleteEmpiricTreatmentProtocolCommand { Id = id });
-        return NoContent();
+        var result = await bus.InvokeAsync<Result>(new DeleteEmpiricTreatmentProtocolCommand(id));
+        return result.ToApiResponse();
     }
 }

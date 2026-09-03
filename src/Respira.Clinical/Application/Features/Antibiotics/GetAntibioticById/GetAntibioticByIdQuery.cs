@@ -3,15 +3,15 @@ using Range = Domain.Models.Range;
 
 namespace Application.Features.Antibiotics.GetAntibioticById;
 
-public class GetAntibioticByIdQuery : IQuery
+public record GetAntibioticByIdQuery(Guid Id) : IQuery
 {
     /// <summary>
     /// Antibiotic ID
     /// </summary>
-    public Guid Id { get; set; }
+    public Guid Id { get; set; } = Id;
 }
 
-public class AntibioticGroupResult
+public record AntibioticGroupResult
 {
     /// <summary>
     /// Antibiotic group ID
@@ -39,7 +39,7 @@ public class AntibioticGroupResult
     public required string? ParentName { get; set; }
 }
 
-public class PathogenResult
+public record PathogenResult
 {
     /// <summary>
     /// Pathogen ID
@@ -52,7 +52,7 @@ public class PathogenResult
     public required string Name { get; set; }
 }
 
-public class DosageResult
+public record DosageResult
 {
     /// <summary>
     /// Dosage ID
@@ -75,7 +75,7 @@ public class DosageResult
     public required Range? Crcl { get; set; }
 }
 
-public class AntibioticResult
+public record AntibioticResult
 {
     /// <summary>
     /// Antibiotic ID

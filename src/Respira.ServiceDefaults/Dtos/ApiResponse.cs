@@ -3,10 +3,10 @@
 namespace Respira.ServiceDefaults.Dtos;
 
 /// <summary>
-/// Result pattern (https://milanjovanovic.tech/blog/functional-error-handling-in-dotnet-with-the-result-pattern)
+/// ApiResponse pattern (https://milanjovanovic.tech/blog/functional-error-handling-in-dotnet-with-the-result-pattern)
 /// </summary>
 /// <typeparam name="T">Response data type</typeparam>
-public class Result<T>
+public class ApiResponse<T>
 {
     /// <summary>
     /// Response status code.
@@ -35,10 +35,10 @@ public class Result<T>
     /// <param name="data">The result data</param>
     /// <param name="message">Success message (if any)</param>
     /// <param name="statusCode">Success status code, default to 200</param>
-    /// <returns>Result object</returns>
-    public static Result<T> Ok(T data, string? message = null, int statusCode = StatusCodes.Status200OK)
+    /// <returns>ApiResponse object</returns>
+    public static ApiResponse<T> Ok(T data, string? message = null, int statusCode = StatusCodes.Status200OK)
     {
-        return new Result<T>
+        return new ApiResponse<T>
         {
             Success = true,
             Message = message,
@@ -52,10 +52,10 @@ public class Result<T>
     /// </summary>
     /// <param name="message">Error message (required)</param>
     /// <param name="statusCode">Failure status code</param>
-    /// <returns>Result object</returns>
-    public static Result<T> Fail(string message, int statusCode = StatusCodes.Status500InternalServerError)
+    /// <returns>ApiResponse object</returns>
+    public static ApiResponse<T> Fail(string message, int statusCode = StatusCodes.Status500InternalServerError)
     {
-        return new Result<T>
+        return new ApiResponse<T>
         {
             StatusCode = statusCode,
             Success = false,
@@ -65,10 +65,10 @@ public class Result<T>
 }
 
 /// <summary>
-/// Result pattern (non-generic with no data object)
+/// ApiResponse pattern (non-generic with no data object)
 /// (https://milanjovanovic.tech/blog/functional-error-handling-in-dotnet-with-the-result-pattern)
 /// </summary>
-public class Result
+public class ApiResponse
 {
     /// <summary>
     /// Response status code.
@@ -90,10 +90,10 @@ public class Result
     /// </summary>
     /// <param name="message">Success message (if any)</param>
     /// <param name="statusCode">Success status code, default to 200</param>
-    /// <returns>Result object</returns>
-    public static Result Ok(string? message = null, int statusCode = StatusCodes.Status200OK)
+    /// <returns>ApiResponse object</returns>
+    public static ApiResponse Ok(string? message = null, int statusCode = StatusCodes.Status200OK)
     {
-        return new Result
+        return new ApiResponse
         {
             Success = true,
             Message = message,
@@ -106,10 +106,10 @@ public class Result
     /// </summary>
     /// <param name="message">Error message (required)</param>
     /// <param name="statusCode">Failure status code</param>
-    /// <returns>Result object</returns>
-    public static Result Fail(string? message = null, int statusCode = StatusCodes.Status500InternalServerError)
+    /// <returns>ApiResponse object</returns>
+    public static ApiResponse Fail(string? message = null, int statusCode = StatusCodes.Status500InternalServerError)
     {
-        return new Result
+        return new ApiResponse
         {
             StatusCode = statusCode,
             Success = false,

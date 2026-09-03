@@ -51,7 +51,7 @@ public class GetPathogensHandlerTest : IClassFixture<PostgresFixture>, IAsyncLif
         var idByName = seeded.ToDictionary(x => x.Name, x => x.Id);
 
         var result = await _handler.HandleAsync(new GetPathogensQuery(), TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.Equal(Status.Success, result.StatusCode);
         Assert.NotNull(result.Data);
@@ -88,7 +88,7 @@ public class GetPathogensHandlerTest : IClassFixture<PostgresFixture>, IAsyncLif
         await _context.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var result = await _handler.HandleAsync(new GetPathogensQuery(), TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.Equal(Status.Success, result.StatusCode);
         Assert.NotNull(result.Data);
@@ -103,7 +103,7 @@ public class GetPathogensHandlerTest : IClassFixture<PostgresFixture>, IAsyncLif
     public async Task GetPathogens_EmptyDatabase_ReturnsEmpty()
     {
         var result = await _handler.HandleAsync(new GetPathogensQuery(), TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.Equal(Status.Success, result.StatusCode);
         Assert.NotNull(result.Data);

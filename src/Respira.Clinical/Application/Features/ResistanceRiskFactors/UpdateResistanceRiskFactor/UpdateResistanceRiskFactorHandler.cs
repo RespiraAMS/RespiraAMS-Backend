@@ -8,9 +8,9 @@ public class UpdateResistanceRiskFactorHandler(
     IDbContext context,
     IUpdateMapper<ResistanceRiskFactor, UpdateResistanceRiskFactorCommand> mapper,
     ILogger<UpdateResistanceRiskFactorCommand> logger)
-    : ICommandHandler<UpdateResistanceRiskFactorCommand, Respira.ServiceDefaults.Contracts.Results.Result>
+    : ICommandHandler<UpdateResistanceRiskFactorCommand, Result>
 {
-    public async Task<Respira.ServiceDefaults.Contracts.Results.Result> HandleAsync(UpdateResistanceRiskFactorCommand command,
+    public async Task<Result> HandleAsync(UpdateResistanceRiskFactorCommand command,
         CancellationToken cancellationToken = default)
     {
         // Check if pathogen exists
@@ -19,8 +19,7 @@ public class UpdateResistanceRiskFactorHandler(
         if (pathogen is null)
         {
             logger.LogDebug("Pathogen ID not found: {Id}", command.PathogenId);
-            return Respira.ServiceDefaults.Contracts.Results.Result.Failure(new Error(Status.BadRequest, "Pathogen ID not exists"));
-            // throw new BadRequestException("Pathogen ID not exists");
+            return Result.Failure(new Error(Status.BadRequest, "Pathogen ID not exists"));
         }
 
         // Get entity by ID
@@ -30,8 +29,7 @@ public class UpdateResistanceRiskFactorHandler(
         if (factor is null)
         {
             logger.LogDebug("Resistance risk factor ID not found: {Id}", command.Id);
-            return Respira.ServiceDefaults.Contracts.Results.Result.Failure(new Error(Status.BadRequest, "Resistance risk factor ID not found"));
-            // throw new NotFoundException(nameof(ResistanceRiskFactor), command.Id);
+            return Result.Failure(new Error(Status.BadRequest, "Resistance risk factor ID not found"));
         }
 
         // Map from command to query
@@ -39,6 +37,6 @@ public class UpdateResistanceRiskFactorHandler(
 
         // Save changes to database
         await context.SaveChangesAsync(cancellationToken);
-        return Respira.ServiceDefaults.Contracts.Results.Result.Success(Status.Updated);
+        return Result.Success(Status.Updated);
     }
 }

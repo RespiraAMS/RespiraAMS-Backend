@@ -6,21 +6,36 @@ using Microsoft.Extensions.Logging;
 
 namespace Application.Features.Diagnose.ValidateDiagnosis;
 
-public class ValidateDiagnosisHandler(IDbContext context, ILogger<ValidateDiagnosisHandler> logger) : IQueryHandler<ValidateDiagnosisQuery, ValidateDiagnosisResult>
+public class ValidateDiagnosisHandler(IDbContext context, ILogger<ValidateDiagnosisHandler> logger)
+    : IQueryHandler<ValidateDiagnosisQuery, Result<ValidateDiagnosisResult>>
 {
-    public async Task<ValidateDiagnosisResult> HandleAsync(ValidateDiagnosisQuery query, CancellationToken cancellationToken = default)
+    public async Task<Result<ValidateDiagnosisResult>> HandleAsync(ValidateDiagnosisQuery query,
+        CancellationToken cancellationToken = default)
     {
+        /*
+         * Since this is handler is used for cross service validation, a success result doesn't mean
+         * data is valid
+         */
+
         // Validate if severity and treatment site enums are valid
-        if (query.Severity is not null && (!Enum.TryParse<Domain.Enums.Severity>(query.Severity, ignoreCase: true, out var severity) || !Enum.IsDefined(severity)))
+        if (query.Severity is not null &&
+            (!Enum.TryParse<Domain.Enums.Severity>(query.Severity, ignoreCase: true, out var severity) ||
+             !Enum.IsDefined(severity)))
         {
             logger.LogInformation("Invalid severity: {severity}", query.Severity);
-            return new ValidateDiagnosisResult(false);
+            return Result<ValidateDiagnosisResult>.Success(
+                Status.Success,
+                new ValidateDiagnosisResult(false, "Invalid severity"));
         }
 
-        if (query.TreatmentSite is not null && (!Enum.TryParse<TreatmentSite>(query.TreatmentSite, ignoreCase: true, out var treatmentSite) || !Enum.IsDefined(treatmentSite)))
+        if (query.TreatmentSite is not null &&
+            (!Enum.TryParse<TreatmentSite>(query.TreatmentSite, ignoreCase: true, out var treatmentSite) ||
+             !Enum.IsDefined(treatmentSite)))
         {
             logger.LogInformation("Invalid treatment site: {treatmentSite}", query.TreatmentSite);
-            return new ValidateDiagnosisResult(false);
+            return Result<ValidateDiagnosisResult>.Success(
+                Status.Success,
+                new ValidateDiagnosisResult(false, "Invalid treatment site"));
         }
 
         // Check if the antibiotic and pathogen exists
@@ -35,7 +50,9 @@ public class ValidateDiagnosisHandler(IDbContext context, ILogger<ValidateDiagno
             if (!pathogens.TryGetValue(pathogen.Id, out var dbPathogen))
             {
                 logger.LogInformation("Pathogen {pathogenId} does not exist", pathogen.Id);
-                return new ValidateDiagnosisResult(false);
+                return Result<ValidateDiagnosisResult>.Success(
+                    Status.Success,
+                    new ValidateDiagnosisResult(false, $"Pathogen {pathogen.Id} does not exist"));
             }
 
             // Check if the name match
@@ -46,7 +63,9 @@ public class ValidateDiagnosisHandler(IDbContext context, ILogger<ValidateDiagno
                     DbPathogen = dbPathogen.Name,
                     QueryPathogen = pathogen.Name
                 });
-                return new ValidateDiagnosisResult(false);
+                return Result<ValidateDiagnosisResult>.Success(
+                    Status.Success,
+                    new ValidateDiagnosisResult(false, $"Pathogen {pathogen.Id} has name mismatch"));
             }
         }
 
@@ -63,7 +82,9 @@ public class ValidateDiagnosisHandler(IDbContext context, ILogger<ValidateDiagno
             if (!antibiotics.TryGetValue(antibiotic.Id, out var dbAntibiotic))
             {
                 logger.LogInformation("Antibiotic {antibioticId} does not exist", antibiotic.Id);
-                return new ValidateDiagnosisResult(false);
+                return Result<ValidateDiagnosisResult>.Success(
+                    Status.Success,
+                    new ValidateDiagnosisResult(false, $"Pathogen {antibiotic.Id} does not exist"));
             }
 
             // Check if the name match
@@ -74,28 +95,36 @@ public class ValidateDiagnosisHandler(IDbContext context, ILogger<ValidateDiagno
                     DbAntibiotic = dbAntibiotic.Name,
                     QueryAntibiotic = antibiotic.Name
                 });
-                return new ValidateDiagnosisResult(false);
+                return Result<ValidateDiagnosisResult>.Success(
+                    Status.Success,
+                    new ValidateDiagnosisResult(false, $"Pathogen {antibiotic.Id} has name mismatch"));
             }
 
             // Check if the route of administration valid and match db record
-            if (!Enum.TryParse<RouteOfAdministration>(antibiotic.RouteOfAdministration, ignoreCase: true, out var route) || !Enum.IsDefined(route))
+            if (!Enum.TryParse<RouteOfAdministration>(antibiotic.RouteOfAdministration, ignoreCase: true,
+                    out var route) || !Enum.IsDefined(route))
             {
                 logger.LogInformation("Invalid route of administration: {detail}", new
                 {
                     AntibioticId = antibiotic.Id,
                     QueryRoute = antibiotic.RouteOfAdministration,
                 });
-                return new ValidateDiagnosisResult(false);
+                return Result<ValidateDiagnosisResult>.Success(
+                    Status.Success,
+                    new ValidateDiagnosisResult(false, "Invalid route of administration"));
             }
 
-            if (!Enum.TryParse<AwareClassification>(antibiotic.Classification, ignoreCase: true, out var classification) || !Enum.IsDefined(classification))
+            if (!Enum.TryParse<AwareClassification>(antibiotic.Classification, ignoreCase: true,
+                    out var classification) || !Enum.IsDefined(classification))
             {
                 logger.LogInformation("Invalid antibiotic classification: {detail}", new
                 {
                     AntibioticId = antibiotic.Id,
                     QueryClassification = antibiotic.Classification
                 });
-                return new ValidateDiagnosisResult(false);
+                return Result<ValidateDiagnosisResult>.Success(
+                    Status.Success,
+                    new ValidateDiagnosisResult(false, "Invalid antibiotic classification"));
             }
 
             // Check if the classification match
@@ -107,23 +136,27 @@ public class ValidateDiagnosisHandler(IDbContext context, ILogger<ValidateDiagno
                     DbClassification = dbAntibiotic.Classification,
                     QueryClassification = antibiotic.Classification
                 });
-                return new ValidateDiagnosisResult(false);
+                return Result<ValidateDiagnosisResult>.Success(
+                    Status.Success,
+                    new ValidateDiagnosisResult(false, "Antibiotic classification does not match against db"));
             }
 
             // Check if the dose exists
-            if (!dbAntibiotic.Dosages.Any(d => d.Dose.EqualsIgnoreCase(antibiotic.Dose) && d.RouteOfAdministration == route))
+            if (!dbAntibiotic.Dosages.Any(d =>
+                    d.Dose.EqualsIgnoreCase(antibiotic.Dose) && d.RouteOfAdministration == route))
             {
-                logger.LogInformation("Antibiotic dose does not exist or route of administration mismatch: {detail}", new
-                {
-                    DbAntibiotic = dbAntibiotic.Name,
-                    QueryAntibiotic = antibiotic.Name
-                });
-                return new ValidateDiagnosisResult(false);
+                logger.LogInformation("Antibiotic dose does not exist or route of administration mismatch: {detail}",
+                    new
+                    {
+                        DbAntibiotic = dbAntibiotic.Name,
+                        QueryAntibiotic = antibiotic.Name
+                    });
+                return Result<ValidateDiagnosisResult>.Success(
+                    Status.Success,
+                    new ValidateDiagnosisResult(false, "Antibiotic dose or route of administration does not match against db"));
             }
-
         }
 
-        return new ValidateDiagnosisResult(true);
-
+        return Result<ValidateDiagnosisResult>.Success(Status.Success, new ValidateDiagnosisResult(true));
     }
 }

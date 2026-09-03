@@ -3,7 +3,7 @@ using Range = Domain.Models.Range;
 
 namespace Application.Features.Antibiotics.UpdateDosage;
 
-public class UpdateDosageCommand : ICommand
+public record UpdateDosageCommand : ICommand
 {
     /// <summary>
     /// Dosage ID

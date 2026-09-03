@@ -2,7 +2,7 @@
 
 namespace Application.Features.ResistanceRiskFactors.CreateResistanceRiskFactor;
 
-public class CreateResistanceRiskFactorCommand : ICommand
+public record CreateResistanceRiskFactorCommand : ICommand
 {
     /// <summary>
     /// Disease ID
@@ -25,10 +25,10 @@ public class CreateResistanceRiskFactorCommand : ICommand
     public required string Name { get; set; }
 }
 
-public class CreateResistanceRiskFactorResult(Guid id)
+public record CreateResistanceRiskFactorResult(Guid Id)
 {
     /// <summary>
     /// Resistance risk factor ID
     /// </summary>
-    public Guid Id { get; set; } = id;
+    public Guid Id { get; set; } = Id;
 }

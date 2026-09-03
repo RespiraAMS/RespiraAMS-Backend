@@ -166,7 +166,7 @@ public class UpdateAntibiogramHandlerTest : IClassFixture<PostgresFixture>, IAsy
             FirstPriorityMedicineIds = [antibioticIds[1]],
             SecondPriorityMedicineIds = [antibioticIds[4]],
         }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.Equal(Status.Updated, result.StatusCode);
 
@@ -207,7 +207,7 @@ public class UpdateAntibiogramHandlerTest : IClassFixture<PostgresFixture>, IAsy
             FirstPriorityMedicineIds = [antibioticIds[1]],
             SecondPriorityMedicineIds = [antibioticIds[2]],
         }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.Equal(Status.Updated, result.StatusCode);
 
@@ -237,7 +237,7 @@ public class UpdateAntibiogramHandlerTest : IClassFixture<PostgresFixture>, IAsy
             FirstPriorityMedicineIds = [antibioticIds[0]],
             SecondPriorityMedicineIds = [antibioticIds[2]],
         }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.Equal(Status.Updated, result.StatusCode);
 
@@ -267,7 +267,7 @@ public class UpdateAntibiogramHandlerTest : IClassFixture<PostgresFixture>, IAsy
                 FirstPriorityMedicineIds = [antibioticIds[1]],
                 SecondPriorityMedicineIds = [antibioticIds[2]],
             }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsFailure);
+        Assert.True(result.IsFailure());
         Assert.NotNull(result.Error);
         Assert.Equal(Status.BadRequest, result.StatusCode);
 
@@ -291,7 +291,7 @@ public class UpdateAntibiogramHandlerTest : IClassFixture<PostgresFixture>, IAsy
                 FirstPriorityMedicineIds = [antibioticIds[1]],
                 SecondPriorityMedicineIds = [antibioticIds[2]],
             }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsFailure);
+        Assert.True(result.IsFailure());
         Assert.NotNull(result.Error);
         Assert.Equal(Status.BadRequest, result.StatusCode);
     }
@@ -312,7 +312,7 @@ public class UpdateAntibiogramHandlerTest : IClassFixture<PostgresFixture>, IAsy
                 FirstPriorityMedicineIds = [antibioticIds[1]],
                 SecondPriorityMedicineIds = [antibioticIds[2]],
             }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsFailure);
+        Assert.True(result.IsFailure());
         Assert.NotNull(result.Error);
         Assert.Equal(Status.BadRequest, result.StatusCode);
 
@@ -343,7 +343,7 @@ public class UpdateAntibiogramHandlerTest : IClassFixture<PostgresFixture>, IAsy
                 FirstPriorityMedicineIds = [antibioticIds[1]],
                 SecondPriorityMedicineIds = [antibioticIds[2]],
             }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsFailure);
+        Assert.True(result.IsFailure());
         Assert.NotNull(result.Error);
         Assert.Equal(Status.BadRequest, result.StatusCode);
 

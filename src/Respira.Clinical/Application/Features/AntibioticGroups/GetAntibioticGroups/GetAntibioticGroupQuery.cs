@@ -1,8 +1,8 @@
 ﻿namespace Application.Features.AntibioticGroups.GetAntibioticGroups;
 
-public class GetAntibioticGroupsQuery : IQuery;
+public record GetAntibioticGroupsQuery : IQuery;
 
-public class AntibioticGroupItem
+public record AntibioticGroupItem
 {
     /// <summary>
     /// Antibiotic group ID
@@ -15,10 +15,10 @@ public class AntibioticGroupItem
     public required string Name { get; set; }
 }
 
-public class GetAntibioticGroupsResult(IEnumerable<AntibioticGroupItem> groups)
+public record GetAntibioticGroupsResult
 {
     /// <summary>
     /// List of antibiotic group
     /// </summary>
-    public IEnumerable<AntibioticGroupItem> AntibioticGroups { get; set; } = groups;
+    public required IEnumerable<AntibioticGroupItem> AntibioticGroups { get; set; }
 }

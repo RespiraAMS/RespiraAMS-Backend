@@ -99,9 +99,9 @@ public class DeleteCauseHandlerTest : IClassFixture<PostgresFixture>, IAsyncLife
         ]);
         var target = causes[0];
 
-        var result = await _handler.HandleAsync(new DeleteCauseCommand { Id = target.Id },
+        var result = await _handler.HandleAsync(new DeleteCauseCommand(target.Id),
             TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.Equal(Status.Deleted, result.StatusCode);
 
@@ -140,9 +140,9 @@ public class DeleteCauseHandlerTest : IClassFixture<PostgresFixture>, IAsyncLife
             (Severity.Moderate, TreatmentSite.Inpatient),
         ]);
 
-        var result = await _handler.HandleAsync(new DeleteCauseCommand { Id = causes[0].Id },
+        var result = await _handler.HandleAsync(new DeleteCauseCommand(causes[0].Id),
             TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.Equal(Status.Deleted, result.StatusCode);
 
@@ -161,8 +161,8 @@ public class DeleteCauseHandlerTest : IClassFixture<PostgresFixture>, IAsyncLife
         var unknownId = Guid.CreateVersion7();
 
         var result = await _handler.HandleAsync(
-            new DeleteCauseCommand { Id = unknownId }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsFailure);
+            new DeleteCauseCommand(unknownId), TestContext.Current.CancellationToken);
+        Assert.True(result.IsFailure());
         Assert.NotNull(result.Error);
         Assert.Equal(Status.BadRequest, result.StatusCode);
 
@@ -182,8 +182,8 @@ public class DeleteCauseHandlerTest : IClassFixture<PostgresFixture>, IAsyncLife
         ], softDeletedFirst: true);
 
         var result = await _handler.HandleAsync(
-            new DeleteCauseCommand { Id = causes[0].Id }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsFailure);
+            new DeleteCauseCommand(causes[0].Id), TestContext.Current.CancellationToken);
+        Assert.True(result.IsFailure());
         Assert.NotNull(result.Error);
         Assert.Equal(Status.BadRequest, result.StatusCode);
 

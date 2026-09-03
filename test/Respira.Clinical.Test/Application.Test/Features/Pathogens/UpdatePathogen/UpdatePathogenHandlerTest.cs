@@ -63,7 +63,7 @@ public class UpdatePathogenHandlerTest : IClassFixture<PostgresFixture>, IAsyncL
             Name = newName,
             Description = newDescription,
         }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.Equal(Status.Updated, result.StatusCode);
 
@@ -95,7 +95,7 @@ public class UpdatePathogenHandlerTest : IClassFixture<PostgresFixture>, IAsyncL
             Name = "Bacillus anthracis",
             Description = "Should never be written",
         }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsFailure);
+        Assert.True(result.IsFailure());
         Assert.NotNull(result.Error);
         Assert.Equal(Status.BadRequest, result.StatusCode);
 

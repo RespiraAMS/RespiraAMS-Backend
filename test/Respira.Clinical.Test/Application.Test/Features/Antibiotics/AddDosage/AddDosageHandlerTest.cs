@@ -113,7 +113,7 @@ public class AddDosageHandlerTest : IClassFixture<PostgresFixture>, IAsyncLifeti
             Dose = "1 g IV every 8 hours",
             Crcl = null,
         }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.NotNull(result.Data);
         Assert.Equal(Status.Created, result.StatusCode);
@@ -152,7 +152,7 @@ public class AddDosageHandlerTest : IClassFixture<PostgresFixture>, IAsyncLifeti
             Dose = "250 mg orally every 24 hours",
             Crcl = new Range { Min = 15, IsMinExclusive = true, Max = 29, IsMaxExclusive = true, Unit = "mL/min" },
         }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.NotNull(result.Data);
         Assert.Equal(Status.Created, result.StatusCode);
@@ -193,7 +193,7 @@ public class AddDosageHandlerTest : IClassFixture<PostgresFixture>, IAsyncLifeti
             Dose = "500 mg IV every 24 hours",
             Crcl = new Range { Min = 60, IsMinExclusive = true, Max = 90, IsMaxExclusive = false, Unit = "mL/min" },
         }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.NotNull(result.Data);
         Assert.Equal(Status.Created, result.StatusCode);
@@ -220,7 +220,7 @@ public class AddDosageHandlerTest : IClassFixture<PostgresFixture>, IAsyncLifeti
                 Dose = "500 mg orally every 8 hours",
                 Crcl = null,
             }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsFailure);
+        Assert.True(result.IsFailure());
         Assert.NotNull(result.Error);
         Assert.Equal(Status.BadRequest, result.StatusCode);
 
@@ -245,7 +245,7 @@ public class AddDosageHandlerTest : IClassFixture<PostgresFixture>, IAsyncLifeti
                 Dose = "1 g IV every 6 hours",
                 Crcl = null,
             }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsFailure);
+        Assert.True(result.IsFailure());
         Assert.NotNull(result.Error);
         Assert.Equal(Status.BadRequest, result.StatusCode);
     }
@@ -270,7 +270,7 @@ public class AddDosageHandlerTest : IClassFixture<PostgresFixture>, IAsyncLifeti
                 Dose = "875 mg orally every 12 hours",
                 Crcl = null,
             }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsFailure);
+        Assert.True(result.IsFailure());
         Assert.NotNull(result.Error);
         Assert.Equal(Status.BusinessRuleViolation, result.StatusCode);
 
@@ -305,7 +305,7 @@ public class AddDosageHandlerTest : IClassFixture<PostgresFixture>, IAsyncLifeti
                 Dose = "400 mg IV every 12 hours",
                 Crcl = new Range { Min = 15, IsMinExclusive = true, Max = 29, IsMaxExclusive = false, Unit = "mL/min" },
             }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsFailure);
+        Assert.True(result.IsFailure());
         Assert.NotNull(result.Error);
         Assert.Equal(Status.BusinessRuleViolation, result.StatusCode);
 
@@ -337,7 +337,7 @@ public class AddDosageHandlerTest : IClassFixture<PostgresFixture>, IAsyncLifeti
                 Dose = "500 mg IV every 24 hours",
                 Crcl = new Range { Min = 45, IsMinExclusive = true, Max = 75, IsMaxExclusive = false, Unit = "mL/min" },
             }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsFailure);
+        Assert.True(result.IsFailure());
         Assert.NotNull(result.Error);
         Assert.Equal(Status.BusinessRuleViolation, result.StatusCode);
 
@@ -369,7 +369,7 @@ public class AddDosageHandlerTest : IClassFixture<PostgresFixture>, IAsyncLifeti
                 Dose = "500 mg IV every 24 hours",
                 Crcl = new Range { Min = 60, IsMinExclusive = false, Max = 90, IsMaxExclusive = false, Unit = "mL/min" },
             }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsFailure);
+        Assert.True(result.IsFailure());
         Assert.NotNull(result.Error);
         Assert.Equal(Status.BusinessRuleViolation, result.StatusCode);
 

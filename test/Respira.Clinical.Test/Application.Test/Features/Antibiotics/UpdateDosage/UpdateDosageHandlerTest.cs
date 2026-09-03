@@ -138,7 +138,7 @@ public class UpdateDosageHandlerTest : IClassFixture<PostgresFixture>, IAsyncLif
             Dose = "875 mg orally every 12 hours",
             Crcl = null,
         }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.Equal(Status.Updated, result.StatusCode);
 
@@ -188,7 +188,7 @@ public class UpdateDosageHandlerTest : IClassFixture<PostgresFixture>, IAsyncLif
             Dose = "500 mg IV every 24 hours",
             Crcl = new Range { Min = 45, IsMinExclusive = true, Max = 60, IsMaxExclusive = false, Unit = "mL/min" },
         }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.Equal(Status.Updated, result.StatusCode);
 
@@ -221,7 +221,7 @@ public class UpdateDosageHandlerTest : IClassFixture<PostgresFixture>, IAsyncLif
             Dose = "400 mg IV every 12 hours",
             Crcl = null,
         }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.Equal(Status.Updated, result.StatusCode);
 
@@ -249,7 +249,7 @@ public class UpdateDosageHandlerTest : IClassFixture<PostgresFixture>, IAsyncLif
                 Dose = "500 mg orally every 8 hours",
                 Crcl = null,
             }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsFailure);
+        Assert.True(result.IsFailure());
         Assert.NotNull(result.Error);
         Assert.Equal(Status.BadRequest, result.StatusCode);
 
@@ -275,7 +275,7 @@ public class UpdateDosageHandlerTest : IClassFixture<PostgresFixture>, IAsyncLif
                 Dose = "250 mg orally every 6 hours",
                 Crcl = null,
             }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsFailure);
+        Assert.True(result.IsFailure());
         Assert.NotNull(result.Error);
         Assert.Equal(Status.BadRequest, result.StatusCode);
     }
@@ -302,7 +302,7 @@ public class UpdateDosageHandlerTest : IClassFixture<PostgresFixture>, IAsyncLif
                 Dose = "875 mg orally every 12 hours",
                 Crcl = null,
             }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsFailure);
+        Assert.True(result.IsFailure());
         Assert.NotNull(result.Error);
         Assert.Equal(Status.BadRequest, result.StatusCode);
 
@@ -339,7 +339,7 @@ public class UpdateDosageHandlerTest : IClassFixture<PostgresFixture>, IAsyncLif
                 Dose = "250 mg orally every 24 hours",
                 Crcl = null,
             }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsFailure);
+        Assert.True(result.IsFailure());
         Assert.NotNull(result.Error);
         Assert.Equal(Status.BusinessRuleViolation, result.StatusCode);
 
@@ -383,7 +383,7 @@ public class UpdateDosageHandlerTest : IClassFixture<PostgresFixture>, IAsyncLif
                 Dose = "500 mg IV every 12 hours",
                 Crcl = new Range { Min = 45, IsMinExclusive = false, Max = 60, IsMaxExclusive = false, Unit = "mL/min" },
             }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsFailure);
+        Assert.True(result.IsFailure());
         Assert.NotNull(result.Error);
         Assert.Equal(Status.BusinessRuleViolation, result.StatusCode);
 

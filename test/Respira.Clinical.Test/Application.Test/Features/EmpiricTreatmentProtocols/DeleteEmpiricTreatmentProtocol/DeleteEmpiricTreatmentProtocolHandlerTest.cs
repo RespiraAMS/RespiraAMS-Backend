@@ -121,9 +121,9 @@ public class DeleteEmpiricTreatmentProtocolHandlerTest : IClassFixture<PostgresF
             otherCriteriaIds: [_criterionId]);
         var control = await SeedProtocolAsync();
 
-        var result = await _handler.HandleAsync(new DeleteEmpiricTreatmentProtocolCommand { Id = target.Id },
+        var result = await _handler.HandleAsync(new DeleteEmpiricTreatmentProtocolCommand(target.Id),
             TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.Equal(Status.Deleted, result.StatusCode);
 
@@ -162,9 +162,9 @@ public class DeleteEmpiricTreatmentProtocolHandlerTest : IClassFixture<PostgresF
         await CleanupProtocolsAsync();
         var target = await SeedProtocolAsync();
 
-        var result = await _handler.HandleAsync(new DeleteEmpiricTreatmentProtocolCommand { Id = target.Id },
+        var result = await _handler.HandleAsync(new DeleteEmpiricTreatmentProtocolCommand(target.Id),
             TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.Equal(Status.Deleted, result.StatusCode);
 
@@ -187,9 +187,9 @@ public class DeleteEmpiricTreatmentProtocolHandlerTest : IClassFixture<PostgresF
         var unknownId = Guid.CreateVersion7();
 
         var result = await _handler.HandleAsync(
-            new DeleteEmpiricTreatmentProtocolCommand { Id = unknownId },
+            new DeleteEmpiricTreatmentProtocolCommand(unknownId),
             TestContext.Current.CancellationToken);
-        Assert.True(result.IsFailure);
+        Assert.True(result.IsFailure());
         Assert.NotNull(result.Error);
         Assert.Equal(Status.BadRequest, result.StatusCode);
 

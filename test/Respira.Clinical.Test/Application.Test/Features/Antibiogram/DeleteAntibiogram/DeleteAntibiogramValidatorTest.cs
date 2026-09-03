@@ -11,11 +11,7 @@ public class DeleteAntibiogramValidatorTest
     [Fact]
     public async Task DeleteAntibiogram_Success()
     {
-        var result = await _validator.ValidateAsync(new DeleteAntibiogramCommand
-        {
-            Id = Guid.CreateVersion7(),
-        }, TestContext.Current.CancellationToken);
-
+        var result = await _validator.ValidateAsync(new DeleteAntibiogramCommand(Guid.CreateVersion7()), TestContext.Current.CancellationToken);
         Assert.Empty(result.Errors);
     }
 
@@ -27,11 +23,7 @@ public class DeleteAntibiogramValidatorTest
     [Fact]
     public async Task DeleteAntibiogram_EmptyId_Fail()
     {
-        var result = await _validator.ValidateAsync(new DeleteAntibiogramCommand
-        {
-            Id = Guid.Empty,
-        }, TestContext.Current.CancellationToken);
-
+        var result = await _validator.ValidateAsync(new DeleteAntibiogramCommand(Guid.Empty), TestContext.Current.CancellationToken);
         _ = Assert.Single(result.Errors);
         Assert.Equal("Id", result.Errors[0].PropertyName);
     }

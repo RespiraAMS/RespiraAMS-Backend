@@ -9,6 +9,7 @@ using Application.Features.ResistanceRiskFactors.CreateResistanceRiskFactor;
 using Asp.Versioning;
 using Microsoft.AspNetCore.Mvc;
 using Respira.Clinical.API.Dtos;
+using Respira.ServiceDefaults.Contracts.Results;
 using Respira.ServiceDefaults.Dtos;
 using Wolverine;
 
@@ -27,22 +28,20 @@ public class DiseasesController(IMessageBus bus) : ControllerBase
     [ProducesResponseType<Result>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetDiseases([FromQuery] GetPagedDiseaseRequestDto req)
     {
-        var result = await bus.InvokeAsync<Pagination<PagedDiseaseItem>>(req.ToQuery());
-        var resp = Result<Pagination<PagedDiseaseItem>>.Ok(result, statusCode: StatusCodes.Status201Created);
-        return Ok(resp);
+        var result = await bus.InvokeAsync<Result<Pagination<PagedDiseaseItem>>>(req.ToQuery());
+        return result.ToApiResponse();
     }
 
     [HttpGet]
     [Route("list")]
-    [ProducesResponseType<Result<IEnumerable<DiseaseItem>>>(StatusCodes.Status200OK)]
+    [ProducesResponseType<Result<GetDiseasesResult>>(StatusCodes.Status200OK)]
     [ProducesResponseType<Result>(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType<Result>(StatusCodes.Status403Forbidden)]
     [ProducesResponseType<Result>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetDiseases()
     {
-        var result = await bus.InvokeAsync<GetDiseasesResult>(new GetDiseasesQuery());
-        var resp = Result<IEnumerable<DiseaseItem>>.Ok(result.Diseases);
-        return Ok(resp);
+        var result = await bus.InvokeAsync<Result<GetDiseasesResult>>(new GetDiseasesQuery());
+        return result.ToApiResponse();
     }
 
     [HttpGet]
@@ -54,9 +53,8 @@ public class DiseasesController(IMessageBus bus) : ControllerBase
     [ProducesResponseType<Result>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetDisease(Guid id)
     {
-        var result = await bus.InvokeAsync<DiseaseResult>(new GetDiseaseByIdQuery { Id = id });
-        var resp = Result<DiseaseResult>.Ok(result);
-        return Ok(resp);
+        var result = await bus.InvokeAsync<Result<DiseaseResult>>(new GetDiseaseByIdQuery(id));
+        return result.ToApiResponse();
     }
 
     [HttpGet]
@@ -68,9 +66,8 @@ public class DiseasesController(IMessageBus bus) : ControllerBase
     [ProducesResponseType<Result>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetDiagnosisTemplate(Guid id)
     {
-        var result = await bus.InvokeAsync<DiseaseCriteriaResult>(new GetDiseaseCriteriaQuery { Id = id });
-        var resp = Result<DiseaseCriteriaResult>.Ok(result);
-        return Ok(resp);
+        var result = await bus.InvokeAsync<Result<DiseaseCriteriaResult>>(new GetDiseaseCriteriaQuery(id));
+        return result.ToApiResponse();
     }
 
     [HttpPut]
@@ -83,8 +80,8 @@ public class DiseasesController(IMessageBus bus) : ControllerBase
     [ProducesResponseType<Result>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> UpdateDisease(Guid id, [FromBody] UpdateDiseaseRequestDto req)
     {
-        await bus.InvokeAsync(req.ToCommand(id));
-        return NoContent();
+        var result = await bus.InvokeAsync<Result>(req.ToCommand(id));
+        return result.ToApiResponse();
     }
 
     [HttpPost]
@@ -97,9 +94,8 @@ public class DiseasesController(IMessageBus bus) : ControllerBase
     [ProducesResponseType<Result>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> AddCause(Guid id, [FromBody] CreateCauseRequestDto req)
     {
-        var result = await bus.InvokeAsync<CreateCauseResult>(req.ToCommand(id));
-        var resp = Result<CreateCauseResult>.Ok(result, statusCode: StatusCodes.Status201Created);
-        return Created((string?)null, resp);
+        var result = await bus.InvokeAsync<Result<CreateCauseResult>>(req.ToCommand(id));
+        return result.ToApiResponse();
     }
 
     [HttpPost]
@@ -113,10 +109,8 @@ public class DiseasesController(IMessageBus bus) : ControllerBase
     public async Task<IActionResult> AddIcuHospitalizeCriterion(Guid id,
         [FromBody] CreateIcuHospitalizeCriterionRequestDto req)
     {
-        var result = await bus.InvokeAsync<CreateIcuHospitalizeCriterionResult>(req.ToCommand(id));
-        var resp = Result<CreateIcuHospitalizeCriterionResult>
-            .Ok(result, statusCode: StatusCodes.Status201Created);
-        return Created((string?)null, resp);
+        var result = await bus.InvokeAsync<Result<CreateIcuHospitalizeCriterionResult>>(req.ToCommand(id));
+        return result.ToApiResponse();
     }
 
     [HttpPost]
@@ -130,10 +124,8 @@ public class DiseasesController(IMessageBus bus) : ControllerBase
     public async Task<IActionResult> AddResistanceRiskFactor(Guid id,
         [FromBody] CreateResistanceRiskFactorRequestDto req)
     {
-        var result = await bus.InvokeAsync<CreateResistanceRiskFactorResult>(req.ToCommand(id));
-        var resp = Result<CreateResistanceRiskFactorResult>
-            .Ok(result, statusCode: StatusCodes.Status201Created);
-        return Created((string?)null, resp);
+        var result = await bus.InvokeAsync<Result<CreateResistanceRiskFactorResult>>(req.ToCommand(id));
+        return result.ToApiResponse();
     }
 
     [HttpPost]
@@ -147,9 +139,7 @@ public class DiseasesController(IMessageBus bus) : ControllerBase
     public async Task<IActionResult> AddTreatmentProtocol(Guid id,
         [FromBody] CreateEmpiricTreatmentProtocolRequestDto req)
     {
-        var result = await bus.InvokeAsync<CreateEmpiricTreatmentProtocolResult>(req.ToCommand(id));
-        var resp = Result<CreateEmpiricTreatmentProtocolResult>
-            .Ok(result, statusCode: StatusCodes.Status201Created);
-        return Created((string?)null, resp);
+        var result = await bus.InvokeAsync<Result<CreateEmpiricTreatmentProtocolResult>>(req.ToCommand(id));
+        return result.ToApiResponse();
     }
 }

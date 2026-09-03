@@ -5,9 +5,9 @@ using X.PagedList.EF;
 namespace Application.Features.Pathogens.GetPagedPathogen;
 
 public class GetPagedPathogensHandler(IDbContext context, IPaginationFactory factory)
-    : IQueryHandler<GetPagedPathogenQuery, Respira.ServiceDefaults.Contracts.Results.Result<Pagination<PagedPathogenItem>>>
+    : IQueryHandler<GetPagedPathogenQuery, Result<Pagination<PagedPathogenItem>>>
 {
-    public async Task<Respira.ServiceDefaults.Contracts.Results.Result<Pagination<PagedPathogenItem>>> HandleAsync(GetPagedPathogenQuery query,
+    public async Task<Result<Pagination<PagedPathogenItem>>> HandleAsync(GetPagedPathogenQuery query,
         CancellationToken cancellationToken = default)
     {
         // Apply filter
@@ -31,6 +31,6 @@ public class GetPagedPathogensHandler(IDbContext context, IPaginationFactory fac
                 Description = x.Description,
             })
             .ToPagedListAsync(query.Param.Page, query.Param.Size);
-        return Respira.ServiceDefaults.Contracts.Results.Result<Pagination<PagedPathogenItem>>.Success(Status.Success, factory.Create(pathogens));
+        return Result<Pagination<PagedPathogenItem>>.Success(Status.Success, factory.Create(pathogens));
     }
 }

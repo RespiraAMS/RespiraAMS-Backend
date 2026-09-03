@@ -5,9 +5,9 @@ using Microsoft.Extensions.Logging;
 namespace Application.Features.Antibiotics.UpdateAntibioticSpectrum;
 
 public class UpdateAntibioticSpectrumHandler(IDbContext context, ILogger<UpdateAntibioticSpectrumHandler> logger)
-    : ICommandHandler<UpdateAntibioticSpectrumCommand, Respira.ServiceDefaults.Contracts.Results.Result>
+    : ICommandHandler<UpdateAntibioticSpectrumCommand, Result>
 {
-    public async Task<Respira.ServiceDefaults.Contracts.Results.Result> HandleAsync(UpdateAntibioticSpectrumCommand command, CancellationToken cancellationToken = default)
+    public async Task<Result> HandleAsync(UpdateAntibioticSpectrumCommand command, CancellationToken cancellationToken = default)
     {
         // Get entity by ID
         var antibiotic = await context.Antibiotics
@@ -15,8 +15,7 @@ public class UpdateAntibioticSpectrumHandler(IDbContext context, ILogger<UpdateA
         if (antibiotic is null)
         {
             logger.LogDebug("Antibiotic not found: {Id}", command.Id);
-            return Respira.ServiceDefaults.Contracts.Results.Result.Failure(new Error(Status.BadRequest, "Antibiotic not found"));
-            // throw new NotFoundException(nameof(Antibiotic), command.Id);
+            return Result.Failure(new Error(Status.BadRequest, "Antibiotic not found"));
         }
 
         // Check if pathogen IDs exist
@@ -29,13 +28,12 @@ public class UpdateAntibioticSpectrumHandler(IDbContext context, ILogger<UpdateA
                 PathogenDbCount = pathogenCount,
                 PathogenProvided = command.PathogenIds.Count
             });
-            return Respira.ServiceDefaults.Contracts.Results.Result.Failure(new Error(Status.BadRequest, "Not all pathogen IDs provided exists in database"));
-            // throw new BadRequestException("Not all pathogen IDs provided exists in database");
+            return Result.Failure(new Error(Status.BadRequest, "Not all pathogen IDs provided exists in database"));
         }
 
         // Update in database
         context.UpdateRelations(antibiotic.AntibioticSpectra, command.PathogenIds);
         await context.SaveChangesAsync(cancellationToken);
-        return Respira.ServiceDefaults.Contracts.Results.Result.Success(Status.Updated);
+        return Result.Success(Status.Updated);
     }
 }

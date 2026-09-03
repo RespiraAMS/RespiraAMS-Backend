@@ -147,7 +147,7 @@ public class DeleteDosageHandlerTest : IClassFixture<PostgresFixture>, IAsyncLif
             Id = target.Id,
             AntibioticId = antibiotic.Id,
         }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.Equal(Status.Deleted, result.StatusCode);
 
@@ -196,7 +196,7 @@ public class DeleteDosageHandlerTest : IClassFixture<PostgresFixture>, IAsyncLif
             Id = target.Id,
             AntibioticId = antibiotic.Id,
         }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.Equal(Status.Deleted, result.StatusCode);
 
@@ -232,7 +232,7 @@ public class DeleteDosageHandlerTest : IClassFixture<PostgresFixture>, IAsyncLif
                 Id = Guid.CreateVersion7(),
                 AntibioticId = unknownId,
             }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsFailure);
+        Assert.True(result.IsFailure());
         Assert.NotNull(result.Error);
         Assert.Equal(Status.BadRequest, result.StatusCode);
 
@@ -257,7 +257,7 @@ public class DeleteDosageHandlerTest : IClassFixture<PostgresFixture>, IAsyncLif
                 Id = deletedAntibiotic.Dosages[0].Id,
                 AntibioticId = deletedAntibiotic.Id,
             }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsFailure);
+        Assert.True(result.IsFailure());
         Assert.NotNull(result.Error);
         Assert.Equal(Status.BadRequest, result.StatusCode);
     }
@@ -282,7 +282,7 @@ public class DeleteDosageHandlerTest : IClassFixture<PostgresFixture>, IAsyncLif
                 Id = foreignDosageId,
                 AntibioticId = antibiotic.Id,
             }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsFailure);
+        Assert.True(result.IsFailure());
         Assert.NotNull(result.Error);
         Assert.Equal(Status.BadRequest, result.StatusCode);
 
@@ -311,7 +311,7 @@ public class DeleteDosageHandlerTest : IClassFixture<PostgresFixture>, IAsyncLif
                 Id = antibiotic.Dosages[0].Id,
                 AntibioticId = antibiotic.Id,
             }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsFailure);
+        Assert.True(result.IsFailure());
         Assert.NotNull(result.Error);
         Assert.Equal(Status.BusinessRuleViolation, result.StatusCode);
 
@@ -350,7 +350,7 @@ public class DeleteDosageHandlerTest : IClassFixture<PostgresFixture>, IAsyncLif
                 Id = oralStandard.Id,
                 AntibioticId = antibiotic.Id,
             }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsFailure);
+        Assert.True(result.IsFailure());
         Assert.NotNull(result.Error);
         Assert.Equal(Status.BusinessRuleViolation, result.StatusCode);
 

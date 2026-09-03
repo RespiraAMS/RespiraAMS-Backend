@@ -5,9 +5,9 @@ using Microsoft.Extensions.Logging;
 namespace Application.Features.AntibioticGroups.DeleteAntibioticGroup;
 
 public class DeleteAntibioticGroupHandler(IDbContext context, ILogger<DeleteAntibioticGroupHandler> logger)
-    : ICommandHandler<DeleteAntibioticGroupCommand, Respira.ServiceDefaults.Contracts.Results.Result>
+    : ICommandHandler<DeleteAntibioticGroupCommand, Result>
 {
-    public async Task<Respira.ServiceDefaults.Contracts.Results.Result> HandleAsync(DeleteAntibioticGroupCommand command, CancellationToken cancellationToken = default)
+    public async Task<Result> HandleAsync(DeleteAntibioticGroupCommand command, CancellationToken cancellationToken = default)
     {
         // Get entity by ID
         var group = await context.AntibioticGroups
@@ -15,8 +15,7 @@ public class DeleteAntibioticGroupHandler(IDbContext context, ILogger<DeleteAnti
         if (group is null)
         {
             logger.LogDebug("Antibiotic group not found: {Id}", command.Id);
-            return Respira.ServiceDefaults.Contracts.Results.Result.Failure(new Error(Status.BadRequest, "Antibiotic group not found"));
-            // throw new NotFoundException(nameof(AntibioticGroup), command.Id);
+            return Result.Failure(new Error(Status.BadRequest, "Antibiotic group not found"));
         }
 
         // Delete antibiotic group - cascade delete all associating antibiotic
@@ -34,6 +33,6 @@ public class DeleteAntibioticGroupHandler(IDbContext context, ILogger<DeleteAnti
                     .SetProperty(a => a.DeletedAt, DateTimeOffset.UtcNow), cancellationToken);
             logger.LogDebug("Cascade delete {count} antibiotics when delete antibiotic group {Id}", count, command.Id);
         }, cancellationToken);
-        return Respira.ServiceDefaults.Contracts.Results.Result.Success(Status.Deleted);
+        return Result.Success(Status.Deleted);
     }
 }

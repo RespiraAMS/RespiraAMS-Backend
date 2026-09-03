@@ -122,7 +122,7 @@ public class CreateAntibiogramHandlerTest : IClassFixture<PostgresFixture>, IAsy
             FirstPriorityMedicineIds = [antibioticIds[1]],
             SecondPriorityMedicineIds = [antibioticIds[2]],
         }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.NotNull(result.Data);
         Assert.Equal(Status.Created, result.StatusCode);
@@ -157,7 +157,7 @@ public class CreateAntibiogramHandlerTest : IClassFixture<PostgresFixture>, IAsy
             FirstPriorityMedicineIds = [antibioticIds[2], antibioticIds[3]],
             SecondPriorityMedicineIds = [antibioticIds[4]],
         }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.NotNull(result.Data);
         Assert.Equal(Status.Created, result.StatusCode);
@@ -189,7 +189,7 @@ public class CreateAntibiogramHandlerTest : IClassFixture<PostgresFixture>, IAsy
                 FirstPriorityMedicineIds = [antibioticIds[0]],
                 SecondPriorityMedicineIds = [antibioticIds[2]],
             }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.NotNull(result.Data);
         Assert.Equal(Status.Created, result.StatusCode);
@@ -216,7 +216,7 @@ public class CreateAntibiogramHandlerTest : IClassFixture<PostgresFixture>, IAsy
                 FirstPriorityMedicineIds = [Guid.CreateVersion7()],
                 SecondPriorityMedicineIds = [Guid.CreateVersion7()],
             }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsFailure);
+        Assert.True(result.IsFailure());
         Assert.NotNull(result.Error);
         Assert.Equal(Status.BadRequest, result.StatusCode);
 
@@ -239,7 +239,7 @@ public class CreateAntibiogramHandlerTest : IClassFixture<PostgresFixture>, IAsy
                 FirstPriorityMedicineIds = [Guid.CreateVersion7()],
                 SecondPriorityMedicineIds = [Guid.CreateVersion7()],
             }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsFailure);
+        Assert.True(result.IsFailure());
         Assert.NotNull(result.Error);
         Assert.Equal(Status.BadRequest, result.StatusCode);
     }
@@ -259,7 +259,7 @@ public class CreateAntibiogramHandlerTest : IClassFixture<PostgresFixture>, IAsy
                 FirstPriorityMedicineIds = [antibioticIds[1]],
                 SecondPriorityMedicineIds = [antibioticIds[2]],
             }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsFailure);
+        Assert.True(result.IsFailure());
         Assert.NotNull(result.Error);
         Assert.Equal(Status.BadRequest, result.StatusCode);
 
@@ -284,7 +284,7 @@ public class CreateAntibiogramHandlerTest : IClassFixture<PostgresFixture>, IAsy
                 FirstPriorityMedicineIds = [antibioticIds[1]],
                 SecondPriorityMedicineIds = [antibioticIds[2]],
             }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsFailure);
+        Assert.True(result.IsFailure());
         Assert.NotNull(result.Error);
         Assert.Equal(Status.BadRequest, result.StatusCode);
 

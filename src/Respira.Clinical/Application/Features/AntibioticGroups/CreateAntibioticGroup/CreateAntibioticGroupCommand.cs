@@ -1,6 +1,6 @@
 ﻿namespace Application.Features.AntibioticGroups.CreateAntibioticGroup;
 
-public class CreateAntibioticGroupCommand : ICommand
+public record CreateAntibioticGroupCommand : ICommand
 {
     /// <summary>
     /// Antibiotic group name
@@ -19,10 +19,10 @@ public class CreateAntibioticGroupCommand : ICommand
     public required Guid? ParentId { get; set; }
 }
 
-public class CreateAntibioticGroupResult(Guid id)
+public record CreateAntibioticGroupResult(Guid Id)
 {
     /// <summary>
     /// Antibiotic group ID
     /// </summary>
-    public Guid Id { get; set; } = id;
+    public Guid Id { get; set; } = Id;
 }

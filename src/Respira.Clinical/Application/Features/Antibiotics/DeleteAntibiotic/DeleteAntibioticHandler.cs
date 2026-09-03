@@ -5,9 +5,9 @@ using Microsoft.Extensions.Logging;
 namespace Application.Features.Antibiotics.DeleteAntibiotic;
 
 public class DeleteAntibioticHandler(IDbContext context, ILogger<DeleteAntibioticHandler> logger)
-    : ICommandHandler<DeleteAntibioticCommand, Respira.ServiceDefaults.Contracts.Results.Result>
+    : ICommandHandler<DeleteAntibioticCommand, Result>
 {
-    public async Task<Respira.ServiceDefaults.Contracts.Results.Result> HandleAsync(DeleteAntibioticCommand command, CancellationToken cancellationToken = default)
+    public async Task<Result> HandleAsync(DeleteAntibioticCommand command, CancellationToken cancellationToken = default)
     {
         // Get entity by ID
         var antibiotic = await context.Antibiotics
@@ -15,7 +15,7 @@ public class DeleteAntibioticHandler(IDbContext context, ILogger<DeleteAntibioti
         if (antibiotic is null)
         {
             logger.LogDebug("Antibiotic not found: {Id}", command.Id);
-            return Respira.ServiceDefaults.Contracts.Results.Result.Failure(new Error(Status.BadRequest, "Antibiotic not found"));
+            return Result.Failure(new Error(Status.BadRequest, "Antibiotic not found"));
         }
 
         // Delete antibiotic
@@ -34,6 +34,6 @@ public class DeleteAntibioticHandler(IDbContext context, ILogger<DeleteAntibioti
 
             logger.LogDebug("Cascade delete {count} antibiotics when delete antibiotic {Id}", count, command.Id);
         }, cancellationToken);
-        return Respira.ServiceDefaults.Contracts.Results.Result.Success(Status.Deleted);
+        return Result.Success(Status.Deleted);
     }
 }

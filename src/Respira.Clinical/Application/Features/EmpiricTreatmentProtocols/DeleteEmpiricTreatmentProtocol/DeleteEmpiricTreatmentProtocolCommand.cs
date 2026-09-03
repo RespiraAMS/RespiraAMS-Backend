@@ -1,9 +1,9 @@
 ﻿namespace Application.Features.EmpiricTreatmentProtocols.DeleteEmpiricTreatmentProtocol;
 
-public class DeleteEmpiricTreatmentProtocolCommand : ICommand
+public record DeleteEmpiricTreatmentProtocolCommand(Guid Id) : ICommand
 {
     /// <summary>
     /// Empiric treatment protocol ID
     /// </summary>
-    public required Guid Id { get; set; }
+    public Guid Id { get; set; } = Id;
 }

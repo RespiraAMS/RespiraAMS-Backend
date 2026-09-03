@@ -1,6 +1,6 @@
 ﻿namespace Application.Features.Diseases.UpdateDisease;
 
-public class UpdateDiseaseCommand : ICommand
+public record UpdateDiseaseCommand : ICommand
 {
     /// <summary>
     /// Disease ID

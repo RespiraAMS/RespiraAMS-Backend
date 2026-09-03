@@ -2,6 +2,7 @@
 using Asp.Versioning;
 using Microsoft.AspNetCore.Mvc;
 using Respira.Clinical.API.Dtos;
+using Respira.ServiceDefaults.Contracts.Results;
 using Respira.ServiceDefaults.Dtos;
 using Wolverine;
 
@@ -19,11 +20,10 @@ public class IcuHospitalizeCriteriaController(IMessageBus bus) : ControllerBase
     [ProducesResponseType<Result>(StatusCodes.Status403Forbidden)]
     [ProducesResponseType<Result>(StatusCodes.Status404NotFound)]
     [ProducesResponseType<Result>(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> UpdateIcuHospitalizeCriterion(Guid id,
-        [FromBody] UpdateIcuHospitalizeCriterionRequestDto req)
+    public async Task<IActionResult> UpdateIcuHospitalizeCriterion(Guid id, [FromBody] UpdateIcuHospitalizeCriterionRequestDto req)
     {
-        await bus.InvokeAsync(req.ToCommand(id));
-        return NoContent();
+        var result = await bus.InvokeAsync<Result>(req.ToCommand(id));
+        return result.ToApiResponse();
     }
 
     [HttpDelete]
@@ -34,7 +34,7 @@ public class IcuHospitalizeCriteriaController(IMessageBus bus) : ControllerBase
     [ProducesResponseType<Result>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> RemoveIcuHospitalizeCriterion(Guid id)
     {
-        await bus.InvokeAsync(new DeleteIcuHospitalizeCriterionCommand { Id = id });
-        return NoContent();
+        var result = await bus.InvokeAsync<Result>(new DeleteIcuHospitalizeCriterionCommand(id));
+        return result.ToApiResponse();
     }
 }

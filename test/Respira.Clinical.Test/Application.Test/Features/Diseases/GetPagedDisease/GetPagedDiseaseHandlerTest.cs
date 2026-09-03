@@ -74,7 +74,7 @@ public class GetPagedDiseaseHandlerTest : IClassFixture<PostgresFixture>, IAsync
                 Param = new PaginationParam { Page = 1, Size = 10 },
             },
             TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.Equal(Status.Success, result.StatusCode);
         Assert.NotNull(result.Data);
@@ -116,7 +116,7 @@ public class GetPagedDiseaseHandlerTest : IClassFixture<PostgresFixture>, IAsync
                 Filter = new DiseaseFilter { Name = "pneumonia" },
             },
             TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.Equal(Status.Success, result.StatusCode);
         Assert.NotNull(result.Data);
@@ -141,7 +141,7 @@ public class GetPagedDiseaseHandlerTest : IClassFixture<PostgresFixture>, IAsync
                 Filter = null,
             },
             TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.Equal(Status.Success, result.StatusCode);
         Assert.NotNull(result.Data);
@@ -165,7 +165,7 @@ public class GetPagedDiseaseHandlerTest : IClassFixture<PostgresFixture>, IAsync
                 Param = new PaginationParam { Page = 1, Size = 1 },
             },
             TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.Equal(Status.Success, result.StatusCode);
         Assert.NotNull(result.Data);
@@ -193,7 +193,7 @@ public class GetPagedDiseaseHandlerTest : IClassFixture<PostgresFixture>, IAsync
                 Param = new PaginationParam { Page = 2, Size = 2 },
             },
             TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.Equal(Status.Success, result.StatusCode);
         Assert.NotNull(result.Data);
@@ -220,7 +220,7 @@ public class GetPagedDiseaseHandlerTest : IClassFixture<PostgresFixture>, IAsync
                 Param = new PaginationParam { Page = 5, Size = 10 },
             },
             TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.Equal(Status.Success, result.StatusCode);
         Assert.NotNull(result.Data);
@@ -250,7 +250,7 @@ public class GetPagedDiseaseHandlerTest : IClassFixture<PostgresFixture>, IAsync
                 Param = new PaginationParam { Page = 1, Size = 10 },
             },
             TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.Equal(Status.Success, result.StatusCode);
         Assert.NotNull(result.Data);
@@ -276,7 +276,7 @@ public class GetPagedDiseaseHandlerTest : IClassFixture<PostgresFixture>, IAsync
                 Param = new PaginationParam { Page = 1, Size = 10 },
             },
             TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.Equal(Status.Success, result.StatusCode);
         Assert.NotNull(result.Data);
@@ -302,7 +302,7 @@ public class GetPagedDiseaseHandlerTest : IClassFixture<PostgresFixture>, IAsync
                 Param = new PaginationParam { Page = 1, Size = 10 },
             },
             TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.Equal(Status.Success, result.StatusCode);
         Assert.NotNull(result.Data);

@@ -1,6 +1,6 @@
 ﻿namespace Application.Features.Antibiotics.UpdateAntibioticSpectrum;
 
-public class UpdateAntibioticSpectrumCommand : ICommand
+public record UpdateAntibioticSpectrumCommand : ICommand
 {
     /// <summary>
     /// Antibiotic ID

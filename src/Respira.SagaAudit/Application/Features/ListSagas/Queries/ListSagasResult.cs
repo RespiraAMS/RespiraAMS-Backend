@@ -1,7 +1,7 @@
 namespace Respira.SagaAudit.Application.Features.ListSagas.Queries;
 
 /// <summary>
-/// Result of a <see cref="ListSagasQuery"/>: a saga summary (excludes the step history).
+/// ApiResponse of a <see cref="ListSagasQuery"/>: a saga summary (excludes the step history).
 /// </summary>
 public record ListSagasResult
 {

@@ -123,11 +123,8 @@ public class DeleteResistanceRiskFactorHandlerTest : IClassFixture<PostgresFixtu
         var pathogenId = await SeedPathogenAsync();
         var factorId = await SeedFactorAsync(diseaseId, pathogenId, numeric: false);
 
-        var result = await _handler.HandleAsync(new DeleteResistanceRiskFactorCommand
-        {
-            Id = factorId,
-        }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        var result = await _handler.HandleAsync(new DeleteResistanceRiskFactorCommand(factorId), TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.Equal(Status.Deleted, result.StatusCode);
 
@@ -154,11 +151,8 @@ public class DeleteResistanceRiskFactorHandlerTest : IClassFixture<PostgresFixtu
         var pathogenId = await SeedPathogenAsync();
         var factorId = await SeedFactorAsync(diseaseId, pathogenId, numeric: true);
 
-        var result = await _handler.HandleAsync(new DeleteResistanceRiskFactorCommand
-        {
-            Id = factorId,
-        }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        var result = await _handler.HandleAsync(new DeleteResistanceRiskFactorCommand(factorId), TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.Equal(Status.Deleted, result.StatusCode);
 
@@ -177,12 +171,8 @@ public class DeleteResistanceRiskFactorHandlerTest : IClassFixture<PostgresFixtu
     {
         var unknownId = Guid.CreateVersion7();
 
-        var result = await _handler.HandleAsync(
-            new DeleteResistanceRiskFactorCommand
-            {
-                Id = unknownId,
-            }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsFailure);
+        var result = await _handler.HandleAsync(new DeleteResistanceRiskFactorCommand(unknownId), TestContext.Current.CancellationToken);
+        Assert.True(result.IsFailure());
         Assert.NotNull(result.Error);
         Assert.Equal(Status.BadRequest, result.StatusCode);
     }
@@ -196,12 +186,8 @@ public class DeleteResistanceRiskFactorHandlerTest : IClassFixture<PostgresFixtu
         var pathogenId = await SeedPathogenAsync();
         var factorId = await SeedFactorAsync(diseaseId, pathogenId, numeric: false, softDeletedFactor: true);
 
-        var result = await _handler.HandleAsync(
-            new DeleteResistanceRiskFactorCommand
-            {
-                Id = factorId,
-            }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsFailure);
+        var result = await _handler.HandleAsync(new DeleteResistanceRiskFactorCommand(factorId), TestContext.Current.CancellationToken);
+        Assert.True(result.IsFailure());
         Assert.NotNull(result.Error);
         Assert.Equal(Status.BadRequest, result.StatusCode);
     }

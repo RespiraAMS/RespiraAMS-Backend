@@ -7,9 +7,9 @@ namespace Application.Features.IcuHospitalizeCriteria.DeleteIcuHospitalizeCriter
 public class DeleteIcuHospitalizeCriterionHandler(
     IDbContext context,
     ILogger<DeleteIcuHospitalizeCriterionHandler> logger)
-    : ICommandHandler<DeleteIcuHospitalizeCriterionCommand, Respira.ServiceDefaults.Contracts.Results.Result>
+    : ICommandHandler<DeleteIcuHospitalizeCriterionCommand, Result>
 {
-    public async Task<Respira.ServiceDefaults.Contracts.Results.Result> HandleAsync(DeleteIcuHospitalizeCriterionCommand command, CancellationToken cancellationToken = default)
+    public async Task<Result> HandleAsync(DeleteIcuHospitalizeCriterionCommand command, CancellationToken cancellationToken = default)
     {
         // Get entity by ID
         var icu = await context.IcuHospitalizeCriteria
@@ -17,8 +17,7 @@ public class DeleteIcuHospitalizeCriterionHandler(
         if (icu is null)
         {
             logger.LogDebug("ICU hospitalize criterion not found: {Id}", command.Id);
-            return Respira.ServiceDefaults.Contracts.Results.Result.Failure(new Error(Status.BadRequest, "ICU hospitalize criterion not found"));
-            // throw new NotFoundException(nameof(IcuHospitalizeCriteria), command.Id);
+            return Result.Failure(new Error(Status.BadRequest, "ICU hospitalize criterion not found"));
         }
 
         // Delete ICU hospitalize criterion
@@ -27,6 +26,6 @@ public class DeleteIcuHospitalizeCriterionHandler(
 
         // Save changes to database
         await context.SaveChangesAsync(cancellationToken);
-        return Respira.ServiceDefaults.Contracts.Results.Result.Success(Status.Deleted);
+        return Result.Success(Status.Deleted);
     }
 }

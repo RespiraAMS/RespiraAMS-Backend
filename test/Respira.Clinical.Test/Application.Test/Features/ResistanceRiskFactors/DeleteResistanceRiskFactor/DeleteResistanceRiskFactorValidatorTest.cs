@@ -11,11 +11,7 @@ public class DeleteResistanceRiskFactorValidatorTest
     [Fact]
     public async Task DeleteResistanceRiskFactor_ValidId_Success()
     {
-        var result = await _validator.ValidateAsync(new DeleteResistanceRiskFactorCommand
-        {
-            Id = Guid.CreateVersion7(),
-        }, TestContext.Current.CancellationToken);
-
+        var result = await _validator.ValidateAsync(new DeleteResistanceRiskFactorCommand(Guid.CreateVersion7()), TestContext.Current.CancellationToken);
         Assert.Empty(result.Errors);
     }
 
@@ -33,11 +29,7 @@ public class DeleteResistanceRiskFactorValidatorTest
     [MemberData(nameof(InvalidIds))]
     public async Task DeleteResistanceRiskFactor_Fail(Guid id)
     {
-        var result = await _validator.ValidateAsync(new DeleteResistanceRiskFactorCommand
-        {
-            Id = id,
-        }, TestContext.Current.CancellationToken);
-
+        var result = await _validator.ValidateAsync(new DeleteResistanceRiskFactorCommand(id), TestContext.Current.CancellationToken);
         Assert.Contains(result.Errors, x => x.PropertyName == "Id");
     }
 

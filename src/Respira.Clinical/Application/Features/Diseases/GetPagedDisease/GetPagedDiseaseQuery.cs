@@ -1,6 +1,6 @@
 ﻿namespace Application.Features.Diseases.GetPagedDisease;
 
-public class DiseaseFilter
+public record DiseaseFilter
 {
     /// <summary>
     /// Disease name
@@ -8,7 +8,7 @@ public class DiseaseFilter
     public string? Name { get; set; }
 }
 
-public class GetPagedDiseaseQuery : IQuery
+public record GetPagedDiseaseQuery : IQuery
 {
     /// <summary>
     /// Pagination parameter
@@ -21,7 +21,7 @@ public class GetPagedDiseaseQuery : IQuery
     public DiseaseFilter? Filter { get; set; }
 }
 
-public class PagedDiseaseItem
+public record PagedDiseaseItem
 {
     /// <summary>
     /// Disease ID

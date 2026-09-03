@@ -8,9 +8,9 @@ public class CreateEmpiricTreatmentProtocolHandler(
     IDbContext context,
     ICreateMapper<EmpiricTreatmentProtocol, CreateEmpiricTreatmentProtocolCommand> mapper,
     ILogger<CreateEmpiricTreatmentProtocolHandler> logger)
-    : ICommandHandler<CreateEmpiricTreatmentProtocolCommand, Respira.ServiceDefaults.Contracts.Results.Result<CreateEmpiricTreatmentProtocolResult>>
+    : ICommandHandler<CreateEmpiricTreatmentProtocolCommand, Result<CreateEmpiricTreatmentProtocolResult>>
 {
-    public async Task<Respira.ServiceDefaults.Contracts.Results.Result<CreateEmpiricTreatmentProtocolResult>> HandleAsync(CreateEmpiricTreatmentProtocolCommand command,
+    public async Task<Result<CreateEmpiricTreatmentProtocolResult>> HandleAsync(CreateEmpiricTreatmentProtocolCommand command,
         CancellationToken cancellationToken = default)
     {
         // Check if disease ID exists
@@ -19,8 +19,7 @@ public class CreateEmpiricTreatmentProtocolHandler(
         if (disease is null)
         {
             logger.LogDebug("Disease ID not found: {Id}", command.DiseaseId);
-            return Respira.ServiceDefaults.Contracts.Results.Result<CreateEmpiricTreatmentProtocolResult>.Failure(new Error(Status.BadRequest, "Disease ID not exists"));
-            // throw new BadRequestException("Disease ID not exists");
+            return Result<CreateEmpiricTreatmentProtocolResult>.Failure(new Error(Status.BadRequest, "Disease ID not exists"));
         }
 
         // Check if pathogen ID exists
@@ -28,8 +27,7 @@ public class CreateEmpiricTreatmentProtocolHandler(
                 .FirstOrDefaultAsync(x => x.Id == command.SpecialInfectionId, cancellationToken) is null)
         {
             logger.LogDebug("Pathogen ID not found: {Id}", command.SpecialInfectionId);
-            return Respira.ServiceDefaults.Contracts.Results.Result<CreateEmpiricTreatmentProtocolResult>.Failure(new Error(Status.BadRequest, "Pathogen ID not exists"));
-            // throw new BadRequestException("Pathogen ID (SpecialInfectionId) not exists");
+            return Result<CreateEmpiricTreatmentProtocolResult>.Failure(new Error(Status.BadRequest, "Pathogen ID not exists"));
         }
 
         // Check if all criteria IDs exist
@@ -37,8 +35,7 @@ public class CreateEmpiricTreatmentProtocolHandler(
             command.OtherCriteriaIds.Count)
         {
             logger.LogDebug("Not all criterion ids exists");
-            return Respira.ServiceDefaults.Contracts.Results.Result<CreateEmpiricTreatmentProtocolResult>.Failure(new Error(Status.BadRequest, "Not all criterion ids exists"));
-            // throw new BadRequestException("Not all criterion IDs exists");
+            return Result<CreateEmpiricTreatmentProtocolResult>.Failure(new Error(Status.BadRequest, "Not all criterion ids exists"));
         }
 
         // Check if all antibiotic IDs exist
@@ -46,8 +43,7 @@ public class CreateEmpiricTreatmentProtocolHandler(
             command.MedicineIds.Count)
         {
             logger.LogWarning("Not all antibiotic ids exists");
-            return Respira.ServiceDefaults.Contracts.Results.Result<CreateEmpiricTreatmentProtocolResult>.Failure(new Error(Status.BadRequest, "Not all antibiotic ids exists"));
-            // throw new BadRequestException("Not all medicine ids exists");
+            return Result<CreateEmpiricTreatmentProtocolResult>.Failure(new Error(Status.BadRequest, "Not all antibiotic ids exists"));
         }
 
         // Map from command to entity
@@ -61,6 +57,6 @@ public class CreateEmpiricTreatmentProtocolHandler(
         await context.EmpiricTreatmentProtocols.AddAsync(protocol, cancellationToken);
         await context.SaveChangesAsync(cancellationToken);
 
-        return Respira.ServiceDefaults.Contracts.Results.Result<CreateEmpiricTreatmentProtocolResult>.Success(Status.Created, new CreateEmpiricTreatmentProtocolResult(protocol.Id));
+        return Result<CreateEmpiricTreatmentProtocolResult>.Success(Status.Created, new CreateEmpiricTreatmentProtocolResult(protocol.Id));
     }
 }

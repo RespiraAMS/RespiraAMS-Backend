@@ -2,7 +2,7 @@
 
 namespace Application.Features.Antibiotics.GetPagedAntibiotic;
 
-public class AntibioticFilter
+public record AntibioticFilter
 {
     /// <summary>
     /// Antibiotic name
@@ -20,7 +20,7 @@ public class AntibioticFilter
     public AwareClassification? Classification { get; set; }
 }
 
-public class GetPagedAntibioticQuery : IQuery
+public record GetPagedAntibioticQuery : IQuery
 {
     /// <summary>
     /// Pagination parameter
@@ -33,7 +33,7 @@ public class GetPagedAntibioticQuery : IQuery
     public AntibioticFilter? Filter { get; set; }
 }
 
-public class AntibioticGroupResult
+public record AntibioticGroupResult
 {
     /// <summary>
     /// Antibiotic group ID
@@ -46,7 +46,7 @@ public class AntibioticGroupResult
     public required string Name { get; set; }
 }
 
-public class PagedAntibioticItem
+public record PagedAntibioticItem
 {
     /// <summary>
     /// Antibiotic ID

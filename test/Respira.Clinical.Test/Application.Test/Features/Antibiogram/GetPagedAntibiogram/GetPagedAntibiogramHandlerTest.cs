@@ -167,7 +167,7 @@ public class GetPagedAntibiogramHandlerTest : IClassFixture<PostgresFixture>, IA
         {
             Param = new PaginationParam { Page = 1, Size = 2 },
         }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.NotNull(result.Data);
         Assert.Equal(Status.Success, result.StatusCode);
@@ -209,7 +209,7 @@ public class GetPagedAntibiogramHandlerTest : IClassFixture<PostgresFixture>, IA
         {
             Param = new PaginationParam { Page = 2, Size = 2 },
         }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.NotNull(result.Data);
         Assert.Equal(Status.Success, result.StatusCode);
@@ -231,7 +231,7 @@ public class GetPagedAntibiogramHandlerTest : IClassFixture<PostgresFixture>, IA
         {
             Param = new PaginationParam { Page = 1, Size = 1 },
         }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.NotNull(result.Data);
         Assert.Equal(Status.Success, result.StatusCode);
@@ -254,7 +254,7 @@ public class GetPagedAntibiogramHandlerTest : IClassFixture<PostgresFixture>, IA
             Param = new PaginationParam { Page = 1, Size = 10 },
             Filter = new AntibiogramFilter { PathogenId = pneumoniaeId },
         }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.NotNull(result.Data);
         Assert.Equal(Status.Success, result.StatusCode);
@@ -280,7 +280,7 @@ public class GetPagedAntibiogramHandlerTest : IClassFixture<PostgresFixture>, IA
             Param = new PaginationParam { Page = 1, Size = 10 },
             Filter = new AntibiogramFilter { PathogenId = null },
         }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.NotNull(result.Data);
         Assert.Equal(Status.Success, result.StatusCode);
@@ -299,7 +299,7 @@ public class GetPagedAntibiogramHandlerTest : IClassFixture<PostgresFixture>, IA
             Param = new PaginationParam { Page = 1, Size = 10 },
             Filter = new AntibiogramFilter { PathogenId = Guid.CreateVersion7() },
         }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.NotNull(result.Data);
         Assert.Equal(Status.Success, result.StatusCode);

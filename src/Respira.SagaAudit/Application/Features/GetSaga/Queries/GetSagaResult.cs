@@ -1,7 +1,7 @@
 namespace Respira.SagaAudit.Application.Features.GetSaga.Queries;
 
 /// <summary>
-/// Result of a <see cref="GetSagaQuery"/>: a full saga execution snapshot.
+/// ApiResponse of a <see cref="GetSagaQuery"/>: a full saga execution snapshot.
 /// </summary>
 public record GetSagaResult
 {

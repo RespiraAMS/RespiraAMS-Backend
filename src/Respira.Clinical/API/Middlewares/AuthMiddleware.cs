@@ -9,7 +9,7 @@ public class AuthMiddleware(RequestDelegate next, ILogger<AuthMiddleware> logger
     {
         context.Response.StatusCode = status;
         context.Response.ContentType = "application/json";
-        await context.Response.WriteAsJsonAsync(Result.Fail(message, status));
+        await context.Response.WriteAsJsonAsync(ApiResponse.Fail(message, status));
     }
 
     public async Task InvokeAsync(HttpContext context)

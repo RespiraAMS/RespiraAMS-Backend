@@ -15,22 +15,22 @@ namespace Application.Features.Doctors.Get.Queries
         IDoctorDbContext dbContext,
         ICacheService cacheService,
         IMessageBus bus
-    ) : IQueryHandler<DoctorQuery, Result<DoctorQueryResult>>
+    ) : IQueryHandler<DoctorQuery, ApiResponse<DoctorQueryResult>>
     {
         private const string CacheKeyPrefix = "doctor:info";
 
-        public async Task<Result<DoctorQueryResult>> HandleAsync(
+        public async Task<ApiResponse<DoctorQueryResult>> HandleAsync(
             DoctorQuery query,
             CancellationToken cancellationToken = default
         )
         {
-            var authDoctor = await bus.InvokeAsync<Result<GetAuthDoctorResult>>(
+            var authDoctor = await bus.InvokeAsync<ApiResponse<GetAuthDoctorResult>>(
                 new GetUserQuery { Id = query.Id },
                 cancellationToken
             );
             if (!authDoctor.Success)
             {
-                return Result<DoctorQueryResult>.Fail(
+                return ApiResponse<DoctorQueryResult>.Fail(
                     authDoctor.Message ?? "Auth service error",
                     authDoctor.StatusCode
                 );
@@ -85,13 +85,13 @@ namespace Application.Features.Doctors.Get.Queries
 
             if (doctor.MediaId.HasValue)
             {
-                var media = await bus.InvokeAsync<Result<GetMediaResult>>(
+                var media = await bus.InvokeAsync<ApiResponse<GetMediaResult>>(
                     new GetMediaQuery { Id = doctor.MediaId.Value },
                     cancellationToken
                 );
                 if (!media.Success)
                 {
-                    return Result<DoctorQueryResult>.Fail(
+                    return ApiResponse<DoctorQueryResult>.Fail(
                         media.Message ?? "Media service error",
                         media.StatusCode
                     );
@@ -100,7 +100,7 @@ namespace Application.Features.Doctors.Get.Queries
                 result.Url = media.Data?.Url;
             }
 
-            return Result<DoctorQueryResult>.Ok(result);
+            return ApiResponse<DoctorQueryResult>.Ok(result);
         }
     }
 }

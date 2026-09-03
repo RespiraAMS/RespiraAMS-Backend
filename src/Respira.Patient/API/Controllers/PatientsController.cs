@@ -16,42 +16,42 @@ namespace Respira.Patient.API.Controllers;
 public class PatientsController(IMessageBus bus, ILogger<PatientsController> logger) : ControllerBase
 {
     [HttpPost]
-    [ProducesResponseType<Result<CreatePatientResult>>(StatusCodes.Status201Created)]
-    [ProducesResponseType<Result>(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType<Result>(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType<Result>(StatusCodes.Status403Forbidden)]
-    [ProducesResponseType<Result>(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType<ApiResponse<CreatePatientResult>>(StatusCodes.Status201Created)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> CreatePatient([FromBody] CreatePatientCommand req)
     {
         var result = await bus.InvokeAsync<CreatePatientResult>(req);
-        var resp = Result<CreatePatientResult>.Ok(result, statusCode: StatusCodes.Status201Created);
+        var resp = ApiResponse<CreatePatientResult>.Ok(result, statusCode: StatusCodes.Status201Created);
         return CreatedAtAction(nameof(GetPatient), new { id = result.Id }, resp);
     }
 
     [HttpGet]
     [Route("{id:guid}")]
-    [ProducesResponseType<Result<PatientResult>>(StatusCodes.Status200OK)]
-    [ProducesResponseType<Result>(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType<Result>(StatusCodes.Status403Forbidden)]
-    [ProducesResponseType<Result>(StatusCodes.Status404NotFound)]
-    [ProducesResponseType<Result>(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType<ApiResponse<PatientResult>>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status404NotFound)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetPatient(Guid id)
     {
         var result = await bus.InvokeAsync<PatientResult>(new GetPatientByIdQuery { Id = id });
-        var resp = Result<PatientResult>.Ok(result);
+        var resp = ApiResponse<PatientResult>.Ok(result);
         return Ok(resp);
     }
 
     [HttpGet]
-    [ProducesResponseType<Result<Pagination<PagedPatientItem>>>(StatusCodes.Status200OK)]
-    [ProducesResponseType<Result>(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType<Result>(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType<Result>(StatusCodes.Status403Forbidden)]
-    [ProducesResponseType<Result>(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType<ApiResponse<Pagination<PagedPatientItem>>>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetPatients([FromQuery] GetPagedPatientRequestDto req)
     {
         var result = await bus.InvokeAsync<Pagination<PagedPatientItem>>(req.ToQuery());
-        var resp = Result<Pagination<PagedPatientItem>>.Ok(result);
+        var resp = ApiResponse<Pagination<PagedPatientItem>>.Ok(result);
         return Ok(resp);
     }
 
@@ -66,11 +66,11 @@ public class PatientsController(IMessageBus bus, ILogger<PatientsController> log
     [HttpPut]
     [Route("{id:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [ProducesResponseType<Result>(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType<Result>(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType<Result>(StatusCodes.Status403Forbidden)]
-    [ProducesResponseType<Result>(StatusCodes.Status404NotFound)]
-    [ProducesResponseType<Result>(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status404NotFound)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> UpdatePatient(Guid id, [FromBody] UpdatePatientRequestDto req)
     {
         await bus.InvokeAsync(req.ToCommand(id));
@@ -86,10 +86,10 @@ public class PatientsController(IMessageBus bus, ILogger<PatientsController> log
     [HttpPut]
     [Route("{id:guid}/discharge")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [ProducesResponseType<Result>(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType<Result>(StatusCodes.Status403Forbidden)]
-    [ProducesResponseType<Result>(StatusCodes.Status404NotFound)]
-    [ProducesResponseType<Result>(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status404NotFound)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> DischargePatient(Guid id, [FromBody] DischargePatientRequestDto req)
     {
         await bus.InvokeAsync(req.ToCommand(id));
@@ -120,7 +120,7 @@ public class PatientsController(IMessageBus bus, ILogger<PatientsController> log
         var parse = Guid.TryParse(Request.Headers["X-ID"], out var doctorId);
         logger.LogDebug("Doctor ID: {doctorId} {success}", doctorId, parse);
         var result = await bus.InvokeAsync<CreateTreatmentResult>(req.ToCommand(patientId, doctorId));
-        var resp = Result<CreateTreatmentResult>.Ok(result, statusCode: StatusCodes.Status201Created);
+        var resp = ApiResponse<CreateTreatmentResult>.Ok(result, statusCode: StatusCodes.Status201Created);
         return CreatedAtAction(nameof(GetPatient), new { id = result.Id }, resp);
     }
 
@@ -129,7 +129,7 @@ public class PatientsController(IMessageBus bus, ILogger<PatientsController> log
     public async Task<IActionResult> GetPatientTreatment(Guid patientId, Guid treatmentId)
     {
         var result = await bus.InvokeAsync<TreatmentInfo>(new GetTreatmentByIdQuery(treatmentId, patientId));
-        var resp = Result<TreatmentInfo>.Ok(result);
+        var resp = ApiResponse<TreatmentInfo>.Ok(result);
         return Ok(resp);
     }
 }

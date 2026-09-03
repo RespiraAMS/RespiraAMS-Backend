@@ -2,7 +2,7 @@
 
 namespace Application.Features.Antibiograms.UpdateAntibiogram;
 
-public class UpdateAntibiogramCommand : ICommand
+public record UpdateAntibiogramCommand : ICommand
 {
     /// <summary>
     /// Antibiogram ID

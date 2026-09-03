@@ -5,10 +5,9 @@ using Microsoft.EntityFrameworkCore;
 namespace Application.Features.Diseases.GetDiseaseById;
 
 public class GetDiseaseByIdHandler(IDbContext context, IResultMapper<Criterion, CriterionItem> mapper)
-    : IQueryHandler<GetDiseaseByIdQuery, Respira.ServiceDefaults.Contracts.Results.Result<DiseaseResult>>
+    : IQueryHandler<GetDiseaseByIdQuery, Result<DiseaseResult>>
 {
-    public async Task<Respira.ServiceDefaults.Contracts.Results.Result<DiseaseResult>> HandleAsync(GetDiseaseByIdQuery query,
-        CancellationToken cancellationToken = default)
+    public async Task<Result<DiseaseResult>> HandleAsync(GetDiseaseByIdQuery query, CancellationToken cancellationToken = default)
     {
         var disease = await context.Diseases
             .AsNoTracking()
@@ -64,7 +63,7 @@ public class GetDiseaseByIdHandler(IDbContext context, IResultMapper<Criterion, 
             .FirstOrDefaultAsync(x => x.Id == query.Id, cancellationToken);
 
         return disease is null
-            ? Respira.ServiceDefaults.Contracts.Results.Result<DiseaseResult>.Failure(new Error(Status.ResourceNotFound, "Disease ID not found"))
-            : Respira.ServiceDefaults.Contracts.Results.Result<DiseaseResult>.Success(Status.Success, disease);
+            ? Result<DiseaseResult>.Failure(new Error(Status.ResourceNotFound, "Disease ID not found"))
+            : Result<DiseaseResult>.Success(Status.Success, disease);
     }
 }

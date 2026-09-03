@@ -3,7 +3,7 @@ using Severity = Domain.Enums.Severity;
 
 namespace Application.Features.EmpiricTreatmentProtocols.CreateEmpiricTreatmentProtocol;
 
-public class CreateEmpiricTreatmentProtocolCommand : ICommand
+public record CreateEmpiricTreatmentProtocolCommand : ICommand
 {
     /// <summary>
     /// Empiric treatment protocol name
@@ -57,10 +57,10 @@ public class CreateEmpiricTreatmentProtocolCommand : ICommand
     public required List<Guid> MedicineIds { get; set; }
 }
 
-public class CreateEmpiricTreatmentProtocolResult(Guid id)
+public record CreateEmpiricTreatmentProtocolResult(Guid Id)
 {
     /// <summary>
     /// Empiric treatment protocol ID
     /// </summary>
-    public Guid Id { get; set; } = id;
+    public Guid Id { get; set; } = Id;
 }

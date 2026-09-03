@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore;
 namespace Application.Features.Antibiotics.GetAntibioticById;
 
 public class GetAntibioticByIdHandler(IDbContext context)
-    : IQueryHandler<GetAntibioticByIdQuery, Respira.ServiceDefaults.Contracts.Results.Result<AntibioticResult>>
+    : IQueryHandler<GetAntibioticByIdQuery, Result<AntibioticResult>>
 {
-    public async Task<Respira.ServiceDefaults.Contracts.Results.Result<AntibioticResult>> HandleAsync(GetAntibioticByIdQuery query, CancellationToken cancellationToken = default)
+    public async Task<Result<AntibioticResult>> HandleAsync(GetAntibioticByIdQuery query, CancellationToken cancellationToken = default)
     {
 #pragma warning disable RCS1077 // Optimize LINQ method call: ConvertAll won't work with EF Core SQL translation
         var antibiotic = await context.Antibiotics
@@ -41,7 +41,7 @@ public class GetAntibioticByIdHandler(IDbContext context)
 #pragma warning restore RCS1077 // Optimize LINQ method call
 
         return antibiotic is null
-            ? Respira.ServiceDefaults.Contracts.Results.Result<AntibioticResult>.Failure(new Error(Status.ResourceNotFound, "Antibiotic not found"))
-            : Respira.ServiceDefaults.Contracts.Results.Result<AntibioticResult>.Success(Status.Success, antibiotic);
+            ? Result<AntibioticResult>.Failure(new Error(Status.ResourceNotFound, "Antibiotic not found"))
+            : Result<AntibioticResult>.Success(Status.Success, antibiotic);
     }
 }

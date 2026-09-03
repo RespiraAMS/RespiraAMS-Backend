@@ -162,9 +162,9 @@ public class GetDiseaseCriteriaHandlerTest : IClassFixture<PostgresFixture>, IAs
         await SeedProtocolAsync(disease.Id, [other]);
 
         var result = await _handler.HandleAsync(
-            new GetDiseaseCriteriaQuery { Id = disease.Id },
+            new GetDiseaseCriteriaQuery(disease.Id),
             TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.Equal(Status.Success, result.StatusCode);
         Assert.NotNull(result.Data);
@@ -203,9 +203,9 @@ public class GetDiseaseCriteriaHandlerTest : IClassFixture<PostgresFixture>, IAs
         await SeedProtocolAsync(disease.Id, [shared]);
 
         var result = await _handler.HandleAsync(
-            new GetDiseaseCriteriaQuery { Id = disease.Id },
+            new GetDiseaseCriteriaQuery(disease.Id),
             TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.Equal(Status.Success, result.StatusCode);
         Assert.NotNull(result.Data);
@@ -228,9 +228,9 @@ public class GetDiseaseCriteriaHandlerTest : IClassFixture<PostgresFixture>, IAs
         await SeedProtocolAsync(disease.Id, [other]);
 
         var result = await _handler.HandleAsync(
-            new GetDiseaseCriteriaQuery { Id = disease.Id },
+            new GetDiseaseCriteriaQuery(disease.Id),
             TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.Equal(Status.Success, result.StatusCode);
         Assert.NotNull(result.Data);
@@ -251,9 +251,9 @@ public class GetDiseaseCriteriaHandlerTest : IClassFixture<PostgresFixture>, IAs
         await SeedIcuCriterionAsync(disease.Id, numeric, score: 4);
 
         var result = await _handler.HandleAsync(
-            new GetDiseaseCriteriaQuery { Id = disease.Id },
+            new GetDiseaseCriteriaQuery(disease.Id),
             TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.Equal(Status.Success, result.StatusCode);
         Assert.NotNull(result.Data);
@@ -274,9 +274,9 @@ public class GetDiseaseCriteriaHandlerTest : IClassFixture<PostgresFixture>, IAs
         var disease = await SeedDiseaseAsync();
 
         var result = await _handler.HandleAsync(
-            new GetDiseaseCriteriaQuery { Id = disease.Id },
+            new GetDiseaseCriteriaQuery(disease.Id),
             TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.Equal(Status.Success, result.StatusCode);
         Assert.NotNull(result.Data);
@@ -298,9 +298,9 @@ public class GetDiseaseCriteriaHandlerTest : IClassFixture<PostgresFixture>, IAs
         var unknownId = Guid.CreateVersion7();
 
         var result = await _handler.HandleAsync(
-            new GetDiseaseCriteriaQuery { Id = unknownId },
+            new GetDiseaseCriteriaQuery(unknownId),
             TestContext.Current.CancellationToken);
-        Assert.True(result.IsFailure);
+        Assert.True(result.IsFailure());
         Assert.NotNull(result.Error);
         Assert.Equal(Status.BadRequest, result.StatusCode);
         Assert.Null(result.Data);
@@ -317,9 +317,9 @@ public class GetDiseaseCriteriaHandlerTest : IClassFixture<PostgresFixture>, IAs
 
         // Business rule: a soft-deleted disease is hidden by the global query filter
         var result = await _handler.HandleAsync(
-            new GetDiseaseCriteriaQuery { Id = disease.Id },
+            new GetDiseaseCriteriaQuery(disease.Id),
             TestContext.Current.CancellationToken);
-        Assert.True(result.IsFailure);
+        Assert.True(result.IsFailure());
         Assert.NotNull(result.Error);
         Assert.Equal(Status.BadRequest, result.StatusCode);
         Assert.Null(result.Data);

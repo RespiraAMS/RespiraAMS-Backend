@@ -71,7 +71,7 @@ public class GetPagedPathogensHandlerTest : IClassFixture<PostgresFixture>, IAsy
         {
             Param = new Respira.ServiceDefaults.Dtos.PaginationParam { Page = 1, Size = 2 },
         }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.Equal(Status.Success, result.StatusCode);
         Assert.NotNull(result.Data);
@@ -95,7 +95,7 @@ public class GetPagedPathogensHandlerTest : IClassFixture<PostgresFixture>, IAsy
         {
             Param = new Respira.ServiceDefaults.Dtos.PaginationParam { Page = 2, Size = 2 },
         }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.Equal(Status.Success, result.StatusCode);
         Assert.NotNull(result.Data);
@@ -116,7 +116,7 @@ public class GetPagedPathogensHandlerTest : IClassFixture<PostgresFixture>, IAsy
         {
             Param = new Respira.ServiceDefaults.Dtos.PaginationParam { Page = 3, Size = 2 },
         }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.Equal(Status.Success, result.StatusCode);
         Assert.NotNull(result.Data);
@@ -147,7 +147,7 @@ public class GetPagedPathogensHandlerTest : IClassFixture<PostgresFixture>, IAsy
             Param = new Respira.ServiceDefaults.Dtos.PaginationParam { Page = 1, Size = 10 },
             Filter = new PathogenFilter { Name = "PNEU" },
         }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.Equal(Status.Success, result.StatusCode);
         Assert.NotNull(result.Data);
@@ -168,7 +168,7 @@ public class GetPagedPathogensHandlerTest : IClassFixture<PostgresFixture>, IAsy
             Param = new Respira.ServiceDefaults.Dtos.PaginationParam { Page = 1, Size = 10 },
             Filter = new PathogenFilter { Name = "Salmonella" },
         }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.Equal(Status.Success, result.StatusCode);
         Assert.NotNull(result.Data);

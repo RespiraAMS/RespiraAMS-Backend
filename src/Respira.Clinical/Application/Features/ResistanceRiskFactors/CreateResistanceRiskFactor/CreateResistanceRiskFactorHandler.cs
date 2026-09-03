@@ -8,9 +8,9 @@ public class CreateResistanceRiskFactorHandler(
     IDbContext context,
     ICreateMapper<ResistanceRiskFactor, CreateResistanceRiskFactorCommand> mapper,
     ILogger<CreateResistanceRiskFactorCommand> logger)
-    : ICommandHandler<CreateResistanceRiskFactorCommand, Respira.ServiceDefaults.Contracts.Results.Result<CreateResistanceRiskFactorResult>>
+    : ICommandHandler<CreateResistanceRiskFactorCommand, Result<CreateResistanceRiskFactorResult>>
 {
-    public async Task<Respira.ServiceDefaults.Contracts.Results.Result<CreateResistanceRiskFactorResult>> HandleAsync(CreateResistanceRiskFactorCommand command,
+    public async Task<Result<CreateResistanceRiskFactorResult>> HandleAsync(CreateResistanceRiskFactorCommand command,
         CancellationToken cancellationToken = default)
     {
         // Check if disease exists
@@ -19,8 +19,7 @@ public class CreateResistanceRiskFactorHandler(
         if (disease is null)
         {
             logger.LogDebug("Disease ID not found: {Id}", command.DiseaseId);
-            return Respira.ServiceDefaults.Contracts.Results.Result<CreateResistanceRiskFactorResult>.Failure(new Error(Status.BadRequest, "Disease ID not exists"));
-            // throw new BadRequestException("Disease ID not exists");
+            return Result<CreateResistanceRiskFactorResult>.Failure(new Error(Status.BadRequest, "Disease ID not exists"));
         }
 
         // Check if pathogen exists
@@ -29,8 +28,7 @@ public class CreateResistanceRiskFactorHandler(
         if (pathogen is null)
         {
             logger.LogDebug("Pathogen ID not found: {Id}", command.PathogenId);
-            return Respira.ServiceDefaults.Contracts.Results.Result<CreateResistanceRiskFactorResult>.Failure(new Error(Status.BadRequest, "Pathogen ID not exists"));
-            // throw new BadRequestException("Pathogen ID not exists");
+            return Result<CreateResistanceRiskFactorResult>.Failure(new Error(Status.BadRequest, "Pathogen ID not exists"));
         }
 
         // Map from command to query
@@ -40,6 +38,6 @@ public class CreateResistanceRiskFactorHandler(
         await context.ResistanceRiskFactors.AddAsync(factor, cancellationToken);
         await context.SaveChangesAsync(cancellationToken);
 
-        return Respira.ServiceDefaults.Contracts.Results.Result<CreateResistanceRiskFactorResult>.Success(Status.Created, new CreateResistanceRiskFactorResult(factor.Id));
+        return Result<CreateResistanceRiskFactorResult>.Success(Status.Created, new CreateResistanceRiskFactorResult(factor.Id));
     }
 }

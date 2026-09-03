@@ -5,6 +5,7 @@ using Domain;
 using Infrastructure;
 using Respira.Clinical.API.Middlewares;
 using Respira.ServiceDefaults.Extensions;
+using Respira.ServiceDefaults.Middlewares;
 using Respira.ServiceDefaults.Utils.OpenApiTransformers;
 using Scalar.AspNetCore;
 using Wolverine;
@@ -79,7 +80,7 @@ var app = builder.Build();
 
 app.UseCustomErrorHandling();
 app.UseClaimsPropagation();
-app.UseAuthorizationMiddleware(); // Comment this to deactivate auth middleware
+// app.UseAuthorizationMiddleware(); // Comment this to deactivate auth middleware
 app.MapControllers();
 
 // Configure the HTTP request pipeline.

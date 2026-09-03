@@ -3,7 +3,7 @@ using Severity = Domain.Enums.Severity;
 
 namespace Application.Features.EmpiricTreatmentProtocols.UpdateEmpiricTreatmentProtocol;
 
-public class UpdateEmpiricTreatmentProtocolCommand : ICommand
+public record UpdateEmpiricTreatmentProtocolCommand : ICommand
 {
     /// <summary>
     /// Empiric treatment protocol ID

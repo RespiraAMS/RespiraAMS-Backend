@@ -7,9 +7,9 @@ namespace Application.Features.Antibiotics.DeleteDosage;
 public class DeleteDosageHandler(
     IDbContext context,
     ILogger<DeleteDosageHandler> logger)
-    : ICommandHandler<DeleteDosageCommand, Respira.ServiceDefaults.Contracts.Results.Result>
+    : ICommandHandler<DeleteDosageCommand, Result>
 {
-    public async Task<Respira.ServiceDefaults.Contracts.Results.Result> HandleAsync(DeleteDosageCommand command, CancellationToken cancellationToken = default)
+    public async Task<Result> HandleAsync(DeleteDosageCommand command, CancellationToken cancellationToken = default)
     {
         // Get antibiotic that own this dosage
         var antibiotic = await context.Antibiotics
@@ -18,8 +18,7 @@ public class DeleteDosageHandler(
         if (antibiotic is null)
         {
             logger.LogDebug("Dosage with this antibiotic not found: {AntibioticId}", command.AntibioticId);
-            return Respira.ServiceDefaults.Contracts.Results.Result.Failure(new Error(Status.BadRequest, "Antibiotic not found"));
-            // throw new NotFoundException(nameof(Antibiotic), command.AntibioticId);
+            return Result.Failure(new Error(Status.BadRequest, "Antibiotic not found"));
         }
 
         // Get the dosage for update from the fetched antibiotic
@@ -34,19 +33,18 @@ public class DeleteDosageHandler(
         if (dosages.FirstOrDefault(d => d.Id == command.Id) is null)
         {
             logger.LogDebug("Dosage with this ID ({DosageId}) not found in this antibiotic ({AntibioticId})", command.Id, command.AntibioticId);
-            return Respira.ServiceDefaults.Contracts.Results.Result.Failure(new Error(Status.BadRequest, $"No dosage with this ID found in antibiotic {command.AntibioticId}"));
-            // throw new NotFoundException(nameof(Dosage), command.Id);
+            return Result.Failure(new Error(Status.BadRequest, $"No dosage with this ID found in antibiotic {command.AntibioticId}"));
         }
 
-        // Try remove the dosage from cloned object
+        // Try to remove the dosage from cloned object
         dosages.RemoveAll(d => d.Id == command.Id);
 
         // Validate dosage
         var validationResult = Antibiotic.IsAntibioticDosageValid(dosages);
-        if (!validationResult.IsSuccess)
+        if (!validationResult.IsSuccess())
         {
             logger.LogDebug("Dosage validation failed: {msg}", validationResult.Error);
-            return Respira.ServiceDefaults.Contracts.Results.Result.Failure(validationResult.Error!);
+            return Result.Failure(validationResult.Error!);
         }
 
         // Since we hard delete in the memory clone while our db delete is soft delete, 
@@ -61,6 +59,6 @@ public class DeleteDosageHandler(
         // will just hide the soft deleted dosage anyway
 
         await context.SaveChangesAsync(cancellationToken);
-        return Respira.ServiceDefaults.Contracts.Results.Result.Success(Status.Deleted);
+        return Result.Success(Status.Deleted);
     }
 }

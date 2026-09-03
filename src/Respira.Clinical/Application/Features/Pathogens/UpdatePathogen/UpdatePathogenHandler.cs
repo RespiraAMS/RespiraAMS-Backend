@@ -8,9 +8,9 @@ public class UpdatePathogenHandler(
     IDbContext context,
     IUpdateMapper<Pathogen, UpdatePathogenCommand> mapper,
     ILogger<UpdatePathogenHandler> logger)
-    : ICommandHandler<UpdatePathogenCommand, Respira.ServiceDefaults.Contracts.Results.Result>
+    : ICommandHandler<UpdatePathogenCommand, Result>
 {
-    public async Task<Respira.ServiceDefaults.Contracts.Results.Result> HandleAsync(UpdatePathogenCommand command, CancellationToken cancellationToken = default)
+    public async Task<Result> HandleAsync(UpdatePathogenCommand command, CancellationToken cancellationToken = default)
     {
         // Get pathogen by ID
         var pathogen = await context.Pathogens
@@ -18,8 +18,7 @@ public class UpdatePathogenHandler(
         if (pathogen is null)
         {
             logger.LogWarning("Pathogen ID not found");
-            return Respira.ServiceDefaults.Contracts.Results.Result.Failure(new Error(Status.BadRequest, "Pathogen ID not found"));
-            // throw new NotFoundException(nameof(Pathogen), command.Id);
+            return Result.Failure(new Error(Status.BadRequest, "Pathogen ID not found"));
         }
 
         // Map command to model
@@ -28,6 +27,6 @@ public class UpdatePathogenHandler(
         // Save changes to database
         await context.SaveChangesAsync(cancellationToken);
 
-        return Respira.ServiceDefaults.Contracts.Results.Result.Success(Status.Updated);
+        return Result.Success(Status.Updated);
     }
 }

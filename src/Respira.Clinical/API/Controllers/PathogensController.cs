@@ -5,6 +5,7 @@ using Application.Features.Pathogens.GetPathogens;
 using Asp.Versioning;
 using Microsoft.AspNetCore.Mvc;
 using Respira.Clinical.API.Dtos;
+using Respira.ServiceDefaults.Contracts.Results;
 using Respira.ServiceDefaults.Dtos;
 using Wolverine;
 
@@ -23,10 +24,8 @@ public class PathogensController(IMessageBus bus) : ControllerBase
     [ProducesResponseType<Result>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> CreatePathogen([FromBody] CreatePathogenCommand req)
     {
-        var result = await bus.InvokeAsync<CreatePathogenResult>(req);
-        var resp = Result<CreatePathogenResult>
-            .Ok(result, statusCode: StatusCodes.Status201Created);
-        return Created((string?)null, resp);
+        var result = await bus.InvokeAsync<Result<CreatePathogenResult>>(req);
+        return result.ToApiResponse();
     }
 
     [HttpGet]
@@ -37,9 +36,8 @@ public class PathogensController(IMessageBus bus) : ControllerBase
     [ProducesResponseType<Result>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetPathogens([FromQuery] GetPagedPathogenRequestDto req)
     {
-        var result = await bus.InvokeAsync<Pagination<PagedPathogenItem>>(req.ToQuery());
-        var resp = Result<Pagination<PagedPathogenItem>>.Ok(result);
-        return Ok(resp);
+        var result = await bus.InvokeAsync<Result<Pagination<PagedPathogenItem>>>(req.ToQuery());
+        return result.ToApiResponse();
     }
 
     [HttpGet]
@@ -51,9 +49,8 @@ public class PathogensController(IMessageBus bus) : ControllerBase
     [ProducesResponseType<Result>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetPathogens()
     {
-        var result = await bus.InvokeAsync<GetPathogensResult>(new GetPathogensQuery());
-        var resp = Result<IEnumerable<PathogenItem>>.Ok(result.Pathogens);
-        return Ok(resp);
+        var result = await bus.InvokeAsync<Result<GetPathogensResult>>(new GetPathogensQuery());
+        return result.ToApiResponse();
     }
 
     [HttpPut]
@@ -66,8 +63,8 @@ public class PathogensController(IMessageBus bus) : ControllerBase
     [ProducesResponseType<Result>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> UpdatePathogen(Guid id, [FromBody] UpdatePathogenRequestDto req)
     {
-        await bus.InvokeAsync(req.ToCommand(id));
-        return NoContent();
+        var result = await bus.InvokeAsync<Result>(req.ToCommand(id));
+        return result.ToApiResponse();
     }
 
     [HttpDelete]
@@ -79,7 +76,7 @@ public class PathogensController(IMessageBus bus) : ControllerBase
     [ProducesResponseType<Result>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> DeletePathogen(Guid id)
     {
-        await bus.InvokeAsync(new DeletePathogenCommand(id));
-        return NoContent();
+        var result = await bus.InvokeAsync<Result>(new DeletePathogenCommand(id));
+        return result.ToApiResponse();
     }
 }

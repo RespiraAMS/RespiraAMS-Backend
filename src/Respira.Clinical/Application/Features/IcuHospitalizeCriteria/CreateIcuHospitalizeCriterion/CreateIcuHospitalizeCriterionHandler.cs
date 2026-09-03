@@ -8,9 +8,9 @@ public class CreateIcuHospitalizeCriterionHandler(
     IDbContext context,
     ICreateMapper<IcuHospitalizeCriterion, CreateIcuHospitalizeCriterionCommand> mapper,
     ILogger<CreateIcuHospitalizeCriterionHandler> logger)
-    : ICommandHandler<CreateIcuHospitalizeCriterionCommand, Respira.ServiceDefaults.Contracts.Results.Result<CreateIcuHospitalizeCriterionResult>>
+    : ICommandHandler<CreateIcuHospitalizeCriterionCommand, Result<CreateIcuHospitalizeCriterionResult>>
 {
-    public async Task<Respira.ServiceDefaults.Contracts.Results.Result<CreateIcuHospitalizeCriterionResult>> HandleAsync(CreateIcuHospitalizeCriterionCommand command,
+    public async Task<Result<CreateIcuHospitalizeCriterionResult>> HandleAsync(CreateIcuHospitalizeCriterionCommand command,
         CancellationToken cancellationToken = default)
     {
         // Check if disease exists
@@ -19,8 +19,7 @@ public class CreateIcuHospitalizeCriterionHandler(
         if (disease is null)
         {
             logger.LogDebug("Disease ID not found: {Id}", command.DiseaseId);
-            return Respira.ServiceDefaults.Contracts.Results.Result<CreateIcuHospitalizeCriterionResult>.Failure(new Error(Status.BadRequest, "Disease ID not found"));
-            // throw new BadRequestException("Disease ID not exists");
+            return Result<CreateIcuHospitalizeCriterionResult>.Failure(new Error(Status.BadRequest, "Disease ID not found"));
         }
 
         // Map from command to model
@@ -30,6 +29,6 @@ public class CreateIcuHospitalizeCriterionHandler(
         await context.IcuHospitalizeCriteria.AddAsync(icu, cancellationToken);
         await context.SaveChangesAsync(cancellationToken);
 
-        return Respira.ServiceDefaults.Contracts.Results.Result<CreateIcuHospitalizeCriterionResult>.Success(Status.Created, new CreateIcuHospitalizeCriterionResult(icu.Id));
+        return Result<CreateIcuHospitalizeCriterionResult>.Success(Status.Created, new CreateIcuHospitalizeCriterionResult(icu.Id));
     }
 }

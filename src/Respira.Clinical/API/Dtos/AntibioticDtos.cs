@@ -6,7 +6,7 @@ using Respira.ServiceDefaults.Dtos;
 
 namespace Respira.Clinical.API.Dtos;
 
-public class GetPagedAntibioticsRequestDto
+public record GetPagedAntibioticsRequestDto
 {
     /// <summary>
     /// Pagination parameter: page index (1-based)
@@ -52,7 +52,7 @@ public class GetPagedAntibioticsRequestDto
     }
 }
 
-public class UpdateAntibioticRequestDto
+public record UpdateAntibioticRequestDto
 {
     /// <summary>
     /// Antibiotic name
@@ -81,7 +81,7 @@ public class UpdateAntibioticRequestDto
     }
 }
 
-public class UpdateAntibioticSpectrumRequestDto
+public record UpdateAntibioticSpectrumRequestDto
 {
     /// <summary>
     /// List of pathogen IDs

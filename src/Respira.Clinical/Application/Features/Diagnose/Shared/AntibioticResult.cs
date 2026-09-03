@@ -2,7 +2,7 @@ using Domain.Enums;
 
 namespace Application.Features.Diagnose.Shared;
 
-public class AntibioticResult
+public record AntibioticResult
 {
     /// <summary>
     /// Antibiotic ID

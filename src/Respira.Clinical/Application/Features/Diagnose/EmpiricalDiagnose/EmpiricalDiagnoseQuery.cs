@@ -4,7 +4,7 @@ using Severity = Domain.Enums.Severity;
 
 namespace Application.Features.Diagnose.EmpiricalDiagnose;
 
-public class EmpiricalDiagnoseQuery : IQuery
+public record EmpiricalDiagnoseQuery : IQuery
 {
     /// <summary>
     /// Disease ID
@@ -81,7 +81,7 @@ public class EmpiricalDiagnoseQuery : IQuery
     public required List<Guid> OtherCriteria { get; set; }
 }
 
-public class InfectionProbability
+public record InfectionProbability
 {
     /// <summary>
     /// Pathogen ID
@@ -99,7 +99,7 @@ public class InfectionProbability
     public required decimal Probability { get; set; }
 }
 
-public class EmpiricalTreatmentProtocolResult
+public record EmpiricalTreatmentProtocolResult
 {
     /// <summary>
     /// Treatment protocol ID
@@ -135,7 +135,7 @@ public class EmpiricalTreatmentProtocolResult
     public required int Version { get; set; }
 
 }
-public class EmpiricalDiagnoseResult
+public record EmpiricalDiagnoseResult
 {
     /// <summary>
     /// Patient's creatine clearance calculated

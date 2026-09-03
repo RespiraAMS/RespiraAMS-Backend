@@ -97,7 +97,7 @@ public class UpdateAntibioticHandlerTest : IClassFixture<PostgresFixture>, IAsyn
             AntibioticGroupId = group.Id,
             Classification = Enum.Parse<AwareClassification>(newClassification),
         }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.Equal(Status.Updated, result.StatusCode);
 
@@ -128,7 +128,7 @@ public class UpdateAntibioticHandlerTest : IClassFixture<PostgresFixture>, IAsyn
             AntibioticGroupId = newGroup.Id,
             Classification = AwareClassification.Watch,
         }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.Equal(Status.Updated, result.StatusCode);
 
@@ -156,7 +156,7 @@ public class UpdateAntibioticHandlerTest : IClassFixture<PostgresFixture>, IAsyn
                 AntibioticGroupId = group.Id,
                 Classification = AwareClassification.Watch,
             }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsFailure);
+        Assert.True(result.IsFailure());
         Assert.NotNull(result.Error);
         Assert.Equal(Status.BadRequest, result.StatusCode);
 
@@ -179,7 +179,7 @@ public class UpdateAntibioticHandlerTest : IClassFixture<PostgresFixture>, IAsyn
                 AntibioticGroupId = unknownGroupId,
                 Classification = AwareClassification.Access,
             }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsFailure);
+        Assert.True(result.IsFailure());
         Assert.NotNull(result.Error);
         Assert.Equal(Status.BadRequest, result.StatusCode);
 
@@ -209,7 +209,7 @@ public class UpdateAntibioticHandlerTest : IClassFixture<PostgresFixture>, IAsyn
                 AntibioticGroupId = deletedGroup.Id,
                 Classification = AwareClassification.Reserve,
             }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsFailure);
+        Assert.True(result.IsFailure());
         Assert.NotNull(result.Error);
         Assert.Equal(Status.BadRequest, result.StatusCode);
     }

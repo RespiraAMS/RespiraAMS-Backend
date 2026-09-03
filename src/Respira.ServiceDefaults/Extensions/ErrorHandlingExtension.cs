@@ -32,7 +32,7 @@ public static class ErrorHandlingExtensions
             };
 
             context.HttpContext.Response.ContentType = "application/json";
-            var errorResponse = Result<object>.Fail(message, statusCode);
+            var errorResponse = ApiResponse<object>.Fail(message, statusCode);
             await context.HttpContext.Response.WriteAsJsonAsync(errorResponse);
         });
 

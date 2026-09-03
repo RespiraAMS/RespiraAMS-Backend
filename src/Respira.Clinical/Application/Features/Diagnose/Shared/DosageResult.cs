@@ -2,7 +2,7 @@ using Domain.Enums;
 
 namespace Application.Features.Diagnose.Shared;
 
-public class DosageResult
+public record DosageResult
 {
     /// <summary>
     /// Antibiotic route of administration

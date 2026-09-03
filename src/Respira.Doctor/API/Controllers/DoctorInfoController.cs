@@ -17,23 +17,23 @@ namespace Respira.Doctor.API.Controllers;
 public class DoctorInfoController(IMessageBus messageBus) : ControllerBase
 {
     [HttpGet("{id}")]
-    public async Task<ActionResult<Result<DoctorQueryResult>>> GetDoctorAsync(Guid id)
+    public async Task<ActionResult<ApiResponse<DoctorQueryResult>>> GetDoctorAsync(Guid id)
     {
-        var result = await messageBus.InvokeAsync<Result<DoctorQueryResult>>(
+        var result = await messageBus.InvokeAsync<ApiResponse<DoctorQueryResult>>(
             new DoctorQuery { Id = id }
         );
         return StatusCode(result.StatusCode, result);
     }
 
     [HttpGet]
-    [ProducesResponseType<Result<Pagination<DoctorListItemResult>>>(StatusCodes.Status200OK)]
-    public async Task<ActionResult<Result<Pagination<DoctorListItemResult>>>> GetDoctorsAsync(
+    [ProducesResponseType<ApiResponse<Pagination<DoctorListItemResult>>>(StatusCodes.Status200OK)]
+    public async Task<ActionResult<ApiResponse<Pagination<DoctorListItemResult>>>> GetDoctorsAsync(
         [FromQuery] GetDoctorsRequestDto request
     )
     {
         var result = await messageBus.InvokeAsync<Pagination<DoctorListItemResult>>(
             request.ToQuery()
         );
-        return Ok(Result<Pagination<DoctorListItemResult>>.Ok(result));
+        return Ok(ApiResponse<Pagination<DoctorListItemResult>>.Ok(result));
     }
 }

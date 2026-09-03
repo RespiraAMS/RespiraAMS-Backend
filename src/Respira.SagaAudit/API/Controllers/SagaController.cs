@@ -22,7 +22,7 @@ public class SagaController(IMessageBus bus) : ControllerBase
     [HttpGet("{sagaId:guid}")]
     public async Task<IActionResult> GetById(Guid sagaId, CancellationToken cancellationToken)
     {
-        var result = await bus.InvokeAsync<Result<GetSagaResult>>(
+        var result = await bus.InvokeAsync<ApiResponse<GetSagaResult>>(
             new GetSagaQuery { SagaId = sagaId },
             cancellationToken
         );
@@ -40,7 +40,7 @@ public class SagaController(IMessageBus bus) : ControllerBase
         CancellationToken cancellationToken = default
     )
     {
-        var result = await bus.InvokeAsync<Result<List<ListSagasResult>>>(
+        var result = await bus.InvokeAsync<ApiResponse<List<ListSagasResult>>>(
             new ListSagasQuery { Status = status, Limit = limit },
             cancellationToken
         );

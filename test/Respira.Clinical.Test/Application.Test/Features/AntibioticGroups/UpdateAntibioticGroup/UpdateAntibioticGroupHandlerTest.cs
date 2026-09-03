@@ -77,7 +77,7 @@ public class UpdateAntibioticGroupHandlerTest : IClassFixture<PostgresFixture>, 
             Description = newDescription,
             ParentId = null,
         }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.Equal(Status.Updated, result.StatusCode);
 
@@ -107,7 +107,7 @@ public class UpdateAntibioticGroupHandlerTest : IClassFixture<PostgresFixture>, 
             Description = "Subgroup of beta-lactam antibiotics",
             ParentId = parent.Id,
         }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.Equal(Status.Updated, result.StatusCode);
 
@@ -134,7 +134,7 @@ public class UpdateAntibioticGroupHandlerTest : IClassFixture<PostgresFixture>, 
                 Description = "Should never be written",
                 ParentId = null,
             }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsFailure);
+        Assert.True(result.IsFailure());
         Assert.NotNull(result.Error);
         Assert.Equal(Status.BadRequest, result.StatusCode);
 
@@ -155,7 +155,7 @@ public class UpdateAntibioticGroupHandlerTest : IClassFixture<PostgresFixture>, 
                 Description = "Reparent attempt with an unknown parent",
                 ParentId = unknownParentId,
             }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsFailure);
+        Assert.True(result.IsFailure());
         Assert.NotNull(result.Error);
         Assert.Equal(Status.BadRequest, result.StatusCode);
 
@@ -184,7 +184,7 @@ public class UpdateAntibioticGroupHandlerTest : IClassFixture<PostgresFixture>, 
                 Description = "Reparent under a deleted branch",
                 ParentId = deletedParent.Id,
             }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsFailure);
+        Assert.True(result.IsFailure());
         Assert.NotNull(result.Error);
         Assert.Equal(Status.BadRequest, result.StatusCode);
     }

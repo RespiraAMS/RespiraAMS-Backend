@@ -3,10 +3,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Diseases.GetDiseases;
 
-public class GetDiseasesHandler(IDbContext context) : IQueryHandler<GetDiseasesQuery, Respira.ServiceDefaults.Contracts.Results.Result<GetDiseasesResult>>
+public class GetDiseasesHandler(IDbContext context) : IQueryHandler<GetDiseasesQuery, Result<GetDiseasesResult>>
 {
-    public async Task<Respira.ServiceDefaults.Contracts.Results.Result<GetDiseasesResult>> HandleAsync(GetDiseasesQuery query,
-        CancellationToken cancellationToken = default)
+    public async Task<Result<GetDiseasesResult>> HandleAsync(GetDiseasesQuery query, CancellationToken cancellationToken = default)
     {
         var diseases = await context.Diseases
             .AsNoTracking()
@@ -17,6 +16,6 @@ public class GetDiseasesHandler(IDbContext context) : IQueryHandler<GetDiseasesQ
                 Name = x.Name,
             })
             .ToListAsync(cancellationToken);
-        return Respira.ServiceDefaults.Contracts.Results.Result<GetDiseasesResult>.Success(Status.Success, new GetDiseasesResult(diseases));
+        return Result<GetDiseasesResult>.Success(Status.Success, new GetDiseasesResult { Diseases = diseases });
     }
 }

@@ -2,7 +2,7 @@
 
 namespace Application.Features.ResistanceRiskFactors.UpdateResistanceRiskFactor;
 
-public class UpdateResistanceRiskFactorCommand : ICommand
+public record UpdateResistanceRiskFactorCommand : ICommand
 {
     /// <summary>
     /// Resistance risk factor ID

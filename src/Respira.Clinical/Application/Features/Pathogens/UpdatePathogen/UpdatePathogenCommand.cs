@@ -1,6 +1,6 @@
 ﻿namespace Application.Features.Pathogens.UpdatePathogen;
 
-public class UpdatePathogenCommand : ICommand
+public record UpdatePathogenCommand : ICommand
 {
     /// <summary>
     /// Pathogen ID

@@ -4,7 +4,7 @@ using Respira.ServiceDefaults.Dtos;
 
 namespace Respira.Clinical.API.Dtos;
 
-public class GetPagedPathogenRequestDto
+public record GetPagedPathogenRequestDto
 {
     /// <summary>
     /// Pagination parameter: page index (1-based)
@@ -34,7 +34,7 @@ public class GetPagedPathogenRequestDto
     }
 }
 
-public class UpdatePathogenRequestDto
+public record UpdatePathogenRequestDto
 {
     public required string Name { get; set; }
     public required string Description { get; set; }

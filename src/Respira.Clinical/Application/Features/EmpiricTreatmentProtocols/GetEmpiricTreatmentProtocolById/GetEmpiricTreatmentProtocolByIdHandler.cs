@@ -5,10 +5,9 @@ using Microsoft.EntityFrameworkCore;
 namespace Application.Features.EmpiricTreatmentProtocols.GetEmpiricTreatmentProtocolById;
 
 public class GetEmpiricTreatmentProtocolByIdHandler(IDbContext context, IResultMapper<Criterion, CriterionItem> mapper)
-    : IQueryHandler<GetEmpiricTreatmentProtocolByIdQuery, Respira.ServiceDefaults.Contracts.Results.Result<EmpiricTreatmentProtocolResult>>
+    : IQueryHandler<GetEmpiricTreatmentProtocolByIdQuery, Result<EmpiricTreatmentProtocolResult>>
 {
-    public async Task<Respira.ServiceDefaults.Contracts.Results.Result<EmpiricTreatmentProtocolResult>> HandleAsync(GetEmpiricTreatmentProtocolByIdQuery query,
-        CancellationToken cancellationToken = default)
+    public async Task<Result<EmpiricTreatmentProtocolResult>> HandleAsync(GetEmpiricTreatmentProtocolByIdQuery query, CancellationToken cancellationToken = default)
     {
 #pragma warning disable RCS1077 // Optimize LINQ method call: ConvertAll won't work with EF Core SQL translation
         var protocol = await context.EmpiricTreatmentProtocols
@@ -44,7 +43,7 @@ public class GetEmpiricTreatmentProtocolByIdHandler(IDbContext context, IResultM
 #pragma warning restore RCS1077 // Optimize LINQ method call
 
         return protocol is null
-            ? Respira.ServiceDefaults.Contracts.Results.Result<EmpiricTreatmentProtocolResult>.Failure(new Error(Status.ResourceNotFound, "Empiric treatment protocol with id {id} not found"))
-            : Respira.ServiceDefaults.Contracts.Results.Result<EmpiricTreatmentProtocolResult>.Success(Status.Success, protocol);
+            ? Result<EmpiricTreatmentProtocolResult>.Failure(new Error(Status.ResourceNotFound, "Empiric treatment protocol with id {id} not found"))
+            : Result<EmpiricTreatmentProtocolResult>.Success(Status.Success, protocol);
     }
 }

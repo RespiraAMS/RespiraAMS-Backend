@@ -1,7 +1,7 @@
 namespace Application.Abstracts.Storage;
 
 /// <summary>
-/// Result of a successful object upload to storage.
+/// ApiResponse of a successful object upload to storage.
 /// </summary>
 public record StorageResult
 {

@@ -232,7 +232,7 @@ public class EmpiricalDiagnoseHandlerTest : IClassFixture<PostgresFixture>, IAsy
         var query = BuildQuery(disease.Id, [], [rrfCrit.Id], [rrfCrit.Id], ageYears: 50);
 
         var result = await _handler.HandleAsync(query, TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.NotNull(result.Data);
         Assert.Equal(Status.Success, result.StatusCode);
@@ -283,7 +283,7 @@ public class EmpiricalDiagnoseHandlerTest : IClassFixture<PostgresFixture>, IAsy
             confusion: true, urea: 8m, respiratory: 32, systolic: 80m, diastolic: 50m);
 
         var result = await _handler.HandleAsync(query, TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.NotNull(result.Data);
         Assert.Equal(Status.Success, result.StatusCode);
@@ -310,7 +310,7 @@ public class EmpiricalDiagnoseHandlerTest : IClassFixture<PostgresFixture>, IAsy
         var query = BuildQuery(disease.Id, [icuCrit.Id], [], [], ageYears: 50);
 
         var result = await _handler.HandleAsync(query, TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.NotNull(result.Data);
         Assert.Equal(Status.Success, result.StatusCode);
@@ -333,7 +333,7 @@ public class EmpiricalDiagnoseHandlerTest : IClassFixture<PostgresFixture>, IAsy
         var query = BuildQuery(disease.Id, [], [], [], ageYears: 50);
 
         var result = await _handler.HandleAsync(query, TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.NotNull(result.Data);
         Assert.Equal(Status.Success, result.StatusCode);
@@ -355,7 +355,7 @@ public class EmpiricalDiagnoseHandlerTest : IClassFixture<PostgresFixture>, IAsy
 
         var query = BuildQuery(unknownId, [], [], [], ageYears: 50);
         var result = await _handler.HandleAsync(query, TestContext.Current.CancellationToken);
-        Assert.True(result.IsFailure);
+        Assert.True(result.IsFailure());
         Assert.NotNull(result.Error);
         Assert.Equal(Status.ResourceNotFound, result.StatusCode);
     }
@@ -372,7 +372,7 @@ public class EmpiricalDiagnoseHandlerTest : IClassFixture<PostgresFixture>, IAsy
         var query = BuildQuery(disease.Id, [Guid.CreateVersion7()], [], [], ageYears: 50);
 
         var result = await _handler.HandleAsync(query, TestContext.Current.CancellationToken);
-        Assert.True(result.IsFailure);
+        Assert.True(result.IsFailure());
         Assert.NotNull(result.Error);
         Assert.Equal(Status.BadRequest, result.StatusCode);
     }
@@ -389,7 +389,7 @@ public class EmpiricalDiagnoseHandlerTest : IClassFixture<PostgresFixture>, IAsy
         var query = BuildQuery(disease.Id, [], [Guid.CreateVersion7()], [], ageYears: 50);
 
         var result = await _handler.HandleAsync(query, TestContext.Current.CancellationToken);
-        Assert.True(result.IsFailure);
+        Assert.True(result.IsFailure());
         Assert.NotNull(result.Error);
         Assert.Equal(Status.BadRequest, result.StatusCode);
     }
@@ -404,7 +404,7 @@ public class EmpiricalDiagnoseHandlerTest : IClassFixture<PostgresFixture>, IAsy
         var query = BuildQuery(disease.Id, [], [], [Guid.CreateVersion7()], ageYears: 50);
 
         var result = await _handler.HandleAsync(query, TestContext.Current.CancellationToken);
-        Assert.True(result.IsFailure);
+        Assert.True(result.IsFailure());
         Assert.NotNull(result.Error);
         Assert.Equal(Status.BadRequest, result.StatusCode);
     }

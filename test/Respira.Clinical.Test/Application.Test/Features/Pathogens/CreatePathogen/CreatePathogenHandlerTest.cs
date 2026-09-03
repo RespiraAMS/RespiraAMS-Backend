@@ -49,7 +49,7 @@ public class CreatePathogenHandlerTest : IClassFixture<PostgresFixture>, IAsyncL
             Description = description,
         }, TestContext.Current.CancellationToken);
 
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.Equal(Status.Created, result.StatusCode);
         Assert.NotNull(result.Data);

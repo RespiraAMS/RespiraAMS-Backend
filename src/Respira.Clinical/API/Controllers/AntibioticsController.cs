@@ -8,6 +8,7 @@ using Application.Features.Antibiotics.GetPagedAntibiotic;
 using Asp.Versioning;
 using Microsoft.AspNetCore.Mvc;
 using Respira.Clinical.API.Dtos;
+using Respira.ServiceDefaults.Contracts.Results;
 using Respira.ServiceDefaults.Dtos;
 using Wolverine;
 
@@ -27,9 +28,8 @@ public class AntibioticsController(IMessageBus bus) : ControllerBase
     [ProducesResponseType<Result>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> CreateAntibiotic([FromBody] CreateAntibioticCommand req)
     {
-        var result = await bus.InvokeAsync<CreateAntibioticResult>(req);
-        var resp = Result<CreateAntibioticResult>.Ok(result, statusCode: StatusCodes.Status201Created);
-        return Created((string?)null, resp);
+        var result = await bus.InvokeAsync<Result<CreateAntibioticResult>>(req);
+        return result.ToApiResponse();
     }
 
     [HttpGet]
@@ -40,22 +40,20 @@ public class AntibioticsController(IMessageBus bus) : ControllerBase
     [ProducesResponseType<Result>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetAntibiotics([FromQuery] GetPagedAntibioticsRequestDto req)
     {
-        var result = await bus.InvokeAsync<Pagination<PagedAntibioticItem>>(req.ToQuery());
-        var resp = Result<Pagination<PagedAntibioticItem>>.Ok(result);
-        return Ok(resp);
+        var result = await bus.InvokeAsync<Result<Pagination<PagedAntibioticItem>>>(req.ToQuery());
+        return result.ToApiResponse();
     }
 
     [HttpGet]
     [Route("list")]
-    [ProducesResponseType<Result<IEnumerable<AntibioticItem>>>(StatusCodes.Status200OK)]
+    [ProducesResponseType<Result<GetAntibioticsResult>>(StatusCodes.Status200OK)]
     [ProducesResponseType<Result>(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType<Result>(StatusCodes.Status403Forbidden)]
     [ProducesResponseType<Result>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetAntibiotics()
     {
-        var result = await bus.InvokeAsync<GetAntibioticsResult>(new GetAntibioticsQuery());
-        var resp = Result<IEnumerable<AntibioticItem>>.Ok(result.Antibiotics);
-        return Ok(resp);
+        var result = await bus.InvokeAsync<Result<GetAntibioticsResult>>(new GetAntibioticsQuery());
+        return result.ToApiResponse();
     }
 
     [HttpGet]
@@ -67,9 +65,8 @@ public class AntibioticsController(IMessageBus bus) : ControllerBase
     [ProducesResponseType<Result>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetAntibiotic(Guid id)
     {
-        var result = await bus.InvokeAsync<AntibioticResult>(new GetAntibioticByIdQuery { Id = id });
-        var resp = Result<AntibioticResult>.Ok(result);
-        return Ok(resp);
+        var result = await bus.InvokeAsync<Result<AntibioticResult>>(new GetAntibioticByIdQuery(id));
+        return result.ToApiResponse();
     }
 
     [HttpPut]
@@ -82,8 +79,8 @@ public class AntibioticsController(IMessageBus bus) : ControllerBase
     [ProducesResponseType<Result>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> UpdateAntibiotic(Guid id, [FromBody] UpdateAntibioticRequestDto req)
     {
-        await bus.InvokeAsync(req.ToCommand(id));
-        return NoContent();
+        var result = await bus.InvokeAsync<Result>(req.ToCommand(id));
+        return result.ToApiResponse();
     }
 
     [HttpPut]
@@ -94,11 +91,10 @@ public class AntibioticsController(IMessageBus bus) : ControllerBase
     [ProducesResponseType<Result>(StatusCodes.Status403Forbidden)]
     [ProducesResponseType<Result>(StatusCodes.Status404NotFound)]
     [ProducesResponseType<Result>(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> UpdateAntibioticSpectrum(Guid id,
-        [FromBody] UpdateAntibioticSpectrumRequestDto req)
+    public async Task<IActionResult> UpdateAntibioticSpectrum(Guid id, [FromBody] UpdateAntibioticSpectrumRequestDto req)
     {
-        await bus.InvokeAsync(req.ToCommand(id));
-        return NoContent();
+        var result = await bus.InvokeAsync<Result>(req.ToCommand(id));
+        return result.ToApiResponse();
     }
 
     [HttpPost]
@@ -111,9 +107,8 @@ public class AntibioticsController(IMessageBus bus) : ControllerBase
     [ProducesResponseType<Result>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> AddDosage(Guid id, [FromBody] AddDosageRequestDto req)
     {
-        var result = await bus.InvokeAsync<AddDosageResult>(req.ToCommand(id));
-        var resp = Result<AddDosageResult>.Ok(result, statusCode: StatusCodes.Status201Created);
-        return Created((string?)null, resp);
+        var result = await bus.InvokeAsync<Result<AddDosageResult>>(req.ToCommand(id));
+        return result.ToApiResponse();
     }
 
     [HttpPut]
@@ -126,8 +121,8 @@ public class AntibioticsController(IMessageBus bus) : ControllerBase
     [ProducesResponseType<Result>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> UpdateDosage(Guid id, Guid dosageId, [FromBody] UpdateDosageRequestDto req)
     {
-        await bus.InvokeAsync(req.ToCommand(dosageId, id));
-        return NoContent();
+        var result = await bus.InvokeAsync<Result>(req.ToCommand(dosageId, id));
+        return result.ToApiResponse();
     }
 
     [HttpDelete]
@@ -139,8 +134,8 @@ public class AntibioticsController(IMessageBus bus) : ControllerBase
     [ProducesResponseType<Result>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> DeleteDosage(Guid id, Guid dosageId)
     {
-        await bus.InvokeAsync(new DeleteDosageCommand { Id = dosageId, AntibioticId = id });
-        return NoContent();
+        var result = await bus.InvokeAsync<Result>(new DeleteDosageCommand { Id = dosageId, AntibioticId = id });
+        return result.ToApiResponse();
     }
 
     [HttpDelete]
@@ -152,7 +147,7 @@ public class AntibioticsController(IMessageBus bus) : ControllerBase
     [ProducesResponseType<Result>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> DeleteAntibiotic(Guid id)
     {
-        await bus.InvokeAsync(new DeleteAntibioticCommand { Id = id });
-        return NoContent();
+        var result = await bus.InvokeAsync<Result>(new DeleteAntibioticCommand(id));
+        return result.ToApiResponse();
     }
 }

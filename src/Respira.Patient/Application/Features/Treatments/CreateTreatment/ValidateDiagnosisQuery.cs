@@ -34,7 +34,8 @@ public class ValidateDiagnosisQuery : IQuery
 }
 
 [MessageIdentity("validate-diagnosis-result")]
-public class ValidateDiagnosisResult(bool isValid)
+public class ValidateDiagnosisResult(bool isValid, string? message = null)
 {
     public bool IsValid { get; set; } = isValid;
+    public string? Message { get; set; } = message;
 }

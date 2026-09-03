@@ -23,7 +23,7 @@ public class DiagnoseController(IMessageBus bus) : ControllerBase
     public async Task<IActionResult> EmpiricalDiagnose([FromBody] EmpiricalDiagnoseQuery req)
     {
         var result = await bus.InvokeAsync<Result<EmpiricalDiagnoseResult>>(req);
-        return Ok(result);
+        return result.ToApiResponse();
     }
 
     [HttpPost]
@@ -37,6 +37,6 @@ public class DiagnoseController(IMessageBus bus) : ControllerBase
     public async Task<IActionResult> TargetedDiagnose([FromBody] TargetedDiagnoseQuery req)
     {
         var result = await bus.InvokeAsync<Result<TargetedDiagnoseResult>>(req);
-        return Ok(result);
+        return result.ToApiResponse();
     }
 }

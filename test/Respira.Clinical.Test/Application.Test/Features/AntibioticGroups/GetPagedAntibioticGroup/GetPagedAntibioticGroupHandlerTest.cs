@@ -100,7 +100,7 @@ public class GetPagedAntibioticGroupHandlerTest : IClassFixture<PostgresFixture>
         {
             Param = new PaginationParam { Page = 1, Size = 2 },
         }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.Equal(Status.Success, result.StatusCode);
         Assert.NotNull(result.Data);
@@ -132,7 +132,7 @@ public class GetPagedAntibioticGroupHandlerTest : IClassFixture<PostgresFixture>
         {
             Param = new PaginationParam { Page = 2, Size = 2 },
         }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.Equal(Status.Success, result.StatusCode);
         Assert.NotNull(result.Data);
@@ -155,7 +155,7 @@ public class GetPagedAntibioticGroupHandlerTest : IClassFixture<PostgresFixture>
             Param = new PaginationParam { Page = 1, Size = 10 },
             Filter = new AntibioticGroupFilter { Name = "LACTAM" },
         }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.Equal(Status.Success, result.StatusCode);
         Assert.NotNull(result.Data);
@@ -174,7 +174,7 @@ public class GetPagedAntibioticGroupHandlerTest : IClassFixture<PostgresFixture>
             Param = new PaginationParam { Page = 1, Size = 10 },
             Filter = new AntibioticGroupFilter { ParentId = root.Id },
         }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.Equal(Status.Success, result.StatusCode);
         Assert.NotNull(result.Data);
@@ -198,7 +198,7 @@ public class GetPagedAntibioticGroupHandlerTest : IClassFixture<PostgresFixture>
             Param = new PaginationParam { Page = 1, Size = 10 },
             Filter = new AntibioticGroupFilter { Name = "penic", ParentId = root.Id },
         }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.Equal(Status.Success, result.StatusCode);
         Assert.NotNull(result.Data);
@@ -217,7 +217,7 @@ public class GetPagedAntibioticGroupHandlerTest : IClassFixture<PostgresFixture>
             Param = new PaginationParam { Page = 1, Size = 10 },
             Filter = new AntibioticGroupFilter { Name = "Tetracyclines" },
         }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.Equal(Status.Success, result.StatusCode);
         Assert.NotNull(result.Data);

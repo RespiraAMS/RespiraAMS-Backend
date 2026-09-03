@@ -1,9 +1,9 @@
 ﻿namespace Application.Features.Antibiograms.DeleteAntibiogram;
 
-public class DeleteAntibiogramCommand : ICommand
+public record DeleteAntibiogramCommand(Guid Id) : ICommand
 {
     /// <summary>
     /// Antibiogram ID
     /// </summary>
-    public required Guid Id { get; set; }
+    public Guid Id { get; set; } = Id;
 }

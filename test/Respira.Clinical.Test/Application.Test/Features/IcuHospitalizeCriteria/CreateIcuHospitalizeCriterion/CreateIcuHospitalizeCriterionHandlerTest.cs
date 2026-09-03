@@ -94,7 +94,7 @@ public class CreateIcuHospitalizeCriterionHandlerTest : IClassFixture<PostgresFi
             // NEWS2: new confusion scores 1 point
             Score = 1,
         }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.Equal(Status.Created, result.StatusCode);
         Assert.NotNull(result.Data);
@@ -140,7 +140,7 @@ public class CreateIcuHospitalizeCriterionHandlerTest : IClassFixture<PostgresFi
             },
             Score = 3,
         }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.Equal(Status.Created, result.StatusCode);
         Assert.NotNull(result.Data);
@@ -175,7 +175,7 @@ public class CreateIcuHospitalizeCriterionHandlerTest : IClassFixture<PostgresFi
                 },
                 Score = 1,
             }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsFailure);
+        Assert.True(result.IsFailure());
         Assert.NotNull(result.Error);
         Assert.Equal(Status.BadRequest, result.StatusCode);
 
@@ -206,7 +206,7 @@ public class CreateIcuHospitalizeCriterionHandlerTest : IClassFixture<PostgresFi
                 },
                 Score = 1,
             }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsFailure);
+        Assert.True(result.IsFailure());
         Assert.NotNull(result.Error);
         Assert.Equal(Status.BadRequest, result.StatusCode);
     }

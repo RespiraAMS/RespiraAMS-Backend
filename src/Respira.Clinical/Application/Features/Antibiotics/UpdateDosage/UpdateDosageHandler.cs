@@ -8,9 +8,9 @@ public class UpdateDosageHandler(
     IDbContext context,
     IUpdateMapper<Dosage, UpdateDosageCommand> mapper,
     ILogger<UpdateDosageHandler> logger)
-    : ICommandHandler<UpdateDosageCommand, Respira.ServiceDefaults.Contracts.Results.Result>
+    : ICommandHandler<UpdateDosageCommand, Result>
 {
-    public async Task<Respira.ServiceDefaults.Contracts.Results.Result> HandleAsync(UpdateDosageCommand command, CancellationToken cancellationToken = default)
+    public async Task<Result> HandleAsync(UpdateDosageCommand command, CancellationToken cancellationToken = default)
     {
         // Get antibiotic that own this dosage
         var antibiotic = await context.Antibiotics
@@ -19,8 +19,7 @@ public class UpdateDosageHandler(
         if (antibiotic is null)
         {
             logger.LogDebug("Dosage with this antibiotic not found: {AntibioticId}", command.AntibioticId);
-            return Respira.ServiceDefaults.Contracts.Results.Result.Failure(new Error(Status.BadRequest, "Antibiotic not found"));
-            // throw new NotFoundException(nameof(Antibiotic), command.AntibioticId);
+            return Result.Failure(new Error(Status.BadRequest, "Antibiotic not found"));
         }
 
         // Get the dosage for update from the fetched antibiotic
@@ -36,8 +35,7 @@ public class UpdateDosageHandler(
         if (dosage is null)
         {
             logger.LogDebug("Dosage with this ID ({DosageId}) not found in this antibiotic ({AntibioticId})", command.Id, command.AntibioticId);
-            return Respira.ServiceDefaults.Contracts.Results.Result.Failure(new Error(Status.BadRequest, $"No dosage with this ID found in antibiotic {command.AntibioticId}"));
-            // throw new NotFoundException(nameof(Dosage), command.Id);
+            return Result.Failure(new Error(Status.BadRequest, $"No dosage with this ID found in antibiotic {command.AntibioticId}"));
         }
 
         // Map command to model
@@ -45,10 +43,10 @@ public class UpdateDosageHandler(
 
         // Validate dosage
         var validationResult = Antibiotic.IsAntibioticDosageValid(dosages);
-        if (!validationResult.IsSuccess)
+        if (!validationResult.IsSuccess())
         {
             logger.LogDebug("Dosage validation failed: {msg}", validationResult.Error);
-            return Respira.ServiceDefaults.Contracts.Results.Result.Failure(validationResult.Error!);
+            return Result.Failure(validationResult.Error!);
         }
 
         // Update dosage to database
@@ -57,7 +55,6 @@ public class UpdateDosageHandler(
 
         // Save changes to database
         await context.SaveChangesAsync(cancellationToken);
-        return Respira.ServiceDefaults.Contracts.Results.Result.Success(Status.Updated);
-
+        return Result.Success(Status.Updated);
     }
 }

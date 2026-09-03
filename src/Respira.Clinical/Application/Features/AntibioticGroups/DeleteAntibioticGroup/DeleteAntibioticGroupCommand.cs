@@ -1,9 +1,9 @@
 ﻿namespace Application.Features.AntibioticGroups.DeleteAntibioticGroup;
 
-public class DeleteAntibioticGroupCommand : ICommand
+public record DeleteAntibioticGroupCommand(Guid Id) : ICommand
 {
     /// <summary>
     /// Antibiotic group ID
     /// </summary>
-    public required Guid Id { get; set; }
+    public Guid Id { get; set; } = Id;
 }

@@ -2,6 +2,7 @@ using Application.Contracts.Data;
 using Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Respira.ServiceDefaults.Contracts.Results;
 using Wolverine;
 
 namespace Application.Features.Treatments.CreateTreatment;
@@ -17,11 +18,18 @@ public class CreateTreatmentHandler(
     public async Task<CreateTreatmentResult> HandleAsync(CreateTreatmentCommand command, CancellationToken cancellationToken = default)
     {
         // Validate the diagnosis record with Clinical service
-        var validateResult = await bus.InvokeAsync<ValidateDiagnosisResult>(validateDiagnoseResultMapper.Map(command.DiagnosisRecord));
-        if (!validateResult.IsValid)
+        var validateResult = await bus.InvokeAsync<Result<ValidateDiagnosisResult>>(validateDiagnoseResultMapper.Map(command.DiagnosisRecord), cancellationToken);
+        if (validateResult.IsFailure())
         {
-            logger.LogInformation("Invalid diagnosis record");
-            throw new BadRequestException("Invalid diagnosis record");
+            logger.LogWarning("Failed to validate diagnosis result: {Error}", validateResult.Error);
+            throw new ServerException();
+        }
+        
+        // Check if data is valid
+        if (!validateResult.Data!.IsValid)
+        {
+            logger.LogDebug("Invalid diagnosis record: {Message}", validateResult.Data.Message);
+            throw new BadRequestException($"Invalid diagnosis record: {validateResult.Data.Message}");
         }
 
         // When a treatment is created, there are 2 cases:

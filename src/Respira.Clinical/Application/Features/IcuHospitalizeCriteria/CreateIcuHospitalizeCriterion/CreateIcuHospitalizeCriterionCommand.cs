@@ -2,7 +2,7 @@
 
 namespace Application.Features.IcuHospitalizeCriteria.CreateIcuHospitalizeCriterion;
 
-public class CreateIcuHospitalizeCriterionCommand : ICommand
+public record CreateIcuHospitalizeCriterionCommand : ICommand
 {
     /// <summary>
     /// Disease ID
@@ -20,10 +20,10 @@ public class CreateIcuHospitalizeCriterionCommand : ICommand
     public required int Score { get; set; }
 }
 
-public class CreateIcuHospitalizeCriterionResult(Guid id)
+public record CreateIcuHospitalizeCriterionResult(Guid Id)
 {
     /// <summary>
     /// ICU hospitalize criterion
     /// </summary>
-    public Guid Id { get; set; } = id;
+    public Guid Id { get; set; } = Id;
 }

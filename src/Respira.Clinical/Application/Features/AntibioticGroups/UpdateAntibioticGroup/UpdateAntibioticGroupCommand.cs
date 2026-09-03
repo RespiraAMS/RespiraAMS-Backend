@@ -1,6 +1,6 @@
 ﻿namespace Application.Features.AntibioticGroups.UpdateAntibioticGroup;
 
-public class UpdateAntibioticGroupCommand : ICommand
+public record UpdateAntibioticGroupCommand : ICommand
 {
     /// <summary>
     /// Antibiotic group ID

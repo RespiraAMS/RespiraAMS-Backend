@@ -131,9 +131,9 @@ public class GetDiseaseByIdHandlerTest : IClassFixture<PostgresFixture>, IAsyncL
         var (disease, _, _) = await SeedDiseaseAsync(withRelations: false, threshold: 4);
 
         var result = await _handler.HandleAsync(
-            new GetDiseaseByIdQuery { Id = disease.Id },
+            new GetDiseaseByIdQuery(disease.Id),
             TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.Equal(Status.Success, result.StatusCode);
         Assert.NotNull(result.Data);
@@ -159,9 +159,9 @@ public class GetDiseaseByIdHandlerTest : IClassFixture<PostgresFixture>, IAsyncL
         var (disease, _, _) = await SeedDiseaseAsync(withRelations: false, threshold: 1);
 
         var result = await _handler.HandleAsync(
-            new GetDiseaseByIdQuery { Id = disease.Id },
+            new GetDiseaseByIdQuery(disease.Id),
             TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.Equal(Status.Success, result.StatusCode);
         Assert.NotNull(result.Data);
@@ -177,9 +177,9 @@ public class GetDiseaseByIdHandlerTest : IClassFixture<PostgresFixture>, IAsyncL
         var (disease, _, criterion) = await SeedDiseaseAsync(withRelations: true, threshold: 5);
 
         var result = await _handler.HandleAsync(
-            new GetDiseaseByIdQuery { Id = disease.Id },
+            new GetDiseaseByIdQuery(disease.Id),
             TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.Equal(Status.Success, result.StatusCode);
         Assert.NotNull(result.Data);
@@ -230,9 +230,9 @@ public class GetDiseaseByIdHandlerTest : IClassFixture<PostgresFixture>, IAsyncL
 
         // Business rule: a missing disease is reported as NotFound
         var result = await _handler.HandleAsync(
-            new GetDiseaseByIdQuery { Id = unknownId },
+            new GetDiseaseByIdQuery(unknownId),
             TestContext.Current.CancellationToken);
-        Assert.True(result.IsFailure);
+        Assert.True(result.IsFailure());
         Assert.NotNull(result.Error);
         Assert.Equal(Status.ResourceNotFound, result.StatusCode);
     }
@@ -249,9 +249,9 @@ public class GetDiseaseByIdHandlerTest : IClassFixture<PostgresFixture>, IAsyncL
         await _context.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var result = await _handler.HandleAsync(
-            new GetDiseaseByIdQuery { Id = disease.Id },
+            new GetDiseaseByIdQuery(disease.Id),
             TestContext.Current.CancellationToken);
-        Assert.True(result.IsFailure);
+        Assert.True(result.IsFailure());
         Assert.NotNull(result.Error);
         Assert.Equal(Status.ResourceNotFound, result.StatusCode);
     }

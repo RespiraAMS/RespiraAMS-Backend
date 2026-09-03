@@ -11,10 +11,7 @@ public class DeleteAntibioticGroupValidatorTest
     [Fact]
     public async Task DeleteAntibioticGroup_Success()
     {
-        var result = await _validator.ValidateAsync(
-            new DeleteAntibioticGroupCommand { Id = Guid.CreateVersion7() },
-            TestContext.Current.CancellationToken);
-
+        var result = await _validator.ValidateAsync(new DeleteAntibioticGroupCommand(Guid.CreateVersion7()), TestContext.Current.CancellationToken);
         Assert.Empty(result.Errors);
     }
 
@@ -26,10 +23,7 @@ public class DeleteAntibioticGroupValidatorTest
     public async Task DeleteAntibioticGroup_EmptyId_Fail()
     {
         // Boundary: Guid.Empty is treated as empty by NotEmpty
-        var result = await _validator.ValidateAsync(
-            new DeleteAntibioticGroupCommand { Id = Guid.Empty },
-            TestContext.Current.CancellationToken);
-
+        var result = await _validator.ValidateAsync(new DeleteAntibioticGroupCommand(Guid.Empty), TestContext.Current.CancellationToken);
         _ = Assert.Single(result.Errors);
         Assert.Equal("Id", result.Errors[0].PropertyName);
     }

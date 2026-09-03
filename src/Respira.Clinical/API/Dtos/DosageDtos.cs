@@ -5,7 +5,7 @@ using Range = Domain.Models.Range;
 
 namespace Respira.Clinical.API.Dtos;
 
-public class AddDosageRequestDto
+public record AddDosageRequestDto
 {
     /// <summary>
     /// Route of administration
@@ -35,7 +35,7 @@ public class AddDosageRequestDto
     }
 }
 
-public class UpdateDosageRequestDto
+public record UpdateDosageRequestDto
 {
     /// <summary>
     /// Antibiotic dosage. There is no exact format, or content rule for dosage

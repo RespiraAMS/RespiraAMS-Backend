@@ -45,7 +45,7 @@ namespace Domain.Test.Models
         {
             var result = Antibiotic.IsAntibioticDosageValid(dosages);
             Assert.Equal(Status.BusinessRuleViolation, result.StatusCode);
-            Assert.True(result.IsFailure);
+            Assert.True(result.IsFailure());
             Assert.NotNull(result.Error);
         }
 
@@ -96,7 +96,7 @@ namespace Domain.Test.Models
         public void IsAntibioticDosageValid_ValidStandardDose_Success(List<Dosage> dosages)
         {
             var result = Antibiotic.IsAntibioticDosageValid(dosages);
-            Assert.True(result.IsSuccess);
+            Assert.True(result.IsSuccess());
             Assert.True(result.Data);
             Assert.Null(result.Error);
             Assert.Equal(Status.Success, result.StatusCode);
@@ -132,7 +132,7 @@ namespace Domain.Test.Models
         {
             var result = Antibiotic.IsAntibioticDosageValid(dosages);
             Assert.Equal(Status.BusinessRuleViolation, result.StatusCode);
-            Assert.True(result.IsFailure);
+            Assert.True(result.IsFailure());
             Assert.NotNull(result.Error);
         }
 
@@ -183,7 +183,7 @@ namespace Domain.Test.Models
         {
             var result = Antibiotic.IsAntibioticDosageValid(dosages);
             Assert.Equal(Status.BusinessRuleViolation, result.StatusCode);
-            Assert.True(result.IsFailure);
+            Assert.True(result.IsFailure());
             Assert.NotNull(result.Error);
         }
 
@@ -261,7 +261,7 @@ namespace Domain.Test.Models
         public void IsAntibioticDosageValid_NonOverlappingCrcl_Success(List<Dosage> dosages)
         {
             var result = Antibiotic.IsAntibioticDosageValid(dosages);
-            Assert.True(result.IsSuccess);
+            Assert.True(result.IsSuccess());
             Assert.True(result.Data);
             Assert.Null(result.Error);
             Assert.Equal(Status.Success, result.StatusCode);
@@ -338,7 +338,7 @@ namespace Domain.Test.Models
         {
             var result = Antibiotic.IsAntibioticDosageValid(dosages);
             Assert.Equal(Status.BusinessRuleViolation, result.StatusCode);
-            Assert.True(result.IsFailure);
+            Assert.True(result.IsFailure());
             Assert.NotNull(result.Error);
         }
 

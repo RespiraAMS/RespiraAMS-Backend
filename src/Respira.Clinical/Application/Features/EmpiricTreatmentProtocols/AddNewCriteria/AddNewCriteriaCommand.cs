@@ -2,7 +2,7 @@
 
 namespace Application.Features.EmpiricTreatmentProtocols.AddNewCriteria;
 
-public class AddNewCriteriaCommand : ICommand
+public record AddNewCriteriaCommand : ICommand
 {
     /// <summary>
     /// Empiric treatment protocol

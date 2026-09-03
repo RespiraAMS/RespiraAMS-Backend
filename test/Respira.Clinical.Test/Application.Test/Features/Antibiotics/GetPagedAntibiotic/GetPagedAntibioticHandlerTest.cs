@@ -112,7 +112,7 @@ public class GetPagedAntibioticHandlerTest : IClassFixture<PostgresFixture>, IAs
         {
             Param = new PaginationParam { Page = 1, Size = 2 },
         }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.NotNull(result.Data);
         Assert.Equal(Status.Success, result.StatusCode);
@@ -143,7 +143,7 @@ public class GetPagedAntibioticHandlerTest : IClassFixture<PostgresFixture>, IAs
         {
             Param = new PaginationParam { Page = 2, Size = 2 },
         }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.NotNull(result.Data);
         Assert.Equal(Status.Success, result.StatusCode);
@@ -167,7 +167,7 @@ public class GetPagedAntibioticHandlerTest : IClassFixture<PostgresFixture>, IAs
             Param = new PaginationParam { Page = 1, Size = 10 },
             Filter = new AntibioticFilter { Name = "MYCIN" },
         }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.NotNull(result.Data);
         Assert.Equal(Status.Success, result.StatusCode);
@@ -189,7 +189,7 @@ public class GetPagedAntibioticHandlerTest : IClassFixture<PostgresFixture>, IAs
             Param = new PaginationParam { Page = 1, Size = 10 },
             Filter = new AntibioticFilter { AntibioticGroupId = macrolides.Id },
         }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.NotNull(result.Data);
         Assert.Equal(Status.Success, result.StatusCode);
@@ -209,7 +209,7 @@ public class GetPagedAntibioticHandlerTest : IClassFixture<PostgresFixture>, IAs
             Param = new PaginationParam { Page = 1, Size = 10 },
             Filter = new AntibioticFilter { Classification = AwareClassification.Watch },
         }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.NotNull(result.Data);
         Assert.Equal(Status.Success, result.StatusCode);
@@ -235,7 +235,7 @@ public class GetPagedAntibioticHandlerTest : IClassFixture<PostgresFixture>, IAs
                 Classification = AwareClassification.Watch,
             },
         }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.NotNull(result.Data);
         Assert.Equal(Status.Success, result.StatusCode);
@@ -254,7 +254,7 @@ public class GetPagedAntibioticHandlerTest : IClassFixture<PostgresFixture>, IAs
             Param = new PaginationParam { Page = 1, Size = 10 },
             Filter = new AntibioticFilter { Name = "Vancomycin" },
         }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.NotNull(result.Data);
         Assert.Equal(Status.Success, result.StatusCode);

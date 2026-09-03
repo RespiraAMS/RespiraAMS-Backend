@@ -3,9 +3,9 @@
 namespace Application.Features.Pathogens.CreatePathogen;
 
 public class CreatePathogenHandler(IDbContext context, ICreateMapper<Pathogen, CreatePathogenCommand> mapper)
-    : ICommandHandler<CreatePathogenCommand, Respira.ServiceDefaults.Contracts.Results.Result<CreatePathogenResult>>
+    : ICommandHandler<CreatePathogenCommand, Result<CreatePathogenResult>>
 {
-    public async Task<Respira.ServiceDefaults.Contracts.Results.Result<CreatePathogenResult>> HandleAsync(CreatePathogenCommand command,
+    public async Task<Result<CreatePathogenResult>> HandleAsync(CreatePathogenCommand command,
         CancellationToken cancellationToken = default)
     {
         // Map command to model
@@ -16,6 +16,6 @@ public class CreatePathogenHandler(IDbContext context, ICreateMapper<Pathogen, C
         await context.SaveChangesAsync(cancellationToken);
 
 
-        return Respira.ServiceDefaults.Contracts.Results.Result<CreatePathogenResult>.Success(Status.Created, new CreatePathogenResult(pathogen.Id));
+        return Result<CreatePathogenResult>.Success(Status.Created, new CreatePathogenResult(pathogen.Id));
     }
 }

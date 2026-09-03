@@ -72,7 +72,7 @@ public class CreateAntibioticGroupHandlerTest : IClassFixture<PostgresFixture>, 
         };
 
         var result = await _handler.HandleAsync(command, TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.Equal(Status.Created, result.StatusCode);
         Assert.NotNull(result.Data);
@@ -100,7 +100,7 @@ public class CreateAntibioticGroupHandlerTest : IClassFixture<PostgresFixture>, 
             Description = "Beta-lactam antibiotics active against gram-positive organisms",
             ParentId = parent.Id,
         }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.Equal(Status.Created, result.StatusCode);
         Assert.NotNull(result.Data);
@@ -128,7 +128,7 @@ public class CreateAntibioticGroupHandlerTest : IClassFixture<PostgresFixture>, 
                 Description = "Beta-lactam antibiotics resistant to staphylococcal beta-lactamase",
                 ParentId = unknownParentId,
             }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsFailure);
+        Assert.True(result.IsFailure());
         Assert.NotNull(result.Error);
         Assert.Equal(Status.BadRequest, result.StatusCode);
 
@@ -151,7 +151,7 @@ public class CreateAntibioticGroupHandlerTest : IClassFixture<PostgresFixture>, 
                 Description = "Aminoglycoside used for severe gram-negative infections",
                 ParentId = deletedParent.Id,
             }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsFailure);
+        Assert.True(result.IsFailure());
         Assert.NotNull(result.Error);
         Assert.Equal(Status.BadRequest, result.StatusCode);
 

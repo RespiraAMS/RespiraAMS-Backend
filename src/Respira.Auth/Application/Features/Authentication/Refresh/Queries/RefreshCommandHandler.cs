@@ -34,7 +34,7 @@ public class RefreshCommandHandler(
     TokenRevoker tokenRevoker,
     IOptions<JwtOption> jwtOption,
     ILogger<RefreshCommandHandler> logger
-) : IQueryHandler<RefreshCommand, Result<LoginResult>>
+) : IQueryHandler<RefreshCommand, ApiResponse<LoginResult>>
 {
     /// <summary>
     /// Validates the refresh token, persists a new refresh token and revokes the previous one.
@@ -42,7 +42,7 @@ public class RefreshCommandHandler(
     /// <param name="query">Refresh request holding the raw refresh token</param>
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>API response with the new access/refresh tokens, or a failure response</returns>
-    public async Task<Result<LoginResult>> HandleAsync(
+    public async Task<ApiResponse<LoginResult>> HandleAsync(
         RefreshCommand query,
         CancellationToken cancellationToken = default
     )
@@ -57,7 +57,7 @@ public class RefreshCommandHandler(
             }
             catch (UnauthorizedAccessException)
             {
-                return Result<LoginResult>.Fail(
+                return ApiResponse<LoginResult>.Fail(
                     message: "Invalid refresh token",
                     statusCode: StatusCodes.Status401Unauthorized
                 );
@@ -74,7 +74,7 @@ public class RefreshCommandHandler(
             );
             if (storedToken?.IsExpired() != false)
             {
-                return Result<LoginResult>.Fail(
+                return ApiResponse<LoginResult>.Fail(
                     message: "Invalid or expired refresh token",
                     statusCode: StatusCodes.Status401Unauthorized
                 );
@@ -108,7 +108,7 @@ public class RefreshCommandHandler(
                 throw new ServerException();
             }
 
-            return Result<LoginResult>.Ok(
+            return ApiResponse<LoginResult>.Ok(
                 new LoginResult { AccessToken = accessToken, RefreshToken = refreshToken }
             );
         }

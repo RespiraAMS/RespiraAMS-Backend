@@ -4,7 +4,7 @@ using Domain.Enums;
 
 namespace Respira.Clinical.API.Dtos;
 
-public class CreateCauseRequestDto
+public record CreateCauseRequestDto
 {
     /// <summary>
     /// Pathogen ID
@@ -33,7 +33,7 @@ public class CreateCauseRequestDto
     }
 }
 
-public class UpdateCauseRequestDto
+public record UpdateCauseRequestDto
 {
     /// <summary>
     /// Severity caused by this pathogen

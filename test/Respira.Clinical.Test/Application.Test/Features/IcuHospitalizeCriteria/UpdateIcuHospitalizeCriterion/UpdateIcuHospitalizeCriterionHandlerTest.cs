@@ -117,7 +117,7 @@ public class UpdateIcuHospitalizeCriterionHandlerTest : IClassFixture<PostgresFi
             // Update score from 1 to 2 (still a valid NEWS2 contribution)
             Score = 2,
         }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.Equal(Status.Updated, result.StatusCode);
 
@@ -147,7 +147,7 @@ public class UpdateIcuHospitalizeCriterionHandlerTest : IClassFixture<PostgresFi
             },
             Score = 3,
         }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.Equal(Status.Updated, result.StatusCode);
 
@@ -181,7 +181,7 @@ public class UpdateIcuHospitalizeCriterionHandlerTest : IClassFixture<PostgresFi
                 },
                 Score = 1,
             }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsFailure);
+        Assert.True(result.IsFailure());
         Assert.NotNull(result.Error);
         Assert.Equal(Status.BadRequest, result.StatusCode);
     }
@@ -206,7 +206,7 @@ public class UpdateIcuHospitalizeCriterionHandlerTest : IClassFixture<PostgresFi
                 },
                 Score = 1,
             }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsFailure);
+        Assert.True(result.IsFailure());
         Assert.NotNull(result.Error);
         Assert.Equal(Status.BadRequest, result.StatusCode);
     }

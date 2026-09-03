@@ -20,7 +20,7 @@ namespace Application.Features.Authentication.VerifyEmail
         IAuthDbContext dbContext,
         ILogger<VerifyEmailCommand> logger,
         IHashService hashService
-    ) : ICommandHandler<VerifyEmailCommand, Result<bool>>
+    ) : ICommandHandler<VerifyEmailCommand, ApiResponse<bool>>
     {
         /// <summary>
         /// Validates the verification token, marks the account email as confirmed and
@@ -29,7 +29,7 @@ namespace Application.Features.Authentication.VerifyEmail
         /// <param name="command">Verification token and email</param>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <returns>Success response, or a failure response on invalid/expired token</returns>
-        public async Task<Result<bool>> HandleAsync(
+        public async Task<ApiResponse<bool>> HandleAsync(
             VerifyEmailCommand command,
             CancellationToken cancellationToken = default
         )
@@ -44,7 +44,7 @@ namespace Application.Features.Authentication.VerifyEmail
 
                 if (doctor is null)
                 {
-                    return Result<bool>.Fail(
+                    return ApiResponse<bool>.Fail(
                         message: "Invalid verification request",
                         statusCode: StatusCodes.Status400BadRequest
                     );
@@ -53,7 +53,7 @@ namespace Application.Features.Authentication.VerifyEmail
                 // Already confirmed: idempotent success
                 if (doctor.IsEmailConfirmed)
                 {
-                    return Result<bool>.Ok(true);
+                    return ApiResponse<bool>.Ok(true);
                 }
 
                 var hashToken = hashService.HashToken(command.Token);
@@ -67,7 +67,7 @@ namespace Application.Features.Authentication.VerifyEmail
 
                 if (token?.IsExpired() != false)
                 {
-                    return Result<bool>.Fail(
+                    return ApiResponse<bool>.Fail(
                         message: "Invalid or expired verification token",
                         statusCode: StatusCodes.Status400BadRequest
                     );
@@ -81,7 +81,7 @@ namespace Application.Features.Authentication.VerifyEmail
                     throw new ServerException();
                 }
 
-                return Result<bool>.Ok(true);
+                return ApiResponse<bool>.Ok(true);
             }
             catch (Exception e)
             {

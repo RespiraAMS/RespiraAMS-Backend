@@ -2,7 +2,7 @@
 
 namespace Application.Features.Antibiotics.UpdateAntibiotic;
 
-public class UpdateAntibioticCommand : ICommand
+public record UpdateAntibioticCommand : ICommand
 {
     /// <summary>
     /// Antibiotic ID

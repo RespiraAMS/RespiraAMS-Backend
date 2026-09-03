@@ -5,7 +5,7 @@ using Respira.ServiceDefaults.Dtos;
 
 namespace Respira.Clinical.API.Dtos;
 
-public class GetPagedAntibiogramRequestDto
+public record GetPagedAntibiogramRequestDto
 {
     /// <summary>
     /// Pagination parameter: page index (1-based)
@@ -39,7 +39,7 @@ public class GetPagedAntibiogramRequestDto
     }
 }
 
-public class UpdateAntibiogramRequestDto
+public record UpdateAntibiogramRequestDto
 {
     /// <summary>
     /// Minimum Inhibitory Concentration (MIC) level

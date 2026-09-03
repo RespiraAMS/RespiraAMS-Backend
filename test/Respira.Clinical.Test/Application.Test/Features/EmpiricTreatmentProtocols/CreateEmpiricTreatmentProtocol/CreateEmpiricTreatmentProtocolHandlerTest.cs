@@ -118,7 +118,7 @@ public class CreateEmpiricTreatmentProtocolHandlerTest : IClassFixture<PostgresF
         };
 
         var result = await _handler.HandleAsync(command, TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.Equal(Status.Created, result.StatusCode);
         Assert.NotNull(result.Data);
@@ -176,7 +176,7 @@ public class CreateEmpiricTreatmentProtocolHandlerTest : IClassFixture<PostgresF
         };
 
         var result = await _handler.HandleAsync(command, TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.Equal(Status.Created, result.StatusCode);
         Assert.NotNull(result.Data);
@@ -223,7 +223,7 @@ public class CreateEmpiricTreatmentProtocolHandlerTest : IClassFixture<PostgresF
                 OtherCriteriaIds = [],
                 MedicineIds = [_antibioticId],
             }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsFailure);
+        Assert.True(result.IsFailure());
         Assert.NotNull(result.Error);
         Assert.Equal(Status.BadRequest, result.StatusCode);
 
@@ -253,7 +253,7 @@ public class CreateEmpiricTreatmentProtocolHandlerTest : IClassFixture<PostgresF
                 OtherCriteriaIds = [],
                 MedicineIds = [_antibioticId],
             }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsFailure);
+        Assert.True(result.IsFailure());
         Assert.NotNull(result.Error);
         Assert.Equal(Status.BadRequest, result.StatusCode);
 
@@ -282,7 +282,7 @@ public class CreateEmpiricTreatmentProtocolHandlerTest : IClassFixture<PostgresF
                 OtherCriteriaIds = [_criterionId, unknownCriterionId],
                 MedicineIds = [_antibioticId],
             }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsFailure);
+        Assert.True(result.IsFailure());
         Assert.NotNull(result.Error);
         Assert.Equal(Status.BadRequest, result.StatusCode);
 
@@ -311,7 +311,7 @@ public class CreateEmpiricTreatmentProtocolHandlerTest : IClassFixture<PostgresF
                 OtherCriteriaIds = [_criterionId],
                 MedicineIds = [_antibioticId, unknownMedicineId],
             }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsFailure);
+        Assert.True(result.IsFailure());
         Assert.NotNull(result.Error);
         Assert.Equal(Status.BadRequest, result.StatusCode);
 

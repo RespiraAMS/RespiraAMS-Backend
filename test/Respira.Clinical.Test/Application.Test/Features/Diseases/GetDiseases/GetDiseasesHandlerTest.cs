@@ -69,7 +69,7 @@ public class GetDiseasesHandlerTest : IClassFixture<PostgresFixture>, IAsyncLife
         var result = await _handler.HandleAsync(
             new GetDiseasesQuery(),
             TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.Equal(Status.Success, result.StatusCode);
         Assert.NotNull(result.Data);
@@ -98,7 +98,7 @@ public class GetDiseasesHandlerTest : IClassFixture<PostgresFixture>, IAsyncLife
         var result = await _handler.HandleAsync(
             new GetDiseasesQuery(),
             TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.Equal(Status.Success, result.StatusCode);
         Assert.NotNull(result.Data);
@@ -118,7 +118,7 @@ public class GetDiseasesHandlerTest : IClassFixture<PostgresFixture>, IAsyncLife
         var result = await _handler.HandleAsync(
             new GetDiseasesQuery(),
             TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.Equal(Status.Success, result.StatusCode);
         Assert.NotNull(result.Data);
@@ -142,7 +142,7 @@ public class GetDiseasesHandlerTest : IClassFixture<PostgresFixture>, IAsyncLife
         var result = await _handler.HandleAsync(
             new GetDiseasesQuery(),
             TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.Equal(Status.Success, result.StatusCode);
         Assert.NotNull(result.Data);

@@ -1,6 +1,6 @@
 ﻿namespace Application.Features.Pathogens.GetPagedPathogen;
 
-public class PathogenFilter
+public record PathogenFilter
 {
     /// <summary>
     /// Pathogen name
@@ -8,7 +8,7 @@ public class PathogenFilter
     public string? Name { get; set; }
 }
 
-public class GetPagedPathogenQuery : IQuery
+public record GetPagedPathogenQuery : IQuery
 {
     /// <summary>
     /// Pagination param
@@ -21,7 +21,7 @@ public class GetPagedPathogenQuery : IQuery
     public PathogenFilter? Filter { get; set; }
 }
 
-public class PagedPathogenItem
+public record PagedPathogenItem
 {
     /// <summary>
     /// Pathogen ID

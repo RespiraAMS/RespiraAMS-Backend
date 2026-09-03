@@ -1,9 +1,9 @@
 ﻿namespace Application.Features.Causes.DeleteCause;
 
-public class DeleteCauseCommand : ICommand
+public record DeleteCauseCommand(Guid Id) : ICommand
 {
     /// <summary>
     /// Disease's cause ID
     /// </summary>
-    public required Guid Id { get; set; }
+    public Guid Id { get; set; } = Id;
 }

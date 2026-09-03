@@ -24,7 +24,7 @@ namespace Application.Features.Treatments.GetTreatmentById
             }
 
             // Get doctor by ID
-            var resp = await bus.InvokeAsync<Result<DoctorQueryResult>>(new GetDoctorByIdQuery(treatment.DoctorId));
+            var resp = await bus.InvokeAsync<ApiResponse<DoctorQueryResult>>(new GetDoctorByIdQuery(treatment.DoctorId));
             if (!resp.Success)
             {
                 logger.LogWarning("Failed to get doctor information: {DoctorId}", treatment.DoctorId);

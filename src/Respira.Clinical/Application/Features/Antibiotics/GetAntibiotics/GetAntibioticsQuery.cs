@@ -1,8 +1,8 @@
 ﻿namespace Application.Features.Antibiotics.GetAntibiotics;
 
-public class GetAntibioticsQuery : IQuery;
+public record GetAntibioticsQuery : IQuery;
 
-public class AntibioticItem
+public record AntibioticItem
 {
     /// <summary>
     /// Antibiotic ID
@@ -15,10 +15,10 @@ public class AntibioticItem
     public required string Name { get; set; }
 }
 
-public class GetAntibioticsResult(IEnumerable<AntibioticItem> antibiotics)
+public record GetAntibioticsResult(IEnumerable<AntibioticItem> Antibiotics)
 {
     /// <summary>
     /// List of antibiotics
     /// </summary>
-    public IEnumerable<AntibioticItem> Antibiotics { get; set; } = antibiotics;
+    public IEnumerable<AntibioticItem> Antibiotics { get; set; } = Antibiotics;
 }

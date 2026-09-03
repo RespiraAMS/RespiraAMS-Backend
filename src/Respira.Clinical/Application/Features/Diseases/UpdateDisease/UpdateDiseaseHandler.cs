@@ -8,9 +8,9 @@ public class UpdateDiseaseHandler(
     IDbContext context,
     IUpdateMapper<Disease, UpdateDiseaseCommand> mapper,
     ILogger<UpdateDiseaseHandler> logger)
-    : ICommandHandler<UpdateDiseaseCommand, Respira.ServiceDefaults.Contracts.Results.Result>
+    : ICommandHandler<UpdateDiseaseCommand, Result>
 {
-    public async Task<Respira.ServiceDefaults.Contracts.Results.Result> HandleAsync(UpdateDiseaseCommand command, CancellationToken cancellationToken = default)
+    public async Task<Result> HandleAsync(UpdateDiseaseCommand command, CancellationToken cancellationToken = default)
     {
         // Get entity by ID
         var disease = await context.Diseases
@@ -18,8 +18,7 @@ public class UpdateDiseaseHandler(
         if (disease is null)
         {
             logger.LogDebug("Disease not found: {Id}", command.Id);
-            return Respira.ServiceDefaults.Contracts.Results.Result.Failure(new Error(Status.BadRequest, "Disease ID not found"));
-            // throw new NotFoundException(nameof(Disease), command.Id);
+            return Result.Failure(new Error(Status.BadRequest, "Disease ID not found"));
         }
 
         // Map command to model
@@ -27,6 +26,6 @@ public class UpdateDiseaseHandler(
 
         // Save changes to database
         await context.SaveChangesAsync(cancellationToken);
-        return Respira.ServiceDefaults.Contracts.Results.Result.Success(Status.Updated);
+        return Result.Success(Status.Updated);
     }
 }

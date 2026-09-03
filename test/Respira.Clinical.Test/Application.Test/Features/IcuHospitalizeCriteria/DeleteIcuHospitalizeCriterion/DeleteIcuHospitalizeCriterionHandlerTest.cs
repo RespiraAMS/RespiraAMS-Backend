@@ -108,11 +108,8 @@ public class DeleteIcuHospitalizeCriterionHandlerTest : IClassFixture<PostgresFi
         var diseaseId = await SeedDiseaseAsync();
         var icuId = await SeedIcuCriterionAsync(diseaseId, numeric: false);
 
-        var result = await _handler.HandleAsync(new DeleteIcuHospitalizeCriterionCommand
-        {
-            Id = icuId,
-        }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        var result = await _handler.HandleAsync(new DeleteIcuHospitalizeCriterionCommand(icuId), TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.Equal(Status.Deleted, result.StatusCode);
 
@@ -138,11 +135,8 @@ public class DeleteIcuHospitalizeCriterionHandlerTest : IClassFixture<PostgresFi
         var diseaseId = await SeedDiseaseAsync();
         var icuId = await SeedIcuCriterionAsync(diseaseId, numeric: true);
 
-        var result = await _handler.HandleAsync(new DeleteIcuHospitalizeCriterionCommand
-        {
-            Id = icuId,
-        }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        var result = await _handler.HandleAsync(new DeleteIcuHospitalizeCriterionCommand(icuId), TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.Equal(Status.Deleted, result.StatusCode);
 
@@ -161,12 +155,8 @@ public class DeleteIcuHospitalizeCriterionHandlerTest : IClassFixture<PostgresFi
     {
         var unknownId = Guid.CreateVersion7();
 
-        var result = await _handler.HandleAsync(
-            new DeleteIcuHospitalizeCriterionCommand
-            {
-                Id = unknownId,
-            }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsFailure);
+        var result = await _handler.HandleAsync(new DeleteIcuHospitalizeCriterionCommand(unknownId), TestContext.Current.CancellationToken);
+        Assert.True(result.IsFailure());
         Assert.NotNull(result.Error);
         Assert.Equal(Status.BadRequest, result.StatusCode);
     }
@@ -179,12 +169,8 @@ public class DeleteIcuHospitalizeCriterionHandlerTest : IClassFixture<PostgresFi
         var diseaseId = await SeedDiseaseAsync();
         var icuId = await SeedIcuCriterionAsync(diseaseId, numeric: false, softDeletedIcu: true);
 
-        var result = await _handler.HandleAsync(
-            new DeleteIcuHospitalizeCriterionCommand
-            {
-                Id = icuId,
-            }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsFailure);
+        var result = await _handler.HandleAsync(new DeleteIcuHospitalizeCriterionCommand(icuId), TestContext.Current.CancellationToken);
+        Assert.True(result.IsFailure());
         Assert.NotNull(result.Error);
         Assert.Equal(Status.BadRequest, result.StatusCode);
     }

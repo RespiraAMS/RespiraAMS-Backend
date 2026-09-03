@@ -120,8 +120,8 @@ public class DeleteAntibioticHandlerTest : IClassFixture<PostgresFixture>, IAsyn
     {
         var target = await SeedAsync(withDosages: true);
 
-        var result = await _handler.HandleAsync(new DeleteAntibioticCommand { Id = target.Id }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        var result = await _handler.HandleAsync(new DeleteAntibioticCommand(target.Id), TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.Equal(Status.Deleted, result.StatusCode);
 
@@ -158,9 +158,9 @@ public class DeleteAntibioticHandlerTest : IClassFixture<PostgresFixture>, IAsyn
         // Lower boundary of the cascade: no dosage linked to the antibiotic
         var target = await SeedAsync(withDosages: false);
 
-        var result = await _handler.HandleAsync(new DeleteAntibioticCommand { Id = target.Id },
+        var result = await _handler.HandleAsync(new DeleteAntibioticCommand(target.Id),
             TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.Equal(Status.Deleted, result.StatusCode);
 
@@ -184,8 +184,8 @@ public class DeleteAntibioticHandlerTest : IClassFixture<PostgresFixture>, IAsyn
         var unknownId = Guid.CreateVersion7();
 
         var result = await _handler.HandleAsync(
-            new DeleteAntibioticCommand { Id = unknownId }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsFailure);
+            new DeleteAntibioticCommand(unknownId), TestContext.Current.CancellationToken);
+        Assert.True(result.IsFailure());
         Assert.NotNull(result.Error);
         Assert.Equal(Status.BadRequest, result.StatusCode);
 

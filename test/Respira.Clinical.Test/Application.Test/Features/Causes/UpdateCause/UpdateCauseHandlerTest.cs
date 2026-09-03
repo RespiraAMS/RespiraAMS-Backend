@@ -141,7 +141,7 @@ public class UpdateCauseHandlerTest : IClassFixture<PostgresFixture>, IAsyncLife
             Severity = Severity.Moderate,
             TreatmentSite = TreatmentSite.Inpatient,
         }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.Equal(Status.Updated, result.StatusCode);
 
@@ -184,7 +184,7 @@ public class UpdateCauseHandlerTest : IClassFixture<PostgresFixture>, IAsyncLife
             Severity = Severity.Moderate,
             TreatmentSite = TreatmentSite.Inpatient,
         }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.Equal(Status.Updated, result.StatusCode);
 
@@ -218,7 +218,7 @@ public class UpdateCauseHandlerTest : IClassFixture<PostgresFixture>, IAsyncLife
             Severity = Severity.Severe,
             TreatmentSite = TreatmentSite.IntensiveCareUnit,
         }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.Equal(Status.Updated, result.StatusCode);
 
@@ -243,7 +243,7 @@ public class UpdateCauseHandlerTest : IClassFixture<PostgresFixture>, IAsyncLife
             Severity = Severity.Mild,
             TreatmentSite = TreatmentSite.Outpatient,
         }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.Equal(Status.Updated, result.StatusCode);
 
@@ -271,7 +271,7 @@ public class UpdateCauseHandlerTest : IClassFixture<PostgresFixture>, IAsyncLife
                 Severity = Severity.Moderate,
                 TreatmentSite = TreatmentSite.Inpatient,
             }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsFailure);
+        Assert.True(result.IsFailure());
         Assert.NotNull(result.Error);
         Assert.Equal(Status.BadRequest, result.StatusCode);
 
@@ -297,7 +297,7 @@ public class UpdateCauseHandlerTest : IClassFixture<PostgresFixture>, IAsyncLife
                 Severity = Severity.Moderate,
                 TreatmentSite = TreatmentSite.Inpatient,
             }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsFailure);
+        Assert.True(result.IsFailure());
         Assert.NotNull(result.Error);
         Assert.Equal(Status.BadRequest, result.StatusCode);
     }
@@ -323,7 +323,7 @@ public class UpdateCauseHandlerTest : IClassFixture<PostgresFixture>, IAsyncLife
                 Severity = Severity.Severe,
                 TreatmentSite = TreatmentSite.IntensiveCareUnit,
             }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsFailure);
+        Assert.True(result.IsFailure());
         Assert.NotNull(result.Error);
         Assert.Equal(Status.BadRequest, result.StatusCode);
 

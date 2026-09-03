@@ -77,7 +77,7 @@ public class UpdateDiseaseHandlerTest : IClassFixture<PostgresFixture>, IAsyncLi
         };
 
         var result = await _handler.HandleAsync(command, TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.Equal(Status.Updated, result.StatusCode);
 
@@ -120,7 +120,7 @@ public class UpdateDiseaseHandlerTest : IClassFixture<PostgresFixture>, IAsyncLi
         };
 
         var result = await _handler.HandleAsync(command, TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.Equal(Status.Updated, result.StatusCode);
 
@@ -150,7 +150,7 @@ public class UpdateDiseaseHandlerTest : IClassFixture<PostgresFixture>, IAsyncLi
                 Description = "Infection caused by Mycobacterium tuberculosis",
                 IcuScoreThreshold = 4,
             }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsFailure);
+        Assert.True(result.IsFailure());
         Assert.NotNull(result.Error);
         Assert.Equal(Status.BadRequest, result.StatusCode);
 

@@ -12,7 +12,7 @@ public class GetDiseaseCriteriaValidatorTest
     public async Task GetDiseaseCriteria_ValidCommand_Success()
     {
         var result = await _validator.ValidateAsync(
-            new GetDiseaseCriteriaQuery { Id = Guid.CreateVersion7() },
+            new GetDiseaseCriteriaQuery(Guid.CreateVersion7()),
             TestContext.Current.CancellationToken);
 
         Assert.Empty(result.Errors);
@@ -25,7 +25,7 @@ public class GetDiseaseCriteriaValidatorTest
     [Fact]
     public async Task GetDiseaseCriteria_EmptyId_Fail()
     {
-        var command = new GetDiseaseCriteriaQuery { Id = Guid.Empty };
+        var command = new GetDiseaseCriteriaQuery(Guid.Empty);
 
         var result = await _validator.ValidateAsync(command, TestContext.Current.CancellationToken);
 

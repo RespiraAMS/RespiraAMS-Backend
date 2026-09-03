@@ -2,7 +2,7 @@
 
 namespace Application.Features.Antibiograms.GetPagedAntibiogram;
 
-public class AntibiogramFilter
+public record AntibiogramFilter
 {
     /// <summary>
     /// Pathogen ID
@@ -10,7 +10,7 @@ public class AntibiogramFilter
     public Guid? PathogenId { get; set; }
 }
 
-public class GetPagedAntibiogramQuery : IQuery
+public record GetPagedAntibiogramQuery : IQuery
 {
     /// <summary>
     /// Pagination parameter
@@ -23,7 +23,7 @@ public class GetPagedAntibiogramQuery : IQuery
     public AntibiogramFilter? Filter { get; set; }
 }
 
-public class PathogenResult
+public record PathogenResult
 {
     /// <summary>
     /// Pathogen ID
@@ -36,7 +36,7 @@ public class PathogenResult
     public required string Name { get; set; }
 }
 
-public class AntibioticResult
+public record AntibioticResult
 {
     /// <summary>
     /// Antibiotic ID
@@ -49,7 +49,7 @@ public class AntibioticResult
     public required string Name { get; set; }
 }
 
-public class PagedAntibiogramItem
+public record PagedAntibiogramItem
 {
     /// <summary>
     /// Antibiogram ID

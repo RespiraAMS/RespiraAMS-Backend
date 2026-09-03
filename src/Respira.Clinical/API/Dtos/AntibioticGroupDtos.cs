@@ -4,7 +4,7 @@ using Respira.ServiceDefaults.Dtos;
 
 namespace Respira.Clinical.API.Dtos;
 
-public class GetPagedAntibioticGroupRequestDto
+public record GetPagedAntibioticGroupRequestDto
 {
     /// <summary>
     /// Pagination parameter: page index (1-based)
@@ -44,7 +44,7 @@ public class GetPagedAntibioticGroupRequestDto
     }
 }
 
-public class UpdateAntibioticGroupRequestDto
+public record UpdateAntibioticGroupRequestDto
 {
     /// <summary>
     /// Antibiotic group name

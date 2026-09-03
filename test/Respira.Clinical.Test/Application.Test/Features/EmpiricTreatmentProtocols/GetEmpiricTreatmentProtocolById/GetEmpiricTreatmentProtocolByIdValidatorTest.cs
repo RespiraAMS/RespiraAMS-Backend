@@ -12,7 +12,7 @@ public class GetEmpiricTreatmentProtocolByIdValidatorTest
     public async Task GetEmpiricTreatmentProtocolById_ValidId_Success()
     {
         var result = await _validator.ValidateAsync(
-            new GetEmpiricTreatmentProtocolByIdQuery { Id = Guid.CreateVersion7() },
+            new GetEmpiricTreatmentProtocolByIdQuery(Guid.CreateVersion7()),
             TestContext.Current.CancellationToken);
 
         Assert.Empty(result.Errors);
@@ -27,7 +27,7 @@ public class GetEmpiricTreatmentProtocolByIdValidatorTest
     {
         // Boundary: Guid.Empty is treated as empty by NotEmpty
         var result = await _validator.ValidateAsync(
-            new GetEmpiricTreatmentProtocolByIdQuery { Id = Guid.Empty },
+            new GetEmpiricTreatmentProtocolByIdQuery(Guid.Empty),
             TestContext.Current.CancellationToken);
 
         _ = Assert.Single(result.Errors);

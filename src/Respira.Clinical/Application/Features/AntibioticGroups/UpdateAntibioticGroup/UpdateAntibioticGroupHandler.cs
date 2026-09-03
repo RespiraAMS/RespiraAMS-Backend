@@ -9,7 +9,7 @@ public class UpdateAntibioticGroupHandler(
     IUpdateMapper<AntibioticGroup, UpdateAntibioticGroupCommand> mapper,
     ILogger<UpdateAntibioticGroupHandler> logger) : ICommandHandler<UpdateAntibioticGroupCommand, Respira.ServiceDefaults.Contracts.Results.Result>
 {
-    public async Task<Respira.ServiceDefaults.Contracts.Results.Result> HandleAsync(UpdateAntibioticGroupCommand command, CancellationToken cancellationToken = default)
+    public async Task<Result> HandleAsync(UpdateAntibioticGroupCommand command, CancellationToken cancellationToken = default)
     {
         // Check if parent ID exists if provided
         if (command.ParentId is not null)
@@ -19,8 +19,7 @@ public class UpdateAntibioticGroupHandler(
             if (parent is null)
             {
                 logger.LogDebug("Parent ID not found for antibiotic group: {Id}", command.ParentId);
-                return Respira.ServiceDefaults.Contracts.Results.Result.Failure(new Error(Status.BadRequest, "Antibiotic group parent ID not found"));
-                // throw new BadRequestException("Parent ID not exists");
+                return Result.Failure(new Error(Status.BadRequest, "Antibiotic group parent ID not found"));
             }
         }
 
@@ -30,8 +29,7 @@ public class UpdateAntibioticGroupHandler(
         if (group is null)
         {
             logger.LogDebug("Antibiotic group not found: {Id}", command.Id);
-            return Respira.ServiceDefaults.Contracts.Results.Result.Failure(new Error(Status.BadRequest, "Antibiotic group not found"));
-            // throw new NotFoundException(nameof(AntibioticGroup), command.Id);
+            return Result.Failure(new Error(Status.BadRequest, "Antibiotic group not found"));
         }
 
         // Map from command to model
@@ -39,6 +37,6 @@ public class UpdateAntibioticGroupHandler(
 
         // Save changes to database
         await context.SaveChangesAsync(cancellationToken);
-        return Respira.ServiceDefaults.Contracts.Results.Result.Success(Status.Updated);
+        return Result.Success(Status.Updated);
     }
 }

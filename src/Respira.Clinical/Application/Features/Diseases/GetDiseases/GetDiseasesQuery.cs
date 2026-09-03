@@ -1,8 +1,8 @@
 ﻿namespace Application.Features.Diseases.GetDiseases;
 
-public class GetDiseasesQuery : IQuery;
+public record GetDiseasesQuery : IQuery;
 
-public class DiseaseItem
+public record DiseaseItem
 {
     /// <summary>
     /// Disease ID
@@ -15,10 +15,10 @@ public class DiseaseItem
     public required string Name { get; set; }
 }
 
-public class GetDiseasesResult(IEnumerable<DiseaseItem> items)
+public record GetDiseasesResult
 {
     /// <summary>
     /// List of diseases
     /// </summary>
-    public IEnumerable<DiseaseItem> Diseases { get; set; } = items;
+    public required IEnumerable<DiseaseItem> Diseases { get; set; }
 }

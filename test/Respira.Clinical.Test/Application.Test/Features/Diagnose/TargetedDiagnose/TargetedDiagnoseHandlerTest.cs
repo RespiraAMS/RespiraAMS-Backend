@@ -171,7 +171,7 @@ public class TargetedDiagnoseHandlerTest : IClassFixture<PostgresFixture>, IAsyn
             QueryFor(pathogen.Id, ageYears: 50, weight: 70, height: 1.7m, scr: 1.0m),
             TestContext.Current.CancellationToken);
 
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.NotNull(result.Data);
         Assert.Equal(Status.Success, result.StatusCode);
@@ -217,7 +217,7 @@ public class TargetedDiagnoseHandlerTest : IClassFixture<PostgresFixture>, IAsyn
         var result = await _handler.HandleAsync(
             QueryFor(pathogen.Id, ageYears: 70, weight: 60, height: 1.7m, scr: 3.0m),
             TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.NotNull(result.Data);
         Assert.Equal(Status.Success, result.StatusCode);
@@ -248,7 +248,7 @@ public class TargetedDiagnoseHandlerTest : IClassFixture<PostgresFixture>, IAsyn
         var result = await _handler.HandleAsync(
             QueryFor(pathogen.Id, ageYears: 50, weight: 70, height: 1.7m, scr: 1.0m),
             TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.NotNull(result.Data);
         Assert.Equal(Status.Success, result.StatusCode);
@@ -279,7 +279,7 @@ public class TargetedDiagnoseHandlerTest : IClassFixture<PostgresFixture>, IAsyn
         var result = await _handler.HandleAsync(
             QueryFor(pathogen.Id, ageYears: 50, weight: 70, height: 1.7m, scr: 1.0m),
             TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.NotNull(result.Data);
         Assert.Equal(Status.Success, result.StatusCode);
@@ -303,7 +303,7 @@ public class TargetedDiagnoseHandlerTest : IClassFixture<PostgresFixture>, IAsyn
 
         var query = QueryFor(unknownId, ageYears: 50, weight: 70, height: 1.7m, scr: 1.0m);
         var result = await _handler.HandleAsync(query, TestContext.Current.CancellationToken);
-        Assert.True(result.IsFailure);
+        Assert.True(result.IsFailure());
         Assert.NotNull(result.Error);
         Assert.Equal(Status.ResourceNotFound, result.StatusCode);
     }
@@ -317,7 +317,7 @@ public class TargetedDiagnoseHandlerTest : IClassFixture<PostgresFixture>, IAsyn
 
         var query = QueryFor(pathogen.Id, ageYears: 50, weight: 70, height: 1.7m, scr: 1.0m);
         var result = await _handler.HandleAsync(query, TestContext.Current.CancellationToken);
-        Assert.True(result.IsFailure);
+        Assert.True(result.IsFailure());
         Assert.NotNull(result.Error);
         Assert.Equal(Status.ServerError, result.StatusCode);
     }

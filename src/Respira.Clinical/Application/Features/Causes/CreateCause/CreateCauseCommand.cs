@@ -3,7 +3,7 @@ using Severity = Domain.Enums.Severity;
 
 namespace Application.Features.Causes.CreateCause;
 
-public class CreateCauseCommand : ICommand
+public record CreateCauseCommand : ICommand
 {
     /// <summary>
     /// Disease ID
@@ -26,10 +26,10 @@ public class CreateCauseCommand : ICommand
     public required TreatmentSite TreatmentSite { get; set; }
 }
 
-public class CreateCauseResult(Guid id)
+public record CreateCauseResult(Guid Id)
 {
     /// <summary>
     /// Disease's cause ID
     /// </summary>
-    public Guid Id { get; set; } = id;
+    public Guid Id { get; set; } = Id;
 }

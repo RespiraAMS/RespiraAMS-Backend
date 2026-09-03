@@ -78,7 +78,7 @@ public class CreateAntibioticHandlerTest : IClassFixture<PostgresFixture>, IAsyn
             RouteOfAdministration = Enum.Parse<RouteOfAdministration>(route),
             StandardDose = standardDose,
         }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.NotNull(result.Data);
         Assert.Equal(Status.Created, result.StatusCode);
@@ -119,7 +119,7 @@ public class CreateAntibioticHandlerTest : IClassFixture<PostgresFixture>, IAsyn
                 RouteOfAdministration = RouteOfAdministration.Oral,
                 StandardDose = "500 mg orally every 12 hours",
             }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsFailure);
+        Assert.True(result.IsFailure());
         Assert.NotNull(result.Error);
         Assert.Equal(Status.BadRequest, result.StatusCode);
 
@@ -145,7 +145,7 @@ public class CreateAntibioticHandlerTest : IClassFixture<PostgresFixture>, IAsyn
                 RouteOfAdministration = RouteOfAdministration.Intravenous,
                 StandardDose = "2.5 mg/kg IV every 12 hours",
             }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsFailure);
+        Assert.True(result.IsFailure());
         Assert.NotNull(result.Error);
         Assert.Equal(Status.BadRequest, result.StatusCode);
     }

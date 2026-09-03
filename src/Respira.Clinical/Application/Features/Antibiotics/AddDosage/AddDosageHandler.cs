@@ -8,9 +8,9 @@ public class AddDosageHandler(
     IDbContext context,
     ICreateMapper<Dosage, AddDosageCommand> mapper,
     ILogger<AddDosageHandler> logger)
-    : ICommandHandler<AddDosageCommand, Respira.ServiceDefaults.Contracts.Results.Result<AddDosageResult>>
+    : ICommandHandler<AddDosageCommand, Result<AddDosageResult>>
 {
-    public async Task<Respira.ServiceDefaults.Contracts.Results.Result<AddDosageResult>> HandleAsync(AddDosageCommand command, CancellationToken cancellationToken = default)
+    public async Task<Result<AddDosageResult>> HandleAsync(AddDosageCommand command, CancellationToken cancellationToken = default)
     {
         // Check if antibiotic exists
         var antibiotic = await context.Antibiotics
@@ -19,8 +19,7 @@ public class AddDosageHandler(
         if (antibiotic is null)
         {
             logger.LogDebug("Antibiotic not found: {Id}", command.AntibioticId);
-            return Respira.ServiceDefaults.Contracts.Results.Result<AddDosageResult>.Failure(new Error(Status.BadRequest, "Antibiotic not found"));
-            // throw new NotFoundException(nameof(Antibiotic), command.AntibioticId);
+            return Result<AddDosageResult>.Failure(new Error(Status.BadRequest, "Antibiotic not found"));
         }
 
         // Map from command to entity
@@ -39,10 +38,10 @@ public class AddDosageHandler(
 
         // Validate dosage
         var validationResult = Antibiotic.IsAntibioticDosageValid(dosages);
-        if (!validationResult.IsSuccess)
+        if (!validationResult.IsSuccess())
         {
             logger.LogDebug("Dosage validation failed: {msg}", validationResult.Error);
-            return Respira.ServiceDefaults.Contracts.Results.Result<AddDosageResult>.Failure(validationResult.Error!);
+            return Result<AddDosageResult>.Failure(validationResult.Error!);
         }
 
         // Add the new created dosage into database and link it to antibiotic
@@ -52,6 +51,6 @@ public class AddDosageHandler(
 
         // Save changes to database
         await context.SaveChangesAsync(cancellationToken);
-        return Respira.ServiceDefaults.Contracts.Results.Result<AddDosageResult>.Success(Status.Created, new AddDosageResult(dosage.Id));
+        return Result<AddDosageResult>.Success(Status.Created, new AddDosageResult(dosage.Id));
     }
 }

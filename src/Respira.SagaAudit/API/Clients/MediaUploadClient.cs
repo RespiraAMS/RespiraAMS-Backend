@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace Respira.SagaAudit.API.Clients;
 
-/// <summary>Result returned by the Media service <c>POST /api/1/media/upload</c> endpoint.</summary>
+/// <summary>ApiResponse returned by the Media service <c>POST /api/1/media/upload</c> endpoint.</summary>
 public class MediaUploadResult
 {
     /// <summary>Identifier of the media record created by the Media service.</summary>

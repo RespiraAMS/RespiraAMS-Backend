@@ -16,7 +16,7 @@ namespace Application.Features.Authentication.GetListInfoDoctor.Queries;
 public class GetListInfoDoctorQueryHandler(
     IAuthDbContext dbContext,
     ILogger<GetListInfoDoctorQueryHandler> logger
-) : IQueryHandler<GetListInfoDoctorQuery, Result<IEnumerable<GetAuthDoctorListResult>>>
+) : IQueryHandler<GetListInfoDoctorQuery, ApiResponse<IEnumerable<GetAuthDoctorListResult>>>
 {
     /// <summary>
     /// Loads the requested auth doctors and projects them to the list result.
@@ -24,7 +24,7 @@ public class GetListInfoDoctorQueryHandler(
     /// <param name="query">Query holding the doctor ids.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>Auth details for the found doctors.</returns>
-    public async Task<Result<IEnumerable<GetAuthDoctorListResult>>> HandleAsync(
+    public async Task<ApiResponse<IEnumerable<GetAuthDoctorListResult>>> HandleAsync(
         GetListInfoDoctorQuery query,
         CancellationToken cancellationToken = default
     )
@@ -33,7 +33,7 @@ public class GetListInfoDoctorQueryHandler(
         {
             if (query.Ids.Count == 0)
             {
-                return Result<IEnumerable<GetAuthDoctorListResult>>.Ok(
+                return ApiResponse<IEnumerable<GetAuthDoctorListResult>>.Ok(
                     new List<GetAuthDoctorListResult>()
                 );
             }
@@ -57,12 +57,12 @@ public class GetListInfoDoctorQueryHandler(
                     }
             );
 
-            return Result<IEnumerable<GetAuthDoctorListResult>>.Ok(result);
+            return ApiResponse<IEnumerable<GetAuthDoctorListResult>>.Ok(result);
         }
         catch (Exception ex)
         {
             logger.LogError(ex, "Error retrieving doctor list info");
-            return Result<IEnumerable<GetAuthDoctorListResult>>.Fail(
+            return ApiResponse<IEnumerable<GetAuthDoctorListResult>>.Fail(
                 "Error retrieving doctor list info"
             );
         }

@@ -23,13 +23,13 @@ public class AuthController(IMessageBus bus) : ControllerBase
     /// <param name="id">The doctor identifier.</param>
     [HttpGet]
     [Route("doctors/{id}")]
-    [ProducesResponseType<Result<GetAuthDoctorResult>>(StatusCodes.Status200OK)]
-    [ProducesResponseType<Result>(StatusCodes.Status404NotFound)]
-    [ProducesResponseType<Result>(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<Result<GetAuthDoctorResult>>> GetDoctor(Guid id)
+    [ProducesResponseType<ApiResponse<GetAuthDoctorResult>>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status404NotFound)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult<ApiResponse<GetAuthDoctorResult>>> GetDoctor(Guid id)
     {
         var query = new GetUserQuery { Id = id };
-        var result = await bus.InvokeAsync<Result<GetAuthDoctorResult>>(query);
+        var result = await bus.InvokeAsync<ApiResponse<GetAuthDoctorResult>>(query);
         return StatusCode(result.StatusCode, result);
     }
 
@@ -39,14 +39,14 @@ public class AuthController(IMessageBus bus) : ControllerBase
     /// <param name="query">Login credentials</param>
     [HttpPost]
     [Route("login")]
-    [ProducesResponseType<Result<LoginResult>>(StatusCodes.Status200OK)]
-    [ProducesResponseType<Result>(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType<Result>(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType<Result>(StatusCodes.Status403Forbidden)]
-    [ProducesResponseType<Result>(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType<ApiResponse<LoginResult>>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> Login([FromBody] LoginQuery query)
     {
-        var result = await bus.InvokeAsync<Result<LoginResult>>(query);
+        var result = await bus.InvokeAsync<ApiResponse<LoginResult>>(query);
         return StatusCode(result.StatusCode, result);
     }
 
@@ -57,13 +57,13 @@ public class AuthController(IMessageBus bus) : ControllerBase
     /// <param name="query">Refresh request holding the raw refresh token</param>
     [HttpPost]
     [Route("refresh")]
-    [ProducesResponseType<Result<LoginResult>>(StatusCodes.Status200OK)]
-    [ProducesResponseType<Result<LoginResult>>(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType<Result>(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType<Result>(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType<ApiResponse<LoginResult>>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ApiResponse<LoginResult>>(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> Refresh([FromBody] RefreshCommand query)
     {
-        var result = await bus.InvokeAsync<Result<LoginResult>>(query);
+        var result = await bus.InvokeAsync<ApiResponse<LoginResult>>(query);
         return StatusCode(result.StatusCode, result);
     }
 
@@ -75,14 +75,14 @@ public class AuthController(IMessageBus bus) : ControllerBase
     /// <param name="command">Access and refresh tokens to revoke</param>
     [HttpPost]
     [Route("logout")]
-    [ProducesResponseType<Result>(StatusCodes.Status200OK)]
-    [ProducesResponseType<Result>(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType<Result>(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> Logout([FromBody] LogoutCommand command)
     {
         var revoked = await bus.InvokeAsync<bool>(command);
         var message = revoked ? "Logout successful" : "Already logged out";
-        return Ok(Result.Ok(message));
+        return Ok(ApiResponse.Ok(message));
     }
 
     /// <summary>
@@ -92,12 +92,12 @@ public class AuthController(IMessageBus bus) : ControllerBase
     /// <param name="command">Verification token and email from the query string</param>
     [HttpGet]
     [Route("verify-email")]
-    [ProducesResponseType<Result<bool>>(StatusCodes.Status200OK)]
-    [ProducesResponseType<Result>(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType<Result>(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType<ApiResponse<bool>>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> VerifyEmail([FromQuery] VerifyEmailCommand command)
     {
-        var result = await bus.InvokeAsync<Result<bool>>(command);
+        var result = await bus.InvokeAsync<ApiResponse<bool>>(command);
         return StatusCode(result.StatusCode, result);
     }
 
@@ -108,14 +108,14 @@ public class AuthController(IMessageBus bus) : ControllerBase
     /// <param name="command">Email of the account to verify</param>
     [HttpPost]
     [Route("resend-verification-email")]
-    [ProducesResponseType<Result<bool>>(StatusCodes.Status200OK)]
-    [ProducesResponseType<Result>(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType<Result>(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType<ApiResponse<bool>>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> ResendVerificationEmail(
         [FromBody] RequestEmailVerificationCommand command
     )
     {
-        var result = await bus.InvokeAsync<Result<bool>>(command);
+        var result = await bus.InvokeAsync<ApiResponse<bool>>(command);
         return StatusCode(result.StatusCode, result);
     }
 }

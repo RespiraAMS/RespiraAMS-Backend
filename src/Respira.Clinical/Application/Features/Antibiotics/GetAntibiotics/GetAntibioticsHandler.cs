@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore;
 namespace Application.Features.Antibiotics.GetAntibiotics;
 
 public class GetAntibioticsHandler(IDbContext context)
-    : IQueryHandler<GetAntibioticsQuery, Respira.ServiceDefaults.Contracts.Results.Result<GetAntibioticsResult>>
+    : IQueryHandler<GetAntibioticsQuery, Result<GetAntibioticsResult>>
 {
-    public async Task<Respira.ServiceDefaults.Contracts.Results.Result<GetAntibioticsResult>> HandleAsync(GetAntibioticsQuery query, CancellationToken cancellationToken = default)
+    public async Task<Result<GetAntibioticsResult>> HandleAsync(GetAntibioticsQuery query, CancellationToken cancellationToken = default)
     {
         var antibiotics = await context.Antibiotics
             .AsNoTracking()
@@ -17,6 +17,6 @@ public class GetAntibioticsHandler(IDbContext context)
                 Name = x.Name
             })
             .ToListAsync(cancellationToken);
-        return Respira.ServiceDefaults.Contracts.Results.Result<GetAntibioticsResult>.Success(Status.Success, new GetAntibioticsResult(antibiotics));
+        return Result<GetAntibioticsResult>.Success(Status.Success, new GetAntibioticsResult(antibiotics));
     }
 }

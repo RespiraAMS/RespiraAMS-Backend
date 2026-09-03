@@ -142,7 +142,7 @@ public class DeletePathogenHandlerTest : IClassFixture<PostgresFixture>, IAsyncL
         var seeded = await SeedPathogenAsync(withRelatedData: true);
 
         var result = await _handler.HandleAsync(new DeletePathogenCommand(seeded.Id), TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.Equal(Status.Deleted, result.StatusCode);
 
@@ -189,7 +189,7 @@ public class DeletePathogenHandlerTest : IClassFixture<PostgresFixture>, IAsyncL
         var seeded = await SeedPathogenAsync(withRelatedData: false);
 
         var result = await _handler.HandleAsync(new DeletePathogenCommand(seeded.Id), TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.Equal(Status.Deleted, result.StatusCode);
 
@@ -213,7 +213,7 @@ public class DeletePathogenHandlerTest : IClassFixture<PostgresFixture>, IAsyncL
         var unknownId = Guid.CreateVersion7();
 
         var result = await _handler.HandleAsync(new DeletePathogenCommand(unknownId), TestContext.Current.CancellationToken);
-        Assert.True(result.IsFailure);
+        Assert.True(result.IsFailure());
         Assert.NotNull(result.Error);
         Assert.Equal(Status.BadRequest, result.StatusCode);
 

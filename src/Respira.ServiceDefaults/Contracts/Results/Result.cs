@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Mvc;
+
 namespace Respira.ServiceDefaults.Contracts.Results;
 
 /*
@@ -51,18 +53,54 @@ public sealed class Result
     /// Construct a failure result
     /// </summary>
     /// <param name="error">Operation error</param>
-    /// <returns>A failure result</returns
+    /// <returns>A failure result</returns>
     public static Result Failure(Error error) => new(error.Code, error);
 
     /// <summary>
     /// Check if the result is a success result
     /// </summary>
-    public bool IsSuccess => Status.IsSuccess(StatusCode);
+    public bool IsSuccess() => Status.IsSuccess(StatusCode);
 
     /// <summary>
     /// Check if the result is a failure result
     /// </summary>
-    public bool IsFailure => !IsSuccess;
+    public bool IsFailure() => !IsSuccess();
+
+    /// <summary>
+    /// Build the Result object into an <code>IActionResult</code> object for API controller to return
+    /// </summary>
+    public IActionResult ToApiResponse()
+    {
+        if (IsFailure())
+        {
+            return Error!.Code switch
+            {
+                Status.BadRequest or Status.SagaBadRequest
+                    or Status.BusinessRuleViolation or Status.SagaBusinessRuleViolation
+                    => new BadRequestObjectResult(this),
+
+                Status.Unauthorized or Status.SagaUnauthorized
+                    => new UnauthorizedResult(),
+
+                Status.Restricted or Status.SagaRestricted
+                    => new ForbidResult(),
+
+                Status.ResourceNotFound or Status.SagaResourceNotFound
+                    => new NotFoundObjectResult(this),
+
+                _ => new ObjectResult(this) { StatusCode = Status.ToHttpStatusCode(Error!.Code) }
+            };
+        }
+
+        return StatusCode switch
+        {
+            Status.Success or Status.SagaSuccess => new OkObjectResult(this),
+            Status.Created or Status.SagaCreated => new CreatedResult((string?)null, this),
+            Status.Updated or Status.SagaUpdated => new NoContentResult(),
+            Status.Deleted or Status.SagaDeleted => new NoContentResult(),
+            _ => new OkObjectResult(this)
+        };
+    }
 }
 
 public sealed class Result<T>
@@ -119,16 +157,52 @@ public sealed class Result<T>
     /// Construct a failure result
     /// </summary>
     /// <param name="error">Operation error</param>
-    /// <returns>A failure result</returns
+    /// <returns>A failure result</returns>
     public static Result<T> Failure(Error error) => new(error.Code, error, default);
 
     /// <summary>
     /// Check if the result is a success result
     /// </summary>
-    public bool IsSuccess => Status.IsSuccess(StatusCode);
+    public bool IsSuccess() => Status.IsSuccess(StatusCode);
 
     /// <summary>
     /// Check if the result is a failure result
     /// </summary>
-    public bool IsFailure => !IsSuccess;
+    public bool IsFailure() => !IsSuccess();
+
+    /// <summary>
+    /// Build the Result object into an <code>IActionResult</code> object for API controller to return
+    /// </summary>
+    public IActionResult ToApiResponse()
+    {
+        if (IsFailure())
+        {
+            return Error!.Code switch
+            {
+                Status.BadRequest or Status.SagaBadRequest
+                    or Status.BusinessRuleViolation or Status.SagaBusinessRuleViolation
+                    => new BadRequestObjectResult(this),
+
+                Status.Unauthorized or Status.SagaUnauthorized
+                    => new UnauthorizedResult(),
+
+                Status.Restricted or Status.SagaRestricted
+                    => new ForbidResult(),
+
+                Status.ResourceNotFound or Status.SagaResourceNotFound
+                    => new NotFoundObjectResult(this),
+
+                _ => new ObjectResult(this) { StatusCode = Status.ToHttpStatusCode(Error!.Code) }
+            };
+        }
+
+        return StatusCode switch
+        {
+            Status.Success or Status.SagaSuccess => new OkObjectResult(this),
+            Status.Created or Status.SagaCreated => new CreatedResult((string?)null, this),
+            Status.Updated or Status.SagaUpdated => new NoContentResult(),
+            Status.Deleted or Status.SagaDeleted => new NoContentResult(),
+            _ => new OkObjectResult(this)
+        };
+    }
 }

@@ -11,11 +11,7 @@ public class DeleteIcuHospitalizeCriterionValidatorTest
     [Fact]
     public async Task DeleteIcuHospitalizeCriterion_ValidId_Success()
     {
-        var result = await _validator.ValidateAsync(new DeleteIcuHospitalizeCriterionCommand
-        {
-            Id = Guid.CreateVersion7(),
-        }, TestContext.Current.CancellationToken);
-
+        var result = await _validator.ValidateAsync(new DeleteIcuHospitalizeCriterionCommand(Guid.CreateVersion7()), TestContext.Current.CancellationToken);
         Assert.Empty(result.Errors);
     }
 
@@ -33,11 +29,7 @@ public class DeleteIcuHospitalizeCriterionValidatorTest
     [MemberData(nameof(InvalidIds))]
     public async Task DeleteIcuHospitalizeCriterion_Fail(Guid id)
     {
-        var result = await _validator.ValidateAsync(new DeleteIcuHospitalizeCriterionCommand
-        {
-            Id = id,
-        }, TestContext.Current.CancellationToken);
-
+        var result = await _validator.ValidateAsync(new DeleteIcuHospitalizeCriterionCommand(id), TestContext.Current.CancellationToken);
         Assert.Contains(result.Errors, x => x.PropertyName == "Id");
     }
 

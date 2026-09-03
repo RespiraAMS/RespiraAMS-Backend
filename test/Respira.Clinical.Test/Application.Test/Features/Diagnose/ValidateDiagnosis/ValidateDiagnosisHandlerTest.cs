@@ -5,6 +5,7 @@ using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moq;
+using Respira.ServiceDefaults.Contracts.Results;
 using AntibioticModel = Domain.Models.Antibiotic;
 
 namespace Application.Test.Features.Diagnose.ValidateDiagnosis;
@@ -134,10 +135,14 @@ public class ValidateDiagnosisHandlerTest : IClassFixture<PostgresFixture>, IAsy
             treatmentSite: nameof(TreatmentSite.Outpatient));
 
         var result = await _handler.HandleAsync(query, TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess());
+        Assert.NotNull(result.Data);
+        Assert.Null(result.Error);
+        Assert.Equal(Status.Success, result.StatusCode);
 
         // Business rule: every provided record matches a real DB record (name + classification + dose)
         // and the optional enums are recognised -> the diagnosis payload is valid
-        Assert.True(result.IsValid);
+        Assert.True(result.Data.IsValid);
     }
 
     [Fact]
@@ -162,8 +167,12 @@ public class ValidateDiagnosisHandlerTest : IClassFixture<PostgresFixture>, IAsy
             pathogens: [new PathogenRecord { Id = haemophilus.Id, Name = "Haemophilus influenzae" }]);
 
         var result = await _handler.HandleAsync(query, TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess());
+        Assert.NotNull(result.Data);
+        Assert.Null(result.Error);
+        Assert.Equal(Status.Success, result.StatusCode);
 
-        Assert.True(result.IsValid);
+        Assert.True(result.Data.IsValid);
     }
 
     [Fact]
@@ -191,9 +200,13 @@ public class ValidateDiagnosisHandlerTest : IClassFixture<PostgresFixture>, IAsy
             treatmentSite: "inpatient");
 
         var result = await _handler.HandleAsync(query, TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess());
+        Assert.NotNull(result.Data);
+        Assert.Null(result.Error);
+        Assert.Equal(Status.Success, result.StatusCode);
 
         // Business rule: matching is case-insensitive for pathogen/antibiotic names and enum strings
-        Assert.True(result.IsValid);
+        Assert.True(result.Data.IsValid);
     }
 
     [Fact]
@@ -238,8 +251,12 @@ public class ValidateDiagnosisHandlerTest : IClassFixture<PostgresFixture>, IAsy
             treatmentSite: nameof(TreatmentSite.IntensiveCareUnit));
 
         var result = await _handler.HandleAsync(query, TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess());
+        Assert.NotNull(result.Data);
+        Assert.Null(result.Error);
+        Assert.Equal(Status.Success, result.StatusCode);
 
-        Assert.True(result.IsValid);
+        Assert.True(result.Data.IsValid);
     }
 
     # endregion
@@ -256,9 +273,13 @@ public class ValidateDiagnosisHandlerTest : IClassFixture<PostgresFixture>, IAsy
         var query = BuildQuery(severity: invalidSeverity);
 
         var result = await _handler.HandleAsync(query, TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess());
+        Assert.NotNull(result.Data);
+        Assert.Null(result.Error);
+        Assert.Equal(Status.Success, result.StatusCode);
 
         // Business rule: an unrecognised severity string must make the payload invalid
-        Assert.False(result.IsValid);
+        Assert.False(result.Data.IsValid);
     }
 
     [Fact]
@@ -270,8 +291,12 @@ public class ValidateDiagnosisHandlerTest : IClassFixture<PostgresFixture>, IAsy
         var query = BuildQuery(treatmentSite: invalidSite);
 
         var result = await _handler.HandleAsync(query, TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess());
+        Assert.NotNull(result.Data);
+        Assert.Null(result.Error);
+        Assert.Equal(Status.Success, result.StatusCode);
 
-        Assert.False(result.IsValid);
+        Assert.False(result.Data.IsValid);
     }
 
     # endregion
@@ -289,9 +314,13 @@ public class ValidateDiagnosisHandlerTest : IClassFixture<PostgresFixture>, IAsy
             pathogens: [new PathogenRecord { Id = unknownId, Name = "Streptococcus pneumoniae" }]);
 
         var result = await _handler.HandleAsync(query, TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess());
+        Assert.NotNull(result.Data);
+        Assert.Null(result.Error);
+        Assert.Equal(Status.Success, result.StatusCode);
 
         // Business rule: every referenced pathogen must exist in the database
-        Assert.False(result.IsValid);
+        Assert.False(result.Data.IsValid);
     }
 
     [Fact]
@@ -305,9 +334,13 @@ public class ValidateDiagnosisHandlerTest : IClassFixture<PostgresFixture>, IAsy
             pathogens: [new PathogenRecord { Id = pneumo.Id, Name = "Mycoplasma pneumoniae" }]);
 
         var result = await _handler.HandleAsync(query, TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess());
+        Assert.NotNull(result.Data);
+        Assert.Null(result.Error);
+        Assert.Equal(Status.Success, result.StatusCode);
 
         // Business rule: the pathogen name must match the stored record (case-insensitive)
-        Assert.False(result.IsValid);
+        Assert.False(result.Data.IsValid);
     }
 
     # endregion
@@ -332,9 +365,13 @@ public class ValidateDiagnosisHandlerTest : IClassFixture<PostgresFixture>, IAsy
             }]);
 
         var result = await _handler.HandleAsync(query, TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess());
+        Assert.NotNull(result.Data);
+        Assert.Null(result.Error);
+        Assert.Equal(Status.Success, result.StatusCode);
 
         // Business rule: every referenced antibiotic must exist in the database
-        Assert.False(result.IsValid);
+        Assert.False(result.Data.IsValid);
     }
 
     [Fact]
@@ -357,9 +394,13 @@ public class ValidateDiagnosisHandlerTest : IClassFixture<PostgresFixture>, IAsy
             }]);
 
         var result = await _handler.HandleAsync(query, TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess());
+        Assert.NotNull(result.Data);
+        Assert.Null(result.Error);
+        Assert.Equal(Status.Success, result.StatusCode);
 
         // Business rule: the antibiotic name must match the stored record (case-insensitive)
-        Assert.False(result.IsValid);
+        Assert.False(result.Data.IsValid);
     }
 
     [Fact]
@@ -384,9 +425,13 @@ public class ValidateDiagnosisHandlerTest : IClassFixture<PostgresFixture>, IAsy
             }]);
 
         var result = await _handler.HandleAsync(query, TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess());
+        Assert.NotNull(result.Data);
+        Assert.Null(result.Error);
+        Assert.Equal(Status.Success, result.StatusCode);
 
         // Business rule: route of administration must be a recognised value
-        Assert.False(result.IsValid);
+        Assert.False(result.Data.IsValid);
     }
 
     [Fact]
@@ -410,9 +455,13 @@ public class ValidateDiagnosisHandlerTest : IClassFixture<PostgresFixture>, IAsy
             }]);
 
         var result = await _handler.HandleAsync(query, TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess());
+        Assert.NotNull(result.Data);
+        Assert.Null(result.Error);
+        Assert.Equal(Status.Success, result.StatusCode);
 
         // Business rule: classification must be a recognised value
-        Assert.False(result.IsValid);
+        Assert.False(result.Data.IsValid);
     }
 
     [Fact]
@@ -435,9 +484,13 @@ public class ValidateDiagnosisHandlerTest : IClassFixture<PostgresFixture>, IAsy
             }]);
 
         var result = await _handler.HandleAsync(query, TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess());
+        Assert.NotNull(result.Data);
+        Assert.Null(result.Error);
+        Assert.Equal(Status.Success, result.StatusCode);
 
         // Business rule: the supplied classification must equal the stored classification
-        Assert.False(result.IsValid);
+        Assert.False(result.Data.IsValid);
     }
 
     [Fact]
@@ -460,9 +513,13 @@ public class ValidateDiagnosisHandlerTest : IClassFixture<PostgresFixture>, IAsy
             }]);
 
         var result = await _handler.HandleAsync(query, TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess());
+        Assert.NotNull(result.Data);
+        Assert.Null(result.Error);
+        Assert.Equal(Status.Success, result.StatusCode);
 
         // Business rule: the dose must correspond to a real dosage of the antibiotic (case-insensitive)
-        Assert.False(result.IsValid);
+        Assert.False(result.Data.IsValid);
     }
 
     [Fact]
@@ -486,9 +543,13 @@ public class ValidateDiagnosisHandlerTest : IClassFixture<PostgresFixture>, IAsy
             }]);
 
         var result = await _handler.HandleAsync(query, TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess());
+        Assert.NotNull(result.Data);
+        Assert.Null(result.Error);
+        Assert.Equal(Status.Success, result.StatusCode);
 
         // Business rule: a dosage must exist for the requested route of administration
-        Assert.False(result.IsValid);
+        Assert.False(result.Data.IsValid);
     }
 
     # endregion

@@ -1,6 +1,6 @@
 ﻿namespace Application.Features.AntibioticGroups.GetPagedAntibioticGroup;
 
-public class AntibioticGroupFilter
+public record AntibioticGroupFilter
 {
     /// <summary>
     /// Antibiotic group name
@@ -13,7 +13,7 @@ public class AntibioticGroupFilter
     public Guid? ParentId { get; set; }
 }
 
-public class GetPagedAntibioticGroupQuery : IQuery
+public record GetPagedAntibioticGroupQuery : IQuery
 {
     /// <summary>
     /// Pagination parameter
@@ -26,7 +26,7 @@ public class GetPagedAntibioticGroupQuery : IQuery
     public AntibioticGroupFilter? Filter { get; set; }
 }
 
-public class PagedAntibioticGroupItem
+public record PagedAntibioticGroupItem
 {
     /// <summary>
     /// Antibiotic group ID

@@ -1,6 +1,6 @@
 ﻿namespace Application.Features.Pathogens.CreatePathogen;
 
-public class CreatePathogenCommand : ICommand
+public record CreatePathogenCommand : ICommand
 {
     /// <summary>
     /// Pathogen name
@@ -13,10 +13,10 @@ public class CreatePathogenCommand : ICommand
     public required string Description { get; set; }
 }
 
-public class CreatePathogenResult(Guid id)
+public record CreatePathogenResult(Guid Id)
 {
     /// <summary>
     /// Pathogen ID
     /// </summary>
-    public Guid Id { get; set; } = id;
+    public Guid Id { get; set; } = Id;
 }

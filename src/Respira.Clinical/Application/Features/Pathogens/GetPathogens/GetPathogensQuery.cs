@@ -1,8 +1,8 @@
 ﻿namespace Application.Features.Pathogens.GetPathogens;
 
-public class GetPathogensQuery : IQuery;
+public record GetPathogensQuery : IQuery;
 
-public class PathogenItem
+public record PathogenItem
 {
     /// <summary>
     /// Pathogen ID
@@ -15,10 +15,10 @@ public class PathogenItem
     public required string Name { get; set; }
 }
 
-public class GetPathogensResult(IEnumerable<PathogenItem> pathogens)
+public record GetPathogensResult
 {
     /// <summary>
     /// List of pathogens
     /// </summary>
-    public IEnumerable<PathogenItem> Pathogens { get; set; } = pathogens;
+    public required IEnumerable<PathogenItem> Pathogens { get; set; }
 }

@@ -3,7 +3,7 @@ using Severity = Domain.Enums.Severity;
 
 namespace Application.Features.Causes.UpdateCause;
 
-public class UpdateCauseCommand : ICommand
+public record UpdateCauseCommand : ICommand
 {
     /// <summary>
     /// Disease's cause ID

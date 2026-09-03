@@ -101,9 +101,9 @@ public class DeleteAntibioticGroupHandlerTest : IClassFixture<PostgresFixture>, 
     {
         var (target, other) = await SeedAsync(withAntibiotics: true);
 
-        var result = await _handler.HandleAsync(new DeleteAntibioticGroupCommand { Id = target.Id },
+        var result = await _handler.HandleAsync(new DeleteAntibioticGroupCommand(target.Id),
             TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.Equal(Status.Deleted, result.StatusCode);
 
@@ -139,9 +139,9 @@ public class DeleteAntibioticGroupHandlerTest : IClassFixture<PostgresFixture>, 
         // Lower boundary of the cascade: nothing linked to the group
         var (target, _) = await SeedAsync(withAntibiotics: false);
 
-        var result = await _handler.HandleAsync(new DeleteAntibioticGroupCommand { Id = target.Id },
+        var result = await _handler.HandleAsync(new DeleteAntibioticGroupCommand(target.Id),
             TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.Equal(Status.Deleted, result.StatusCode);
 
@@ -165,8 +165,8 @@ public class DeleteAntibioticGroupHandlerTest : IClassFixture<PostgresFixture>, 
         var unknownId = Guid.CreateVersion7();
 
         var result = await _handler.HandleAsync(
-            new DeleteAntibioticGroupCommand { Id = unknownId }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsFailure);
+            new DeleteAntibioticGroupCommand(unknownId), TestContext.Current.CancellationToken);
+        Assert.True(result.IsFailure());
         Assert.NotNull(result.Error);
         Assert.Equal(Status.BadRequest, result.StatusCode);
 

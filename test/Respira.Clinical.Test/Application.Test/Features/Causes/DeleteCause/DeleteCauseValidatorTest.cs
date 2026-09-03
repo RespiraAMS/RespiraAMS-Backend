@@ -11,11 +11,7 @@ public class DeleteCauseValidatorTest
     [Fact]
     public async Task DeleteCause_Success()
     {
-        var result = await _validator.ValidateAsync(new DeleteCauseCommand
-        {
-            Id = Guid.CreateVersion7(),
-        }, TestContext.Current.CancellationToken);
-
+        var result = await _validator.ValidateAsync(new DeleteCauseCommand(Guid.CreateVersion7()), TestContext.Current.CancellationToken);
         Assert.Empty(result.Errors);
     }
 
@@ -27,11 +23,7 @@ public class DeleteCauseValidatorTest
     [Fact]
     public async Task DeleteCause_EmptyId_Fail()
     {
-        var result = await _validator.ValidateAsync(new DeleteCauseCommand
-        {
-            Id = Guid.Empty,
-        }, TestContext.Current.CancellationToken);
-
+        var result = await _validator.ValidateAsync(new DeleteCauseCommand(Guid.Empty), TestContext.Current.CancellationToken);
         _ = Assert.Single(result.Errors);
         Assert.Equal("Id", result.Errors[0].PropertyName);
     }

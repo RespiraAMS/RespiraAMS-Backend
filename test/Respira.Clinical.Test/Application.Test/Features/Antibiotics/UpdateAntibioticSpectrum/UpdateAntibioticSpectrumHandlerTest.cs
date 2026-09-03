@@ -110,7 +110,7 @@ public class UpdateAntibioticSpectrumHandlerTest : IClassFixture<PostgresFixture
             Id = antibiotic.Id,
             PathogenIds = [allIds[1], allIds[2]],
         }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.Equal(Status.Updated, result.StatusCode);
 
@@ -129,7 +129,7 @@ public class UpdateAntibioticSpectrumHandlerTest : IClassFixture<PostgresFixture
             Id = antibiotic.Id,
             PathogenIds = [allIds[0], allIds[1]],
         }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.Equal(Status.Updated, result.StatusCode);
 
@@ -152,7 +152,7 @@ public class UpdateAntibioticSpectrumHandlerTest : IClassFixture<PostgresFixture
                 Id = unknownId,
                 PathogenIds = [Guid.CreateVersion7()],
             }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsFailure);
+        Assert.True(result.IsFailure());
         Assert.NotNull(result.Error);
         Assert.Equal(Status.BadRequest, result.StatusCode);
     }
@@ -169,7 +169,7 @@ public class UpdateAntibioticSpectrumHandlerTest : IClassFixture<PostgresFixture
                 Id = antibiotic.Id,
                 PathogenIds = [allIds[0], unknownPathogenId],
             }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsFailure);
+        Assert.True(result.IsFailure());
         Assert.NotNull(result.Error);
         Assert.Equal(Status.BadRequest, result.StatusCode);
 
@@ -200,7 +200,7 @@ public class UpdateAntibioticSpectrumHandlerTest : IClassFixture<PostgresFixture
                 Id = antibiotic.Id,
                 PathogenIds = [deletedPathogen.Id],
             }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsFailure);
+        Assert.True(result.IsFailure());
         Assert.NotNull(result.Error);
         Assert.Equal(Status.BadRequest, result.StatusCode);
     }

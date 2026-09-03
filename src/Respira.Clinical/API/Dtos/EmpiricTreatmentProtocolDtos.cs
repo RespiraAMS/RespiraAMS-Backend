@@ -6,7 +6,7 @@ using Domain.Enums;
 
 namespace Respira.Clinical.API.Dtos;
 
-public class CreateEmpiricTreatmentProtocolRequestDto
+public record CreateEmpiricTreatmentProtocolRequestDto
 {
     /// <summary>
     /// Empiric treatment protocol name
@@ -73,7 +73,7 @@ public class CreateEmpiricTreatmentProtocolRequestDto
     }
 }
 
-public class UpdateEmpiricTreatmentProtocolRequestDto
+public record UpdateEmpiricTreatmentProtocolRequestDto
 {
     /// <summary>
     /// Empiric treatment protocol name
@@ -140,7 +140,7 @@ public class UpdateEmpiricTreatmentProtocolRequestDto
     }
 }
 
-public class AddNewCriteriaRequestDto
+public record AddNewCriteriaRequestDto
 {
     /// <summary>
     /// List of new criteria to be added

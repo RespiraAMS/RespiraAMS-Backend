@@ -4,15 +4,15 @@ using Severity = Domain.Enums.Severity;
 
 namespace Application.Features.Diseases.GetDiseaseById;
 
-public class GetDiseaseByIdQuery : IQuery
+public record GetDiseaseByIdQuery(Guid Id) : IQuery
 {
     /// <summary>
     /// Disease ID
     /// </summary>
-    public required Guid Id { get; set; }
+    public Guid Id { get; set; } = Id;
 }
 
-public class IcuHospitalizeCriterionResult
+public record IcuHospitalizeCriterionResult
 {
     /// <summary>
     /// ICU hospitalize criterion ID
@@ -30,7 +30,7 @@ public class IcuHospitalizeCriterionResult
     public required int Score { get; set; }
 }
 
-public class CauseResult
+public record CauseResult
 {
     /// <summary>
     /// Disease's cause ID
@@ -53,7 +53,7 @@ public class CauseResult
     public required TreatmentSite TreatmentSite { get; set; }
 }
 
-public class ResistanceRiskFactorResult
+public record ResistanceRiskFactorResult
 {
     /// <summary>
     /// Resistance risk factor ID
@@ -76,7 +76,7 @@ public class ResistanceRiskFactorResult
     public required string Name { get; set; }
 }
 
-public class EmpiricTreatmentProtocolResult
+public record EmpiricTreatmentProtocolResult
 {
     /// <summary>
     /// Empiric treatment protocol ID
@@ -110,7 +110,7 @@ public class EmpiricTreatmentProtocolResult
     public required int Version { get; set; }
 }
 
-public class DiseaseResult
+public record DiseaseResult
 {
     /// <summary>
     /// Disease ID

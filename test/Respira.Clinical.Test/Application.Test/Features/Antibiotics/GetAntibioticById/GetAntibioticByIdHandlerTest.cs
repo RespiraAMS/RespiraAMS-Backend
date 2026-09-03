@@ -121,9 +121,8 @@ public class GetAntibioticByIdHandlerTest : IClassFixture<PostgresFixture>, IAsy
     {
         var (seeded, root) = await SeedFullGraphAsync();
 
-        var result = await _handler.HandleAsync(
-            new GetAntibioticByIdQuery { Id = seeded.Id }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        var result = await _handler.HandleAsync(new GetAntibioticByIdQuery(seeded.Id), TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.NotNull(result.Data);
         Assert.Equal(Status.Success, result.StatusCode);
@@ -191,8 +190,8 @@ public class GetAntibioticByIdHandlerTest : IClassFixture<PostgresFixture>, IAsy
         await _context.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var result = await _handler.HandleAsync(
-            new GetAntibioticByIdQuery { Id = azithromycin.Id }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+            new GetAntibioticByIdQuery(azithromycin.Id), TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.NotNull(result.Data);
         Assert.Equal(Status.Success, result.StatusCode);
@@ -216,8 +215,8 @@ public class GetAntibioticByIdHandlerTest : IClassFixture<PostgresFixture>, IAsy
     {
         var unknownId = Guid.CreateVersion7();
 
-        var result = await _handler.HandleAsync(new GetAntibioticByIdQuery { Id = unknownId }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsFailure);
+        var result = await _handler.HandleAsync(new GetAntibioticByIdQuery(unknownId), TestContext.Current.CancellationToken);
+        Assert.True(result.IsFailure());
         Assert.NotNull(result.Error);
         Assert.Equal(Status.ResourceNotFound, result.StatusCode);
     }

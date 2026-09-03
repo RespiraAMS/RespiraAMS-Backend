@@ -108,7 +108,7 @@ public class CreateResistanceRiskFactorHandlerTest : IClassFixture<PostgresFixtu
                 Value = null,
             },
         }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.Equal(Status.Created, result.StatusCode);
         Assert.NotNull(result.Data);
@@ -156,7 +156,7 @@ public class CreateResistanceRiskFactorHandlerTest : IClassFixture<PostgresFixtu
                 Value = value,
             },
         }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsSuccess);
+        Assert.True(result.IsSuccess());
         Assert.Null(result.Error);
         Assert.Equal(Status.Created, result.StatusCode);
         Assert.NotNull(result.Data);
@@ -193,7 +193,7 @@ public class CreateResistanceRiskFactorHandlerTest : IClassFixture<PostgresFixtu
                     Value = null,
                 },
             }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsFailure);
+        Assert.True(result.IsFailure());
         Assert.NotNull(result.Error);
         Assert.Equal(Status.BadRequest, result.StatusCode);
     }
@@ -216,7 +216,7 @@ public class CreateResistanceRiskFactorHandlerTest : IClassFixture<PostgresFixtu
                     Value = null,
                 },
             }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsFailure);
+        Assert.True(result.IsFailure());
         Assert.NotNull(result.Error);
         Assert.Equal(Status.BadRequest, result.StatusCode);
     }
@@ -240,7 +240,7 @@ public class CreateResistanceRiskFactorHandlerTest : IClassFixture<PostgresFixtu
                     Value = null,
                 },
             }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsFailure);
+        Assert.True(result.IsFailure());
         Assert.NotNull(result.Error);
         Assert.Equal(Status.BadRequest, result.StatusCode);
     }
@@ -264,7 +264,7 @@ public class CreateResistanceRiskFactorHandlerTest : IClassFixture<PostgresFixtu
                     Value = null,
                 },
             }, TestContext.Current.CancellationToken);
-        Assert.True(result.IsFailure);
+        Assert.True(result.IsFailure());
         Assert.NotNull(result.Error);
         Assert.Equal(Status.BadRequest, result.StatusCode);
     }

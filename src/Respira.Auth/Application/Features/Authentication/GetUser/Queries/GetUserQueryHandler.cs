@@ -8,9 +8,9 @@ using Respira.ServiceDefaults.Dtos;
 namespace Application.Features.Authentication.GetUser.Queries
 {
     public class GetUserQueryHandler(IAuthDbContext dbContext, ILogger<GetUserQueryHandler> logger)
-        : IQueryHandler<GetUserQuery, Result<GetAuthDoctorResult>>
+        : IQueryHandler<GetUserQuery, ApiResponse<GetAuthDoctorResult>>
     {
-        public async Task<Result<GetAuthDoctorResult>> HandleAsync(
+        public async Task<ApiResponse<GetAuthDoctorResult>> HandleAsync(
             GetUserQuery query,
             CancellationToken cancellationToken = default
         )
@@ -22,14 +22,14 @@ namespace Application.Features.Authentication.GetUser.Queries
                     .FirstOrDefaultAsync(x => x.Id == query.Id, cancellationToken);
                 if (doctor is null)
                 {
-                    return Result<GetAuthDoctorResult>.Fail(
+                    return ApiResponse<GetAuthDoctorResult>.Fail(
                         "Doctor not found",
                         StatusCodes.Status404NotFound
                     );
                 }
                 else
                 {
-                    return Result<GetAuthDoctorResult>.Ok(
+                    return ApiResponse<GetAuthDoctorResult>.Ok(
                         new GetAuthDoctorResult
                         {
                             Email = doctor.Email,
@@ -44,7 +44,7 @@ namespace Application.Features.Authentication.GetUser.Queries
             catch (Exception ex)
             {
                 logger.LogError(ex, "Error retrieving doctor");
-                return Result<GetAuthDoctorResult>.Fail("Error retrieving doctor");
+                return ApiResponse<GetAuthDoctorResult>.Fail("Error retrieving doctor");
             }
         }
     }

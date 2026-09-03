@@ -4,7 +4,7 @@ using Application.Features.Shared.ManageCriterion;
 
 namespace Respira.Clinical.API.Dtos;
 
-public class CreateIcuHospitalizeCriterionRequestDto
+public record CreateIcuHospitalizeCriterionRequestDto
 {
     /// <summary>
     /// Criterion
@@ -27,7 +27,7 @@ public class CreateIcuHospitalizeCriterionRequestDto
     }
 }
 
-public class UpdateIcuHospitalizeCriterionRequestDto
+public record UpdateIcuHospitalizeCriterionRequestDto
 {
     /// <summary>
     /// Criterion
