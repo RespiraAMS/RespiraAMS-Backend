@@ -24,7 +24,7 @@ public class CreateTreatmentHandler(
             logger.LogWarning("Failed to validate diagnosis result: {Error}", validateResult.Error);
             throw new ServerException();
         }
-        
+
         // Check if data is valid
         if (!validateResult.Data!.IsValid)
         {

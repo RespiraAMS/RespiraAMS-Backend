@@ -4,8 +4,8 @@ using Asp.Versioning;
 using Domain;
 using Infrastructure;
 using Respira.Clinical.API.Middlewares;
+using Respira.ServiceDefaults.Contracts.Results;
 using Respira.ServiceDefaults.Extensions;
-using Respira.ServiceDefaults.Middlewares;
 using Respira.ServiceDefaults.Utils.OpenApiTransformers;
 using Scalar.AspNetCore;
 using Wolverine;
@@ -71,7 +71,7 @@ builder.Host.UseWolverine(opts =>
     opts.UseRabbitMqUsingNamedConnection("rabbitmq").AutoProvision();
 
     opts.ListenToRabbitQueue("validate-diagnosis-query-queue");
-    opts.PublishMessage<ValidateDiagnosisResult>().ToRabbitQueue("validate-diagnosis-result-queue");
+    opts.PublishMessage<Result<ValidateDiagnosisResult>>().ToRabbitQueue("validate-diagnosis-result-queue");
 
     opts.Durability.Mode = DurabilityMode.Balanced;
 });
@@ -80,7 +80,7 @@ var app = builder.Build();
 
 app.UseCustomErrorHandling();
 app.UseClaimsPropagation();
-// app.UseAuthorizationMiddleware(); // Comment this to deactivate auth middleware
+app.UseAuthorizationMiddleware(); // Comment this to deactivate auth middleware
 app.MapControllers();
 
 // Configure the HTTP request pipeline.

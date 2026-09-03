@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Respira.ServiceDefaults.Contracts.Results;
@@ -21,6 +22,7 @@ public sealed class Result
     /// </summary>
     public Error? Error { get; }
 
+    [JsonConstructor]
     private Result(string statusCode, Error? error)
     {
         if (Status.IsSuccess(statusCode) && error != null)
@@ -67,7 +69,7 @@ public sealed class Result
     public bool IsFailure() => !IsSuccess();
 
     /// <summary>
-    /// Build the Result object into an <code>IActionResult</code> object for API controller to return
+    /// Build the Result object into an <c>IActionResult</c> object for API controller to return
     /// </summary>
     public IActionResult ToApiResponse()
     {
@@ -123,6 +125,7 @@ public sealed class Result<T>
     /// </summary>
     public T? Data { get; }
 
+    [JsonConstructor]
     private Result(string statusCode, Error? error, T? data)
     {
         if (Status.IsSuccess(statusCode) && error != null)
@@ -171,7 +174,7 @@ public sealed class Result<T>
     public bool IsFailure() => !IsSuccess();
 
     /// <summary>
-    /// Build the Result object into an <code>IActionResult</code> object for API controller to return
+    /// Build the Result object into an <c>IActionResult</c> object for API controller to return
     /// </summary>
     public IActionResult ToApiResponse()
     {

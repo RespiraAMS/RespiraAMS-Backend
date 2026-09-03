@@ -14,6 +14,13 @@ public class AuthMiddleware(RequestDelegate next, ILogger<AuthMiddleware> logger
 
     public async Task InvokeAsync(HttpContext context)
     {
+        logger.LogDebug("Gateway headers stream down: {headers}", new
+        {
+            Id = context.Request.Headers["X-ID"],
+            Email = context.Request.Headers["X-Email"],
+            Role = context.Request.Headers["X-Role"],
+        });
+
         var path = context.Request.Path.Value;
         if (path is null)
         {

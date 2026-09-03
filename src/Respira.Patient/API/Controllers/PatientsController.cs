@@ -118,6 +118,12 @@ public class PatientsController(IMessageBus bus, ILogger<PatientsController> log
         // and valid UUID, so we just need to get the ID here
 
         var parse = Guid.TryParse(Request.Headers["X-ID"], out var doctorId);
+        logger.LogDebug("Gateway headers stream down: {headers}", new
+        {
+            Id = Request.Headers["X-ID"],
+            Email = Request.Headers["X-Email"],
+            Role = Request.Headers["X-Role"],
+        });
         logger.LogDebug("Doctor ID: {doctorId} {success}", doctorId, parse);
         var result = await bus.InvokeAsync<CreateTreatmentResult>(req.ToCommand(patientId, doctorId));
         var resp = ApiResponse<CreateTreatmentResult>.Ok(result, statusCode: StatusCodes.Status201Created);
