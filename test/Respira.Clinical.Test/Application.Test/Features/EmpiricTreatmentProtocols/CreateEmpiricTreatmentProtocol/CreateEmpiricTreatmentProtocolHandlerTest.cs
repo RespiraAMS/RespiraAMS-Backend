@@ -5,7 +5,7 @@ using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moq;
-using Respira.ServiceDefaults.Exceptions;
+using Respira.ServiceDefaults.Contracts.Results;
 
 namespace Application.Test.Features.EmpiricTreatmentProtocols.CreateEmpiricTreatmentProtocol;
 
@@ -118,8 +118,12 @@ public class CreateEmpiricTreatmentProtocolHandlerTest : IClassFixture<PostgresF
         };
 
         var result = await _handler.HandleAsync(command, TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.Equal(Status.Created, result.StatusCode);
+        Assert.NotNull(result.Data);
 
-        Assert.NotEqual(Guid.Empty, result.Id);
+        Assert.NotEqual(Guid.Empty, result.Data.Id);
 
         // Verify through a fresh context so the change tracker cannot mask a failed commit
         await using var freshContext = new AppDbContext(_options);
@@ -127,7 +131,7 @@ public class CreateEmpiricTreatmentProtocolHandlerTest : IClassFixture<PostgresF
             .Include(p => p.OtherCriteria)
             .Include(p => p.Medicines)
             .Include(p => p.SpecialInfection)
-            .SingleAsync(p => p.Id == result.Id, TestContext.Current.CancellationToken);
+            .SingleAsync(p => p.Id == result.Data.Id, TestContext.Current.CancellationToken);
 
         Assert.Equal(command.Name, saved.Name);
         Assert.Equal(command.Issuer, saved.Issuer);
@@ -172,15 +176,19 @@ public class CreateEmpiricTreatmentProtocolHandlerTest : IClassFixture<PostgresF
         };
 
         var result = await _handler.HandleAsync(command, TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.Equal(Status.Created, result.StatusCode);
+        Assert.NotNull(result.Data);
 
-        Assert.NotEqual(Guid.Empty, result.Id);
+        Assert.NotEqual(Guid.Empty, result.Data.Id);
 
         await using var freshContext = new AppDbContext(_options);
         var saved = await freshContext.EmpiricTreatmentProtocols
             .Include(p => p.OtherCriteria)
             .Include(p => p.Medicines)
             .Include(p => p.SpecialInfection)
-            .SingleAsync(p => p.Id == result.Id, TestContext.Current.CancellationToken);
+            .SingleAsync(p => p.Id == result.Data.Id, TestContext.Current.CancellationToken);
 
         Assert.Equal(_diseaseId, saved.DiseaseId);
         Assert.Null(saved.SpecialInfectionId);
@@ -201,7 +209,7 @@ public class CreateEmpiricTreatmentProtocolHandlerTest : IClassFixture<PostgresF
 
         var unknownDiseaseId = Guid.CreateVersion7();
 
-        await Assert.ThrowsAsync<BadRequestException>(() => _handler.HandleAsync(
+        var result = await _handler.HandleAsync(
             new CreateEmpiricTreatmentProtocolCommand
             {
                 Name = "WHO 2024 CAP Guidance",
@@ -214,7 +222,10 @@ public class CreateEmpiricTreatmentProtocolHandlerTest : IClassFixture<PostgresF
                 SpecialInfectionId = null,
                 OtherCriteriaIds = [],
                 MedicineIds = [_antibioticId],
-            }, TestContext.Current.CancellationToken));
+            }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsFailure);
+        Assert.NotNull(result.Error);
+        Assert.Equal(Status.BadRequest, result.StatusCode);
 
         // Nothing must be created when the disease does not exist
         Assert.Empty(await _context.EmpiricTreatmentProtocols
@@ -228,7 +239,7 @@ public class CreateEmpiricTreatmentProtocolHandlerTest : IClassFixture<PostgresF
 
         var unknownPathogenId = Guid.CreateVersion7();
 
-        await Assert.ThrowsAsync<BadRequestException>(() => _handler.HandleAsync(
+        var result = await _handler.HandleAsync(
             new CreateEmpiricTreatmentProtocolCommand
             {
                 Name = "WHO 2024 CAP Guidance",
@@ -241,7 +252,10 @@ public class CreateEmpiricTreatmentProtocolHandlerTest : IClassFixture<PostgresF
                 SpecialInfectionId = unknownPathogenId,
                 OtherCriteriaIds = [],
                 MedicineIds = [_antibioticId],
-            }, TestContext.Current.CancellationToken));
+            }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsFailure);
+        Assert.NotNull(result.Error);
+        Assert.Equal(Status.BadRequest, result.StatusCode);
 
         Assert.Empty(await _context.EmpiricTreatmentProtocols
             .ToListAsync(TestContext.Current.CancellationToken));
@@ -254,7 +268,7 @@ public class CreateEmpiricTreatmentProtocolHandlerTest : IClassFixture<PostgresF
 
         var unknownCriterionId = Guid.CreateVersion7();
 
-        await Assert.ThrowsAsync<BadRequestException>(() => _handler.HandleAsync(
+        var result = await _handler.HandleAsync(
             new CreateEmpiricTreatmentProtocolCommand
             {
                 Name = "WHO 2024 CAP Guidance",
@@ -267,7 +281,10 @@ public class CreateEmpiricTreatmentProtocolHandlerTest : IClassFixture<PostgresF
                 SpecialInfectionId = null,
                 OtherCriteriaIds = [_criterionId, unknownCriterionId],
                 MedicineIds = [_antibioticId],
-            }, TestContext.Current.CancellationToken));
+            }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsFailure);
+        Assert.NotNull(result.Error);
+        Assert.Equal(Status.BadRequest, result.StatusCode);
 
         Assert.Empty(await _context.EmpiricTreatmentProtocols
             .ToListAsync(TestContext.Current.CancellationToken));
@@ -280,7 +297,7 @@ public class CreateEmpiricTreatmentProtocolHandlerTest : IClassFixture<PostgresF
 
         var unknownMedicineId = Guid.CreateVersion7();
 
-        await Assert.ThrowsAsync<BadRequestException>(() => _handler.HandleAsync(
+        var result = await _handler.HandleAsync(
             new CreateEmpiricTreatmentProtocolCommand
             {
                 Name = "WHO 2024 CAP Guidance",
@@ -293,7 +310,10 @@ public class CreateEmpiricTreatmentProtocolHandlerTest : IClassFixture<PostgresF
                 SpecialInfectionId = null,
                 OtherCriteriaIds = [_criterionId],
                 MedicineIds = [_antibioticId, unknownMedicineId],
-            }, TestContext.Current.CancellationToken));
+            }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsFailure);
+        Assert.NotNull(result.Error);
+        Assert.Equal(Status.BadRequest, result.StatusCode);
 
         Assert.Empty(await _context.EmpiricTreatmentProtocols
             .ToListAsync(TestContext.Current.CancellationToken));

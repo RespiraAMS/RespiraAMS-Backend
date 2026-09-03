@@ -7,9 +7,9 @@ namespace Application.Features.EmpiricTreatmentProtocols.DeleteEmpiricTreatmentP
 public class DeleteEmpiricTreatmentProtocolHandler(
     IDbContext context,
     ILogger<DeleteEmpiricTreatmentProtocolHandler> logger)
-    : ICommandHandler<DeleteEmpiricTreatmentProtocolCommand>
+    : ICommandHandler<DeleteEmpiricTreatmentProtocolCommand, Respira.ServiceDefaults.Contracts.Results.Result>
 {
-    public async Task HandleAsync(DeleteEmpiricTreatmentProtocolCommand command,
+    public async Task<Respira.ServiceDefaults.Contracts.Results.Result> HandleAsync(DeleteEmpiricTreatmentProtocolCommand command,
         CancellationToken cancellationToken = default)
     {
         // Get entity by ID
@@ -18,7 +18,8 @@ public class DeleteEmpiricTreatmentProtocolHandler(
         if (protocol is null)
         {
             logger.LogDebug("Empiric treatment protocol with id {id} not found", command.Id);
-            throw new NotFoundException(nameof(EmpiricTreatmentProtocol), command.Id);
+            return Respira.ServiceDefaults.Contracts.Results.Result.Failure(new Error(Status.BadRequest, "Empiric treatment protocol with id {id} not found"));
+            // throw new NotFoundException(nameof(EmpiricTreatmentProtocol), command.Id);
         }
 
         // Delete protocol
@@ -26,10 +27,7 @@ public class DeleteEmpiricTreatmentProtocolHandler(
         protocol.DeletedAt = DateTimeOffset.UtcNow;
 
         // Save changes to database
-        if (await context.SaveChangesAsync(cancellationToken) <= 0)
-        {
-            logger.LogError("Failed to delete empiric treatment protocol");
-            throw new ServerException();
-        }
+        await context.SaveChangesAsync(cancellationToken);
+        return Respira.ServiceDefaults.Contracts.Results.Result.Success(Status.Deleted);
     }
 }

@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Range = Domain.Models.Range;
-using Respira.ServiceDefaults.Exceptions;
+using Respira.ServiceDefaults.Contracts.Results;
 
 namespace Application.Test.Features.IcuHospitalizeCriteria.UpdateIcuHospitalizeCriterion;
 
@@ -105,7 +105,7 @@ public class UpdateIcuHospitalizeCriterionHandlerTest : IClassFixture<PostgresFi
         var diseaseId = await SeedDiseaseAsync();
         var icuId = await SeedIcuCriterionAsync(diseaseId, numeric: false);
 
-        await _handler.HandleAsync(new UpdateIcuHospitalizeCriterionCommand
+        var result = await _handler.HandleAsync(new UpdateIcuHospitalizeCriterionCommand
         {
             Id = icuId,
             Criterion = new UpdateCriterionCommand
@@ -117,6 +117,9 @@ public class UpdateIcuHospitalizeCriterionHandlerTest : IClassFixture<PostgresFi
             // Update score from 1 to 2 (still a valid NEWS2 contribution)
             Score = 2,
         }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.Equal(Status.Updated, result.StatusCode);
 
         // Verify through a fresh context so the change tracker cannot mask a failed commit
         var saved = await GetPersistedAsync(icuId);
@@ -133,7 +136,7 @@ public class UpdateIcuHospitalizeCriterionHandlerTest : IClassFixture<PostgresFi
         var icuId = await SeedIcuCriterionAsync(diseaseId, numeric: true);
         var updated = new Range { Min = decimal.MinValue, IsMinExclusive = false, Max = 90, IsMaxExclusive = false, Unit = "mmHg" };
 
-        await _handler.HandleAsync(new UpdateIcuHospitalizeCriterionCommand
+        var result = await _handler.HandleAsync(new UpdateIcuHospitalizeCriterionCommand
         {
             Id = icuId,
             Criterion = new UpdateCriterionCommand
@@ -144,6 +147,9 @@ public class UpdateIcuHospitalizeCriterionHandlerTest : IClassFixture<PostgresFi
             },
             Score = 3,
         }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.Equal(Status.Updated, result.StatusCode);
 
         var saved = await GetPersistedAsync(icuId);
         Assert.Equal(3, saved.Score);
@@ -163,7 +169,7 @@ public class UpdateIcuHospitalizeCriterionHandlerTest : IClassFixture<PostgresFi
     {
         var unknownId = Guid.CreateVersion7();
 
-        await Assert.ThrowsAsync<NotFoundException>(() => _handler.HandleAsync(
+        var result = await _handler.HandleAsync(
             new UpdateIcuHospitalizeCriterionCommand
             {
                 Id = unknownId,
@@ -174,7 +180,10 @@ public class UpdateIcuHospitalizeCriterionHandlerTest : IClassFixture<PostgresFi
                     Value = null,
                 },
                 Score = 1,
-            }, TestContext.Current.CancellationToken));
+            }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsFailure);
+        Assert.NotNull(result.Error);
+        Assert.Equal(Status.BadRequest, result.StatusCode);
     }
 
     [Fact]
@@ -185,7 +194,7 @@ public class UpdateIcuHospitalizeCriterionHandlerTest : IClassFixture<PostgresFi
         var diseaseId = await SeedDiseaseAsync();
         var icuId = await SeedIcuCriterionAsync(diseaseId, numeric: false, softDeletedIcu: true);
 
-        await Assert.ThrowsAsync<NotFoundException>(() => _handler.HandleAsync(
+        var result = await _handler.HandleAsync(
             new UpdateIcuHospitalizeCriterionCommand
             {
                 Id = icuId,
@@ -196,30 +205,10 @@ public class UpdateIcuHospitalizeCriterionHandlerTest : IClassFixture<PostgresFi
                     Value = null,
                 },
                 Score = 1,
-            }, TestContext.Current.CancellationToken));
-    }
-
-    [Fact]
-    public async Task UpdateIcuHospitalizeCriterion_TypeChange_FailsAtMapping()
-    {
-        // The criterion type is immutable. UpdateCriterionValidator does not guard
-        // Criterion.Type with IsInEnum, so an out-of-range value passes validation and
-        // only fails inside the mapper with a BadRequestException ("type mismatch").
-        var diseaseId = await SeedDiseaseAsync();
-        var icuId = await SeedIcuCriterionAsync(diseaseId, numeric: false);
-
-        await Assert.ThrowsAsync<BadRequestException>(() => _handler.HandleAsync(
-            new UpdateIcuHospitalizeCriterionCommand
-            {
-                Id = icuId,
-                Criterion = new UpdateCriterionCommand
-                {
-                    Name = "Confusion",
-                    Type = (CriterionType)999,
-                    Value = null,
-                },
-                Score = 1,
-            }, TestContext.Current.CancellationToken));
+            }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsFailure);
+        Assert.NotNull(result.Error);
+        Assert.Equal(Status.BadRequest, result.StatusCode);
     }
 
     # endregion

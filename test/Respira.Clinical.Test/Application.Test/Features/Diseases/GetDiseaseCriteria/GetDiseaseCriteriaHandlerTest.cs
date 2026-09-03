@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Range = Domain.Models.Range;
-using Respira.ServiceDefaults.Exceptions;
+using Respira.ServiceDefaults.Contracts.Results;
 
 namespace Application.Test.Features.Diseases.GetDiseaseCriteria;
 
@@ -164,24 +164,28 @@ public class GetDiseaseCriteriaHandlerTest : IClassFixture<PostgresFixture>, IAs
         var result = await _handler.HandleAsync(
             new GetDiseaseCriteriaQuery { Id = disease.Id },
             TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.Equal(Status.Success, result.StatusCode);
+        Assert.NotNull(result.Data);
 
         // Business rule: ICU hospitalize criteria are projected through the criterion mapper
-        Assert.Equal(2, result.IcuHospitalizeCriteria.Count());
-        Assert.Contains(result.IcuHospitalizeCriteria, x => x.Id == icuA.Id && x.Name == "Prior history of COPD");
-        Assert.Contains(result.IcuHospitalizeCriteria, x => x.Id == icuB.Id && x.Name == "Age over 65");
-        Assert.All(result.IcuHospitalizeCriteria, x =>
+        Assert.Equal(2, result.Data.IcuHospitalizeCriteria.Count());
+        Assert.Contains(result.Data.IcuHospitalizeCriteria, x => x.Id == icuA.Id && x.Name == "Prior history of COPD");
+        Assert.Contains(result.Data.IcuHospitalizeCriteria, x => x.Id == icuB.Id && x.Name == "Age over 65");
+        Assert.All(result.Data.IcuHospitalizeCriteria, x =>
         {
             Assert.Equal(CriterionType.Boolean, x.Type);
             Assert.Null(x.Value);
         });
 
         // Business rule: resistance risk factor criteria are projected
-        var riskItem = Assert.Single(result.ResistanceRiskFactorCriteria);
+        var riskItem = Assert.Single(result.Data.ResistanceRiskFactorCriteria);
         Assert.Equal(risk.Id, riskItem.Id);
         Assert.Equal("Prior antibiotic use within 90 days", riskItem.Name);
 
         // Business rule: secondary "other" criteria unique to treatment protocols are projected
-        var otherItem = Assert.Single(result.OtherCriteria);
+        var otherItem = Assert.Single(result.Data.OtherCriteria);
         Assert.Equal(other.Id, otherItem.Id);
         Assert.Equal("Immunocompromised status", otherItem.Name);
     }
@@ -201,11 +205,15 @@ public class GetDiseaseCriteriaHandlerTest : IClassFixture<PostgresFixture>, IAs
         var result = await _handler.HandleAsync(
             new GetDiseaseCriteriaQuery { Id = disease.Id },
             TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.Equal(Status.Success, result.StatusCode);
+        Assert.NotNull(result.Data);
 
         // Business rule: a criterion already present in ICU/resistance categories is
         // deduplicated out of the OtherCriteria collection
-        Assert.Contains(result.IcuHospitalizeCriteria, x => x.Id == shared.Id);
-        Assert.Empty(result.OtherCriteria);
+        Assert.Contains(result.Data.IcuHospitalizeCriteria, x => x.Id == shared.Id);
+        Assert.Empty(result.Data.OtherCriteria);
     }
 
     [Fact]
@@ -222,9 +230,13 @@ public class GetDiseaseCriteriaHandlerTest : IClassFixture<PostgresFixture>, IAs
         var result = await _handler.HandleAsync(
             new GetDiseaseCriteriaQuery { Id = disease.Id },
             TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.Equal(Status.Success, result.StatusCode);
+        Assert.NotNull(result.Data);
 
         // Business rule: OtherCriteria is de-duplicated by criterion Id across protocols
-        var item = Assert.Single(result.OtherCriteria);
+        var item = Assert.Single(result.Data.OtherCriteria);
         Assert.Equal(other.Id, item.Id);
     }
 
@@ -241,8 +253,12 @@ public class GetDiseaseCriteriaHandlerTest : IClassFixture<PostgresFixture>, IAs
         var result = await _handler.HandleAsync(
             new GetDiseaseCriteriaQuery { Id = disease.Id },
             TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.Equal(Status.Success, result.StatusCode);
+        Assert.NotNull(result.Data);
 
-        var item = Assert.Single(result.IcuHospitalizeCriteria);
+        var item = Assert.Single(result.Data.IcuHospitalizeCriteria);
         Assert.Equal(numeric.Id, item.Id);
         Assert.Equal(CriterionType.Numeric, item.Type);
         Assert.NotNull(item.Value);
@@ -260,11 +276,15 @@ public class GetDiseaseCriteriaHandlerTest : IClassFixture<PostgresFixture>, IAs
         var result = await _handler.HandleAsync(
             new GetDiseaseCriteriaQuery { Id = disease.Id },
             TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.Equal(Status.Success, result.StatusCode);
+        Assert.NotNull(result.Data);
 
         // Business rule: a disease without any associated criteria yields empty collections
-        Assert.Empty(result.IcuHospitalizeCriteria);
-        Assert.Empty(result.ResistanceRiskFactorCriteria);
-        Assert.Empty(result.OtherCriteria);
+        Assert.Empty(result.Data.IcuHospitalizeCriteria);
+        Assert.Empty(result.Data.ResistanceRiskFactorCriteria);
+        Assert.Empty(result.Data.OtherCriteria);
     }
 
     # endregion
@@ -277,9 +297,13 @@ public class GetDiseaseCriteriaHandlerTest : IClassFixture<PostgresFixture>, IAs
         await CleanupAsync();
         var unknownId = Guid.CreateVersion7();
 
-        await Assert.ThrowsAsync<NotFoundException>(() => _handler.HandleAsync(
+        var result = await _handler.HandleAsync(
             new GetDiseaseCriteriaQuery { Id = unknownId },
-            TestContext.Current.CancellationToken));
+            TestContext.Current.CancellationToken);
+        Assert.True(result.IsFailure);
+        Assert.NotNull(result.Error);
+        Assert.Equal(Status.BadRequest, result.StatusCode);
+        Assert.Null(result.Data);
     }
 
     [Fact]
@@ -292,9 +316,13 @@ public class GetDiseaseCriteriaHandlerTest : IClassFixture<PostgresFixture>, IAs
         await _context.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         // Business rule: a soft-deleted disease is hidden by the global query filter
-        await Assert.ThrowsAsync<NotFoundException>(() => _handler.HandleAsync(
+        var result = await _handler.HandleAsync(
             new GetDiseaseCriteriaQuery { Id = disease.Id },
-            TestContext.Current.CancellationToken));
+            TestContext.Current.CancellationToken);
+        Assert.True(result.IsFailure);
+        Assert.NotNull(result.Error);
+        Assert.Equal(Status.BadRequest, result.StatusCode);
+        Assert.Null(result.Data);
     }
 
     # endregion

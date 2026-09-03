@@ -8,10 +8,9 @@ public class CreateAntibioticHandler(
     IDbContext context,
     ICreateMapper<Antibiotic, CreateAntibioticCommand> mapper,
     ILogger<CreateAntibioticHandler> logger)
-    : ICommandHandler<CreateAntibioticCommand, CreateAntibioticResult>
+    : ICommandHandler<CreateAntibioticCommand, Respira.ServiceDefaults.Contracts.Results.Result<CreateAntibioticResult>>
 {
-    public async Task<CreateAntibioticResult> HandleAsync(CreateAntibioticCommand command,
-        CancellationToken cancellationToken = default)
+    public async Task<Respira.ServiceDefaults.Contracts.Results.Result<CreateAntibioticResult>> HandleAsync(CreateAntibioticCommand command, CancellationToken cancellationToken = default)
     {
         // Check if antibiotic group exists
         var group = await context.AntibioticGroups
@@ -19,7 +18,8 @@ public class CreateAntibioticHandler(
         if (group is null)
         {
             logger.LogDebug("Antibiotic group ID not found for antibiotic group: {Id}", command.AntibioticGroupId);
-            throw new BadRequestException("Antibiotic group ID not exists");
+            return Respira.ServiceDefaults.Contracts.Results.Result<CreateAntibioticResult>.Failure(new Error(Status.BadRequest, "Antibiotic group ID not exists"));
+            // throw new BadRequestException("Antibiotic group ID not exists");
         }
 
         // Map command to model
@@ -27,12 +27,7 @@ public class CreateAntibioticHandler(
 
         // Save changes to database
         await context.Antibiotics.AddAsync(antibiotic, cancellationToken);
-        if (await context.SaveChangesAsync(cancellationToken) <= 0)
-        {
-            logger.LogError("Failed to save antibiotic");
-            throw new ServerException();
-        }
-
-        return new CreateAntibioticResult(antibiotic.Id);
+        await context.SaveChangesAsync(cancellationToken);
+        return Respira.ServiceDefaults.Contracts.Results.Result<CreateAntibioticResult>.Success(Status.Created, new CreateAntibioticResult(antibiotic.Id));
     }
 }

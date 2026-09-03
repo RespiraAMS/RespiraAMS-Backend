@@ -9,9 +9,9 @@ public class AddNewCriteriaHandler(
     IDbContext context,
     ICreateMapper<Criterion, CreateCriterionCommand> mapper,
     ILogger<AddNewCriteriaHandler> logger)
-    : ICommandHandler<AddNewCriteriaCommand>
+    : ICommandHandler<AddNewCriteriaCommand, Respira.ServiceDefaults.Contracts.Results.Result>
 {
-    public async Task HandleAsync(AddNewCriteriaCommand command, CancellationToken cancellationToken = default)
+    public async Task<Respira.ServiceDefaults.Contracts.Results.Result> HandleAsync(AddNewCriteriaCommand command, CancellationToken cancellationToken = default)
     {
         // Get treatment protocol by ID
         var protocol = await context.EmpiricTreatmentProtocols
@@ -20,7 +20,8 @@ public class AddNewCriteriaHandler(
         if (protocol is null)
         {
             logger.LogWarning("Empiric treatment protocol ID not found");
-            throw new NotFoundException(nameof(EmpiricTreatmentProtocol), command.Id);
+            return Respira.ServiceDefaults.Contracts.Results.Result.Failure(new Error(Status.BadRequest, "Empiric treatment protocol ID not found"));
+            // throw new NotFoundException(nameof(EmpiricTreatmentProtocol), command.Id);
         }
 
         // Map request to models
@@ -36,5 +37,6 @@ public class AddNewCriteriaHandler(
             // Since criteria list is already tracked by EF Core, we don't need to use stub
             protocol.OtherCriteria.AddRange(criteria);
         }, cancellationToken);
+        return Respira.ServiceDefaults.Contracts.Results.Result.Success(Status.Created);
     }
 }

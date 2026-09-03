@@ -8,9 +8,9 @@ public class UpdateAntibiogramHandler(
     IDbContext context,
     IUpdateMapper<Antibiogram, UpdateAntibiogramCommand> mapper,
     ILogger<UpdateAntibiogramHandler> logger)
-    : ICommandHandler<UpdateAntibiogramCommand>
+    : ICommandHandler<UpdateAntibiogramCommand, Respira.ServiceDefaults.Contracts.Results.Result>
 {
-    public async Task HandleAsync(UpdateAntibiogramCommand command, CancellationToken cancellationToken = default)
+    public async Task<Respira.ServiceDefaults.Contracts.Results.Result> HandleAsync(UpdateAntibiogramCommand command, CancellationToken cancellationToken = default)
     {
         // Check if all antibiotics exists
         var ids = command.MicIds
@@ -22,7 +22,8 @@ public class UpdateAntibiogramHandler(
         if (!allAntibioticsExist)
         {
             logger.LogDebug("Not all antibiotic IDs exist");
-            throw new BadRequestException("Not all antibiotic IDs exist");
+            return Respira.ServiceDefaults.Contracts.Results.Result.Failure(new Error(Status.BadRequest, "Not all antibiotic IDs exist"));
+            // throw new BadRequestException("Not all antibiotic IDs exist");
         }
 
         // Get entity by ID
@@ -34,7 +35,8 @@ public class UpdateAntibiogramHandler(
         if (antibiogram is null)
         {
             logger.LogDebug("Antibiogram not found: {Id}", command.Id);
-            throw new NotFoundException(nameof(Antibiogram), command.Id);
+            return Respira.ServiceDefaults.Contracts.Results.Result.Failure(new Error(Status.BadRequest, "Antibiogram not found"));
+            // throw new NotFoundException(nameof(Antibiogram), command.Id);
         }
 
         // Map from command to model
@@ -44,10 +46,7 @@ public class UpdateAntibiogramHandler(
         context.UpdateRelations(antibiogram.SecondPriorityMedicines, command.SecondPriorityMedicineIds);
 
         // Save changes to database
-        if (await context.SaveChangesAsync(cancellationToken) <= 0)
-        {
-            logger.LogError("Failed to save antibiogram");
-            throw new ServerException();
-        }
+        await context.SaveChangesAsync(cancellationToken);
+        return Respira.ServiceDefaults.Contracts.Results.Result.Success(Status.Updated);
     }
 }

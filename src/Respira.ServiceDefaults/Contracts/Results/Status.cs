@@ -2,6 +2,20 @@ using Microsoft.AspNetCore.Http;
 
 namespace Respira.ServiceDefaults.Contracts.Results;
 
+/*
+ * Rule of status code in this application context:
+ * 1. For resource not found (database not exists, cache miss,...), there are 2 cases:
+ * a. If you try to read that resource, it would be a RESOUCE-NOT-FOUND error
+ * b. If you try to do some operation on that resource, it would be a BAD-REQUEST error
+ * (trying to do something with non existing data is more suited with BAD-REQUEST than
+ * RESOURCE-NOT-FOUND)
+ * c. If you try to read sub resources of a resource, and that parent resource is not found,
+ * it would be a BAD-REQUEST error. For example, let's say that you want to read a specific
+ * treatment of a specific patient, you would have to provide 2 IDs, patient and treatment:
+ * - If the patient ID exists, treatment don't, then that a RESOUCE-NOT-FOUND error
+ * - If the patient ID don't even exists, then that a BAD-REQUEST error.
+ */
+
 public static class Status
 {
     #region STATUS CODES FOR NORMAL FLOWS

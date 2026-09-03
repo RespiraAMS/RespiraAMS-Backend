@@ -3,6 +3,7 @@ using Application.Features.AntibioticGroups.GetAntibioticGroups;
 using Domain.Models;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
+using Respira.ServiceDefaults.Contracts.Results;
 
 namespace Application.Test.Features.AntibioticGroups.GetAntibioticGroups;
 
@@ -58,18 +59,22 @@ public class GetAntibioticGroupsHandlerTest : IClassFixture<PostgresFixture>, IA
 
         var result = await _handler.HandleAsync(new GetAntibioticGroupsQuery(),
             TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.Equal(Status.Success, result.StatusCode);
+        Assert.NotNull(result.Data);
 
         Assert.Equal(
         [
             "Aminoglycosides",
             "Beta-lactams",
             "Macrolides",
-        ], [.. result.AntibioticGroups.Select(x => x.Name)]);
+        ], [.. result.Data.AntibioticGroups.Select(x => x.Name)]);
 
         // The projection must keep the ID together with the name
-        var betaLactams = Assert.Single(result.AntibioticGroups, x => x.Name == "Beta-lactams");
+        var betaLactams = Assert.Single(result.Data.AntibioticGroups, x => x.Name == "Beta-lactams");
         Assert.Equal(idByName["Beta-lactams"], betaLactams.Id);
-        Assert.All(result.AntibioticGroups, x => Assert.NotEqual(Guid.Empty, x.Id));
+        Assert.All(result.Data.AntibioticGroups, x => Assert.NotEqual(Guid.Empty, x.Id));
     }
 
     [Fact]
@@ -94,8 +99,12 @@ public class GetAntibioticGroupsHandlerTest : IClassFixture<PostgresFixture>, IA
 
         var result = await _handler.HandleAsync(new GetAntibioticGroupsQuery(),
             TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.Equal(Status.Success, result.StatusCode);
+        Assert.NotNull(result.Data);
 
-        var item = Assert.Single(result.AntibioticGroups);
+        var item = Assert.Single(result.Data.AntibioticGroups);
         Assert.Equal("Glycopeptides", item.Name);
     }
 
@@ -106,8 +115,12 @@ public class GetAntibioticGroupsHandlerTest : IClassFixture<PostgresFixture>, IA
     {
         var result = await _handler.HandleAsync(new GetAntibioticGroupsQuery(),
             TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.Equal(Status.Success, result.StatusCode);
+        Assert.NotNull(result.Data);
 
-        Assert.Empty(result.AntibioticGroups);
+        Assert.Empty(result.Data.AntibioticGroups);
     }
 
     # endregion

@@ -6,7 +6,7 @@ using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moq;
-using Respira.ServiceDefaults.Exceptions;
+using Respira.ServiceDefaults.Contracts.Results;
 
 namespace Application.Test.Features.Antibiogram.CreateAntibiogram;
 
@@ -122,8 +122,12 @@ public class CreateAntibiogramHandlerTest : IClassFixture<PostgresFixture>, IAsy
             FirstPriorityMedicineIds = [antibioticIds[1]],
             SecondPriorityMedicineIds = [antibioticIds[2]],
         }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.NotNull(result.Data);
+        Assert.Equal(Status.Created, result.StatusCode);
 
-        Assert.NotEqual(Guid.Empty, result.Id);
+        Assert.NotEqual(Guid.Empty, result.Data.Id);
 
         // Verify through a fresh context so the change tracker cannot mask a failed commit
         await using var freshContext = new AppDbContext(_options);
@@ -131,7 +135,7 @@ public class CreateAntibiogramHandlerTest : IClassFixture<PostgresFixture>, IAsy
             .Include(x => x.Mics)
             .Include(x => x.FirstPriorityMedicines)
             .Include(x => x.SecondPriorityMedicines)
-            .SingleAsync(x => x.Id == result.Id, TestContext.Current.CancellationToken);
+            .SingleAsync(x => x.Id == result.Data.Id, TestContext.Current.CancellationToken);
 
         Assert.Equal(pathogenId, saved.PathogenId);
         Assert.Equal(MinimumInhibitoryConcentration.Resistance, saved.MicLevel);
@@ -153,13 +157,17 @@ public class CreateAntibiogramHandlerTest : IClassFixture<PostgresFixture>, IAsy
             FirstPriorityMedicineIds = [antibioticIds[2], antibioticIds[3]],
             SecondPriorityMedicineIds = [antibioticIds[4]],
         }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.NotNull(result.Data);
+        Assert.Equal(Status.Created, result.StatusCode);
 
         await using var freshContext = new AppDbContext(_options);
         var saved = await freshContext.Antibiograms
             .Include(x => x.Mics)
             .Include(x => x.FirstPriorityMedicines)
             .Include(x => x.SecondPriorityMedicines)
-            .SingleAsync(x => x.Id == result.Id, TestContext.Current.CancellationToken);
+            .SingleAsync(x => x.Id == result.Data.Id, TestContext.Current.CancellationToken);
 
         Assert.Equal(2, saved.Mics.Count);
         Assert.Equal(2, saved.FirstPriorityMedicines.Count);
@@ -167,12 +175,12 @@ public class CreateAntibiogramHandlerTest : IClassFixture<PostgresFixture>, IAsy
     }
 
     [Fact]
-    public async Task CreateAntibiogram_DuplicateAntibioticAcrossLists_Fail()
+    public async Task CreateAntibiogram_DuplicateAntibioticAcrossLists_Success()
     {
         var (pathogenId, antibioticIds) = await SeedAsync(antibioticCount: 3);
 
         // The same antibiotic appears as MIC and as first priority
-        await _handler.HandleAsync(
+        var result = await _handler.HandleAsync(
             new CreateAntibiogramCommand
             {
                 PathogenId = pathogenId,
@@ -181,6 +189,10 @@ public class CreateAntibiogramHandlerTest : IClassFixture<PostgresFixture>, IAsy
                 FirstPriorityMedicineIds = [antibioticIds[0]],
                 SecondPriorityMedicineIds = [antibioticIds[2]],
             }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.NotNull(result.Data);
+        Assert.Equal(Status.Created, result.StatusCode);
 
         Assert.Equal(1, await _context.Antibiograms.CountAsync(TestContext.Current.CancellationToken));
     }
@@ -195,7 +207,7 @@ public class CreateAntibiogramHandlerTest : IClassFixture<PostgresFixture>, IAsy
     {
         var unknownId = Guid.CreateVersion7();
 
-        await Assert.ThrowsAsync<BadRequestException>(() => _handler.HandleAsync(
+        var result = await _handler.HandleAsync(
             new CreateAntibiogramCommand
             {
                 PathogenId = unknownId,
@@ -203,7 +215,10 @@ public class CreateAntibiogramHandlerTest : IClassFixture<PostgresFixture>, IAsy
                 MicIds = [Guid.CreateVersion7()],
                 FirstPriorityMedicineIds = [Guid.CreateVersion7()],
                 SecondPriorityMedicineIds = [Guid.CreateVersion7()],
-            }, TestContext.Current.CancellationToken));
+            }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsFailure);
+        Assert.NotNull(result.Error);
+        Assert.Equal(Status.BadRequest, result.StatusCode);
 
         Assert.Equal(0, await _context.Antibiograms.CountAsync(TestContext.Current.CancellationToken));
     }
@@ -215,7 +230,7 @@ public class CreateAntibiogramHandlerTest : IClassFixture<PostgresFixture>, IAsy
         // must be rejected just like an unknown pathogen
         var (deletedPathogenId, _) = await SeedAsync(antibioticCount: 1, softDeletedPathogen: true);
 
-        await Assert.ThrowsAsync<BadRequestException>(() => _handler.HandleAsync(
+        var result = await _handler.HandleAsync(
             new CreateAntibiogramCommand
             {
                 PathogenId = deletedPathogenId,
@@ -223,7 +238,10 @@ public class CreateAntibiogramHandlerTest : IClassFixture<PostgresFixture>, IAsy
                 MicIds = [Guid.CreateVersion7()],
                 FirstPriorityMedicineIds = [Guid.CreateVersion7()],
                 SecondPriorityMedicineIds = [Guid.CreateVersion7()],
-            }, TestContext.Current.CancellationToken));
+            }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsFailure);
+        Assert.NotNull(result.Error);
+        Assert.Equal(Status.BadRequest, result.StatusCode);
     }
 
     [Fact]
@@ -232,7 +250,7 @@ public class CreateAntibiogramHandlerTest : IClassFixture<PostgresFixture>, IAsy
         var (pathogenId, antibioticIds) = await SeedAsync(antibioticCount: 3);
         var unknownId = Guid.CreateVersion7();
 
-        await Assert.ThrowsAsync<BadRequestException>(() => _handler.HandleAsync(
+        var result = await _handler.HandleAsync(
             new CreateAntibiogramCommand
             {
                 PathogenId = pathogenId,
@@ -240,7 +258,10 @@ public class CreateAntibiogramHandlerTest : IClassFixture<PostgresFixture>, IAsy
                 MicIds = [antibioticIds[0], unknownId],
                 FirstPriorityMedicineIds = [antibioticIds[1]],
                 SecondPriorityMedicineIds = [antibioticIds[2]],
-            }, TestContext.Current.CancellationToken));
+            }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsFailure);
+        Assert.NotNull(result.Error);
+        Assert.Equal(Status.BadRequest, result.StatusCode);
 
         // Nothing must be created when any referenced antibiotic does not exist
         Assert.Equal(0, await _context.Antibiograms.CountAsync(TestContext.Current.CancellationToken));
@@ -254,7 +275,7 @@ public class CreateAntibiogramHandlerTest : IClassFixture<PostgresFixture>, IAsy
         var (pathogenId, antibioticIds) = await SeedAsync(
             antibioticCount: 3, softDeletedFirstAntibiotic: true);
 
-        await Assert.ThrowsAsync<BadRequestException>(() => _handler.HandleAsync(
+        var result = await _handler.HandleAsync(
             new CreateAntibiogramCommand
             {
                 PathogenId = pathogenId,
@@ -262,7 +283,10 @@ public class CreateAntibiogramHandlerTest : IClassFixture<PostgresFixture>, IAsy
                 MicIds = [antibioticIds[0]],
                 FirstPriorityMedicineIds = [antibioticIds[1]],
                 SecondPriorityMedicineIds = [antibioticIds[2]],
-            }, TestContext.Current.CancellationToken));
+            }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsFailure);
+        Assert.NotNull(result.Error);
+        Assert.Equal(Status.BadRequest, result.StatusCode);
 
         Assert.Equal(0, await _context.Antibiograms.CountAsync(TestContext.Current.CancellationToken));
     }

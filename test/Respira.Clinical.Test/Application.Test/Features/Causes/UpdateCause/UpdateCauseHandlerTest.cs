@@ -6,7 +6,7 @@ using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moq;
-using Respira.ServiceDefaults.Exceptions;
+using Respira.ServiceDefaults.Contracts.Results;
 
 namespace Application.Test.Features.Causes.UpdateCause;
 
@@ -135,12 +135,15 @@ public class UpdateCauseHandlerTest : IClassFixture<PostgresFixture>, IAsyncLife
         var target = causes[0];
         var updatedAtBefore = target.UpdatedAt;
 
-        await _handler.HandleAsync(new UpdateCauseCommand
+        var result = await _handler.HandleAsync(new UpdateCauseCommand
         {
             Id = target.Id,
             Severity = Severity.Moderate,
             TreatmentSite = TreatmentSite.Inpatient,
         }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.Equal(Status.Updated, result.StatusCode);
 
         // Verify through a fresh context so the change tracker cannot mask a failed commit
         await using var freshContext = new AppDbContext(_options);
@@ -175,12 +178,15 @@ public class UpdateCauseHandlerTest : IClassFixture<PostgresFixture>, IAsyncLife
 
         // Update the second pair's cause onto values equal to the first pair's
         // cause - allowed because they belong to different disease+pathogen pairs
-        await _handler.HandleAsync(new UpdateCauseCommand
+        var result = await _handler.HandleAsync(new UpdateCauseCommand
         {
             Id = causes[1].Id,
             Severity = Severity.Moderate,
             TreatmentSite = TreatmentSite.Inpatient,
         }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.Equal(Status.Updated, result.StatusCode);
 
         await using var freshContext = new AppDbContext(_options);
         var saved = await freshContext.Causes
@@ -206,18 +212,47 @@ public class UpdateCauseHandlerTest : IClassFixture<PostgresFixture>, IAsyncLife
         sibling.DeletedAt = DateTimeOffset.UtcNow;
         await _context.SaveChangesAsync(TestContext.Current.CancellationToken);
 
-        await _handler.HandleAsync(new UpdateCauseCommand
+        var result = await _handler.HandleAsync(new UpdateCauseCommand
         {
             Id = causes[0].Id,
             Severity = Severity.Severe,
             TreatmentSite = TreatmentSite.IntensiveCareUnit,
         }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.Equal(Status.Updated, result.StatusCode);
 
         await using var freshContext = new AppDbContext(_options);
         var saved = await freshContext.Causes
             .SingleAsync(x => x.Id == causes[0].Id, TestContext.Current.CancellationToken);
         Assert.Equal(Severity.Severe, saved.Severity);
         Assert.Equal(TreatmentSite.IntensiveCareUnit, saved.TreatmentSite);
+    }
+
+    [Fact]
+    public async Task UpdateCause_KeepSameValues_Success()
+    {
+        var causes = await SeedAsync(
+        [
+            (Severity.Mild, TreatmentSite.Outpatient),
+        ]);
+
+        var result = await _handler.HandleAsync(new UpdateCauseCommand
+        {
+            Id = causes[0].Id,
+            Severity = Severity.Mild,
+            TreatmentSite = TreatmentSite.Outpatient,
+        }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.Equal(Status.Updated, result.StatusCode);
+
+        // The no-op update must be accepted and leave the stored values intact
+        await using var freshContext = new AppDbContext(_options);
+        var saved = await freshContext.Causes
+            .SingleAsync(x => x.Id == causes[0].Id, TestContext.Current.CancellationToken);
+        Assert.Equal(Severity.Mild, saved.Severity);
+        Assert.Equal(TreatmentSite.Outpatient, saved.TreatmentSite);
     }
 
     # endregion
@@ -229,13 +264,16 @@ public class UpdateCauseHandlerTest : IClassFixture<PostgresFixture>, IAsyncLife
     {
         var unknownId = Guid.CreateVersion7();
 
-        await Assert.ThrowsAsync<NotFoundException>(() => _handler.HandleAsync(
+        var result = await _handler.HandleAsync(
             new UpdateCauseCommand
             {
                 Id = unknownId,
                 Severity = Severity.Moderate,
                 TreatmentSite = TreatmentSite.Inpatient,
-            }, TestContext.Current.CancellationToken));
+            }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsFailure);
+        Assert.NotNull(result.Error);
+        Assert.Equal(Status.BadRequest, result.StatusCode);
 
         // Nothing must exist when the target was never there
         Assert.Equal(0, await _context.Causes.IgnoreQueryFilters()
@@ -252,13 +290,16 @@ public class UpdateCauseHandlerTest : IClassFixture<PostgresFixture>, IAsyncLife
             (Severity.Mild, TreatmentSite.Outpatient),
         ], softDeletedFirst: true);
 
-        await Assert.ThrowsAsync<NotFoundException>(() => _handler.HandleAsync(
+        var result = await _handler.HandleAsync(
             new UpdateCauseCommand
             {
                 Id = causes[0].Id,
                 Severity = Severity.Moderate,
                 TreatmentSite = TreatmentSite.Inpatient,
-            }, TestContext.Current.CancellationToken));
+            }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsFailure);
+        Assert.NotNull(result.Error);
+        Assert.Equal(Status.BadRequest, result.StatusCode);
     }
 
     [Fact]
@@ -275,13 +316,16 @@ public class UpdateCauseHandlerTest : IClassFixture<PostgresFixture>, IAsyncLife
             (Severity.Severe, TreatmentSite.IntensiveCareUnit),
         ]);
 
-        await Assert.ThrowsAsync<BadRequestException>(() => _handler.HandleAsync(
+        var result = await _handler.HandleAsync(
             new UpdateCauseCommand
             {
                 Id = causes[0].Id,
                 Severity = Severity.Severe,
                 TreatmentSite = TreatmentSite.IntensiveCareUnit,
-            }, TestContext.Current.CancellationToken));
+            }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsFailure);
+        Assert.NotNull(result.Error);
+        Assert.Equal(Status.BadRequest, result.StatusCode);
 
         // The rejected update must leave both causes unchanged
         await using var freshContext = new AppDbContext(_options);
@@ -289,29 +333,6 @@ public class UpdateCauseHandlerTest : IClassFixture<PostgresFixture>, IAsyncLife
             .SingleAsync(x => x.Id == causes[0].Id, TestContext.Current.CancellationToken);
         Assert.Equal(Severity.Mild, first.Severity);
         Assert.Equal(TreatmentSite.Outpatient, first.TreatmentSite);
-    }
-
-    [Fact]
-    public async Task UpdateCause_KeepSameValues_Success()
-    {
-        var causes = await SeedAsync(
-        [
-            (Severity.Mild, TreatmentSite.Outpatient),
-        ]);
-
-        await _handler.HandleAsync(new UpdateCauseCommand
-        {
-            Id = causes[0].Id,
-            Severity = Severity.Mild,
-            TreatmentSite = TreatmentSite.Outpatient,
-        }, TestContext.Current.CancellationToken);
-
-        // The no-op update must be accepted and leave the stored values intact
-        await using var freshContext = new AppDbContext(_options);
-        var saved = await freshContext.Causes
-            .SingleAsync(x => x.Id == causes[0].Id, TestContext.Current.CancellationToken);
-        Assert.Equal(Severity.Mild, saved.Severity);
-        Assert.Equal(TreatmentSite.Outpatient, saved.TreatmentSite);
     }
 
     # endregion

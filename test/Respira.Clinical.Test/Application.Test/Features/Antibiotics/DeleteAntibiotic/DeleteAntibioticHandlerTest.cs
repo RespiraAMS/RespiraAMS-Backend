@@ -6,6 +6,7 @@ using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moq;
+using Respira.ServiceDefaults.Contracts.Results;
 using Respira.ServiceDefaults.Exceptions;
 
 namespace Application.Test.Features.Antibiotics.DeleteAntibiotic;
@@ -119,8 +120,10 @@ public class DeleteAntibioticHandlerTest : IClassFixture<PostgresFixture>, IAsyn
     {
         var target = await SeedAsync(withDosages: true);
 
-        await _handler.HandleAsync(new DeleteAntibioticCommand { Id = target.Id },
-            TestContext.Current.CancellationToken);
+        var result = await _handler.HandleAsync(new DeleteAntibioticCommand { Id = target.Id }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.Equal(Status.Deleted, result.StatusCode);
 
         // All entities carry a !IsDeleted query filter, so IgnoreQueryFilters is
         // required to observe the soft-delete flags
@@ -155,8 +158,11 @@ public class DeleteAntibioticHandlerTest : IClassFixture<PostgresFixture>, IAsyn
         // Lower boundary of the cascade: no dosage linked to the antibiotic
         var target = await SeedAsync(withDosages: false);
 
-        await _handler.HandleAsync(new DeleteAntibioticCommand { Id = target.Id },
+        var result = await _handler.HandleAsync(new DeleteAntibioticCommand { Id = target.Id },
             TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.Equal(Status.Deleted, result.StatusCode);
 
         await using var freshContext = new AppDbContext(_options);
         var deleted = await freshContext.Antibiotics.IgnoreQueryFilters()
@@ -177,8 +183,11 @@ public class DeleteAntibioticHandlerTest : IClassFixture<PostgresFixture>, IAsyn
     {
         var unknownId = Guid.CreateVersion7();
 
-        await Assert.ThrowsAsync<NotFoundException>(() => _handler.HandleAsync(
-            new DeleteAntibioticCommand { Id = unknownId }, TestContext.Current.CancellationToken));
+        var result = await _handler.HandleAsync(
+            new DeleteAntibioticCommand { Id = unknownId }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsFailure);
+        Assert.NotNull(result.Error);
+        Assert.Equal(Status.BadRequest, result.StatusCode);
 
         // Nothing must be soft-deleted when the target does not exist
         Assert.Equal(0, await _context.Antibiotics.IgnoreQueryFilters()

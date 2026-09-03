@@ -6,7 +6,7 @@ using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moq;
-using Respira.ServiceDefaults.Exceptions;
+using Respira.ServiceDefaults.Contracts.Results;
 
 namespace Application.Test.Features.Causes.CreateCause;
 
@@ -91,13 +91,17 @@ public class CreateCauseHandlerTest : IClassFixture<PostgresFixture>, IAsyncLife
             Severity = Severity.Moderate,
             TreatmentSite = TreatmentSite.Inpatient,
         }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.Equal(Status.Created, result.StatusCode);
+        Assert.NotNull(result.Data);
 
-        Assert.NotEqual(Guid.Empty, result.Id);
+        Assert.NotEqual(Guid.Empty, result.Data.Id);
 
         // Verify through a fresh context so the change tracker cannot mask a failed commit
         await using var freshContext = new AppDbContext(_options);
         var saved = await freshContext.Causes
-            .SingleAsync(x => x.Id == result.Id, TestContext.Current.CancellationToken);
+            .SingleAsync(x => x.Id == result.Data.Id, TestContext.Current.CancellationToken);
         Assert.Equal(diseaseId, saved.DiseaseId);
         Assert.Equal(pathogenId, saved.PathogenId);
         Assert.Equal(Severity.Moderate, saved.Severity);
@@ -129,8 +133,12 @@ public class CreateCauseHandlerTest : IClassFixture<PostgresFixture>, IAsyncLife
             Severity = Severity.Severe,
             TreatmentSite = TreatmentSite.IntensiveCareUnit,
         }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.Equal(Status.Created, result.StatusCode);
+        Assert.NotNull(result.Data);
 
-        Assert.NotEqual(Guid.Empty, result.Id);
+        Assert.NotEqual(Guid.Empty, result.Data.Id);
 
         await using var freshContext = new AppDbContext(_options);
         Assert.Equal(2, await freshContext.Causes
@@ -166,9 +174,13 @@ public class CreateCauseHandlerTest : IClassFixture<PostgresFixture>, IAsyncLife
             Severity = Severity.Mild,
             TreatmentSite = TreatmentSite.Outpatient,
         }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.Equal(Status.Created, result.StatusCode);
+        Assert.NotNull(result.Data);
 
-        Assert.NotEqual(Guid.Empty, result.Id);
-        Assert.NotEqual(original.Id, result.Id);
+        Assert.NotEqual(Guid.Empty, result.Data.Id);
+        Assert.NotEqual(original.Id, result.Data.Id);
         Assert.Equal(2, await _context.Causes.IgnoreQueryFilters()
             .CountAsync(TestContext.Current.CancellationToken));
     }
@@ -183,14 +195,17 @@ public class CreateCauseHandlerTest : IClassFixture<PostgresFixture>, IAsyncLife
         var (_, pathogenId) = await SeedAsync();
         var unknownDiseaseId = Guid.CreateVersion7();
 
-        await Assert.ThrowsAsync<BadRequestException>(() => _handler.HandleAsync(
+        var result = await _handler.HandleAsync(
             new CreateCauseCommand
             {
                 DiseaseId = unknownDiseaseId,
                 PathogenId = pathogenId,
                 Severity = Severity.Moderate,
                 TreatmentSite = TreatmentSite.Inpatient,
-            }, TestContext.Current.CancellationToken));
+            }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsFailure);
+        Assert.NotNull(result.Error);
+        Assert.Equal(Status.BadRequest, result.StatusCode);
 
         // Nothing must be created when the disease does not exist
         Assert.Equal(0, await _context.Causes.CountAsync(TestContext.Current.CancellationToken));
@@ -203,14 +218,17 @@ public class CreateCauseHandlerTest : IClassFixture<PostgresFixture>, IAsyncLife
         // must be rejected just like an unknown disease
         var (deletedDiseaseId, pathogenId) = await SeedAsync(softDeletedDisease: true);
 
-        await Assert.ThrowsAsync<BadRequestException>(() => _handler.HandleAsync(
+        var result = await _handler.HandleAsync(
             new CreateCauseCommand
             {
                 DiseaseId = deletedDiseaseId,
                 PathogenId = pathogenId,
                 Severity = Severity.Moderate,
                 TreatmentSite = TreatmentSite.Inpatient,
-            }, TestContext.Current.CancellationToken));
+            }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsFailure);
+        Assert.NotNull(result.Error);
+        Assert.Equal(Status.BadRequest, result.StatusCode);
     }
 
     [Fact]
@@ -219,14 +237,17 @@ public class CreateCauseHandlerTest : IClassFixture<PostgresFixture>, IAsyncLife
         var (diseaseId, _) = await SeedAsync();
         var unknownPathogenId = Guid.CreateVersion7();
 
-        await Assert.ThrowsAsync<BadRequestException>(() => _handler.HandleAsync(
+        var result = await _handler.HandleAsync(
             new CreateCauseCommand
             {
                 DiseaseId = diseaseId,
                 PathogenId = unknownPathogenId,
                 Severity = Severity.Moderate,
                 TreatmentSite = TreatmentSite.Inpatient,
-            }, TestContext.Current.CancellationToken));
+            }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsFailure);
+        Assert.NotNull(result.Error);
+        Assert.Equal(Status.BadRequest, result.StatusCode);
 
         Assert.Equal(0, await _context.Causes.CountAsync(TestContext.Current.CancellationToken));
     }
@@ -238,14 +259,17 @@ public class CreateCauseHandlerTest : IClassFixture<PostgresFixture>, IAsyncLife
         // must be rejected just like an unknown pathogen
         var (diseaseId, deletedPathogenId) = await SeedAsync(softDeletedPathogen: true);
 
-        await Assert.ThrowsAsync<BadRequestException>(() => _handler.HandleAsync(
+        var result = await _handler.HandleAsync(
             new CreateCauseCommand
             {
                 DiseaseId = diseaseId,
                 PathogenId = deletedPathogenId,
                 Severity = Severity.Moderate,
                 TreatmentSite = TreatmentSite.Inpatient,
-            }, TestContext.Current.CancellationToken));
+            }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsFailure);
+        Assert.NotNull(result.Error);
+        Assert.Equal(Status.BadRequest, result.StatusCode);
     }
 
     [Fact]
@@ -265,14 +289,17 @@ public class CreateCauseHandlerTest : IClassFixture<PostgresFixture>, IAsyncLife
         }, TestContext.Current.CancellationToken);
         await _context.SaveChangesAsync(TestContext.Current.CancellationToken);
 
-        await Assert.ThrowsAsync<BadRequestException>(() => _handler.HandleAsync(
+        var result = await _handler.HandleAsync(
             new CreateCauseCommand
             {
                 DiseaseId = diseaseId,
                 PathogenId = pathogenId,
                 Severity = Severity.Mild,
                 TreatmentSite = TreatmentSite.Outpatient,
-            }, TestContext.Current.CancellationToken));
+            }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsFailure);
+        Assert.NotNull(result.Error);
+        Assert.Equal(Status.BadRequest, result.StatusCode);
 
         // The duplicate must not be persisted
         Assert.Equal(1, await _context.Causes.CountAsync(TestContext.Current.CancellationToken));

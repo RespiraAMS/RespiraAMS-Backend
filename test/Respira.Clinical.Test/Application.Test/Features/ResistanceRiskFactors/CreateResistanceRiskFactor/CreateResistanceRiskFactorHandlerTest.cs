@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Range = Domain.Models.Range;
-using Respira.ServiceDefaults.Exceptions;
+using Respira.ServiceDefaults.Contracts.Results;
 
 namespace Application.Test.Features.ResistanceRiskFactors.CreateResistanceRiskFactor;
 
@@ -108,11 +108,15 @@ public class CreateResistanceRiskFactorHandlerTest : IClassFixture<PostgresFixtu
                 Value = null,
             },
         }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.Equal(Status.Created, result.StatusCode);
+        Assert.NotNull(result.Data);
 
-        Assert.NotEqual(Guid.Empty, result.Id);
+        Assert.NotEqual(Guid.Empty, result.Data.Id);
 
         // Verify through a fresh context so the change tracker cannot mask a failed commit
-        var saved = await GetPersistedAsync(result.Id);
+        var saved = await GetPersistedAsync(result.Data.Id);
         Assert.Equal(diseaseId, saved.DiseaseId);
         Assert.Equal(pathogenId, saved.PathogenId);
         Assert.Equal("Prior antibiotic use in last 90 days", saved.Name);
@@ -152,8 +156,12 @@ public class CreateResistanceRiskFactorHandlerTest : IClassFixture<PostgresFixtu
                 Value = value,
             },
         }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.Equal(Status.Created, result.StatusCode);
+        Assert.NotNull(result.Data);
 
-        var saved = await GetPersistedAsync(result.Id);
+        var saved = await GetPersistedAsync(result.Data.Id);
         Assert.Equal(diseaseId, saved.DiseaseId);
         Assert.Equal(pathogenId, saved.PathogenId);
         Assert.Equal("Elevated WBC count", saved.Name);
@@ -172,7 +180,7 @@ public class CreateResistanceRiskFactorHandlerTest : IClassFixture<PostgresFixtu
     {
         var pathogenId = await SeedPathogenAsync();
 
-        await Assert.ThrowsAsync<BadRequestException>(() => _handler.HandleAsync(
+        var result = await _handler.HandleAsync(
             new CreateResistanceRiskFactorCommand
             {
                 DiseaseId = Guid.CreateVersion7(),
@@ -184,7 +192,10 @@ public class CreateResistanceRiskFactorHandlerTest : IClassFixture<PostgresFixtu
                     Type = CriterionType.Boolean,
                     Value = null,
                 },
-            }, TestContext.Current.CancellationToken));
+            }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsFailure);
+        Assert.NotNull(result.Error);
+        Assert.Equal(Status.BadRequest, result.StatusCode);
     }
 
     [Fact]
@@ -192,7 +203,7 @@ public class CreateResistanceRiskFactorHandlerTest : IClassFixture<PostgresFixtu
     {
         var diseaseId = await SeedDiseaseAsync();
 
-        await Assert.ThrowsAsync<BadRequestException>(() => _handler.HandleAsync(
+        var result = await _handler.HandleAsync(
             new CreateResistanceRiskFactorCommand
             {
                 DiseaseId = diseaseId,
@@ -204,7 +215,10 @@ public class CreateResistanceRiskFactorHandlerTest : IClassFixture<PostgresFixtu
                     Type = CriterionType.Boolean,
                     Value = null,
                 },
-            }, TestContext.Current.CancellationToken));
+            }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsFailure);
+        Assert.NotNull(result.Error);
+        Assert.Equal(Status.BadRequest, result.StatusCode);
     }
 
     [Fact]
@@ -213,7 +227,7 @@ public class CreateResistanceRiskFactorHandlerTest : IClassFixture<PostgresFixtu
         var diseaseId = await SeedDiseaseAsync(softDeleted: true);
         var pathogenId = await SeedPathogenAsync();
 
-        await Assert.ThrowsAsync<BadRequestException>(() => _handler.HandleAsync(
+        var result = await _handler.HandleAsync(
             new CreateResistanceRiskFactorCommand
             {
                 DiseaseId = diseaseId,
@@ -225,7 +239,10 @@ public class CreateResistanceRiskFactorHandlerTest : IClassFixture<PostgresFixtu
                     Type = CriterionType.Boolean,
                     Value = null,
                 },
-            }, TestContext.Current.CancellationToken));
+            }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsFailure);
+        Assert.NotNull(result.Error);
+        Assert.Equal(Status.BadRequest, result.StatusCode);
     }
 
     [Fact]
@@ -234,7 +251,7 @@ public class CreateResistanceRiskFactorHandlerTest : IClassFixture<PostgresFixtu
         var diseaseId = await SeedDiseaseAsync();
         var pathogenId = await SeedPathogenAsync(softDeleted: true);
 
-        await Assert.ThrowsAsync<BadRequestException>(() => _handler.HandleAsync(
+        var result = await _handler.HandleAsync(
             new CreateResistanceRiskFactorCommand
             {
                 DiseaseId = diseaseId,
@@ -246,7 +263,10 @@ public class CreateResistanceRiskFactorHandlerTest : IClassFixture<PostgresFixtu
                     Type = CriterionType.Boolean,
                     Value = null,
                 },
-            }, TestContext.Current.CancellationToken));
+            }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsFailure);
+        Assert.NotNull(result.Error);
+        Assert.Equal(Status.BadRequest, result.StatusCode);
     }
 
     # endregion

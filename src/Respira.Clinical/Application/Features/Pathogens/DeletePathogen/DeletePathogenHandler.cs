@@ -5,9 +5,9 @@ using Microsoft.Extensions.Logging;
 namespace Application.Features.Pathogens.DeletePathogen;
 
 public class DeletePathogenHandler(IDbContext context, ILogger<DeletePathogenHandler> logger)
-    : ICommandHandler<DeletePathogenCommand>
+    : ICommandHandler<DeletePathogenCommand, Respira.ServiceDefaults.Contracts.Results.Result>
 {
-    public async Task HandleAsync(DeletePathogenCommand command, CancellationToken cancellationToken = default)
+    public async Task<Respira.ServiceDefaults.Contracts.Results.Result> HandleAsync(DeletePathogenCommand command, CancellationToken cancellationToken = default)
     {
         // Get pathogen by ID
         var pathogen = await context.Pathogens
@@ -15,7 +15,8 @@ public class DeletePathogenHandler(IDbContext context, ILogger<DeletePathogenHan
         if (pathogen is null)
         {
             logger.LogWarning("Pathogen ID not found");
-            throw new NotFoundException(nameof(Pathogen), command.Id);
+            return Respira.ServiceDefaults.Contracts.Results.Result.Failure(new Error(Status.BadRequest, "Pathogen ID not found"));
+            // throw new NotFoundException(nameof(Pathogen), command.Id);
         }
 
         // Delete cascade in transaction
@@ -50,5 +51,7 @@ public class DeletePathogenHandler(IDbContext context, ILogger<DeletePathogenHan
                 DiseasePathogenCount = diseasePathogenCount
             });
         }, cancellationToken);
+
+        return Respira.ServiceDefaults.Contracts.Results.Result.Success(Status.Deleted);
     }
 }

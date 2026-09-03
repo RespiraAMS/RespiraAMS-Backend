@@ -10,7 +10,7 @@ using Microsoft.Extensions.Options;
 using Moq;
 using AntibioticModel = Domain.Models.Antibiotic;
 using Range = Domain.Models.Range;
-using Respira.ServiceDefaults.Exceptions;
+using Respira.ServiceDefaults.Contracts.Results;
 
 namespace Application.Test.Features.Diagnose.EmpiricalDiagnose;
 
@@ -232,16 +232,20 @@ public class EmpiricalDiagnoseHandlerTest : IClassFixture<PostgresFixture>, IAsy
         var query = BuildQuery(disease.Id, [], [rrfCrit.Id], [rrfCrit.Id], ageYears: 50);
 
         var result = await _handler.HandleAsync(query, TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.NotNull(result.Data);
+        Assert.Equal(Status.Success, result.StatusCode);
 
         // Business rule: CrCl computed (Cockcroft-Gault) and positive
-        Assert.Equal(87.5m, result.Crcl);
+        Assert.Equal(87.5m, result.Data.Crcl);
 
         // Business rule: CURB-65 severity/treatment site
-        Assert.Equal(Severity.Mild, result.Severity);
-        Assert.Equal(TreatmentSite.Outpatient, result.TreatmentSite);
+        Assert.Equal(Severity.Mild, result.Data.Severity);
+        Assert.Equal(TreatmentSite.Outpatient, result.Data.TreatmentSite);
 
         // Business rule: recommended medicines (one per group) are projected with their group
-        var medicine = Assert.Single(result.Medicines);
+        var medicine = Assert.Single(result.Data.Medicines);
         Assert.Equal(amox.Id, medicine.Id);
         Assert.Equal("Amoxicillin", medicine.Name);
         Assert.Equal(AwareClassification.Access, medicine.Classification);
@@ -250,16 +254,16 @@ public class EmpiricalDiagnoseHandlerTest : IClassFixture<PostgresFixture>, IAsy
         Assert.NotEmpty(medicine.Dosages);
 
         // Business rule: recommendations include all medicines across reference protocols
-        var recommendation = Assert.Single(result.Recommendations);
+        var recommendation = Assert.Single(result.Data.Recommendations);
         Assert.Equal(amox.Id, recommendation.Id);
 
         // Business rule: infection probabilities computed from resistance risk factors
-        var prob = Assert.Single(result.InfectionProbabilities);
+        var prob = Assert.Single(result.Data.InfectionProbabilities);
         Assert.Equal(pathogen.Id, prob.PathogenId);
         Assert.Equal(1.0m, prob.Probability);
 
         // Business rule: matched protocols are returned as references
-        var reference = Assert.Single(result.References);
+        var reference = Assert.Single(result.Data.References);
         Assert.Equal("IDSA/ATS 2024 CAP Empiric Guidance", reference.Name);
         Assert.Equal(3, reference.Version);
     }
@@ -279,10 +283,14 @@ public class EmpiricalDiagnoseHandlerTest : IClassFixture<PostgresFixture>, IAsy
             confusion: true, urea: 8m, respiratory: 32, systolic: 80m, diastolic: 50m);
 
         var result = await _handler.HandleAsync(query, TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.NotNull(result.Data);
+        Assert.Equal(Status.Success, result.StatusCode);
 
-        Assert.Equal(Severity.Severe, result.Severity);
-        Assert.Equal(TreatmentSite.IntensiveCareUnit, result.TreatmentSite);
-        Assert.NotEmpty(result.Medicines);
+        Assert.Equal(Severity.Severe, result.Data.Severity);
+        Assert.Equal(TreatmentSite.IntensiveCareUnit, result.Data.TreatmentSite);
+        Assert.NotEmpty(result.Data.Medicines);
     }
 
     [Fact]
@@ -302,9 +310,13 @@ public class EmpiricalDiagnoseHandlerTest : IClassFixture<PostgresFixture>, IAsy
         var query = BuildQuery(disease.Id, [icuCrit.Id], [], [], ageYears: 50);
 
         var result = await _handler.HandleAsync(query, TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.NotNull(result.Data);
+        Assert.Equal(Status.Success, result.StatusCode);
 
-        Assert.Equal(Severity.Mild, result.Severity);
-        Assert.Equal(TreatmentSite.IntensiveCareUnit, result.TreatmentSite);
+        Assert.Equal(Severity.Mild, result.Data.Severity);
+        Assert.Equal(TreatmentSite.IntensiveCareUnit, result.Data.TreatmentSite);
     }
 
     [Fact]
@@ -321,10 +333,14 @@ public class EmpiricalDiagnoseHandlerTest : IClassFixture<PostgresFixture>, IAsy
         var query = BuildQuery(disease.Id, [], [], [], ageYears: 50);
 
         var result = await _handler.HandleAsync(query, TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.NotNull(result.Data);
+        Assert.Equal(Status.Success, result.StatusCode);
 
-        Assert.Equal(Severity.Mild, result.Severity);
-        Assert.Empty(result.InfectionProbabilities);
-        Assert.NotEmpty(result.Medicines);
+        Assert.Equal(Severity.Mild, result.Data.Severity);
+        Assert.Empty(result.Data.InfectionProbabilities);
+        Assert.NotEmpty(result.Data.Medicines);
     }
 
     # endregion
@@ -337,9 +353,11 @@ public class EmpiricalDiagnoseHandlerTest : IClassFixture<PostgresFixture>, IAsy
         await CleanupAsync();
         var unknownId = Guid.CreateVersion7();
 
-        await Assert.ThrowsAsync<NotFoundException>(() => _handler.HandleAsync(
-            BuildQuery(unknownId, [], [], [], ageYears: 50),
-            TestContext.Current.CancellationToken));
+        var query = BuildQuery(unknownId, [], [], [], ageYears: 50);
+        var result = await _handler.HandleAsync(query, TestContext.Current.CancellationToken);
+        Assert.True(result.IsFailure);
+        Assert.NotNull(result.Error);
+        Assert.Equal(Status.ResourceNotFound, result.StatusCode);
     }
 
     [Fact]
@@ -353,8 +371,10 @@ public class EmpiricalDiagnoseHandlerTest : IClassFixture<PostgresFixture>, IAsy
         // Provided ICU criterion ID does not belong to this disease
         var query = BuildQuery(disease.Id, [Guid.CreateVersion7()], [], [], ageYears: 50);
 
-        await Assert.ThrowsAsync<BadRequestException>(() => _handler.HandleAsync(
-            query, TestContext.Current.CancellationToken));
+        var result = await _handler.HandleAsync(query, TestContext.Current.CancellationToken);
+        Assert.True(result.IsFailure);
+        Assert.NotNull(result.Error);
+        Assert.Equal(Status.BadRequest, result.StatusCode);
     }
 
     [Fact]
@@ -368,8 +388,10 @@ public class EmpiricalDiagnoseHandlerTest : IClassFixture<PostgresFixture>, IAsy
 
         var query = BuildQuery(disease.Id, [], [Guid.CreateVersion7()], [], ageYears: 50);
 
-        await Assert.ThrowsAsync<BadRequestException>(() => _handler.HandleAsync(
-            query, TestContext.Current.CancellationToken));
+        var result = await _handler.HandleAsync(query, TestContext.Current.CancellationToken);
+        Assert.True(result.IsFailure);
+        Assert.NotNull(result.Error);
+        Assert.Equal(Status.BadRequest, result.StatusCode);
     }
 
     [Fact]
@@ -381,8 +403,10 @@ public class EmpiricalDiagnoseHandlerTest : IClassFixture<PostgresFixture>, IAsy
         // Other criterion ID does not exist in the Criteria table at all
         var query = BuildQuery(disease.Id, [], [], [Guid.CreateVersion7()], ageYears: 50);
 
-        await Assert.ThrowsAsync<BadRequestException>(() => _handler.HandleAsync(
-            query, TestContext.Current.CancellationToken));
+        var result = await _handler.HandleAsync(query, TestContext.Current.CancellationToken);
+        Assert.True(result.IsFailure);
+        Assert.NotNull(result.Error);
+        Assert.Equal(Status.BadRequest, result.StatusCode);
     }
 
     # endregion

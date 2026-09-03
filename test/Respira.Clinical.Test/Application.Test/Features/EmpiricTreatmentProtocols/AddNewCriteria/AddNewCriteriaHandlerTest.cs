@@ -6,7 +6,7 @@ using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moq;
-using Respira.ServiceDefaults.Exceptions;
+using Respira.ServiceDefaults.Contracts.Results;
 using Range = Domain.Models.Range;
 
 namespace Application.Test.Features.EmpiricTreatmentProtocols.AddNewCriteria;
@@ -122,7 +122,10 @@ public class AddNewCriteriaHandlerTest : IClassFixture<PostgresFixture>, IAsyncL
             ],
         };
 
-        await _handler.HandleAsync(command, TestContext.Current.CancellationToken);
+        var result = await _handler.HandleAsync(command, TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.Equal(Status.Created, result.StatusCode);
 
         // Verify through a fresh context so the change tracker cannot mask a failed commit
         await using var freshContext = new AppDbContext(_options);
@@ -159,7 +162,10 @@ public class AddNewCriteriaHandlerTest : IClassFixture<PostgresFixture>, IAsyncL
             ],
         };
 
-        await _handler.HandleAsync(command, TestContext.Current.CancellationToken);
+        var result = await _handler.HandleAsync(command, TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.Equal(Status.Created, result.StatusCode);
 
         await using var freshContext = new AppDbContext(_options);
         var savedProtocol = await freshContext.EmpiricTreatmentProtocols
@@ -192,7 +198,10 @@ public class AddNewCriteriaHandlerTest : IClassFixture<PostgresFixture>, IAsyncL
             ],
         };
 
-        await _handler.HandleAsync(command, TestContext.Current.CancellationToken);
+        var result = await _handler.HandleAsync(command, TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.Equal(Status.Created, result.StatusCode);
 
         await using var freshContext = new AppDbContext(_options);
         var savedProtocol = await freshContext.EmpiricTreatmentProtocols
@@ -216,7 +225,7 @@ public class AddNewCriteriaHandlerTest : IClassFixture<PostgresFixture>, IAsyncL
         await CleanupAsync();
         var unknownId = Guid.CreateVersion7();
 
-        await Assert.ThrowsAsync<NotFoundException>(() => _handler.HandleAsync(
+        var result = await _handler.HandleAsync(
             new AddNewCriteriaCommand
             {
                 Id = unknownId,
@@ -224,7 +233,10 @@ public class AddNewCriteriaHandlerTest : IClassFixture<PostgresFixture>, IAsyncL
                 [
                     new() { Name = "Prior history of COPD", Type = CriterionType.Boolean },
                 ],
-            }, TestContext.Current.CancellationToken));
+            }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsFailure);
+        Assert.NotNull(result.Error);
+        Assert.Equal(Status.BadRequest, result.StatusCode);
 
         // Nothing must be created when the protocol does not exist
         Assert.Equal(0, await _context.Criteria.IgnoreQueryFilters()

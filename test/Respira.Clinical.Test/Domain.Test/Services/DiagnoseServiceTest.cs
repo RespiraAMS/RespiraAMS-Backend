@@ -4,7 +4,6 @@ using Domain.Services.Dtos;
 using Domain.Services.Implementations;
 using Microsoft.Extensions.Logging;
 using Moq;
-using Respira.ServiceDefaults.Exceptions;
 using Assert = Xunit.Assert;
 using Range = Domain.Models.Range;
 
@@ -66,7 +65,7 @@ public class DiagnoseServiceTest
     [MemberData(nameof(InvalidInputs))]
     public void CrCl_NonPositiveInput_Fail(int age, decimal weight, decimal height, decimal scr)
     {
-        Assert.Throws<BadRequestException>(() => _service.CrCl(age, weight, height, scr));
+        Assert.Throws<ArgumentException>(() => _service.CrCl(age, weight, height, scr));
     }
 
     /*=== CrCl: non-obese patients use Cockcroft-Gault ===*/
@@ -229,9 +228,7 @@ public class DiagnoseServiceTest
         // proving the loop continued past the unknown option instead of stopping
         var unknownOption = Guid.CreateVersion7();
 
-        var result = _service.NeedIcu(IcuCriteria, 3, [unknownOption, HypotensionCriterionId]);
-
-        Assert.True(result);
+        Assert.Throws<ArgumentException>(() => _service.NeedIcu(IcuCriteria, 3, [unknownOption, HypotensionCriterionId]));
         VerifyWarningLogged(unknownOption, Times.Once());
     }
 
@@ -241,11 +238,8 @@ public class DiagnoseServiceTest
         var unknownFirst = Guid.CreateVersion7();
         var unknownSecond = Guid.CreateVersion7();
 
-        var result = _service.NeedIcu(IcuCriteria, 5, [unknownFirst, unknownSecond]);
-
-        Assert.False(result);
-        VerifyWarningLogged(unknownFirst, Times.Once());
-        VerifyWarningLogged(unknownSecond, Times.Once());
+        Assert.Throws<ArgumentException>(() => _service.NeedIcu(IcuCriteria, 5, [unknownFirst, unknownSecond]));
+        VerifyWarningLogged(unknownFirst, Times.Once()); // Will throw immediately on the first unknown option, so only one log
     }
 
     [Fact]
@@ -253,9 +247,7 @@ public class DiagnoseServiceTest
     {
         var option = Guid.CreateVersion7();
 
-        var result = _service.NeedIcu([], 5, [option]);
-
-        Assert.False(result);
+        Assert.Throws<ArgumentException>(() => _service.NeedIcu([], 5, [option]));
         VerifyWarningLogged(option, Times.Once());
     }
 
@@ -319,7 +311,7 @@ public class DiagnoseServiceTest
         // Unlike NeedIcu, an unknown option is NOT ignored but rejected
         var unknownOption = Guid.CreateVersion7();
 
-        Assert.Throws<BadRequestException>(
+        Assert.Throws<ArgumentException>(
             () => _service.InfectionProbability(ResistanceRiskFactors, [unknownOption]));
         VerifyWarningLogged(unknownOption, Times.Once());
     }
@@ -495,13 +487,13 @@ public class DiagnoseServiceTest
                 (MeropenemStandardDose, RouteOfAdministration.Intravenous, null)),
         };
 
-        Assert.Throws<BadRequestException>(() => _service.GetAdjustedDosage(antibiotics, crcl));
+        Assert.Throws<ArgumentException>(() => _service.GetAdjustedDosage(antibiotics, crcl));
     }
 
     [Fact]
     public void GetAdjustedDosage_EmptyAntibioticsList_Fail()
     {
-        Assert.Throws<BadRequestException>(() => _service.GetAdjustedDosage([], 42m));
+        Assert.Throws<ArgumentException>(() => _service.GetAdjustedDosage([], 42m));
     }
 
     /*=== GetAdjustedDosage: dose selection against CrCl range boundaries ===*/
@@ -638,7 +630,7 @@ public class DiagnoseServiceTest
     [Fact]
     public void GetRecommendedMedicines_EmptyAntibioticsList_Fail()
     {
-        Assert.Throws<BadRequestException>(() => _service.GetRecommendedMedicines([]));
+        Assert.Throws<ArgumentException>(() => _service.GetRecommendedMedicines([]));
     }
 
     /*=== GetRecommendedMedicines: exactly one medicine per antibiotic group ===*/

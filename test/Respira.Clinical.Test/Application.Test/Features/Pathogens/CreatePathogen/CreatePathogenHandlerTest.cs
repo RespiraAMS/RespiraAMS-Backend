@@ -2,8 +2,7 @@ using Application.Contracts.Data;
 using Application.Features.Pathogens.CreatePathogen;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using Moq;
+using Respira.ServiceDefaults.Contracts.Results;
 
 namespace Application.Test.Features.Pathogens.CreatePathogen;
 
@@ -19,10 +18,9 @@ public class CreatePathogenHandlerTest : IClassFixture<PostgresFixture>, IAsyncL
         _options = new DbContextOptionsBuilder<AppDbContext>().UseNpgsql(fixture.ConnectionString).Options;
         _context = new AppDbContext(_options);
         var mapper = new CreatePathogenMapper();
-        var logger = new Mock<ILogger<CreatePathogenHandler>>().Object;
 
         // Initialize handler
-        _handler = new(_context, mapper, logger);
+        _handler = new(_context, mapper);
     }
 
     public async ValueTask DisposeAsync()
@@ -51,8 +49,12 @@ public class CreatePathogenHandlerTest : IClassFixture<PostgresFixture>, IAsyncL
             Description = description,
         }, TestContext.Current.CancellationToken);
 
-        Assert.NotNull(result);
-        Assert.True(result.Id != Guid.Empty);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.Equal(Status.Created, result.StatusCode);
+        Assert.NotNull(result.Data);
+
+        Assert.True(result.Data.Id != Guid.Empty);
 
         // Verify through a fresh context so the change tracker of the saving context
         // cannot mask whether the row was truly committed
@@ -61,7 +63,7 @@ public class CreatePathogenHandlerTest : IClassFixture<PostgresFixture>, IAsyncL
             p => p.Name == name && p.Description == description,
             TestContext.Current.CancellationToken);
 
-        Assert.Equal(result.Id, saved.Id);
+        Assert.Equal(result.Data.Id, saved.Id);
     }
 
     # endregion

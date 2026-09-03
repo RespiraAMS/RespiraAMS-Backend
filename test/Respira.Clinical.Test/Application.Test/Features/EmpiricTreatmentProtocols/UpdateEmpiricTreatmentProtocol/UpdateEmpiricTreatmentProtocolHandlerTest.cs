@@ -5,7 +5,7 @@ using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moq;
-using Respira.ServiceDefaults.Exceptions;
+using Respira.ServiceDefaults.Contracts.Results;
 
 namespace Application.Test.Features.EmpiricTreatmentProtocols.UpdateEmpiricTreatmentProtocol;
 
@@ -136,7 +136,10 @@ public class UpdateEmpiricTreatmentProtocolHandlerTest : IClassFixture<PostgresF
             MedicineIds = [_antibioticId, _antibioticId2],
         };
 
-        await _handler.HandleAsync(command, TestContext.Current.CancellationToken);
+        var result = await _handler.HandleAsync(command, TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.Equal(Status.Updated, result.StatusCode);
 
         // Verify through a fresh context so the change tracker cannot mask a failed commit
         await using var freshContext = new AppDbContext(_options);
@@ -197,7 +200,10 @@ public class UpdateEmpiricTreatmentProtocolHandlerTest : IClassFixture<PostgresF
             MedicineIds = [_antibioticId],
         };
 
-        await _handler.HandleAsync(command, TestContext.Current.CancellationToken);
+        var result = await _handler.HandleAsync(command, TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.Equal(Status.Updated, result.StatusCode);
 
         await using var freshContext = new AppDbContext(_options);
         var saved = await freshContext.EmpiricTreatmentProtocols
@@ -225,7 +231,7 @@ public class UpdateEmpiricTreatmentProtocolHandlerTest : IClassFixture<PostgresF
         await CleanupProtocolsAsync();
         var unknownId = Guid.CreateVersion7();
 
-        await Assert.ThrowsAsync<NotFoundException>(() => _handler.HandleAsync(
+        var result = await _handler.HandleAsync(
             new UpdateEmpiricTreatmentProtocolCommand
             {
                 Id = unknownId,
@@ -238,7 +244,10 @@ public class UpdateEmpiricTreatmentProtocolHandlerTest : IClassFixture<PostgresF
                 SpecialInfectionId = null,
                 OtherCriteriaIds = [],
                 MedicineIds = [_antibioticId],
-            }, TestContext.Current.CancellationToken));
+            }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsFailure);
+        Assert.NotNull(result.Error);
+        Assert.Equal(Status.BadRequest, result.StatusCode);
 
         // Nothing was created/modified for a missing protocol
         Assert.Empty(await _context.EmpiricTreatmentProtocols
@@ -252,7 +261,7 @@ public class UpdateEmpiricTreatmentProtocolHandlerTest : IClassFixture<PostgresF
         var seeded = await SeedProtocolAsync();
         var unknownPathogenId = Guid.CreateVersion7();
 
-        await Assert.ThrowsAsync<BadRequestException>(() => _handler.HandleAsync(
+        var result = await _handler.HandleAsync(
             new UpdateEmpiricTreatmentProtocolCommand
             {
                 Id = seeded.Id,
@@ -265,7 +274,10 @@ public class UpdateEmpiricTreatmentProtocolHandlerTest : IClassFixture<PostgresF
                 SpecialInfectionId = unknownPathogenId,
                 OtherCriteriaIds = [],
                 MedicineIds = [_antibioticId],
-            }, TestContext.Current.CancellationToken));
+            }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsFailure);
+        Assert.NotNull(result.Error);
+        Assert.Equal(Status.BadRequest, result.StatusCode);
 
         // The existing protocol must remain untouched when validation fails
         await using var freshContext = new AppDbContext(_options);
@@ -282,7 +294,7 @@ public class UpdateEmpiricTreatmentProtocolHandlerTest : IClassFixture<PostgresF
         var seeded = await SeedProtocolAsync();
         var unknownCriterionId = Guid.CreateVersion7();
 
-        await Assert.ThrowsAsync<BadRequestException>(() => _handler.HandleAsync(
+        var result = await _handler.HandleAsync(
             new UpdateEmpiricTreatmentProtocolCommand
             {
                 Id = seeded.Id,
@@ -295,7 +307,10 @@ public class UpdateEmpiricTreatmentProtocolHandlerTest : IClassFixture<PostgresF
                 SpecialInfectionId = null,
                 OtherCriteriaIds = [_criterionId, unknownCriterionId],
                 MedicineIds = [_antibioticId],
-            }, TestContext.Current.CancellationToken));
+            }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsFailure);
+        Assert.NotNull(result.Error);
+        Assert.Equal(Status.BadRequest, result.StatusCode);
 
         Assert.Equal("Legacy 2019 CAP Protocol", seeded.Name);
     }
@@ -307,7 +322,7 @@ public class UpdateEmpiricTreatmentProtocolHandlerTest : IClassFixture<PostgresF
         var seeded = await SeedProtocolAsync();
         var unknownMedicineId = Guid.CreateVersion7();
 
-        await Assert.ThrowsAsync<BadRequestException>(() => _handler.HandleAsync(
+        var result = await _handler.HandleAsync(
             new UpdateEmpiricTreatmentProtocolCommand
             {
                 Id = seeded.Id,
@@ -320,7 +335,10 @@ public class UpdateEmpiricTreatmentProtocolHandlerTest : IClassFixture<PostgresF
                 SpecialInfectionId = null,
                 OtherCriteriaIds = [_criterionId],
                 MedicineIds = [_antibioticId, unknownMedicineId],
-            }, TestContext.Current.CancellationToken));
+            }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsFailure);
+        Assert.NotNull(result.Error);
+        Assert.Equal(Status.BadRequest, result.StatusCode);
 
         Assert.Equal("Legacy 2019 CAP Protocol", seeded.Name);
     }

@@ -8,9 +8,9 @@ public class CreateCauseHandler(
     IDbContext context,
     ICreateMapper<Cause, CreateCauseCommand> mapper,
     ILogger<CreateCauseHandler> logger)
-    : ICommandHandler<CreateCauseCommand, CreateCauseResult>
+    : ICommandHandler<CreateCauseCommand, Respira.ServiceDefaults.Contracts.Results.Result<CreateCauseResult>>
 {
-    public async Task<CreateCauseResult> HandleAsync(CreateCauseCommand command,
+    public async Task<Respira.ServiceDefaults.Contracts.Results.Result<CreateCauseResult>> HandleAsync(CreateCauseCommand command,
         CancellationToken cancellationToken = default)
     {
         // Check if disease exists
@@ -19,7 +19,8 @@ public class CreateCauseHandler(
         if (disease is null)
         {
             logger.LogDebug("Disease ID not found: {Id}", command.DiseaseId);
-            throw new BadRequestException("Disease ID not exists");
+            return Respira.ServiceDefaults.Contracts.Results.Result<CreateCauseResult>.Failure(new Error(Status.BadRequest, "Disease ID not exists"));
+            // throw new BadRequestException("Disease ID not exists");
         }
 
         // Check if pathogen exists
@@ -28,7 +29,8 @@ public class CreateCauseHandler(
         if (pathogen is null)
         {
             logger.LogDebug("Pathogen ID not found: {Id}", command.PathogenId);
-            throw new BadRequestException("Pathogen ID not exists");
+            return Respira.ServiceDefaults.Contracts.Results.Result<CreateCauseResult>.Failure(new Error(Status.BadRequest, "Pathogen ID not exists"));
+            // throw new BadRequestException("Pathogen ID not exists");
         }
 
         // Check if this cause (disease, pathogen, severity, treatment site) exists.
@@ -44,7 +46,8 @@ public class CreateCauseHandler(
         if (causeDb is not null)
         {
             logger.LogDebug("Disease's cause duplicate: {cause}", command);
-            throw new BadRequestException("This disease's cause is already exists");
+            return Respira.ServiceDefaults.Contracts.Results.Result<CreateCauseResult>.Failure(new Error(Status.BadRequest, "Disease's cause duplicate"));
+            // throw new BadRequestException("This disease's cause is already exists");
         }
 
         // Map command to model
@@ -52,12 +55,8 @@ public class CreateCauseHandler(
 
         // Save changes to database
         await context.Causes.AddAsync(cause, cancellationToken);
-        if (await context.SaveChangesAsync(cancellationToken) <= 0)
-        {
-            logger.LogError("Failed to save disease's cause");
-            throw new ServerException();
-        }
+        await context.SaveChangesAsync(cancellationToken);
 
-        return new CreateCauseResult(cause.Id);
+        return Respira.ServiceDefaults.Contracts.Results.Result<CreateCauseResult>.Success(Status.Created, new CreateCauseResult(cause.Id));
     }
 }

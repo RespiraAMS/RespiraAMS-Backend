@@ -9,9 +9,9 @@ public class GetDiseaseCriteriaHandler(
     IDbContext context,
     IResultMapper<Criterion, CriterionItem> mapper,
     ILogger<GetDiseaseCriteriaHandler> logger)
-    : IQueryHandler<GetDiseaseCriteriaQuery, DiseaseCriteriaResult>
+    : IQueryHandler<GetDiseaseCriteriaQuery, Respira.ServiceDefaults.Contracts.Results.Result<DiseaseCriteriaResult>>
 {
-    public async Task<DiseaseCriteriaResult> HandleAsync(GetDiseaseCriteriaQuery query,
+    public async Task<Respira.ServiceDefaults.Contracts.Results.Result<DiseaseCriteriaResult>> HandleAsync(GetDiseaseCriteriaQuery query,
         CancellationToken cancellationToken = default)
     {
         // Get disease by ID with all criteria included
@@ -29,7 +29,8 @@ public class GetDiseaseCriteriaHandler(
         if (disease is null)
         {
             logger.LogDebug("Disease ID not found: {Id}", query.Id);
-            throw new NotFoundException(nameof(Disease), query.Id);
+            return Respira.ServiceDefaults.Contracts.Results.Result<DiseaseCriteriaResult>.Failure(new Error(Status.BadRequest, "Disease ID not found"));
+            // throw new NotFoundException(nameof(Disease), query.Id);
         }
 
         // Since TreatmentProtocol.OtherCriteria can reference to the same criteria as ICU or ResistanceRisk,
@@ -59,6 +60,6 @@ public class GetDiseaseCriteriaHandler(
             OtherCriteriaCount = result.OtherCriteria.Count(),
         });
 
-        return result;
+        return Respira.ServiceDefaults.Contracts.Results.Result<DiseaseCriteriaResult>.Success(Status.Success, result);
     }
 }

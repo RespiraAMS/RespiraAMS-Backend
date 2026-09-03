@@ -1,5 +1,6 @@
 ﻿using Domain.Models;
 using Domain.Services.Dtos;
+using Respira.ServiceDefaults.Contracts.Results;
 
 namespace Domain.Services.Contracts;
 
@@ -8,6 +9,6 @@ namespace Domain.Services.Contracts;
 /// </summary>
 public interface IDiagnoseService
 {
-    DiagnoseResult EmpiricalDiagnose(Disease disease, PatientInfo info, ClinicalPicture clinicalPicture);
-    DiagnoseResult TargetedDiagnose(PatientInfo info, Antibiogram antibiogram);
+    Result<DiagnoseResult> EmpiricalDiagnose(Disease disease, PatientInfo info, ClinicalPicture clinicalPicture);
+    Result<DiagnoseResult> TargetedDiagnose(PatientInfo info, Antibiogram antibiogram);
 }

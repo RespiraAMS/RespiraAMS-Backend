@@ -6,6 +6,7 @@ using Domain.Models;
 using Infrastructure.Data;
 using Infrastructure.Mappers;
 using Microsoft.EntityFrameworkCore;
+using Respira.ServiceDefaults.Contracts.Results;
 using Respira.ServiceDefaults.Dtos;
 
 namespace Application.Test.Features.Antibiotics.GetPagedAntibiotic;
@@ -111,21 +112,25 @@ public class GetPagedAntibioticHandlerTest : IClassFixture<PostgresFixture>, IAs
         {
             Param = new PaginationParam { Page = 1, Size = 2 },
         }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.NotNull(result.Data);
+        Assert.Equal(Status.Success, result.StatusCode);
 
-        Assert.Equal(["Azithromycin", "Meropenem"], [.. result.Items.Select(x => x.Name)]);
+        Assert.Equal(["Azithromycin", "Meropenem"], [.. result.Data.Items.Select(x => x.Name)]);
 
         // The nested group projection must carry the group name through the navigation
-        Assert.Equal("Macrolides", result.Items.Single(x => x.Name == "Azithromycin")
+        Assert.Equal("Macrolides", result.Data.Items.Single(x => x.Name == "Azithromycin")
             .AntibioticGroup.Name);
-        Assert.Equal(betaLactams.Id, result.Items.Single(x => x.Name == "Meropenem")
+        Assert.Equal(betaLactams.Id, result.Data.Items.Single(x => x.Name == "Meropenem")
             .AntibioticGroup.Id);
 
-        Assert.Equal(1, result.Metadata.CurrentPage);
-        Assert.Equal(2, result.Metadata.PageSize);
-        Assert.Equal(3, result.Metadata.TotalItemCount);
-        Assert.Equal(2, result.Metadata.PageCount);
-        Assert.False(result.Metadata.HasPreviousPage);
-        Assert.True(result.Metadata.HasNextPage);
+        Assert.Equal(1, result.Data.Metadata.CurrentPage);
+        Assert.Equal(2, result.Data.Metadata.PageSize);
+        Assert.Equal(3, result.Data.Metadata.TotalItemCount);
+        Assert.Equal(2, result.Data.Metadata.PageCount);
+        Assert.False(result.Data.Metadata.HasPreviousPage);
+        Assert.True(result.Data.Metadata.HasNextPage);
     }
 
     [Fact]
@@ -138,12 +143,16 @@ public class GetPagedAntibioticHandlerTest : IClassFixture<PostgresFixture>, IAs
         {
             Param = new PaginationParam { Page = 2, Size = 2 },
         }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.NotNull(result.Data);
+        Assert.Equal(Status.Success, result.StatusCode);
 
-        var item = Assert.Single(result.Items);
+        var item = Assert.Single(result.Data.Items);
         Assert.Equal("Amoxicillin", item.Name);
-        Assert.True(result.Metadata.HasPreviousPage);
-        Assert.False(result.Metadata.HasNextPage);
-        Assert.Equal(2, result.Metadata.CurrentPage);
+        Assert.True(result.Data.Metadata.HasPreviousPage);
+        Assert.False(result.Data.Metadata.HasNextPage);
+        Assert.Equal(2, result.Data.Metadata.CurrentPage);
     }
 
     /*=== filter ===*/
@@ -158,12 +167,16 @@ public class GetPagedAntibioticHandlerTest : IClassFixture<PostgresFixture>, IAs
             Param = new PaginationParam { Page = 1, Size = 10 },
             Filter = new AntibioticFilter { Name = "MYCIN" },
         }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.NotNull(result.Data);
+        Assert.Equal(Status.Success, result.StatusCode);
 
         // Uppercase pattern against stored lowercase "mycin" proves ILike
         // case-insensitivity; Amoxicillin does not contain the fragment
-        var item = Assert.Single(result.Items);
+        var item = Assert.Single(result.Data.Items);
         Assert.Equal("Azithromycin", item.Name);
-        Assert.Equal(1, result.Metadata.TotalItemCount);
+        Assert.Equal(1, result.Data.Metadata.TotalItemCount);
     }
 
     [Fact]
@@ -176,8 +189,12 @@ public class GetPagedAntibioticHandlerTest : IClassFixture<PostgresFixture>, IAs
             Param = new PaginationParam { Page = 1, Size = 10 },
             Filter = new AntibioticFilter { AntibioticGroupId = macrolides.Id },
         }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.NotNull(result.Data);
+        Assert.Equal(Status.Success, result.StatusCode);
 
-        var item = Assert.Single(result.Items);
+        var item = Assert.Single(result.Data.Items);
         Assert.Equal("Azithromycin", item.Name);
         Assert.Equal(macrolides.Id, item.AntibioticGroup.Id);
     }
@@ -192,12 +209,16 @@ public class GetPagedAntibioticHandlerTest : IClassFixture<PostgresFixture>, IAs
             Param = new PaginationParam { Page = 1, Size = 10 },
             Filter = new AntibioticFilter { Classification = AwareClassification.Watch },
         }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.NotNull(result.Data);
+        Assert.Equal(Status.Success, result.StatusCode);
 
         Assert.Equal(
         [
             "Azithromycin",
             "Meropenem",
-        ], [.. result.Items.Select(x => x.Name)]);
+        ], [.. result.Data.Items.Select(x => x.Name)]);
     }
 
     [Fact]
@@ -214,8 +235,12 @@ public class GetPagedAntibioticHandlerTest : IClassFixture<PostgresFixture>, IAs
                 Classification = AwareClassification.Watch,
             },
         }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.NotNull(result.Data);
+        Assert.Equal(Status.Success, result.StatusCode);
 
-        var item = Assert.Single(result.Items);
+        var item = Assert.Single(result.Data.Items);
         Assert.Equal("Meropenem", item.Name);
     }
 
@@ -229,9 +254,13 @@ public class GetPagedAntibioticHandlerTest : IClassFixture<PostgresFixture>, IAs
             Param = new PaginationParam { Page = 1, Size = 10 },
             Filter = new AntibioticFilter { Name = "Vancomycin" },
         }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.NotNull(result.Data);
+        Assert.Equal(Status.Success, result.StatusCode);
 
-        Assert.Empty(result.Items);
-        Assert.Equal(0, result.Metadata.TotalItemCount);
+        Assert.Empty(result.Data.Items);
+        Assert.Equal(0, result.Data.Metadata.TotalItemCount);
     }
 
     # endregion

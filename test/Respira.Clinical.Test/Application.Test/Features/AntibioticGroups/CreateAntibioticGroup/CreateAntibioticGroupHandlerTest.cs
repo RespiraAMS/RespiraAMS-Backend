@@ -5,7 +5,7 @@ using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moq;
-using Respira.ServiceDefaults.Exceptions;
+using Respira.ServiceDefaults.Contracts.Results;
 
 namespace Application.Test.Features.AntibioticGroups.CreateAntibioticGroup;
 
@@ -44,8 +44,7 @@ public class CreateAntibioticGroupHandlerTest : IClassFixture<PostgresFixture>, 
             .ExecuteDeleteAsync(TestContext.Current.CancellationToken);
     }
 
-    private async Task<AntibioticGroup> SeedGroupAsync(string name, string description,
-        bool softDeleted = false)
+    private async Task<AntibioticGroup> SeedGroupAsync(string name, string description, bool softDeleted = false)
     {
         var group = new AntibioticGroup
         {
@@ -73,13 +72,17 @@ public class CreateAntibioticGroupHandlerTest : IClassFixture<PostgresFixture>, 
         };
 
         var result = await _handler.HandleAsync(command, TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.Equal(Status.Created, result.StatusCode);
+        Assert.NotNull(result.Data);
 
-        Assert.NotEqual(Guid.Empty, result.Id);
+        Assert.NotEqual(Guid.Empty, result.Data.Id);
 
         // Verify through a fresh context so the change tracker cannot mask a failed commit
         await using var freshContext = new AppDbContext(_options);
         var saved = await freshContext.AntibioticGroups.SingleAsync(
-            x => x.Id == result.Id, TestContext.Current.CancellationToken);
+            x => x.Id == result.Data.Id, TestContext.Current.CancellationToken);
         Assert.Equal("Beta-lactams", saved.Name);
         Assert.Equal(command.Description, saved.Description);
         Assert.Null(saved.ParentId);
@@ -97,10 +100,14 @@ public class CreateAntibioticGroupHandlerTest : IClassFixture<PostgresFixture>, 
             Description = "Beta-lactam antibiotics active against gram-positive organisms",
             ParentId = parent.Id,
         }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.Equal(Status.Created, result.StatusCode);
+        Assert.NotNull(result.Data);
 
         await using var freshContext = new AppDbContext(_options);
         var saved = await freshContext.AntibioticGroups.SingleAsync(
-            x => x.Id == result.Id, TestContext.Current.CancellationToken);
+            x => x.Id == result.Data.Id, TestContext.Current.CancellationToken);
         Assert.Equal(parent.Id, saved.ParentId);
         Assert.Equal("Penicillins", saved.Name);
     }
@@ -114,13 +121,16 @@ public class CreateAntibioticGroupHandlerTest : IClassFixture<PostgresFixture>, 
     {
         var unknownParentId = Guid.CreateVersion7();
 
-        await Assert.ThrowsAsync<BadRequestException>(() => _handler.HandleAsync(
+        var result = await _handler.HandleAsync(
             new CreateAntibioticGroupCommand
             {
                 Name = "Cephalosporins",
                 Description = "Beta-lactam antibiotics resistant to staphylococcal beta-lactamase",
                 ParentId = unknownParentId,
-            }, TestContext.Current.CancellationToken));
+            }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsFailure);
+        Assert.NotNull(result.Error);
+        Assert.Equal(Status.BadRequest, result.StatusCode);
 
         // Nothing must be created when the parent does not exist
         Assert.Equal(0, await _context.AntibioticGroups.CountAsync(TestContext.Current.CancellationToken));
@@ -134,13 +144,16 @@ public class CreateAntibioticGroupHandlerTest : IClassFixture<PostgresFixture>, 
         var deletedParent = await SeedGroupAsync("Aminoglycosides",
             "Bactericidal inhibitors of protein synthesis", softDeleted: true);
 
-        await Assert.ThrowsAsync<BadRequestException>(() => _handler.HandleAsync(
+        var result = await _handler.HandleAsync(
             new CreateAntibioticGroupCommand
             {
                 Name = "Gentamicin subgroup",
                 Description = "Aminoglycoside used for severe gram-negative infections",
                 ParentId = deletedParent.Id,
-            }, TestContext.Current.CancellationToken));
+            }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsFailure);
+        Assert.NotNull(result.Error);
+        Assert.Equal(Status.BadRequest, result.StatusCode);
 
         Assert.Equal(1, await _context.AntibioticGroups.IgnoreQueryFilters()
             .CountAsync(TestContext.Current.CancellationToken));

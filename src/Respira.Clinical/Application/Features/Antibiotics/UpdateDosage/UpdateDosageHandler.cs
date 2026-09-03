@@ -1,5 +1,4 @@
 ﻿using Application.Contracts.Data;
-using Domain.Exceptions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -9,9 +8,9 @@ public class UpdateDosageHandler(
     IDbContext context,
     IUpdateMapper<Dosage, UpdateDosageCommand> mapper,
     ILogger<UpdateDosageHandler> logger)
-    : ICommandHandler<UpdateDosageCommand>
+    : ICommandHandler<UpdateDosageCommand, Respira.ServiceDefaults.Contracts.Results.Result>
 {
-    public async Task HandleAsync(UpdateDosageCommand command, CancellationToken cancellationToken = default)
+    public async Task<Respira.ServiceDefaults.Contracts.Results.Result> HandleAsync(UpdateDosageCommand command, CancellationToken cancellationToken = default)
     {
         // Get antibiotic that own this dosage
         var antibiotic = await context.Antibiotics
@@ -20,7 +19,8 @@ public class UpdateDosageHandler(
         if (antibiotic is null)
         {
             logger.LogDebug("Dosage with this antibiotic not found: {AntibioticId}", command.AntibioticId);
-            throw new NotFoundException(nameof(Antibiotic), command.AntibioticId);
+            return Respira.ServiceDefaults.Contracts.Results.Result.Failure(new Error(Status.BadRequest, "Antibiotic not found"));
+            // throw new NotFoundException(nameof(Antibiotic), command.AntibioticId);
         }
 
         // Get the dosage for update from the fetched antibiotic
@@ -36,31 +36,19 @@ public class UpdateDosageHandler(
         if (dosage is null)
         {
             logger.LogDebug("Dosage with this ID ({DosageId}) not found in this antibiotic ({AntibioticId})", command.Id, command.AntibioticId);
-            throw new NotFoundException(nameof(Dosage), command.Id);
+            return Respira.ServiceDefaults.Contracts.Results.Result.Failure(new Error(Status.BadRequest, $"No dosage with this ID found in antibiotic {command.AntibioticId}"));
+            // throw new NotFoundException(nameof(Dosage), command.Id);
         }
 
         // Map command to model
         mapper.MapModel(dosage, command);
 
-        // Check for business logic
-        try
+        // Validate dosage
+        var validationResult = Antibiotic.IsAntibioticDosageValid(dosages);
+        if (!validationResult.IsSuccess)
         {
-            Antibiotic.IsAntibioticDosageValid(dosages);
-        }
-        catch (StandardDoseInvalidException e)
-        {
-            logger.LogDebug("Dosage validation failed: {msg}", e.Message);
-            throw new BadRequestException("Update this dosage violate business rule: each route of administration must have 1 and only 1 standard dose");
-        }
-        catch (OverlappedCrclException e)
-        {
-            logger.LogDebug("Dosage validation failed: {msg}", e.Message);
-            throw new BadRequestException("Update this dosage violate business rule: all dosages in each route of administration must not have overlapping CrCl range");
-        }
-        catch (Exception e)
-        {
-            logger.LogError("Failed to validate dosage: {exception}", e);
-            throw new ServerException();
+            logger.LogDebug("Dosage validation failed: {msg}", validationResult.Error);
+            return Respira.ServiceDefaults.Contracts.Results.Result.Failure(validationResult.Error!);
         }
 
         // Update dosage to database
@@ -68,10 +56,8 @@ public class UpdateDosageHandler(
         mapper.MapModel(dbDosage, command);
 
         // Save changes to database
-        if (await context.SaveChangesAsync(cancellationToken) <= 0)
-        {
-            logger.LogError("Failed to save antibiotic dosage");
-            throw new ServerException();
-        }
+        await context.SaveChangesAsync(cancellationToken);
+        return Respira.ServiceDefaults.Contracts.Results.Result.Success(Status.Updated);
+
     }
 }

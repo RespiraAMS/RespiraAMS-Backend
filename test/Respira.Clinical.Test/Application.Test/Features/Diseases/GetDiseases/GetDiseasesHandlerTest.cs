@@ -2,6 +2,7 @@ using Application.Features.Diseases.GetDiseases;
 using Domain.Models;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
+using Respira.ServiceDefaults.Contracts.Results;
 
 namespace Application.Test.Features.Diseases.GetDiseases;
 
@@ -68,14 +69,18 @@ public class GetDiseasesHandlerTest : IClassFixture<PostgresFixture>, IAsyncLife
         var result = await _handler.HandleAsync(
             new GetDiseasesQuery(),
             TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.Equal(Status.Success, result.StatusCode);
+        Assert.NotNull(result.Data);
 
         // Business rule: every non-deleted disease is projected with its Id and Name
-        Assert.Equal(3, result.Diseases.Count());
-        var ids = result.Diseases.Select(x => x.Id).ToHashSet();
+        Assert.Equal(3, result.Data.Diseases.Count());
+        var ids = result.Data.Diseases.Select(x => x.Id).ToHashSet();
         Assert.Contains(a.Id, ids);
         Assert.Contains(b.Id, ids);
         Assert.Contains(c.Id, ids);
-        Assert.All(result.Diseases, item =>
+        Assert.All(result.Data.Diseases, item =>
         {
             Assert.NotEqual(Guid.Empty, item.Id);
             Assert.False(string.IsNullOrEmpty(item.Name));
@@ -93,9 +98,13 @@ public class GetDiseasesHandlerTest : IClassFixture<PostgresFixture>, IAsyncLife
         var result = await _handler.HandleAsync(
             new GetDiseasesQuery(),
             TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.Equal(Status.Success, result.StatusCode);
+        Assert.NotNull(result.Data);
 
         // Business rule: diseases are ordered alphabetically by name (ascending)
-        var orderedNames = result.Diseases.Select(x => x.Name).ToList();
+        var orderedNames = result.Data.Diseases.Select(x => x.Name).ToList();
         Assert.Equal(new[] { "Anthrax", "Influenza", "Tuberculosis" }, orderedNames);
     }
 
@@ -109,10 +118,14 @@ public class GetDiseasesHandlerTest : IClassFixture<PostgresFixture>, IAsyncLife
         var result = await _handler.HandleAsync(
             new GetDiseasesQuery(),
             TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.Equal(Status.Success, result.StatusCode);
+        Assert.NotNull(result.Data);
 
         // Business rule: soft-deleted diseases are hidden by the global query filter
-        Assert.Single(result.Diseases);
-        var single = Assert.Single(result.Diseases);
+        Assert.Single(result.Data.Diseases);
+        var single = Assert.Single(result.Data.Diseases);
         Assert.Equal(active.Id, single.Id);
     }
 
@@ -129,8 +142,12 @@ public class GetDiseasesHandlerTest : IClassFixture<PostgresFixture>, IAsyncLife
         var result = await _handler.HandleAsync(
             new GetDiseasesQuery(),
             TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.Equal(Status.Success, result.StatusCode);
+        Assert.NotNull(result.Data);
 
-        Assert.Empty(result.Diseases);
+        Assert.Empty(result.Data.Diseases);
     }
 
     # endregion

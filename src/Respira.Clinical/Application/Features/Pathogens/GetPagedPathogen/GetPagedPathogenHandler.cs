@@ -5,9 +5,9 @@ using X.PagedList.EF;
 namespace Application.Features.Pathogens.GetPagedPathogen;
 
 public class GetPagedPathogensHandler(IDbContext context, IPaginationFactory factory)
-    : IQueryHandler<GetPagedPathogenQuery, Pagination<PagedPathogenItem>>
+    : IQueryHandler<GetPagedPathogenQuery, Respira.ServiceDefaults.Contracts.Results.Result<Pagination<PagedPathogenItem>>>
 {
-    public async Task<Pagination<PagedPathogenItem>> HandleAsync(GetPagedPathogenQuery query,
+    public async Task<Respira.ServiceDefaults.Contracts.Results.Result<Pagination<PagedPathogenItem>>> HandleAsync(GetPagedPathogenQuery query,
         CancellationToken cancellationToken = default)
     {
         // Apply filter
@@ -16,9 +16,7 @@ public class GetPagedPathogensHandler(IDbContext context, IPaginationFactory fac
         {
             if (query.Filter.Name is not null)
             {
-                queryable = queryable.Where(x =>
-                    EF.Functions.ILike(x.Name, $"%{query.Filter.Name}%")
-                );
+                queryable = queryable.Where(x => EF.Functions.ILike(x.Name, $"%{query.Filter.Name}%"));
             }
         }
 
@@ -33,6 +31,6 @@ public class GetPagedPathogensHandler(IDbContext context, IPaginationFactory fac
                 Description = x.Description,
             })
             .ToPagedListAsync(query.Param.Page, query.Param.Size);
-        return factory.Create(pathogens);
+        return Respira.ServiceDefaults.Contracts.Results.Result<Pagination<PagedPathogenItem>>.Success(Status.Success, factory.Create(pathogens));
     }
 }

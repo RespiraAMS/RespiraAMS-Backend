@@ -3,6 +3,7 @@ using Application.Features.Antibiotics.GetAntibiotics;
 using Domain.Models;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
+using Respira.ServiceDefaults.Contracts.Results;
 
 namespace Application.Test.Features.Antibiotics.GetAntibiotics;
 
@@ -69,18 +70,22 @@ public class GetAntibioticsHandlerTest : IClassFixture<PostgresFixture>, IAsyncL
 
         var result = await _handler.HandleAsync(new GetAntibioticsQuery(),
             TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.NotNull(result.Data);
+        Assert.Equal(Status.Success, result.StatusCode);
 
         Assert.Equal(
         [
             "Amoxicillin",
             "Co-amoxiclav",
             "Meropenem",
-        ], result.Antibiotics.Select(x => x.Name).ToArray());
+        ], [.. result.Data.Antibiotics.Select(x => x.Name)]);
 
         // The projection must keep the ID together with the name
-        var amoxicillin = Assert.Single(result.Antibiotics, x => x.Name == "Amoxicillin");
+        var amoxicillin = Assert.Single(result.Data.Antibiotics, x => x.Name == "Amoxicillin");
         Assert.Equal(idByName["Amoxicillin"], amoxicillin.Id);
-        Assert.All(result.Antibiotics, x => Assert.NotEqual(Guid.Empty, x.Id));
+        Assert.All(result.Data.Antibiotics, x => Assert.NotEqual(Guid.Empty, x.Id));
     }
 
     [Fact]
@@ -112,8 +117,12 @@ public class GetAntibioticsHandlerTest : IClassFixture<PostgresFixture>, IAsyncL
 
         var result = await _handler.HandleAsync(new GetAntibioticsQuery(),
             TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.NotNull(result.Data);
+        Assert.Equal(Status.Success, result.StatusCode);
 
-        var item = Assert.Single(result.Antibiotics);
+        var item = Assert.Single(result.Data.Antibiotics);
         Assert.Equal("Azithromycin", item.Name);
     }
 
@@ -124,8 +133,12 @@ public class GetAntibioticsHandlerTest : IClassFixture<PostgresFixture>, IAsyncL
     {
         var result = await _handler.HandleAsync(new GetAntibioticsQuery(),
             TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.NotNull(result.Data);
+        Assert.Equal(Status.Success, result.StatusCode);
 
-        Assert.Empty(result.Antibiotics);
+        Assert.Empty(result.Data.Antibiotics);
     }
 
     # endregion

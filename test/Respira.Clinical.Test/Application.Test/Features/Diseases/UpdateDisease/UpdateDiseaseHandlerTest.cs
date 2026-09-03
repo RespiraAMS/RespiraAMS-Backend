@@ -4,7 +4,7 @@ using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moq;
-using Respira.ServiceDefaults.Exceptions;
+using Respira.ServiceDefaults.Contracts.Results;
 
 namespace Application.Test.Features.Diseases.UpdateDisease;
 
@@ -76,7 +76,10 @@ public class UpdateDiseaseHandlerTest : IClassFixture<PostgresFixture>, IAsyncLi
             IcuScoreThreshold = 5,
         };
 
-        await _handler.HandleAsync(command, TestContext.Current.CancellationToken);
+        var result = await _handler.HandleAsync(command, TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.Equal(Status.Updated, result.StatusCode);
 
         // Verify through a fresh context so the change tracker cannot mask a failed commit
         await using var freshContext = new AppDbContext(_options);
@@ -116,7 +119,10 @@ public class UpdateDiseaseHandlerTest : IClassFixture<PostgresFixture>, IAsyncLi
             IcuScoreThreshold = 1,
         };
 
-        await _handler.HandleAsync(command, TestContext.Current.CancellationToken);
+        var result = await _handler.HandleAsync(command, TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.Equal(Status.Updated, result.StatusCode);
 
         await using var freshContext = new AppDbContext(_options);
         var saved = await freshContext.Diseases
@@ -136,14 +142,17 @@ public class UpdateDiseaseHandlerTest : IClassFixture<PostgresFixture>, IAsyncLi
         await CleanupDiseasesAsync();
         var unknownId = Guid.CreateVersion7();
 
-        await Assert.ThrowsAsync<NotFoundException>(() => _handler.HandleAsync(
+        var result = await _handler.HandleAsync(
             new UpdateDiseaseCommand
             {
                 Id = unknownId,
                 Name = "Tuberculosis",
                 Description = "Infection caused by Mycobacterium tuberculosis",
                 IcuScoreThreshold = 4,
-            }, TestContext.Current.CancellationToken));
+            }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsFailure);
+        Assert.NotNull(result.Error);
+        Assert.Equal(Status.BadRequest, result.StatusCode);
 
         // Nothing must be created/modified for a missing disease
         Assert.Equal(0, await _context.Diseases

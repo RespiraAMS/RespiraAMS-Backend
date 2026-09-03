@@ -8,9 +8,9 @@ public class CreateResistanceRiskFactorHandler(
     IDbContext context,
     ICreateMapper<ResistanceRiskFactor, CreateResistanceRiskFactorCommand> mapper,
     ILogger<CreateResistanceRiskFactorCommand> logger)
-    : ICommandHandler<CreateResistanceRiskFactorCommand, CreateResistanceRiskFactorResult>
+    : ICommandHandler<CreateResistanceRiskFactorCommand, Respira.ServiceDefaults.Contracts.Results.Result<CreateResistanceRiskFactorResult>>
 {
-    public async Task<CreateResistanceRiskFactorResult> HandleAsync(CreateResistanceRiskFactorCommand command,
+    public async Task<Respira.ServiceDefaults.Contracts.Results.Result<CreateResistanceRiskFactorResult>> HandleAsync(CreateResistanceRiskFactorCommand command,
         CancellationToken cancellationToken = default)
     {
         // Check if disease exists
@@ -19,7 +19,8 @@ public class CreateResistanceRiskFactorHandler(
         if (disease is null)
         {
             logger.LogDebug("Disease ID not found: {Id}", command.DiseaseId);
-            throw new BadRequestException("Disease ID not exists");
+            return Respira.ServiceDefaults.Contracts.Results.Result<CreateResistanceRiskFactorResult>.Failure(new Error(Status.BadRequest, "Disease ID not exists"));
+            // throw new BadRequestException("Disease ID not exists");
         }
 
         // Check if pathogen exists
@@ -28,7 +29,8 @@ public class CreateResistanceRiskFactorHandler(
         if (pathogen is null)
         {
             logger.LogDebug("Pathogen ID not found: {Id}", command.PathogenId);
-            throw new BadRequestException("Pathogen ID not exists");
+            return Respira.ServiceDefaults.Contracts.Results.Result<CreateResistanceRiskFactorResult>.Failure(new Error(Status.BadRequest, "Pathogen ID not exists"));
+            // throw new BadRequestException("Pathogen ID not exists");
         }
 
         // Map from command to query
@@ -36,12 +38,8 @@ public class CreateResistanceRiskFactorHandler(
 
         // Save changes to database
         await context.ResistanceRiskFactors.AddAsync(factor, cancellationToken);
-        if (await context.SaveChangesAsync(cancellationToken) <= 0)
-        {
-            logger.LogError("Failed to save resistance risk factor");
-            throw new ServerException();
-        }
+        await context.SaveChangesAsync(cancellationToken);
 
-        return new CreateResistanceRiskFactorResult(factor.Id);
+        return Respira.ServiceDefaults.Contracts.Results.Result<CreateResistanceRiskFactorResult>.Success(Status.Created, new CreateResistanceRiskFactorResult(factor.Id));
     }
 }

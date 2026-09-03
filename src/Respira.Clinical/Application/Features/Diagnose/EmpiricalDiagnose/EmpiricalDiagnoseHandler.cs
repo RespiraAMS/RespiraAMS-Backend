@@ -14,9 +14,9 @@ public class EmpiricalDiagnoseHandler
     IMapper<EmpiricalDiagnoseQuery, PatientInfo> patientInfoMapper,
     IMapper<EmpiricalDiagnoseQuery, ClinicalPicture> clinicalPictureMapper,
     ILogger<EmpiricalDiagnoseHandler> logger)
-    : IQueryHandler<EmpiricalDiagnoseQuery, EmpiricalDiagnoseResult>
+    : IQueryHandler<EmpiricalDiagnoseQuery, Respira.ServiceDefaults.Contracts.Results.Result<EmpiricalDiagnoseResult>>
 {
-    public async Task<EmpiricalDiagnoseResult> HandleAsync(EmpiricalDiagnoseQuery query, CancellationToken cancellationToken = default)
+    public async Task<Respira.ServiceDefaults.Contracts.Results.Result<EmpiricalDiagnoseResult>> HandleAsync(EmpiricalDiagnoseQuery query, CancellationToken cancellationToken = default)
     {
         // Get disease
         var disease = await context.Diseases
@@ -41,29 +41,30 @@ public class EmpiricalDiagnoseHandler
         if (disease is null)
         {
             logger.LogDebug("Disease not found: {Id}", query.DiseaseId);
-            throw new NotFoundException(nameof(Disease), query.DiseaseId);
+            return Respira.ServiceDefaults.Contracts.Results.Result<EmpiricalDiagnoseResult>.Failure(new Error(Status.ResourceNotFound, "Disease not found"));
+            // throw new NotFoundException(nameof(Disease), query.DiseaseId);
         }
 
         // Check clinical picture criteria IDs all exist in this disease
-        if (!query.IcuHospitalizeCriteria.All(x =>
-                disease.IcuHospitalizeCriteria.Select(icu => icu.CriterionId).Contains(x)))
+        if (!query.IcuHospitalizeCriteria.All(x => disease.IcuHospitalizeCriteria.Select(icu => icu.CriterionId).Contains(x)))
         {
             logger.LogWarning("Not all ICU hospitalize criteria ID exist");
-            throw new BadRequestException("Not all ICU hospitalize criteria ID exist");
+            return Respira.ServiceDefaults.Contracts.Results.Result<EmpiricalDiagnoseResult>.Failure(new Error(Status.BadRequest, "Not all ICU hospitalize criteria ID exist"));
+            // throw new BadRequestException("Not all ICU hospitalize criteria ID exist");
         }
 
-        if (!query.ResistanceRiskFactors.All(x =>
-                disease.ResistanceRiskFactors.Select(risk => risk.CriterionId).Contains(x)))
+        if (!query.ResistanceRiskFactors.All(x => disease.ResistanceRiskFactors.Select(risk => risk.CriterionId).Contains(x)))
         {
             logger.LogWarning("Not all resistance risk factors ID exist");
-            throw new BadRequestException("Not all resistance risk factors ID exist");
+            return Respira.ServiceDefaults.Contracts.Results.Result<EmpiricalDiagnoseResult>.Failure(new Error(Status.BadRequest, "Not all resistance risk factors ID exist"));
+            // throw new BadRequestException("Not all resistance risk factors ID exist");
         }
 
-        if (await context.Criteria.CountAsync(x => query.OtherCriteria.Contains(x.Id), cancellationToken) !=
-            query.OtherCriteria.Count)
+        if (await context.Criteria.CountAsync(x => query.OtherCriteria.Contains(x.Id), cancellationToken) != query.OtherCriteria.Count)
         {
             logger.LogWarning("Not all other criteria IDs exists");
-            throw new BadRequestException("Not all other criteria IDs exists");
+            return Respira.ServiceDefaults.Contracts.Results.Result<EmpiricalDiagnoseResult>.Failure(new Error(Status.BadRequest, "Not all other criteria IDs exists"));
+            // throw new BadRequestException("Not all other criteria IDs exists");
         }
 
         // Map from query to DTOs
@@ -71,17 +72,22 @@ public class EmpiricalDiagnoseHandler
         var picture = clinicalPictureMapper.Map(query);
 
         // Diagnose
-        var result = (Domain.Services.Dtos.EmpiricalDiagnoseResult)service.EmpiricalDiagnose(disease, info, picture);
+        var result = service.EmpiricalDiagnose(disease, info, picture);
+        if (result.IsFailure)
+        {
+            logger.LogDebug("Diagnose service failed: {Error}", result.Error);
+            return Respira.ServiceDefaults.Contracts.Results.Result<EmpiricalDiagnoseResult>.Failure(result.Error!);
+        }
+        var diagnosis = (Domain.Services.Dtos.EmpiricalDiagnoseResult)result.Data!;
 
         // Merge all the medicines in all recommendations protocols into a single list
         var recommendations = new List<Antibiotic>();
-        result.References.ForEach(r => recommendations.AddRange(r.Medicines));
+        diagnosis.References.ForEach(r => recommendations.AddRange(r.Medicines));
 
-        // return service.Diagnose(disease, clinicalPicture);
-        return new()
+        return Respira.ServiceDefaults.Contracts.Results.Result<EmpiricalDiagnoseResult>.Success(Status.Success, new EmpiricalDiagnoseResult
         {
-            Crcl = result.Crcl,
-            Medicines = result.Medicines.ConvertAll(m => new AntibioticResult
+            Crcl = diagnosis.Crcl,
+            Medicines = diagnosis.Medicines.ConvertAll(m => new AntibioticResult
             {
                 Id = m.Id,
                 Name = m.Name,
@@ -107,15 +113,15 @@ public class EmpiricalDiagnoseHandler
                     Dose = d.Dose,
                 }),
             }),
-            Severity = result.Severity,
-            TreatmentSite = result.TreatmentSite,
-            InfectionProbabilities = result.InfectionProbabilities.ConvertAll(p => new InfectionProbability
+            Severity = diagnosis.Severity,
+            TreatmentSite = diagnosis.TreatmentSite,
+            InfectionProbabilities = diagnosis.InfectionProbabilities.ConvertAll(p => new InfectionProbability
             {
                 PathogenId = p.Pathogen.Id,
                 PathogenName = p.Pathogen.Name,
                 Probability = p.Probability,
             }),
-            References = result.References.ConvertAll(r => new EmpiricalTreatmentProtocolResult
+            References = diagnosis.References.ConvertAll(r => new EmpiricalTreatmentProtocolResult
             {
                 Id = r.Id,
                 UpdatedAt = r.UpdatedAt,
@@ -124,6 +130,6 @@ public class EmpiricalDiagnoseHandler
                 Issuer = r.Issuer,
                 Version = r.Version
             })
-        };
+        });
     }
 }

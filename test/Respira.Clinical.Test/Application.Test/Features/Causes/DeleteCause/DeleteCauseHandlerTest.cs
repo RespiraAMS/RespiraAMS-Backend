@@ -6,7 +6,7 @@ using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moq;
-using Respira.ServiceDefaults.Exceptions;
+using Respira.ServiceDefaults.Contracts.Results;
 
 namespace Application.Test.Features.Causes.DeleteCause;
 
@@ -99,8 +99,11 @@ public class DeleteCauseHandlerTest : IClassFixture<PostgresFixture>, IAsyncLife
         ]);
         var target = causes[0];
 
-        await _handler.HandleAsync(new DeleteCauseCommand { Id = target.Id },
+        var result = await _handler.HandleAsync(new DeleteCauseCommand { Id = target.Id },
             TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.Equal(Status.Deleted, result.StatusCode);
 
         // Deletion is a soft delete: the row must remain with the flags set.
         // Causes carry a !IsDeleted query filter, so IgnoreQueryFilters is required
@@ -137,8 +140,11 @@ public class DeleteCauseHandlerTest : IClassFixture<PostgresFixture>, IAsyncLife
             (Severity.Moderate, TreatmentSite.Inpatient),
         ]);
 
-        await _handler.HandleAsync(new DeleteCauseCommand { Id = causes[0].Id },
+        var result = await _handler.HandleAsync(new DeleteCauseCommand { Id = causes[0].Id },
             TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.Equal(Status.Deleted, result.StatusCode);
 
         Assert.Equal(0, await _context.Causes.CountAsync(TestContext.Current.CancellationToken));
         Assert.Equal(1, await _context.Causes.IgnoreQueryFilters()
@@ -154,8 +160,11 @@ public class DeleteCauseHandlerTest : IClassFixture<PostgresFixture>, IAsyncLife
     {
         var unknownId = Guid.CreateVersion7();
 
-        await Assert.ThrowsAsync<NotFoundException>(() => _handler.HandleAsync(
-            new DeleteCauseCommand { Id = unknownId }, TestContext.Current.CancellationToken));
+        var result = await _handler.HandleAsync(
+            new DeleteCauseCommand { Id = unknownId }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsFailure);
+        Assert.NotNull(result.Error);
+        Assert.Equal(Status.BadRequest, result.StatusCode);
 
         // Nothing must exist when the target was never there
         Assert.Equal(0, await _context.Causes.IgnoreQueryFilters()
@@ -172,8 +181,11 @@ public class DeleteCauseHandlerTest : IClassFixture<PostgresFixture>, IAsyncLife
             (Severity.Mild, TreatmentSite.Outpatient),
         ], softDeletedFirst: true);
 
-        await Assert.ThrowsAsync<NotFoundException>(() => _handler.HandleAsync(
-            new DeleteCauseCommand { Id = causes[0].Id }, TestContext.Current.CancellationToken));
+        var result = await _handler.HandleAsync(
+            new DeleteCauseCommand { Id = causes[0].Id }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsFailure);
+        Assert.NotNull(result.Error);
+        Assert.Equal(Status.BadRequest, result.StatusCode);
 
         // The already-deleted row must keep its original delete timestamp
         // (Postgres timestamp precision is lower than DateTimeOffset ticks)
@@ -185,9 +197,6 @@ public class DeleteCauseHandlerTest : IClassFixture<PostgresFixture>, IAsyncLife
         Assert.True((stillDeleted.DeletedAt - causes[0].DeletedAt).GetValueOrDefault().Duration()
             < TimeSpan.FromSeconds(1));
     }
-
-    // Skipped paths: the ServerException branch (SaveChangesAsync returning <= 0)
-    // cannot be simulated against a real database without mocking infrastructure internals
 
     # endregion
 }

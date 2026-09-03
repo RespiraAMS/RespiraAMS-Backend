@@ -6,7 +6,7 @@ using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moq;
-using Respira.ServiceDefaults.Exceptions;
+using Respira.ServiceDefaults.Contracts.Results;
 
 namespace Application.Test.Features.Antibiotics.CreateAntibiotic;
 
@@ -78,18 +78,22 @@ public class CreateAntibioticHandlerTest : IClassFixture<PostgresFixture>, IAsyn
             RouteOfAdministration = Enum.Parse<RouteOfAdministration>(route),
             StandardDose = standardDose,
         }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.NotNull(result.Data);
+        Assert.Equal(Status.Created, result.StatusCode);
 
-        Assert.NotEqual(Guid.Empty, result.Id);
+        Assert.NotEqual(Guid.Empty, result.Data.Id);
 
         // Verify through a fresh context so the change tracker cannot mask a failed commit
         await using var freshContext = new AppDbContext(_options);
         var saved = await freshContext.Antibiotics.SingleAsync(
-            x => x.Id == result.Id, TestContext.Current.CancellationToken);
+            x => x.Id == result.Data.Id, TestContext.Current.CancellationToken);
         Assert.Equal(name, saved.Name);
         Assert.Equal(group.Id, saved.AntibioticGroupId);
 
         var dosage = Assert.Single(await freshContext.Dosages
-            .Where(x => x.AntibioticId == result.Id)
+            .Where(x => x.AntibioticId == result.Data.Id)
             .ToListAsync(TestContext.Current.CancellationToken));
         Assert.Contains(dosage.Id, saved.DosageIds);
         Assert.Equal(standardDose, dosage.Dose);
@@ -106,7 +110,7 @@ public class CreateAntibioticHandlerTest : IClassFixture<PostgresFixture>, IAsyn
     {
         var unknownGroupId = Guid.CreateVersion7();
 
-        await Assert.ThrowsAsync<BadRequestException>(() => _handler.HandleAsync(
+        var result = await _handler.HandleAsync(
             new CreateAntibioticCommand
             {
                 Name = "Ciprofloxacin",
@@ -114,7 +118,10 @@ public class CreateAntibioticHandlerTest : IClassFixture<PostgresFixture>, IAsyn
                 Classification = AwareClassification.Watch,
                 RouteOfAdministration = RouteOfAdministration.Oral,
                 StandardDose = "500 mg orally every 12 hours",
-            }, TestContext.Current.CancellationToken));
+            }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsFailure);
+        Assert.NotNull(result.Error);
+        Assert.Equal(Status.BadRequest, result.StatusCode);
 
         // Nothing must be created when the group does not exist
         Assert.Equal(0, await _context.Antibiotics.CountAsync(TestContext.Current.CancellationToken));
@@ -129,7 +136,7 @@ public class CreateAntibioticHandlerTest : IClassFixture<PostgresFixture>, IAsyn
         var deletedGroup = await SeedGroupAsync("Polypeptides",
             "Discontinued classification branch", softDeleted: true);
 
-        await Assert.ThrowsAsync<BadRequestException>(async () => await _handler.HandleAsync(
+        var result = await _handler.HandleAsync(
             new CreateAntibioticCommand
             {
                 Name = "Colistin",
@@ -137,7 +144,10 @@ public class CreateAntibioticHandlerTest : IClassFixture<PostgresFixture>, IAsyn
                 Classification = AwareClassification.Reserve,
                 RouteOfAdministration = RouteOfAdministration.Intravenous,
                 StandardDose = "2.5 mg/kg IV every 12 hours",
-            }, TestContext.Current.CancellationToken));
+            }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsFailure);
+        Assert.NotNull(result.Error);
+        Assert.Equal(Status.BadRequest, result.StatusCode);
     }
 
     # endregion

@@ -8,10 +8,9 @@ public class UpdateIcuHospitalizeCriterionHandler(
     IDbContext context,
     IUpdateMapper<IcuHospitalizeCriterion, UpdateIcuHospitalizeCriterionCommand> mapper,
     ILogger<UpdateIcuHospitalizeCriterionHandler> logger)
-    : ICommandHandler<UpdateIcuHospitalizeCriterionCommand>
+    : ICommandHandler<UpdateIcuHospitalizeCriterionCommand, Respira.ServiceDefaults.Contracts.Results.Result>
 {
-    public async Task HandleAsync(UpdateIcuHospitalizeCriterionCommand command,
-        CancellationToken cancellationToken = default)
+    public async Task<Respira.ServiceDefaults.Contracts.Results.Result> HandleAsync(UpdateIcuHospitalizeCriterionCommand command, CancellationToken cancellationToken = default)
     {
         // Get entity by ID
         var icu = await context.IcuHospitalizeCriteria
@@ -20,17 +19,15 @@ public class UpdateIcuHospitalizeCriterionHandler(
         if (icu is null)
         {
             logger.LogDebug("ICU hospitalize criterion not found: {Id}", command.Id);
-            throw new NotFoundException(nameof(IcuHospitalizeCriteria), command.Id);
+            return Respira.ServiceDefaults.Contracts.Results.Result.Failure(new Error(Status.BadRequest, "ICU hospitalize criterion not found"));
+            // throw new NotFoundException(nameof(IcuHospitalizeCriteria), command.Id);
         }
 
         // Map from command to model
         mapper.MapModel(icu, command);
 
         // Save changes to database
-        if (await context.SaveChangesAsync(cancellationToken) <= 0)
-        {
-            logger.LogError("Failed to save disease's ICU hospitalize criterion");
-            throw new ServerException();
-        }
+        await context.SaveChangesAsync(cancellationToken);
+        return Respira.ServiceDefaults.Contracts.Results.Result.Success(Status.Updated);
     }
 }

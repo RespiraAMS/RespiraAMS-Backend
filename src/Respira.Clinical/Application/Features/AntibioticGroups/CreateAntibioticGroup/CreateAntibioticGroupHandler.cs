@@ -8,10 +8,9 @@ public class CreateAntibioticGroupHandler(
     IDbContext context,
     ICreateMapper<AntibioticGroup, CreateAntibioticGroupCommand> mapper,
     ILogger<CreateAntibioticGroupHandler> logger)
-    : ICommandHandler<CreateAntibioticGroupCommand, CreateAntibioticGroupResult>
+    : ICommandHandler<CreateAntibioticGroupCommand, Respira.ServiceDefaults.Contracts.Results.Result<CreateAntibioticGroupResult>>
 {
-    public async Task<CreateAntibioticGroupResult> HandleAsync(CreateAntibioticGroupCommand command,
-        CancellationToken cancellationToken = default)
+    public async Task<Respira.ServiceDefaults.Contracts.Results.Result<CreateAntibioticGroupResult>> HandleAsync(CreateAntibioticGroupCommand command, CancellationToken cancellationToken = default)
     {
         // Check if parent ID exists in database if provided
         if (command.ParentId is not null)
@@ -21,7 +20,8 @@ public class CreateAntibioticGroupHandler(
             if (parent is null)
             {
                 logger.LogDebug("Parent ID not found for antibiotic group: {Id}", command.ParentId);
-                throw new BadRequestException("Parent ID not exists");
+                return Respira.ServiceDefaults.Contracts.Results.Result<CreateAntibioticGroupResult>.Failure(new Error(Status.BadRequest, "Antibiotic group parent ID not found"));
+                // throw new BadRequestException("Parent ID not exists");
             }
         }
 
@@ -30,12 +30,7 @@ public class CreateAntibioticGroupHandler(
 
         // Save antibiotic group to database
         await context.AntibioticGroups.AddAsync(group, cancellationToken);
-        if (await context.SaveChangesAsync(cancellationToken) <= 0)
-        {
-            logger.LogError("Failed to save antibiotic group");
-            throw new ServerException();
-        }
-
-        return new CreateAntibioticGroupResult(group.Id);
+        await context.SaveChangesAsync(cancellationToken);
+        return Respira.ServiceDefaults.Contracts.Results.Result<CreateAntibioticGroupResult>.Success(Status.Created, new CreateAntibioticGroupResult(group.Id));
     }
 }

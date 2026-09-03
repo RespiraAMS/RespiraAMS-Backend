@@ -6,7 +6,7 @@ using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moq;
-using Respira.ServiceDefaults.Exceptions;
+using Respira.ServiceDefaults.Contracts.Results;
 
 namespace Application.Test.Features.Pathogens.DeletePathogen;
 
@@ -141,7 +141,10 @@ public class DeletePathogenHandlerTest : IClassFixture<PostgresFixture>, IAsyncL
     {
         var seeded = await SeedPathogenAsync(withRelatedData: true);
 
-        await _handler.HandleAsync(new DeletePathogenCommand(seeded.Id), TestContext.Current.CancellationToken);
+        var result = await _handler.HandleAsync(new DeletePathogenCommand(seeded.Id), TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.Equal(Status.Deleted, result.StatusCode);
 
         // All entities carry a !IsDeleted query filter, so IgnoreQueryFilters is
         // required to observe the soft-delete flags
@@ -185,7 +188,10 @@ public class DeletePathogenHandlerTest : IClassFixture<PostgresFixture>, IAsyncL
         // Lower boundary of the cascade: nothing linked to the pathogen
         var seeded = await SeedPathogenAsync(withRelatedData: false);
 
-        await _handler.HandleAsync(new DeletePathogenCommand(seeded.Id), TestContext.Current.CancellationToken);
+        var result = await _handler.HandleAsync(new DeletePathogenCommand(seeded.Id), TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.Equal(Status.Deleted, result.StatusCode);
 
         await using var freshContext = new AppDbContext(_options);
         var deleted = await freshContext.Pathogens.IgnoreQueryFilters()
@@ -206,8 +212,10 @@ public class DeletePathogenHandlerTest : IClassFixture<PostgresFixture>, IAsyncL
     {
         var unknownId = Guid.CreateVersion7();
 
-        await Assert.ThrowsAsync<NotFoundException>(
-            () => _handler.HandleAsync(new DeletePathogenCommand(unknownId), TestContext.Current.CancellationToken));
+        var result = await _handler.HandleAsync(new DeletePathogenCommand(unknownId), TestContext.Current.CancellationToken);
+        Assert.True(result.IsFailure);
+        Assert.NotNull(result.Error);
+        Assert.Equal(Status.BadRequest, result.StatusCode);
 
         // Nothing must be soft-deleted when the target does not exist
         Assert.Equal(0, await _context.Pathogens.IgnoreQueryFilters()

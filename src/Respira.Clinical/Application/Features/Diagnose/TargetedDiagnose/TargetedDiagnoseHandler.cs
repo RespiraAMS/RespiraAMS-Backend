@@ -13,15 +13,16 @@ public class TargetedDiagnoseHandler(
     IDiagnoseService service,
     IMapper<TargetedDiagnoseQuery, PatientInfo> mapper,
     ILogger<TargetedDiagnoseHandler> logger)
-    : IQueryHandler<TargetedDiagnoseQuery, TargetedDiagnoseResult>
+    : IQueryHandler<TargetedDiagnoseQuery, Respira.ServiceDefaults.Contracts.Results.Result<TargetedDiagnoseResult>>
 {
-    public async Task<TargetedDiagnoseResult> HandleAsync(TargetedDiagnoseQuery query, CancellationToken cancellationToken = default)
+    public async Task<Respira.ServiceDefaults.Contracts.Results.Result<TargetedDiagnoseResult>> HandleAsync(TargetedDiagnoseQuery query, CancellationToken cancellationToken = default)
     {
         // Check if pathogen exists
         if (await context.Pathogens.FirstOrDefaultAsync(x => x.Id == query.PathogenId, cancellationToken) is null)
         {
             logger.LogDebug("Pathogen ID not exists: {PathogenId}", query.PathogenId);
-            throw new NotFoundException(nameof(Pathogen), query.PathogenId);
+            return Respira.ServiceDefaults.Contracts.Results.Result<TargetedDiagnoseResult>.Failure(new Error(Status.ResourceNotFound, "Pathogen not found"));
+            // throw new NotFoundException(nameof(Pathogen), query.PathogenId);
         }
 
         // Get antibiogram for this pathogen
@@ -40,14 +41,21 @@ public class TargetedDiagnoseHandler(
         if (antibiogram is null)
         {
             logger.LogDebug("No antibiogram found for this pathogen: {PathogenId}", query.PathogenId);
-            throw new UnexpectedException("No antibiogram found for this pathogen");
+            return Respira.ServiceDefaults.Contracts.Results.Result<TargetedDiagnoseResult>.Failure(new Error(Status.ServerError, "No antibiogram found for this pathogen"));
+            // throw new UnexpectedException("No antibiogram found for this pathogen");
         }
 
         var result = service.TargetedDiagnose(mapper.Map(query), antibiogram);
-        return new TargetedDiagnoseResult
+        if (result.IsFailure)
         {
-            Crcl = result.Crcl,
-            Medicines = result.Medicines.ConvertAll(m => new AntibioticResult
+            logger.LogDebug("Diagnose service failed: {Error}", result.Error);
+            return Respira.ServiceDefaults.Contracts.Results.Result<TargetedDiagnoseResult>.Failure(result.Error!);
+        }
+
+        return Respira.ServiceDefaults.Contracts.Results.Result<TargetedDiagnoseResult>.Success(Status.Success, new TargetedDiagnoseResult
+        {
+            Crcl = result.Data!.Crcl,
+            Medicines = result.Data!.Medicines.ConvertAll(m => new AntibioticResult
             {
                 Id = m.Id,
                 Name = m.Name,
@@ -76,6 +84,6 @@ public class TargetedDiagnoseHandler(
                         Dose = d.Dose,
                     }),
                 })],
-        };
+        });
     }
 }

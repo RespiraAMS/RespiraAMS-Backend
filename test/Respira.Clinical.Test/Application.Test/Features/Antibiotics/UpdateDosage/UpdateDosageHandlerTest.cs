@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Range = Domain.Models.Range;
-using Respira.ServiceDefaults.Exceptions;
+using Respira.ServiceDefaults.Contracts.Results;
 
 namespace Application.Test.Features.Antibiotics.UpdateDosage;
 
@@ -130,7 +130,7 @@ public class UpdateDosageHandlerTest : IClassFixture<PostgresFixture>, IAsyncLif
         ]);
         var target = antibiotic.Dosages[0];
 
-        await _handler.HandleAsync(new UpdateDosageCommand
+        var result = await _handler.HandleAsync(new UpdateDosageCommand
         {
             Id = target.Id,
             AntibioticId = antibiotic.Id,
@@ -138,6 +138,9 @@ public class UpdateDosageHandlerTest : IClassFixture<PostgresFixture>, IAsyncLif
             Dose = "875 mg orally every 12 hours",
             Crcl = null,
         }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.Equal(Status.Updated, result.StatusCode);
 
         // Verify through a fresh context so the change tracker cannot mask a failed commit
         var saved = await GetPersistedDosageAsync(target.Id);
@@ -177,7 +180,7 @@ public class UpdateDosageHandlerTest : IClassFixture<PostgresFixture>, IAsyncLif
         ]);
         var adjusted = antibiotic.Dosages[2];
 
-        await _handler.HandleAsync(new UpdateDosageCommand
+        var result = await _handler.HandleAsync(new UpdateDosageCommand
         {
             Id = adjusted.Id,
             AntibioticId = antibiotic.Id,
@@ -185,6 +188,9 @@ public class UpdateDosageHandlerTest : IClassFixture<PostgresFixture>, IAsyncLif
             Dose = "500 mg IV every 24 hours",
             Crcl = new Range { Min = 45, IsMinExclusive = true, Max = 60, IsMaxExclusive = false, Unit = "mL/min" },
         }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.Equal(Status.Updated, result.StatusCode);
 
         var saved = await GetPersistedDosageAsync(adjusted.Id);
         Assert.Equal("500 mg IV every 24 hours", saved.Dose);
@@ -207,7 +213,7 @@ public class UpdateDosageHandlerTest : IClassFixture<PostgresFixture>, IAsyncLif
         var target = antibiotic.Dosages[0];
         var updatedAtBefore = target.UpdatedAt;
 
-        await _handler.HandleAsync(new UpdateDosageCommand
+        var result = await _handler.HandleAsync(new UpdateDosageCommand
         {
             Id = target.Id,
             AntibioticId = antibiotic.Id,
@@ -215,6 +221,9 @@ public class UpdateDosageHandlerTest : IClassFixture<PostgresFixture>, IAsyncLif
             Dose = "400 mg IV every 12 hours",
             Crcl = null,
         }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.Equal(Status.Updated, result.StatusCode);
 
         var saved = await GetPersistedDosageAsync(target.Id);
         Assert.Equal(RouteOfAdministration.Intravenous, saved.RouteOfAdministration);
@@ -231,7 +240,7 @@ public class UpdateDosageHandlerTest : IClassFixture<PostgresFixture>, IAsyncLif
     {
         var unknownId = Guid.CreateVersion7();
 
-        await Assert.ThrowsAsync<NotFoundException>(() => _handler.HandleAsync(
+        var result = await _handler.HandleAsync(
             new UpdateDosageCommand
             {
                 Id = Guid.CreateVersion7(),
@@ -239,7 +248,10 @@ public class UpdateDosageHandlerTest : IClassFixture<PostgresFixture>, IAsyncLif
                 RouteOfAdministration = RouteOfAdministration.Oral,
                 Dose = "500 mg orally every 8 hours",
                 Crcl = null,
-            }, TestContext.Current.CancellationToken));
+            }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsFailure);
+        Assert.NotNull(result.Error);
+        Assert.Equal(Status.BadRequest, result.StatusCode);
 
         Assert.Equal(0, await _context.Dosages.CountAsync(TestContext.Current.CancellationToken));
     }
@@ -254,7 +266,7 @@ public class UpdateDosageHandlerTest : IClassFixture<PostgresFixture>, IAsyncLif
             ("500 mg orally every 6 hours", RouteOfAdministration.Oral, null),
         ], softDeleted: true);
 
-        await Assert.ThrowsAsync<NotFoundException>(() => _handler.HandleAsync(
+        var result = await _handler.HandleAsync(
             new UpdateDosageCommand
             {
                 Id = deletedAntibiotic.Dosages[0].Id,
@@ -262,7 +274,10 @@ public class UpdateDosageHandlerTest : IClassFixture<PostgresFixture>, IAsyncLif
                 RouteOfAdministration = RouteOfAdministration.Oral,
                 Dose = "250 mg orally every 6 hours",
                 Crcl = null,
-            }, TestContext.Current.CancellationToken));
+            }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsFailure);
+        Assert.NotNull(result.Error);
+        Assert.Equal(Status.BadRequest, result.StatusCode);
     }
 
     [Fact]
@@ -278,7 +293,7 @@ public class UpdateDosageHandlerTest : IClassFixture<PostgresFixture>, IAsyncLif
             .Include(x => x.Dosages)
             .SingleAsync(x => x.Name.Contains("(other)"), TestContext.Current.CancellationToken)).Dosages[0].Id;
 
-        await Assert.ThrowsAsync<NotFoundException>(() => _handler.HandleAsync(
+        var result = await _handler.HandleAsync(
             new UpdateDosageCommand
             {
                 Id = foreignDosageId,
@@ -286,7 +301,10 @@ public class UpdateDosageHandlerTest : IClassFixture<PostgresFixture>, IAsyncLif
                 RouteOfAdministration = RouteOfAdministration.Oral,
                 Dose = "875 mg orally every 12 hours",
                 Crcl = null,
-            }, TestContext.Current.CancellationToken));
+            }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsFailure);
+        Assert.NotNull(result.Error);
+        Assert.Equal(Status.BadRequest, result.StatusCode);
 
         // The foreign dosage must stay untouched
         var saved = await GetPersistedDosageAsync(foreignDosageId);
@@ -312,7 +330,7 @@ public class UpdateDosageHandlerTest : IClassFixture<PostgresFixture>, IAsyncLif
         ]);
         var adjusted = antibiotic.Dosages[1];
 
-        await Assert.ThrowsAsync<BadRequestException>(() => _handler.HandleAsync(
+        var result = await _handler.HandleAsync(
             new UpdateDosageCommand
             {
                 Id = adjusted.Id,
@@ -320,7 +338,10 @@ public class UpdateDosageHandlerTest : IClassFixture<PostgresFixture>, IAsyncLif
                 RouteOfAdministration = RouteOfAdministration.Oral,
                 Dose = "250 mg orally every 24 hours",
                 Crcl = null,
-            }, TestContext.Current.CancellationToken));
+            }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsFailure);
+        Assert.NotNull(result.Error);
+        Assert.Equal(Status.BusinessRuleViolation, result.StatusCode);
 
         // The rejected update must not be persisted
         var saved = await GetPersistedDosageAsync(adjusted.Id);
@@ -353,7 +374,7 @@ public class UpdateDosageHandlerTest : IClassFixture<PostgresFixture>, IAsyncLif
         ]);
         var adjusted = antibiotic.Dosages[1];
 
-        await Assert.ThrowsAsync<BadRequestException>(() => _handler.HandleAsync(
+        var result = await _handler.HandleAsync(
             new UpdateDosageCommand
             {
                 Id = adjusted.Id,
@@ -361,7 +382,10 @@ public class UpdateDosageHandlerTest : IClassFixture<PostgresFixture>, IAsyncLif
                 RouteOfAdministration = RouteOfAdministration.Intravenous,
                 Dose = "500 mg IV every 12 hours",
                 Crcl = new Range { Min = 45, IsMinExclusive = false, Max = 60, IsMaxExclusive = false, Unit = "mL/min" },
-            }, TestContext.Current.CancellationToken));
+            }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsFailure);
+        Assert.NotNull(result.Error);
+        Assert.Equal(Status.BusinessRuleViolation, result.StatusCode);
 
         // The old range must remain persisted untouched
         var saved = await GetPersistedDosageAsync(adjusted.Id);
@@ -370,10 +394,6 @@ public class UpdateDosageHandlerTest : IClassFixture<PostgresFixture>, IAsyncLif
         Assert.Equal(45, saved.Crcl.Max);
         Assert.False(saved.Crcl.IsMinExclusive);
     }
-
-    // Skipped paths: the two ServerException branches (SaveChangesAsync returning <= 0
-    // and an unexpected exception escaping DosageBusinessChecker) cannot be simulated
-    // against a real database without mocking infrastructure internals
 
     # endregion
 }

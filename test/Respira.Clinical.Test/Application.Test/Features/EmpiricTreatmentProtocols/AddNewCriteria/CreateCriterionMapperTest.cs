@@ -2,7 +2,6 @@ using Application.Contracts.Mappers;
 using Application.Features.Shared.ManageCriterion;
 using Domain.Enums;
 using Domain.Models;
-using Respira.ServiceDefaults.Exceptions;
 using Range = Domain.Models.Range;
 
 namespace Application.Test.Features.EmpiricTreatmentProtocols.AddNewCriteria;
@@ -73,7 +72,7 @@ public class CreateCriterionMapperTest
             Value = null,
         };
 
-        Assert.Throws<UnexpectedException>(() => _mapper.ToModel(command));
+        Assert.Throws<ArgumentException>(() => _mapper.ToModel(command));
     }
 
     # endregion

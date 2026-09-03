@@ -5,6 +5,7 @@ using Domain.Models;
 using Infrastructure.Data;
 using Infrastructure.Mappers;
 using Microsoft.EntityFrameworkCore;
+using Respira.ServiceDefaults.Contracts.Results;
 
 namespace Application.Test.Features.Pathogens.GetPagedPathogen;
 
@@ -70,15 +71,19 @@ public class GetPagedPathogensHandlerTest : IClassFixture<PostgresFixture>, IAsy
         {
             Param = new Respira.ServiceDefaults.Dtos.PaginationParam { Page = 1, Size = 2 },
         }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.Equal(Status.Success, result.StatusCode);
+        Assert.NotNull(result.Data);
 
-        Assert.Equal(["Pathogen-5", "Pathogen-4"], [.. result.Items.Select(x => x.Name)]);
+        Assert.Equal(["Pathogen-5", "Pathogen-4"], [.. result.Data.Items.Select(x => x.Name)]);
 
-        Assert.Equal(1, result.Metadata.CurrentPage);
-        Assert.Equal(2, result.Metadata.PageSize);
-        Assert.Equal(5, result.Metadata.TotalItemCount);
-        Assert.Equal(3, result.Metadata.PageCount);
-        Assert.False(result.Metadata.HasPreviousPage);
-        Assert.True(result.Metadata.HasNextPage);
+        Assert.Equal(1, result.Data.Metadata.CurrentPage);
+        Assert.Equal(2, result.Data.Metadata.PageSize);
+        Assert.Equal(5, result.Data.Metadata.TotalItemCount);
+        Assert.Equal(3, result.Data.Metadata.PageCount);
+        Assert.False(result.Data.Metadata.HasPreviousPage);
+        Assert.True(result.Data.Metadata.HasNextPage);
     }
 
     [Fact]
@@ -90,11 +95,15 @@ public class GetPagedPathogensHandlerTest : IClassFixture<PostgresFixture>, IAsy
         {
             Param = new Respira.ServiceDefaults.Dtos.PaginationParam { Page = 2, Size = 2 },
         }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.Equal(Status.Success, result.StatusCode);
+        Assert.NotNull(result.Data);
 
-        Assert.Equal(["Pathogen-3", "Pathogen-2"], [.. result.Items.Select(x => x.Name)]);
-        Assert.True(result.Metadata.HasPreviousPage);
-        Assert.True(result.Metadata.HasNextPage);
-        Assert.Equal(2, result.Metadata.CurrentPage);
+        Assert.Equal(["Pathogen-3", "Pathogen-2"], [.. result.Data.Items.Select(x => x.Name)]);
+        Assert.True(result.Data.Metadata.HasPreviousPage);
+        Assert.True(result.Data.Metadata.HasNextPage);
+        Assert.Equal(2, result.Data.Metadata.CurrentPage);
     }
 
     [Fact]
@@ -107,12 +116,16 @@ public class GetPagedPathogensHandlerTest : IClassFixture<PostgresFixture>, IAsy
         {
             Param = new Respira.ServiceDefaults.Dtos.PaginationParam { Page = 3, Size = 2 },
         }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.Equal(Status.Success, result.StatusCode);
+        Assert.NotNull(result.Data);
 
-        var item = Assert.Single(result.Items);
+        var item = Assert.Single(result.Data.Items);
         Assert.Equal("Pathogen-1", item.Name);
-        Assert.True(result.Metadata.HasPreviousPage);
-        Assert.False(result.Metadata.HasNextPage);
-        Assert.Equal(3, result.Metadata.CurrentPage);
+        Assert.True(result.Data.Metadata.HasPreviousPage);
+        Assert.False(result.Data.Metadata.HasNextPage);
+        Assert.Equal(3, result.Data.Metadata.CurrentPage);
     }
 
     /*=== filter ===*/
@@ -134,11 +147,15 @@ public class GetPagedPathogensHandlerTest : IClassFixture<PostgresFixture>, IAsy
             Param = new Respira.ServiceDefaults.Dtos.PaginationParam { Page = 1, Size = 10 },
             Filter = new PathogenFilter { Name = "PNEU" },
         }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.Equal(Status.Success, result.StatusCode);
+        Assert.NotNull(result.Data);
 
-        var item = Assert.Single(result.Items);
+        var item = Assert.Single(result.Data.Items);
         Assert.Equal("Klebsiella pneumoniae", item.Name);
         Assert.Equal("Gram-negative bacillus", item.Description);
-        Assert.Equal(1, result.Metadata.TotalItemCount);
+        Assert.Equal(1, result.Data.Metadata.TotalItemCount);
     }
 
     [Fact]
@@ -151,9 +168,13 @@ public class GetPagedPathogensHandlerTest : IClassFixture<PostgresFixture>, IAsy
             Param = new Respira.ServiceDefaults.Dtos.PaginationParam { Page = 1, Size = 10 },
             Filter = new PathogenFilter { Name = "Salmonella" },
         }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.Equal(Status.Success, result.StatusCode);
+        Assert.NotNull(result.Data);
 
-        Assert.Empty(result.Items);
-        Assert.Equal(0, result.Metadata.TotalItemCount);
+        Assert.Empty(result.Data.Items);
+        Assert.Equal(0, result.Data.Metadata.TotalItemCount);
     }
 
     # endregion

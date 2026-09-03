@@ -5,10 +5,9 @@ using X.PagedList.EF;
 namespace Application.Features.Antibiotics.GetPagedAntibiotic;
 
 public class GetPagedAntibioticHandler(IDbContext context, IPaginationFactory factory)
-    : IQueryHandler<GetPagedAntibioticQuery, Pagination<PagedAntibioticItem>>
+    : IQueryHandler<GetPagedAntibioticQuery, Respira.ServiceDefaults.Contracts.Results.Result<Pagination<PagedAntibioticItem>>>
 {
-    public async Task<Pagination<PagedAntibioticItem>> HandleAsync(GetPagedAntibioticQuery query,
-        CancellationToken cancellationToken = default)
+    public async Task<Respira.ServiceDefaults.Contracts.Results.Result<Pagination<PagedAntibioticItem>>> HandleAsync(GetPagedAntibioticQuery query, CancellationToken cancellationToken = default)
     {
         // Apply filter
         var queryable = context.Antibiotics.AsQueryable();
@@ -47,6 +46,6 @@ public class GetPagedAntibioticHandler(IDbContext context, IPaginationFactory fa
                 Classification = x.Classification
             })
             .ToPagedListAsync(query.Param.Page, query.Param.Size);
-        return factory.Create(antibiotics);
+        return Respira.ServiceDefaults.Contracts.Results.Result<Pagination<PagedAntibioticItem>>.Success(Status.Success, factory.Create(antibiotics));
     }
 }

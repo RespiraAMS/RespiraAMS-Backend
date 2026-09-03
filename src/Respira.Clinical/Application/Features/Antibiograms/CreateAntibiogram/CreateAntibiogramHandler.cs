@@ -8,18 +8,17 @@ public class CreateAntibiogramHandler(
     IDbContext context,
     ICreateMapper<Antibiogram, CreateAntibiogramCommand> mapper,
     ILogger<CreateAntibiogramHandler> logger)
-    : ICommandHandler<CreateAntibiogramCommand, CreateAntibiogramResult>
+    : ICommandHandler<CreateAntibiogramCommand, Respira.ServiceDefaults.Contracts.Results.Result<CreateAntibiogramResult>>
 {
-    public async Task<CreateAntibiogramResult> HandleAsync(CreateAntibiogramCommand command,
-        CancellationToken cancellationToken = default)
+    public async Task<Respira.ServiceDefaults.Contracts.Results.Result<CreateAntibiogramResult>> HandleAsync(CreateAntibiogramCommand command, CancellationToken cancellationToken = default)
     {
         // Check if pathogen ID exists
-        var pathogen = await context.Pathogens
-            .FirstOrDefaultAsync(x => x.Id == command.PathogenId, cancellationToken);
+        var pathogen = await context.Pathogens.FirstOrDefaultAsync(x => x.Id == command.PathogenId, cancellationToken);
         if (pathogen is null)
         {
             logger.LogDebug("Pathogen with ID not found: {Id}", command.PathogenId);
-            throw new BadRequestException("Pathogen with ID not found");
+            return Respira.ServiceDefaults.Contracts.Results.Result<CreateAntibiogramResult>.Failure(new Error(Status.BadRequest, "Pathogen not found"));
+            // throw new BadRequestException("Pathogen with ID not found");
         }
 
         // Check if all antibiotics exists
@@ -32,7 +31,8 @@ public class CreateAntibiogramHandler(
         if (!allAntibioticsExist)
         {
             logger.LogDebug("Not all antibiotic IDs exist");
-            throw new BadRequestException("Not all antibiotic IDs exist");
+            return Respira.ServiceDefaults.Contracts.Results.Result<CreateAntibiogramResult>.Failure(new Error(Status.BadRequest, "Not all antibiotic IDs exist"));
+            // throw new BadRequestException("Not all antibiotic IDs exist");
         }
 
         // Map from command to model
@@ -43,12 +43,8 @@ public class CreateAntibiogramHandler(
 
         // Save changes to database
         await context.Antibiograms.AddAsync(antibiogram, cancellationToken);
-        if (await context.SaveChangesAsync(cancellationToken) <= 0)
-        {
-            logger.LogError("Failed to save antibiogram");
-            throw new ServerException();
-        }
+        await context.SaveChangesAsync(cancellationToken);
 
-        return new CreateAntibiogramResult(antibiogram.Id);
+        return Respira.ServiceDefaults.Contracts.Results.Result<CreateAntibiogramResult>.Success(Status.Created, new CreateAntibiogramResult(antibiogram.Id));
     }
 }

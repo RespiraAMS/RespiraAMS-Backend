@@ -4,7 +4,7 @@ using Domain.Enums;
 using Domain.Models;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
-using Respira.ServiceDefaults.Exceptions;
+using Respira.ServiceDefaults.Contracts.Results;
 using Range = Domain.Models.Range;
 
 namespace Application.Test.Features.Antibiotics.GetAntibioticById;
@@ -123,32 +123,36 @@ public class GetAntibioticByIdHandlerTest : IClassFixture<PostgresFixture>, IAsy
 
         var result = await _handler.HandleAsync(
             new GetAntibioticByIdQuery { Id = seeded.Id }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.NotNull(result.Data);
+        Assert.Equal(Status.Success, result.StatusCode);
 
-        Assert.Equal(seeded.Id, result.Id);
-        Assert.Equal("Amoxicillin", result.Name);
-        Assert.Equal(AwareClassification.Access, result.Classification);
+        Assert.Equal(seeded.Id, result.Data.Id);
+        Assert.Equal("Amoxicillin", result.Data.Name);
+        Assert.Equal(AwareClassification.Access, result.Data.Classification);
 
         // Nested group projection with parent resolution through two levels:
         // the antibiotic sits in "Penicillins", whose parent is the root group
-        Assert.Equal("Penicillins", result.AntibioticGroup.Name);
+        Assert.Equal("Penicillins", result.Data.AntibioticGroup.Name);
         Assert.Equal("Beta-lactam antibiotics active against gram-positive organisms",
-            result.AntibioticGroup.Description);
-        Assert.Equal(root.Id, result.AntibioticGroup.ParentId);
-        Assert.Equal("Beta-lactams", result.AntibioticGroup.ParentName);
+            result.Data.AntibioticGroup.Description);
+        Assert.Equal(root.Id, result.Data.AntibioticGroup.ParentId);
+        Assert.Equal("Beta-lactams", result.Data.AntibioticGroup.ParentName);
 
         // Antibiotic spectrum: both linked pathogens must appear
-        Assert.Equal(2, result.AntibioticSpectrum.Count);
-        Assert.Contains(result.AntibioticSpectrum, x => x.Name == "Klebsiella pneumoniae");
-        Assert.Contains(result.AntibioticSpectrum, x => x.Name == "Pseudomonas aeruginosa");
+        Assert.Equal(2, result.Data.AntibioticSpectrum.Count);
+        Assert.Contains(result.Data.AntibioticSpectrum, x => x.Name == "Klebsiella pneumoniae");
+        Assert.Contains(result.Data.AntibioticSpectrum, x => x.Name == "Pseudomonas aeruginosa");
 
         // Dosages: one standard (no CrCl range) and one renal-adjusted
-        Assert.Equal(2, result.Dosages.Count);
-        var standard = Assert.Single(result.Dosages, x => x.RouteOfAdministration ==
+        Assert.Equal(2, result.Data.Dosages.Count);
+        var standard = Assert.Single(result.Data.Dosages, x => x.RouteOfAdministration ==
             RouteOfAdministration.Oral);
         Assert.Equal("500 mg orally every 8 hours", standard.Dose);
         Assert.Null(standard.Crcl);
 
-        var adjusted = Assert.Single(result.Dosages, x => x.RouteOfAdministration ==
+        var adjusted = Assert.Single(result.Data.Dosages, x => x.RouteOfAdministration ==
             RouteOfAdministration.Intravenous);
         Assert.Equal("1 g IV every 12 hours", adjusted.Dose);
         Assert.NotNull(adjusted.Crcl);
@@ -188,14 +192,18 @@ public class GetAntibioticByIdHandlerTest : IClassFixture<PostgresFixture>, IAsy
 
         var result = await _handler.HandleAsync(
             new GetAntibioticByIdQuery { Id = azithromycin.Id }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.NotNull(result.Data);
+        Assert.Equal(Status.Success, result.StatusCode);
 
         // Business rule: a root group has neither parent ID nor parent name
-        Assert.Null(result.AntibioticGroup.ParentName);
-        Assert.Null(result.AntibioticGroup.ParentId);
+        Assert.Null(result.Data.AntibioticGroup.ParentName);
+        Assert.Null(result.Data.AntibioticGroup.ParentId);
 
         // No spectrum linked: the list must be empty, not null
-        Assert.Empty(result.AntibioticSpectrum);
-        var dosage = Assert.Single(result.Dosages);
+        Assert.Empty(result.Data.AntibioticSpectrum);
+        var dosage = Assert.Single(result.Data.Dosages);
         Assert.Equal(RouteOfAdministration.Oral, dosage.RouteOfAdministration);
     }
 
@@ -208,9 +216,10 @@ public class GetAntibioticByIdHandlerTest : IClassFixture<PostgresFixture>, IAsy
     {
         var unknownId = Guid.CreateVersion7();
 
-        await Assert.ThrowsAsync<NotFoundException>(
-            () => _handler.HandleAsync(new GetAntibioticByIdQuery { Id = unknownId },
-                TestContext.Current.CancellationToken));
+        var result = await _handler.HandleAsync(new GetAntibioticByIdQuery { Id = unknownId }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsFailure);
+        Assert.NotNull(result.Error);
+        Assert.Equal(Status.ResourceNotFound, result.StatusCode);
     }
 
     # endregion

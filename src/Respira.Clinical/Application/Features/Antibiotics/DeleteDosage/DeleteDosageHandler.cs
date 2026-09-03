@@ -1,5 +1,4 @@
 ﻿using Application.Contracts.Data;
-using Domain.Exceptions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -8,9 +7,9 @@ namespace Application.Features.Antibiotics.DeleteDosage;
 public class DeleteDosageHandler(
     IDbContext context,
     ILogger<DeleteDosageHandler> logger)
-    : ICommandHandler<DeleteDosageCommand>
+    : ICommandHandler<DeleteDosageCommand, Respira.ServiceDefaults.Contracts.Results.Result>
 {
-    public async Task HandleAsync(DeleteDosageCommand command, CancellationToken cancellationToken = default)
+    public async Task<Respira.ServiceDefaults.Contracts.Results.Result> HandleAsync(DeleteDosageCommand command, CancellationToken cancellationToken = default)
     {
         // Get antibiotic that own this dosage
         var antibiotic = await context.Antibiotics
@@ -19,7 +18,8 @@ public class DeleteDosageHandler(
         if (antibiotic is null)
         {
             logger.LogDebug("Dosage with this antibiotic not found: {AntibioticId}", command.AntibioticId);
-            throw new NotFoundException(nameof(Antibiotic), command.AntibioticId);
+            return Respira.ServiceDefaults.Contracts.Results.Result.Failure(new Error(Status.BadRequest, "Antibiotic not found"));
+            // throw new NotFoundException(nameof(Antibiotic), command.AntibioticId);
         }
 
         // Get the dosage for update from the fetched antibiotic
@@ -34,36 +34,19 @@ public class DeleteDosageHandler(
         if (dosages.FirstOrDefault(d => d.Id == command.Id) is null)
         {
             logger.LogDebug("Dosage with this ID ({DosageId}) not found in this antibiotic ({AntibioticId})", command.Id, command.AntibioticId);
-            throw new NotFoundException(nameof(Dosage), command.Id);
+            return Respira.ServiceDefaults.Contracts.Results.Result.Failure(new Error(Status.BadRequest, $"No dosage with this ID found in antibiotic {command.AntibioticId}"));
+            // throw new NotFoundException(nameof(Dosage), command.Id);
         }
 
         // Try remove the dosage from cloned object
         dosages.RemoveAll(d => d.Id == command.Id);
 
-        // Check for business logic
-        try
+        // Validate dosage
+        var validationResult = Antibiotic.IsAntibioticDosageValid(dosages);
+        if (!validationResult.IsSuccess)
         {
-            Antibiotic.IsAntibioticDosageValid(dosages);
-        }
-        catch (DosageEmptyException e)
-        {
-            logger.LogDebug("Dosage validation failed: {msg}", e.Message);
-            throw new BadRequestException("Delete this dosage violate business rule: antibiotic must have at least 1 dosage");
-        }
-        catch (StandardDoseInvalidException e)
-        {
-            logger.LogDebug("Dosage validation failed: {msg}", e.Message);
-            throw new BadRequestException("Delete this dosage violate business rule: each route of administration must have 1 and only 1 standard dose");
-        }
-        catch (OverlappedCrclException e)
-        {
-            logger.LogDebug("Dosage validation failed: {msg}", e.Message);
-            throw new BadRequestException("Delete this dosage violate business rule: all dosages in each route of administration must not have overlapping CrCl range");
-        }
-        catch (Exception e)
-        {
-            logger.LogError("Failed to validate dosage: {exception}", e);
-            throw new ServerException();
+            logger.LogDebug("Dosage validation failed: {msg}", validationResult.Error);
+            return Respira.ServiceDefaults.Contracts.Results.Result.Failure(validationResult.Error!);
         }
 
         // Since we hard delete in the memory clone while our db delete is soft delete, 
@@ -77,10 +60,7 @@ public class DeleteDosageHandler(
         // which is incorrect with our soft delete setup. The global query filter
         // will just hide the soft deleted dosage anyway
 
-        if (await context.SaveChangesAsync(cancellationToken) <= 0)
-        {
-            logger.LogError("Failed to delete antibiotic dosage");
-            throw new ServerException();
-        }
+        await context.SaveChangesAsync(cancellationToken);
+        return Respira.ServiceDefaults.Contracts.Results.Result.Success(Status.Deleted);
     }
 }

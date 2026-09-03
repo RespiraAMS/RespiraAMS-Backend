@@ -2,7 +2,7 @@
 using Application.Features.Diagnose.TargetedDiagnose;
 using Asp.Versioning;
 using Microsoft.AspNetCore.Mvc;
-using Respira.ServiceDefaults.Dtos;
+using Respira.ServiceDefaults.Contracts.Results;
 using Wolverine;
 
 namespace Respira.Clinical.API.Controllers;
@@ -22,9 +22,8 @@ public class DiagnoseController(IMessageBus bus) : ControllerBase
     [ProducesResponseType<Result>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> EmpiricalDiagnose([FromBody] EmpiricalDiagnoseQuery req)
     {
-        var result = await bus.InvokeAsync<EmpiricalDiagnoseResult>(req);
-        var resp = Result<EmpiricalDiagnoseResult>.Ok(result);
-        return Ok(resp);
+        var result = await bus.InvokeAsync<Result<EmpiricalDiagnoseResult>>(req);
+        return Ok(result);
     }
 
     [HttpPost]
@@ -37,8 +36,7 @@ public class DiagnoseController(IMessageBus bus) : ControllerBase
     [ProducesResponseType<Result>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> TargetedDiagnose([FromBody] TargetedDiagnoseQuery req)
     {
-        var result = await bus.InvokeAsync<TargetedDiagnoseResult>(req);
-        var resp = Result<TargetedDiagnoseResult>.Ok(result);
-        return Ok(resp);
+        var result = await bus.InvokeAsync<Result<TargetedDiagnoseResult>>(req);
+        return Ok(result);
     }
 }

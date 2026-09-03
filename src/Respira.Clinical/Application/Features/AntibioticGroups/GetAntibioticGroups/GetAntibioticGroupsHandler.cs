@@ -4,10 +4,9 @@ using Microsoft.EntityFrameworkCore;
 namespace Application.Features.AntibioticGroups.GetAntibioticGroups;
 
 public class GetAntibioticGroupsHandler(IDbContext context)
-    : IQueryHandler<GetAntibioticGroupsQuery, GetAntibioticGroupsResult>
+    : IQueryHandler<GetAntibioticGroupsQuery, Respira.ServiceDefaults.Contracts.Results.Result<GetAntibioticGroupsResult>>
 {
-    public async Task<GetAntibioticGroupsResult> HandleAsync(GetAntibioticGroupsQuery query,
-        CancellationToken cancellationToken = default)
+    public async Task<Respira.ServiceDefaults.Contracts.Results.Result<GetAntibioticGroupsResult>> HandleAsync(GetAntibioticGroupsQuery query, CancellationToken cancellationToken = default)
     {
         var group = await context.AntibioticGroups
             .AsNoTracking()
@@ -18,6 +17,6 @@ public class GetAntibioticGroupsHandler(IDbContext context)
                 Name = x.Name,
             })
             .ToListAsync(cancellationToken);
-        return new GetAntibioticGroupsResult(group);
+        return Respira.ServiceDefaults.Contracts.Results.Result<GetAntibioticGroupsResult>.Success(Status.Success, new GetAntibioticGroupsResult(group));
     }
 }

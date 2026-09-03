@@ -4,6 +4,7 @@ using Domain.Services.Contracts;
 using Domain.Services.Dtos;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Respira.ServiceDefaults.Contracts.Results;
 using Respira.ServiceDefaults.Exceptions;
 
 namespace Domain.Services.Implementations;
@@ -22,7 +23,7 @@ public sealed class CapDiagnoseService(ILogger<CapDiagnoseService> logger, IOpti
     /// <param name="clinicalPicture">Patient's clinical picture</param>
     /// <returns>Diagnosis result</returns>
     /// <exception cref="UnexpectedException">Throw if no protocol found for treatment</exception>
-    public DiagnoseResult EmpiricalDiagnose(Disease disease, PatientInfo info, ClinicalPicture clinicalPicture)
+    public Result<DiagnoseResult> EmpiricalDiagnose(Disease disease, PatientInfo info, ClinicalPicture clinicalPicture)
     {
         // Calculate patient age
         var age = DateTimeOffset.UtcNow.Year - info.DateOfBirth.Year;
@@ -54,7 +55,11 @@ public sealed class CapDiagnoseService(ILogger<CapDiagnoseService> logger, IOpti
                 Severity = severity,
                 TreatmentSite = treatmentSite
             });
-            throw new UnexpectedException("Cannot find any treatment protocols that matched the current patient condition");
+
+            // Since the protocol filter is either severity or treatment site match,
+            // if found no protocol, that would be more of an issue, an exception than
+            // a fail path, since treatment must rely on protocol
+            throw new Exception("Cannot find any treatment protocols that matched the current patient condition");
         }
 
         // Sort protocol with factors and coefficients
@@ -100,7 +105,8 @@ public sealed class CapDiagnoseService(ILogger<CapDiagnoseService> logger, IOpti
         // Get recommendation medicines: using medicine recommended in the first protocol
         var recommended = GetRecommendedMedicines(sorted[0].Medicines);
 
-        return new EmpiricalDiagnoseResult()
+
+        return Result<DiagnoseResult>.Success(Status.Success, new EmpiricalDiagnoseResult()
         {
             Crcl = crcl,
             Medicines = recommended,
@@ -108,7 +114,7 @@ public sealed class CapDiagnoseService(ILogger<CapDiagnoseService> logger, IOpti
             TreatmentSite = treatmentSite,
             InfectionProbabilities = [.. probabilities],
             References = sorted,
-        };
+        });
     }
 
     /// <summary>
@@ -119,7 +125,7 @@ public sealed class CapDiagnoseService(ILogger<CapDiagnoseService> logger, IOpti
     /// >Antibiogram used for targeted diagnosis. Note that this object will be modified directly
     /// </param>
     /// <returns>Diagnosis result</returns>
-    public DiagnoseResult TargetedDiagnose(PatientInfo info, Antibiogram antibiogram)
+    public Result<DiagnoseResult> TargetedDiagnose(PatientInfo info, Antibiogram antibiogram)
     {
         // Calculate patient age
         var age = DateTimeOffset.UtcNow.Year - info.DateOfBirth.Year;
@@ -135,11 +141,11 @@ public sealed class CapDiagnoseService(ILogger<CapDiagnoseService> logger, IOpti
         // Get recommended medicines using first priority
         var recommended = GetRecommendedMedicines(antibiogram.FirstPriorityMedicines);
 
-        return new DiagnoseResult()
+        return Result<DiagnoseResult>.Success(Status.Success, new DiagnoseResult()
         {
             Medicines = recommended,
             Crcl = crcl
-        };
+        });
     }
 
     /// <summary>
@@ -153,7 +159,7 @@ public sealed class CapDiagnoseService(ILogger<CapDiagnoseService> logger, IOpti
     /// <param name="diastolic">Diastolic blood pressure (mmHg)</param>
     /// <param name="age">Patient age</param>
     /// <returns>A tuple of (<see cref="Severity"/>, <see cref="TreatmentSite"/>)</returns>
-    /// <exception cref="UnexpectedException">
+    /// <exception cref="Exception">
     /// Throw exception if the score calculated get an unexpected value
     /// </exception>
     private (Severity, TreatmentSite) Curb65(bool confusion, decimal? urea, int respiratory, decimal systolic, decimal diastolic, int age)
@@ -175,7 +181,7 @@ public sealed class CapDiagnoseService(ILogger<CapDiagnoseService> logger, IOpti
                 0 => (Severity.Mild, TreatmentSite.Outpatient),
                 1 or 2 => (Severity.Moderate, TreatmentSite.Inpatient),
                 3 or 4 => (Severity.Severe, TreatmentSite.IntensiveCareUnit),
-                _ => throw new UnexpectedException($"CRB65 score get an unexpected value: {score}")
+                _ => throw new Exception($"CRB65 score get an unexpected value: {score}")
             };
         }
 
@@ -185,7 +191,7 @@ public sealed class CapDiagnoseService(ILogger<CapDiagnoseService> logger, IOpti
             >= 0 and <= 1 => (Severity.Mild, TreatmentSite.Outpatient),
             2 => (Severity.Moderate, TreatmentSite.Inpatient),
             >= 3 and <= 5 => (Severity.Severe, TreatmentSite.IntensiveCareUnit),
-            _ => throw new UnexpectedException($"CURB65 score get an unexpected value: {score}")
+            _ => throw new Exception($"CURB65 score get an unexpected value: {score}")
         };
     }
 

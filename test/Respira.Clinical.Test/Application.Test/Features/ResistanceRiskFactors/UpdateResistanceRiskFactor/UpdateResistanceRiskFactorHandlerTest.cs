@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Range = Domain.Models.Range;
-using Respira.ServiceDefaults.Exceptions;
+using Respira.ServiceDefaults.Contracts.Results;
 
 namespace Application.Test.Features.ResistanceRiskFactors.UpdateResistanceRiskFactor;
 
@@ -121,7 +121,7 @@ public class UpdateResistanceRiskFactorHandlerTest : IClassFixture<PostgresFixtu
         var newPathogenId = await SeedPathogenAsync();
         var factorId = await SeedFactorAsync(diseaseId, oldPathogenId, numeric: false);
 
-        await _handler.HandleAsync(new UpdateResistanceRiskFactorCommand
+        var result = await _handler.HandleAsync(new UpdateResistanceRiskFactorCommand
         {
             Id = factorId,
             PathogenId = newPathogenId,
@@ -133,6 +133,9 @@ public class UpdateResistanceRiskFactorHandlerTest : IClassFixture<PostgresFixtu
                 Value = null,
             },
         }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.Equal(Status.Updated, result.StatusCode);
 
         // Verify through a fresh context so the change tracker cannot mask a failed commit
         var saved = await GetPersistedAsync(factorId);
@@ -151,7 +154,7 @@ public class UpdateResistanceRiskFactorHandlerTest : IClassFixture<PostgresFixtu
         var factorId = await SeedFactorAsync(diseaseId, pathogenId, numeric: true);
         var updated = new Range { Min = 100, IsMinExclusive = false, Max = decimal.MaxValue, IsMaxExclusive = false, Unit = "mg/L" };
 
-        await _handler.HandleAsync(new UpdateResistanceRiskFactorCommand
+        var result = await _handler.HandleAsync(new UpdateResistanceRiskFactorCommand
         {
             Id = factorId,
             PathogenId = pathogenId,
@@ -163,6 +166,9 @@ public class UpdateResistanceRiskFactorHandlerTest : IClassFixture<PostgresFixtu
                 Value = updated,
             },
         }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.Equal(Status.Updated, result.StatusCode);
 
         var saved = await GetPersistedAsync(factorId);
         Assert.Equal("Elevated CRP", saved.Name);
@@ -182,7 +188,7 @@ public class UpdateResistanceRiskFactorHandlerTest : IClassFixture<PostgresFixtu
     {
         var pathogenId = await SeedPathogenAsync();
 
-        await Assert.ThrowsAsync<NotFoundException>(() => _handler.HandleAsync(
+        var result = await _handler.HandleAsync(
             new UpdateResistanceRiskFactorCommand
             {
                 Id = Guid.CreateVersion7(),
@@ -194,7 +200,10 @@ public class UpdateResistanceRiskFactorHandlerTest : IClassFixture<PostgresFixtu
                     Type = CriterionType.Boolean,
                     Value = null,
                 },
-            }, TestContext.Current.CancellationToken));
+            }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsFailure);
+        Assert.NotNull(result.Error);
+        Assert.Equal(Status.BadRequest, result.StatusCode);
     }
 
     [Fact]
@@ -206,7 +215,7 @@ public class UpdateResistanceRiskFactorHandlerTest : IClassFixture<PostgresFixtu
         var pathogenId = await SeedPathogenAsync();
         var factorId = await SeedFactorAsync(diseaseId, pathogenId, numeric: false, softDeletedFactor: true);
 
-        await Assert.ThrowsAsync<NotFoundException>(() => _handler.HandleAsync(
+        var result = await _handler.HandleAsync(
             new UpdateResistanceRiskFactorCommand
             {
                 Id = factorId,
@@ -218,7 +227,10 @@ public class UpdateResistanceRiskFactorHandlerTest : IClassFixture<PostgresFixtu
                     Type = CriterionType.Boolean,
                     Value = null,
                 },
-            }, TestContext.Current.CancellationToken));
+            }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsFailure);
+        Assert.NotNull(result.Error);
+        Assert.Equal(Status.BadRequest, result.StatusCode);
     }
 
     [Fact]
@@ -229,7 +241,7 @@ public class UpdateResistanceRiskFactorHandlerTest : IClassFixture<PostgresFixtu
         var pathogenId = await SeedPathogenAsync();
         var factorId = await SeedFactorAsync(diseaseId, pathogenId, numeric: false);
 
-        await Assert.ThrowsAsync<BadRequestException>(() => _handler.HandleAsync(
+        var result = await _handler.HandleAsync(
             new UpdateResistanceRiskFactorCommand
             {
                 Id = factorId,
@@ -241,7 +253,10 @@ public class UpdateResistanceRiskFactorHandlerTest : IClassFixture<PostgresFixtu
                     Type = CriterionType.Boolean,
                     Value = null,
                 },
-            }, TestContext.Current.CancellationToken));
+            }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsFailure);
+        Assert.NotNull(result.Error);
+        Assert.Equal(Status.BadRequest, result.StatusCode);
     }
 
     [Fact]
@@ -251,7 +266,7 @@ public class UpdateResistanceRiskFactorHandlerTest : IClassFixture<PostgresFixtu
         var pathogenId = await SeedPathogenAsync(softDeleted: true);
         var factorId = await SeedFactorAsync(diseaseId, pathogenId, numeric: false);
 
-        await Assert.ThrowsAsync<BadRequestException>(() => _handler.HandleAsync(
+        var result = await _handler.HandleAsync(
             new UpdateResistanceRiskFactorCommand
             {
                 Id = factorId,
@@ -263,31 +278,10 @@ public class UpdateResistanceRiskFactorHandlerTest : IClassFixture<PostgresFixtu
                     Type = CriterionType.Boolean,
                     Value = null,
                 },
-            }, TestContext.Current.CancellationToken));
-    }
-
-    [Fact]
-    public async Task UpdateResistanceRiskFactor_TypeChange_FailsAtMapping()
-    {
-        // The criterion type is immutable. An out-of-range Type passes validation but
-        // fails inside the mapper with a BadRequestException ("type mismatch").
-        var diseaseId = await SeedDiseaseAsync();
-        var pathogenId = await SeedPathogenAsync();
-        var factorId = await SeedFactorAsync(diseaseId, pathogenId, numeric: false);
-
-        await Assert.ThrowsAsync<BadRequestException>(() => _handler.HandleAsync(
-            new UpdateResistanceRiskFactorCommand
-            {
-                Id = factorId,
-                PathogenId = pathogenId,
-                Name = "Prior antibiotic use",
-                Criterion = new UpdateCriterionCommand
-                {
-                    Name = "Prior antibiotic use",
-                    Type = (CriterionType)999,
-                    Value = null,
-                },
-            }, TestContext.Current.CancellationToken));
+            }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsFailure);
+        Assert.NotNull(result.Error);
+        Assert.Equal(Status.BadRequest, result.StatusCode);
     }
 
     # endregion

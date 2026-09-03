@@ -5,7 +5,7 @@ using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moq;
-using Respira.ServiceDefaults.Exceptions;
+using Respira.ServiceDefaults.Contracts.Results;
 
 namespace Application.Test.Features.Pathogens.UpdatePathogen;
 
@@ -57,12 +57,15 @@ public class UpdatePathogenHandlerTest : IClassFixture<PostgresFixture>, IAsyncL
             "Coagulase-negative staphylococcus of skin flora");
         var updatedBefore = DateTimeOffset.UtcNow;
 
-        await _handler.HandleAsync(new UpdatePathogenCommand
+        var result = await _handler.HandleAsync(new UpdatePathogenCommand
         {
             Id = seeded.Id,
             Name = newName,
             Description = newDescription,
         }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.Equal(Status.Updated, result.StatusCode);
 
         // Verify through a fresh context so the change tracker of the saving context
         // cannot mask whether the row was truly committed
@@ -86,12 +89,15 @@ public class UpdatePathogenHandlerTest : IClassFixture<PostgresFixture>, IAsyncL
     {
         var unknownId = Guid.CreateVersion7();
 
-        await Assert.ThrowsAsync<NotFoundException>(() => _handler.HandleAsync(new UpdatePathogenCommand
+        var result = await _handler.HandleAsync(new UpdatePathogenCommand
         {
             Id = unknownId,
             Name = "Bacillus anthracis",
             Description = "Should never be written",
-        }, TestContext.Current.CancellationToken));
+        }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsFailure);
+        Assert.NotNull(result.Error);
+        Assert.Equal(Status.BadRequest, result.StatusCode);
 
         // Nothing must be created when the target does not exist
         Assert.Equal(0, await _context.Pathogens.CountAsync(TestContext.Current.CancellationToken));

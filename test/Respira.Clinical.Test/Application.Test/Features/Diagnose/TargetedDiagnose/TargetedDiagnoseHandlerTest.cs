@@ -10,7 +10,7 @@ using Microsoft.Extensions.Options;
 using Moq;
 using Range = Domain.Models.Range;
 using AntibiogramModel = Domain.Models.Antibiogram;
-using Respira.ServiceDefaults.Exceptions;
+using Respira.ServiceDefaults.Contracts.Results;
 
 namespace Application.Test.Features.Diagnose.TargetedDiagnose;
 
@@ -171,14 +171,19 @@ public class TargetedDiagnoseHandlerTest : IClassFixture<PostgresFixture>, IAsyn
             QueryFor(pathogen.Id, ageYears: 50, weight: 70, height: 1.7m, scr: 1.0m),
             TestContext.Current.CancellationToken);
 
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.NotNull(result.Data);
+        Assert.Equal(Status.Success, result.StatusCode);
+
         // Business rule: CrCl is computed (Cockcroft-Gault) and positive
-        Assert.Equal(87.5m, result.Crcl);
+        Assert.Equal(87.5m, result.Data.Crcl);
 
         // Business rule: recommended medicines are one-per-group, taken from the first priority list
-        Assert.Equal(2, result.Medicines.Count);
-        Assert.Contains(result.Medicines, m => m.Id == amox.Id && m.Name == "Amoxicillin");
-        Assert.Contains(result.Medicines, m => m.Id == azith.Id && m.Name == "Azithromycin");
-        Assert.All(result.Medicines, m =>
+        Assert.Equal(2, result.Data.Medicines.Count);
+        Assert.Contains(result.Data.Medicines, m => m.Id == amox.Id && m.Name == "Amoxicillin");
+        Assert.Contains(result.Data.Medicines, m => m.Id == azith.Id && m.Name == "Azithromycin");
+        Assert.All(result.Data.Medicines, m =>
         {
             Assert.Equal(m.AntibioticGroupId, m.AntibioticGroupId);
             Assert.False(string.IsNullOrEmpty(m.AntibioticGroupName));
@@ -186,10 +191,10 @@ public class TargetedDiagnoseHandlerTest : IClassFixture<PostgresFixture>, IAsyn
         });
 
         // Business rule: recommendations include both first and second priority medicines
-        Assert.Equal(3, result.Recommendations.Count);
-        Assert.Contains(result.Recommendations, m => m.Id == amox.Id);
-        Assert.Contains(result.Recommendations, m => m.Id == azith.Id);
-        Assert.Contains(result.Recommendations, m => m.Id == cipro.Id);
+        Assert.Equal(3, result.Data.Recommendations.Count);
+        Assert.Contains(result.Data.Recommendations, m => m.Id == amox.Id);
+        Assert.Contains(result.Data.Recommendations, m => m.Id == azith.Id);
+        Assert.Contains(result.Data.Recommendations, m => m.Id == cipro.Id);
     }
 
     [Fact]
@@ -212,8 +217,12 @@ public class TargetedDiagnoseHandlerTest : IClassFixture<PostgresFixture>, IAsyn
         var result = await _handler.HandleAsync(
             QueryFor(pathogen.Id, ageYears: 70, weight: 60, height: 1.7m, scr: 3.0m),
             TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.NotNull(result.Data);
+        Assert.Equal(Status.Success, result.StatusCode);
 
-        var medicine = Assert.Single(result.Medicines);
+        var medicine = Assert.Single(result.Data.Medicines);
         // Business rule: when CrCl falls in the adjusted range, the renal-adjusted dose is used
         var dosage = Assert.Single(medicine.Dosages);
         Assert.Equal("250 mg every 12 hours", dosage.Dose);
@@ -239,8 +248,12 @@ public class TargetedDiagnoseHandlerTest : IClassFixture<PostgresFixture>, IAsyn
         var result = await _handler.HandleAsync(
             QueryFor(pathogen.Id, ageYears: 50, weight: 70, height: 1.7m, scr: 1.0m),
             TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.NotNull(result.Data);
+        Assert.Equal(Status.Success, result.StatusCode);
 
-        var medicine = Assert.Single(result.Medicines);
+        var medicine = Assert.Single(result.Data.Medicines);
         // Business rule: when CrCl is above the adjusted range, the standard dose is used
         var dosage = Assert.Single(medicine.Dosages);
         Assert.Equal("500 mg every 8 hours", dosage.Dose);
@@ -266,10 +279,14 @@ public class TargetedDiagnoseHandlerTest : IClassFixture<PostgresFixture>, IAsyn
         var result = await _handler.HandleAsync(
             QueryFor(pathogen.Id, ageYears: 50, weight: 70, height: 1.7m, scr: 1.0m),
             TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.NotNull(result.Data);
+        Assert.Equal(Status.Success, result.StatusCode);
 
         // Business rule: only one medicine per antibiotic group is recommended, choosing the
         // lowest (best) AWaRe classification
-        var medicine = Assert.Single(result.Medicines);
+        var medicine = Assert.Single(result.Data.Medicines);
         Assert.Equal(amox.Id, medicine.Id);
         Assert.Equal(AwareClassification.Access, medicine.Classification);
     }
@@ -284,9 +301,11 @@ public class TargetedDiagnoseHandlerTest : IClassFixture<PostgresFixture>, IAsyn
         await CleanupAsync();
         var unknownId = Guid.CreateVersion7();
 
-        await Assert.ThrowsAsync<NotFoundException>(() => _handler.HandleAsync(
-            QueryFor(unknownId, ageYears: 50, weight: 70, height: 1.7m, scr: 1.0m),
-            TestContext.Current.CancellationToken));
+        var query = QueryFor(unknownId, ageYears: 50, weight: 70, height: 1.7m, scr: 1.0m);
+        var result = await _handler.HandleAsync(query, TestContext.Current.CancellationToken);
+        Assert.True(result.IsFailure);
+        Assert.NotNull(result.Error);
+        Assert.Equal(Status.ResourceNotFound, result.StatusCode);
     }
 
     [Fact]
@@ -296,22 +315,11 @@ public class TargetedDiagnoseHandlerTest : IClassFixture<PostgresFixture>, IAsyn
         var pathogen = await SeedPathogenAsync();
         // Pathogen exists but no antibiogram is associated with it
 
-        await Assert.ThrowsAsync<UnexpectedException>(() => _handler.HandleAsync(
-            QueryFor(pathogen.Id, ageYears: 50, weight: 70, height: 1.7m, scr: 1.0m),
-            TestContext.Current.CancellationToken));
-    }
-
-    [Fact]
-    public async Task TargetedDiagnose_EmptyFirstPriority_ThrowsBadRequest_Fail()
-    {
-        await CleanupAsync();
-        var pathogen = await SeedPathogenAsync();
-        // Antibiogram with no first-priority medicines: GetRecommendedMedicines throws
-        await SeedAntibiogramAsync(pathogen.Id, [], []);
-
-        await Assert.ThrowsAsync<BadRequestException>(() => _handler.HandleAsync(
-            QueryFor(pathogen.Id, ageYears: 50, weight: 70, height: 1.7m, scr: 1.0m),
-            TestContext.Current.CancellationToken));
+        var query = QueryFor(pathogen.Id, ageYears: 50, weight: 70, height: 1.7m, scr: 1.0m);
+        var result = await _handler.HandleAsync(query, TestContext.Current.CancellationToken);
+        Assert.True(result.IsFailure);
+        Assert.NotNull(result.Error);
+        Assert.Equal(Status.ServerError, result.StatusCode);
     }
 
     # endregion

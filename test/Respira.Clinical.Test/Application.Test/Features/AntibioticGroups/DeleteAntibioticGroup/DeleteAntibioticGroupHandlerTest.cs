@@ -6,7 +6,7 @@ using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moq;
-using Respira.ServiceDefaults.Exceptions;
+using Respira.ServiceDefaults.Contracts.Results;
 
 namespace Application.Test.Features.AntibioticGroups.DeleteAntibioticGroup;
 
@@ -101,8 +101,11 @@ public class DeleteAntibioticGroupHandlerTest : IClassFixture<PostgresFixture>, 
     {
         var (target, other) = await SeedAsync(withAntibiotics: true);
 
-        await _handler.HandleAsync(new DeleteAntibioticGroupCommand { Id = target.Id },
+        var result = await _handler.HandleAsync(new DeleteAntibioticGroupCommand { Id = target.Id },
             TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.Equal(Status.Deleted, result.StatusCode);
 
         // All entities carry a !IsDeleted query filter, so IgnoreQueryFilters is
         // required to observe the soft-delete flags
@@ -136,8 +139,11 @@ public class DeleteAntibioticGroupHandlerTest : IClassFixture<PostgresFixture>, 
         // Lower boundary of the cascade: nothing linked to the group
         var (target, _) = await SeedAsync(withAntibiotics: false);
 
-        await _handler.HandleAsync(new DeleteAntibioticGroupCommand { Id = target.Id },
+        var result = await _handler.HandleAsync(new DeleteAntibioticGroupCommand { Id = target.Id },
             TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.Equal(Status.Deleted, result.StatusCode);
 
         await using var freshContext = new AppDbContext(_options);
         var deleted = await freshContext.AntibioticGroups.IgnoreQueryFilters()
@@ -158,8 +164,11 @@ public class DeleteAntibioticGroupHandlerTest : IClassFixture<PostgresFixture>, 
     {
         var unknownId = Guid.CreateVersion7();
 
-        await Assert.ThrowsAsync<NotFoundException>(() => _handler.HandleAsync(
-            new DeleteAntibioticGroupCommand { Id = unknownId }, TestContext.Current.CancellationToken));
+        var result = await _handler.HandleAsync(
+            new DeleteAntibioticGroupCommand { Id = unknownId }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsFailure);
+        Assert.NotNull(result.Error);
+        Assert.Equal(Status.BadRequest, result.StatusCode);
 
         // Nothing must be soft-deleted when the target does not exist
         Assert.Equal(0, await _context.AntibioticGroups.IgnoreQueryFilters()

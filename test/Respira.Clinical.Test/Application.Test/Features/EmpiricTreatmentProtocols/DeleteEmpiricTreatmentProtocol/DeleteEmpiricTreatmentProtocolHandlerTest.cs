@@ -5,7 +5,7 @@ using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moq;
-using Respira.ServiceDefaults.Exceptions;
+using Respira.ServiceDefaults.Contracts.Results;
 
 namespace Application.Test.Features.EmpiricTreatmentProtocols.DeleteEmpiricTreatmentProtocol;
 
@@ -121,8 +121,11 @@ public class DeleteEmpiricTreatmentProtocolHandlerTest : IClassFixture<PostgresF
             otherCriteriaIds: [_criterionId]);
         var control = await SeedProtocolAsync();
 
-        await _handler.HandleAsync(new DeleteEmpiricTreatmentProtocolCommand { Id = target.Id },
+        var result = await _handler.HandleAsync(new DeleteEmpiricTreatmentProtocolCommand { Id = target.Id },
             TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.Equal(Status.Deleted, result.StatusCode);
 
         // Soft-deleted rows are hidden by the query filter, so IgnoreQueryFilters is
         // required to observe the deletion flags
@@ -159,8 +162,11 @@ public class DeleteEmpiricTreatmentProtocolHandlerTest : IClassFixture<PostgresF
         await CleanupProtocolsAsync();
         var target = await SeedProtocolAsync();
 
-        await _handler.HandleAsync(new DeleteEmpiricTreatmentProtocolCommand { Id = target.Id },
+        var result = await _handler.HandleAsync(new DeleteEmpiricTreatmentProtocolCommand { Id = target.Id },
             TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.Equal(Status.Deleted, result.StatusCode);
 
         await using var freshContext = new AppDbContext(_options);
         var deleted = await freshContext.EmpiricTreatmentProtocols.IgnoreQueryFilters()
@@ -180,9 +186,12 @@ public class DeleteEmpiricTreatmentProtocolHandlerTest : IClassFixture<PostgresF
         await CleanupProtocolsAsync();
         var unknownId = Guid.CreateVersion7();
 
-        await Assert.ThrowsAsync<NotFoundException>(() => _handler.HandleAsync(
+        var result = await _handler.HandleAsync(
             new DeleteEmpiricTreatmentProtocolCommand { Id = unknownId },
-            TestContext.Current.CancellationToken));
+            TestContext.Current.CancellationToken);
+        Assert.True(result.IsFailure);
+        Assert.NotNull(result.Error);
+        Assert.Equal(Status.BadRequest, result.StatusCode);
 
         // Nothing must be soft-deleted when the target does not exist
         Assert.Equal(0, await _context.EmpiricTreatmentProtocols.IgnoreQueryFilters()

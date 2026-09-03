@@ -1,7 +1,6 @@
 ﻿using Domain.Models;
 using Domain.Services.Dtos;
 using Microsoft.Extensions.Logging;
-using Respira.ServiceDefaults.Exceptions;
 
 namespace Domain.Services.Implementations;
 
@@ -16,11 +15,12 @@ public class DiagnoseService(ILogger<DiagnoseService> logger)
     /// <param name="scr">Serum creatine (mg/dL)</param>
     /// <param name="isMale">Boolean flag: is the patient male (default) or female</param>
     /// <returns>Creatine clearance (ml/minute)</returns>
+    /// <exception cref="ArgumentException">Throw if any of the input value is non-positive</exception>
     protected virtual decimal CrCl(int age, decimal weight, decimal height, decimal scr, bool isMale = true)
     {
         if (height <= 0 || weight <= 0 || scr <= 0)
         {
-            throw new BadRequestException("Weight, height and serum creatine must be positive value");
+            throw new ArgumentException("Weight, height and serum creatine must be positive value");
         }
 
         // Calculate patient's BMI
@@ -40,8 +40,7 @@ public class DiagnoseService(ILogger<DiagnoseService> logger)
     }
 
     /// <summary>
-    /// Assess if this patient need treatment in Intensive Care Unit (ICU). If any option didn't exist in criteria,
-    /// that option will be ignored and continue to the next option
+    /// Assess if this patient need treatment in Intensive Care Unit (ICU).
     /// </summary>
     /// <param name="criteria">The list of all criteria for assessment</param>
     /// <param name="scoreThreshold">The minimum score threshold to consider needing ICU</param>
@@ -51,6 +50,7 @@ public class DiagnoseService(ILogger<DiagnoseService> logger)
     /// not IcuHospitalizeCriteria.Id). See <see cref="IcuHospitalizeCriterion"/> for more detail
     /// </param>
     /// <returns>A boolean flag, true if patient need ICU</returns>
+    /// <exception cref="ArgumentException">Throw if any option didn't exist in criteria</exception>
     protected virtual bool NeedIcu(List<IcuHospitalizeCriterion> criteria, int scoreThreshold, List<Guid> options)
     {
         var score = 0;
@@ -61,7 +61,7 @@ public class DiagnoseService(ILogger<DiagnoseService> logger)
             if (criterion is null)
             {
                 logger.LogWarning("ICU hospitalize option does not exists in criteria: {ID}", option);
-                continue;
+                throw new ArgumentException($"ICU hospitalize option {option} does not exists in criteria");
             }
 
             score += criterion.Score;
@@ -80,7 +80,7 @@ public class DiagnoseService(ILogger<DiagnoseService> logger)
     /// not ResistanceRiskFactor.Id). See <see cref="ResistanceRiskFactor"/> for more detail.
     /// </param>
     /// <returns>A list of <see cref="InfectionProbability"/> record</returns>
-    /// <exception cref="BadRequestException">Throw if any option didn't exist in ResistanceRiskFactor list</exception>
+    /// <exception cref="ArgumentException">Throw if any option didn't exist in ResistanceRiskFactor list</exception>
     protected virtual IEnumerable<InfectionProbability> InfectionProbability(List<ResistanceRiskFactor> factors,
         List<Guid> options)
     {
@@ -92,7 +92,7 @@ public class DiagnoseService(ILogger<DiagnoseService> logger)
             if (factor is null)
             {
                 logger.LogWarning("Resistance risk factor not found: {CriterionId}", option);
-                throw new BadRequestException("Resistance risk factor not found");
+                throw new ArgumentException("Option {option} not found in Resistance risk factor");
             }
 
             if (scores.TryGetValue(factor.PathogenId, out _))
@@ -118,7 +118,7 @@ public class DiagnoseService(ILogger<DiagnoseService> logger)
     }
 
     /// <summary>
-    /// Data normalization
+    /// Data normalization. Would return 0 if min == max
     /// </summary>
     /// <param name="value">value for normalization</param>
     /// <param name="min">The minimum value that <c>value</c> can reach</param>
@@ -135,13 +135,13 @@ public class DiagnoseService(ILogger<DiagnoseService> logger)
     /// <param name="antibiotics">The list of antibiotic for dosage filtered</param>
     /// <param name="crcl">Patient's creatine clearance</param>
     /// <returns>The list of antibiotics with their adjusted dosages</returns>
-    /// <exception cref="BadRequestException">
+    /// <exception cref="ArgumentException">
     /// Throw if <c>antibiotics</c> is empty, or <c>crcl</c> is non-positive
     /// </exception>
     protected virtual List<Antibiotic> GetAdjustedDosage(List<Antibiotic> antibiotics, decimal crcl)
     {
-        if (crcl <= 0) throw new BadRequestException("Invalid value for CrCl: CrCl should be positive number");
-        if (antibiotics.Count == 0) throw new BadRequestException("Invalid value for antibiotics: empty list given");
+        if (crcl <= 0) throw new ArgumentException("Invalid value for CrCl: CrCl should be positive number");
+        if (antibiotics.Count == 0) throw new ArgumentException("Invalid value for antibiotics: empty list given");
 
         foreach (var antibiotic in antibiotics)
         {
@@ -166,10 +166,10 @@ public class DiagnoseService(ILogger<DiagnoseService> logger)
     /// </summary>
     /// <param name="antibiotics">The list of antibiotics</param>
     /// <returns>The list of recommended antibiotics</returns>
-    /// <exception cref="BadRequestException">Throw if <c>antibiotics</c> is empty</exception>
+    /// <exception cref="ArgumentException">Throw if <c>antibiotics</c> is empty</exception>
     protected virtual List<Antibiotic> GetRecommendedMedicines(List<Antibiotic> antibiotics)
     {
-        if (antibiotics.Count == 0) throw new BadRequestException("Invalid value for antibiotics: empty list given");
+        if (antibiotics.Count == 0) throw new ArgumentException("Invalid value for antibiotics: empty list given");
 
         /*
          * Rule of picking antibiotic for treatment: for each antibiotic group, we can only pick

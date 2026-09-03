@@ -8,9 +8,9 @@ public class UpdateResistanceRiskFactorHandler(
     IDbContext context,
     IUpdateMapper<ResistanceRiskFactor, UpdateResistanceRiskFactorCommand> mapper,
     ILogger<UpdateResistanceRiskFactorCommand> logger)
-    : ICommandHandler<UpdateResistanceRiskFactorCommand>
+    : ICommandHandler<UpdateResistanceRiskFactorCommand, Respira.ServiceDefaults.Contracts.Results.Result>
 {
-    public async Task HandleAsync(UpdateResistanceRiskFactorCommand command,
+    public async Task<Respira.ServiceDefaults.Contracts.Results.Result> HandleAsync(UpdateResistanceRiskFactorCommand command,
         CancellationToken cancellationToken = default)
     {
         // Check if pathogen exists
@@ -19,7 +19,8 @@ public class UpdateResistanceRiskFactorHandler(
         if (pathogen is null)
         {
             logger.LogDebug("Pathogen ID not found: {Id}", command.PathogenId);
-            throw new BadRequestException("Pathogen ID not exists");
+            return Respira.ServiceDefaults.Contracts.Results.Result.Failure(new Error(Status.BadRequest, "Pathogen ID not exists"));
+            // throw new BadRequestException("Pathogen ID not exists");
         }
 
         // Get entity by ID
@@ -29,17 +30,15 @@ public class UpdateResistanceRiskFactorHandler(
         if (factor is null)
         {
             logger.LogDebug("Resistance risk factor ID not found: {Id}", command.Id);
-            throw new NotFoundException(nameof(ResistanceRiskFactor), command.Id);
+            return Respira.ServiceDefaults.Contracts.Results.Result.Failure(new Error(Status.BadRequest, "Resistance risk factor ID not found"));
+            // throw new NotFoundException(nameof(ResistanceRiskFactor), command.Id);
         }
 
         // Map from command to query
         mapper.MapModel(factor, command);
 
         // Save changes to database
-        if (await context.SaveChangesAsync(cancellationToken) <= 0)
-        {
-            logger.LogError("Failed to save resistance risk factor");
-            throw new ServerException();
-        }
+        await context.SaveChangesAsync(cancellationToken);
+        return Respira.ServiceDefaults.Contracts.Results.Result.Success(Status.Updated);
     }
 }

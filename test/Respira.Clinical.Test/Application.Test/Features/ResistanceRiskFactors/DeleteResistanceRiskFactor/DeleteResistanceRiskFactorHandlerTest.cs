@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Range = Domain.Models.Range;
-using Respira.ServiceDefaults.Exceptions;
+using Respira.ServiceDefaults.Contracts.Results;
 
 namespace Application.Test.Features.ResistanceRiskFactors.DeleteResistanceRiskFactor;
 
@@ -123,10 +123,13 @@ public class DeleteResistanceRiskFactorHandlerTest : IClassFixture<PostgresFixtu
         var pathogenId = await SeedPathogenAsync();
         var factorId = await SeedFactorAsync(diseaseId, pathogenId, numeric: false);
 
-        await _handler.HandleAsync(new DeleteResistanceRiskFactorCommand
+        var result = await _handler.HandleAsync(new DeleteResistanceRiskFactorCommand
         {
             Id = factorId,
         }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.Equal(Status.Deleted, result.StatusCode);
 
         // The row must be soft-deleted: hidden by the normal query filter
         Assert.Null(await GetPersistedAsync(factorId, ignoreFilters: false));
@@ -151,10 +154,13 @@ public class DeleteResistanceRiskFactorHandlerTest : IClassFixture<PostgresFixtu
         var pathogenId = await SeedPathogenAsync();
         var factorId = await SeedFactorAsync(diseaseId, pathogenId, numeric: true);
 
-        await _handler.HandleAsync(new DeleteResistanceRiskFactorCommand
+        var result = await _handler.HandleAsync(new DeleteResistanceRiskFactorCommand
         {
             Id = factorId,
         }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.Equal(Status.Deleted, result.StatusCode);
 
         Assert.Null(await GetPersistedAsync(factorId, ignoreFilters: false));
         var saved = await GetPersistedAsync(factorId);
@@ -171,11 +177,14 @@ public class DeleteResistanceRiskFactorHandlerTest : IClassFixture<PostgresFixtu
     {
         var unknownId = Guid.CreateVersion7();
 
-        await Assert.ThrowsAsync<NotFoundException>(() => _handler.HandleAsync(
+        var result = await _handler.HandleAsync(
             new DeleteResistanceRiskFactorCommand
             {
                 Id = unknownId,
-            }, TestContext.Current.CancellationToken));
+            }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsFailure);
+        Assert.NotNull(result.Error);
+        Assert.Equal(Status.BadRequest, result.StatusCode);
     }
 
     [Fact]
@@ -187,11 +196,14 @@ public class DeleteResistanceRiskFactorHandlerTest : IClassFixture<PostgresFixtu
         var pathogenId = await SeedPathogenAsync();
         var factorId = await SeedFactorAsync(diseaseId, pathogenId, numeric: false, softDeletedFactor: true);
 
-        await Assert.ThrowsAsync<NotFoundException>(() => _handler.HandleAsync(
+        var result = await _handler.HandleAsync(
             new DeleteResistanceRiskFactorCommand
             {
                 Id = factorId,
-            }, TestContext.Current.CancellationToken));
+            }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsFailure);
+        Assert.NotNull(result.Error);
+        Assert.Equal(Status.BadRequest, result.StatusCode);
     }
 
     # endregion

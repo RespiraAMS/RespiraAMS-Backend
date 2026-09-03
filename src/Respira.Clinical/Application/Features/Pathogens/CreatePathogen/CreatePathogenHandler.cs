@@ -1,15 +1,11 @@
 ﻿using Application.Contracts.Data;
-using Microsoft.Extensions.Logging;
 
 namespace Application.Features.Pathogens.CreatePathogen;
 
-public class CreatePathogenHandler(
-    IDbContext context,
-    ICreateMapper<Pathogen, CreatePathogenCommand> mapper,
-    ILogger<CreatePathogenHandler> logger)
-    : ICommandHandler<CreatePathogenCommand, CreatePathogenResult>
+public class CreatePathogenHandler(IDbContext context, ICreateMapper<Pathogen, CreatePathogenCommand> mapper)
+    : ICommandHandler<CreatePathogenCommand, Respira.ServiceDefaults.Contracts.Results.Result<CreatePathogenResult>>
 {
-    public async Task<CreatePathogenResult> HandleAsync(CreatePathogenCommand command,
+    public async Task<Respira.ServiceDefaults.Contracts.Results.Result<CreatePathogenResult>> HandleAsync(CreatePathogenCommand command,
         CancellationToken cancellationToken = default)
     {
         // Map command to model
@@ -17,12 +13,9 @@ public class CreatePathogenHandler(
 
         // Save changes to database
         await context.Pathogens.AddAsync(pathogen, cancellationToken);
-        if (await context.SaveChangesAsync(cancellationToken) <= 0)
-        {
-            logger.LogError("Failed to create pathogen");
-            throw new ServerException();
-        }
+        await context.SaveChangesAsync(cancellationToken);
 
-        return new CreatePathogenResult(pathogen.Id);
+
+        return Respira.ServiceDefaults.Contracts.Results.Result<CreatePathogenResult>.Success(Status.Created, new CreatePathogenResult(pathogen.Id));
     }
 }

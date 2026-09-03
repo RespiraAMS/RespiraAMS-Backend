@@ -12,9 +12,9 @@ public class CreateCriterionMapper : ICreateMapper<Criterion, CreateCriterionCom
             CriterionType.Numeric => new NumericCriterion
             {
                 Name = command.Name,
-                Value = command.Value ?? throw new UnexpectedException("Criterion is numeric type but Value is null")
+                Value = command.Value ?? throw new ArgumentException("Criterion is numeric type but Value is null")
             },
-            _ => throw new UnexpectedException("Unknown criterion type")
+            _ => throw new ArgumentException("Unknown criterion type")
         };
     }
 }
@@ -49,10 +49,10 @@ public class UpdateCriterionMapper : IUpdateMapper<Criterion, UpdateCriterionCom
                 break;
             case CriterionType.Numeric:
                 ((NumericCriterion)model).Value =
-                    command.Value ?? throw new UnexpectedException("Criterion is numeric type but Value is null");
+                    command.Value ?? throw new ArgumentException("Criterion is numeric type but Value is null");
                 break;
             default:
-                throw new UnexpectedException("Unexpected type for criterion");
+                throw new ArgumentException("Unexpected type for criterion");
         }
 
         model.UpdatedAt = DateTimeOffset.UtcNow;

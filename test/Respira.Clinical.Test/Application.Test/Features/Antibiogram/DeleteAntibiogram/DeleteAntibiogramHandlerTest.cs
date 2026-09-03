@@ -6,7 +6,7 @@ using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moq;
-using Respira.ServiceDefaults.Exceptions;
+using Respira.ServiceDefaults.Contracts.Results;
 
 namespace Application.Test.Features.Antibiogram.DeleteAntibiogram;
 
@@ -136,8 +136,10 @@ public class DeleteAntibiogramHandlerTest : IClassFixture<PostgresFixture>, IAsy
         // three join tables
         var target = await SeedAsync(antibioticCount: 3);
 
-        await _handler.HandleAsync(new DeleteAntibiogramCommand { Id = target.Id },
-            TestContext.Current.CancellationToken);
+        var result = await _handler.HandleAsync(new DeleteAntibiogramCommand { Id = target.Id }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.Equal(Status.Deleted, result.StatusCode);
 
         // Deletion is a soft delete: the row must remain with the flags set.
         // All entities carry a !IsDeleted query filter, so IgnoreQueryFilters is
@@ -172,8 +174,10 @@ public class DeleteAntibiogramHandlerTest : IClassFixture<PostgresFixture>, IAsy
          */
         var target = await SeedAsync(antibioticCount: 3);
 
-        await _handler.HandleAsync(new DeleteAntibiogramCommand { Id = target.Id },
-            TestContext.Current.CancellationToken);
+        var result = await _handler.HandleAsync(new DeleteAntibiogramCommand { Id = target.Id }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.Equal(Status.Deleted, result.StatusCode);
 
         await using var db = (AppDbContext)_context;
         var micRows = await db.Database
@@ -209,8 +213,11 @@ public class DeleteAntibiogramHandlerTest : IClassFixture<PostgresFixture>, IAsy
     {
         var unknownId = Guid.CreateVersion7();
 
-        await Assert.ThrowsAsync<NotFoundException>(() => _handler.HandleAsync(
-            new DeleteAntibiogramCommand { Id = unknownId }, TestContext.Current.CancellationToken));
+        var result = await _handler.HandleAsync(
+            new DeleteAntibiogramCommand { Id = unknownId }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsFailure);
+        Assert.NotNull(result.Error);
+        Assert.Equal(Status.BadRequest, result.StatusCode);
 
         // Nothing must exist when the target was never there
         Assert.Equal(0, await _context.Antibiograms.IgnoreQueryFilters()
@@ -224,8 +231,11 @@ public class DeleteAntibiogramHandlerTest : IClassFixture<PostgresFixture>, IAsy
         // deleting it again must be rejected just like an unknown antibiogram
         var deletedTarget = await SeedAsync(antibioticCount: 3, softDeletedTarget: true);
 
-        await Assert.ThrowsAsync<NotFoundException>(() => _handler.HandleAsync(
-            new DeleteAntibiogramCommand { Id = deletedTarget.Id }, TestContext.Current.CancellationToken));
+        var result = await _handler.HandleAsync(
+            new DeleteAntibiogramCommand { Id = deletedTarget.Id }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsFailure);
+        Assert.NotNull(result.Error);
+        Assert.Equal(Status.BadRequest, result.StatusCode);
 
         // The already-deleted row must keep its original delete timestamp
         // (Postgres timestamp precision is lower than DateTimeOffset ticks)
@@ -237,10 +247,6 @@ public class DeleteAntibiogramHandlerTest : IClassFixture<PostgresFixture>, IAsy
         Assert.True((stillDeleted.DeletedAt - deletedTarget.DeletedAt).GetValueOrDefault().Duration()
             < TimeSpan.FromSeconds(1));
     }
-
-    // Skipped paths:
-    // - The ServerException branch (SaveChangesAsync returning <= 0) cannot be
-    //   simulated against a real database without mocking infrastructure internals
 
     # endregion
 }

@@ -5,7 +5,7 @@ using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moq;
-using Respira.ServiceDefaults.Exceptions;
+using Respira.ServiceDefaults.Contracts.Results;
 
 namespace Application.Test.Features.AntibioticGroups.UpdateAntibioticGroup;
 
@@ -70,13 +70,16 @@ public class UpdateAntibioticGroupHandlerTest : IClassFixture<PostgresFixture>, 
         var seeded = await SeedGroupAsync("Old group", "Outdated description");
         var updatedBefore = DateTimeOffset.UtcNow;
 
-        await _handler.HandleAsync(new UpdateAntibioticGroupCommand
+        var result = await _handler.HandleAsync(new UpdateAntibioticGroupCommand
         {
             Id = seeded.Id,
             Name = newName,
             Description = newDescription,
             ParentId = null,
         }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.Equal(Status.Updated, result.StatusCode);
 
         await using var freshContext = new AppDbContext(_options);
         var saved = await freshContext.AntibioticGroups.SingleAsync(
@@ -97,13 +100,16 @@ public class UpdateAntibioticGroupHandlerTest : IClassFixture<PostgresFixture>, 
         var seeded = await SeedGroupAsync("Penicillins",
             "Standalone antibiotic group without a parent");
 
-        await _handler.HandleAsync(new UpdateAntibioticGroupCommand
+        var result = await _handler.HandleAsync(new UpdateAntibioticGroupCommand
         {
             Id = seeded.Id,
             Name = "Penicillins",
             Description = "Subgroup of beta-lactam antibiotics",
             ParentId = parent.Id,
         }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.Equal(Status.Updated, result.StatusCode);
 
         await using var freshContext = new AppDbContext(_options);
         var saved = await freshContext.AntibioticGroups.SingleAsync(
@@ -120,14 +126,17 @@ public class UpdateAntibioticGroupHandlerTest : IClassFixture<PostgresFixture>, 
     {
         var unknownId = Guid.CreateVersion7();
 
-        await Assert.ThrowsAsync<NotFoundException>(() => _handler.HandleAsync(
+        var result = await _handler.HandleAsync(
             new UpdateAntibioticGroupCommand
             {
                 Id = unknownId,
                 Name = "Lincosamides",
                 Description = "Should never be written",
                 ParentId = null,
-            }, TestContext.Current.CancellationToken));
+            }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsFailure);
+        Assert.NotNull(result.Error);
+        Assert.Equal(Status.BadRequest, result.StatusCode);
 
         Assert.Equal(0, await _context.AntibioticGroups.CountAsync(TestContext.Current.CancellationToken));
     }
@@ -138,14 +147,17 @@ public class UpdateAntibioticGroupHandlerTest : IClassFixture<PostgresFixture>, 
         var seeded = await SeedGroupAsync("Penicillins", "Existing group");
         var unknownParentId = Guid.CreateVersion7();
 
-        await Assert.ThrowsAsync<BadRequestException>(() => _handler.HandleAsync(
+        var result = await _handler.HandleAsync(
             new UpdateAntibioticGroupCommand
             {
                 Id = seeded.Id,
                 Name = "Penicillins",
                 Description = "Reparent attempt with an unknown parent",
                 ParentId = unknownParentId,
-            }, TestContext.Current.CancellationToken));
+            }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsFailure);
+        Assert.NotNull(result.Error);
+        Assert.Equal(Status.BadRequest, result.StatusCode);
 
         // The target must stay untouched when the parent does not exist
         await using var freshContext = new AppDbContext(_options);
@@ -164,14 +176,17 @@ public class UpdateAntibioticGroupHandlerTest : IClassFixture<PostgresFixture>, 
             "Discontinued classification branch", softDeleted: true);
         var seeded = await SeedGroupAsync("Colistin subgroup", "Existing group");
 
-        await Assert.ThrowsAsync<BadRequestException>(() => _handler.HandleAsync(
+        var result = await _handler.HandleAsync(
             new UpdateAntibioticGroupCommand
             {
                 Id = seeded.Id,
                 Name = "Colistin subgroup",
                 Description = "Reparent under a deleted branch",
                 ParentId = deletedParent.Id,
-            }, TestContext.Current.CancellationToken));
+            }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsFailure);
+        Assert.NotNull(result.Error);
+        Assert.Equal(Status.BadRequest, result.StatusCode);
     }
 
     # endregion

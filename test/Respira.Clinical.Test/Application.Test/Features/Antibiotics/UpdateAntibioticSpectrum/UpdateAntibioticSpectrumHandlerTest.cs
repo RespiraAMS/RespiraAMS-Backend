@@ -6,7 +6,7 @@ using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moq;
-using Respira.ServiceDefaults.Exceptions;
+using Respira.ServiceDefaults.Contracts.Results;
 
 namespace Application.Test.Features.Antibiotics.UpdateAntibioticSpectrum;
 
@@ -105,11 +105,14 @@ public class UpdateAntibioticSpectrumHandlerTest : IClassFixture<PostgresFixture
         // Initial [P1] -> command [P2, P3]: P1 must be removed, P2 and P3 added
         var (antibiotic, allIds) = await SeedAsync([0]);
 
-        await _handler.HandleAsync(new UpdateAntibioticSpectrumCommand
+        var result = await _handler.HandleAsync(new UpdateAntibioticSpectrumCommand
         {
             Id = antibiotic.Id,
             PathogenIds = [allIds[1], allIds[2]],
         }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.Equal(Status.Updated, result.StatusCode);
 
         var spectrum = await GetSpectrumIdsAsync(antibiotic.Id);
         Assert.Equal([.. new List<Guid> { allIds[1], allIds[2] }.Order()], spectrum);
@@ -121,11 +124,14 @@ public class UpdateAntibioticSpectrumHandlerTest : IClassFixture<PostgresFixture
         // Initial [P1] -> command [P1, P2]: P1 kept, P2 added (no duplicate rows)
         var (antibiotic, allIds) = await SeedAsync([0]);
 
-        await _handler.HandleAsync(new UpdateAntibioticSpectrumCommand
+        var result = await _handler.HandleAsync(new UpdateAntibioticSpectrumCommand
         {
             Id = antibiotic.Id,
             PathogenIds = [allIds[0], allIds[1]],
         }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.Equal(Status.Updated, result.StatusCode);
 
         var spectrum = await GetSpectrumIdsAsync(antibiotic.Id);
         Assert.Equal([.. new List<Guid> { allIds[0], allIds[1] }.Order()], spectrum);
@@ -140,12 +146,15 @@ public class UpdateAntibioticSpectrumHandlerTest : IClassFixture<PostgresFixture
     {
         var unknownId = Guid.CreateVersion7();
 
-        await Assert.ThrowsAsync<NotFoundException>(() => _handler.HandleAsync(
+        var result = await _handler.HandleAsync(
             new UpdateAntibioticSpectrumCommand
             {
                 Id = unknownId,
                 PathogenIds = [Guid.CreateVersion7()],
-            }, TestContext.Current.CancellationToken));
+            }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsFailure);
+        Assert.NotNull(result.Error);
+        Assert.Equal(Status.BadRequest, result.StatusCode);
     }
 
     [Fact]
@@ -154,12 +163,15 @@ public class UpdateAntibioticSpectrumHandlerTest : IClassFixture<PostgresFixture
         var (antibiotic, allIds) = await SeedAsync([0]);
         var unknownPathogenId = Guid.CreateVersion7();
 
-        await Assert.ThrowsAsync<BadRequestException>(() => _handler.HandleAsync(
+        var result = await _handler.HandleAsync(
             new UpdateAntibioticSpectrumCommand
             {
                 Id = antibiotic.Id,
                 PathogenIds = [allIds[0], unknownPathogenId],
-            }, TestContext.Current.CancellationToken));
+            }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsFailure);
+        Assert.NotNull(result.Error);
+        Assert.Equal(Status.BadRequest, result.StatusCode);
 
         // Relations must stay untouched when any pathogen ID does not exist
         var spectrum = await GetSpectrumIdsAsync(antibiotic.Id);
@@ -182,12 +194,15 @@ public class UpdateAntibioticSpectrumHandlerTest : IClassFixture<PostgresFixture
         await _context.Pathogens.AddAsync(deletedPathogen, TestContext.Current.CancellationToken);
         await _context.SaveChangesAsync(TestContext.Current.CancellationToken);
 
-        await Assert.ThrowsAsync<BadRequestException>(() => _handler.HandleAsync(
+        var result = await _handler.HandleAsync(
             new UpdateAntibioticSpectrumCommand
             {
                 Id = antibiotic.Id,
                 PathogenIds = [deletedPathogen.Id],
-            }, TestContext.Current.CancellationToken));
+            }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsFailure);
+        Assert.NotNull(result.Error);
+        Assert.Equal(Status.BadRequest, result.StatusCode);
     }
 
     # endregion

@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Range = Domain.Models.Range;
-using Respira.ServiceDefaults.Exceptions;
+using Respira.ServiceDefaults.Contracts.Results;
 
 namespace Application.Test.Features.IcuHospitalizeCriteria.CreateIcuHospitalizeCriterion;
 
@@ -94,11 +94,15 @@ public class CreateIcuHospitalizeCriterionHandlerTest : IClassFixture<PostgresFi
             // NEWS2: new confusion scores 1 point
             Score = 1,
         }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.Equal(Status.Created, result.StatusCode);
+        Assert.NotNull(result.Data);
 
-        Assert.NotEqual(Guid.Empty, result.Id);
+        Assert.NotEqual(Guid.Empty, result.Data.Id);
 
         // Verify through a fresh context so the change tracker cannot mask a failed commit
-        var saved = await GetPersistedAsync(result.Id);
+        var saved = await GetPersistedAsync(result.Data.Id);
         Assert.Equal(diseaseId, saved.DiseaseId);
         Assert.Equal(1, saved.Score);
         Assert.Equal(saved.CriterionId, saved.Criterion.Id);
@@ -136,8 +140,12 @@ public class CreateIcuHospitalizeCriterionHandlerTest : IClassFixture<PostgresFi
             },
             Score = 3,
         }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.Equal(Status.Created, result.StatusCode);
+        Assert.NotNull(result.Data);
 
-        var saved = await GetPersistedAsync(result.Id);
+        var saved = await GetPersistedAsync(result.Data.Id);
         Assert.Equal(diseaseId, saved.DiseaseId);
         Assert.Equal(3, saved.Score);
         var numeric = Assert.IsType<NumericCriterion>(saved.Criterion);
@@ -155,7 +163,7 @@ public class CreateIcuHospitalizeCriterionHandlerTest : IClassFixture<PostgresFi
     {
         var unknownId = Guid.CreateVersion7();
 
-        await Assert.ThrowsAsync<BadRequestException>(() => _handler.HandleAsync(
+        var result = await _handler.HandleAsync(
             new CreateIcuHospitalizeCriterionCommand
             {
                 DiseaseId = unknownId,
@@ -166,7 +174,10 @@ public class CreateIcuHospitalizeCriterionHandlerTest : IClassFixture<PostgresFi
                     Value = null,
                 },
                 Score = 1,
-            }, TestContext.Current.CancellationToken));
+            }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsFailure);
+        Assert.NotNull(result.Error);
+        Assert.Equal(Status.BadRequest, result.StatusCode);
 
         // Neither the ICU criterion nor its owned Criterion row must be persisted
         Assert.Equal(0, await _context.IcuHospitalizeCriteria.IgnoreQueryFilters()
@@ -183,7 +194,7 @@ public class CreateIcuHospitalizeCriterionHandlerTest : IClassFixture<PostgresFi
         // must be rejected just like an unknown disease
         var deletedDiseaseId = await SeedDiseaseAsync(softDeleted: true);
 
-        await Assert.ThrowsAsync<BadRequestException>(() => _handler.HandleAsync(
+        var result = await _handler.HandleAsync(
             new CreateIcuHospitalizeCriterionCommand
             {
                 DiseaseId = deletedDiseaseId,
@@ -194,7 +205,10 @@ public class CreateIcuHospitalizeCriterionHandlerTest : IClassFixture<PostgresFi
                     Value = null,
                 },
                 Score = 1,
-            }, TestContext.Current.CancellationToken));
+            }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsFailure);
+        Assert.NotNull(result.Error);
+        Assert.Equal(Status.BadRequest, result.StatusCode);
     }
 
     # endregion

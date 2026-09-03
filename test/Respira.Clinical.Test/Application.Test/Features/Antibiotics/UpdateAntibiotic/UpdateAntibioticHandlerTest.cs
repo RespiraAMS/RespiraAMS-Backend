@@ -6,7 +6,7 @@ using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moq;
-using Respira.ServiceDefaults.Exceptions;
+using Respira.ServiceDefaults.Contracts.Results;
 
 namespace Application.Test.Features.Antibiotics.UpdateAntibiotic;
 
@@ -90,13 +90,16 @@ public class UpdateAntibioticHandlerTest : IClassFixture<PostgresFixture>, IAsyn
         var seeded = await SeedAntibioticAsync("Amoxicillin", group, AwareClassification.Access);
         var updatedBefore = DateTimeOffset.UtcNow;
 
-        await _handler.HandleAsync(new UpdateAntibioticCommand
+        var result = await _handler.HandleAsync(new UpdateAntibioticCommand
         {
             Id = seeded.Id,
             Name = newName,
             AntibioticGroupId = group.Id,
             Classification = Enum.Parse<AwareClassification>(newClassification),
         }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.Equal(Status.Updated, result.StatusCode);
 
         await using var freshContext = new AppDbContext(_options);
         var saved = await freshContext.Antibiotics.SingleAsync(
@@ -118,13 +121,16 @@ public class UpdateAntibioticHandlerTest : IClassFixture<PostgresFixture>, IAsyn
             "Protein synthesis inhibitors with a macrocyclic lactone ring");
         var seeded = await SeedAntibioticAsync("Azithromycin", oldGroup, AwareClassification.Watch);
 
-        await _handler.HandleAsync(new UpdateAntibioticCommand
+        var result = await _handler.HandleAsync(new UpdateAntibioticCommand
         {
             Id = seeded.Id,
             Name = "Azithromycin",
             AntibioticGroupId = newGroup.Id,
             Classification = AwareClassification.Watch,
         }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.Equal(Status.Updated, result.StatusCode);
 
         await using var freshContext = new AppDbContext(_options);
         var saved = await freshContext.Antibiotics.SingleAsync(
@@ -142,14 +148,17 @@ public class UpdateAntibioticHandlerTest : IClassFixture<PostgresFixture>, IAsyn
         var group = await SeedGroupAsync("Beta-lactams", "Existing group");
         var unknownId = Guid.CreateVersion7();
 
-        await Assert.ThrowsAsync<NotFoundException>(() => _handler.HandleAsync(
+        var result = await _handler.HandleAsync(
             new UpdateAntibioticCommand
             {
                 Id = unknownId,
                 Name = "Ciprofloxacin",
                 AntibioticGroupId = group.Id,
                 Classification = AwareClassification.Watch,
-            }, TestContext.Current.CancellationToken));
+            }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsFailure);
+        Assert.NotNull(result.Error);
+        Assert.Equal(Status.BadRequest, result.StatusCode);
 
         // Nothing must be created when the target does not exist
         Assert.Equal(0, await _context.Antibiotics.CountAsync(TestContext.Current.CancellationToken));
@@ -162,14 +171,17 @@ public class UpdateAntibioticHandlerTest : IClassFixture<PostgresFixture>, IAsyn
         var seeded = await SeedAntibioticAsync("Amoxicillin", group, AwareClassification.Access);
         var unknownGroupId = Guid.CreateVersion7();
 
-        await Assert.ThrowsAsync<BadRequestException>(() => _handler.HandleAsync(
+        var result = await _handler.HandleAsync(
             new UpdateAntibioticCommand
             {
                 Id = seeded.Id,
                 Name = "Amoxicillin",
                 AntibioticGroupId = unknownGroupId,
                 Classification = AwareClassification.Access,
-            }, TestContext.Current.CancellationToken));
+            }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsFailure);
+        Assert.NotNull(result.Error);
+        Assert.Equal(Status.BadRequest, result.StatusCode);
 
         // The target must stay untouched when the group does not exist
         await using var freshContext = new AppDbContext(_options);
@@ -189,14 +201,17 @@ public class UpdateAntibioticHandlerTest : IClassFixture<PostgresFixture>, IAsyn
         var otherGroup = await SeedGroupAsync("Beta-lactams", "Existing group");
         var seeded = await SeedAntibioticAsync("Colistin", otherGroup, AwareClassification.Reserve);
 
-        await Assert.ThrowsAsync<BadRequestException>(() => _handler.HandleAsync(
+        var result = await _handler.HandleAsync(
             new UpdateAntibioticCommand
             {
                 Id = seeded.Id,
                 Name = "Colistin",
                 AntibioticGroupId = deletedGroup.Id,
                 Classification = AwareClassification.Reserve,
-            }, TestContext.Current.CancellationToken));
+            }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsFailure);
+        Assert.NotNull(result.Error);
+        Assert.Equal(Status.BadRequest, result.StatusCode);
     }
 
     # endregion

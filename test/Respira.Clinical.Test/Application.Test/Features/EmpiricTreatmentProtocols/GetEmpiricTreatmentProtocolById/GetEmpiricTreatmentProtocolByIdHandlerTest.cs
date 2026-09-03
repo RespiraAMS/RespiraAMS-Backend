@@ -4,7 +4,7 @@ using Domain.Enums;
 using Domain.Models;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
-using Respira.ServiceDefaults.Exceptions;
+using Respira.ServiceDefaults.Contracts.Results;
 
 namespace Application.Test.Features.EmpiricTreatmentProtocols.GetEmpiricTreatmentProtocolById;
 
@@ -133,33 +133,37 @@ public class GetEmpiricTreatmentProtocolByIdHandlerTest : IClassFixture<Postgres
         var result = await _handler.HandleAsync(
             new GetEmpiricTreatmentProtocolByIdQuery { Id = seeded.Id },
             TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.Equal(Status.Success, result.StatusCode);
+        Assert.NotNull(result.Data);
 
-        Assert.Equal(seeded.Id, result.Id);
-        Assert.Equal("IDSA/ATS 2024 CAP Empiric Guidance", result.Name);
-        Assert.Equal("Infectious Diseases Society of America", result.Issuer);
-        Assert.Equal(new DateOnly(2024, 8, 1), result.IssueDate);
-        Assert.Equal(3, result.Version);
-        Assert.Equal(Severity.Severe, result.Severity);
-        Assert.Equal(TreatmentSite.IntensiveCareUnit, result.TreatmentSite);
-        Assert.NotEqual(default, result.UpdatedAt);
+        Assert.Equal(seeded.Id, result.Data.Id);
+        Assert.Equal("IDSA/ATS 2024 CAP Empiric Guidance", result.Data.Name);
+        Assert.Equal("Infectious Diseases Society of America", result.Data.Issuer);
+        Assert.Equal(new DateOnly(2024, 8, 1), result.Data.IssueDate);
+        Assert.Equal(3, result.Data.Version);
+        Assert.Equal(Severity.Severe, result.Data.Severity);
+        Assert.Equal(TreatmentSite.IntensiveCareUnit, result.Data.TreatmentSite);
+        Assert.NotEqual(default, result.Data.UpdatedAt);
 
         // Business rule: a designated special infection is projected when present
-        Assert.NotNull(result.SpecialInfection);
-        Assert.Equal(_pathogenId, result.SpecialInfection.Id);
-        Assert.Equal("Streptococcus pneumoniae", result.SpecialInfection.Name);
+        Assert.NotNull(result.Data.SpecialInfection);
+        Assert.Equal(_pathogenId, result.Data.SpecialInfection.Id);
+        Assert.Equal("Streptococcus pneumoniae", result.Data.SpecialInfection.Name);
 
         // Business rule: secondary criteria are mapped through the criterion result mapper
-        _ = Assert.Single(result.OtherCriteria);
-        var criterion = result.OtherCriteria[0];
+        _ = Assert.Single(result.Data.OtherCriteria);
+        var criterion = result.Data.OtherCriteria[0];
         Assert.Equal(_criterionId, criterion.Id);
         Assert.Equal("Prior history of COPD", criterion.Name);
         Assert.Equal(CriterionType.Boolean, criterion.Type);
         Assert.Null(criterion.Value);
 
         // Business rule: assigned medicines are projected
-        _ = Assert.Single(result.Medicines);
-        Assert.Equal(_antibioticId, result.Medicines[0].Id);
-        Assert.Equal("Amoxicillin", result.Medicines[0].Name);
+        _ = Assert.Single(result.Data.Medicines);
+        Assert.Equal(_antibioticId, result.Data.Medicines[0].Id);
+        Assert.Equal("Amoxicillin", result.Data.Medicines[0].Name);
     }
 
     [Fact]
@@ -171,15 +175,19 @@ public class GetEmpiricTreatmentProtocolByIdHandlerTest : IClassFixture<Postgres
         var result = await _handler.HandleAsync(
             new GetEmpiricTreatmentProtocolByIdQuery { Id = seeded.Id },
             TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.Equal(Status.Success, result.StatusCode);
+        Assert.NotNull(result.Data);
 
-        Assert.Equal(seeded.Id, result.Id);
-        Assert.Equal(3, result.Version);
+        Assert.Equal(seeded.Id, result.Data.Id);
+        Assert.Equal(3, result.Data.Version);
 
         // Business rule: when no special infection is assigned, the result is null (not a stub)
-        Assert.Null(result.SpecialInfection);
+        Assert.Null(result.Data.SpecialInfection);
         // Business rule: empty relations yield empty lists, never null
-        Assert.Empty(result.OtherCriteria);
-        Assert.Empty(result.Medicines);
+        Assert.Empty(result.Data.OtherCriteria);
+        Assert.Empty(result.Data.Medicines);
     }
 
     # endregion
@@ -192,9 +200,12 @@ public class GetEmpiricTreatmentProtocolByIdHandlerTest : IClassFixture<Postgres
         await CleanupProtocolsAsync();
         var unknownId = Guid.CreateVersion7();
 
-        await Assert.ThrowsAsync<NotFoundException>(() => _handler.HandleAsync(
+        var result = await _handler.HandleAsync(
             new GetEmpiricTreatmentProtocolByIdQuery { Id = unknownId },
-            TestContext.Current.CancellationToken));
+            TestContext.Current.CancellationToken);
+        Assert.True(result.IsFailure);
+        Assert.NotNull(result.Error);
+        Assert.Equal(Status.ResourceNotFound, result.StatusCode);
     }
 
     [Fact]
@@ -205,9 +216,12 @@ public class GetEmpiricTreatmentProtocolByIdHandlerTest : IClassFixture<Postgres
 
         // Business rule: soft-deleted protocols are hidden by the query filter and must
         // be reported as not found
-        await Assert.ThrowsAsync<NotFoundException>(() => _handler.HandleAsync(
+        var result = await _handler.HandleAsync(
             new GetEmpiricTreatmentProtocolByIdQuery { Id = seeded.Id },
-            TestContext.Current.CancellationToken));
+            TestContext.Current.CancellationToken);
+        Assert.True(result.IsFailure);
+        Assert.NotNull(result.Error);
+        Assert.Equal(Status.ResourceNotFound, result.StatusCode);
     }
 
     # endregion

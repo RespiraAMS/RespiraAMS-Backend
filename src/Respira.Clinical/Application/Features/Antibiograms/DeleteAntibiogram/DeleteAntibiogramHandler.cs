@@ -5,17 +5,17 @@ using Microsoft.Extensions.Logging;
 namespace Application.Features.Antibiograms.DeleteAntibiogram;
 
 public class DeleteAntibiogramHandler(IDbContext context, ILogger<DeleteAntibiogramHandler> logger)
-    : ICommandHandler<DeleteAntibiogramCommand>
+    : ICommandHandler<DeleteAntibiogramCommand, Respira.ServiceDefaults.Contracts.Results.Result>
 {
-    public async Task HandleAsync(DeleteAntibiogramCommand command, CancellationToken cancellationToken = default)
+    public async Task<Respira.ServiceDefaults.Contracts.Results.Result> HandleAsync(DeleteAntibiogramCommand command, CancellationToken cancellationToken = default)
     {
         // Get entity by ID
-        var antibiogram = await context.Antibiograms
-            .FirstOrDefaultAsync(x => x.Id == command.Id, cancellationToken);
+        var antibiogram = await context.Antibiograms.FirstOrDefaultAsync(x => x.Id == command.Id, cancellationToken);
         if (antibiogram is null)
         {
             logger.LogDebug("Antibiogram not found: {Id}", command.Id);
-            throw new NotFoundException(nameof(Antibiogram), command.Id);
+            return Respira.ServiceDefaults.Contracts.Results.Result.Failure(new Error(Status.BadRequest, "Antibiogram not found"));
+            // throw new NotFoundException(nameof(Antibiogram), command.Id);
         }
 
         // Delete antibiogram
@@ -23,10 +23,7 @@ public class DeleteAntibiogramHandler(IDbContext context, ILogger<DeleteAntibiog
         antibiogram.DeletedAt = DateTimeOffset.UtcNow;
 
         // Save changes to database
-        if (await context.SaveChangesAsync(cancellationToken) <= 0)
-        {
-            logger.LogError("Failed to delete antibiogram");
-            throw new ServerException();
-        }
+        await context.SaveChangesAsync(cancellationToken);
+        return Respira.ServiceDefaults.Contracts.Results.Result.Success(Status.Deleted);
     }
 }

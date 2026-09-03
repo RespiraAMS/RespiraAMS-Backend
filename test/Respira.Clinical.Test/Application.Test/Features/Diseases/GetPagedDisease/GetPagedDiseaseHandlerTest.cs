@@ -3,6 +3,7 @@ using Domain.Models;
 using Infrastructure.Data;
 using Infrastructure.Mappers;
 using Microsoft.EntityFrameworkCore;
+using Respira.ServiceDefaults.Contracts.Results;
 using Respira.ServiceDefaults.Dtos;
 
 namespace Application.Test.Features.Diseases.GetPagedDisease;
@@ -73,22 +74,26 @@ public class GetPagedDiseaseHandlerTest : IClassFixture<PostgresFixture>, IAsync
                 Param = new PaginationParam { Page = 1, Size = 10 },
             },
             TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.Equal(Status.Success, result.StatusCode);
+        Assert.NotNull(result.Data);
 
         // Business rule: all non-deleted diseases are returned
-        Assert.Equal(3, result.Metadata.TotalItemCount);
-        Assert.Equal(3, result.Items.Count());
-        Assert.Equal(1, result.Metadata.PageCount);
-        Assert.Equal(1, result.Metadata.CurrentPage);
-        Assert.Equal(10, result.Metadata.PageSize);
-        Assert.False(result.Metadata.HasNextPage);
-        Assert.False(result.Metadata.HasPreviousPage);
+        Assert.Equal(3, result.Data.Metadata.TotalItemCount);
+        Assert.Equal(3, result.Data.Items.Count());
+        Assert.Equal(1, result.Data.Metadata.PageCount);
+        Assert.Equal(1, result.Data.Metadata.CurrentPage);
+        Assert.Equal(10, result.Data.Metadata.PageSize);
+        Assert.False(result.Data.Metadata.HasNextPage);
+        Assert.False(result.Data.Metadata.HasPreviousPage);
 
         // Business rule: each item projects Id and Name
-        var ids = result.Items.Select(x => x.Id).ToHashSet();
+        var ids = result.Data.Items.Select(x => x.Id).ToHashSet();
         Assert.Contains(a.Id, ids);
         Assert.Contains(b.Id, ids);
         Assert.Contains(c.Id, ids);
-        Assert.All(result.Items, item =>
+        Assert.All(result.Data.Items, item =>
         {
             Assert.NotEqual(Guid.Empty, item.Id);
             Assert.False(string.IsNullOrEmpty(item.Name));
@@ -111,10 +116,14 @@ public class GetPagedDiseaseHandlerTest : IClassFixture<PostgresFixture>, IAsync
                 Filter = new DiseaseFilter { Name = "pneumonia" },
             },
             TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.Equal(Status.Success, result.StatusCode);
+        Assert.NotNull(result.Data);
 
-        Assert.Equal(2, result.Metadata.TotalItemCount);
-        Assert.Equal(2, result.Items.Count());
-        Assert.All(result.Items, item => Assert.Contains("Pneumonia", item.Name, StringComparison.Ordinal));
+        Assert.Equal(2, result.Data.Metadata.TotalItemCount);
+        Assert.Equal(2, result.Data.Items.Count());
+        Assert.All(result.Data.Items, item => Assert.Contains("Pneumonia", item.Name, StringComparison.Ordinal));
     }
 
     [Fact]
@@ -132,8 +141,12 @@ public class GetPagedDiseaseHandlerTest : IClassFixture<PostgresFixture>, IAsync
                 Filter = null,
             },
             TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.Equal(Status.Success, result.StatusCode);
+        Assert.NotNull(result.Data);
 
-        Assert.Equal(2, result.Metadata.TotalItemCount);
+        Assert.Equal(2, result.Data.Metadata.TotalItemCount);
     }
 
     // Boundary value technique: Size = 1 is the smallest valid page size
@@ -152,13 +165,17 @@ public class GetPagedDiseaseHandlerTest : IClassFixture<PostgresFixture>, IAsync
                 Param = new PaginationParam { Page = 1, Size = 1 },
             },
             TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.Equal(Status.Success, result.StatusCode);
+        Assert.NotNull(result.Data);
 
-        Assert.Single(result.Items);
-        Assert.Equal(1, result.Metadata.PageSize);
-        Assert.Equal(5, result.Metadata.TotalItemCount);
-        Assert.Equal(5, result.Metadata.PageCount);
-        Assert.True(result.Metadata.HasNextPage);
-        Assert.False(result.Metadata.HasPreviousPage);
+        Assert.Single(result.Data.Items);
+        Assert.Equal(1, result.Data.Metadata.PageSize);
+        Assert.Equal(5, result.Data.Metadata.TotalItemCount);
+        Assert.Equal(5, result.Data.Metadata.PageCount);
+        Assert.True(result.Data.Metadata.HasNextPage);
+        Assert.False(result.Data.Metadata.HasPreviousPage);
     }
 
     [Fact]
@@ -176,14 +193,18 @@ public class GetPagedDiseaseHandlerTest : IClassFixture<PostgresFixture>, IAsync
                 Param = new PaginationParam { Page = 2, Size = 2 },
             },
             TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.Equal(Status.Success, result.StatusCode);
+        Assert.NotNull(result.Data);
 
         // ceil(5 / 2) = 3 pages; page 2 holds items 3 and 4
-        Assert.Equal(2, result.Items.Count());
-        Assert.Equal(5, result.Metadata.TotalItemCount);
-        Assert.Equal(3, result.Metadata.PageCount);
-        Assert.Equal(2, result.Metadata.CurrentPage);
-        Assert.True(result.Metadata.HasNextPage);
-        Assert.True(result.Metadata.HasPreviousPage);
+        Assert.Equal(2, result.Data.Items.Count());
+        Assert.Equal(5, result.Data.Metadata.TotalItemCount);
+        Assert.Equal(3, result.Data.Metadata.PageCount);
+        Assert.Equal(2, result.Data.Metadata.CurrentPage);
+        Assert.True(result.Data.Metadata.HasNextPage);
+        Assert.True(result.Data.Metadata.HasPreviousPage);
     }
 
     [Fact]
@@ -199,14 +220,18 @@ public class GetPagedDiseaseHandlerTest : IClassFixture<PostgresFixture>, IAsync
                 Param = new PaginationParam { Page = 5, Size = 10 },
             },
             TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.Equal(Status.Success, result.StatusCode);
+        Assert.NotNull(result.Data);
 
-        Assert.Empty(result.Items);
-        Assert.Equal(2, result.Metadata.TotalItemCount);
-        Assert.Equal(1, result.Metadata.PageCount);
-        Assert.False(result.Metadata.HasNextPage);
+        Assert.Empty(result.Data.Items);
+        Assert.Equal(2, result.Data.Metadata.TotalItemCount);
+        Assert.Equal(1, result.Data.Metadata.PageCount);
+        Assert.False(result.Data.Metadata.HasNextPage);
         // X.PagedList clamps the reported current page to the last page, so the
         // beyond-range request yields an empty page without throwing.
-        Assert.False(result.Metadata.HasPreviousPage);
+        Assert.False(result.Data.Metadata.HasPreviousPage);
     }
 
     [Fact]
@@ -225,8 +250,12 @@ public class GetPagedDiseaseHandlerTest : IClassFixture<PostgresFixture>, IAsync
                 Param = new PaginationParam { Page = 1, Size = 10 },
             },
             TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.Equal(Status.Success, result.StatusCode);
+        Assert.NotNull(result.Data);
 
-        var orderedNames = result.Items.Select(x => x.Name).ToList();
+        var orderedNames = result.Data.Items.Select(x => x.Name).ToList();
         Assert.Equal(new[] { "Newest Disease", "Middle Disease", "Oldest Disease" }, orderedNames);
     }
 
@@ -247,9 +276,13 @@ public class GetPagedDiseaseHandlerTest : IClassFixture<PostgresFixture>, IAsync
                 Param = new PaginationParam { Page = 1, Size = 10 },
             },
             TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.Equal(Status.Success, result.StatusCode);
+        Assert.NotNull(result.Data);
 
-        Assert.Equal(1, result.Metadata.TotalItemCount);
-        var single = Assert.Single(result.Items);
+        Assert.Equal(1, result.Data.Metadata.TotalItemCount);
+        var single = Assert.Single(result.Data.Items);
         Assert.Equal(active.Id, single.Id);
     }
 
@@ -269,9 +302,13 @@ public class GetPagedDiseaseHandlerTest : IClassFixture<PostgresFixture>, IAsync
                 Param = new PaginationParam { Page = 1, Size = 10 },
             },
             TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.Equal(Status.Success, result.StatusCode);
+        Assert.NotNull(result.Data);
 
-        Assert.Empty(result.Items);
-        Assert.Equal(0, result.Metadata.TotalItemCount);
+        Assert.Empty(result.Data.Items);
+        Assert.Equal(0, result.Data.Metadata.TotalItemCount);
     }
 
     # endregion

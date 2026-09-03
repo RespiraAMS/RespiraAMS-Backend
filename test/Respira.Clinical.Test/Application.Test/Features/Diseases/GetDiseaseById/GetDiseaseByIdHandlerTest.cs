@@ -4,7 +4,7 @@ using Domain.Enums;
 using Domain.Models;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
-using Respira.ServiceDefaults.Exceptions;
+using Respira.ServiceDefaults.Contracts.Results;
 
 namespace Application.Test.Features.Diseases.GetDiseaseById;
 
@@ -133,18 +133,22 @@ public class GetDiseaseByIdHandlerTest : IClassFixture<PostgresFixture>, IAsyncL
         var result = await _handler.HandleAsync(
             new GetDiseaseByIdQuery { Id = disease.Id },
             TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.Equal(Status.Success, result.StatusCode);
+        Assert.NotNull(result.Data);
 
         // Business rule: scalar disease fields are projected verbatim
-        Assert.Equal(disease.Id, result.Id);
-        Assert.Equal("Community-Acquired Pneumonia", result.Name);
-        Assert.Equal("Infection of the lung parenchyma acquired outside of a healthcare setting", result.Description);
-        Assert.Equal(4, result.IcuScoreThreshold);
+        Assert.Equal(disease.Id, result.Data.Id);
+        Assert.Equal("Community-Acquired Pneumonia", result.Data.Name);
+        Assert.Equal("Infection of the lung parenchyma acquired outside of a healthcare setting", result.Data.Description);
+        Assert.Equal(4, result.Data.IcuScoreThreshold);
 
         // Business rule: when no relations exist, collections are returned as empty lists, never null
-        Assert.Empty(result.IcuHospitalizeCriteria);
-        Assert.Empty(result.ResistanceRiskFactors);
-        Assert.Empty(result.Causes);
-        Assert.Empty(result.EmpiricTreatmentProtocols);
+        Assert.Empty(result.Data.IcuHospitalizeCriteria);
+        Assert.Empty(result.Data.ResistanceRiskFactors);
+        Assert.Empty(result.Data.Causes);
+        Assert.Empty(result.Data.EmpiricTreatmentProtocols);
     }
 
     // Boundary value technique: 1 is the smallest plausible ICU score threshold
@@ -157,9 +161,13 @@ public class GetDiseaseByIdHandlerTest : IClassFixture<PostgresFixture>, IAsyncL
         var result = await _handler.HandleAsync(
             new GetDiseaseByIdQuery { Id = disease.Id },
             TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.Equal(Status.Success, result.StatusCode);
+        Assert.NotNull(result.Data);
 
-        Assert.Equal(1, result.IcuScoreThreshold);
-        Assert.Equal(disease.Id, result.Id);
+        Assert.Equal(1, result.Data.IcuScoreThreshold);
+        Assert.Equal(disease.Id, result.Data.Id);
     }
 
     [Fact]
@@ -171,13 +179,17 @@ public class GetDiseaseByIdHandlerTest : IClassFixture<PostgresFixture>, IAsyncL
         var result = await _handler.HandleAsync(
             new GetDiseaseByIdQuery { Id = disease.Id },
             TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.Equal(Status.Success, result.StatusCode);
+        Assert.NotNull(result.Data);
 
         // Business rule: scalar fields
-        Assert.Equal(disease.Id, result.Id);
-        Assert.Equal(5, result.IcuScoreThreshold);
+        Assert.Equal(disease.Id, result.Data.Id);
+        Assert.Equal(5, result.Data.IcuScoreThreshold);
 
         // Business rule: ICU hospitalize criteria are projected (ordered, with mapped criterion)
-        var icu = Assert.Single(result.IcuHospitalizeCriteria);
+        var icu = Assert.Single(result.Data.IcuHospitalizeCriteria);
         Assert.Equal(5, icu.Score);
         Assert.NotNull(icu.Criterion);
         Assert.Equal(criterion.Id, icu.Criterion.Id);
@@ -186,20 +198,20 @@ public class GetDiseaseByIdHandlerTest : IClassFixture<PostgresFixture>, IAsyncL
         Assert.Null(icu.Criterion.Value);
 
         // Business rule: resistance risk factors carry pathogen name and mapped criterion
-        var rrf = Assert.Single(result.ResistanceRiskFactors);
+        var rrf = Assert.Single(result.Data.ResistanceRiskFactors);
         Assert.Equal("Prior antibiotic use within 90 days", rrf.Name);
         Assert.Equal("Streptococcus pneumoniae", rrf.PathogenName);
         Assert.NotNull(rrf.Criterion);
         Assert.Equal("Prior history of COPD", rrf.Criterion.Name);
 
         // Business rule: causes project pathogen, severity and treatment site
-        var cause = Assert.Single(result.Causes);
+        var cause = Assert.Single(result.Data.Causes);
         Assert.Equal("Streptococcus pneumoniae", cause.PathogenName);
         Assert.Equal(Severity.Severe, cause.Severity);
         Assert.Equal(TreatmentSite.IntensiveCareUnit, cause.TreatmentSite);
 
         // Business rule: empiric treatment protocols are projected with their metadata
-        var protocol = Assert.Single(result.EmpiricTreatmentProtocols);
+        var protocol = Assert.Single(result.Data.EmpiricTreatmentProtocols);
         Assert.Equal("IDSA/ATS 2024 CAP Empiric Guidance", protocol.Name);
         Assert.Equal("Infectious Diseases Society of America", protocol.Issuer);
         Assert.Equal(new DateOnly(2024, 8, 1), protocol.IssueDate);
@@ -217,9 +229,12 @@ public class GetDiseaseByIdHandlerTest : IClassFixture<PostgresFixture>, IAsyncL
         var unknownId = Guid.CreateVersion7();
 
         // Business rule: a missing disease is reported as NotFound
-        await Assert.ThrowsAsync<NotFoundException>(() => _handler.HandleAsync(
+        var result = await _handler.HandleAsync(
             new GetDiseaseByIdQuery { Id = unknownId },
-            TestContext.Current.CancellationToken));
+            TestContext.Current.CancellationToken);
+        Assert.True(result.IsFailure);
+        Assert.NotNull(result.Error);
+        Assert.Equal(Status.ResourceNotFound, result.StatusCode);
     }
 
     [Fact]
@@ -233,9 +248,12 @@ public class GetDiseaseByIdHandlerTest : IClassFixture<PostgresFixture>, IAsyncL
         disease.DeletedAt = DateTimeOffset.UtcNow;
         await _context.SaveChangesAsync(TestContext.Current.CancellationToken);
 
-        await Assert.ThrowsAsync<NotFoundException>(() => _handler.HandleAsync(
+        var result = await _handler.HandleAsync(
             new GetDiseaseByIdQuery { Id = disease.Id },
-            TestContext.Current.CancellationToken));
+            TestContext.Current.CancellationToken);
+        Assert.True(result.IsFailure);
+        Assert.NotNull(result.Error);
+        Assert.Equal(Status.ResourceNotFound, result.StatusCode);
     }
 
     # endregion

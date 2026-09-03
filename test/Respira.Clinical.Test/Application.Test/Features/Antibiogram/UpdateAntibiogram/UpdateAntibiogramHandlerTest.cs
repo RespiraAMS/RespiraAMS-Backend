@@ -6,7 +6,7 @@ using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moq;
-using Respira.ServiceDefaults.Exceptions;
+using Respira.ServiceDefaults.Contracts.Results;
 
 namespace Application.Test.Features.Antibiogram.UpdateAntibiogram;
 
@@ -158,7 +158,7 @@ public class UpdateAntibiogramHandlerTest : IClassFixture<PostgresFixture>, IAsy
         var (_, antibioticIds, antibiogram) = await SeedAsync(antibioticCount: 5, seedControlAntibiogram: true);
         _ = antibiogram ?? throw new InvalidOperationException("Seed failure");
 
-        await _handler.HandleAsync(new UpdateAntibiogramCommand
+        var result = await _handler.HandleAsync(new UpdateAntibiogramCommand
         {
             Id = antibiogram.Id,
             MicLevel = MinimumInhibitoryConcentration.Resistance,
@@ -166,6 +166,9 @@ public class UpdateAntibiogramHandlerTest : IClassFixture<PostgresFixture>, IAsy
             FirstPriorityMedicineIds = [antibioticIds[1]],
             SecondPriorityMedicineIds = [antibioticIds[4]],
         }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.Equal(Status.Updated, result.StatusCode);
 
         // Verify through a fresh context so the change tracker cannot mask a failed commit
         var saved = await GetPersistedAntibiogramAsync(antibiogram.Id);
@@ -196,7 +199,7 @@ public class UpdateAntibiogramHandlerTest : IClassFixture<PostgresFixture>, IAsy
         var (_, antibioticIds, antibiogram) = await SeedAsync(antibioticCount: 3);
         _ = antibiogram ?? throw new InvalidOperationException("Seed failure");
 
-        await _handler.HandleAsync(new UpdateAntibiogramCommand
+        var result = await _handler.HandleAsync(new UpdateAntibiogramCommand
         {
             Id = antibiogram.Id,
             MicLevel = MinimumInhibitoryConcentration.Intermediate,
@@ -204,6 +207,9 @@ public class UpdateAntibiogramHandlerTest : IClassFixture<PostgresFixture>, IAsy
             FirstPriorityMedicineIds = [antibioticIds[1]],
             SecondPriorityMedicineIds = [antibioticIds[2]],
         }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.Equal(Status.Updated, result.StatusCode);
 
         var saved = await GetPersistedAntibiogramAsync(antibiogram.Id);
         Assert.Equal(2, saved.Mics.Count);
@@ -223,7 +229,7 @@ public class UpdateAntibiogramHandlerTest : IClassFixture<PostgresFixture>, IAsy
         var (_, antibioticIds, antibiogram) = await SeedAsync(antibioticCount: 3);
         _ = antibiogram ?? throw new InvalidOperationException("Seed failure");
 
-        await _handler.HandleAsync(new UpdateAntibiogramCommand
+        var result = await _handler.HandleAsync(new UpdateAntibiogramCommand
         {
             Id = antibiogram.Id,
             MicLevel = MinimumInhibitoryConcentration.Resistance,
@@ -231,6 +237,9 @@ public class UpdateAntibiogramHandlerTest : IClassFixture<PostgresFixture>, IAsy
             FirstPriorityMedicineIds = [antibioticIds[0]],
             SecondPriorityMedicineIds = [antibioticIds[2]],
         }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.Equal(Status.Updated, result.StatusCode);
 
         var saved = await GetPersistedAntibiogramAsync(antibiogram.Id);
         Assert.Contains(antibioticIds[0], saved.Mics.Select(x => x.Id));
@@ -249,7 +258,7 @@ public class UpdateAntibiogramHandlerTest : IClassFixture<PostgresFixture>, IAsy
         var (_, antibioticIds, _) = await SeedAsync(antibioticCount: 3, seedAntibiogram: false);
         var unknownId = Guid.CreateVersion7();
 
-        await Assert.ThrowsAsync<NotFoundException>(() => _handler.HandleAsync(
+        var result = await _handler.HandleAsync(
             new UpdateAntibiogramCommand
             {
                 Id = unknownId,
@@ -257,7 +266,10 @@ public class UpdateAntibiogramHandlerTest : IClassFixture<PostgresFixture>, IAsy
                 MicIds = [antibioticIds[0]],
                 FirstPriorityMedicineIds = [antibioticIds[1]],
                 SecondPriorityMedicineIds = [antibioticIds[2]],
-            }, TestContext.Current.CancellationToken));
+            }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsFailure);
+        Assert.NotNull(result.Error);
+        Assert.Equal(Status.BadRequest, result.StatusCode);
 
         Assert.Equal(0, await _context.Antibiograms.CountAsync(TestContext.Current.CancellationToken));
     }
@@ -270,7 +282,7 @@ public class UpdateAntibiogramHandlerTest : IClassFixture<PostgresFixture>, IAsy
         var (_, antibioticIds, deleted) = await SeedAsync(antibioticCount: 3, softDeletedAntibiogram: true);
         _ = deleted ?? throw new InvalidOperationException("Seed failure");
 
-        await Assert.ThrowsAsync<NotFoundException>(() => _handler.HandleAsync(
+        var result = await _handler.HandleAsync(
             new UpdateAntibiogramCommand
             {
                 Id = deleted.Id,
@@ -278,7 +290,10 @@ public class UpdateAntibiogramHandlerTest : IClassFixture<PostgresFixture>, IAsy
                 MicIds = [antibioticIds[0]],
                 FirstPriorityMedicineIds = [antibioticIds[1]],
                 SecondPriorityMedicineIds = [antibioticIds[2]],
-            }, TestContext.Current.CancellationToken));
+            }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsFailure);
+        Assert.NotNull(result.Error);
+        Assert.Equal(Status.BadRequest, result.StatusCode);
     }
 
     [Fact]
@@ -288,7 +303,7 @@ public class UpdateAntibiogramHandlerTest : IClassFixture<PostgresFixture>, IAsy
         _ = antibiogram ?? throw new InvalidOperationException("Seed failure");
         var unknownId = Guid.CreateVersion7();
 
-        await Assert.ThrowsAsync<BadRequestException>(() => _handler.HandleAsync(
+        var result = await _handler.HandleAsync(
             new UpdateAntibiogramCommand
             {
                 Id = antibiogram.Id,
@@ -296,7 +311,10 @@ public class UpdateAntibiogramHandlerTest : IClassFixture<PostgresFixture>, IAsy
                 MicIds = [antibioticIds[0], unknownId],
                 FirstPriorityMedicineIds = [antibioticIds[1]],
                 SecondPriorityMedicineIds = [antibioticIds[2]],
-            }, TestContext.Current.CancellationToken));
+            }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsFailure);
+        Assert.NotNull(result.Error);
+        Assert.Equal(Status.BadRequest, result.StatusCode);
 
         // The failed update must leave the stored relations untouched
         var saved = await GetPersistedAntibiogramAsync(antibiogram.Id);
@@ -316,7 +334,7 @@ public class UpdateAntibiogramHandlerTest : IClassFixture<PostgresFixture>, IAsy
             antibioticCount: 3, softDeletedFirstAntibiotic: true);
         _ = antibiogram ?? throw new InvalidOperationException("Seed failure");
 
-        await Assert.ThrowsAsync<BadRequestException>(() => _handler.HandleAsync(
+        var result = await _handler.HandleAsync(
             new UpdateAntibiogramCommand
             {
                 Id = antibiogram.Id,
@@ -324,7 +342,10 @@ public class UpdateAntibiogramHandlerTest : IClassFixture<PostgresFixture>, IAsy
                 MicIds = [antibioticIds[0]],
                 FirstPriorityMedicineIds = [antibioticIds[1]],
                 SecondPriorityMedicineIds = [antibioticIds[2]],
-            }, TestContext.Current.CancellationToken));
+            }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsFailure);
+        Assert.NotNull(result.Error);
+        Assert.Equal(Status.BadRequest, result.StatusCode);
 
         var saved = await GetPersistedAntibiogramAsync(antibiogram.Id);
         Assert.Equal(MinimumInhibitoryConcentration.Susceptible, saved.MicLevel);

@@ -3,10 +3,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Antibiotics.GetAntibiotics;
 
-public class GetAntibioticsHandler(IDbContext context) : IQueryHandler<GetAntibioticsQuery, GetAntibioticsResult>
+public class GetAntibioticsHandler(IDbContext context)
+    : IQueryHandler<GetAntibioticsQuery, Respira.ServiceDefaults.Contracts.Results.Result<GetAntibioticsResult>>
 {
-    public async Task<GetAntibioticsResult> HandleAsync(GetAntibioticsQuery query,
-        CancellationToken cancellationToken = default)
+    public async Task<Respira.ServiceDefaults.Contracts.Results.Result<GetAntibioticsResult>> HandleAsync(GetAntibioticsQuery query, CancellationToken cancellationToken = default)
     {
         var antibiotics = await context.Antibiotics
             .AsNoTracking()
@@ -17,6 +17,6 @@ public class GetAntibioticsHandler(IDbContext context) : IQueryHandler<GetAntibi
                 Name = x.Name
             })
             .ToListAsync(cancellationToken);
-        return new GetAntibioticsResult(antibiotics);
+        return Respira.ServiceDefaults.Contracts.Results.Result<GetAntibioticsResult>.Success(Status.Success, new GetAntibioticsResult(antibiotics));
     }
 }

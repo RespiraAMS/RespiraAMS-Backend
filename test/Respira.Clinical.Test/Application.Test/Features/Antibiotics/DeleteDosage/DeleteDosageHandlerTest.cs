@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Range = Domain.Models.Range;
-using Respira.ServiceDefaults.Exceptions;
+using Respira.ServiceDefaults.Contracts.Results;
 
 namespace Application.Test.Features.Antibiotics.DeleteDosage;
 
@@ -142,19 +142,15 @@ public class DeleteDosageHandlerTest : IClassFixture<PostgresFixture>, IAsyncLif
         ], seedControlAntibiotic: true);
         var target = antibiotic.Dosages[1];
 
-        await _handler.HandleAsync(new DeleteDosageCommand
+        var result = await _handler.HandleAsync(new DeleteDosageCommand
         {
             Id = target.Id,
             AntibioticId = antibiotic.Id,
         }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.Equal(Status.Deleted, result.StatusCode);
 
-        /*
-         * SOURCE PROBLEM: this test documents the soft-delete contract stated in
-         * DeleteDosageHandler ("our db delete is soft delete"). It currently FAILS
-         * because Dosage.AntibioticId is a required FK (AppDbContext, cascade default),
-         * so RemoveAll from the navigation collection makes EF hard-DELETE the orphaned
-         * row and the IsDeleted/DeletedAt flags never reach the database
-         */
         var saved = await FindPersistedDosageIncludingDeletedAsync(target.Id);
         Assert.NotNull(saved);
         Assert.True(saved.IsDeleted);
@@ -195,11 +191,14 @@ public class DeleteDosageHandlerTest : IClassFixture<PostgresFixture>, IAsyncLif
         ]);
         var target = antibiotic.Dosages[2];
 
-        await _handler.HandleAsync(new DeleteDosageCommand
+        var result = await _handler.HandleAsync(new DeleteDosageCommand
         {
             Id = target.Id,
             AntibioticId = antibiotic.Id,
         }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.Equal(Status.Deleted, result.StatusCode);
 
         var deleted = await FindPersistedDosageIncludingDeletedAsync(target.Id);
         Assert.NotNull(deleted);
@@ -227,12 +226,15 @@ public class DeleteDosageHandlerTest : IClassFixture<PostgresFixture>, IAsyncLif
     {
         var unknownId = Guid.CreateVersion7();
 
-        await Assert.ThrowsAsync<NotFoundException>(() => _handler.HandleAsync(
+        var result = await _handler.HandleAsync(
             new DeleteDosageCommand
             {
                 Id = Guid.CreateVersion7(),
                 AntibioticId = unknownId,
-            }, TestContext.Current.CancellationToken));
+            }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsFailure);
+        Assert.NotNull(result.Error);
+        Assert.Equal(Status.BadRequest, result.StatusCode);
 
         // Nothing must be soft-deleted when the antibiotic does not exist
         Assert.Equal(0, await _context.Dosages.IgnoreQueryFilters()
@@ -249,12 +251,15 @@ public class DeleteDosageHandlerTest : IClassFixture<PostgresFixture>, IAsyncLif
             ("500 mg orally every 6 hours", RouteOfAdministration.Oral, null),
         ], softDeleted: true);
 
-        await Assert.ThrowsAsync<NotFoundException>(() => _handler.HandleAsync(
+        var result = await _handler.HandleAsync(
             new DeleteDosageCommand
             {
                 Id = deletedAntibiotic.Dosages[0].Id,
                 AntibioticId = deletedAntibiotic.Id,
-            }, TestContext.Current.CancellationToken));
+            }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsFailure);
+        Assert.NotNull(result.Error);
+        Assert.Equal(Status.BadRequest, result.StatusCode);
     }
 
     [Fact]
@@ -271,12 +276,15 @@ public class DeleteDosageHandlerTest : IClassFixture<PostgresFixture>, IAsyncLif
             .SingleAsync(x => x.Name == "Azithromycin", TestContext.Current.CancellationToken);
         var foreignDosageId = control.Dosages[0].Id;
 
-        await Assert.ThrowsAsync<NotFoundException>(() => _handler.HandleAsync(
+        var result = await _handler.HandleAsync(
             new DeleteDosageCommand
             {
                 Id = foreignDosageId,
                 AntibioticId = antibiotic.Id,
-            }, TestContext.Current.CancellationToken));
+            }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsFailure);
+        Assert.NotNull(result.Error);
+        Assert.Equal(Status.BadRequest, result.StatusCode);
 
         // The foreign dosage must stay active
         var saved = await FindPersistedDosageIncludingDeletedAsync(foreignDosageId);
@@ -297,12 +305,15 @@ public class DeleteDosageHandlerTest : IClassFixture<PostgresFixture>, IAsyncLif
             ("500 mg orally every 8 hours", RouteOfAdministration.Oral, null),
         ]);
 
-        await Assert.ThrowsAsync<BadRequestException>(() => _handler.HandleAsync(
+        var result = await _handler.HandleAsync(
             new DeleteDosageCommand
             {
                 Id = antibiotic.Dosages[0].Id,
                 AntibioticId = antibiotic.Id,
-            }, TestContext.Current.CancellationToken));
+            }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsFailure);
+        Assert.NotNull(result.Error);
+        Assert.Equal(Status.BusinessRuleViolation, result.StatusCode);
 
         // The rejected deletion must leave the dosage active and linked
         var saved = await FindPersistedDosageIncludingDeletedAsync(antibiotic.Dosages[0].Id);
@@ -333,12 +344,15 @@ public class DeleteDosageHandlerTest : IClassFixture<PostgresFixture>, IAsyncLif
         ]);
         var oralStandard = antibiotic.Dosages[0];
 
-        await Assert.ThrowsAsync<BadRequestException>(() => _handler.HandleAsync(
+        var result = await _handler.HandleAsync(
             new DeleteDosageCommand
             {
                 Id = oralStandard.Id,
                 AntibioticId = antibiotic.Id,
-            }, TestContext.Current.CancellationToken));
+            }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsFailure);
+        Assert.NotNull(result.Error);
+        Assert.Equal(Status.BusinessRuleViolation, result.StatusCode);
 
         // All three dosages must stay active and linked after the rejection
         var savedAntibiotic = await GetPersistedAntibioticAsync(antibiotic.Id);

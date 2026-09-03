@@ -5,9 +5,9 @@ using X.PagedList.EF;
 namespace Application.Features.Diseases.GetPagedDisease;
 
 public class GetPagedDiseaseHandler(IDbContext context, IPaginationFactory factory)
-    : IQueryHandler<GetPagedDiseaseQuery, Pagination<PagedDiseaseItem>>
+    : IQueryHandler<GetPagedDiseaseQuery, Respira.ServiceDefaults.Contracts.Results.Result<Pagination<PagedDiseaseItem>>>
 {
-    public async Task<Pagination<PagedDiseaseItem>> HandleAsync(GetPagedDiseaseQuery query,
+    public async Task<Respira.ServiceDefaults.Contracts.Results.Result<Pagination<PagedDiseaseItem>>> HandleAsync(GetPagedDiseaseQuery query,
         CancellationToken cancellationToken = default)
     {
         // Apply filter
@@ -28,6 +28,6 @@ public class GetPagedDiseaseHandler(IDbContext context, IPaginationFactory facto
                 Name = x.Name,
             })
             .ToPagedListAsync(query.Param.Page, query.Param.Size);
-        return factory.Create(diseases);
+        return Respira.ServiceDefaults.Contracts.Results.Result<Pagination<PagedDiseaseItem>>.Success(Status.Success, factory.Create(diseases));
     }
 }

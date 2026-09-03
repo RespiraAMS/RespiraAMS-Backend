@@ -6,6 +6,7 @@ using Domain.Models;
 using Infrastructure.Data;
 using Infrastructure.Mappers;
 using Microsoft.EntityFrameworkCore;
+using Respira.ServiceDefaults.Contracts.Results;
 using Respira.ServiceDefaults.Dtos;
 
 namespace Application.Test.Features.Antibiogram.GetPagedAntibiogram;
@@ -166,32 +167,36 @@ public class GetPagedAntibiogramHandlerTest : IClassFixture<PostgresFixture>, IA
         {
             Param = new PaginationParam { Page = 1, Size = 2 },
         }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.NotNull(result.Data);
+        Assert.Equal(Status.Success, result.StatusCode);
 
         // Newest active first; the soft-deleted antibiogram must stay hidden
         Assert.Equal(
         [
             MinimumInhibitoryConcentration.Resistance,
             MinimumInhibitoryConcentration.Susceptible,
-        ], [.. result.Items.Select(x => x.MicLevel)]);
+        ], [.. result.Data.Items.Select(x => x.MicLevel)]);
 
         // The nested projections must carry names and IDs through the navigations
-        var newest = result.Items.First();
+        var newest = result.Data.Items.First();
         Assert.Equal(aeruginosaId, newest.Pathogen.Id);
         Assert.Equal("Pseudomonas aeruginosa", newest.Pathogen.Name);
         Assert.Equal(["Ciprofloxacin"], [.. newest.Mics.Select(x => x.Name)]);
         Assert.Equal(["Meropenem"], [.. newest.FirstPriorityMedicines.Select(x => x.Name)]);
         Assert.Equal(["Amoxicillin"], [.. newest.SecondPriorityMedicines.Select(x => x.Name)]);
 
-        var second = result.Items.Skip(1).First();
+        var second = result.Data.Items.Skip(1).First();
         Assert.Equal("Klebsiella pneumoniae", second.Pathogen.Name);
         Assert.Equal(["Meropenem"], [.. second.Mics.Select(x => x.Name)]);
 
-        Assert.Equal(1, result.Metadata.CurrentPage);
-        Assert.Equal(2, result.Metadata.PageSize);
-        Assert.Equal(3, result.Metadata.TotalItemCount);
-        Assert.Equal(2, result.Metadata.PageCount);
-        Assert.False(result.Metadata.HasPreviousPage);
-        Assert.True(result.Metadata.HasNextPage);
+        Assert.Equal(1, result.Data.Metadata.CurrentPage);
+        Assert.Equal(2, result.Data.Metadata.PageSize);
+        Assert.Equal(3, result.Data.Metadata.TotalItemCount);
+        Assert.Equal(2, result.Data.Metadata.PageCount);
+        Assert.False(result.Data.Metadata.HasPreviousPage);
+        Assert.True(result.Data.Metadata.HasNextPage);
     }
 
     [Fact]
@@ -204,12 +209,16 @@ public class GetPagedAntibiogramHandlerTest : IClassFixture<PostgresFixture>, IA
         {
             Param = new PaginationParam { Page = 2, Size = 2 },
         }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.NotNull(result.Data);
+        Assert.Equal(Status.Success, result.StatusCode);
 
-        var item = Assert.Single(result.Items);
+        var item = Assert.Single(result.Data.Items);
         Assert.Equal(MinimumInhibitoryConcentration.Intermediate, item.MicLevel);
-        Assert.True(result.Metadata.HasPreviousPage);
-        Assert.False(result.Metadata.HasNextPage);
-        Assert.Equal(2, result.Metadata.CurrentPage);
+        Assert.True(result.Data.Metadata.HasPreviousPage);
+        Assert.False(result.Data.Metadata.HasNextPage);
+        Assert.Equal(2, result.Data.Metadata.CurrentPage);
     }
 
     [Fact]
@@ -222,11 +231,15 @@ public class GetPagedAntibiogramHandlerTest : IClassFixture<PostgresFixture>, IA
         {
             Param = new PaginationParam { Page = 1, Size = 1 },
         }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.NotNull(result.Data);
+        Assert.Equal(Status.Success, result.StatusCode);
 
-        _ = Assert.Single(result.Items);
-        Assert.Equal(MinimumInhibitoryConcentration.Resistance, result.Items.First().MicLevel);
-        Assert.Equal(3, result.Metadata.PageCount);
-        Assert.True(result.Metadata.HasNextPage);
+        _ = Assert.Single(result.Data.Items);
+        Assert.Equal(MinimumInhibitoryConcentration.Resistance, result.Data.Items.First().MicLevel);
+        Assert.Equal(3, result.Data.Metadata.PageCount);
+        Assert.True(result.Data.Metadata.HasNextPage);
     }
 
     /*=== filter ===*/
@@ -241,15 +254,19 @@ public class GetPagedAntibiogramHandlerTest : IClassFixture<PostgresFixture>, IA
             Param = new PaginationParam { Page = 1, Size = 10 },
             Filter = new AntibiogramFilter { PathogenId = pneumoniaeId },
         }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.NotNull(result.Data);
+        Assert.Equal(Status.Success, result.StatusCode);
 
         // Susceptible then Intermediate; the soft-deleted pneumoniae row stays hidden
         Assert.Equal(
         [
             MinimumInhibitoryConcentration.Susceptible,
             MinimumInhibitoryConcentration.Intermediate,
-        ], [.. result.Items.Select(x => x.MicLevel)]);
-        Assert.All(result.Items, x => Assert.Equal(pneumoniaeId, x.Pathogen.Id));
-        Assert.Equal(2, result.Metadata.TotalItemCount);
+        ], [.. result.Data.Items.Select(x => x.MicLevel)]);
+        Assert.All(result.Data.Items, x => Assert.Equal(pneumoniaeId, x.Pathogen.Id));
+        Assert.Equal(2, result.Data.Metadata.TotalItemCount);
     }
 
     [Fact]
@@ -263,9 +280,13 @@ public class GetPagedAntibiogramHandlerTest : IClassFixture<PostgresFixture>, IA
             Param = new PaginationParam { Page = 1, Size = 10 },
             Filter = new AntibiogramFilter { PathogenId = null },
         }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.NotNull(result.Data);
+        Assert.Equal(Status.Success, result.StatusCode);
 
-        Assert.Equal(3, result.Items.Count());
-        Assert.Equal(3, result.Metadata.TotalItemCount);
+        Assert.Equal(3, result.Data.Items.Count());
+        Assert.Equal(3, result.Data.Metadata.TotalItemCount);
     }
 
     [Fact]
@@ -278,9 +299,13 @@ public class GetPagedAntibiogramHandlerTest : IClassFixture<PostgresFixture>, IA
             Param = new PaginationParam { Page = 1, Size = 10 },
             Filter = new AntibiogramFilter { PathogenId = Guid.CreateVersion7() },
         }, TestContext.Current.CancellationToken);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Error);
+        Assert.NotNull(result.Data);
+        Assert.Equal(Status.Success, result.StatusCode);
 
-        Assert.Empty(result.Items);
-        Assert.Equal(0, result.Metadata.TotalItemCount);
+        Assert.Empty(result.Data.Items);
+        Assert.Equal(0, result.Data.Metadata.TotalItemCount);
     }
 
     # endregion
