@@ -3,12 +3,20 @@ using Respira.ServiceDefaults.Models;
 
 namespace Domain.Models;
 
+/*
+ * Business rules:
+ * 1. Patient is allow for update/delete only if that patient hasn't receive any treatment
+ * 2. If patient has received treatment, only basic information that wouldn't affect
+ * treatment can be updated (name, medical record code, health insurance, address, city, country)
+ * 3. A patient without treatment cannot be discharge
+ */
+
 public class Patient : Base
 {
     /// <summary>
     /// Patient full name
     /// </summary>
-    public required string FullName { get; set; }
+    public required string FullName { get; set => field = FullNameNormalize(value); }
 
     /// <summary>
     /// Patient date of birth
@@ -65,5 +73,15 @@ public class Patient : Base
         var age = DateTimeOffset.UtcNow.Year - DateOfBirth.Year;
         if (DateOfBirth.AddYears(age) > DateOnly.FromDateTime(DateTime.UtcNow)) age--;
         return age;
+    }
+
+    public static string FullNameNormalize(string fullname)
+    {
+        fullname = fullname.Trim();
+
+        return string.Join(" ", fullname
+            .Split((char[]?)null, StringSplitOptions.RemoveEmptyEntries)
+            .Select(word => char.ToUpper(word[0]) + word[1..].ToLower())
+        );
     }
 }

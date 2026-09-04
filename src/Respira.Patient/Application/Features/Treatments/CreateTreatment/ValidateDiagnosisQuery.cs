@@ -9,7 +9,7 @@ using Wolverine.Attributes;
 
 namespace Application.Features.Treatments.CreateTreatment;
 
-public class AntibioticRecord
+public record AntibioticRecord
 {
     public required Guid Id { get; set; }
     public required string Name { get; set; }
@@ -18,14 +18,14 @@ public class AntibioticRecord
     public required string Dose { get; set; }
 }
 
-public class PathogenRecord
+public record PathogenRecord
 {
     public required Guid Id { get; set; }
     public required string Name { get; set; }
 }
 
 [MessageIdentity("validate-diagnosis-query")]
-public class ValidateDiagnosisQuery : IQuery
+public record ValidateDiagnosisQuery : IQuery
 {
     public required List<AntibioticRecord> Antibiotics { get; set; }
     public required List<PathogenRecord> Pathogens { get; set; }
@@ -34,8 +34,8 @@ public class ValidateDiagnosisQuery : IQuery
 }
 
 [MessageIdentity("validate-diagnosis-result")]
-public class ValidateDiagnosisResult(bool isValid, string? message = null)
+public record ValidateDiagnosisResult(bool IsValid, string? Message = null)
 {
-    public bool IsValid { get; set; } = isValid;
-    public string? Message { get; set; } = message;
+    public bool IsValid { get; set; } = IsValid;
+    public string? Message { get; set; } = Message;
 }

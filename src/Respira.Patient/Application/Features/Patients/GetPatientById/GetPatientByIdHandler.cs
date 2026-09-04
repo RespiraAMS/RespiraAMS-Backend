@@ -3,10 +3,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Patients.GetPatientById;
 
-public class GetPatientByIdHandler(IDbContext context) : IQueryHandler<GetPatientByIdQuery, PatientResult>
+public class GetPatientByIdHandler(IDbContext context) : IQueryHandler<GetPatientByIdQuery, Result<PatientResult>>
 {
-    public async Task<PatientResult> HandleAsync(GetPatientByIdQuery query,
-        CancellationToken cancellationToken = default)
+    public async Task<Result<PatientResult>> HandleAsync(GetPatientByIdQuery query, CancellationToken cancellationToken = default)
     {
         var patient = await context.Patients
             .AsNoTracking()
@@ -34,6 +33,8 @@ public class GetPatientByIdHandler(IDbContext context) : IQueryHandler<GetPatien
             })
             .FirstOrDefaultAsync(x => x.Id == query.Id, cancellationToken);
 
-        return patient ?? throw new NotFoundException(nameof(Patient), query.Id);
+        return patient is null
+            ? Result<PatientResult>.Failure(new Error(Status.ResourceNotFound, "Patient not found"))
+            : Result<PatientResult>.Success(Status.Success, patient);
     }
 }

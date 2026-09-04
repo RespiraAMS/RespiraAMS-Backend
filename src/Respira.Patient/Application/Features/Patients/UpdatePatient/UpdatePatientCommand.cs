@@ -1,6 +1,6 @@
 ﻿namespace Application.Features.Patients.UpdatePatient;
 
-public class UpdatePatientCommand : ICommand
+public record UpdatePatientCommand : ICommand
 {
     /// <summary>
     /// Patient's ID

@@ -1,28 +1,24 @@
 ﻿using Application.Contracts.Data;
-using Application.Features.Patients.Shared;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace Application.Features.Patients.UpdatePatient;
 
 public class UpdatePatientHandler(IDbContext context, ILogger<UpdatePatientHandler> logger)
-    : ICommandHandler<UpdatePatientCommand>
+    : ICommandHandler<UpdatePatientCommand, Result>
 {
-    public async Task HandleAsync(UpdatePatientCommand command, CancellationToken cancellationToken = default)
+    public async Task<Result> HandleAsync(UpdatePatientCommand command, CancellationToken cancellationToken = default)
     {
-        logger.LogDebug("????");
-
         // Get entity by ID
-        var patient = await context.Patients
-            .FirstOrDefaultAsync(x => x.Id == command.Id, cancellationToken);
+        var patient = await context.Patients.FirstOrDefaultAsync(x => x.Id == command.Id, cancellationToken);
         if (patient is null)
         {
             logger.LogDebug("Patient with this ID not found: {Id}", command.Id);
-            throw new NotFoundException(nameof(Patient), command.Id);
+            return Result.Failure(new Error(Status.BadRequest, "Patient not found"));
         }
 
         // Check if this patient already receive any treatment.
-        // Because patient date of birth (which is patient age) and gender does affect diagnosis result, 
+        // Because patient date of birth (which is patient age) and gender does affect diagnosis result,
         // to keep data consistency, we won't update these values. If no treatment actually started
         // (for example, doctor enter wrong data and immediately notice), dob and gender can still be updated.
         // This is also why this feature doesn't have a mapper
@@ -31,7 +27,7 @@ public class UpdatePatientHandler(IDbContext context, ILogger<UpdatePatientHandl
             logger.LogDebug("Patient {Id} does not have treatment, update normally", patient.Id);
 
             // Map command to model
-            patient.FullName = PatientNameNormalizer.Normalize(command.FullName);
+            patient.FullName = command.FullName;
             patient.DateOfBirth = command.DateOfBirth;
             patient.IsMale = command.IsMale;
         }
@@ -48,10 +44,7 @@ public class UpdatePatientHandler(IDbContext context, ILogger<UpdatePatientHandl
         patient.UpdatedAt = DateTimeOffset.UtcNow;
 
         // Save changes to database
-        if (await context.SaveChangesAsync(cancellationToken) <= 0)
-        {
-            logger.LogError("Failed to save patient to database");
-            throw new ServerException();
-        }
+        await context.SaveChangesAsync(cancellationToken);
+        return Result.Success(Status.Updated);
     }
 }

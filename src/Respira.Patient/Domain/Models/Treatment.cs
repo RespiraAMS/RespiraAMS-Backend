@@ -11,6 +11,13 @@ namespace Domain.Models;
  * not the time it was queried. That's why, this service wouldn't reference Clinical service to get
  * data, but instead store duplicate data like name (Doctor ID is an exception, it should still
  * reference the Doctor service to get doctor data)
+ *
+ * Business rules:
+ * 1. A treatment can only be created, not update or delete
+ * 2. Patient can only receive new treatment when the current treatment has poor response.
+ * For example, if the current patient is receive empirical treatment, and then microbiological
+ * test result came, if the patient is currently has good/favorable response, then there is no
+ * need to change treatment
  */
 
 /// <summary>

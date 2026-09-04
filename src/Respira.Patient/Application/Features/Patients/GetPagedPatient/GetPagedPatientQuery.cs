@@ -2,7 +2,7 @@
 
 namespace Application.Features.Patients.GetPagedPatient;
 
-public class PatientFilter
+public record PatientFilter
 {
     /// <summary>
     /// Patient's fullname
@@ -15,7 +15,7 @@ public class PatientFilter
     public string? MedicalRecordCode { get; set; }
 }
 
-public class GetPagedPatientQuery : IQuery
+public record GetPagedPatientQuery : IQuery
 {
     /// <summary>
     /// Pagination parameter
@@ -28,7 +28,7 @@ public class GetPagedPatientQuery : IQuery
     public PatientFilter? Filter { get; set; }
 }
 
-public class PagedPatientItem
+public record PagedPatientItem
 {
     /// <summary>
     /// Patient's ID

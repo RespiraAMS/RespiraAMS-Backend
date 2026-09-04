@@ -1,6 +1,6 @@
 ﻿namespace Application.Features.Patients.CreatePatient;
 
-public class CreatePatientCommand : ICommand
+public record CreatePatientCommand : ICommand
 {
     /// <summary>
     /// Patient's full name. This value will be automatically normalize into Title case (capitalized)
@@ -38,10 +38,10 @@ public class CreatePatientCommand : ICommand
 
 }
 
-public class CreatePatientResult(Guid id)
+public record CreatePatientResult(Guid Id)
 {
     /// <summary>
     /// Patient's ID
     /// </summary>
-    public Guid Id { get; set; } = id;
+    public Guid Id { get; set; } = Id;
 }

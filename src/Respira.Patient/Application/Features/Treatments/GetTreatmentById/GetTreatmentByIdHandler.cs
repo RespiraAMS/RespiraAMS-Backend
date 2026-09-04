@@ -6,9 +6,9 @@ using Wolverine;
 namespace Application.Features.Treatments.GetTreatmentById
 {
     public class GetTreatmentByIdHandler(IDbContext context, IMessageBus bus, ILogger<GetTreatmentByIdHandler> logger)
-        : IQueryHandler<GetTreatmentByIdQuery, TreatmentInfo>
+        : IQueryHandler<GetTreatmentByIdQuery, Result<TreatmentInfo>>
     {
-        public async Task<TreatmentInfo> HandleAsync(GetTreatmentByIdQuery query, CancellationToken cancellationToken = default)
+        public async Task<Result<TreatmentInfo>> HandleAsync(GetTreatmentByIdQuery query, CancellationToken cancellationToken = default)
         {
             // Get treatment by ID. Technically, other doctor can still see the treatment even if they are
             // not responsible for this treatment (a patient can be treated by different doctors, and doctor
@@ -20,7 +20,7 @@ namespace Application.Features.Treatments.GetTreatmentById
             if (treatment is null)
             {
                 logger.LogDebug("Treatment not found: {id}", query.Id);
-                throw new NotFoundException(nameof(Treatment), query.Id);
+                return Result<TreatmentInfo>.Failure(new Error(Status.ResourceNotFound, "Treatment not found"));
             }
 
             // Get doctor by ID
@@ -29,16 +29,11 @@ namespace Application.Features.Treatments.GetTreatmentById
             {
                 logger.LogWarning("Failed to get doctor information: {DoctorId}", treatment.DoctorId);
                 logger.LogDebug(resp.Message);
-                throw new ServerException();
+                return Result<TreatmentInfo>.Failure(new Error(Status.ServerError, "Failed to get doctor information"));
             }
-            var doctor = resp.Data;
-            if (doctor is null)
-            {
-                logger.LogWarning("Doctor unexpectedly null even when get doctor query success");
-                throw new UnexpectedException("Doctor unexpectedly null even when get doctor query success");
-            }
+            var doctor = resp.Data!;
 
-            return new TreatmentInfo
+            return Result<TreatmentInfo>.Success(Status.Success, new TreatmentInfo
             {
                 Id = treatment.Id,
                 Doctor = new DoctorInfo
@@ -58,7 +53,7 @@ namespace Application.Features.Treatments.GetTreatmentById
                 },
                 Type = treatment.TreatmentType,
                 Diagnosis = treatment.DiagnosisRecord,
-            };
+            });
         }
     }
 }

@@ -2,7 +2,7 @@
 
 namespace Application.Features.Patients.DischargePatient;
 
-public class DischargePatientCommand : ICommand
+public record DischargePatientCommand : ICommand
 {
     /// <summary>
     /// Patient's ID

@@ -44,6 +44,6 @@ public class ValidateDiagnosisMapper : IMapper<DiagnosisRecord, ValidateDiagnosi
             };
         }
 
-        throw new UnexpectedException($"Invalid diagnosis record: diagnosis record type is not supported: {source.GetType()}");
+        throw new ArgumentException($"Invalid diagnosis record: diagnosis record type is not supported: {source.GetType()}");
     }
 }

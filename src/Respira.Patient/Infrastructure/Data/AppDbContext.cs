@@ -9,6 +9,11 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     public DbSet<Patient> Patients { get; set; }
     public DbSet<Treatment> Treatments { get; set; }
 
+    public async override ValueTask DisposeAsync()
+    {
+        await base.DisposeAsync();
+    }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -24,6 +29,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             .WithOne(x => x.Patient);
         modelBuilder.Entity<Patient>().HasIndex(x => x.FullName);
         modelBuilder.Entity<Patient>().HasIndex(x => x.MedicalRecordCode);
+        modelBuilder.Entity<Patient>().Property(x => x.Status).HasConversion<string>();
 
         // Configure on Treatment
         modelBuilder.Entity<Treatment>()
@@ -42,6 +48,9 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
 
         modelBuilder.Entity<Treatment>()
             .Ignore(x => x.DiagnosisRecord);
+        modelBuilder.Entity<EmpiricalTreatment>()
+            .Property(x => x.Status)
+            .HasConversion<string>();
         modelBuilder.Entity<EmpiricalTreatment>()
             .OwnsOne(x => x.EmpiricalDiagnosisRecord, owned =>
             {

@@ -13,7 +13,7 @@ public class CreateTreatmentMapper : ICreateMapper<Treatment, CreateTreatmentCom
                 DoctorId = command.DoctorId,
                 Status = PatientTreatmentStatus.FavorableResponse,
                 TargetedDiagnosisRecord = (TargetedDiagnosisRecord)command.DiagnosisRecord ??
-                    throw new UnexpectedException("Failed to map targeted diagnosis record for create treatment: diagnosis record is not targted"),
+                    throw new ArgumentException("Failed to map targeted diagnosis record for create treatment: diagnosis record is not targted"),
             } :
             new EmpiricalTreatment
             {
@@ -21,7 +21,7 @@ public class CreateTreatmentMapper : ICreateMapper<Treatment, CreateTreatmentCom
                 DoctorId = command.DoctorId,
                 Status = PatientTreatmentStatus.FavorableResponse,
                 EmpiricalDiagnosisRecord = (EmpiricalDiagnosisRecord)command.DiagnosisRecord ??
-                    throw new UnexpectedException("Failed to map empirical diagnosis record for create treatment: diagnosis record is not empirical"),
+                    throw new ArgumentException("Failed to map empirical diagnosis record for create treatment: diagnosis record is not empirical"),
             };
     }
 }

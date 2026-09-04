@@ -17,7 +17,7 @@ public class CreatePatientValidator : AbstractValidator<CreatePatientCommand>
         RuleFor(x => x.HealthInsuranceCardNumber)
             .NotEmpty()
             .Length(10)
-            .WithMessage("Patient health insurance card number is required");
+            .WithMessage("Patient health insurance card number is required, and must be a 10 numeric characters string");
         RuleFor(x => x.Address)
             .NotEmpty()
             .WithMessage("Patient address is required");

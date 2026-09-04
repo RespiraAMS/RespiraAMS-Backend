@@ -2,15 +2,15 @@
 
 namespace Application.Features.Patients.GetPatientById;
 
-public class GetPatientByIdQuery : IQuery
+public record GetPatientByIdQuery(Guid Id) : IQuery
 {
     /// <summary>
     /// Patient's ID
     /// </summary>
-    public required Guid Id { get; set; }
+    public Guid Id { get; set; } = Id;
 }
 
-public class TreatmentResult
+public record TreatmentResult
 {
     /// <summary>
     /// Patient's treatment ID
@@ -33,7 +33,7 @@ public class TreatmentResult
     public required PatientTreatmentStatus Status { get; set; }
 }
 
-public class PatientResult
+public record PatientResult
 {
     /// <summary>
     /// Patient's ID

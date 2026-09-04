@@ -2,20 +2,20 @@ using Domain.Enums;
 
 namespace Application.Features.Treatments.GetTreatmentById;
 
-public class GetTreatmentByIdQuery(Guid id, Guid patientId) : IQuery
+public record GetTreatmentByIdQuery(Guid Id, Guid PatientId) : IQuery
 {
-    public Guid Id { get; set; } = id;
-    public Guid PatientId { get; set; } = patientId;
+    public Guid Id { get; set; } = Id;
+    public Guid PatientId { get; set; } = PatientId;
 }
 
-public class DoctorInfo
+public record DoctorInfo
 {
     public required Guid Id { get; set; }
     public required string DisplayName { get; set; }
     public string? Avatar { get; set; }
 }
 
-public class PatientInfo
+public record PatientInfo
 {
     /// <summary>
     /// Patient's ID
@@ -41,7 +41,7 @@ public class PatientInfo
     public required PatientStatus Status { get; set; }
 }
 
-public class TreatmentInfo
+public record TreatmentInfo
 {
     public required Guid Id { get; set; }
     public required DoctorInfo Doctor { get; set; }

@@ -3,9 +3,9 @@ using Wolverine.Attributes;
 namespace Application.Features.Treatments.GetTreatmentById
 {
     [MessageIdentity("doctor-query")]
-    public class GetDoctorByIdQuery(Guid id)
+    public record GetDoctorByIdQuery(Guid Id)
     {
-        public Guid Id { get; set; } = id;
+        public Guid Id { get; set; } = Id;
     }
 
     [MessageIdentity("doctor-result")]

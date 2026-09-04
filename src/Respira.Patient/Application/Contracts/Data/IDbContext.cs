@@ -1,5 +1,4 @@
-﻿using Domain.Models;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace Application.Contracts.Data;
 
@@ -14,4 +13,9 @@ public interface IDbContext
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>The number of records changed</returns>
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Dispose the context
+    /// </summary>
+    ValueTask DisposeAsync();
 }

@@ -37,6 +37,21 @@ public class DoctorMiddleware(RequestDelegate next, ILogger<DoctorMiddleware> lo
             return;
         }
 
+        // Check if X-ID header is set and valid UUID
+        var id = context.Request.Headers["X-ID"].FirstOrDefault();
+        if (id is null)
+        {
+            logger.LogDebug("No ID set in request header");
+            await WriteResult(context, Result.Failure(new Error(Status.Unauthorized, "Unauthorized access")));
+            return;
+        }
+        if (!Guid.TryParse(id, out _))
+        {
+            logger.LogDebug("ID is not a valid UUID: {id}", id);
+            await WriteResult(context, Result.Failure(new Error(Status.Unauthorized, "Unauthorized access")));
+            return;
+        }
+
         // Get the headers provided by the gateway
         var role = context.Request.Headers["X-Role"].FirstOrDefault();
         if (role is null)

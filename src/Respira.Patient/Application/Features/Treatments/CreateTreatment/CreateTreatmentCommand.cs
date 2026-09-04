@@ -2,7 +2,7 @@ using Domain.Enums;
 
 namespace Application.Features.Treatments.CreateTreatment;
 
-public class CreateTreatmentCommand : ICommand
+public record CreateTreatmentCommand : ICommand
 {
     /// <summary>
     /// Patient ID
@@ -22,10 +22,10 @@ public class CreateTreatmentCommand : ICommand
     public required TreatmentType TreatmentType { get; set; }
 }
 
-public class CreateTreatmentResult(Guid id)
+public record CreateTreatmentResult(Guid Id)
 {
     /// <summary>
     /// Treatment ID
     /// </summary>
-    public Guid Id { get; set; } = id;
+    public Guid Id { get; set; } = Id;
 }

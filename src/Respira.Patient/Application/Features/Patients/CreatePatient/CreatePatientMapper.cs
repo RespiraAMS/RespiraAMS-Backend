@@ -1,5 +1,4 @@
-﻿using Application.Features.Patients.Shared;
-using Domain.Enums;
+﻿using Domain.Enums;
 
 namespace Application.Features.Patients.CreatePatient;
 
@@ -9,7 +8,7 @@ public class CreatePatientMapper : ICreateMapper<Patient, CreatePatientCommand>
     {
         return new Patient
         {
-            FullName = PatientNameNormalizer.Normalize(command.FullName),
+            FullName = command.FullName,
             DateOfBirth = command.DateOfBirth,
             IsMale = command.IsMale,
             MedicalRecordCode = command.MedicalRecordCode,

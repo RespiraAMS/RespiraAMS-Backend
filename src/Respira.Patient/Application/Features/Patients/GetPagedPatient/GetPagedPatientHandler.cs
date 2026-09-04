@@ -5,10 +5,9 @@ using X.PagedList.EF;
 namespace Application.Features.Patients.GetPagedPatient;
 
 public class GetPagedPatientHandler(IDbContext context, IPaginationFactory factory)
-    : IQueryHandler<GetPagedPatientQuery, Pagination<PagedPatientItem>>
+    : IQueryHandler<GetPagedPatientQuery, Result<Pagination<PagedPatientItem>>>
 {
-    public async Task<Pagination<PagedPatientItem>> HandleAsync(GetPagedPatientQuery query,
-        CancellationToken cancellationToken = default)
+    public async Task<Result<Pagination<PagedPatientItem>>> HandleAsync(GetPagedPatientQuery query, CancellationToken cancellationToken = default)
     {
         // Apply filter
         var queryable = context.Patients.AsQueryable();
@@ -16,14 +15,12 @@ public class GetPagedPatientHandler(IDbContext context, IPaginationFactory facto
         {
             if (query.Filter.FullName is not null)
             {
-                queryable = queryable.Where(x =>
-                    EF.Functions.ILike(x.FullName, $"%{query.Filter.FullName}%"));
+                queryable = queryable.Where(x => EF.Functions.ILike(x.FullName, $"%{query.Filter.FullName}%"));
             }
 
             if (query.Filter.MedicalRecordCode is not null)
             {
-                queryable = queryable.Where(x =>
-                    EF.Functions.ILike(x.MedicalRecordCode, $"%{query.Filter.MedicalRecordCode}%"));
+                queryable = queryable.Where(x => EF.Functions.ILike(x.MedicalRecordCode, $"%{query.Filter.MedicalRecordCode}%"));
             }
         }
 
@@ -42,6 +39,6 @@ public class GetPagedPatientHandler(IDbContext context, IPaginationFactory facto
             })
             .ToPagedListAsync(query.Param.Page, query.Param.Size);
 
-        return factory.Create(patients);
+        return Result<Pagination<PagedPatientItem>>.Success(Status.Success, factory.Create(patients));
     }
 }

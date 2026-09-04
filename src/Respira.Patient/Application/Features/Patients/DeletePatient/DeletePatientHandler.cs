@@ -5,24 +5,23 @@ using Microsoft.Extensions.Logging;
 namespace Application.Features.Patients.DeletePatient;
 
 public class DeletePatientHandler(IDbContext context, ILogger<DeletePatientHandler> logger)
-    : ICommandHandler<DeletePatientCommand>
+    : ICommandHandler<DeletePatientCommand, Result>
 {
-    public async Task HandleAsync(DeletePatientCommand command, CancellationToken cancellationToken = default)
+    public async Task<Result> HandleAsync(DeletePatientCommand command, CancellationToken cancellationToken = default)
     {
         // Get entity by ID
-        var patient = await context.Patients
-            .FirstOrDefaultAsync(x => x.Id == command.Id, cancellationToken);
+        var patient = await context.Patients.FirstOrDefaultAsync(x => x.Id == command.Id, cancellationToken);
         if (patient is null)
         {
             logger.LogDebug("Patient with this ID not found: {Id}", command.Id);
-            throw new NotFoundException(nameof(Patient), command.Id);
+            return Result.Failure(new Error(Status.BadRequest, "Patient not found"));
         }
 
         // Check if patient has any treatment
-        if (!await context.Treatments.AnyAsync(x => x.PatientId == patient.Id, cancellationToken))
+        if (await context.Treatments.AnyAsync(x => x.PatientId == patient.Id, cancellationToken))
         {
-            logger.LogDebug("Patient {Id} has no treatments, cannot discharged", command.Id);
-            throw new BadRequestException("Cannot discharge patient that hasn't received any treatment");
+            logger.LogDebug("Patient {Id} has already received treatment, cannot delete", command.Id);
+            return Result.Failure(new Error(Status.BusinessRuleViolation, "Patient has already received treatment, cannot delete"));
         }
 
         // Delete patient
@@ -30,10 +29,7 @@ public class DeletePatientHandler(IDbContext context, ILogger<DeletePatientHandl
         patient.DeletedAt = DateTimeOffset.UtcNow;
 
         // Save changes to database
-        if (await context.SaveChangesAsync(cancellationToken) <= 0)
-        {
-            logger.LogError("Failed to delete patient");
-            throw new ServerException();
-        }
+        await context.SaveChangesAsync(cancellationToken);
+        return Result.Success(Status.Deleted);
     }
 }
