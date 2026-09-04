@@ -47,4 +47,9 @@ public class PagedAntibioticGroupItem
     /// Antibiotic group parent name
     /// </summary>
     public required string? ParentName { get; set; }
+
+    /// <summary>
+    /// Antibiotic group description
+    /// </summary>
+    public required string Description { get; set; }
 }

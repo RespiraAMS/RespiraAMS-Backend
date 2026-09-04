@@ -38,6 +38,7 @@ public class GetPagedAntibioticGroupHandler(IDbContext context, IPaginationFacto
                 Name = x.Name,
                 ParentId = x.ParentId,
                 ParentName = x.Parent == null ? null : x.Parent.Name,
+                Description = x.Description
             })
             .ToPagedListAsync(query.Param.Page, query.Param.Size);
 
