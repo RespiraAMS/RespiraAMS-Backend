@@ -3,6 +3,7 @@ using Application.Features.Treatments.CreateTreatment;
 using Application.Features.Treatments.GetTreatmentById;
 using Asp.Versioning;
 using Infrastructure;
+using Respira.Patient.API.Middlewares;
 using Respira.ServiceDefaults.Extensions;
 using Respira.ServiceDefaults.Utils.OpenApiTransformers;
 using Scalar.AspNetCore;
@@ -78,7 +79,10 @@ builder.Host.UseWolverine(opts =>
 
 var app = builder.Build();
 
+
 app.UseCustomErrorHandling();
+app.UseClaimsPropagation();
+app.UseDoctorMiddleware();
 app.MapControllers();
 
 // Configure the HTTP request pipeline.
@@ -88,10 +92,10 @@ if (app.Environment.IsDevelopment())
     app.MapScalarApiReference(opts => opts.Theme = ScalarTheme.Kepler);
 }
 
-app.UseHttpsRedirection();
-app.UseClaimsPropagation();
-app.UseAuthorization();
-app.MapControllers();
+if (!app.Environment.IsDevelopment())
+{
+    app.UseHttpsRedirection();
+}
 
 // Auto apply migrations
 app.ApplyMigrations(app.Environment.IsDevelopment());

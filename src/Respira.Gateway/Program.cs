@@ -70,7 +70,8 @@ builder.Services.AddReverseProxy()
             if (user.Identity?.IsAuthenticated == true)
             {
                 var userId = user.FindFirstValue(ClaimTypes.NameIdentifier)
-                    ?? user.FindFirstValue("sub");
+                    ?? user.FindFirstValue("sub")
+                    ?? user.FindFirstValue("X-ID");
                 var email = user.FindFirstValue(ClaimTypes.Email)
                     ?? user.FindFirstValue("email");
                 var role = user.FindFirstValue(ClaimTypes.Role);
