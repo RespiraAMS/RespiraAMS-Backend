@@ -50,6 +50,12 @@ public class PatientsController(IMessageBus bus, ILogger<PatientsController> log
     [ProducesResponseType<ApiResponse>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetPatients([FromQuery] GetPagedPatientRequestDto req)
     {
+        logger.LogDebug("Gateway headers stream down: {headers}", new
+        {
+            Id = Request.Headers["X-ID"],
+            Email = Request.Headers["X-Email"],
+            Role = Request.Headers["X-Role"],
+        });
         var result = await bus.InvokeAsync<Pagination<PagedPatientItem>>(req.ToQuery());
         var resp = ApiResponse<Pagination<PagedPatientItem>>.Ok(result);
         return Ok(resp);

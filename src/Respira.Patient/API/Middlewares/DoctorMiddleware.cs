@@ -1,9 +1,9 @@
 using JasperFx.Core;
 using Respira.ServiceDefaults.Contracts.Results;
 
-namespace Respira.Clinical.API.Middlewares;
+namespace Respira.Patient.API.Middlewares;
 
-public class AuthMiddleware(RequestDelegate next, ILogger<AuthMiddleware> logger)
+public class DoctorMiddleware(RequestDelegate next, ILogger<DoctorMiddleware> logger)
 {
     private static async Task WriteResult(HttpContext context, Result result)
     {
@@ -47,46 +47,16 @@ public class AuthMiddleware(RequestDelegate next, ILogger<AuthMiddleware> logger
         }
 
         // Check for role if they are allow to access the endpoint
-        // For manager, they are allow for all access, while doctor can only call to GET endpoints and
-        // POST api/{version}/diagnose
-
-        // role == doctor && (method == GET || (method == POST && path == "diagnose")) -> Doctor passed
-        // role == manager -> auto passed
-        // role == admin -> auto rejects?
-        // role == ?? -> auto reject
-
-        if (role.EqualsIgnoreCase("doctor"))
+        // Patient service only allow doctor to access
+        if (!role.EqualsIgnoreCase("doctor"))
         {
-            var method = context.Request.Method;
-
-            if (!method.EqualsIgnoreCase("GET") &&
-                (!method.EqualsIgnoreCase("POST") || !path.ContainsIgnoreCase("diagnose")))
-            {
-                logger.LogDebug("Forbidden access: {detail}", new { role, method, path });
-                await WriteResult(context, Result.Failure(new Error(Status.Restricted, "Forbidden access")));
-                return;
-            }
-        }
-        else if (role.EqualsIgnoreCase("manager"))
-        {
-            // This role should be allowed to call all endpoints in this service
-            logger.LogDebug("Manager access to clinical APIs, auto accept");
-        }
-        else if (role.EqualsIgnoreCase("admin"))
-        {
-            logger.LogDebug("Admin access to clinical APIs, auto reject");
-            await WriteResult(context, Result.Failure(new Error(Status.Restricted, "Forbidden access")));
-            return;
-        }
-        else
-        {
-            logger.LogDebug("Unknown role in request header: {role}", role);
+            logger.LogDebug("Role other than doctor access to patient service, auto reject: {role}", role);
             await WriteResult(context, Result.Failure(new Error(Status.Restricted, "Forbidden access")));
             return;
         }
 
         // Forward to the next layer
-        logger.LogDebug("Clinical auth middleware execute successfully, forward to next layer");
+        logger.LogDebug("Patient doctor auth middleware execute successfully, forward to next layer");
         await next(context);
     }
 }
