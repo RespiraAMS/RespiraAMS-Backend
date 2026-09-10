@@ -5,7 +5,7 @@ namespace Respira.ServiceDefaults.Contracts.Results
         /// <summary>
         /// Operation status code
         /// </summary>
-        public string Code { get; set; }
+        public string StatusCode { get; set; }
 
         /// <summary>
         /// Error short description
@@ -28,23 +28,26 @@ namespace Respira.ServiceDefaults.Contracts.Results
             // Check if this status code is a failure code
             if (ApplicationStatus.IsSuccess(code))
             {
-                throw new ArgumentException("Invalid status code, error must be failure code", nameof(code));
+                throw new ArgumentException(
+                    "Invalid status code, error must be failure code",
+                    nameof(code)
+                );
             }
 
-            Code = code;
+            StatusCode = code;
             Description = description;
             Detail = detail;
         }
 
-        public Error(string code, string description) : this(code, description, null) { }
+        public Error(string code, string description)
+            : this(code, description, null) { }
 
         public override string ToString()
         {
             return @$"Error:
-            ApplicationStatus: {Code}
+            ApplicationStatus: {StatusCode}
             Description: {Description}
             Detail: {Detail}";
         }
     }
-
 }
