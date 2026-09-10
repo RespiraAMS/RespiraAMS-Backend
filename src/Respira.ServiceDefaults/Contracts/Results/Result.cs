@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Respira.ServiceDefaults.Contracts.Results
 {
     /*
-     * Implementation of Result pattern 
+     * Implementation of Result pattern
      * (https://milanjovanovic.tech/blog/functional-error-handling-in-dotnet-with-the-result-pattern)
      */
 
@@ -36,9 +36,15 @@ namespace Respira.ServiceDefaults.Contracts.Results
                 throw new ArgumentException("Invalid result, a failure result with null error");
             }
 
-            if (!ApplicationStatus.IsSuccess(statusCode) && error != null && error.Code != statusCode)
+            if (
+                !ApplicationStatus.IsSuccess(statusCode)
+                && error != null
+                && error.StatusCode != statusCode
+            )
             {
-                throw new ArgumentException("Invalid result, a failure result with non matching error code");
+                throw new ArgumentException(
+                    "Invalid result, a failure result with non matching error code"
+                );
             }
 
             StatusCode = statusCode;
@@ -57,7 +63,7 @@ namespace Respira.ServiceDefaults.Contracts.Results
         /// </summary>
         /// <param name="error">Operation error</param>
         /// <returns>A failure result</returns>
-        public static Result Failure(Error error) => new(error.Code, error);
+        public static Result Failure(Error error) => new(error.StatusCode, error);
 
         /// <summary>
         /// Check if the result is a success result
@@ -76,32 +82,43 @@ namespace Respira.ServiceDefaults.Contracts.Results
         {
             if (IsFailure())
             {
-                return Error!.Code switch
+                return Error!.StatusCode switch
                 {
-                    ApplicationStatus.BadRequest or ApplicationStatus.SagaBadRequest
-                        or ApplicationStatus.BusinessRuleViolation or ApplicationStatus.SagaBusinessRuleViolation
-                        => new BadRequestObjectResult(this),
+                    ApplicationStatus.BadRequest
+                    or ApplicationStatus.SagaBadRequest
+                    or ApplicationStatus.BusinessRuleViolation
+                    or ApplicationStatus.SagaBusinessRuleViolation => new BadRequestObjectResult(
+                        this
+                    ),
 
-                    ApplicationStatus.Unauthorized or ApplicationStatus.SagaUnauthorized
-                        => new UnauthorizedResult(),
+                    ApplicationStatus.Unauthorized or ApplicationStatus.SagaUnauthorized =>
+                        new UnauthorizedResult(),
 
-                    ApplicationStatus.Restricted or ApplicationStatus.SagaRestricted
-                        => new ForbidResult(),
+                    ApplicationStatus.Restricted or ApplicationStatus.SagaRestricted =>
+                        new ForbidResult(),
 
-                    ApplicationStatus.ResourceNotFound or ApplicationStatus.SagaResourceNotFound
-                        => new NotFoundObjectResult(this),
+                    ApplicationStatus.ResourceNotFound or ApplicationStatus.SagaResourceNotFound =>
+                        new NotFoundObjectResult(this),
 
-                    _ => new ObjectResult(this) { StatusCode = ApplicationStatus.ToHttpStatusCode(Error!.Code) }
+                    _ => new ObjectResult(this)
+                    {
+                        StatusCode = ApplicationStatus.ToHttpStatusCode(Error!.StatusCode),
+                    },
                 };
             }
 
             return StatusCode switch
             {
-                ApplicationStatus.Success or ApplicationStatus.SagaSuccess => new OkObjectResult(this),
-                ApplicationStatus.Created or ApplicationStatus.SagaCreated => new CreatedResult((string?)null, this),
+                ApplicationStatus.Success or ApplicationStatus.SagaSuccess => new OkObjectResult(
+                    this
+                ),
+                ApplicationStatus.Created or ApplicationStatus.SagaCreated => new CreatedResult(
+                    (string?)null,
+                    this
+                ),
                 ApplicationStatus.Updated or ApplicationStatus.SagaUpdated => new NoContentResult(),
                 ApplicationStatus.Deleted or ApplicationStatus.SagaDeleted => new NoContentResult(),
-                _ => new OkObjectResult(this)
+                _ => new OkObjectResult(this),
             };
         }
     }
@@ -139,9 +156,15 @@ namespace Respira.ServiceDefaults.Contracts.Results
                 throw new ArgumentException("Invalid result, a failure result with null error");
             }
 
-            if (!ApplicationStatus.IsSuccess(statusCode) && error != null && error.Code != statusCode)
+            if (
+                !ApplicationStatus.IsSuccess(statusCode)
+                && error != null
+                && error.StatusCode != statusCode
+            )
             {
-                throw new ArgumentException("Invalid result, a failure result with non matching error code");
+                throw new ArgumentException(
+                    "Invalid result, a failure result with non matching error code"
+                );
             }
 
             StatusCode = statusCode;
@@ -162,7 +185,7 @@ namespace Respira.ServiceDefaults.Contracts.Results
         /// </summary>
         /// <param name="error">Operation error</param>
         /// <returns>A failure result</returns>
-        public static Result<T> Failure(Error error) => new(error.Code, error, default);
+        public static Result<T> Failure(Error error) => new(error.StatusCode, error, default);
 
         /// <summary>
         /// Check if the result is a success result
@@ -181,32 +204,43 @@ namespace Respira.ServiceDefaults.Contracts.Results
         {
             if (IsFailure())
             {
-                return Error!.Code switch
+                return Error!.StatusCode switch
                 {
-                    ApplicationStatus.BadRequest or ApplicationStatus.SagaBadRequest
-                        or ApplicationStatus.BusinessRuleViolation or ApplicationStatus.SagaBusinessRuleViolation
-                        => new BadRequestObjectResult(this),
+                    ApplicationStatus.BadRequest
+                    or ApplicationStatus.SagaBadRequest
+                    or ApplicationStatus.BusinessRuleViolation
+                    or ApplicationStatus.SagaBusinessRuleViolation => new BadRequestObjectResult(
+                        this
+                    ),
 
-                    ApplicationStatus.Unauthorized or ApplicationStatus.SagaUnauthorized
-                        => new UnauthorizedResult(),
+                    ApplicationStatus.Unauthorized or ApplicationStatus.SagaUnauthorized =>
+                        new UnauthorizedResult(),
 
-                    ApplicationStatus.Restricted or ApplicationStatus.SagaRestricted
-                        => new ForbidResult(),
+                    ApplicationStatus.Restricted or ApplicationStatus.SagaRestricted =>
+                        new ForbidResult(),
 
-                    ApplicationStatus.ResourceNotFound or ApplicationStatus.SagaResourceNotFound
-                        => new NotFoundObjectResult(this),
+                    ApplicationStatus.ResourceNotFound or ApplicationStatus.SagaResourceNotFound =>
+                        new NotFoundObjectResult(this),
 
-                    _ => new ObjectResult(this) { StatusCode = ApplicationStatus.ToHttpStatusCode(Error!.Code) }
+                    _ => new ObjectResult(this)
+                    {
+                        StatusCode = ApplicationStatus.ToHttpStatusCode(Error!.StatusCode),
+                    },
                 };
             }
 
             return StatusCode switch
             {
-                ApplicationStatus.Success or ApplicationStatus.SagaSuccess => new OkObjectResult(this),
-                ApplicationStatus.Created or ApplicationStatus.SagaCreated => new CreatedResult((string?)null, this),
+                ApplicationStatus.Success or ApplicationStatus.SagaSuccess => new OkObjectResult(
+                    this
+                ),
+                ApplicationStatus.Created or ApplicationStatus.SagaCreated => new CreatedResult(
+                    (string?)null,
+                    this
+                ),
                 ApplicationStatus.Updated or ApplicationStatus.SagaUpdated => new NoContentResult(),
                 ApplicationStatus.Deleted or ApplicationStatus.SagaDeleted => new NoContentResult(),
-                _ => new OkObjectResult(this)
+                _ => new OkObjectResult(this),
             };
         }
     }
