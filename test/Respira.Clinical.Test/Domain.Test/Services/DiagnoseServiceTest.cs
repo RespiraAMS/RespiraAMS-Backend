@@ -730,7 +730,7 @@ namespace Respira.Domain.Test.Services
                 platelet: null, temperature: null), 3),
         ];
 
-        public static TheoryData<List<ClinicalObservation>, Severity, TreatmentSite> mildCap =
+        public static TheoryData<List<ClinicalObservation>, Severity, TreatmentSite> successDiagnosis =
         [
             // Healthy 42-year-old male: CURB-65 = 0, PSI = 42, IDSA/ATS = 0
             new(
@@ -743,6 +743,26 @@ namespace Respira.Domain.Test.Services
                 Obs("PLATELET", 245_000m),
                 Obs("FIO2", 0.21m),
             ], Severity.Mild, TreatmentSite.Outpatient),
+            // Test the case where higest severity and treatment site would be prioritized
+            new(
+            [
+                // age + confusion -> CURB-65 = 2 => moderate + inpatient
+                // age + female + neoplastic + septic-shock -> PSI = 100 => severe + inpatient
+                // septic-shock -> IDSA/ATS = 3 => need ICU
+                Obs("CONFUSION", true),
+                Obs("AGE", 70m),
+                Obs("FEMALE", false),
+                Obs("NEOPLASTIC", true),
+                Obs("SEPTIC-SHOCK", true),
+            ], Severity.Severe, TreatmentSite.IntensiveCareUnit),
+
+            // Test CRB-65 case
+            new(
+            [
+                // If CURB-65, the result should be mild + outpatient
+                Obs("CONFUSION", true),
+            ], Severity.Moderate, TreatmentSite.Inpatient),
+
         ];
 
         // ---- Tests ----
@@ -775,7 +795,7 @@ namespace Respira.Domain.Test.Services
         }
 
         [Theory]
-        [MemberData(nameof(mildCap))]
+        [MemberData(nameof(successDiagnosis))]
         public void DiagnoseSeverityTest_Diagnose_Success(List<ClinicalObservation> observations, Severity expectedSeverity, TreatmentSite expectedTreatmentSite)
         {
             var result = _service.DiagnoseSeverity(observations);

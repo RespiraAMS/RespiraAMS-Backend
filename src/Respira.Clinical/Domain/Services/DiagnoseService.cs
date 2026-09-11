@@ -6,10 +6,26 @@ using Respira.ServiceDefaults.Contracts.Results;
 
 namespace Respira.Domain.Services
 {
+    /// <summary>
+    /// Severity diagnosis result
+    /// </summary>
+    /// <param name="Severity">Severity</param>
+    /// <param name="TreatmentSite">Treatment site</param>
     public record SeverityDiagnosis(Severity Severity, TreatmentSite TreatmentSite);
 
+    /// <summary>
+    /// Diagnose service
+    /// </summary>
+    /// <param name="context">Clinical context</param>
+    /// <param name="logger">Logger</param>
     public class DiagnoseService(ClinicalContext context, ILogger<DiagnoseService> logger)
     {
+        /// <summary>
+        /// Calculate metrics score
+        /// </summary>
+        /// <param name="metrics">Metrics</param>
+        /// <param name="observations">Clinical observations</param>
+        /// <returns>Score result</returns>
         public decimal CalculateMetricsScore(ScoreMetrics metrics, IEnumerable<ClinicalObservation> observations)
         {
             return metrics.ScoringRules.Sum(sr =>
@@ -20,17 +36,47 @@ namespace Respira.Domain.Services
             });
         }
 
-        public SeverityDiagnosis Curb65(int score)
+        /// <summary>
+        /// CURB-65 severity diagnosis
+        /// </summary>
+        /// <param name="score">Score</param>
+        /// <returns>Severity diagnosis</returns>
+        /// <exception cref="InvalidOperationException">Throw if received invalid score</exception>
+        public SeverityDiagnosis Curb65(int score, bool isBunMissing = false)
         {
+            // If BUN is missing (to be more exact, urea), then this would still be valid
+            // (CRB-65, which has different value matching)
+            if (isBunMissing)
+            {
+                return score switch
+                {
+                    < 0 => throw new ArgumentOutOfRangeException(nameof(score), "Score cannot be negative"),
+                    0 => new SeverityDiagnosis(Severity.Mild, TreatmentSite.Outpatient),
+                    1 or 2 => new SeverityDiagnosis(Severity.Moderate, TreatmentSite.Inpatient),
+                    3 or 4 => new SeverityDiagnosis(Severity.Severe, TreatmentSite.IntensiveCareUnit),
+                    _ => throw new InvalidOperationException($"Unexpected CURB-65 score: {score}"),
+                };
+            }
+
+            // If BUN is present, then this would be CURB-65
             return score switch
             {
+                < 0 => throw new ArgumentOutOfRangeException(nameof(score), "Score cannot be negative"),
                 0 or 1 => new SeverityDiagnosis(Severity.Mild, TreatmentSite.Outpatient),
                 2 => new SeverityDiagnosis(Severity.Moderate, TreatmentSite.Inpatient),
-                > 2 => new SeverityDiagnosis(Severity.Severe, TreatmentSite.IntensiveCareUnit),
+                >= 3 and <= 5 => new SeverityDiagnosis(Severity.Severe, TreatmentSite.IntensiveCareUnit),
                 _ => throw new InvalidOperationException($"Unexpected CURB-65 score: {score}"),
             };
         }
 
+        /// <summary>
+        /// PSI severity diagnosis. Note that, if patient is a young girl, then the score
+        /// can potentially be negative, which will cause the method to throw an exception
+        /// (which is also why PSI normally won't be applied for children)
+        /// </summary>
+        /// <param name="score">Score</param>
+        /// <returns>Severity diagnosis</returns>
+        /// <exception cref="InvalidOperationException">Throw if received invalid score</exception>
         public SeverityDiagnosis Psi(int score)
         {
             // PSI return a more detail classification with 5 levels, and
@@ -39,19 +85,29 @@ namespace Respira.Domain.Services
             // 2. III: Inpatient short term (71 <= score <= 90)
             // 3. IV: Inpatient long term (91 <= score <= 130)
             // 4. V: Intensive Care Unit (score > 130)
-            // To match the result with the CURB-65 classification, we will simplify
-            // the result to the following:
+            // Since we used our defined enums, we will convert with the following:
             // I - II: Mild + Outpatient
-            // III + IV: Moderate + Inpatient
+            // III: Moderate + Inpatient
+            // IV: Severe + Inpatient
             // V: Severe + Intensive Care Unit
             return score switch
             {
+                < 0 => throw new ArgumentOutOfRangeException(nameof(score), "Score cannot be negative"),
                 >= 0 and <= 70 => new SeverityDiagnosis(Severity.Mild, TreatmentSite.Outpatient),
-                <= 130 => new SeverityDiagnosis(Severity.Moderate, TreatmentSite.Inpatient),
+                <= 90 => new SeverityDiagnosis(Severity.Moderate, TreatmentSite.Inpatient),
+                <= 130 => new SeverityDiagnosis(Severity.Severe, TreatmentSite.Inpatient),
                 _ => new SeverityDiagnosis(Severity.Severe, TreatmentSite.IntensiveCareUnit),
             };
         }
 
+        /// <summary>
+        /// AST severity diagnosis. Note that, the actual IDSA/ATS use a major/minor criteria
+        /// system, which we have converted into a score system. Currently, this is still correct,
+        /// but it would be completely wrong if the scale was changed (e.g. required both major
+        /// and minor criteria to be met)
+        /// </summary>
+        /// <param name="score">AST score</param>
+        /// <returns>True if need ICU, false otherwise</returns>
         public bool Ast(int score)
         {
             // AST metrics actually used to check if you need ICU or not
@@ -75,7 +131,9 @@ namespace Respira.Domain.Services
             {
                 if (metric.Code.Equals("CURB-65"))
                 {
-                    var diagnosis = Curb65((int)CalculateMetricsScore(metric, observations));
+                    // Check if BUN is missing
+                    var isBunMissing = !observations.Any(x => x.Variable.Code.Equals("BUN"));
+                    var diagnosis = Curb65((int)CalculateMetricsScore(metric, observations), isBunMissing);
                     severities.Add(metric.Code, diagnosis.Severity);
                     treatmentSites.Add(metric.Code, diagnosis.TreatmentSite);
                 }
