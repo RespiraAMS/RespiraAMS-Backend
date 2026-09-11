@@ -1,4 +1,11 @@
-﻿<Solution>
+<Solution>
+  <Folder Name="/src/" />
+  <Folder Name="/src/Respira.Authentication/">
+    <Project Path="src/Respira.Authentication/Authentication.API/Authentication.API.csproj" />
+    <Project Path="src/Respira.Authentication/Authentication.Application/Authentication.Application.csproj" />
+    <Project Path="src/Respira.Authentication/Authentication.Domain/Authentication.Domain.csproj" />
+    <Project Path="src/Respira.Authentication/Authentication.Infrastructure/Authentication.Infrastructure.csproj" />
+  </Folder>
   <Project Path="src/Respira.AppHost/Respira.AppHost.csproj" />
   <Project Path="src/Respira.Gateway/Respira.Gateway.csproj" />
   <Project Path="src/Respira.ServiceDefaults/Respira.ServiceDefaults.csproj" />
