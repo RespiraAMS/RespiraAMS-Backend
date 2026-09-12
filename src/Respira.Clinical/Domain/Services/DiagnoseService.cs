@@ -6,19 +6,13 @@ using Respira.ServiceDefaults.Contracts.Results;
 
 namespace Respira.Domain.Services
 {
-    /// <summary>
-    /// Severity diagnosis result
-    /// </summary>
-    /// <param name="Severity">Severity</param>
-    /// <param name="TreatmentSite">Treatment site</param>
-    public record SeverityDiagnosis(Severity Severity, TreatmentSite TreatmentSite);
 
     /// <summary>
     /// Diagnose service
     /// </summary>
     /// <param name="context">Clinical context</param>
     /// <param name="logger">Logger</param>
-    public class DiagnoseService(ClinicalContext context, ILogger<DiagnoseService> logger)
+    public class DiagnoseService(ClinicalContext context, ILogger<DiagnoseService> logger) : IDiagnoseService
     {
         /// <summary>
         /// Calculate metrics score
@@ -42,8 +36,9 @@ namespace Respira.Domain.Services
         /// <param name="score">Score</param>
         /// <returns>Severity diagnosis</returns>
         /// <exception cref="InvalidOperationException">Throw if received invalid score</exception>
-        public SeverityDiagnosis Curb65(int score, bool isBunMissing = false)
+        public MetricsSeverityDiagnosis Curb65(int score, bool isBunMissing = false)
         {
+            const string code = "CURB-65";
             // If BUN is missing (to be more exact, urea), then this would still be valid
             // (CRB-65, which has different value matching)
             if (isBunMissing)
@@ -51,9 +46,9 @@ namespace Respira.Domain.Services
                 return score switch
                 {
                     < 0 => throw new ArgumentOutOfRangeException(nameof(score), "Score cannot be negative"),
-                    0 => new SeverityDiagnosis(Severity.Mild, TreatmentSite.Outpatient),
-                    1 or 2 => new SeverityDiagnosis(Severity.Moderate, TreatmentSite.Inpatient),
-                    3 or 4 => new SeverityDiagnosis(Severity.Severe, TreatmentSite.IntensiveCareUnit),
+                    0 => new MetricsSeverityDiagnosis(code, score, Severity.Mild, TreatmentSite.Outpatient),
+                    1 or 2 => new MetricsSeverityDiagnosis(code, score, Severity.Moderate, TreatmentSite.Inpatient),
+                    3 or 4 => new MetricsSeverityDiagnosis(code, score, Severity.Severe, TreatmentSite.IntensiveCareUnit),
                     _ => throw new InvalidOperationException($"Unexpected CURB-65 score: {score}"),
                 };
             }
@@ -62,9 +57,9 @@ namespace Respira.Domain.Services
             return score switch
             {
                 < 0 => throw new ArgumentOutOfRangeException(nameof(score), "Score cannot be negative"),
-                0 or 1 => new SeverityDiagnosis(Severity.Mild, TreatmentSite.Outpatient),
-                2 => new SeverityDiagnosis(Severity.Moderate, TreatmentSite.Inpatient),
-                >= 3 and <= 5 => new SeverityDiagnosis(Severity.Severe, TreatmentSite.IntensiveCareUnit),
+                0 or 1 => new MetricsSeverityDiagnosis(code, score, Severity.Mild, TreatmentSite.Outpatient),
+                2 => new MetricsSeverityDiagnosis(code, score, Severity.Moderate, TreatmentSite.Inpatient),
+                >= 3 and <= 5 => new MetricsSeverityDiagnosis(code, score, Severity.Severe, TreatmentSite.IntensiveCareUnit),
                 _ => throw new InvalidOperationException($"Unexpected CURB-65 score: {score}"),
             };
         }
@@ -77,8 +72,9 @@ namespace Respira.Domain.Services
         /// <param name="score">Score</param>
         /// <returns>Severity diagnosis</returns>
         /// <exception cref="InvalidOperationException">Throw if received invalid score</exception>
-        public SeverityDiagnosis Psi(int score)
+        public MetricsSeverityDiagnosis Psi(int score)
         {
+            const string code = "PSI";
             // PSI return a more detail classification with 5 levels, and
             // 4 type of treatment site: 
             // 1. I - II: Outpatient (score <= 70)
@@ -93,10 +89,10 @@ namespace Respira.Domain.Services
             return score switch
             {
                 < 0 => throw new ArgumentOutOfRangeException(nameof(score), "Score cannot be negative"),
-                >= 0 and <= 70 => new SeverityDiagnosis(Severity.Mild, TreatmentSite.Outpatient),
-                <= 90 => new SeverityDiagnosis(Severity.Moderate, TreatmentSite.Inpatient),
-                <= 130 => new SeverityDiagnosis(Severity.Severe, TreatmentSite.Inpatient),
-                _ => new SeverityDiagnosis(Severity.Severe, TreatmentSite.IntensiveCareUnit),
+                >= 0 and <= 70 => new MetricsSeverityDiagnosis(code, score, Severity.Mild, TreatmentSite.Outpatient),
+                <= 90 => new MetricsSeverityDiagnosis(code, score, Severity.Moderate, TreatmentSite.Inpatient),
+                <= 130 => new MetricsSeverityDiagnosis(code, score, Severity.Severe, TreatmentSite.Inpatient),
+                _ => new MetricsSeverityDiagnosis(code, score, Severity.Severe, TreatmentSite.IntensiveCareUnit),
             };
         }
 
@@ -126,6 +122,7 @@ namespace Respira.Domain.Services
             // invalid
             var severities = new Dictionary<string, Severity>();
             var treatmentSites = new Dictionary<string, TreatmentSite>();
+            IEnumerable<MetricsSeverityDiagnosis> metricsDiagnoses = [];
 
             foreach (var metric in context.Metrics)
             {
@@ -134,20 +131,30 @@ namespace Respira.Domain.Services
                     // Check if BUN is missing
                     var isBunMissing = !observations.Any(x => x.Variable.Code.Equals("BUN"));
                     var diagnosis = Curb65((int)CalculateMetricsScore(metric, observations), isBunMissing);
+                    metricsDiagnoses = metricsDiagnoses.Append(diagnosis);
                     severities.Add(metric.Code, diagnosis.Severity);
                     treatmentSites.Add(metric.Code, diagnosis.TreatmentSite);
                 }
                 else if (metric.Code.Equals("PSI"))
                 {
                     var diagnosis = Psi((int)CalculateMetricsScore(metric, observations));
+                    metricsDiagnoses = metricsDiagnoses.Append(diagnosis);
                     severities.Add(metric.Code, diagnosis.Severity);
                     treatmentSites.Add(metric.Code, diagnosis.TreatmentSite);
                 }
                 else if (metric.Code.Equals("IDSA/ATS"))
                 {
-                    var needIcu = Ast((int)CalculateMetricsScore(metric, observations));
+                    var score = (int)CalculateMetricsScore(metric, observations);
+                    var needIcu = Ast(score);
                     if (needIcu)
                     {
+                        // If you need ICU, then the severity is obviously severe
+                        metricsDiagnoses = metricsDiagnoses.Append(new MetricsSeverityDiagnosis(
+                            metric.Code,
+                            score,
+                            Severity.Severe,
+                            TreatmentSite.IntensiveCareUnit));
+                        severities.Add(metric.Code, Severity.Severe);
                         treatmentSites.Add(metric.Code, TreatmentSite.IntensiveCareUnit);
                     }
                 }
@@ -181,12 +188,18 @@ namespace Respira.Domain.Services
                 {
                     return Result<SeverityDiagnosis>.Success(
                         ApplicationStatus.Success,
-                        new SeverityDiagnosis(Severity.Severe, TreatmentSite.IntensiveCareUnit));
+                        new SeverityDiagnosis(
+                            Severity.Severe,
+                            TreatmentSite.IntensiveCareUnit,
+                            metricsDiagnoses));
                 }
 
                 return Result<SeverityDiagnosis>.Success(
                     ApplicationStatus.Success,
-                    new SeverityDiagnosis(Severity.Severe, TreatmentSite.Inpatient));
+                    new SeverityDiagnosis(
+                        Severity.Severe,
+                        TreatmentSite.Inpatient,
+                        metricsDiagnoses));
             }
             else if (severities.ContainsValue(Severity.Moderate))
             {
@@ -199,7 +212,7 @@ namespace Respira.Domain.Services
 
                 return Result<SeverityDiagnosis>.Success(
                         ApplicationStatus.Success,
-                        new SeverityDiagnosis(Severity.Moderate, TreatmentSite.Inpatient));
+                        new SeverityDiagnosis(Severity.Moderate, TreatmentSite.Inpatient, metricsDiagnoses));
             }
             else if (severities.ContainsValue(Severity.Mild))
             {
@@ -212,10 +225,42 @@ namespace Respira.Domain.Services
 
                 return Result<SeverityDiagnosis>.Success(
                     ApplicationStatus.Success,
-                    new SeverityDiagnosis(Severity.Mild, TreatmentSite.Outpatient));
+                    new SeverityDiagnosis(
+                        Severity.Mild,
+                        TreatmentSite.Outpatient,
+                        metricsDiagnoses));
             }
 
             throw new InvalidOperationException("Unexpected diagnosis result");
+        }
+
+        public Result<InfectionProbability> InfectionProbability(Severity severity, TreatmentSite treatmentSite, IEnumerable<ClinicalObservation> observations)
+        {
+            IEnumerable<HeavySuspected> heavySuspected = [];
+            IEnumerable<Pathogen> worthSuspected = context.SuspectedCauses
+                .Where(sc => sc.Severity == severity && sc.TreatmentSite == treatmentSite)
+                .Select(sc => sc.Pathogen);
+
+            // Check for infection probability first
+            foreach (var pathogen in context.Pathogens)
+            {
+                var total = pathogen.RiskFactors.Count();
+                if (total == 0)
+                {
+                    logger.LogDebug("No risk factors for {pathogen}", pathogen.Name);
+                    continue;
+                }
+                var matched = pathogen.RiskFactors.Count(r => r.Criterion.IsCriterionSatisfied(observations));
+                var probability = (decimal)matched / total;
+                logger.LogDebug("Risk factor calculate: probability for {pathogen}: {probability}", pathogen.Name, probability);
+                heavySuspected = heavySuspected.Append(new HeavySuspected(pathogen, probability));
+            }
+
+            return Result<InfectionProbability>.Success(ApplicationStatus.Success, new InfectionProbability
+            {
+                HeavySuspected = heavySuspected,
+                WorthSuspected = worthSuspected,
+            });
         }
     }
 }

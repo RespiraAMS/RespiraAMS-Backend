@@ -11,7 +11,7 @@ namespace Respira.Domain.Test.Services
 {
     public class DiagnoseServiceTest
     {
-        private readonly DiagnoseService _service;
+        private readonly IDiagnoseService _service;
         private static readonly ClinicalContext _context = CreateContext();
 
         public DiagnoseServiceTest()
@@ -390,7 +390,13 @@ namespace Respira.Domain.Test.Services
             AddRule(psi, "Pleural effusion on x-ray", Eq(Var("PLEURAL-EFFUSION"), Bool(true)), Num(10));
 
             var metrics = new List<ScoreMetrics>() { curb65, idsa_ats, psi };
-            return new ClinicalContext(variables, metrics);
+            return new ClinicalContext
+            {
+                Variables = variables,
+                Metrics = metrics,
+                Pathogens = [],
+                SuspectedCauses = [],
+            };
         }
 
         private static ClinicalVariable GetVariable(string code)
@@ -805,6 +811,7 @@ namespace Respira.Domain.Test.Services
             Assert.NotNull(result.Data);
             Assert.Equal(expectedSeverity, result.Data.Severity);
             Assert.Equal(expectedTreatmentSite, result.Data.TreatmentSite);
+            Assert.NotEmpty(result.Data.MetricsDiagnoses);
         }
     }
 }
