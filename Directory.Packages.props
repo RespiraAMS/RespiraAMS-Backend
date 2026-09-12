@@ -1,10 +1,10 @@
 <Project>
   <PropertyGroup>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
-    <EFCoreVersion>10.0.8</EFCoreVersion>
+    <EFCoreVersion>10.0.11</EFCoreVersion>
     <AspireVersion>13.4.6</AspireVersion>
     <WolverineVersion>6.19.0</WolverineVersion>
-    <MicrosoftExtensionsVersion>10.0.10</MicrosoftExtensionsVersion>
+    <MicrosoftExtensionsVersion>10.0.11</MicrosoftExtensionsVersion>
   </PropertyGroup>
   <!-- Aspire -->
   <ItemGroup>
@@ -53,7 +53,7 @@
   <!-- Database/Storage -->
   <ItemGroup>
     <!-- EF Core -->
-    <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="10.0.10" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="10.0.11" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Tools" Version="$(EFCoreVersion)" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="$(EFCoreVersion)" />
     <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.3" />
@@ -93,8 +93,8 @@
     <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="$(MicrosoftExtensionsVersion)" />
     <PackageVersion Include="Asp.Versioning.Mvc" Version="10.0.0" />
     <!-- Pagination -->
-    <PackageVersion Include="X.PagedList.EF" Version="10.5.9" />
-    <PackageVersion Include="X.PagedList" Version="10.5.9" />
+    <PackageVersion Include="X.PagedList.EF" Version="10.6.0" />
+    <PackageVersion Include="X.PagedList" Version="10.6.0" />
     <!-- Email -->
     <PackageVersion Include="MailKit" Version="4.16.0" />
     <PackageVersion Include="MimeKit" Version="4.16.0" />

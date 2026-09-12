@@ -6,7 +6,7 @@ namespace Authentication.Domain.Entities
     /// <summary>
     /// A registered doctor (or staff) account that can authenticate with the system.
     /// </summary>
-    public class AuthDoctor : Base
+    public class Account : Base
     {
         /// <summary>Email used as the unique login identifier (lowercased on use)</summary>
         public required string Email { get; set; }

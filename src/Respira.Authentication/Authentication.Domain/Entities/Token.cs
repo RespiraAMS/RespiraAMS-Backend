@@ -16,7 +16,7 @@ namespace Authentication.Domain.Entities
         public Guid AuthUserId { get; init; }
 
         /// <summary>Navigation to the owning account</summary>
-        public AuthDoctor? AuthDoctor { get; init; }
+        public Account? Account { get; init; }
 
         /// <summary>Type of the token</summary>
         public TokenType TokenType { get; init; }
