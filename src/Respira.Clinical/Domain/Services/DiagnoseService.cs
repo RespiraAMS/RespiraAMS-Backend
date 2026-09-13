@@ -48,7 +48,7 @@ namespace Respira.Domain.Services
                     < 0 => throw new ArgumentOutOfRangeException(nameof(score), "Score cannot be negative"),
                     0 => new MetricsSeverityDiagnosis(code, score, Severity.Mild, TreatmentSite.Outpatient),
                     1 or 2 => new MetricsSeverityDiagnosis(code, score, Severity.Moderate, TreatmentSite.Inpatient),
-                    3 or 4 => new MetricsSeverityDiagnosis(code, score, Severity.Severe, TreatmentSite.IntensiveCareUnit),
+                    3 or 4 => new MetricsSeverityDiagnosis(code, score, Severity.Severe, TreatmentSite.Inpatient),
                     _ => throw new InvalidOperationException($"Unexpected CURB-65 score: {score}"),
                 };
             }
@@ -59,7 +59,7 @@ namespace Respira.Domain.Services
                 < 0 => throw new ArgumentOutOfRangeException(nameof(score), "Score cannot be negative"),
                 0 or 1 => new MetricsSeverityDiagnosis(code, score, Severity.Mild, TreatmentSite.Outpatient),
                 2 => new MetricsSeverityDiagnosis(code, score, Severity.Moderate, TreatmentSite.Inpatient),
-                >= 3 and <= 5 => new MetricsSeverityDiagnosis(code, score, Severity.Severe, TreatmentSite.IntensiveCareUnit),
+                >= 3 and <= 5 => new MetricsSeverityDiagnosis(code, score, Severity.Severe, TreatmentSite.Inpatient),
                 _ => throw new InvalidOperationException($"Unexpected CURB-65 score: {score}"),
             };
         }
@@ -234,29 +234,68 @@ namespace Respira.Domain.Services
             throw new InvalidOperationException("Unexpected diagnosis result");
         }
 
-        public Result<InfectionProbability> InfectionProbability(Severity severity, TreatmentSite treatmentSite, IEnumerable<ClinicalObservation> observations)
+        private decimal CalculatePriorityScore(int priority)
         {
+            // Reciprocal Rank
+            return 1m / priority;
+        }
+
+        public Result<InfectionAssessment> AssessInfection(Severity severity, TreatmentSite treatmentSite, IEnumerable<ClinicalObservation> observations)
+        {
+            /*
+             * To assess infection, we will proceed with these steps:
+             * 1. Check for suspected pathogens. This list is the easiest to check, but
+             * since the only factors used is severity and treatment site, this may not
+             * be a strong evidence for infection.
+             * 2. Check for risk factors. Since factors have priority, we will use
+             * the some mathematical models to calculate a factor score.
+             * The final score of a pathogen simply is the sum of all factor scores.
+             * 3. Assessment. 
+             * 3.1. Any pathogen with risk factors would be included in the
+             * heavy suspected list.
+             * 3.2. Any pathogen that is both in the suspected list and risk factors
+             * would received a high boost, which make them appear first in the heavy
+             * suspected list.
+             * 3.3. If not, then the pathogen is worth considering
+             */
+
             IEnumerable<HeavySuspected> heavySuspected = [];
-            IEnumerable<Pathogen> worthSuspected = context.SuspectedCauses
+            IEnumerable<Pathogen> worthSuspected = [];
+
+            // Step 1: Check for suspected pathogens
+            var suspected = context.SuspectedCauses
                 .Where(sc => sc.Severity == severity && sc.TreatmentSite == treatmentSite)
                 .Select(sc => sc.Pathogen);
 
-            // Check for infection probability first
+            // Step 2: Check for risk factors
             foreach (var pathogen in context.Pathogens)
             {
-                var total = pathogen.RiskFactors.Count();
-                if (total == 0)
+                var score = pathogen.RiskFactors
+                    .Where(r => r.IsFactorSasified(observations))
+                    .Sum(r => CalculatePriorityScore(r.Priority));
+                logger.LogDebug("Risk factor calculate: score for {pathogen}: {score}", pathogen.Name, score);
+
+                if (score == 0)
                 {
-                    logger.LogDebug("No risk factors for {pathogen}", pathogen.Name);
                     continue;
                 }
-                var matched = pathogen.RiskFactors.Count(r => r.Criterion.IsCriterionSatisfied(observations));
-                var probability = (decimal)matched / total;
-                logger.LogDebug("Risk factor calculate: probability for {pathogen}: {probability}", pathogen.Name, probability);
-                heavySuspected = heavySuspected.Append(new HeavySuspected(pathogen, probability));
+
+                // Check if this pathogen also exists in the suspected list
+                if (suspected.Any(s => s.Id == pathogen.Id))
+                {
+                    // If yes, add a boost. Since we use reciprocal rank, which is
+                    // always <= 1, so a adding 1 will serve
+                    logger.LogDebug("Pathogen {pathogen} is also in the suspected list, adding boost", pathogen.Name);
+                    score++;
+                }
+
+                heavySuspected = heavySuspected.Append(new HeavySuspected(pathogen, score));
             }
 
-            return Result<InfectionProbability>.Success(ApplicationStatus.Success, new InfectionProbability
+            // Step 3: Assessment
+            worthSuspected = suspected.Where(s => !heavySuspected.Select(hs => hs.Pathogen).Contains(s));
+
+            return Result<InfectionAssessment>.Success(ApplicationStatus.Success, new InfectionAssessment
             {
                 HeavySuspected = heavySuspected,
                 WorthSuspected = worthSuspected,

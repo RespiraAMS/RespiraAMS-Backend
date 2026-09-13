@@ -7,13 +7,16 @@ namespace Respira.Domain.Models
     /// based on its risk factors
     /// </summary>
     /// <param name="Pathogen">The suspected pathogen for infection</param>
-    /// <param name="Probability">Infection probability (from 0 to 1)</param>
-    public record HeavySuspected(Pathogen Pathogen, decimal Probability);
+    /// <param name="PriorityScore">
+    /// Priority score. Note that, this score does not indicate the probability of infection,
+    /// this is simply used to rank the pathogens.
+    /// </param>
+    public record HeavySuspected(Pathogen Pathogen, decimal PriorityScore);
 
     /// <summary>
-    /// Infection probability result
+    /// Infection assessment result
     /// </summary>
-    public class InfectionProbability
+    public class InfectionAssessment
     {
         /// <summary>
         /// This is the list of heavily suspected pathogens, based on risk factors.

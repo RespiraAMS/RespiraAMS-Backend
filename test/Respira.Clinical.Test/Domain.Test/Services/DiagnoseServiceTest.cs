@@ -300,7 +300,269 @@ namespace Respira.Domain.Test.Services
                     Description = "Does the patient have septic shock requiring vasopressors",
                     ValueType = ClinicalValueType.Boolean,
                     CanonicalUnit = null
-                }
+                },
+
+                // ---- Risk-factor clinical variables ----
+                new ClinicalVariable
+                {
+                    Name = "Alcohol abuse",
+                    Code = "ALCOHOL-ABUSE",
+                    Description = "History of alcohol abuse",
+                    ValueType = ClinicalValueType.Boolean,
+                    CanonicalUnit = null
+                },
+
+                new ClinicalVariable
+                {
+                    Name = "Smoking",
+                    Code = "SMOKING",
+                    Description = "Current or former smoker",
+                    ValueType = ClinicalValueType.Boolean,
+                    CanonicalUnit = null
+                },
+
+                new ClinicalVariable
+                {
+                    Name = "Chronic obstructive pulmonary disease",
+                    Code = "COPD",
+                    Description = "Has chronic obstructive pulmonary disease (COPD) or other chronic lung disease",
+                    ValueType = ClinicalValueType.Boolean,
+                    CanonicalUnit = null
+                },
+
+                new ClinicalVariable
+                {
+                    Name = "Severe chronic obstructive pulmonary disease",
+                    Code = "SEVERE-COPD",
+                    Description = "Has severe COPD (FEV1 < 30%)",
+                    ValueType = ClinicalValueType.Boolean,
+                    CanonicalUnit = null
+                },
+
+                new ClinicalVariable
+                {
+                    Name = "Malnutrition",
+                    Code = "MALNUTRITION",
+                    Description = "Has malnutrition",
+                    ValueType = ClinicalValueType.Boolean,
+                    CanonicalUnit = null
+                },
+
+                new ClinicalVariable
+                {
+                    Name = "Mental illness",
+                    Code = "MENTAL-ILLNESS",
+                    Description = "Has mental illness",
+                    ValueType = ClinicalValueType.Boolean,
+                    CanonicalUnit = null
+                },
+
+                new ClinicalVariable
+                {
+                    Name = "Immunocompromised",
+                    Code = "IMMUNOCOMPROMISED",
+                    Description = "Is immunocompromised",
+                    ValueType = ClinicalValueType.Boolean,
+                    CanonicalUnit = null
+                },
+
+                new ClinicalVariable
+                {
+                    Name = "HIV infection",
+                    Code = "HIV",
+                    Description = "Has HIV infection",
+                    ValueType = ClinicalValueType.Boolean,
+                    CanonicalUnit = null
+                },
+
+                new ClinicalVariable
+                {
+                    Name = "Organ transplant",
+                    Code = "ORGAN-TRANSPLANT",
+                    Description = "Has had an organ transplant",
+                    ValueType = ClinicalValueType.Boolean,
+                    CanonicalUnit = null
+                },
+
+                new ClinicalVariable
+                {
+                    Name = "Diabetes mellitus",
+                    Code = "DIABETES",
+                    Description = "Has diabetes mellitus",
+                    ValueType = ClinicalValueType.Boolean,
+                    CanonicalUnit = null
+                },
+
+                new ClinicalVariable
+                {
+                    Name = "Influenza infection",
+                    Code = "INFLUENZA",
+                    Description = "Has influenza infection",
+                    ValueType = ClinicalValueType.Boolean,
+                    CanonicalUnit = null
+                },
+
+                new ClinicalVariable
+                {
+                    Name = "Measles infection",
+                    Code = "MEASLES",
+                    Description = "Has measles infection",
+                    ValueType = ClinicalValueType.Boolean,
+                    CanonicalUnit = null
+                },
+
+                new ClinicalVariable
+                {
+                    Name = "IV drug use",
+                    Code = "IV-DRUG-USE",
+                    Description = "History of intravenous drug use",
+                    ValueType = ClinicalValueType.Boolean,
+                    CanonicalUnit = null
+                },
+
+                new ClinicalVariable
+                {
+                    Name = "Prior MRSA infection",
+                    Code = "PRIOR-MRSA-INFECTION",
+                    Description = "History of MRSA infection",
+                    ValueType = ClinicalValueType.Boolean,
+                    CanonicalUnit = null
+                },
+
+                new ClinicalVariable
+                {
+                    Name = "Recent hospitalization with IV antibiotics",
+                    Code = "HOSPITALIZATION-90D",
+                    Description = "Hospitalization and IV antibiotics within 90 days",
+                    ValueType = ClinicalValueType.Boolean,
+                    CanonicalUnit = null
+                },
+
+                new ClinicalVariable
+                {
+                    Name = "ICU stay",
+                    Code = "ICU-STAY",
+                    Description = "Recent ICU stay",
+                    ValueType = ClinicalValueType.Boolean,
+                    CanonicalUnit = null
+                },
+
+                new ClinicalVariable
+                {
+                    Name = "Intubation",
+                    Code = "INTUBATION",
+                    Description = "Recent endotracheal intubation",
+                    ValueType = ClinicalValueType.Boolean,
+                    CanonicalUnit = null
+                },
+
+                new ClinicalVariable
+                {
+                    Name = "Stroke",
+                    Code = "STROKE",
+                    Description = "Has stroke history",
+                    ValueType = ClinicalValueType.Boolean,
+                    CanonicalUnit = null
+                },
+
+                new ClinicalVariable
+                {
+                    Name = "Epilepsy",
+                    Code = "EPILEPSY",
+                    Description = "Has epilepsy",
+                    ValueType = ClinicalValueType.Boolean,
+                    CanonicalUnit = null
+                },
+
+                new ClinicalVariable
+                {
+                    Name = "Anesthesia",
+                    Code = "ANESTHESIA",
+                    Description = "Recent anesthesia",
+                    ValueType = ClinicalValueType.Boolean,
+                    CanonicalUnit = null
+                },
+
+                new ClinicalVariable
+                {
+                    Name = "Prior antibiotic use",
+                    Code = "PRIOR-ANTIBIOTIC-USE",
+                    Description = "Recent antibiotic use",
+                    ValueType = ClinicalValueType.Boolean,
+                    CanonicalUnit = null
+                },
+
+                new ClinicalVariable
+                {
+                    Name = "Cystic fibrosis",
+                    Code = "CYSTIC-FIBROSIS",
+                    Description = "Has cystic fibrosis",
+                    ValueType = ClinicalValueType.Boolean,
+                    CanonicalUnit = null
+                },
+
+                new ClinicalVariable
+                {
+                    Name = "Bronchiectasis",
+                    Code = "BRONCHIECTASIS",
+                    Description = "Has bronchiectasis",
+                    ValueType = ClinicalValueType.Boolean,
+                    CanonicalUnit = null
+                },
+
+                new ClinicalVariable
+                {
+                    Name = "Lung cancer",
+                    Code = "LUNG-CANCER",
+                    Description = "Has lung cancer",
+                    ValueType = ClinicalValueType.Boolean,
+                    CanonicalUnit = null
+                },
+
+                new ClinicalVariable
+                {
+                    Name = "Prior Pseudomonas infection",
+                    Code = "PRIOR-PSEUDOMONAS",
+                    Description = "History of Pseudomonas aeruginosa infection",
+                    ValueType = ClinicalValueType.Boolean,
+                    CanonicalUnit = null
+                },
+
+                new ClinicalVariable
+                {
+                    Name = "Aspiration pneumonia",
+                    Code = "ASPIRATION-PNEUMONIA",
+                    Description = "Has aspiration pneumonia",
+                    ValueType = ClinicalValueType.Boolean,
+                    CanonicalUnit = null
+                },
+
+                new ClinicalVariable
+                {
+                    Name = "Oropharyngeal anaerobic infection",
+                    Code = "OROPHARYNGEAL-ANAEROBIC",
+                    Description = "Has oropharyngeal anaerobic infection",
+                    ValueType = ClinicalValueType.Boolean,
+                    CanonicalUnit = null
+                },
+
+                new ClinicalVariable
+                {
+                    Name = "Severe internal medicine disease",
+                    Code = "SEVERE-INTERNAL-DISEASE",
+                    Description = "Has severe internal medicine disease",
+                    ValueType = ClinicalValueType.Boolean,
+                    CanonicalUnit = null
+                },
+
+                new ClinicalVariable
+                {
+                    Name = "Pulmonary infarction",
+                    Code = "PULMONARY-INFARCTION",
+                    Description = "Has pulmonary infarction",
+                    ValueType = ClinicalValueType.Boolean,
+                    CanonicalUnit = null
+                },
             ];
 
             VariableFormula Var(string code) => new(variables.First(x => x.Code.Equals(code)));
@@ -390,12 +652,175 @@ namespace Respira.Domain.Test.Services
             AddRule(psi, "Pleural effusion on x-ray", Eq(Var("PLEURAL-EFFUSION"), Bool(true)), Num(10));
 
             var metrics = new List<ScoreMetrics>() { curb65, idsa_ats, psi };
+
+            // ---- Pathogens, risk factors and suspected causes ----
+            // Source: docs/pathogen-risk-factor.pdf
+            //   First table      - suspected causes grouped by severity / treatment site
+            //   Table 3.2        - risk factors per pathogen.
+            //                      Priority follows the table order: first factor = 1 (highest).
+
+            Formula Any(params Formula[] formulas) => formulas.Aggregate(Or);
+
+            var pathogens = new List<Pathogen>();
+            Pathogen AddPathogen(string name, string description, bool isAtypical)
+            {
+                var pathogen = new Pathogen
+                {
+                    Name = name,
+                    Description = description,
+                    IsAtypical = isAtypical,
+                    RiskFactors = []
+                };
+                pathogens.Add(pathogen);
+                return pathogen;
+            }
+
+            // CriterionId / PathogenId are just database FKs - the service evaluates the
+            // inline Criterion object, so a random ID is fine in tests.
+            void AddRiskFactor(Pathogen pathogen, string name, Formula criterion, int priority) =>
+                pathogen.RiskFactors = pathogen.RiskFactors.Append(new RiskFactor
+                {
+                    PathogenId = pathogen.Id,
+                    CriterionId = Guid.CreateVersion7(),
+                    Criterion = new Criterion(name, criterion),
+                    Priority = priority
+                });
+
+            var suspectedCauses = new List<SuspectedCause>();
+            void AddSuspectedCause(Pathogen pathogen, Severity severity, TreatmentSite treatmentSite) =>
+                suspectedCauses.Add(new SuspectedCause
+                {
+                    PathogenId = pathogen.Id,
+                    Pathogen = pathogen,
+                    Severity = severity,
+                    TreatmentSite = treatmentSite
+                });
+
+            // ---- Pathogens with risk factors (Table 3.2) ----
+
+            // 1. Streptococcus pneumoniae
+            var spn = AddPathogen("Streptococcus pneumoniae", "Most common bacterial cause of community-acquired pneumonia", false);
+            AddRiskFactor(spn, "Male sex or age < 2 or > 65",
+                And(Eq(Var("FEMALE"), Bool(false)), Or(Lt(Var("AGE"), Num(2m)), Gt(Var("AGE"), Num(65m)))), 1);
+            AddRiskFactor(spn, "Alcohol abuse or smoking",
+                Or(Eq(Var("ALCOHOL-ABUSE"), Bool(true)), Eq(Var("SMOKING"), Bool(true))), 2);
+            AddRiskFactor(spn, "Comorbidities (liver, renal, CHF, malnutrition, mental illness, COPD, immunocompromised, HIV, organ transplant)",
+                Any(Eq(Var("LIVER"), Bool(true)), Eq(Var("RENAL"), Bool(true)), Eq(Var("CHF"), Bool(true)),
+                    Eq(Var("MALNUTRITION"), Bool(true)), Eq(Var("MENTAL-ILLNESS"), Bool(true)), Eq(Var("COPD"), Bool(true)),
+                    Eq(Var("IMMUNOCOMPROMISED"), Bool(true)), Eq(Var("HIV"), Bool(true)), Eq(Var("ORGAN-TRANSPLANT"), Bool(true))), 3);
+
+            // 2. Haemophilus influenzae
+            var hflu = AddPathogen("Haemophilus influenzae", "Common pathogen in patients with chronic lung disease", false);
+            AddRiskFactor(hflu, "Chronic lung disease", Eq(Var("COPD"), Bool(true)), 1);
+            AddRiskFactor(hflu, "Malignancy", Eq(Var("NEOPLASTIC"), Bool(true)), 2);
+            AddRiskFactor(hflu, "HIV infection", Eq(Var("HIV"), Bool(true)), 3);
+            AddRiskFactor(hflu, "Alcohol abuse", Eq(Var("ALCOHOL-ABUSE"), Bool(true)), 4);
+            AddRiskFactor(hflu, "Smoking", Eq(Var("SMOKING"), Bool(true)), 5);
+
+            // 3. Staphylococcus aureus
+            var saureus = AddPathogen("Staphylococcus aureus", "Common in structural lung disease or post-viral infection", false);
+            AddRiskFactor(saureus, "COPD, lung cancer or cystic fibrosis",
+                Any(Eq(Var("COPD"), Bool(true)), Eq(Var("LUNG-CANCER"), Bool(true)), Eq(Var("CYSTIC-FIBROSIS"), Bool(true))), 1);
+            AddRiskFactor(saureus, "Diabetes or renal failure",
+                Any(Eq(Var("DIABETES"), Bool(true)), Eq(Var("RENAL"), Bool(true))), 2);
+            AddRiskFactor(saureus, "Influenza or measles infection",
+                Any(Eq(Var("INFLUENZA"), Bool(true)), Eq(Var("MEASLES"), Bool(true))), 3);
+            AddRiskFactor(saureus, "IV drug use", Eq(Var("IV-DRUG-USE"), Bool(true)), 4);
+
+            // 4. Methicillin-Resistant Staphylococcus aureus (MRSA)
+            var mrsa = AddPathogen("Methicillin-Resistant Staphylococcus aureus (MRSA)", "Healthcare-associated resistant staph", false);
+            AddRiskFactor(mrsa, "Prior MRSA infection", Eq(Var("PRIOR-MRSA-INFECTION"), Bool(true)), 1);
+            AddRiskFactor(mrsa, "Hospitalization and IV antibiotics within 90 days", Eq(Var("HOSPITALIZATION-90D"), Bool(true)), 2);
+
+            // 5. Klebsiella pneumoniae
+            var klebsiella = AddPathogen("Klebsiella pneumoniae", "Enteric Gram-negative bacillus associated with aspiration", false);
+            AddRiskFactor(klebsiella, "ICU stay or intubation",
+                Any(Eq(Var("ICU-STAY"), Bool(true)), Eq(Var("INTUBATION"), Bool(true))), 1);
+            AddRiskFactor(klebsiella, "Aspiration risk (stroke, epilepsy, anesthesia)",
+                Any(Eq(Var("STROKE"), Bool(true)), Eq(Var("EPILEPSY"), Bool(true)), Eq(Var("ANESTHESIA"), Bool(true))), 2);
+            AddRiskFactor(klebsiella, "Alcohol abuse", Eq(Var("ALCOHOL-ABUSE"), Bool(true)), 3);
+            AddRiskFactor(klebsiella, "Chronic lung disease or diabetes",
+                Any(Eq(Var("COPD"), Bool(true)), Eq(Var("DIABETES"), Bool(true))), 4);
+            AddRiskFactor(klebsiella, "Prior antibiotic use", Eq(Var("PRIOR-ANTIBIOTIC-USE"), Bool(true)), 5);
+
+            // 6. Pseudomonas aeruginosa
+            var pseudomonas = AddPathogen("Pseudomonas aeruginosa", "Pathogen in structural lung disease and prior Pseudomonas infection", false);
+            AddRiskFactor(pseudomonas, "Structural lung disease (cystic fibrosis, bronchiectasis, severe COPD)",
+                Any(Eq(Var("CYSTIC-FIBROSIS"), Bool(true)), Eq(Var("BRONCHIECTASIS"), Bool(true)), Eq(Var("SEVERE-COPD"), Bool(true))), 1);
+            AddRiskFactor(pseudomonas, "Prior Pseudomonas aeruginosa infection", Eq(Var("PRIOR-PSEUDOMONAS"), Bool(true)), 2);
+            AddRiskFactor(pseudomonas, "Hospitalization and IV antibiotics within 90 days", Eq(Var("HOSPITALIZATION-90D"), Bool(true)), 3);
+
+            // 7. Acinetobacter baumannii
+            var acinetobacter = AddPathogen("Acinetobacter baumannii", "Multidrug-resistant pathogen in severe illness", false);
+            AddRiskFactor(acinetobacter, "Alcohol abuse, old age or severe internal medicine disease",
+                Any(Eq(Var("ALCOHOL-ABUSE"), Bool(true)), Gt(Var("AGE"), Num(65m)), Eq(Var("SEVERE-INTERNAL-DISEASE"), Bool(true))), 1);
+
+            // 8. Anaerobic bacteria
+            var anaerobic = AddPathogen("Anaerobic bacteria", "Associated with aspiration pneumonia", false);
+            AddRiskFactor(anaerobic, "Lung disease (lung cancer, bronchiectasis, pulmonary infarction, aspiration pneumonia)",
+                Any(Eq(Var("LUNG-CANCER"), Bool(true)), Eq(Var("BRONCHIECTASIS"), Bool(true)),
+                    Eq(Var("PULMONARY-INFARCTION"), Bool(true)), Eq(Var("ASPIRATION-PNEUMONIA"), Bool(true))), 1);
+            AddRiskFactor(anaerobic, "Oropharyngeal anaerobic infection", Eq(Var("OROPHARYNGEAL-ANAEROBIC"), Bool(true)), 2);
+
+            // ---- Pathogens from Table 1 with no specific risk factors in Table 3.2 ----
+            var moraxella = AddPathogen("Moraxella catarrhalis", "Common in patients with chronic lung disease", false);
+            var mycoplasma = AddPathogen("Mycoplasma pneumoniae", "Atypical pathogen, common in young adults", true);
+            var chlamydia = AddPathogen("Chlamydia pneumoniae", "Atypical pathogen, often co-infection", true);
+            var legionella = AddPathogen("Legionella spp", "Atypical pathogen, severe CAP", true);
+            var bordetella = AddPathogen("Bordetella pertussis", "Causes pertussis-associated pneumonia", false);
+            // Enteric Gram-negative bacilli (Table 1) expanded into specific pathogens
+            var ecoli = AddPathogen("Escherichia coli (E. coli)", "Enteric Gram-negative bacillus", false);
+            var salmonella = AddPathogen("Salmonella", "Enteric Gram-negative bacillus", false);
+            var enterobacter = AddPathogen("Enterobacter", "Enteric Gram-negative bacillus", false);
+
+            // ---- Respiratory viruses (Table 1) ----
+            var influenza = AddPathogen("Influenza virus", "Most important respiratory viral pathogen", false);
+            var parainfluenza = AddPathogen("Parainfluenza virus", "Respiratory virus", false);
+            var rsv = AddPathogen("Respiratory syncytial virus (RSV)", "Respiratory virus", false);
+            var adenovirus = AddPathogen("Adenovirus", "Respiratory virus", false);
+            var coronavirus = AddPathogen("Coronavirus", "Respiratory virus", false);
+            var sarsCov2 = AddPathogen("SARS-CoV-2", "Causative agent of COVID-19", false);
+            var rhinovirus = AddPathogen("Rhinovirus", "Respiratory virus", false);
+            var enterovirus = AddPathogen("Enterovirus", "Respiratory virus", false);
+            var bocavirus = AddPathogen("Bocavirus", "Respiratory virus", false);
+            var metapneumovirus = AddPathogen("Metapneumovirus", "Respiratory virus", false);
+            var hmpv = AddPathogen("Human metapneumovirus (HMPV)", "Respiratory virus", false);
+            var cmv = AddPathogen("Cytomegalovirus (CMV)", "Respiratory virus", false);
+            var ebv = AddPathogen("Epstein-Barr virus (EBV)", "Respiratory virus", false);
+
+            // ---- Suspected causes (first table) ----
+            // Group A: mild / outpatient
+            foreach (var p in new[] { spn, hflu, moraxella, mycoplasma, chlamydia,
+                influenza, parainfluenza, rsv, adenovirus, coronavirus, sarsCov2,
+                rhinovirus, enterovirus, bocavirus })
+            {
+                AddSuspectedCause(p, Severity.Mild, TreatmentSite.Outpatient);
+            }
+
+            // Group B: moderate / inpatient
+            foreach (var p in new[] { spn, mycoplasma, chlamydia, hflu, ecoli, salmonella,
+                klebsiella, enterobacter, anaerobic, legionella, bordetella, influenza,
+                parainfluenza, rsv, enterovirus, rhinovirus, adenovirus, coronavirus, sarsCov2, bocavirus,
+                metapneumovirus, hmpv, cmv, ebv })
+            {
+                AddSuspectedCause(p, Severity.Moderate, TreatmentSite.Inpatient);
+                AddSuspectedCause(p, Severity.Severe, TreatmentSite.Inpatient);
+            }
+
+            // Group C: severe / ICU
+            foreach (var p in new[] { spn, ecoli, salmonella, klebsiella, enterobacter, saureus,
+                legionella, mycoplasma, pseudomonas, influenza, parainfluenza, rsv, adenovirus,
+                coronavirus, sarsCov2, metapneumovirus, hmpv })
+            {
+                AddSuspectedCause(p, Severity.Severe, TreatmentSite.IntensiveCareUnit);
+            }
+
             return new ClinicalContext
             {
                 Variables = variables,
                 Metrics = metrics,
-                Pathogens = [],
-                SuspectedCauses = [],
+                Pathogens = pathogens,
+                SuspectedCauses = suspectedCauses,
             };
         }
 
@@ -417,6 +842,7 @@ namespace Respira.Domain.Test.Services
         private static BinaryFormula Div(Formula left, Formula right) => new(left, right, ExpressionOperator.DIV);
         private static BinaryFormula Sub(Formula left, Formula right) => new(left, right, ExpressionOperator.SUB);
         private static BinaryFormula Or(Formula left, Formula right) => new(left, right, ExpressionOperator.OR);
+        private static BinaryFormula And(Formula left, Formula right) => new(left, right, ExpressionOperator.AND);
 
         // ---- Observation / case builders ----
 
@@ -771,6 +1197,104 @@ namespace Respira.Domain.Test.Services
 
         ];
 
+        public static TheoryData<List<ClinicalObservation>, Severity, TreatmentSite, List<HeavySuspected>, List<Pathogen>> assessInfectionData =
+        [
+            new(
+                [],
+                Severity.Mild,
+                TreatmentSite.Outpatient,
+                [],
+                [
+                    _context.Pathogens.First(x => x.Name.Equals("Streptococcus pneumoniae")),
+                    _context.Pathogens.First(x => x.Name.Equals("Haemophilus influenzae")),
+                    _context.Pathogens.First(x => x.Name.Equals("Moraxella catarrhalis")),
+                    _context.Pathogens.First(x => x.Name.Equals("Mycoplasma pneumoniae")),
+                    _context.Pathogens.First(x => x.Name.Equals("Chlamydia pneumoniae")),
+                    _context.Pathogens.First(x => x.Name.Equals("Influenza virus")),
+                    _context.Pathogens.First(x => x.Name.Equals("Parainfluenza virus")),
+                    _context.Pathogens.First(x => x.Name.Equals("Respiratory syncytial virus (RSV)")),
+                    _context.Pathogens.First(x => x.Name.Equals("Enterovirus")),
+                    _context.Pathogens.First(x => x.Name.Equals("Rhinovirus")),
+                    _context.Pathogens.First(x => x.Name.Equals("Adenovirus")),
+                    _context.Pathogens.First(x => x.Name.Equals("Coronavirus")),
+                    _context.Pathogens.First(x => x.Name.Equals("SARS-CoV-2")),
+                    _context.Pathogens.First(x => x.Name.Equals("Bocavirus")),
+                ]
+            ),
+            new(
+                [
+                    // Pseudomonas risk factors
+                    Obs("HOSPITALIZATION-90D", true),
+                    Obs("PRIOR-PSEUDOMONAS", true)
+                ],
+                Severity.Mild,
+                TreatmentSite.Outpatient,
+                [
+                    new HeavySuspected(_context.Pathogens.First(x => x.Name.Equals("Pseudomonas aeruginosa")), (1m / 3m) + 0.5m),
+                    new HeavySuspected(_context.Pathogens.First(x => x.Name.Equals("Methicillin-Resistant Staphylococcus aureus (MRSA)")), 1m / 2m),
+                ],
+                [
+                    _context.Pathogens.First(x => x.Name.Equals("Streptococcus pneumoniae")),
+                    _context.Pathogens.First(x => x.Name.Equals("Haemophilus influenzae")),
+                    _context.Pathogens.First(x => x.Name.Equals("Moraxella catarrhalis")),
+                    _context.Pathogens.First(x => x.Name.Equals("Mycoplasma pneumoniae")),
+                    _context.Pathogens.First(x => x.Name.Equals("Chlamydia pneumoniae")),
+                    _context.Pathogens.First(x => x.Name.Equals("Influenza virus")),
+                    _context.Pathogens.First(x => x.Name.Equals("Parainfluenza virus")),
+                    _context.Pathogens.First(x => x.Name.Equals("Respiratory syncytial virus (RSV)")),
+                    _context.Pathogens.First(x => x.Name.Equals("Enterovirus")),
+                    _context.Pathogens.First(x => x.Name.Equals("Rhinovirus")),
+                    _context.Pathogens.First(x => x.Name.Equals("Adenovirus")),
+                    _context.Pathogens.First(x => x.Name.Equals("Coronavirus")),
+                    _context.Pathogens.First(x => x.Name.Equals("SARS-CoV-2")),
+                    _context.Pathogens.First(x => x.Name.Equals("Bocavirus")),
+                ]
+            ),
+            new(
+                [
+                    // With age being > 65, Streptococcus pneumoniae and Acinetobacter baumannii
+                    // should be considered as a heavy suspected.
+                    // With alcohol abuse, Streptococcus pneumoniae, Haemophilus influenzae,
+                    // Klebsiella pneumoniae and Acinetobacter baumannii should be considered as
+                    // a heavy suspected.
+                    Obs("AGE", 70m),
+                    Obs("FEMALE", false),
+                    Obs("ALCOHOL-ABUSE", true),
+                    Obs("SMOKING", false),
+                    Obs("SEVERE-INTERNAL-DISEASE", false),
+                ],
+                Severity.Mild,
+                TreatmentSite.Outpatient,
+                [
+                    // Score = sum(1st_priority_score + 2nd) + 1 = 1 + 1/2 + 1 = 2.5
+                    new HeavySuspected(_context.Pathogens.First(x => x.Name.Equals("Streptococcus pneumoniae")), 2.5m),
+                    // Score = sum(3rd_priority_score) = 1/3
+                    new HeavySuspected(_context.Pathogens.First(x => x.Name.Equals("Klebsiella pneumoniae")), 1m / 3m),
+                    // Score = sum(1st_priority_score) = 1
+                    new HeavySuspected(_context.Pathogens.First(x => x.Name.Equals("Acinetobacter baumannii")), 1m),
+                    // Score = sum(4th_priority_score) + 1 = 1/4 + 1 = 1.25
+                    new HeavySuspected(_context.Pathogens.First(x => x.Name.Equals("Haemophilus influenzae")), 1.25m),
+                ],
+                [
+                    // _context.Pathogens.First(x => x.Name.Equals("Streptococcus pneumoniae")),
+                    // _context.Pathogens.First(x => x.Name.Equals("Haemophilus influenzae")),
+                    _context.Pathogens.First(x => x.Name.Equals("Moraxella catarrhalis")),
+                    _context.Pathogens.First(x => x.Name.Equals("Mycoplasma pneumoniae")),
+                    _context.Pathogens.First(x => x.Name.Equals("Chlamydia pneumoniae")),
+                    _context.Pathogens.First(x => x.Name.Equals("Influenza virus")),
+                    _context.Pathogens.First(x => x.Name.Equals("Parainfluenza virus")),
+                    _context.Pathogens.First(x => x.Name.Equals("Respiratory syncytial virus (RSV)")),
+                    _context.Pathogens.First(x => x.Name.Equals("Enterovirus")),
+                    _context.Pathogens.First(x => x.Name.Equals("Rhinovirus")),
+                    _context.Pathogens.First(x => x.Name.Equals("Adenovirus")),
+                    _context.Pathogens.First(x => x.Name.Equals("Coronavirus")),
+                    _context.Pathogens.First(x => x.Name.Equals("SARS-CoV-2")),
+                    _context.Pathogens.First(x => x.Name.Equals("Bocavirus")),
+                ]
+            ),
+
+        ];
+
         // ---- Tests ----
 
         [Theory]
@@ -812,6 +1336,34 @@ namespace Respira.Domain.Test.Services
             Assert.Equal(expectedSeverity, result.Data.Severity);
             Assert.Equal(expectedTreatmentSite, result.Data.TreatmentSite);
             Assert.NotEmpty(result.Data.MetricsDiagnoses);
+        }
+
+        [Theory]
+        [MemberData(nameof(assessInfectionData))]
+        public void AssessInfectionTest_Success(List<ClinicalObservation> observations, Severity expectedSeverity, TreatmentSite expectedTreatmentSite, List<HeavySuspected> heavySuspected, List<Pathogen> pathogens)
+        {
+            var result = _service.AssessInfection(expectedSeverity, expectedTreatmentSite, observations);
+            Assert.True(result.IsSuccess());
+            Assert.Equal(ApplicationStatus.Success, result.StatusCode);
+            Assert.Null(result.Error);
+            Assert.NotNull(result.Data);
+
+            Assert.Equal(heavySuspected.Count, result.Data.HeavySuspected.Count());
+            foreach (var hs in heavySuspected)
+            {
+                // Check if the expected heavy suspected is contained in the result
+                Assert.Contains(hs, result.Data.HeavySuspected);
+
+                var resultHs = Assert.Single(result.Data.HeavySuspected, x => x.Pathogen.Id == hs.Pathogen.Id);
+                Assert.Equal(hs.PriorityScore, resultHs.PriorityScore, 4);
+            }
+
+            // Check if the expected pathogens are contained in the result
+            Assert.Equal(pathogens.Count, result.Data.WorthSuspected.Count());
+            foreach (var p in pathogens)
+            {
+                Assert.Contains(p, result.Data.WorthSuspected);
+            }
         }
     }
 }

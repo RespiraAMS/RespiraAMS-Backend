@@ -9,6 +9,6 @@ namespace Respira.Domain.Services
     {
         decimal CalculateMetricsScore(ScoreMetrics metrics, IEnumerable<ClinicalObservation> observations);
         Result<SeverityDiagnosis> DiagnoseSeverity(IEnumerable<ClinicalObservation> observations);
-        Result<InfectionProbability> InfectionProbability(Severity severity, TreatmentSite treatmentSite, IEnumerable<ClinicalObservation> observations);
+        Result<InfectionAssessment> AssessInfection(Severity severity, TreatmentSite treatmentSite, IEnumerable<ClinicalObservation> observations);
     }
 }
