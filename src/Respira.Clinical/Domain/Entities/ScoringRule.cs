@@ -45,17 +45,24 @@ namespace Respira.Domain.Entities
         /// <returns>Score</returns>
         public decimal GetScore(IEnumerable<ClinicalObservation> observations)
         {
-            // A rule cannot be evaluated when any of its variables has no observation.
-            // Skip the rule (contribute 0) so the remaining criteria are still counted.
-            if (Variables.Any(v => !observations.Any(o => o.Variable.Code.Equals(v.Code))))
-            {
-                return 0;
-            }
+            // // A rule cannot be evaluated when any of its variables has no observation.
+            // // Skip the rule (contribute 0) so the remaining criteria are still counted.
+            // if (Variables.Any(v => !observations.Any(o => o.Variable.Code.Equals(v.Code))))
+            // {
+            //     return 0;
+            // }
 
             // Check if the result is safe to parse
             var sastified = Criterion.IsCriterionSatisfied(observations);
             if (sastified is bool x)
             {
+                // Check if the obsevations provide enoughs information to evaluate the score function
+                if (ScoreFunction.Variables.Any(v => !observations.Any(o => o.Variable.Code.Equals(v.Code))))
+                {
+                    var variablesNeeded = string.Join(",", ScoreFunction.Variables.Select(x => x.Code));
+                    throw new InvalidOperationException($"Score function requires observations for variables [{variablesNeeded}]");
+                }
+
                 var score = ScoreFunction.ToExpression(observations).Evaluate();
                 if (score is decimal y)
                 {

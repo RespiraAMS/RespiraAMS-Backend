@@ -41,11 +41,6 @@ namespace Respira.Domain.Entities
 
         public bool IsFactorSasified(IEnumerable<ClinicalObservation> observations)
         {
-            if (Variables.Any(v => !observations.Any(o => o.Variable.Code.Equals(v.Code))))
-            {
-                return false;
-            }
-
             var result = Criterion.IsCriterionSatisfied(observations);
             if (result is bool x)
             {

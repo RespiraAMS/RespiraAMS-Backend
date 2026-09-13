@@ -1193,6 +1193,8 @@ namespace Respira.Domain.Test.Services
             [
                 // If CURB-65, the result should be mild + outpatient
                 Obs("CONFUSION", true),
+                Obs("FEMALE", false),
+                Obs("AGE", 20m)
             ], Severity.Moderate, TreatmentSite.Inpatient),
 
         ];
