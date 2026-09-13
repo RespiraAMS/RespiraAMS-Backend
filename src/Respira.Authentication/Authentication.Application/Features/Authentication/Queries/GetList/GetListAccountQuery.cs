@@ -2,5 +2,8 @@ using Respira.ServiceDefaults.Contracts.CQRS;
 
 namespace Authentication.Application.Features.Authentication.Queries.GetList
 {
-    public record GetListAccountQuery : IQuery { }
+    public record GetListAccountQuery : IQuery
+    {
+        public int? Page { get; set; }
+    }
 }

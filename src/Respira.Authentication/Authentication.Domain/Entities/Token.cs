@@ -13,7 +13,7 @@ namespace Authentication.Domain.Entities
         public required string HashToken { get; init; }
 
         /// <summary>ID of the owning account</summary>
-        public Guid AuthUserId { get; init; }
+        public Guid AccountId { get; init; }
 
         /// <summary>Navigation to the owning account</summary>
         public Account? Account { get; init; }

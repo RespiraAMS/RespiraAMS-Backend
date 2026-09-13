@@ -29,14 +29,14 @@ namespace Authentication.Application.Features.Authentication.Queries.GetList
             var paginationParam = new PaginationParam();
 
             var pagedAccounts = await accountsQuery.ToPagedListAsync(
-                paginationParam.Page,
+                query.Page ?? paginationParam.Page,
                 paginationParam.Size
             );
 
             var result = new Pagination<Account>(
                 new PaginationMetadata
                 {
-                    CurrentPage = paginationParam.Page,
+                    CurrentPage = query.Page ?? paginationParam.Page,
                     PageSize = paginationParam.Size,
                     TotalItemCount = pagedAccounts.TotalItemCount,
                     PageCount = pagedAccounts.PageCount,
