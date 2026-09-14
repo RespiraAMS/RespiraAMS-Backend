@@ -15,6 +15,7 @@
 			<PrivateAssets>all</PrivateAssets>
 		</PackageReference>
 		<PackageReference Include="ZiggyCreatures.FusionCache" />
+		<PackageReference Include="MailKit" />
 	</ItemGroup>
 
 	<PropertyGroup>

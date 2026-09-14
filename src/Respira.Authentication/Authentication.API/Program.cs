@@ -1,8 +1,17 @@
+using Authentication.Application.Constracts.Email;
+using Authentication.Infrastructure.Email;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+builder.Services
+    .AddOptions<EmailOption>()
+    .BindConfiguration(EmailOption.SectionName)
+    .ValidateDataAnnotations()
+    .ValidateOnStart();
+builder.Services.AddScoped<IEmailService, EmailService>();
 
 var app = builder.Build();
 
