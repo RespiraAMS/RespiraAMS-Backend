@@ -1,4 +1,4 @@
-﻿<Solution>
+<Solution>
   <Project Path="src/Respira.AppHost/Respira.AppHost.csproj" />
   <Project Path="src/Respira.Gateway/Respira.Gateway.csproj" />
   <Project Path="src/Respira.ServiceDefaults/Respira.ServiceDefaults.csproj" />
