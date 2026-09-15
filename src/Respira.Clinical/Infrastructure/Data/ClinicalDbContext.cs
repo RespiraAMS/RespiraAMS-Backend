@@ -1,13 +1,28 @@
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Storage;
 using Respira.Application.Contracts.Data;
 using Respira.Domain.Entities;
+using Respira.Domain.Models;
 using Respira.ServiceDefaults.Models;
 
 namespace Respira.Infrastructure.Data
 {
     public class ClinicalDbContext(DbContextOptions<ClinicalDbContext> options) : DbContext(options), IDbContext
     {
+        private static readonly JsonSerializerOptions s_jsonOptions = new()
+        {
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+            Converters = { new JsonStringEnumConverter() }
+        };
+
+        private static readonly ValueComparer<Formula> s_formulaComparer = new(
+            (l, r) => JsonSerializer.Serialize(l, s_jsonOptions) == JsonSerializer.Serialize(r, s_jsonOptions),
+            v => JsonSerializer.Serialize(v, s_jsonOptions).GetHashCode(),
+            v => v);
+
         private IExecutionStrategy GetExecutionStrategy() => base.Database.CreateExecutionStrategy();
 
         public DbSet<ClinicalVariable> ClinicalVariables { get; set; }
@@ -133,7 +148,12 @@ namespace Respira.Infrastructure.Data
 
             modelBuilder.Entity<Criterion>().ToTable("criteria");
             modelBuilder.Entity<Criterion>().Ignore(x => x.Variables);
-            modelBuilder.Entity<Criterion>().OwnsOne(x => x.Formula, builder => builder.ToJson());
+            modelBuilder.Entity<Criterion>().Property(x => x.Formula)
+                .HasColumnType("jsonb")
+                .HasConversion(
+                    v => JsonSerializer.Serialize(v, s_jsonOptions),
+                    v => JsonSerializer.Deserialize<Formula>(v, s_jsonOptions)!)
+                .Metadata.SetValueComparer(s_formulaComparer);
 
             // Config on pathogen
             modelBuilder.Entity<Pathogen>().ToTable("pathogens");
@@ -142,7 +162,7 @@ namespace Respira.Infrastructure.Data
             modelBuilder.Entity<RiskFactor>().ToTable("risk_factors");
             modelBuilder.Entity<RiskFactor>()
                 .HasOne(x => x.Pathogen)
-                .WithMany()
+                .WithMany(x => x.RiskFactors)
                 .HasForeignKey(x => x.PathogenId);
             modelBuilder.Entity<RiskFactor>()
                 .HasOne(x => x.Criterion)
@@ -164,7 +184,12 @@ namespace Respira.Infrastructure.Data
                 .WithMany()
                 .HasForeignKey(x => x.CriterionId);
             modelBuilder.Entity<ScoringRule>().Ignore(x => x.Variables);
-            modelBuilder.Entity<ScoringRule>().OwnsOne(x => x.ScoreFunction, builder => builder.ToJson());
+            modelBuilder.Entity<ScoringRule>().Property(x => x.ScoreFunction)
+                .HasColumnType("jsonb")
+                .HasConversion(
+                    v => JsonSerializer.Serialize(v, s_jsonOptions),
+                    v => JsonSerializer.Deserialize<Formula>(v, s_jsonOptions)!)
+                .Metadata.SetValueComparer(s_formulaComparer);
         }
 
         public override async ValueTask DisposeAsync()

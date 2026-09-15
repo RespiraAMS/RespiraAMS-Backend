@@ -1,6 +1,7 @@
 <Solution>
     <Project Path="src/Respira.Clinical/API/Respira.Clinical.API.csproj" />
     <Project Path="src/Respira.Clinical/Application/Respira.Application.csproj" />
+    <Project Path="src/Respira.Clinical/DI/Respira.DI.csproj" />
     <Project Path="src/Respira.Clinical/Domain/Respira.Domain.csproj" />
     <Project Path="src/Respira.AppHost/Respira.AppHost.csproj" />
     <Project Path="src/Respira.Clinical/Infrastructure/Respira.Infrastructure.csproj" />

@@ -1,0 +1,185 @@
+{
+    "clinicalVariables": [
+        {
+            "id": "00000000-0000-0000-0000-100000000001",
+            "name": "Age",
+            "code": "AGE",
+            "description": "Patient age",
+            "valueType": "Numeric",
+            "canonicalUnit": "year"
+        },
+        {
+            "id": "00000000-0000-0000-0000-100000000002",
+            "name": "Is female sex",
+            "code": "FEMALE",
+            "description": "Is the patient female",
+            "valueType": "Boolean",
+            "canonicalUnit": null
+        },
+        {
+            "id": "00000000-0000-0000-0000-100000000003",
+            "name": "Height",
+            "code": "HEIGHT",
+            "description": "Patient height",
+            "valueType": "Numeric",
+            "canonicalUnit": "cm"
+        },
+        {
+            "id": "00000000-0000-0000-0000-100000000004",
+            "name": "Weight",
+            "code": "WEIGHT",
+            "description": "Patient weight",
+            "valueType": "Numeric",
+            "canonicalUnit": "kg"
+        },
+        {
+            "id": "00000000-0000-0000-0000-100000000005",
+            "name": "Confusion",
+            "code": "CONFUSION",
+            "description": "Does the patient have altered mental status",
+            "valueType": "Boolean",
+            "canonicalUnit": null
+        },
+        {
+            "id": "00000000-0000-0000-0000-100000000006",
+            "name": "Respiratory rate",
+            "code": "RR",
+            "description": "Patient respiratory rate",
+            "valueType": "Numeric",
+            "canonicalUnit": "breaths/min"
+        },
+        {
+            "id": "00000000-0000-0000-0000-100000000007",
+            "name": "Systolic blood pressure",
+            "code": "SBP",
+            "description": "Patient systolic blood pressure",
+            "valueType": "Numeric",
+            "canonicalUnit": "mmHg"
+        },
+        {
+            "id": "00000000-0000-0000-0000-100000000008",
+            "name": "Diastolic blood pressure",
+            "code": "DBP",
+            "description": "Patient diastolic blood pressure",
+            "valueType": "Numeric",
+            "canonicalUnit": "mmHg"
+        },
+        {
+            "id": "00000000-0000-0000-0000-100000000009",
+            "name": "Temperature",
+            "code": "TEMPERATURE",
+            "description": "Patient body temperature",
+            "valueType": "Numeric",
+            "canonicalUnit": "Celcius"
+        },
+        {
+            "id": "00000000-0000-0000-0000-100000000010",
+            "name": "Urea",
+            "code": "UREA",
+            "description": "Patient blood urea",
+            "valueType": "Numeric",
+            "canonicalUnit": "mmol/L"
+        },
+        {
+            "id": "00000000-0000-0000-0000-100000000011",
+            "name": "White blood cell count",
+            "code": "WBC",
+            "description": "Patient white blood cell count",
+            "valueType": "Numeric",
+            "canonicalUnit": "cells/mm3"
+        },
+        {
+            "id": "00000000-0000-0000-0000-100000000012",
+            "name": "Platelet count",
+            "code": "PLATELET",
+            "description": "Patient platelet count",
+            "valueType": "Numeric",
+            "canonicalUnit": "cells/mm3"
+        },
+        {
+            "id": "00000000-0000-0000-0000-100000000013",
+            "name": "Partial pressure of arterial oxygen (PaO₂)",
+            "code": "PAO2",
+            "description": "Arterial partial pressure of oxygen",
+            "valueType": "Numeric",
+            "canonicalUnit": "mmHg"
+        },
+        {
+            "id": "00000000-0000-0000-0000-100000000014",
+            "name": "Fraction of inspired oxygen (FiO₂)",
+            "code": "FIO2",
+            "description": "Fraction of inspired oxygen",
+            "valueType": "Numeric",
+            "canonicalUnit": null
+        },
+        {
+            "id": "00000000-0000-0000-0000-100000000015",
+            "name": "Peripheral oxygen saturation (SpO2)",
+            "code": "SPO2",
+            "description": "Peripheral oxygen saturation",
+            "valueType": "Numeric",
+            "canonicalUnit": "%"
+        },
+        {
+            "id": "00000000-0000-0000-0000-100000000016",
+            "name": "Has pleural effusion on X-Ray",
+            "code": "PLEURAL-EFFUSION",
+            "description": "Does the patient have pleural effusion on X-Ray",
+            "valueType": "Boolean",
+            "canonicalUnit": null
+        },
+        {
+            "id": "00000000-0000-0000-0000-100000000017",
+            "name": "Multilobar pulmonary lesions on chest X-ray",
+            "code": "MULTILOBAR-PULMONARY-LESION",
+            "description": "Does the patient have multilobar pulmonary lesions on chest X-ray",
+            "valueType": "Boolean",
+            "canonicalUnit": null
+        },
+        {
+            "id": "00000000-0000-0000-0000-100000000018",
+            "name": "Hypotension requiring aggressive fluid resuscitation",
+            "code": "HYPOTENSION",
+            "description": "Does the patient have hypotension requiring aggressive fluid resuscitation",
+            "valueType": "Boolean",
+            "canonicalUnit": null
+        },
+        {
+            "id": "00000000-0000-0000-0000-100000000019",
+            "name": "Requires mechanical ventilation",
+            "code": "REQUIRES-MECHANICAL-VENTILATION",
+            "description": "Does the patient require invasive mechanical ventilation",
+            "valueType": "Boolean",
+            "canonicalUnit": null
+        },
+        {
+            "id": "00000000-0000-0000-0000-100000000020",
+            "name": "Septic shock requiring vasopressor support",
+            "code": "SEPTIC-SHOCK",
+            "description": "Does the patient have septic shock requiring vasopressors",
+            "valueType": "Boolean",
+            "canonicalUnit": null
+        },
+    ],
+    "scoreMetrics": [
+        {
+            "id": "00000000-0000-0000-0000-200000000001",
+            "name": "Severity metrics CURB-65",
+            "code": "CURB-65",
+            "description": "CURB-65 metrics to assess severity of a patient",
+            "scoringRules": []
+        },
+        {
+            "id": "00000000-0000-0000-0000-200000000002",
+            "name": "ICU hospitalization criteria by IDSA/ATS",
+            "code": "IDSA/ATS",
+            "description": "IDSA/ATS metrics to assess whether a severe patient need ICU or not",
+            "scoringRules": []
+        }
+    ],
+    // Shared criteria that can be reused
+    "criteria": [],
+    "pathogens": [],
+    "suspectedCauses": [],
+
+}

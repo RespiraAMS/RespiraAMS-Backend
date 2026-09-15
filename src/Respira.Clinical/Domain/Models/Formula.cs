@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using Respira.Domain.Entities;
 using Respira.Domain.Enums;
 
@@ -9,6 +10,13 @@ namespace Respira.Domain.Models
     /// This class will be stored in database as a complex value (e.g. JSONB), so this is
     /// not an entity
     /// </summary>
+    [JsonPolymorphic(TypeDiscriminatorPropertyName = "$type")]
+    [JsonDerivedType(typeof(NumericConstantFormula), typeDiscriminator: "numeric")]
+    [JsonDerivedType(typeof(BooleanConstantFormula), typeDiscriminator: "boolean")]
+    [JsonDerivedType(typeof(VariableFormula), typeDiscriminator: "variable")]
+    [JsonDerivedType(typeof(UnaryFormula), typeDiscriminator: "unary")]
+    [JsonDerivedType(typeof(BinaryFormula), typeDiscriminator: "binary")]
+    [JsonDerivedType(typeof(TernaryFormula), typeDiscriminator: "ternary")]
     public abstract class Formula
     {
         /// <summary>
@@ -34,13 +42,16 @@ namespace Respira.Domain.Models
     /// <param name="constant">Numeric constant value</param>
     public class NumericConstantFormula(decimal constant) : Formula
     {
+        // Need to store this for JSON serialization
+        public decimal Constant { get; } = constant;
+
         public override ExpressionResultType ResultType => ExpressionResultType.Numeric;
 
         public override IEnumerable<ClinicalVariable> Variables => [];
 
         public override Expression ToExpression(IEnumerable<ClinicalObservation> observations)
         {
-            return new NumericalExpression(constant);
+            return new NumericalExpression(Constant);
         }
     }
 
@@ -50,13 +61,15 @@ namespace Respira.Domain.Models
     /// <param name="constant">Boolean constant value</param>
     public class BooleanConstantFormula(bool constant) : Formula
     {
+        // Need to store this for JSON serialization
+        public bool Constant { get; } = constant;
         public override ExpressionResultType ResultType => ExpressionResultType.Boolean;
 
         public override IEnumerable<ClinicalVariable> Variables => [];
 
         public override Expression ToExpression(IEnumerable<ClinicalObservation> observations)
         {
-            return new BooleanExpression(constant);
+            return new BooleanExpression(Constant);
         }
     }
 

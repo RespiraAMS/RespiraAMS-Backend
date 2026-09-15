@@ -18,4 +18,9 @@
         <PackageReference Include="Aspire.Npgsql" />
         <PackageReference Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" />
     </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="../../Respira.ServiceDefaults/Respira.ServiceDefaults.csproj" />
+        <ProjectReference Include="../DI/Respira.DI.csproj" />
+    </ItemGroup>
 </Project>

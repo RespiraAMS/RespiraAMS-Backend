@@ -24,6 +24,8 @@ namespace Respira.Domain.Entities
         /// </summary>
         public IEnumerable<ClinicalVariable> Variables => Formula.Variables;
 
+        private Criterion() { }
+
         public Criterion(string name, Formula formula)
         {
             if (formula.ResultType != ExpressionResultType.Boolean)
