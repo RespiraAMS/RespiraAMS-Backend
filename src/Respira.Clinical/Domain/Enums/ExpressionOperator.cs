@@ -1,8 +1,11 @@
+using System.Text.Json.Serialization;
+
 namespace Respira.Domain.Enums
 {
     /// <summary>
     /// Expression operator
     /// </summary>
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum ExpressionOperator
     {
         ADD,

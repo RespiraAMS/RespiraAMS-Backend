@@ -8,6 +8,7 @@ using Wolverine.EntityFrameworkCore;
 using Wolverine.FluentValidation;
 using Wolverine.RabbitMQ;
 using Scalar.AspNetCore;
+using Respira.Application;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -38,22 +39,14 @@ builder.Services.AddCustomErrorHandling();
 // Add service discovery
 builder.AddServiceDefaults();
 
-// Add mapping profiles
-// builder.Services.AddProfiles();
-
-// Add validators
-// builder.Services.AddFluentValidators();
-
-// Add domain services
-// builder.Services.AddServices();
-
-// Add infrastructure
-builder.AddInfrastructure();
+// DI registration
+builder.AddDI();
 
 // Add Wolverine
 builder.Host.UseWolverine(opts =>
 {
     opts.RestoreV5Defaults();
+    opts.Discovery.IncludeAssembly(typeof(ApplicationMarker).Assembly);
 
     opts.PersistMessagesWithPostgresql(conn, "clinical_db");
     opts.UseEntityFrameworkCoreTransactions();

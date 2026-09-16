@@ -17,7 +17,7 @@ namespace Respira.Domain.Test.Services
         public DiagnoseServiceTest()
         {
             var logger = new Mock<ILogger<DiagnoseService>>().Object;
-            _service = new DiagnoseService(_context, logger);
+            _service = new DiagnoseService(logger);
         }
 
         private static ClinicalContext CreateContext()
@@ -1330,7 +1330,7 @@ namespace Respira.Domain.Test.Services
         [MemberData(nameof(successDiagnosis))]
         public void DiagnoseSeverityTest_Diagnose_Success(List<ClinicalObservation> observations, Severity expectedSeverity, TreatmentSite expectedTreatmentSite)
         {
-            var result = _service.DiagnoseSeverity(observations);
+            var result = _service.DiagnoseSeverity(_context, observations);
             Assert.True(result.IsSuccess());
             Assert.Equal(ApplicationStatus.Success, result.StatusCode);
             Assert.Null(result.Error);
@@ -1344,7 +1344,7 @@ namespace Respira.Domain.Test.Services
         [MemberData(nameof(assessInfectionData))]
         public void AssessInfectionTest_Success(List<ClinicalObservation> observations, Severity expectedSeverity, TreatmentSite expectedTreatmentSite, List<HeavySuspected> heavySuspected, List<Pathogen> pathogens)
         {
-            var result = _service.AssessInfection(expectedSeverity, expectedTreatmentSite, observations);
+            var result = _service.AssessInfection(_context, observations, expectedSeverity, expectedTreatmentSite);
             Assert.True(result.IsSuccess());
             Assert.Equal(ApplicationStatus.Success, result.StatusCode);
             Assert.Null(result.Error);

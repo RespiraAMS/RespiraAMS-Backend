@@ -10,9 +10,8 @@ namespace Respira.Domain.Services
     /// <summary>
     /// Diagnose service
     /// </summary>
-    /// <param name="context">Clinical context</param>
     /// <param name="logger">Logger</param>
-    public class DiagnoseService(ClinicalContext context, ILogger<DiagnoseService> logger) : IDiagnoseService
+    public class DiagnoseService(ILogger<DiagnoseService> logger) : IDiagnoseService
     {
         /// <summary>
         /// Calculate metrics score
@@ -114,7 +113,7 @@ namespace Respira.Domain.Services
             return score >= 3;
         }
 
-        public Result<SeverityDiagnosis> DiagnoseSeverity(IEnumerable<ClinicalObservation> observations)
+        public Result<SeverityDiagnosis> DiagnoseSeverity(ClinicalContext context, IEnumerable<ClinicalObservation> observations)
         {
             // We will prioritize the highest severity and treatment site,
             // but it must be a valid combination. For example, if severity
@@ -240,7 +239,7 @@ namespace Respira.Domain.Services
             return 1m / priority;
         }
 
-        public Result<InfectionAssessment> AssessInfection(Severity severity, TreatmentSite treatmentSite, IEnumerable<ClinicalObservation> observations)
+        public Result<InfectionAssessment> AssessInfection(ClinicalContext context, IEnumerable<ClinicalObservation> observations, Severity severity, TreatmentSite treatmentSite)
         {
             /*
              * To assess infection, we will proceed with these steps:

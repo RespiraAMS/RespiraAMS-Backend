@@ -5,6 +5,8 @@ namespace Respira.Infrastructure.Data
         public List<ClinicalVariableDto> ClinicalVariables { get; init; } = [];
         public List<ScoreMetricsDto> ScoreMetrics { get; init; } = [];
         public List<CriterionDto> Criteria { get; init; } = [];
+        public List<PathogenDto> Pathogens { get; init; } = [];
+        public List<SuspectedCauseDto> SuspectedCauses { get; init; } = [];
     }
 
     public record ClinicalVariableDto
@@ -57,5 +59,27 @@ namespace Respira.Infrastructure.Data
     public record FormulaVariableDto
     {
         public string Id { get; init; } = string.Empty;
+    }
+
+    public record PathogenDto
+    {
+        public string Id { get; init; } = string.Empty;
+        public string Name { get; init; } = string.Empty;
+        public string Description { get; init; } = string.Empty;
+        public bool IsAtypical { get; init; }
+        public List<RiskFactorDto> RiskFactors { get; init; } = [];
+    }
+
+    public record RiskFactorDto
+    {
+        public string CriterionId { get; init; } = string.Empty;
+        public int Priority { get; init; }
+    }
+
+    public record SuspectedCauseDto
+    {
+        public string PathogenId { get; init; } = string.Empty;
+        public string Severity { get; init; } = string.Empty;
+        public string TreatmentSite { get; init; } = string.Empty;
     }
 }

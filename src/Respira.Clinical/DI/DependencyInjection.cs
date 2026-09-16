@@ -5,12 +5,31 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Respira.Application.Contracts.Data;
+using Respira.Domain.Services;
 using Respira.Infrastructure.Data;
 
 namespace Respira.DI
 {
     public static class DependencyInjection
     {
+        public static void AddDI(this IHostApplicationBuilder builder)
+        {
+            AddDomain(builder);
+            AddInfrastructure(builder);
+        }
+
+        # region Domain DI
+
+        public static void AddDomain(this IHostApplicationBuilder builder)
+        {
+            builder.Services.AddScoped<IDiagnoseService, DiagnoseService>();
+        }
+
+        #endregion
+
+
+        #region Infrastructure DI
+
         public static void AddInfrastructure(this IHostApplicationBuilder builder)
         {
             builder.AddNpgsqlDbContext<ClinicalDbContext>("clinicalDb");
@@ -51,5 +70,7 @@ namespace Respira.DI
                 await DbInitializer.InitializeAsync(context, options, logger);
             }
         }
+
+        # endregion
     }
 }

@@ -10,6 +10,9 @@ namespace Respira.Infrastructure.Data
         public required List<ClinicalVariable> ClinicalVariables { get; init; }
         public required List<Criterion> Criteria { get; init; }
         public required List<ScoreMetrics> ScoreMetrics { get; init; }
+        public required List<Pathogen> Pathogens { get; init; }
+        public required List<RiskFactor> RiskFactors { get; init; }
+        public required List<SuspectedCause> SuspectedCauses { get; init; }
     }
 
     public static class DataSeeder
@@ -94,11 +97,58 @@ namespace Respira.Infrastructure.Data
                 };
             });
 
+            var allRiskFactors = new List<RiskFactor>();
+            var pathogens = dto.Pathogens.ConvertAll(p =>
+            {
+                var pathogenId = GenerateId(p.Id);
+                var riskFactors = p.RiskFactors.ConvertAll(rf =>
+                {
+                    var criterionId = GenerateId(rf.CriterionId);
+                    var criterion = criterionLookup[criterionId];
+                    var riskFactor = new RiskFactor
+                    {
+                        PathogenId = pathogenId,
+                        CriterionId = criterionId,
+                        Criterion = criterion,
+                        Priority = rf.Priority,
+                    };
+                    allRiskFactors.Add(riskFactor);
+                    return riskFactor;
+                });
+
+                return new Pathogen
+                {
+                    Id = pathogenId,
+                    Name = p.Name,
+                    Description = p.Description,
+                    IsAtypical = p.IsAtypical,
+                    RiskFactors = riskFactors,
+                };
+            });
+
+            var pathogenLookup = pathogens.ToDictionary(p => p.Id);
+
+            var suspectedCauses = dto.SuspectedCauses.ConvertAll(sc =>
+            {
+                var pathogenId = GenerateId(sc.PathogenId);
+                var pathogen = pathogenLookup[pathogenId];
+                return new SuspectedCause
+                {
+                    PathogenId = pathogenId,
+                    Pathogen = pathogen,
+                    Severity = ParseEnum(sc.Severity, Severity.Mild),
+                    TreatmentSite = ParseEnum(sc.TreatmentSite, TreatmentSite.Outpatient),
+                };
+            });
+
             return new SeedData
             {
                 ClinicalVariables = variables,
                 Criteria = criteria,
                 ScoreMetrics = scoreMetrics,
+                Pathogens = pathogens,
+                RiskFactors = allRiskFactors,
+                SuspectedCauses = suspectedCauses,
             };
         }
 

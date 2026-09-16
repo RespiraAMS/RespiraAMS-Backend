@@ -1781,4 +1781,330 @@
             }
         },
     ],
+    "pathogens": [
+        // ---- Pathogens with risk factors (Table 3.2) ----
+        {
+            "id": "00000000-0000-0000-0000-500000000001",
+            "name": "Streptococcus pneumoniae",
+            "description": "Most common bacterial cause of community-acquired pneumonia",
+            "isAtypical": false,
+            "riskFactors": [
+                { "criterionId": "00000000-0000-0000-0000-400000000019", "priority": 1 },
+                { "criterionId": "00000000-0000-0000-0000-400000000020", "priority": 2 },
+                { "criterionId": "00000000-0000-0000-0000-400000000021", "priority": 3 }
+            ]
+        },
+        {
+            "id": "00000000-0000-0000-0000-500000000002",
+            "name": "Haemophilus influenzae",
+            "description": "Common pathogen in patients with chronic lung disease",
+            "isAtypical": false,
+            "riskFactors": [
+                { "criterionId": "00000000-0000-0000-0000-400000000022", "priority": 1 },
+                { "criterionId": "00000000-0000-0000-0000-400000000023", "priority": 2 },
+                { "criterionId": "00000000-0000-0000-0000-400000000024", "priority": 3 },
+                { "criterionId": "00000000-0000-0000-0000-400000000025", "priority": 4 },
+                { "criterionId": "00000000-0000-0000-0000-400000000026", "priority": 5 }
+            ]
+        },
+        {
+            "id": "00000000-0000-0000-0000-500000000003",
+            "name": "Staphylococcus aureus",
+            "description": "Common in structural lung disease or post-viral infection",
+            "isAtypical": false,
+            "riskFactors": [
+                { "criterionId": "00000000-0000-0000-0000-400000000027", "priority": 1 },
+                { "criterionId": "00000000-0000-0000-0000-400000000028", "priority": 2 },
+                { "criterionId": "00000000-0000-0000-0000-400000000029", "priority": 3 },
+                { "criterionId": "00000000-0000-0000-0000-400000000030", "priority": 4 }
+            ]
+        },
+        {
+            "id": "00000000-0000-0000-0000-500000000004",
+            "name": "Methicillin-Resistant Staphylococcus aureus (MRSA)",
+            "description": "Healthcare-associated resistant staph",
+            "isAtypical": false,
+            "riskFactors": [
+                { "criterionId": "00000000-0000-0000-0000-400000000031", "priority": 1 },
+                { "criterionId": "00000000-0000-0000-0000-400000000032", "priority": 2 }
+            ]
+        },
+        {
+            "id": "00000000-0000-0000-0000-500000000005",
+            "name": "Klebsiella pneumoniae",
+            "description": "Enteric Gram-negative bacillus associated with aspiration",
+            "isAtypical": false,
+            "riskFactors": [
+                { "criterionId": "00000000-0000-0000-0000-400000000033", "priority": 1 },
+                { "criterionId": "00000000-0000-0000-0000-400000000034", "priority": 2 },
+                { "criterionId": "00000000-0000-0000-0000-400000000035", "priority": 3 },
+                { "criterionId": "00000000-0000-0000-0000-400000000036", "priority": 4 },
+                { "criterionId": "00000000-0000-0000-0000-400000000037", "priority": 5 }
+            ]
+        },
+        {
+            "id": "00000000-0000-0000-0000-500000000006",
+            "name": "Pseudomonas aeruginosa",
+            "description": "Pathogen in structural lung disease and prior Pseudomonas infection",
+            "isAtypical": false,
+            "riskFactors": [
+                { "criterionId": "00000000-0000-0000-0000-400000000038", "priority": 1 },
+                { "criterionId": "00000000-0000-0000-0000-400000000039", "priority": 2 },
+                { "criterionId": "00000000-0000-0000-0000-400000000040", "priority": 3 }
+            ]
+        },
+        {
+            "id": "00000000-0000-0000-0000-500000000007",
+            "name": "Acinetobacter baumannii",
+            "description": "Multidrug-resistant pathogen in severe illness",
+            "isAtypical": false,
+            "riskFactors": [
+                { "criterionId": "00000000-0000-0000-0000-400000000041", "priority": 1 }
+            ]
+        },
+        {
+            "id": "00000000-0000-0000-0000-500000000008",
+            "name": "Anaerobic bacteria",
+            "description": "Associated with aspiration pneumonia",
+            "isAtypical": false,
+            "riskFactors": [
+                { "criterionId": "00000000-0000-0000-0000-400000000042", "priority": 1 },
+                { "criterionId": "00000000-0000-0000-0000-400000000043", "priority": 2 }
+            ]
+        },
+        // ---- Pathogens from Table 1 with no specific risk factors ----
+        {
+            "id": "00000000-0000-0000-0000-500000000009",
+            "name": "Moraxella catarrhalis",
+            "description": "Common in patients with chronic lung disease",
+            "isAtypical": false,
+            "riskFactors": []
+        },
+        {
+            "id": "00000000-0000-0000-0000-500000000010",
+            "name": "Mycoplasma pneumoniae",
+            "description": "Atypical pathogen, common in young adults",
+            "isAtypical": true,
+            "riskFactors": []
+        },
+        {
+            "id": "00000000-0000-0000-0000-500000000011",
+            "name": "Chlamydia pneumoniae",
+            "description": "Atypical pathogen, often co-infection",
+            "isAtypical": true,
+            "riskFactors": []
+        },
+        {
+            "id": "00000000-0000-0000-0000-500000000012",
+            "name": "Legionella spp",
+            "description": "Atypical pathogen, severe CAP",
+            "isAtypical": true,
+            "riskFactors": []
+        },
+        {
+            "id": "00000000-0000-0000-0000-500000000013",
+            "name": "Bordetella pertussis",
+            "description": "Causes pertussis-associated pneumonia",
+            "isAtypical": false,
+            "riskFactors": []
+        },
+        {
+            "id": "00000000-0000-0000-0000-500000000014",
+            "name": "Escherichia coli (E. coli)",
+            "description": "Enteric Gram-negative bacillus",
+            "isAtypical": false,
+            "riskFactors": []
+        },
+        {
+            "id": "00000000-0000-0000-0000-500000000015",
+            "name": "Salmonella",
+            "description": "Enteric Gram-negative bacillus",
+            "isAtypical": false,
+            "riskFactors": []
+        },
+        {
+            "id": "00000000-0000-0000-0000-500000000016",
+            "name": "Enterobacter",
+            "description": "Enteric Gram-negative bacillus",
+            "isAtypical": false,
+            "riskFactors": []
+        },
+        // ---- Respiratory viruses ----
+        {
+            "id": "00000000-0000-0000-0000-500000000017",
+            "name": "Influenza virus",
+            "description": "Most important respiratory viral pathogen",
+            "isAtypical": false,
+            "riskFactors": []
+        },
+        {
+            "id": "00000000-0000-0000-0000-500000000018",
+            "name": "Parainfluenza virus",
+            "description": "Respiratory virus",
+            "isAtypical": false,
+            "riskFactors": []
+        },
+        {
+            "id": "00000000-0000-0000-0000-500000000019",
+            "name": "Respiratory syncytial virus (RSV)",
+            "description": "Respiratory virus",
+            "isAtypical": false,
+            "riskFactors": []
+        },
+        {
+            "id": "00000000-0000-0000-0000-500000000020",
+            "name": "Adenovirus",
+            "description": "Respiratory virus",
+            "isAtypical": false,
+            "riskFactors": []
+        },
+        {
+            "id": "00000000-0000-0000-0000-500000000021",
+            "name": "Coronavirus",
+            "description": "Respiratory virus",
+            "isAtypical": false,
+            "riskFactors": []
+        },
+        {
+            "id": "00000000-0000-0000-0000-500000000022",
+            "name": "SARS-CoV-2",
+            "description": "Causative agent of COVID-19",
+            "isAtypical": false,
+            "riskFactors": []
+        },
+        {
+            "id": "00000000-0000-0000-0000-500000000023",
+            "name": "Rhinovirus",
+            "description": "Respiratory virus",
+            "isAtypical": false,
+            "riskFactors": []
+        },
+        {
+            "id": "00000000-0000-0000-0000-500000000024",
+            "name": "Enterovirus",
+            "description": "Respiratory virus",
+            "isAtypical": false,
+            "riskFactors": []
+        },
+        {
+            "id": "00000000-0000-0000-0000-500000000025",
+            "name": "Bocavirus",
+            "description": "Respiratory virus",
+            "isAtypical": false,
+            "riskFactors": []
+        },
+        {
+            "id": "00000000-0000-0000-0000-500000000026",
+            "name": "Metapneumovirus",
+            "description": "Respiratory virus",
+            "isAtypical": false,
+            "riskFactors": []
+        },
+        {
+            "id": "00000000-0000-0000-0000-500000000027",
+            "name": "Human metapneumovirus (HMPV)",
+            "description": "Respiratory virus",
+            "isAtypical": false,
+            "riskFactors": []
+        },
+        {
+            "id": "00000000-0000-0000-0000-500000000028",
+            "name": "Cytomegalovirus (CMV)",
+            "description": "Respiratory virus",
+            "isAtypical": false,
+            "riskFactors": []
+        },
+        {
+            "id": "00000000-0000-0000-0000-500000000029",
+            "name": "Epstein-Barr virus (EBV)",
+            "description": "Respiratory virus",
+            "isAtypical": false,
+            "riskFactors": []
+        }
+    ],
+    "suspectedCauses": [
+        // Group A: Mild / Outpatient
+        { "pathogenId": "00000000-0000-0000-0000-500000000001", "severity": "Mild", "treatmentSite": "Outpatient" },
+        { "pathogenId": "00000000-0000-0000-0000-500000000002", "severity": "Mild", "treatmentSite": "Outpatient" },
+        { "pathogenId": "00000000-0000-0000-0000-500000000009", "severity": "Mild", "treatmentSite": "Outpatient" },
+        { "pathogenId": "00000000-0000-0000-0000-500000000010", "severity": "Mild", "treatmentSite": "Outpatient" },
+        { "pathogenId": "00000000-0000-0000-0000-500000000011", "severity": "Mild", "treatmentSite": "Outpatient" },
+        { "pathogenId": "00000000-0000-0000-0000-500000000017", "severity": "Mild", "treatmentSite": "Outpatient" },
+        { "pathogenId": "00000000-0000-0000-0000-500000000018", "severity": "Mild", "treatmentSite": "Outpatient" },
+        { "pathogenId": "00000000-0000-0000-0000-500000000019", "severity": "Mild", "treatmentSite": "Outpatient" },
+        { "pathogenId": "00000000-0000-0000-0000-500000000020", "severity": "Mild", "treatmentSite": "Outpatient" },
+        { "pathogenId": "00000000-0000-0000-0000-500000000021", "severity": "Mild", "treatmentSite": "Outpatient" },
+        { "pathogenId": "00000000-0000-0000-0000-500000000022", "severity": "Mild", "treatmentSite": "Outpatient" },
+        { "pathogenId": "00000000-0000-0000-0000-500000000023", "severity": "Mild", "treatmentSite": "Outpatient" },
+        { "pathogenId": "00000000-0000-0000-0000-500000000024", "severity": "Mild", "treatmentSite": "Outpatient" },
+        { "pathogenId": "00000000-0000-0000-0000-500000000025", "severity": "Mild", "treatmentSite": "Outpatient" },
+        // Group B: Moderate / Inpatient
+        { "pathogenId": "00000000-0000-0000-0000-500000000001", "severity": "Moderate", "treatmentSite": "Inpatient" },
+        { "pathogenId": "00000000-0000-0000-0000-500000000010", "severity": "Moderate", "treatmentSite": "Inpatient" },
+        { "pathogenId": "00000000-0000-0000-0000-500000000011", "severity": "Moderate", "treatmentSite": "Inpatient" },
+        { "pathogenId": "00000000-0000-0000-0000-500000000002", "severity": "Moderate", "treatmentSite": "Inpatient" },
+        { "pathogenId": "00000000-0000-0000-0000-500000000014", "severity": "Moderate", "treatmentSite": "Inpatient" },
+        { "pathogenId": "00000000-0000-0000-0000-500000000015", "severity": "Moderate", "treatmentSite": "Inpatient" },
+        { "pathogenId": "00000000-0000-0000-0000-500000000005", "severity": "Moderate", "treatmentSite": "Inpatient" },
+        { "pathogenId": "00000000-0000-0000-0000-500000000016", "severity": "Moderate", "treatmentSite": "Inpatient" },
+        { "pathogenId": "00000000-0000-0000-0000-500000000008", "severity": "Moderate", "treatmentSite": "Inpatient" },
+        { "pathogenId": "00000000-0000-0000-0000-500000000012", "severity": "Moderate", "treatmentSite": "Inpatient" },
+        { "pathogenId": "00000000-0000-0000-0000-500000000013", "severity": "Moderate", "treatmentSite": "Inpatient" },
+        { "pathogenId": "00000000-0000-0000-0000-500000000017", "severity": "Moderate", "treatmentSite": "Inpatient" },
+        { "pathogenId": "00000000-0000-0000-0000-500000000018", "severity": "Moderate", "treatmentSite": "Inpatient" },
+        { "pathogenId": "00000000-0000-0000-0000-500000000019", "severity": "Moderate", "treatmentSite": "Inpatient" },
+        { "pathogenId": "00000000-0000-0000-0000-500000000024", "severity": "Moderate", "treatmentSite": "Inpatient" },
+        { "pathogenId": "00000000-0000-0000-0000-500000000023", "severity": "Moderate", "treatmentSite": "Inpatient" },
+        { "pathogenId": "00000000-0000-0000-0000-500000000020", "severity": "Moderate", "treatmentSite": "Inpatient" },
+        { "pathogenId": "00000000-0000-0000-0000-500000000021", "severity": "Moderate", "treatmentSite": "Inpatient" },
+        { "pathogenId": "00000000-0000-0000-0000-500000000022", "severity": "Moderate", "treatmentSite": "Inpatient" },
+        { "pathogenId": "00000000-0000-0000-0000-500000000025", "severity": "Moderate", "treatmentSite": "Inpatient" },
+        { "pathogenId": "00000000-0000-0000-0000-500000000026", "severity": "Moderate", "treatmentSite": "Inpatient" },
+        { "pathogenId": "00000000-0000-0000-0000-500000000027", "severity": "Moderate", "treatmentSite": "Inpatient" },
+        { "pathogenId": "00000000-0000-0000-0000-500000000028", "severity": "Moderate", "treatmentSite": "Inpatient" },
+        { "pathogenId": "00000000-0000-0000-0000-500000000029", "severity": "Moderate", "treatmentSite": "Inpatient" },
+        // Group B also covers Severe / Inpatient
+        { "pathogenId": "00000000-0000-0000-0000-500000000001", "severity": "Severe", "treatmentSite": "Inpatient" },
+        { "pathogenId": "00000000-0000-0000-0000-500000000010", "severity": "Severe", "treatmentSite": "Inpatient" },
+        { "pathogenId": "00000000-0000-0000-0000-500000000011", "severity": "Severe", "treatmentSite": "Inpatient" },
+        { "pathogenId": "00000000-0000-0000-0000-500000000002", "severity": "Severe", "treatmentSite": "Inpatient" },
+        { "pathogenId": "00000000-0000-0000-0000-500000000014", "severity": "Severe", "treatmentSite": "Inpatient" },
+        { "pathogenId": "00000000-0000-0000-0000-500000000015", "severity": "Severe", "treatmentSite": "Inpatient" },
+        { "pathogenId": "00000000-0000-0000-0000-500000000005", "severity": "Severe", "treatmentSite": "Inpatient" },
+        { "pathogenId": "00000000-0000-0000-0000-500000000016", "severity": "Severe", "treatmentSite": "Inpatient" },
+        { "pathogenId": "00000000-0000-0000-0000-500000000008", "severity": "Severe", "treatmentSite": "Inpatient" },
+        { "pathogenId": "00000000-0000-0000-0000-500000000012", "severity": "Severe", "treatmentSite": "Inpatient" },
+        { "pathogenId": "00000000-0000-0000-0000-500000000013", "severity": "Severe", "treatmentSite": "Inpatient" },
+        { "pathogenId": "00000000-0000-0000-0000-500000000017", "severity": "Severe", "treatmentSite": "Inpatient" },
+        { "pathogenId": "00000000-0000-0000-0000-500000000018", "severity": "Severe", "treatmentSite": "Inpatient" },
+        { "pathogenId": "00000000-0000-0000-0000-500000000019", "severity": "Severe", "treatmentSite": "Inpatient" },
+        { "pathogenId": "00000000-0000-0000-0000-500000000024", "severity": "Severe", "treatmentSite": "Inpatient" },
+        { "pathogenId": "00000000-0000-0000-0000-500000000023", "severity": "Severe", "treatmentSite": "Inpatient" },
+        { "pathogenId": "00000000-0000-0000-0000-500000000020", "severity": "Severe", "treatmentSite": "Inpatient" },
+        { "pathogenId": "00000000-0000-0000-0000-500000000021", "severity": "Severe", "treatmentSite": "Inpatient" },
+        { "pathogenId": "00000000-0000-0000-0000-500000000022", "severity": "Severe", "treatmentSite": "Inpatient" },
+        { "pathogenId": "00000000-0000-0000-0000-500000000025", "severity": "Severe", "treatmentSite": "Inpatient" },
+        { "pathogenId": "00000000-0000-0000-0000-500000000026", "severity": "Severe", "treatmentSite": "Inpatient" },
+        { "pathogenId": "00000000-0000-0000-0000-500000000027", "severity": "Severe", "treatmentSite": "Inpatient" },
+        { "pathogenId": "00000000-0000-0000-0000-500000000028", "severity": "Severe", "treatmentSite": "Inpatient" },
+        { "pathogenId": "00000000-0000-0000-0000-500000000029", "severity": "Severe", "treatmentSite": "Inpatient" },
+        // Group C: Severe / ICU
+        { "pathogenId": "00000000-0000-0000-0000-500000000001", "severity": "Severe", "treatmentSite": "IntensiveCareUnit" },
+        { "pathogenId": "00000000-0000-0000-0000-500000000014", "severity": "Severe", "treatmentSite": "IntensiveCareUnit" },
+        { "pathogenId": "00000000-0000-0000-0000-500000000015", "severity": "Severe", "treatmentSite": "IntensiveCareUnit" },
+        { "pathogenId": "00000000-0000-0000-0000-500000000005", "severity": "Severe", "treatmentSite": "IntensiveCareUnit" },
+        { "pathogenId": "00000000-0000-0000-0000-500000000016", "severity": "Severe", "treatmentSite": "IntensiveCareUnit" },
+        { "pathogenId": "00000000-0000-0000-0000-500000000003", "severity": "Severe", "treatmentSite": "IntensiveCareUnit" },
+        { "pathogenId": "00000000-0000-0000-0000-500000000012", "severity": "Severe", "treatmentSite": "IntensiveCareUnit" },
+        { "pathogenId": "00000000-0000-0000-0000-500000000010", "severity": "Severe", "treatmentSite": "IntensiveCareUnit" },
+        { "pathogenId": "00000000-0000-0000-0000-500000000006", "severity": "Severe", "treatmentSite": "IntensiveCareUnit" },
+        { "pathogenId": "00000000-0000-0000-0000-500000000017", "severity": "Severe", "treatmentSite": "IntensiveCareUnit" },
+        { "pathogenId": "00000000-0000-0000-0000-500000000018", "severity": "Severe", "treatmentSite": "IntensiveCareUnit" },
+        { "pathogenId": "00000000-0000-0000-0000-500000000019", "severity": "Severe", "treatmentSite": "IntensiveCareUnit" },
+        { "pathogenId": "00000000-0000-0000-0000-500000000020", "severity": "Severe", "treatmentSite": "IntensiveCareUnit" },
+        { "pathogenId": "00000000-0000-0000-0000-500000000021", "severity": "Severe", "treatmentSite": "IntensiveCareUnit" },
+        { "pathogenId": "00000000-0000-0000-0000-500000000022", "severity": "Severe", "treatmentSite": "IntensiveCareUnit" },
+        { "pathogenId": "00000000-0000-0000-0000-500000000026", "severity": "Severe", "treatmentSite": "IntensiveCareUnit" },
+        { "pathogenId": "00000000-0000-0000-0000-500000000027", "severity": "Severe", "treatmentSite": "IntensiveCareUnit" }
+    ]
 }
