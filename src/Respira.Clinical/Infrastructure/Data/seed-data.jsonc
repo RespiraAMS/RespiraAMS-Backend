@@ -160,6 +160,286 @@
             "valueType": "Boolean",
             "canonicalUnit": null
         },
+        {
+            "id": "00000000-0000-0000-0000-100000000021",
+            "name": "Alcohol abuse",
+            "code": "ALCOHOL-ABUSE",
+            "description": "History of alcohol abuse",
+            "valueType": "Boolean",
+            "canonicalUnit": null
+        },
+        {
+            "id": "00000000-0000-0000-0000-100000000022",
+            "name": "Smoking",
+            "code": "SMOKING",
+            "description": "Current or former smoker",
+            "valueType": "Boolean",
+            "canonicalUnit": null
+        },
+        {
+            "id": "00000000-0000-0000-0000-100000000023",
+            "name": "Chronic obstructive pulmonary disease",
+            "code": "COPD",
+            "description": "Has chronic obstructive pulmonary disease (COPD) or other chronic lung disease",
+            "valueType": "Boolean",
+            "canonicalUnit": null
+        },
+        {
+            "id": "00000000-0000-0000-0000-100000000024",
+            "name": "Severe chronic obstructive pulmonary disease",
+            "code": "SEVERE-COPD",
+            "description": "Has severe COPD (FEV1 < 30%)",
+            "valueType": "Boolean",
+            "canonicalUnit": null
+        },
+        {
+            "id": "00000000-0000-0000-0000-100000000025",
+            "name": "Malnutrition",
+            "code": "MALNUTRITION",
+            "description": "Has malnutrition",
+            "valueType": "Boolean",
+            "canonicalUnit": null
+        },
+        {
+            "id": "00000000-0000-0000-0000-100000000026",
+            "name": "Mental illness",
+            "code": "MENTAL-ILLNESS",
+            "description": "Has mental illness",
+            "valueType": "Boolean",
+            "canonicalUnit": null
+        },
+        {
+            "id": "00000000-0000-0000-0000-100000000027",
+            "name": "Immunocompromised",
+            "code": "IMMUNOCOMPROMISED",
+            "description": "Is immunocompromised",
+            "valueType": "Boolean",
+            "canonicalUnit": null
+        },
+        {
+            "id": "00000000-0000-0000-0000-100000000028",
+            "name": "HIV infection",
+            "code": "HIV",
+            "description": "Has HIV infection",
+            "valueType": "Boolean",
+            "canonicalUnit": null
+        },
+        {
+            "id": "00000000-0000-0000-0000-100000000029",
+            "name": "Organ transplant",
+            "code": "ORGAN-TRANSPLANT",
+            "description": "Has had an organ transplant",
+            "valueType": "Boolean",
+            "canonicalUnit": null
+        },
+        {
+            "id": "00000000-0000-0000-0000-100000000030",
+            "name": "Diabetes mellitus",
+            "code": "DIABETES",
+            "description": "Has diabetes mellitus",
+            "valueType": "Boolean",
+            "canonicalUnit": null
+        },
+        {
+            "id": "00000000-0000-0000-0000-100000000031",
+            "name": "Influenza infection",
+            "code": "INFLUENZA",
+            "description": "Has influenza infection",
+            "valueType": "Boolean",
+            "canonicalUnit": null
+        },
+        {
+            "id": "00000000-0000-0000-0000-100000000032",
+            "name": "Measles infection",
+            "code": "MEASLES",
+            "description": "Has measles infection",
+            "valueType": "Boolean",
+            "canonicalUnit": null
+        },
+        {
+            "id": "00000000-0000-0000-0000-100000000033",
+            "name": "IV drug use",
+            "code": "IV-DRUG-USE",
+            "description": "History of intravenous drug use",
+            "valueType": "Boolean",
+            "canonicalUnit": null
+        },
+        {
+            "id": "00000000-0000-0000-0000-100000000034",
+            "name": "Prior MRSA infection",
+            "code": "PRIOR-MRSA-INFECTION",
+            "description": "History of MRSA infection",
+            "valueType": "Boolean",
+            "canonicalUnit": null
+        },
+        {
+            "id": "00000000-0000-0000-0000-100000000035",
+            "name": "Hospitalization and IV antibiotics within 90 days",
+            "code": "HOSPITALIZATION-90D",
+            "description": "Hospitalization and IV antibiotics within 90 days",
+            "valueType": "Boolean",
+            "canonicalUnit": null
+        },
+        {
+            "id": "00000000-0000-0000-0000-100000000036",
+            "name": "ICU stay",
+            "code": "ICU-STAY",
+            "description": "Recent ICU stay",
+            "valueType": "Boolean",
+            "canonicalUnit": null
+        },
+        {
+            "id": "00000000-0000-0000-0000-100000000037",
+            "name": "Intubation",
+            "code": "INTUBATION",
+            "description": "Recent endotracheal intubation",
+            "valueType": "Boolean",
+            "canonicalUnit": null
+        },
+        {
+            "id": "00000000-0000-0000-0000-100000000038",
+            "name": "Stroke",
+            "code": "STROKE",
+            "description": "Has stroke history",
+            "valueType": "Boolean",
+            "canonicalUnit": null
+        },
+        {
+            "id": "00000000-0000-0000-0000-100000000039",
+            "name": "Epilepsy",
+            "code": "EPILEPSY",
+            "description": "Has epilepsy",
+            "valueType": "Boolean",
+            "canonicalUnit": null
+        },
+        {
+            "id": "00000000-0000-0000-0000-100000000040",
+            "name": "Anesthesia",
+            "code": "ANESTHESIA",
+            "description": "Recent anesthesia",
+            "valueType": "Boolean",
+            "canonicalUnit": null
+        },
+        {
+            "id": "00000000-0000-0000-0000-100000000041",
+            "name": "Prior antibiotic use",
+            "code": "PRIOR-ANTIBIOTIC-USE",
+            "description": "Recent antibiotic use",
+            "valueType": "Boolean",
+            "canonicalUnit": null
+        },
+        {
+            "id": "00000000-0000-0000-0000-100000000042",
+            "name": "Cystic fibrosis",
+            "code": "CYSTIC-FIBROSIS",
+            "description": "Has cystic fibrosis",
+            "valueType": "Boolean",
+            "canonicalUnit": null
+        },
+        {
+            "id": "00000000-0000-0000-0000-100000000043",
+            "name": "Bronchiectasis",
+            "code": "BRONCHIECTASIS",
+            "description": "Has bronchiectasis",
+            "valueType": "Boolean",
+            "canonicalUnit": null
+        },
+        {
+            "id": "00000000-0000-0000-0000-100000000044",
+            "name": "Lung cancer",
+            "code": "LUNG-CANCER",
+            "description": "Has lung cancer",
+            "valueType": "Boolean",
+            "canonicalUnit": null
+        },
+        {
+            "id": "00000000-0000-0000-0000-100000000045",
+            "name": "Prior Pseudomonas infection",
+            "code": "PRIOR-PSEUDOMONAS",
+            "description": "History of Pseudomonas aeruginosa infection",
+            "valueType": "Boolean",
+            "canonicalUnit": null
+        },
+        {
+            "id": "00000000-0000-0000-0000-100000000046",
+            "name": "Aspiration pneumonia",
+            "code": "ASPIRATION-PNEUMONIA",
+            "description": "Has aspiration pneumonia",
+            "valueType": "Boolean",
+            "canonicalUnit": null
+        },
+        {
+            "id": "00000000-0000-0000-0000-100000000047",
+            "name": "Oropharyngeal anaerobic infection",
+            "code": "OROPHARYNGEAL-ANAEROBIC",
+            "description": "Has oropharyngeal anaerobic infection",
+            "valueType": "Boolean",
+            "canonicalUnit": null
+        },
+        {
+            "id": "00000000-0000-0000-0000-100000000048",
+            "name": "Severe internal medicine disease",
+            "code": "SEVERE-INTERNAL-DISEASE",
+            "description": "Has severe internal medicine disease",
+            "valueType": "Boolean",
+            "canonicalUnit": null
+        },
+        {
+            "id": "00000000-0000-0000-0000-100000000049",
+            "name": "Pulmonary infarction",
+            "code": "PULMONARY-INFARCTION",
+            "description": "Has pulmonary infarction",
+            "valueType": "Boolean",
+            "canonicalUnit": null
+        },
+        {
+            "id": "00000000-0000-0000-0000-100000000050",
+            "name": "Has liver disease history",
+            "code": "LIVER",
+            "description": "Does the patient have liver disease history",
+            "valueType": "Boolean",
+            "canonicalUnit": null
+        },
+        {
+            "id": "00000000-0000-0000-0000-100000000051",
+            "name": "Has renal disease history",
+            "code": "RENAL",
+            "description": "Does the patient have renal disease history",
+            "valueType": "Boolean",
+            "canonicalUnit": null
+        },
+        {
+            "id": "00000000-0000-0000-0000-100000000052",
+            "name": "Has congestive heart failure (CHF)",
+            "code": "CHF",
+            "description": "Does the patient have congestive heart failure",
+            "valueType": "Boolean",
+            "canonicalUnit": null
+        },
+        {
+            "id": "00000000-0000-0000-0000-100000000053",
+            "name": "Has cerebrovascular disease history",
+            "code": "CEREBROVASCULAR",
+            "description": "Does the patient have cerebrovascular disease history",
+            "valueType": "Boolean",
+            "canonicalUnit": null
+        },
+        {
+            "id": "00000000-0000-0000-0000-100000000054",
+            "name": "Has neoplastic disease",
+            "code": "NEOPLASTIC",
+            "description": "Does the patient have neoplastic disease",
+            "valueType": "Boolean",
+            "canonicalUnit": null
+        },
+        {
+            "id": "00000000-0000-0000-0000-100000000055",
+            "name": "Septic thromboembolism in infective endocarditis.",
+            "code": "SEPTIC-THROMBOEMBOLISM",
+            "description": "Does the patient have septic thromboembolism in infective endocarditis",
+            "valueType": "Boolean",
+            "canonicalUnit": null
+        }
     ],
     "scoreMetrics": [
         {
@@ -167,19 +447,1338 @@
             "name": "Severity metrics CURB-65",
             "code": "CURB-65",
             "description": "CURB-65 metrics to assess severity of a patient",
-            "scoringRules": []
+            "scoringRules": [
+                {
+                    "id": "00000000-0000-0000-0000-300000000001",
+                    "criterionId": "00000000-0000-0000-0000-400000000001",
+                    "scoreFunction": {
+                        "resultType": "Numeric",
+                        "constant": 1
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-300000000002",
+                    "criterionId": "00000000-0000-0000-0000-400000000002",
+                    "scoreFunction": {
+                        "resultType": "Numeric",
+                        "constant": 1
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-300000000003",
+                    "criterionId": "00000000-0000-0000-0000-400000000003",
+                    "scoreFunction": {
+                        "resultType": "Numeric",
+                        "constant": 1
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-300000000004",
+                    "criterionId": "00000000-0000-0000-0000-400000000004",
+                    "scoreFunction": {
+                        "resultType": "Numeric",
+                        "constant": 1
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-300000000005",
+                    "criterionId": "00000000-0000-0000-0000-400000000005",
+                    "scoreFunction": {
+                        "resultType": "Numeric",
+                        "constant": 1
+                    }
+                },
+            ]
         },
         {
             "id": "00000000-0000-0000-0000-200000000002",
             "name": "ICU hospitalization criteria by IDSA/ATS",
             "code": "IDSA/ATS",
             "description": "IDSA/ATS metrics to assess whether a severe patient need ICU or not",
-            "scoringRules": []
+            "scoringRules": [
+                {
+                    "id": "00000000-0000-0000-0000-300000000006",
+                    "criterionId": "00000000-0000-0000-0000-400000000006",
+                    "scoreFunction": {
+                        "resultType": "Numeric",
+                        "constant": 3
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-300000000007",
+                    "criterionId": "00000000-0000-0000-0000-400000000007",
+                    "scoreFunction": {
+                        "resultType": "Numeric",
+                        "constant": 3
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-300000000008",
+                    "criterionId": "00000000-0000-0000-0000-400000000008",
+                    "scoreFunction": {
+                        "resultType": "Numeric",
+                        "constant": 1
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-300000000009",
+                    "criterionId": "00000000-0000-0000-0000-400000000009",
+                    "scoreFunction": {
+                        "resultType": "Numeric",
+                        "constant": 1
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-300000000010",
+                    "criterionId": "00000000-0000-0000-0000-400000000010",
+                    "scoreFunction": {
+                        "resultType": "Numeric",
+                        "constant": 1
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-300000000011",
+                    "criterionId": "00000000-0000-0000-0000-400000000011",
+                    "scoreFunction": {
+                        "resultType": "Numeric",
+                        "constant": 1
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-300000000012",
+                    "criterionId": "00000000-0000-0000-0000-400000000012",
+                    "scoreFunction": {
+                        "resultType": "Numeric",
+                        "constant": 1
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-300000000013",
+                    "criterionId": "00000000-0000-0000-0000-400000000013",
+                    "scoreFunction": {
+                        "resultType": "Numeric",
+                        "constant": 1
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-300000000014",
+                    "criterionId": "00000000-0000-0000-0000-400000000014",
+                    "scoreFunction": {
+                        "resultType": "Numeric",
+                        "constant": 1
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-300000000015",
+                    "criterionId": "00000000-0000-0000-0000-400000000015",
+                    "scoreFunction": {
+                        "resultType": "Numeric",
+                        "constant": 1
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-300000000016",
+                    "criterionId": "00000000-0000-0000-0000-400000000016",
+                    "scoreFunction": {
+                        "resultType": "Numeric",
+                        "constant": 1
+                    }
+                }
+            ]
         }
     ],
     // Shared criteria that can be reused
-    "criteria": [],
-    "pathogens": [],
-    "suspectedCauses": [],
-
+    "criteria": [
+        // CURB-65 criteria
+        {
+            "id": "00000000-0000-0000-0000-400000000001",
+            "name": "Has confusion",
+            "formula": {
+                "resultType": "Boolean",
+                "left": {
+                    "resultType": "Boolean",
+                    "variable": {
+                        "id": "00000000-0000-0000-0000-100000000005",
+                    }
+                },
+                "right": {
+                    "resultType": "Boolean",
+                    "constant": true
+                },
+                "operator": "EQ"
+            }
+        },
+        {
+            "id": "00000000-0000-0000-0000-400000000002",
+            "name": "Uremia > 7 mmol/L",
+            "formula": {
+                "resultType": "Boolean",
+                "left": {
+                    "resultType": "Numeric",
+                    "variable": {
+                        "id": "00000000-0000-0000-0000-100000000010",
+                    }
+                },
+                "right": {
+                    "resultType": "Numeric",
+                    "constant": 7
+                },
+                "operator": "GT"
+            }
+        },
+        // This is a custom criteria of CURB-65, it's not wrong, our stakeholders required that
+        {
+            "id": "00000000-0000-0000-0000-400000000003",
+            "name": "Respiratory rate > 30 or SpO2 < 90%",
+            "formula": {
+                "resultType": "Boolean",
+                "left": {
+                    "resultType": "Boolean",
+                    "left": {
+                        "resultType": "Numeric",
+                        "variable": {
+                            "id": "00000000-0000-0000-0000-100000000006",
+                        }
+                    },
+                    "right": {
+                        "resultType": "Numeric",
+                        "constant": 30
+                    },
+                    "operator": "GT"
+                },
+                "right": {
+                    "resultType": "Boolean",
+                    "left": {
+                        "resultType": "Numeric",
+                        "variable": {
+                            "id": "00000000-0000-0000-0000-100000000015",
+                        }
+                    },
+                    "right": {
+                        "resultType": "Numeric",
+                        "constant": 90
+                    },
+                    "operator": "LT"
+                },
+                "operator": "OR"
+            }
+        },
+        {
+            "id": "00000000-0000-0000-0000-400000000004",
+            "name": "Low blood pressure",
+            "formula": {
+                "resultType": "Boolean",
+                "left": {
+                    "resultType": "Boolean",
+                    "left": {
+                        "resultType": "Numeric",
+                        "variable": {
+                            "id": "00000000-0000-0000-0000-100000000007",
+                        }
+                    },
+                    "right": {
+                        "resultType": "Numeric",
+                        "constant": 90
+                    },
+                    "operator": "LT"
+                },
+                "right": {
+                    "resultType": "Boolean",
+                    "left": {
+                        "resultType": "Numeric",
+                        "variable": {
+                            "id": "00000000-0000-0000-0000-100000000008",
+                        }
+                    },
+                    "right": {
+                        "resultType": "Numeric",
+                        "constant": 60
+                    },
+                    "operator": "LTE"
+                },
+                "operator": "OR"
+            }
+        },
+        {
+            "id": "00000000-0000-0000-0000-400000000005",
+            "name": "Age > 65",
+            "formula": {
+                "resultType": "Boolean",
+                "left": {
+                    "resultType": "Numeric",
+                    "variable": {
+                        "id": "00000000-0000-0000-0000-100000000001",
+                    }
+                },
+                "right": {
+                    "resultType": "Numeric",
+                    "constant": 65
+                },
+                "operator": "GTE"
+            }
+        },
+        // IDSA/ATS criteria
+        {
+            "id": "00000000-0000-0000-0000-400000000006",
+            "name": "Respiratory failure requiring mechanical ventilation",
+            "formula": {
+                "resultType": "Boolean",
+                "left": {
+                    "resultType": "Boolean",
+                    "variable": {
+                        "id": "00000000-0000-0000-0000-100000000019",
+                    }
+                },
+                "right": {
+                    "resultType": "Boolean",
+                    "constant": true
+                },
+                "operator": "EQ"
+            }
+        },
+        {
+            "id": "00000000-0000-0000-0000-400000000007",
+            "name": "Septic shock requiring vasopressor support",
+            "formula": {
+                "resultType": "Boolean",
+                "left": {
+                    "resultType": "Boolean",
+                    "variable": {
+                        "id": "00000000-0000-0000-0000-100000000020",
+                    }
+                },
+                "right": {
+                    "resultType": "Boolean",
+                    "constant": true
+                },
+                "operator": "EQ"
+            }
+        },
+        {
+            "id": "00000000-0000-0000-0000-400000000008",
+            "name": "Tachypnea",
+            "formula": {
+                "resultType": "Boolean",
+                "left": {
+                    "resultType": "Numeric",
+                    "variable": {
+                        "id": "00000000-0000-0000-0000-100000000006",
+                    }
+                },
+                "right": {
+                    "resultType": "Numeric",
+                    "constant": 30
+                },
+                "operator": "GTE"
+            }
+        },
+        {
+            "id": "00000000-0000-0000-0000-400000000009",
+            "name": "Hypoxia",
+            "formula": {
+                "resultType": "Boolean",
+                "left": {
+                    "resultType": "Numeric",
+                    "left": {
+                        "resultType": "Numeric",
+                        "variable": {
+                            "id": "00000000-0000-0000-0000-100000000013",
+                        }
+                    },
+                    "right": {
+                        "resultType": "Numeric",
+                        "variable": {
+                            "id": "00000000-0000-0000-0000-100000000014",
+                        }
+                    },
+                    "operator": "DIV"
+                },
+                "right": {
+                    "resultType": "Numeric",
+                    "constant": 250
+                },
+                "operator": "LTE"
+            }
+        },
+        {
+            "id": "00000000-0000-0000-0000-400000000010",
+            "name": "Radiographic Extension",
+            "formula": {
+                "resultType": "Boolean",
+                "left": {
+                    "resultType": "Boolean",
+                    "variable": {
+                        "id": "00000000-0000-0000-0000-100000000017",
+                    }
+                },
+                "right": {
+                    "resultType": "Boolean",
+                    "constant": true
+                },
+                "operator": "EQ"
+            }
+        },
+        {
+            "id": "00000000-0000-0000-0000-400000000011",
+            "name": "Neurological disorder",
+            "formula": {
+                "resultType": "Boolean",
+                "left": {
+                    "resultType": "Boolean",
+                    "variable": {
+                        "id": "00000000-0000-0000-0000-100000000005",
+                    }
+                },
+                "right": {
+                    "resultType": "Boolean",
+                    "constant": true
+                },
+                "operator": "EQ"
+            }
+        },
+        {
+            "id": "00000000-0000-0000-0000-400000000012",
+            "name": "Uremia",
+            "formula": {
+                "resultType": "Boolean",
+                "left": {
+                    "resultType": "Numeric",
+                    "left": {
+                        "resultType": "Numeric",
+                        "variable": {
+                            "id": "00000000-0000-0000-0000-100000000010",
+                        }
+                    },
+                    "right": {
+                        "resultType": "Numeric",
+                        "constant": 2.8
+                    },
+                    "operator": "MUL"
+                },
+                "right": {
+                    "resultType": "Numeric",
+                    "constant": 20
+                },
+                "operator": "GTE"
+            }
+        },
+        {
+            "id": "00000000-0000-0000-0000-400000000013",
+            "name": "Leukopenia",
+            "formula": {
+                "resultType": "Boolean",
+                "left": {
+                    "resultType": "Numeric",
+                    "variable": {
+                        "id": "00000000-0000-0000-0000-100000000011",
+                    }
+                },
+                "right": {
+                    "resultType": "Numeric",
+                    "constant": 4000
+                },
+                "operator": "LT"
+            }
+        },
+        {
+            "id": "00000000-0000-0000-0000-400000000014",
+            "name": "Thrombocytopenia",
+            "formula": {
+                "resultType": "Boolean",
+                "left": {
+                    "resultType": "Numeric",
+                    "variable": {
+                        "id": "00000000-0000-0000-0000-100000000012",
+                    }
+                },
+                "right": {
+                    "resultType": "Numeric",
+                    "constant": 100000
+                },
+                "operator": "LT"
+            }
+        },
+        {
+            "id": "00000000-0000-0000-0000-400000000015",
+            "name": "Hypothermia",
+            "formula": {
+                "resultType": "Boolean",
+                "left": {
+                    "resultType": "Numeric",
+                    "variable": {
+                        "id": "00000000-0000-0000-0000-100000000009",
+                    }
+                },
+                "right": {
+                    "resultType": "Numeric",
+                    "constant": 36
+                },
+                "operator": "LT"
+            }
+        },
+        {
+            "id": "00000000-0000-0000-0000-400000000016",
+            "name": "Hypotension",
+            "formula": {
+                "resultType": "Boolean",
+                "left": {
+                    "resultType": "Boolean",
+                    "variable": {
+                        "id": "00000000-0000-0000-0000-100000000018",
+                    }
+                },
+                "right": {
+                    "resultType": "Boolean",
+                    "constant": true
+                },
+                "operator": "EQ"
+            }
+        },
+        // ---- Risk factor criteria for Streptococcus pneumoniae ----
+        {
+            "id": "00000000-0000-0000-0000-400000000019",
+            "name": "Age - Sex factor",
+            "formula": {
+                "resultType": "Boolean",
+                "left": {
+                    "resultType": "Boolean",
+                    "left": {
+                        "resultType": "Boolean",
+                        "variable": { 
+                            "id": "00000000-0000-0000-0000-100000000002" 
+                        }
+                    },
+                    "right": {
+                        "resultType": "Boolean",
+                        "constant": false
+                    },
+                    "operator": "EQ"
+                },
+                "right": {
+                    "resultType": "Boolean",
+                    "left": {
+                        "resultType": "Boolean",
+                        "left": {
+                            "resultType": "Numeric",
+                            "variable": { "id": "00000000-0000-0000-0000-100000000001" }
+                        },
+                        "right": {
+                            "resultType": "Numeric",
+                            "constant": 2
+                        },
+                        "operator": "LT"
+                    },
+                    "right": {
+                        "resultType": "Boolean",
+                        "left": {
+                            "resultType": "Numeric",
+                            "variable": { "id": "00000000-0000-0000-0000-100000000001" }
+                        },
+                        "right": {
+                            "resultType": "Numeric",
+                            "constant": 65
+                        },
+                        "operator": "GT"
+                    },
+                    "operator": "OR"
+                },
+                "operator": "AND"
+            }
+        },
+        {
+            "id": "00000000-0000-0000-0000-400000000020",
+            "name": "Lifestyle habits",
+            "formula": {
+                "resultType": "Boolean",
+                "left": {
+                    "resultType": "Boolean",
+                    "left": {
+                        "resultType": "Boolean",
+                        "variable": { "id": "00000000-0000-0000-0000-100000000021" }
+                    },
+                    "right": {
+                        "resultType": "Boolean",
+                        "constant": true
+                    },
+                    "operator": "EQ"
+                },
+                "right": {
+                    "resultType": "Boolean",
+                    "left": {
+                        "resultType": "Boolean",
+                        "variable": { "id": "00000000-0000-0000-0000-100000000022" }
+                    },
+                    "right": {
+                        "resultType": "Boolean",
+                        "constant": true
+                    },
+                    "operator": "EQ"
+                },
+                "operator": "OR"
+            }
+        },
+        {
+            "id": "00000000-0000-0000-0000-400000000021",
+            "name": "Comorbidities (S. pneumoniae)",
+            "formula": {
+                "resultType": "Boolean",
+                "left": {
+                    "resultType": "Boolean",
+                    "left": {
+                        "resultType": "Boolean",
+                        "left": {
+                            "resultType": "Boolean",
+                            "left": {
+                                "resultType": "Boolean",
+                                "left": {
+                                    "resultType": "Boolean",
+                                    "variable": { "id": "00000000-0000-0000-0000-100000000050" }
+                                },
+                                "right": { "resultType": "Boolean", "constant": true },
+                                "operator": "EQ"
+                            },
+                            "right": {
+                                "resultType": "Boolean",
+                                "left": {
+                                    "resultType": "Boolean",
+                                    "variable": { "id": "00000000-0000-0000-0000-100000000051" }
+                                },
+                                "right": { "resultType": "Boolean", "constant": true },
+                                "operator": "EQ"
+                            },
+                            "operator": "OR"
+                        },
+                        "right": {
+                            "resultType": "Boolean",
+                            "left": {
+                                "resultType": "Boolean",
+                                "variable": { "id": "00000000-0000-0000-0000-100000000052" }
+                            },
+                            "right": { "resultType": "Boolean", "constant": true },
+                            "operator": "EQ"
+                        },
+                        "operator": "OR"
+                    },
+                    "right": {
+                        "resultType": "Boolean",
+                        "left": {
+                            "resultType": "Boolean",
+                            "left": {
+                                "resultType": "Boolean",
+                                "variable": { "id": "00000000-0000-0000-0000-100000000025" }
+                            },
+                            "right": { "resultType": "Boolean", "constant": true },
+                            "operator": "EQ"
+                        },
+                        "right": {
+                            "resultType": "Boolean",
+                            "left": {
+                                "resultType": "Boolean",
+                                "variable": { "id": "00000000-0000-0000-0000-100000000026" }
+                            },
+                            "right": { "resultType": "Boolean", "constant": true },
+                            "operator": "EQ"
+                        },
+                        "operator": "OR"
+                    },
+                    "operator": "OR"
+                },
+                "right": {
+                    "resultType": "Boolean",
+                    "left": {
+                        "resultType": "Boolean",
+                        "left": {
+                            "resultType": "Boolean",
+                            "left": {
+                                "resultType": "Boolean",
+                                "variable": { "id": "00000000-0000-0000-0000-100000000023" }
+                            },
+                            "right": { "resultType": "Boolean", "constant": true },
+                            "operator": "EQ"
+                        },
+                        "right": {
+                            "resultType": "Boolean",
+                            "left": {
+                                "resultType": "Boolean",
+                                "variable": { "id": "00000000-0000-0000-0000-100000000024" }
+                            },
+                            "right": { "resultType": "Boolean", "constant": true },
+                            "operator": "EQ"
+                        },
+                        "operator": "OR"
+                    },
+                    "right": {
+                        "resultType": "Boolean",
+                        "left": {
+                            "resultType": "Boolean",
+                            "left": {
+                                "resultType": "Boolean",
+                                "variable": { "id": "00000000-0000-0000-0000-100000000027" }
+                            },
+                            "right": { "resultType": "Boolean", "constant": true },
+                            "operator": "EQ"
+                        },
+                        "right": {
+                            "resultType": "Boolean",
+                            "left": {
+                                "resultType": "Boolean",
+                                "left": {
+                                    "resultType": "Boolean",
+                                    "variable": { "id": "00000000-0000-0000-0000-100000000028" }
+                                },
+                                "right": { "resultType": "Boolean", "constant": true },
+                                "operator": "EQ"
+                            },
+                            "right": {
+                                "resultType": "Boolean",
+                                "left": {
+                                    "resultType": "Boolean",
+                                    "variable": { "id": "00000000-0000-0000-0000-100000000029" }
+                                },
+                                "right": { "resultType": "Boolean", "constant": true },
+                                "operator": "EQ"
+                            },
+                            "operator": "OR"
+                        },
+                        "operator": "OR"
+                    },
+                    "operator": "OR"
+                },
+                "operator": "OR"
+            }
+        },
+        // ---- Risk factor criteria for Haemophilus influenzae ----
+        {
+            "id": "00000000-0000-0000-0000-400000000022",
+            "name": "Chronic lung disease (H. influenzae)",
+            "formula": {
+                "resultType": "Boolean",
+                "left": {
+                    "resultType": "Boolean",
+                    "left": {
+                        "resultType": "Boolean",
+                        "variable": { "id": "00000000-0000-0000-0000-100000000023" }
+                    },
+                    "right": { "resultType": "Boolean", "constant": true },
+                    "operator": "EQ"
+                },
+                "right": {
+                    "resultType": "Boolean",
+                    "left": {
+                        "resultType": "Boolean",
+                        "variable": { "id": "00000000-0000-0000-0000-100000000024" }
+                    },
+                    "right": { "resultType": "Boolean", "constant": true },
+                    "operator": "EQ"
+                },
+                "operator": "OR"
+            }
+        },
+        {
+            "id": "00000000-0000-0000-0000-400000000023",
+            "name": "Malignancy (H. influenzae)",
+            "formula": {
+                "resultType": "Boolean",
+                "left": {
+                    "resultType": "Boolean",
+                    "variable": { "id": "00000000-0000-0000-0000-100000000054" }
+                },
+                "right": {
+                    "resultType": "Boolean",
+                    "constant": true
+                },
+                "operator": "EQ"
+            }
+        },
+        {
+            "id": "00000000-0000-0000-0000-400000000024",
+            "name": "HIV infection (H. influenzae)",
+            "formula": {
+                "resultType": "Boolean",
+                "left": {
+                    "resultType": "Boolean",
+                    "variable": { "id": "00000000-0000-0000-0000-100000000028" }
+                },
+                "right": {
+                    "resultType": "Boolean",
+                    "constant": true
+                },
+                "operator": "EQ"
+            }
+        },
+        {
+            "id": "00000000-0000-0000-0000-400000000025",
+            "name": "Alcohol abuse (H. influenzae)",
+            "formula": {
+                "resultType": "Boolean",
+                "left": {
+                    "resultType": "Boolean",
+                    "variable": { "id": "00000000-0000-0000-0000-100000000021" }
+                },
+                "right": {
+                    "resultType": "Boolean",
+                    "constant": true
+                },
+                "operator": "EQ"
+            }
+        },
+        {
+            "id": "00000000-0000-0000-0000-400000000026",
+            "name": "Smoking (H. influenzae)",
+            "formula": {
+                "resultType": "Boolean",
+                "left": {
+                    "resultType": "Boolean",
+                    "variable": { "id": "00000000-0000-0000-0000-100000000022" }
+                },
+                "right": {
+                    "resultType": "Boolean",
+                    "constant": true
+                },
+                "operator": "EQ"
+            }
+        },
+        // ---- Risk factor criteria for Staphylococcus aureus ----
+        {
+            "id": "00000000-0000-0000-0000-400000000027",
+            "name": "COPD, lung cancer or cystic fibrosis (S. aureus)",
+            "formula": {
+                "resultType": "Boolean",
+                "left": {
+                    "resultType": "Boolean",
+                    "left": {
+                        "resultType": "Boolean",
+                        "left": {
+                            "resultType": "Boolean",
+                            "variable": { "id": "00000000-0000-0000-0000-100000000023" }
+                        },
+                        "right": { "resultType": "Boolean", "constant": true },
+                        "operator": "EQ"
+                    },
+                    "right": {
+                        "resultType": "Boolean",
+                        "left": {
+                            "resultType": "Boolean",
+                            "variable": { "id": "00000000-0000-0000-0000-100000000024" }
+                        },
+                        "right": { "resultType": "Boolean", "constant": true },
+                        "operator": "EQ"
+                    },
+                    "operator": "OR"
+                },
+                "right": {
+                    "resultType": "Boolean",
+                    "left": {
+                        "resultType": "Boolean",
+                        "left": {
+                            "resultType": "Boolean",
+                            "variable": { "id": "00000000-0000-0000-0000-100000000044" }
+                        },
+                        "right": { "resultType": "Boolean", "constant": true },
+                        "operator": "EQ"
+                    },
+                    "right": {
+                        "resultType": "Boolean",
+                        "left": {
+                            "resultType": "Boolean",
+                            "variable": { "id": "00000000-0000-0000-0000-100000000042" }
+                        },
+                        "right": { "resultType": "Boolean", "constant": true },
+                        "operator": "EQ"
+                    },
+                    "operator": "OR"
+                },
+                "operator": "OR"
+            }
+        },
+        {
+            "id": "00000000-0000-0000-0000-400000000028",
+            "name": "Diabetes or renal failure (S. aureus)",
+            "formula": {
+                "resultType": "Boolean",
+                "left": {
+                    "resultType": "Boolean",
+                    "left": {
+                        "resultType": "Boolean",
+                        "variable": { "id": "00000000-0000-0000-0000-100000000030" }
+                    },
+                    "right": { "resultType": "Boolean", "constant": true },
+                    "operator": "EQ"
+                },
+                "right": {
+                    "resultType": "Boolean",
+                    "left": {
+                        "resultType": "Boolean",
+                        "variable": { "id": "00000000-0000-0000-0000-100000000051" }
+                    },
+                    "right": { "resultType": "Boolean", "constant": true },
+                    "operator": "EQ"
+                },
+                "operator": "OR"
+            }
+        },
+        {
+            "id": "00000000-0000-0000-0000-400000000029",
+            "name": "Influenza or measles infection (S. aureus)",
+            "formula": {
+                "resultType": "Boolean",
+                "left": {
+                    "resultType": "Boolean",
+                    "left": {
+                        "resultType": "Boolean",
+                        "variable": { "id": "00000000-0000-0000-0000-100000000031" }
+                    },
+                    "right": {
+                        "resultType": "Boolean",
+                        "constant": true
+                    },
+                    "operator": "EQ"
+                },
+                "right": {
+                    "resultType": "Boolean",
+                    "left": {
+                        "resultType": "Boolean",
+                        "variable": { "id": "00000000-0000-0000-0000-100000000032" }
+                    },
+                    "right": {
+                        "resultType": "Boolean",
+                        "constant": true
+                    },
+                    "operator": "EQ"
+                },
+                "operator": "OR"
+            }
+        },
+        {
+            "id": "00000000-0000-0000-0000-400000000030",
+            "name": "IV drug use (S. aureus)",
+            "formula": {
+                "resultType": "Boolean",
+                "left": {
+                    "resultType": "Boolean",
+                    "left": {
+                        "resultType": "Boolean",
+                        "variable": { "id": "00000000-0000-0000-0000-100000000033" }
+                    },
+                    "right": {
+                        "resultType": "Boolean",
+                        "constant": true
+                    },
+                    "operator": "EQ"
+                },
+                "right": {
+                    "resultType": "Boolean",
+                    "left": {
+                        "resultType": "Boolean",
+                        "variable": { "id": "00000000-0000-0000-0000-100000000055" }
+                    },
+                    "right": {
+                        "resultType": "Boolean",
+                        "constant": true
+                    },
+                    "operator": "EQ"
+                },
+                "operator": "OR"
+            }
+        },
+        // ---- Risk factor criteria for MRSA ----
+        {
+            "id": "00000000-0000-0000-0000-400000000031",
+            "name": "Prior MRSA infection",
+            "formula": {
+                "resultType": "Boolean",
+                "left": {
+                    "resultType": "Boolean",
+                    "variable": { "id": "00000000-0000-0000-0000-100000000034" }
+                },
+                "right": {
+                    "resultType": "Boolean",
+                    "constant": true
+                },
+                "operator": "EQ"
+            }
+        },
+        {
+            "id": "00000000-0000-0000-0000-400000000032",
+            "name": "Hospitalization and IV antibiotics within 90 days (MRSA)",
+            "formula": {
+                "resultType": "Boolean",
+                "left": {
+                    "resultType": "Boolean",
+                    "variable": { "id": "00000000-0000-0000-0000-100000000035" }
+                },
+                "right": {
+                    "resultType": "Boolean",
+                    "constant": true
+                },
+                "operator": "EQ"
+            }
+        },
+        // ---- Risk factor criteria for Klebsiella pneumoniae ----
+        {
+            "id": "00000000-0000-0000-0000-400000000033",
+            "name": "ICU stay or intubation (Klebsiella)",
+            "formula": {
+                "resultType": "Boolean",
+                "left": {
+                    "resultType": "Boolean",
+                    "left": {
+                        "resultType": "Boolean",
+                        "variable": { "id": "00000000-0000-0000-0000-100000000036" }
+                    },
+                    "right": {
+                        "resultType": "Boolean",
+                        "constant": true
+                    },
+                    "operator": "EQ"
+                },
+                "right": {
+                    "resultType": "Boolean",
+                    "left": {
+                        "resultType": "Boolean",
+                        "variable": { "id": "00000000-0000-0000-0000-100000000037" }
+                    },
+                    "right": {
+                        "resultType": "Boolean",
+                        "constant": true
+                    },
+                    "operator": "EQ"
+                },
+                "operator": "OR"
+            }
+        },
+        {
+            "id": "00000000-0000-0000-0000-400000000034",
+            "name": "Aspiration risk (Klebsiella)",
+            "formula": {
+                "resultType": "Boolean",
+                "left": {
+                    "resultType": "Boolean",
+                    "left": {
+                        "resultType": "Boolean",
+                        "variable": { "id": "00000000-0000-0000-0000-100000000053" }
+                    },
+                    "right": {
+                        "resultType": "Boolean",
+                        "constant": true
+                    },
+                    "operator": "EQ"
+                },
+                "right": {
+                    "resultType": "Boolean",
+                    "left": {
+                        "resultType": "Boolean",
+                        "left": {
+                            "resultType": "Boolean",
+                            "variable": { "id": "00000000-0000-0000-0000-100000000039" }
+                        },
+                        "right": {
+                            "resultType": "Boolean",
+                            "constant": true
+                        },
+                        "operator": "EQ"
+                    },
+                    "right": {
+                        "resultType": "Boolean",
+                        "left": {
+                            "resultType": "Boolean",
+                            "variable": { "id": "00000000-0000-0000-0000-100000000040" }
+                        },
+                        "right": {
+                            "resultType": "Boolean",
+                            "constant": true
+                        },
+                        "operator": "EQ"
+                    },
+                    "operator": "OR"
+                },
+                "operator": "OR"
+            }
+        },
+        {
+            "id": "00000000-0000-0000-0000-400000000035",
+            "name": "Alcohol abuse (Klebsiella)",
+            "formula": {
+                "resultType": "Boolean",
+                "left": {
+                    "resultType": "Boolean",
+                    "variable": { "id": "00000000-0000-0000-0000-100000000021" }
+                },
+                "right": {
+                    "resultType": "Boolean",
+                    "constant": true
+                },
+                "operator": "EQ"
+            }
+        },
+        {
+            "id": "00000000-0000-0000-0000-400000000036",
+            "name": "Chronic lung disease or diabetes (Klebsiella)",
+            "formula": {
+                "resultType": "Boolean",
+                "left": {
+                    "resultType": "Boolean",
+                    "left": {
+                        "resultType": "Boolean",
+                        "left": {
+                            "resultType": "Boolean",
+                            "variable": { "id": "00000000-0000-0000-0000-100000000023" }
+                        },
+                        "right": { "resultType": "Boolean", "constant": true },
+                        "operator": "EQ"
+                    },
+                    "right": {
+                        "resultType": "Boolean",
+                        "left": {
+                            "resultType": "Boolean",
+                            "variable": { "id": "00000000-0000-0000-0000-100000000024" }
+                        },
+                        "right": { "resultType": "Boolean", "constant": true },
+                        "operator": "EQ"
+                    },
+                    "operator": "OR"
+                },
+                "right": {
+                    "resultType": "Boolean",
+                    "left": {
+                        "resultType": "Boolean",
+                        "variable": { "id": "00000000-0000-0000-0000-100000000030" }
+                    },
+                    "right": {
+                        "resultType": "Boolean",
+                        "constant": true
+                    },
+                    "operator": "EQ"
+                },
+                "operator": "OR"
+            }
+        },
+        {
+            "id": "00000000-0000-0000-0000-400000000037",
+            "name": "Prior antibiotic use (Klebsiella)",
+            "formula": {
+                "resultType": "Boolean",
+                "left": {
+                    "resultType": "Boolean",
+                    "variable": { "id": "00000000-0000-0000-0000-100000000041" }
+                },
+                "right": {
+                    "resultType": "Boolean",
+                    "constant": true
+                },
+                "operator": "EQ"
+            }
+        },
+        // ---- Risk factor criteria for Pseudomonas aeruginosa ----
+        {
+            "id": "00000000-0000-0000-0000-400000000038",
+            "name": "Structural lung disease (Pseudomonas)",
+            "formula": {
+                "resultType": "Boolean",
+                "left": {
+                    "resultType": "Boolean",
+                    "left": {
+                        "resultType": "Boolean",
+                        "variable": { "id": "00000000-0000-0000-0000-100000000042" }
+                    },
+                    "right": {
+                        "resultType": "Boolean",
+                        "constant": true
+                    },
+                    "operator": "EQ"
+                },
+                "right": {
+                    "resultType": "Boolean",
+                    "left": {
+                        "resultType": "Boolean",
+                        "left": {
+                            "resultType": "Boolean",
+                            "variable": { "id": "00000000-0000-0000-0000-100000000043" }
+                        },
+                        "right": {
+                            "resultType": "Boolean",
+                            "constant": true
+                        },
+                        "operator": "EQ"
+                    },
+                    "right": {
+                        "resultType": "Boolean",
+                        "left": {
+                            "resultType": "Boolean",
+                            "variable": { "id": "00000000-0000-0000-0000-100000000024" }
+                        },
+                        "right": {
+                            "resultType": "Boolean",
+                            "constant": true
+                        },
+                        "operator": "EQ"
+                    },
+                    "operator": "OR"
+                },
+                "operator": "OR"
+            }
+        },
+        {
+            "id": "00000000-0000-0000-0000-400000000039",
+            "name": "Prior Pseudomonas infection",
+            "formula": {
+                "resultType": "Boolean",
+                "left": {
+                    "resultType": "Boolean",
+                    "variable": { "id": "00000000-0000-0000-0000-100000000045" }
+                },
+                "right": {
+                    "resultType": "Boolean",
+                    "constant": true
+                },
+                "operator": "EQ"
+            }
+        },
+        {
+            "id": "00000000-0000-0000-0000-400000000040",
+            "name": "Hospitalization and IV antibiotics within 90 days (Pseudomonas)",
+            "formula": {
+                "resultType": "Boolean",
+                "left": {
+                    "resultType": "Boolean",
+                    "variable": { "id": "00000000-0000-0000-0000-100000000035" }
+                },
+                "right": {
+                    "resultType": "Boolean",
+                    "constant": true
+                },
+                "operator": "EQ"
+            }
+        },
+        // ---- Risk factor criteria for Acinetobacter baumannii ----
+        {
+            "id": "00000000-0000-0000-0000-400000000041",
+            "name": "Alcohol abuse, old age or severe internal medicine disease (Acinetobacter)",
+            "formula": {
+                "resultType": "Boolean",
+                "left": {
+                    "resultType": "Boolean",
+                    "left": {
+                        "resultType": "Boolean",
+                        "variable": { "id": "00000000-0000-0000-0000-100000000021" }
+                    },
+                    "right": {
+                        "resultType": "Boolean",
+                        "constant": true
+                    },
+                    "operator": "EQ"
+                },
+                "right": {
+                    "resultType": "Boolean",
+                    "left": {
+                        "resultType": "Boolean",
+                        "left": {
+                            "resultType": "Numeric",
+                            "variable": { "id": "00000000-0000-0000-0000-100000000001" }
+                        },
+                        "right": {
+                            "resultType": "Numeric",
+                            "constant": 65
+                        },
+                        "operator": "GT"
+                    },
+                    "right": {
+                        "resultType": "Boolean",
+                        "left": {
+                            "resultType": "Boolean",
+                            "variable": { "id": "00000000-0000-0000-0000-100000000048" }
+                        },
+                        "right": {
+                            "resultType": "Boolean",
+                            "constant": true
+                        },
+                        "operator": "EQ"
+                    },
+                    "operator": "OR"
+                },
+                "operator": "OR"
+            }
+        },
+        // ---- Risk factor criteria for Anaerobic bacteria ----
+        {
+            "id": "00000000-0000-0000-0000-400000000042",
+            "name": "Lung disease (Anaerobic)",
+            "formula": {
+                "resultType": "Boolean",
+                "left": {
+                    "resultType": "Boolean",
+                    "left": {
+                        "resultType": "Boolean",
+                        "left": {
+                            "resultType": "Boolean",
+                            "variable": { "id": "00000000-0000-0000-0000-100000000044" }
+                        },
+                        "right": {
+                            "resultType": "Boolean",
+                            "constant": true
+                        },
+                        "operator": "EQ"
+                    },
+                    "right": {
+                        "resultType": "Boolean",
+                        "left": {
+                            "resultType": "Boolean",
+                            "variable": { "id": "00000000-0000-0000-0000-100000000043" }
+                        },
+                        "right": {
+                            "resultType": "Boolean",
+                            "constant": true
+                        },
+                        "operator": "EQ"
+                    },
+                    "operator": "OR"
+                },
+                "right": {
+                    "resultType": "Boolean",
+                    "left": {
+                        "resultType": "Boolean",
+                        "left": {
+                            "resultType": "Boolean",
+                            "variable": { "id": "00000000-0000-0000-0000-100000000049" }
+                        },
+                        "right": {
+                            "resultType": "Boolean",
+                            "constant": true
+                        },
+                        "operator": "EQ"
+                    },
+                    "right": {
+                        "resultType": "Boolean",
+                        "left": {
+                            "resultType": "Boolean",
+                            "variable": { "id": "00000000-0000-0000-0000-100000000046" }
+                        },
+                        "right": {
+                            "resultType": "Boolean",
+                            "constant": true
+                        },
+                        "operator": "EQ"
+                    },
+                    "operator": "OR"
+                },
+                "operator": "OR"
+            }
+        },
+        {
+            "id": "00000000-0000-0000-0000-400000000043",
+            "name": "Oropharyngeal anaerobic infection",
+            "formula": {
+                "resultType": "Boolean",
+                "left": {
+                    "resultType": "Boolean",
+                    "variable": { "id": "00000000-0000-0000-0000-100000000047" }
+                },
+                "right": {
+                    "resultType": "Boolean",
+                    "constant": true
+                },
+                "operator": "EQ"
+            }
+        },
+    ],
 }

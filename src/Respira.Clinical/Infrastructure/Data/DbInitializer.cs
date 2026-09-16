@@ -8,7 +8,9 @@ namespace Respira.Infrastructure.Data
     {
         private static async Task<bool> HasAnyData(ClinicalDbContext context)
         {
-            return await context.ClinicalVariables.AnyAsync();
+            return await context.ClinicalVariables.AnyAsync() ||
+                await context.Criteria.AnyAsync() ||
+                await context.ScoreMetrics.AnyAsync();
         }
 
         public static async Task InitializeAsync(ClinicalDbContext context, IOptions<SeedDataOptions> options, ILogger<DbInitializer> logger)
@@ -24,6 +26,8 @@ namespace Respira.Infrastructure.Data
             var seedData = await DataSeeder.LoadAsync(options.Value.FilePath);
 
             await context.ClinicalVariables.AddRangeAsync(seedData.ClinicalVariables);
+            await context.Criteria.AddRangeAsync(seedData.Criteria);
+            await context.ScoreMetrics.AddRangeAsync(seedData.ScoreMetrics);
 
             var count = await context.SaveChangesAsync();
             logger.LogInformation("Seeded {Count} records into database", count);
