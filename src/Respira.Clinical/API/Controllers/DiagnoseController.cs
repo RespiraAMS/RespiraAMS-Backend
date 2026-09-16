@@ -1,6 +1,7 @@
 using Asp.Versioning;
 using Microsoft.AspNetCore.Mvc;
-using Respira.Application.Features.Diagnose.EmpiricalDiagnose.GetDiagnoseForm;
+using Respira.Application.Features.Diagnosis.EmpiricalDiagnosis.Diagnose;
+using Respira.Application.Features.Diagnosis.EmpiricalDiagnosis.GetDiagnosisForm;
 using Respira.ServiceDefaults.Contracts.Results;
 using Wolverine;
 
@@ -15,7 +16,18 @@ namespace Respira.Clinical.API.Controllers
         [Route("empirical")]
         public async Task<IActionResult> GetEmpiricalDiagnosisForm()
         {
-            var result = await bus.InvokeAsync<Result<GetDiagnoseFormResult>>(new GetDiagnoseFormQuery());
+            var result = await bus.InvokeAsync<Result<GetDiagnosisFormResult>>(new GetDiagnosisFormQuery());
+            return result.ToApiResponse();
+        }
+
+        [HttpPost]
+        [Route("empirical")]
+        public async Task<IActionResult> PostEmpiricalDiagnosisForm([FromBody] IEnumerable<Observation> observations)
+        {
+            var result = await bus.InvokeAsync<Result<DiagnoseResult>>(new DiagnoseQuery
+            {
+                Observations = observations
+            });
             return result.ToApiResponse();
         }
     }

@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using Respira.Domain.Models;
 using Respira.ServiceDefaults.Models;
 
@@ -17,6 +18,7 @@ namespace Respira.Domain.Entities
         /// <summary>
         /// Pathogen
         /// </summary>
+        [JsonIgnore]
         public Pathogen Pathogen { get; set; } = null!;
 
         /// <summary>

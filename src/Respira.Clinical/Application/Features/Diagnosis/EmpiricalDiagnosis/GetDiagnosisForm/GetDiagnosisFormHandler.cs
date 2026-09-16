@@ -4,12 +4,12 @@ using Respira.Application.Contracts.Data;
 using Respira.ServiceDefaults.Contracts.CQRS;
 using Respira.ServiceDefaults.Contracts.Results;
 
-namespace Respira.Application.Features.Diagnose.EmpiricalDiagnose.GetDiagnoseForm
+namespace Respira.Application.Features.Diagnosis.EmpiricalDiagnosis.GetDiagnosisForm
 {
-    public class GetDiagnoseFormHandler(IDbContext context, ILogger<GetDiagnoseFormHandler> logger)
-        : IQueryHandler<GetDiagnoseFormQuery, Result<GetDiagnoseFormResult>>
+    public class GetDiagnosisFormHandler(IDbContext context, ILogger<GetDiagnosisFormHandler> logger)
+        : IQueryHandler<GetDiagnosisFormQuery, Result<GetDiagnosisFormResult>>
     {
-        public async Task<Result<GetDiagnoseFormResult>> HandleAsync(GetDiagnoseFormQuery query, CancellationToken cancellationToken = default)
+        public async Task<Result<GetDiagnosisFormResult>> HandleAsync(GetDiagnosisFormQuery query, CancellationToken cancellationToken = default)
         {
             var variables = await context.ClinicalVariables
                 .AsNoTracking()
@@ -28,10 +28,10 @@ namespace Respira.Application.Features.Diagnose.EmpiricalDiagnose.GetDiagnoseFor
             {
                 const string msg = "No clinical variable found";
                 logger.LogWarning(msg);
-                return Result<GetDiagnoseFormResult>.Failure(new Error(ApplicationStatus.BusinessRuleViolation, msg));
+                return Result<GetDiagnosisFormResult>.Failure(new Error(ApplicationStatus.BusinessRuleViolation, msg));
             }
 
-            return Result<GetDiagnoseFormResult>.Success(ApplicationStatus.Success, new GetDiagnoseFormResult
+            return Result<GetDiagnosisFormResult>.Success(ApplicationStatus.Success, new GetDiagnosisFormResult
             {
                 Variables = variables.Select(x => new ClinicalVariableResult
                 {

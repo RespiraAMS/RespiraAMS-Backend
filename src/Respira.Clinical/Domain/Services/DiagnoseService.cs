@@ -296,7 +296,7 @@ namespace Respira.Domain.Services
 
             return Result<InfectionAssessment>.Success(ApplicationStatus.Success, new InfectionAssessment
             {
-                HeavySuspected = heavySuspected,
+                HeavySuspected = [.. heavySuspected.OrderByDescending(x => x.PriorityScore)],
                 WorthSuspected = worthSuspected,
             });
         }

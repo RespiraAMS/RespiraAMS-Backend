@@ -1,9 +1,9 @@
 using Respira.Domain.Enums;
 using Respira.ServiceDefaults.Contracts.CQRS;
 
-namespace Respira.Application.Features.Diagnose.EmpiricalDiagnose.GetDiagnoseForm
+namespace Respira.Application.Features.Diagnosis.EmpiricalDiagnosis.GetDiagnosisForm
 {
-    public class GetDiagnoseFormQuery : IQuery;
+    public class GetDiagnosisFormQuery : IQuery;
 
     public record ClinicalVariableResult
     {
@@ -15,7 +15,7 @@ namespace Respira.Application.Features.Diagnose.EmpiricalDiagnose.GetDiagnoseFor
         public string? CanonicalUnit { get; set; }
     }
 
-    public record GetDiagnoseFormResult
+    public record GetDiagnosisFormResult
     {
         public required IEnumerable<ClinicalVariableResult> Variables { get; set; }
     }

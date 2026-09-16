@@ -6,21 +6,16 @@ using Microsoft.EntityFrameworkCore.Storage;
 using Respira.Application.Contracts.Data;
 using Respira.Domain.Entities;
 using Respira.Domain.Models;
+using Respira.Infrastructure.Util.Database;
 using Respira.ServiceDefaults.Models;
 
 namespace Respira.Infrastructure.Data
 {
     public class ClinicalDbContext(DbContextOptions<ClinicalDbContext> options) : DbContext(options), IDbContext
     {
-        private static readonly JsonSerializerOptions s_jsonOptions = new()
-        {
-            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-            Converters = { new JsonStringEnumConverter() }
-        };
-
         private static readonly ValueComparer<Formula> s_formulaComparer = new(
-            (l, r) => JsonSerializer.Serialize(l, s_jsonOptions) == JsonSerializer.Serialize(r, s_jsonOptions),
-            v => JsonSerializer.Serialize(v, s_jsonOptions).GetHashCode(),
+            (l, r) => (l == null && r == null) || (l != null && r != null && FormulaSerializer.Serialize(l) == FormulaSerializer.Serialize(r)),
+            v => v == null ? 0 : FormulaSerializer.Serialize(v).GetHashCode(),
             v => v);
 
         private IExecutionStrategy GetExecutionStrategy() => base.Database.CreateExecutionStrategy();
@@ -151,8 +146,8 @@ namespace Respira.Infrastructure.Data
             modelBuilder.Entity<Criterion>().Property(x => x.Formula)
                 .HasColumnType("jsonb")
                 .HasConversion(
-                    v => JsonSerializer.Serialize(v, s_jsonOptions),
-                    v => JsonSerializer.Deserialize<Formula>(v, s_jsonOptions)!)
+                    v => FormulaSerializer.Serialize(v),
+                    v => FormulaSerializer.Deserialize(v))
                 .Metadata.SetValueComparer(s_formulaComparer);
 
             // Config on pathogen
@@ -187,8 +182,8 @@ namespace Respira.Infrastructure.Data
             modelBuilder.Entity<ScoringRule>().Property(x => x.ScoreFunction)
                 .HasColumnType("jsonb")
                 .HasConversion(
-                    v => JsonSerializer.Serialize(v, s_jsonOptions),
-                    v => JsonSerializer.Deserialize<Formula>(v, s_jsonOptions)!)
+                    v => FormulaSerializer.Serialize(v),
+                    v => FormulaSerializer.Deserialize(v))
                 .Metadata.SetValueComparer(s_formulaComparer);
         }
 

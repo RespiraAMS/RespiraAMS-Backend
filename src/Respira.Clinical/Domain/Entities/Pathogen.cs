@@ -27,6 +27,6 @@ namespace Respira.Domain.Entities
         /// <summary>
         /// Pathogen risk factors
         /// </summary>
-        public IEnumerable<RiskFactor> RiskFactors { get; set; } = [];
+        public ICollection<RiskFactor> RiskFactors { get; set; } = [];
     }
 }

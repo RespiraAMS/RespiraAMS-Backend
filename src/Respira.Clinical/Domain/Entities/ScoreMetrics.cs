@@ -25,6 +25,6 @@ namespace Respira.Domain.Entities
         /// <summary>
         /// Scoring rules
         /// </summary>
-        public IEnumerable<ScoringRule> ScoringRules { get; set; } = [];
+        public ICollection<ScoringRule> ScoringRules { get; set; } = [];
     }
 }

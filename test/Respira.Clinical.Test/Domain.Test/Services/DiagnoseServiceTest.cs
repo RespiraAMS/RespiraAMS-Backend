@@ -570,13 +570,17 @@ namespace Respira.Domain.Test.Services
             // CriterionId is just a database FK - the service evaluates the inline
             // Criterion object, so a random ID is fine in tests
             void AddRule(ScoreMetrics metric, string name, Formula criterion, Formula score) =>
-                metric.ScoringRules = metric.ScoringRules.Append(new ScoringRule
-                {
-                    ScoreMetricsId = metric.Id,
-                    CriterionId = Guid.CreateVersion7(),
-                    Criterion = new Criterion(name, criterion),
-                    ScoreFunction = score
-                });
+                metric.ScoringRules =
+                [
+                    .. metric.ScoringRules,
+                    new ScoringRule
+                        {
+                            ScoreMetricsId = metric.Id,
+                            CriterionId = Guid.CreateVersion7(),
+                            Criterion = new Criterion(name, criterion),
+                            ScoreFunction = score
+                        },
+                ];
 
             var curb65 = new ScoreMetrics
             {
@@ -678,13 +682,17 @@ namespace Respira.Domain.Test.Services
             // CriterionId / PathogenId are just database FKs - the service evaluates the
             // inline Criterion object, so a random ID is fine in tests.
             void AddRiskFactor(Pathogen pathogen, string name, Formula criterion, int priority) =>
-                pathogen.RiskFactors = pathogen.RiskFactors.Append(new RiskFactor
-                {
-                    PathogenId = pathogen.Id,
-                    CriterionId = Guid.CreateVersion7(),
-                    Criterion = new Criterion(name, criterion),
-                    Priority = priority
-                });
+                pathogen.RiskFactors =
+                [
+                    .. pathogen.RiskFactors,
+                    new RiskFactor
+                        {
+                            PathogenId = pathogen.Id,
+                            CriterionId = Guid.CreateVersion7(),
+                            Criterion = new Criterion(name, criterion),
+                            Priority = priority
+                        },
+                ];
 
             var suspectedCauses = new List<SuspectedCause>();
             void AddSuspectedCause(Pathogen pathogen, Severity severity, TreatmentSite treatmentSite) =>
