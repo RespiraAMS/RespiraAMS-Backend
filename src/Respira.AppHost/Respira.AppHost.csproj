@@ -16,4 +16,8 @@
 		<PackageReference Include="MessagePack" />
 		<PackageReference Include="Aspire.Hosting.Kubernetes" />
 	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\Respira.Authentication\Authentication.API\Authentication.API.csproj" />
+	</ItemGroup>
 </Project>

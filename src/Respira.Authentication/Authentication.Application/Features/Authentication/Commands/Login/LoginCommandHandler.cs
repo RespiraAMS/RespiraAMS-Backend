@@ -1,6 +1,8 @@
 using Authentication.Application.Constracts.Authentication;
+using Authentication.Application.Constracts.Cache;
 using Authentication.Application.Constracts.Data;
 using Authentication.Application.Features.Authentication.Commands.Login.Result;
+using Authentication.Domain.Entities;
 using Authentication.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -13,17 +15,36 @@ namespace Authentication.Application.Features.Authentication.Commands.Login
         IAuthDbContext dbContext,
         ILogger<LoginCommandHandler> logger,
         IHashService hashService,
-        IJwtService jwtService
+        IJwtService jwtService,
+        ICacheService cacheService
     ) : ICommandHandler<LoginCommand, Result<LoginResult?>>
     {
+        private static readonly TimeSpan CacheExpiration = TimeSpan.FromMinutes(5);
+
         public async Task<Result<LoginResult?>> HandleAsync(
             LoginCommand command,
             CancellationToken cancellationToken = default
         )
         {
-            var account = await dbContext.Accounts.FirstOrDefaultAsync(a =>
-                a.Email == command.Email && a.Status == StatusType.Active && !a.IsDeleted
-            );
+            var accountCacheKey = $"auth:account:email:{command.Email.ToLowerInvariant()}";
+            var account = await cacheService.GetAsync<Account>(accountCacheKey, cancellationToken);
+
+            if (account is null)
+            {
+                account = await dbContext.Accounts.FirstOrDefaultAsync(a =>
+                    a.Email == command.Email && a.Status == StatusType.Active && !a.IsDeleted
+                );
+
+                if (account is not null)
+                {
+                    await cacheService.SetAsync(
+                        accountCacheKey,
+                        account,
+                        CacheExpiration,
+                        cancellationToken
+                    );
+                }
+            }
 
             if (account is null)
             {

@@ -7,6 +7,13 @@
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.AspNetCore.OpenApi" />
+		<PackageReference Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" />
+		<PackageReference Include="Aspire.StackExchange.Redis" />
+		<PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" />
+		<PackageReference Include="WolverineFx" />
+		<PackageReference Include="WolverineFx.RuntimeCompilation" />
+		<PackageReference Include="ZiggyCreatures.FusionCache" />
+		<PackageReference Include="ZiggyCreatures.FusionCache.Serialization.SystemTextJson" />
 	</ItemGroup>
 
 	<ItemGroup>

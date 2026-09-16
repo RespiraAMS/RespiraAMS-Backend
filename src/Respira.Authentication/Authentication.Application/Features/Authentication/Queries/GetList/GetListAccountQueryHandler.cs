@@ -1,3 +1,4 @@
+using Authentication.Application.Constracts.Cache;
 using Authentication.Application.Constracts.Data;
 using Authentication.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -11,6 +12,7 @@ namespace Authentication.Application.Features.Authentication.Queries.GetList
 {
     public class GetListAccountQueryHandler(
         IAuthDbContext dbContext,
+        ICacheService cacheService,
         ILogger<GetListAccountQueryHandler> logger
     ) : IQueryHandler<GetListAccountQuery, Result<Pagination<Account>>>
     {
@@ -21,22 +23,33 @@ namespace Authentication.Application.Features.Authentication.Queries.GetList
         {
             ArgumentNullException.ThrowIfNull(query);
 
+            var paginationParam = query.PaginationParam;
+            var cacheKey = $"auth:accounts:list:page:{paginationParam.Page}:size:{paginationParam.Size}";
+            var cachedResult = await cacheService.GetAsync<Pagination<Account>>(
+                cacheKey,
+                cancellationToken
+            );
+
+            if (cachedResult is not null)
+            {
+                logger.LogDebug("Authentication account list cache hit for page {Page}", paginationParam.Page);
+                return Result<Pagination<Account>>.Success(ApplicationStatus.Success, cachedResult);
+            }
+
             var accountsQuery = dbContext
                 .Accounts.AsNoTracking()
                 .Where(account => !account.IsDeleted)
                 .OrderByDescending(account => account.CreatedAt);
 
-            var paginationParam = new PaginationParam();
-
             var pagedAccounts = await accountsQuery.ToPagedListAsync(
-                query.Page ?? paginationParam.Page,
+                paginationParam.Page,
                 paginationParam.Size
             );
 
             var result = new Pagination<Account>(
                 new PaginationMetadata
                 {
-                    CurrentPage = query.Page ?? paginationParam.Page,
+                    CurrentPage = paginationParam.Page,
                     PageSize = paginationParam.Size,
                     TotalItemCount = pagedAccounts.TotalItemCount,
                     PageCount = pagedAccounts.PageCount,
@@ -50,6 +63,13 @@ namespace Authentication.Application.Features.Authentication.Queries.GetList
                 "Authentication account list returned {Count} of {TotalItemCount} account(s)",
                 pagedAccounts.Count,
                 pagedAccounts.TotalItemCount
+            );
+
+            await cacheService.SetAsync(
+                cacheKey,
+                result,
+                TimeSpan.FromMinutes(2),
+                cancellationToken
             );
 
             return Result<Pagination<Account>>.Success(ApplicationStatus.Success, result);

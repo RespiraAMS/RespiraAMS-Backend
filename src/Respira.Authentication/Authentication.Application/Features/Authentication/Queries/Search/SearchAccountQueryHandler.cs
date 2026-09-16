@@ -1,3 +1,6 @@
+using System.Security.Cryptography;
+using System.Text;
+using Authentication.Application.Constracts.Cache;
 using Authentication.Application.Constracts.Data;
 using Authentication.Application.Features.Authentication.Queries.Search.Result;
 using Microsoft.EntityFrameworkCore;
@@ -9,6 +12,7 @@ namespace Authentication.Application.Features.Authentication.Queries.Search
 {
     public class SearchAccountQueryHandler(
         IAuthDbContext dbContext,
+        ICacheService cacheService,
         ILogger<SearchAccountQueryHandler> logger
     ) : IQueryHandler<SearchAccountQuery, Result<IEnumerable<AccountResult>>>
     {
@@ -17,11 +21,32 @@ namespace Authentication.Application.Features.Authentication.Queries.Search
             CancellationToken cancellationToken = default
         )
         {
+            ArgumentNullException.ThrowIfNull(query);
+
+            var normalizedQuery = query.Query.Trim();
+            var queryHash = Convert.ToHexString(
+                SHA256.HashData(Encoding.UTF8.GetBytes(normalizedQuery))
+            );
+            var cacheKey = $"auth:accounts:search:{queryHash}";
+            var cachedAccounts = await cacheService.GetAsync<List<AccountResult>>(
+                cacheKey,
+                cancellationToken
+            );
+
+            if (cachedAccounts is not null)
+            {
+                logger.LogDebug("Authentication account search cache hit for {Query}", normalizedQuery);
+                return Result<IEnumerable<AccountResult>>.Success(
+                    ApplicationStatus.Success,
+                    cachedAccounts
+                );
+            }
+
             var accountList = await dbContext
                 .Accounts.Where(a =>
-                    a.Email.Contains(query.Query)
-                    || a.Phone.Contains(query.Query)
-                    || a.Id.ToString().Equals(query.Query)
+                    a.Email.Contains(normalizedQuery)
+                    || a.Phone.Contains(normalizedQuery)
+                    || a.Id.ToString().Equals(normalizedQuery)
                 )
                 .AsNoTracking()
                 .Select(a => new AccountResult
@@ -39,6 +64,13 @@ namespace Authentication.Application.Features.Authentication.Queries.Search
                 "Authentication account search for {Query} returned {Count} result(s)",
                 query.Query,
                 accountList.Count
+            );
+
+            await cacheService.SetAsync(
+                cacheKey,
+                accountList,
+                TimeSpan.FromMinutes(2),
+                cancellationToken
             );
 
             return Result<IEnumerable<AccountResult>>.Success(

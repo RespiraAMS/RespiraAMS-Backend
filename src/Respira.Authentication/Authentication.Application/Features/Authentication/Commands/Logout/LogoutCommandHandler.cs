@@ -1,4 +1,5 @@
 using Authentication.Application.Constracts.Authentication;
+using Authentication.Application.Constracts.Cache;
 using Authentication.Application.Constracts.Data;
 using Authentication.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -13,7 +14,8 @@ namespace Authentication.Application.Features.Authentication.Commands.Logout
         IAuthDbContext dbContext,
         IHashService hashService,
         ILogger<LogoutCommandHandler> logger,
-        IOptions<JwtOption> jwtOption
+        IOptions<JwtOption> jwtOption,
+        ICacheService cacheService
     ) : ICommandHandler<LogoutCommand, Result<bool>>
     {
         public async Task<Result<bool>> HandleAsync(
@@ -34,6 +36,11 @@ namespace Authentication.Application.Features.Authentication.Commands.Logout
                 );
             }
 
+            var account = await dbContext.Accounts.FirstOrDefaultAsync(
+                a => a.Id == isTokenExist.AccountId && !a.IsDeleted,
+                cancellationToken
+            );
+
             var blacklistToken = new BlacklistToken()
             {
                 HashToken = hashService.HashToken(command.RefreshToken),
@@ -46,6 +53,15 @@ namespace Authentication.Application.Features.Authentication.Commands.Logout
 
             await dbContext.SaveChangesAsync(cancellationToken);
 
+            if (account is not null)
+            {
+                await cacheService.RemoveAsync(
+                    $"auth:account:email:{account.Email.ToLowerInvariant()}",
+                    cancellationToken
+                );
+            }
+
+            logger.LogInformation("User logged out successfully");
             return Result<bool>.Success(ApplicationStatus.Success, true);
         }
     }
