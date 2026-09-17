@@ -16,7 +16,7 @@ var builder = WebApplication.CreateBuilder(args);
 var conn = builder.Configuration.GetConnectionString("clinicalDb") ?? throw new InvalidOperationException("No connection string found");
 
 // Add API controllers
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(options => options.JsonSerializerOptions.PropertyNameCaseInsensitive = true);
 
 // Add API versioning
 builder.Services.AddApiVersioning(options =>
@@ -56,6 +56,16 @@ builder.Host.UseWolverine(opts =>
     opts.UseRabbitMqUsingNamedConnection("rabbitmq").AutoProvision();
 
     opts.Durability.Mode = DurabilityMode.Balanced;
+});
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("test", policy =>
+    {
+        policy.AllowAnyOrigin()
+            .AllowAnyMethod()
+            .AllowAnyHeader();
+    });
 });
 
 var app = builder.Build();

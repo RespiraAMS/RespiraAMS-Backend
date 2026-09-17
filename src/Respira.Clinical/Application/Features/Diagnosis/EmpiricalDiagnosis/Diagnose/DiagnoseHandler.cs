@@ -99,6 +99,12 @@ namespace Respira.Application.Features.Diagnosis.EmpiricalDiagnosis.Diagnose
                 return Result<DiagnoseResult>.Failure(infectionAssessment.Error!);
             }
 
+            logger.LogDebug("Diagnose result: {detail}", new
+            {
+                Severity = severityDiagnosis.Data,
+                Infection = infectionAssessment.Data,
+            });
+
             return Result<DiagnoseResult>.Success(ApplicationStatus.Success, new DiagnoseResult
             {
                 Severity = severityDiagnosis.Data.Severity,

@@ -4,7 +4,7 @@
             "id": "00000000-0000-0000-0000-100000000001",
             "name": "Age",
             "code": "AGE",
-            "description": "Patient age",
+            "description": "Tuổi bệnh nhân",
             "valueType": "Numeric",
             "canonicalUnit": "year"
         },
@@ -12,7 +12,7 @@
             "id": "00000000-0000-0000-0000-100000000002",
             "name": "Is female sex",
             "code": "FEMALE",
-            "description": "Is the patient female",
+            "description": "Bệnh nhân này có phải giới tính nữ không?",
             "valueType": "Boolean",
             "canonicalUnit": null
         },
@@ -20,7 +20,7 @@
             "id": "00000000-0000-0000-0000-100000000003",
             "name": "Height",
             "code": "HEIGHT",
-            "description": "Patient height",
+            "description": "Chiều cao bệnh nhân",
             "valueType": "Numeric",
             "canonicalUnit": "cm"
         },
@@ -28,7 +28,7 @@
             "id": "00000000-0000-0000-0000-100000000004",
             "name": "Weight",
             "code": "WEIGHT",
-            "description": "Patient weight",
+            "description": "Cân nặng bệnh nhân",
             "valueType": "Numeric",
             "canonicalUnit": "kg"
         },
@@ -44,7 +44,7 @@
             "id": "00000000-0000-0000-0000-100000000006",
             "name": "Respiratory rate",
             "code": "RR",
-            "description": "Patient respiratory rate",
+            "description": "Nhịp thở",
             "valueType": "Numeric",
             "canonicalUnit": "breaths/min"
         },
@@ -52,7 +52,7 @@
             "id": "00000000-0000-0000-0000-100000000007",
             "name": "Systolic blood pressure",
             "code": "SBP",
-            "description": "Patient systolic blood pressure",
+            "description": "Huyết áp tâm thu",
             "valueType": "Numeric",
             "canonicalUnit": "mmHg"
         },
@@ -60,7 +60,7 @@
             "id": "00000000-0000-0000-0000-100000000008",
             "name": "Diastolic blood pressure",
             "code": "DBP",
-            "description": "Patient diastolic blood pressure",
+            "description": "Huyết áp tâm trương",
             "valueType": "Numeric",
             "canonicalUnit": "mmHg"
         },
@@ -68,7 +68,7 @@
             "id": "00000000-0000-0000-0000-100000000009",
             "name": "Temperature",
             "code": "TEMPERATURE",
-            "description": "Patient body temperature",
+            "description": "Nhiệt độ cơ thể",
             "valueType": "Numeric",
             "canonicalUnit": "Celcius"
         },
@@ -76,7 +76,7 @@
             "id": "00000000-0000-0000-0000-100000000010",
             "name": "Urea",
             "code": "UREA",
-            "description": "Patient blood urea",
+            "description": "Urea máu",
             "valueType": "Numeric",
             "canonicalUnit": "mmol/L"
         },
@@ -84,7 +84,7 @@
             "id": "00000000-0000-0000-0000-100000000011",
             "name": "White blood cell count",
             "code": "WBC",
-            "description": "Patient white blood cell count",
+            "description": "Số lượng bạch cầu",
             "valueType": "Numeric",
             "canonicalUnit": "cells/mm3"
         },
@@ -92,7 +92,7 @@
             "id": "00000000-0000-0000-0000-100000000012",
             "name": "Platelet count",
             "code": "PLATELET",
-            "description": "Patient platelet count",
+            "description": "Số lượng tiểu cầu",
             "valueType": "Numeric",
             "canonicalUnit": "cells/mm3"
         },
@@ -100,7 +100,7 @@
             "id": "00000000-0000-0000-0000-100000000013",
             "name": "Partial pressure of arterial oxygen (PaO₂)",
             "code": "PAO2",
-            "description": "Arterial partial pressure of oxygen",
+            "description": "Phân áp oxy trong máu động mạch",
             "valueType": "Numeric",
             "canonicalUnit": "mmHg"
         },
@@ -108,31 +108,23 @@
             "id": "00000000-0000-0000-0000-100000000014",
             "name": "Fraction of inspired oxygen (FiO₂)",
             "code": "FIO2",
-            "description": "Fraction of inspired oxygen",
+            "description": "Phân suất oxy trong khí hít vào",
             "valueType": "Numeric",
             "canonicalUnit": null
         },
         {
             "id": "00000000-0000-0000-0000-100000000015",
-            "name": "Peripheral oxygen saturation (SpO2)",
+            "name": "Peripheral oxygen saturation (SpO₂)",
             "code": "SPO2",
-            "description": "Peripheral oxygen saturation",
+            "description": "Độ bão hòa oxy trong máu ngoại vi",
             "valueType": "Numeric",
             "canonicalUnit": "%"
-        },
-        {
-            "id": "00000000-0000-0000-0000-100000000016",
-            "name": "Has pleural effusion on X-Ray",
-            "code": "PLEURAL-EFFUSION",
-            "description": "Does the patient have pleural effusion on X-Ray",
-            "valueType": "Boolean",
-            "canonicalUnit": null
         },
         {
             "id": "00000000-0000-0000-0000-100000000017",
             "name": "Multilobar pulmonary lesions on chest X-ray",
             "code": "MULTILOBAR-PULMONARY-LESION",
-            "description": "Does the patient have multilobar pulmonary lesions on chest X-ray",
+            "description": "Bệnh nhân có bị tổn thương nhiều thùy phổi trên phim X-quang không?",
             "valueType": "Boolean",
             "canonicalUnit": null
         },
@@ -140,7 +132,7 @@
             "id": "00000000-0000-0000-0000-100000000018",
             "name": "Hypotension requiring aggressive fluid resuscitation",
             "code": "HYPOTENSION",
-            "description": "Does the patient have hypotension requiring aggressive fluid resuscitation",
+            "description": "Bệnh nhân có bị hạ huyết áp cần phải bù dịch tích cực không?",
             "valueType": "Boolean",
             "canonicalUnit": null
         },
@@ -148,7 +140,7 @@
             "id": "00000000-0000-0000-0000-100000000019",
             "name": "Requires mechanical ventilation",
             "code": "REQUIRES-MECHANICAL-VENTILATION",
-            "description": "Does the patient require invasive mechanical ventilation",
+            "description": "Bệnh nhân có bị suy hô hấp cần phải thông khí cơ học không?",
             "valueType": "Boolean",
             "canonicalUnit": null
         },
@@ -156,7 +148,7 @@
             "id": "00000000-0000-0000-0000-100000000020",
             "name": "Septic shock requiring vasopressor support",
             "code": "SEPTIC-SHOCK",
-            "description": "Does the patient have septic shock requiring vasopressors",
+            "description": "Bệnh nhân có bị sốc nhiễm khuẩn cần phải dùng thuốc vận mạch không?",
             "valueType": "Boolean",
             "canonicalUnit": null
         },
@@ -164,7 +156,7 @@
             "id": "00000000-0000-0000-0000-100000000021",
             "name": "Alcohol abuse",
             "code": "ALCOHOL-ABUSE",
-            "description": "History of alcohol abuse",
+            "description": "Bệnh nhân có tiền sử nghiện rượu không?",
             "valueType": "Boolean",
             "canonicalUnit": null
         },
@@ -172,7 +164,7 @@
             "id": "00000000-0000-0000-0000-100000000022",
             "name": "Smoking",
             "code": "SMOKING",
-            "description": "Current or former smoker",
+            "description": "Bệnh nhân có hút thuốc lá không?",
             "valueType": "Boolean",
             "canonicalUnit": null
         },
@@ -180,7 +172,7 @@
             "id": "00000000-0000-0000-0000-100000000023",
             "name": "Chronic obstructive pulmonary disease",
             "code": "COPD",
-            "description": "Has chronic obstructive pulmonary disease (COPD) or other chronic lung disease",
+            "description": "Bệnh nhân có mắc bệnh phổi tắc nghẽn mãn tính không?",
             "valueType": "Boolean",
             "canonicalUnit": null
         },
@@ -188,7 +180,7 @@
             "id": "00000000-0000-0000-0000-100000000024",
             "name": "Severe chronic obstructive pulmonary disease",
             "code": "SEVERE-COPD",
-            "description": "Has severe COPD (FEV1 < 30%)",
+            "description": "Bệnh nhân có bị mắc bệnh phổi tắc nghẽn mãn tính nặng (FEV1 < 30%) không?",
             "valueType": "Boolean",
             "canonicalUnit": null
         },
@@ -196,7 +188,7 @@
             "id": "00000000-0000-0000-0000-100000000025",
             "name": "Malnutrition",
             "code": "MALNUTRITION",
-            "description": "Has malnutrition",
+            "description": "Bệnh nhân có bị suy dinh dưỡng không?",
             "valueType": "Boolean",
             "canonicalUnit": null
         },
@@ -204,7 +196,7 @@
             "id": "00000000-0000-0000-0000-100000000026",
             "name": "Mental illness",
             "code": "MENTAL-ILLNESS",
-            "description": "Has mental illness",
+            "description": "Bệnh nhân có bị mắc bệnh tâm thần không?",
             "valueType": "Boolean",
             "canonicalUnit": null
         },
@@ -212,7 +204,7 @@
             "id": "00000000-0000-0000-0000-100000000027",
             "name": "Immunocompromised",
             "code": "IMMUNOCOMPROMISED",
-            "description": "Is immunocompromised",
+            "description": "Bệnh nhân có bị suy giảm miễn dịch không?",
             "valueType": "Boolean",
             "canonicalUnit": null
         },
@@ -220,7 +212,7 @@
             "id": "00000000-0000-0000-0000-100000000028",
             "name": "HIV infection",
             "code": "HIV",
-            "description": "Has HIV infection",
+            "description": "Bệnh nhân có nhiễm HIV không?",
             "valueType": "Boolean",
             "canonicalUnit": null
         },
@@ -228,7 +220,7 @@
             "id": "00000000-0000-0000-0000-100000000029",
             "name": "Organ transplant",
             "code": "ORGAN-TRANSPLANT",
-            "description": "Has had an organ transplant",
+            "description": "Bệnh nhân có từng ghép tạng không?",
             "valueType": "Boolean",
             "canonicalUnit": null
         },
@@ -236,7 +228,7 @@
             "id": "00000000-0000-0000-0000-100000000030",
             "name": "Diabetes mellitus",
             "code": "DIABETES",
-            "description": "Has diabetes mellitus",
+            "description": "Bệnh nhân có bị đái tháo đường không?",
             "valueType": "Boolean",
             "canonicalUnit": null
         },
@@ -244,7 +236,7 @@
             "id": "00000000-0000-0000-0000-100000000031",
             "name": "Influenza infection",
             "code": "INFLUENZA",
-            "description": "Has influenza infection",
+            "description": "Bệnh nhân có bị nhiễm virus influenza không?",
             "valueType": "Boolean",
             "canonicalUnit": null
         },
@@ -252,7 +244,7 @@
             "id": "00000000-0000-0000-0000-100000000032",
             "name": "Measles infection",
             "code": "MEASLES",
-            "description": "Has measles infection",
+            "description": "Bệnh nhân có bị nhiễm virus sởi không?",
             "valueType": "Boolean",
             "canonicalUnit": null
         },
@@ -260,7 +252,7 @@
             "id": "00000000-0000-0000-0000-100000000033",
             "name": "IV drug use",
             "code": "IV-DRUG-USE",
-            "description": "History of intravenous drug use",
+            "description": "Bệnh nhân có từng tiêm chính không?",
             "valueType": "Boolean",
             "canonicalUnit": null
         },
@@ -268,7 +260,7 @@
             "id": "00000000-0000-0000-0000-100000000034",
             "name": "Prior MRSA infection",
             "code": "PRIOR-MRSA-INFECTION",
-            "description": "History of MRSA infection",
+            "description": "Bệnh nhân có tiền sử nhiễm MRSA không?",
             "valueType": "Boolean",
             "canonicalUnit": null
         },
@@ -276,7 +268,7 @@
             "id": "00000000-0000-0000-0000-100000000035",
             "name": "Hospitalization and IV antibiotics within 90 days",
             "code": "HOSPITALIZATION-90D",
-            "description": "Hospitalization and IV antibiotics within 90 days",
+            "description": "Bệnh nhân có từng nằm viện và dùng kháng sinh tĩnh mạch trong vòng 90 ngày không?",
             "valueType": "Boolean",
             "canonicalUnit": null
         },
@@ -284,7 +276,7 @@
             "id": "00000000-0000-0000-0000-100000000036",
             "name": "ICU stay",
             "code": "ICU-STAY",
-            "description": "Recent ICU stay",
+            "description": "Bệnh nhân có từng nằm ICU gần đây không?",
             "valueType": "Boolean",
             "canonicalUnit": null
         },
@@ -292,15 +284,7 @@
             "id": "00000000-0000-0000-0000-100000000037",
             "name": "Intubation",
             "code": "INTUBATION",
-            "description": "Recent endotracheal intubation",
-            "valueType": "Boolean",
-            "canonicalUnit": null
-        },
-        {
-            "id": "00000000-0000-0000-0000-100000000038",
-            "name": "Stroke",
-            "code": "STROKE",
-            "description": "Has stroke history",
+            "description": "Bệnh nhân có từng đặt nội khí quản gần đây không?",
             "valueType": "Boolean",
             "canonicalUnit": null
         },
@@ -308,7 +292,7 @@
             "id": "00000000-0000-0000-0000-100000000039",
             "name": "Epilepsy",
             "code": "EPILEPSY",
-            "description": "Has epilepsy",
+            "description": "Bệnh nhân có bị động kinh không?",
             "valueType": "Boolean",
             "canonicalUnit": null
         },
@@ -316,7 +300,7 @@
             "id": "00000000-0000-0000-0000-100000000040",
             "name": "Anesthesia",
             "code": "ANESTHESIA",
-            "description": "Recent anesthesia",
+            "description": "Bệnh nhân có bị gây mê gần đây không?",
             "valueType": "Boolean",
             "canonicalUnit": null
         },
@@ -324,7 +308,7 @@
             "id": "00000000-0000-0000-0000-100000000041",
             "name": "Prior antibiotic use",
             "code": "PRIOR-ANTIBIOTIC-USE",
-            "description": "Recent antibiotic use",
+            "description": "Bệnh nhân có từng sử dụng kháng sinh gần đây không?",
             "valueType": "Boolean",
             "canonicalUnit": null
         },
@@ -332,7 +316,7 @@
             "id": "00000000-0000-0000-0000-100000000042",
             "name": "Cystic fibrosis",
             "code": "CYSTIC-FIBROSIS",
-            "description": "Has cystic fibrosis",
+            "description": "Bệnh nhân có bị bệnh xơ nang không?",
             "valueType": "Boolean",
             "canonicalUnit": null
         },
@@ -340,7 +324,7 @@
             "id": "00000000-0000-0000-0000-100000000043",
             "name": "Bronchiectasis",
             "code": "BRONCHIECTASIS",
-            "description": "Has bronchiectasis",
+            "description": "Bệnh nhân có bị giãn phế quản không?",
             "valueType": "Boolean",
             "canonicalUnit": null
         },
@@ -348,7 +332,7 @@
             "id": "00000000-0000-0000-0000-100000000044",
             "name": "Lung cancer",
             "code": "LUNG-CANCER",
-            "description": "Has lung cancer",
+            "description": "Bệnh nhân có bị ung thư phổi không?",
             "valueType": "Boolean",
             "canonicalUnit": null
         },
@@ -356,7 +340,7 @@
             "id": "00000000-0000-0000-0000-100000000045",
             "name": "Prior Pseudomonas infection",
             "code": "PRIOR-PSEUDOMONAS",
-            "description": "History of Pseudomonas aeruginosa infection",
+            "description": "Bệnh nhân có tiền sử nhiễm Pseudomonas aeruginosa không?",
             "valueType": "Boolean",
             "canonicalUnit": null
         },
@@ -364,7 +348,7 @@
             "id": "00000000-0000-0000-0000-100000000046",
             "name": "Aspiration pneumonia",
             "code": "ASPIRATION-PNEUMONIA",
-            "description": "Has aspiration pneumonia",
+            "description": "Bệnh nhân có bị viêm phổi hít không?",
             "valueType": "Boolean",
             "canonicalUnit": null
         },
@@ -380,7 +364,7 @@
             "id": "00000000-0000-0000-0000-100000000048",
             "name": "Severe internal medicine disease",
             "code": "SEVERE-INTERNAL-DISEASE",
-            "description": "Has severe internal medicine disease",
+            "description": "Bệnh nhân có bị mắc các bệnh nội khoa nặng không?",
             "valueType": "Boolean",
             "canonicalUnit": null
         },
@@ -388,7 +372,7 @@
             "id": "00000000-0000-0000-0000-100000000049",
             "name": "Pulmonary infarction",
             "code": "PULMONARY-INFARCTION",
-            "description": "Has pulmonary infarction",
+            "description": "Bệnh nhân có bị nhồi máu phổi không?",
             "valueType": "Boolean",
             "canonicalUnit": null
         },
@@ -404,7 +388,7 @@
             "id": "00000000-0000-0000-0000-100000000051",
             "name": "Has renal disease history",
             "code": "RENAL",
-            "description": "Does the patient have renal disease history",
+            "description": "Bệnh nhân có bị bệnh thận mạn không?",
             "valueType": "Boolean",
             "canonicalUnit": null
         },
@@ -412,7 +396,7 @@
             "id": "00000000-0000-0000-0000-100000000052",
             "name": "Has congestive heart failure (CHF)",
             "code": "CHF",
-            "description": "Does the patient have congestive heart failure",
+            "description": "Bệnh nhân có bị suy tim ứ huyết không?",
             "valueType": "Boolean",
             "canonicalUnit": null
         },
@@ -420,7 +404,7 @@
             "id": "00000000-0000-0000-0000-100000000053",
             "name": "Has cerebrovascular disease history",
             "code": "CEREBROVASCULAR",
-            "description": "Does the patient have cerebrovascular disease history",
+            "description": "Bệnh nhân có bị tai biến mạch máu não không?",
             "valueType": "Boolean",
             "canonicalUnit": null
         },
@@ -428,7 +412,7 @@
             "id": "00000000-0000-0000-0000-100000000054",
             "name": "Has neoplastic disease",
             "code": "NEOPLASTIC",
-            "description": "Does the patient have neoplastic disease",
+            "description": "Bệnh nhân có bị ung thư ác tính không?",
             "valueType": "Boolean",
             "canonicalUnit": null
         },
@@ -436,7 +420,7 @@
             "id": "00000000-0000-0000-0000-100000000055",
             "name": "Septic thromboembolism in infective endocarditis.",
             "code": "SEPTIC-THROMBOEMBOLISM",
-            "description": "Does the patient have septic thromboembolism in infective endocarditis",
+            "description": "Bệnh nhân có bị thuyên tắc huyết khối nhiễm trùng trong viêm nội tâm mạc nhiễm khuẩn không?",
             "valueType": "Boolean",
             "canonicalUnit": null
         }
