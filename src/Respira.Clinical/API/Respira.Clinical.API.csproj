@@ -21,6 +21,6 @@
 
     <ItemGroup>
         <ProjectReference Include="../../Respira.ServiceDefaults/Respira.ServiceDefaults.csproj" />
-        <ProjectReference Include="../DI/Respira.DI.csproj" />
+        <ProjectReference Include="../DI/Respira.Clinical.DI.csproj" />
     </ItemGroup>
 </Project>

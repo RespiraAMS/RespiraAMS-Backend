@@ -16,6 +16,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="../../../src/Respira.Clinical/Domain/Respira.Domain.csproj" />
+        <ProjectReference Include="../../../src/Respira.Clinical/Domain/Respira.Clinical.Domain.csproj" />
     </ItemGroup>
 </Project>
