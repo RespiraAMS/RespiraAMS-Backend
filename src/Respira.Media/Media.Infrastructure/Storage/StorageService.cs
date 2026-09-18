@@ -50,7 +50,10 @@ namespace Media.Infrastructure.Storage
             return objectKey;
         }
 
-        public async Task DeleteAsync(string objectKey, CancellationToken cancellationToken = default)
+        public async Task DeleteAsync(
+            string objectKey,
+            CancellationToken cancellationToken = default
+        )
         {
             var deleteRequest = new DeleteObjectRequest
             {
