@@ -9,6 +9,7 @@ namespace Respira.Clinical.Infrastructure.Data
         public List<SuspectedCauseDto> SuspectedCauses { get; init; } = [];
         public List<AntibioticGroupDto> AntibioticGroups { get; init; } = [];
         public List<AntibioticDto> Antibiotics { get; init; } = [];
+        public List<TreatmentDto> Treatments { get; init; } = [];
     }
 
     public record ClinicalVariableDto
@@ -118,5 +119,15 @@ namespace Respira.Clinical.Infrastructure.Data
         public decimal? Max { get; init; }
         public bool IsMaxExclusive { get; init; }
         public string? Unit { get; init; }
+    }
+
+    public record TreatmentDto
+    {
+        public string Id { get; init; } = string.Empty;
+        public string Severity { get; init; } = string.Empty;
+        public string TreatmentSite { get; init; } = string.Empty;
+        public List<Guid> MedicineIds { get; init; } = [];
+        public List<Guid> PathogenIds { get; init; } = [];
+        public List<Guid> CriteriaIds { get; init; } = [];
     }
 }

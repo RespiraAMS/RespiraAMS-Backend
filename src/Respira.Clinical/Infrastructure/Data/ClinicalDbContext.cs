@@ -28,6 +28,7 @@ namespace Respira.Clinical.Infrastructure.Data
         public DbSet<Antibiotic> Antibiotics { get; set; }
         public DbSet<AntibioticGroup> AntibioticGroups { get; set; }
         public DbSet<Dosage> Dosages { get; set; }
+        public DbSet<Treatment> Treatments { get; set; }
 
         public async Task ExecuteInTransactionAsync(Func<Task> action, CancellationToken cancellationToken = default)
         {
@@ -219,6 +220,20 @@ namespace Respira.Clinical.Infrastructure.Data
             modelBuilder.Entity<Antibiotic>()
                 .Property(x => x.Classification)
                 .HasConversion<string>();
+
+            // Config on treatment
+            modelBuilder.Entity<Treatment>().ToTable("treatments");
+            modelBuilder.Entity<Treatment>()
+                .HasMany(x => x.Pathogens)
+                .WithMany()
+                .UsingEntity(t => t.ToTable("treatment_pathogens"));
+            modelBuilder.Entity<Treatment>()
+                .HasMany(x => x.Criteria)
+                .WithMany()
+                .UsingEntity(t => t.ToTable("treatment_criteria"));
+            modelBuilder.Entity<Treatment>()
+                .HasMany(x => x.Medicines)
+                .WithMany();
         }
 
         public override async ValueTask DisposeAsync()

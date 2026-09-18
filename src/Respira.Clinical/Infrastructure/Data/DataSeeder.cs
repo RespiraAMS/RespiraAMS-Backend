@@ -15,6 +15,7 @@ namespace Respira.Clinical.Infrastructure.Data
         public required List<SuspectedCause> SuspectedCauses { get; init; }
         public required List<AntibioticGroup> AntibioticGroups { get; init; }
         public required List<Antibiotic> Antibiotics { get; init; }
+        public required List<Treatment> Treatments { get; init; }
     }
 
     public static class DataSeeder
@@ -177,6 +178,26 @@ namespace Respira.Clinical.Infrastructure.Data
                 return antibiotic;
             });
 
+            var treatments = dto.Treatments.ConvertAll(t =>
+            {
+                var treatmentId = GenerateId(t.Id);
+                var pathogens = t.PathogenIds.ConvertAll(p => pathogenLookup[p]);
+                var criteria = t.CriteriaIds.ConvertAll(c => criterionLookup[c]);
+                var medicines = t.MedicineIds.ConvertAll(m => antibiotics.First(a => a.Id == m));
+                return new Treatment
+                {
+                    Id = treatmentId,
+                    Severity = ParseEnum(t.Severity, Severity.Mild),
+                    TreatmentSite = ParseEnum(t.TreatmentSite, TreatmentSite.Outpatient),
+                    PathogenIds = t.PathogenIds,
+                    Pathogens = pathogens,
+                    CriteriaIds = t.CriteriaIds,
+                    Criteria = criteria,
+                    MedicineIds = t.MedicineIds,
+                    Medicines = medicines,
+                };
+            });
+
 
             return new SeedData
             {
@@ -188,6 +209,7 @@ namespace Respira.Clinical.Infrastructure.Data
                 SuspectedCauses = suspectedCauses,
                 AntibioticGroups = antibioticGroups,
                 Antibiotics = antibiotics,
+                Treatments = treatments,
             };
         }
 

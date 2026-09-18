@@ -121,6 +121,14 @@
             "canonicalUnit": "%"
         },
         {
+            "id": "00000000-0000-0000-0000-100000000016",
+            "name": "Beta-lactam allergy",
+            "code": "BETA-LACTAM-ALLERGY",
+            "description": "Bệnh nhân có bị dị ứng với beta-lactam không?",
+            "valueType": "Boolean",
+            "canonicalUnit": null
+        },
+        {
             "id": "00000000-0000-0000-0000-100000000017",
             "name": "Multilobar pulmonary lesions on chest X-ray",
             "code": "MULTILOBAR-PULMONARY-LESION",
@@ -471,7 +479,7 @@
                         "resultType": "Numeric",
                         "constant": 1
                     }
-                },
+                }
             ]
         },
         {
@@ -582,7 +590,7 @@
                 "left": {
                     "resultType": "Boolean",
                     "variable": {
-                        "id": "00000000-0000-0000-0000-100000000005",
+                        "id": "00000000-0000-0000-0000-100000000005"
                     }
                 },
                 "right": {
@@ -600,7 +608,7 @@
                 "left": {
                     "resultType": "Numeric",
                     "variable": {
-                        "id": "00000000-0000-0000-0000-100000000010",
+                        "id": "00000000-0000-0000-0000-100000000010"
                     }
                 },
                 "right": {
@@ -621,7 +629,7 @@
                     "left": {
                         "resultType": "Numeric",
                         "variable": {
-                            "id": "00000000-0000-0000-0000-100000000006",
+                            "id": "00000000-0000-0000-0000-100000000006"
                         }
                     },
                     "right": {
@@ -635,7 +643,7 @@
                     "left": {
                         "resultType": "Numeric",
                         "variable": {
-                            "id": "00000000-0000-0000-0000-100000000015",
+                            "id": "00000000-0000-0000-0000-100000000015"
                         }
                     },
                     "right": {
@@ -657,7 +665,7 @@
                     "left": {
                         "resultType": "Numeric",
                         "variable": {
-                            "id": "00000000-0000-0000-0000-100000000007",
+                            "id": "00000000-0000-0000-0000-100000000007"
                         }
                     },
                     "right": {
@@ -671,7 +679,7 @@
                     "left": {
                         "resultType": "Numeric",
                         "variable": {
-                            "id": "00000000-0000-0000-0000-100000000008",
+                            "id": "00000000-0000-0000-0000-100000000008"
                         }
                     },
                     "right": {
@@ -691,7 +699,7 @@
                 "left": {
                     "resultType": "Numeric",
                     "variable": {
-                        "id": "00000000-0000-0000-0000-100000000001",
+                        "id": "00000000-0000-0000-0000-100000000001"
                     }
                 },
                 "right": {
@@ -710,7 +718,7 @@
                 "left": {
                     "resultType": "Boolean",
                     "variable": {
-                        "id": "00000000-0000-0000-0000-100000000019",
+                        "id": "00000000-0000-0000-0000-100000000019"
                     }
                 },
                 "right": {
@@ -728,7 +736,7 @@
                 "left": {
                     "resultType": "Boolean",
                     "variable": {
-                        "id": "00000000-0000-0000-0000-100000000020",
+                        "id": "00000000-0000-0000-0000-100000000020"
                     }
                 },
                 "right": {
@@ -746,7 +754,7 @@
                 "left": {
                     "resultType": "Numeric",
                     "variable": {
-                        "id": "00000000-0000-0000-0000-100000000006",
+                        "id": "00000000-0000-0000-0000-100000000006"
                     }
                 },
                 "right": {
@@ -766,13 +774,13 @@
                     "left": {
                         "resultType": "Numeric",
                         "variable": {
-                            "id": "00000000-0000-0000-0000-100000000013",
+                            "id": "00000000-0000-0000-0000-100000000013"
                         }
                     },
                     "right": {
                         "resultType": "Numeric",
                         "variable": {
-                            "id": "00000000-0000-0000-0000-100000000014",
+                            "id": "00000000-0000-0000-0000-100000000014"
                         }
                     },
                     "operator": "DIV"
@@ -792,7 +800,7 @@
                 "left": {
                     "resultType": "Boolean",
                     "variable": {
-                        "id": "00000000-0000-0000-0000-100000000017",
+                        "id": "00000000-0000-0000-0000-100000000017"
                     }
                 },
                 "right": {
@@ -810,7 +818,7 @@
                 "left": {
                     "resultType": "Boolean",
                     "variable": {
-                        "id": "00000000-0000-0000-0000-100000000005",
+                        "id": "00000000-0000-0000-0000-100000000005"
                     }
                 },
                 "right": {
@@ -830,7 +838,7 @@
                     "left": {
                         "resultType": "Numeric",
                         "variable": {
-                            "id": "00000000-0000-0000-0000-100000000010",
+                            "id": "00000000-0000-0000-0000-100000000010"
                         }
                     },
                     "right": {
@@ -854,7 +862,7 @@
                 "left": {
                     "resultType": "Numeric",
                     "variable": {
-                        "id": "00000000-0000-0000-0000-100000000011",
+                        "id": "00000000-0000-0000-0000-100000000011"
                     }
                 },
                 "right": {
@@ -872,7 +880,7 @@
                 "left": {
                     "resultType": "Numeric",
                     "variable": {
-                        "id": "00000000-0000-0000-0000-100000000012",
+                        "id": "00000000-0000-0000-0000-100000000012"
                     }
                 },
                 "right": {
@@ -890,7 +898,7 @@
                 "left": {
                     "resultType": "Numeric",
                     "variable": {
-                        "id": "00000000-0000-0000-0000-100000000009",
+                        "id": "00000000-0000-0000-0000-100000000009"
                     }
                 },
                 "right": {
@@ -908,7 +916,7 @@
                 "left": {
                     "resultType": "Boolean",
                     "variable": {
-                        "id": "00000000-0000-0000-0000-100000000018",
+                        "id": "00000000-0000-0000-0000-100000000018"
                     }
                 },
                 "right": {
@@ -928,8 +936,8 @@
                     "resultType": "Boolean",
                     "left": {
                         "resultType": "Boolean",
-                        "variable": { 
-                            "id": "00000000-0000-0000-0000-100000000002" 
+                        "variable": {
+                            "id": "00000000-0000-0000-0000-100000000002"
                         }
                     },
                     "right": {
@@ -944,7 +952,9 @@
                         "resultType": "Boolean",
                         "left": {
                             "resultType": "Numeric",
-                            "variable": { "id": "00000000-0000-0000-0000-100000000001" }
+                            "variable": {
+                                "id": "00000000-0000-0000-0000-100000000001"
+                            }
                         },
                         "right": {
                             "resultType": "Numeric",
@@ -956,7 +966,9 @@
                         "resultType": "Boolean",
                         "left": {
                             "resultType": "Numeric",
-                            "variable": { "id": "00000000-0000-0000-0000-100000000001" }
+                            "variable": {
+                                "id": "00000000-0000-0000-0000-100000000001"
+                            }
                         },
                         "right": {
                             "resultType": "Numeric",
@@ -978,7 +990,9 @@
                     "resultType": "Boolean",
                     "left": {
                         "resultType": "Boolean",
-                        "variable": { "id": "00000000-0000-0000-0000-100000000021" }
+                        "variable": {
+                            "id": "00000000-0000-0000-0000-100000000021"
+                        }
                     },
                     "right": {
                         "resultType": "Boolean",
@@ -990,7 +1004,9 @@
                     "resultType": "Boolean",
                     "left": {
                         "resultType": "Boolean",
-                        "variable": { "id": "00000000-0000-0000-0000-100000000022" }
+                        "variable": {
+                            "id": "00000000-0000-0000-0000-100000000022"
+                        }
                     },
                     "right": {
                         "resultType": "Boolean",
@@ -1016,18 +1032,28 @@
                                 "resultType": "Boolean",
                                 "left": {
                                     "resultType": "Boolean",
-                                    "variable": { "id": "00000000-0000-0000-0000-100000000050" }
+                                    "variable": {
+                                        "id": "00000000-0000-0000-0000-100000000050"
+                                    }
                                 },
-                                "right": { "resultType": "Boolean", "constant": true },
+                                "right": {
+                                    "resultType": "Boolean",
+                                    "constant": true
+                                },
                                 "operator": "EQ"
                             },
                             "right": {
                                 "resultType": "Boolean",
                                 "left": {
                                     "resultType": "Boolean",
-                                    "variable": { "id": "00000000-0000-0000-0000-100000000051" }
+                                    "variable": {
+                                        "id": "00000000-0000-0000-0000-100000000051"
+                                    }
                                 },
-                                "right": { "resultType": "Boolean", "constant": true },
+                                "right": {
+                                    "resultType": "Boolean",
+                                    "constant": true
+                                },
                                 "operator": "EQ"
                             },
                             "operator": "OR"
@@ -1036,9 +1062,14 @@
                             "resultType": "Boolean",
                             "left": {
                                 "resultType": "Boolean",
-                                "variable": { "id": "00000000-0000-0000-0000-100000000052" }
+                                "variable": {
+                                    "id": "00000000-0000-0000-0000-100000000052"
+                                }
                             },
-                            "right": { "resultType": "Boolean", "constant": true },
+                            "right": {
+                                "resultType": "Boolean",
+                                "constant": true
+                            },
                             "operator": "EQ"
                         },
                         "operator": "OR"
@@ -1049,18 +1080,28 @@
                             "resultType": "Boolean",
                             "left": {
                                 "resultType": "Boolean",
-                                "variable": { "id": "00000000-0000-0000-0000-100000000025" }
+                                "variable": {
+                                    "id": "00000000-0000-0000-0000-100000000025"
+                                }
                             },
-                            "right": { "resultType": "Boolean", "constant": true },
+                            "right": {
+                                "resultType": "Boolean",
+                                "constant": true
+                            },
                             "operator": "EQ"
                         },
                         "right": {
                             "resultType": "Boolean",
                             "left": {
                                 "resultType": "Boolean",
-                                "variable": { "id": "00000000-0000-0000-0000-100000000026" }
+                                "variable": {
+                                    "id": "00000000-0000-0000-0000-100000000026"
+                                }
                             },
-                            "right": { "resultType": "Boolean", "constant": true },
+                            "right": {
+                                "resultType": "Boolean",
+                                "constant": true
+                            },
                             "operator": "EQ"
                         },
                         "operator": "OR"
@@ -1075,18 +1116,28 @@
                             "resultType": "Boolean",
                             "left": {
                                 "resultType": "Boolean",
-                                "variable": { "id": "00000000-0000-0000-0000-100000000023" }
+                                "variable": {
+                                    "id": "00000000-0000-0000-0000-100000000023"
+                                }
                             },
-                            "right": { "resultType": "Boolean", "constant": true },
+                            "right": {
+                                "resultType": "Boolean",
+                                "constant": true
+                            },
                             "operator": "EQ"
                         },
                         "right": {
                             "resultType": "Boolean",
                             "left": {
                                 "resultType": "Boolean",
-                                "variable": { "id": "00000000-0000-0000-0000-100000000024" }
+                                "variable": {
+                                    "id": "00000000-0000-0000-0000-100000000024"
+                                }
                             },
-                            "right": { "resultType": "Boolean", "constant": true },
+                            "right": {
+                                "resultType": "Boolean",
+                                "constant": true
+                            },
                             "operator": "EQ"
                         },
                         "operator": "OR"
@@ -1097,9 +1148,14 @@
                             "resultType": "Boolean",
                             "left": {
                                 "resultType": "Boolean",
-                                "variable": { "id": "00000000-0000-0000-0000-100000000027" }
+                                "variable": {
+                                    "id": "00000000-0000-0000-0000-100000000027"
+                                }
                             },
-                            "right": { "resultType": "Boolean", "constant": true },
+                            "right": {
+                                "resultType": "Boolean",
+                                "constant": true
+                            },
                             "operator": "EQ"
                         },
                         "right": {
@@ -1108,18 +1164,28 @@
                                 "resultType": "Boolean",
                                 "left": {
                                     "resultType": "Boolean",
-                                    "variable": { "id": "00000000-0000-0000-0000-100000000028" }
+                                    "variable": {
+                                        "id": "00000000-0000-0000-0000-100000000028"
+                                    }
                                 },
-                                "right": { "resultType": "Boolean", "constant": true },
+                                "right": {
+                                    "resultType": "Boolean",
+                                    "constant": true
+                                },
                                 "operator": "EQ"
                             },
                             "right": {
                                 "resultType": "Boolean",
                                 "left": {
                                     "resultType": "Boolean",
-                                    "variable": { "id": "00000000-0000-0000-0000-100000000029" }
+                                    "variable": {
+                                        "id": "00000000-0000-0000-0000-100000000029"
+                                    }
                                 },
-                                "right": { "resultType": "Boolean", "constant": true },
+                                "right": {
+                                    "resultType": "Boolean",
+                                    "constant": true
+                                },
                                 "operator": "EQ"
                             },
                             "operator": "OR"
@@ -1141,18 +1207,28 @@
                     "resultType": "Boolean",
                     "left": {
                         "resultType": "Boolean",
-                        "variable": { "id": "00000000-0000-0000-0000-100000000023" }
+                        "variable": {
+                            "id": "00000000-0000-0000-0000-100000000023"
+                        }
                     },
-                    "right": { "resultType": "Boolean", "constant": true },
+                    "right": {
+                        "resultType": "Boolean",
+                        "constant": true
+                    },
                     "operator": "EQ"
                 },
                 "right": {
                     "resultType": "Boolean",
                     "left": {
                         "resultType": "Boolean",
-                        "variable": { "id": "00000000-0000-0000-0000-100000000024" }
+                        "variable": {
+                            "id": "00000000-0000-0000-0000-100000000024"
+                        }
                     },
-                    "right": { "resultType": "Boolean", "constant": true },
+                    "right": {
+                        "resultType": "Boolean",
+                        "constant": true
+                    },
                     "operator": "EQ"
                 },
                 "operator": "OR"
@@ -1165,7 +1241,9 @@
                 "resultType": "Boolean",
                 "left": {
                     "resultType": "Boolean",
-                    "variable": { "id": "00000000-0000-0000-0000-100000000054" }
+                    "variable": {
+                        "id": "00000000-0000-0000-0000-100000000054"
+                    }
                 },
                 "right": {
                     "resultType": "Boolean",
@@ -1181,7 +1259,9 @@
                 "resultType": "Boolean",
                 "left": {
                     "resultType": "Boolean",
-                    "variable": { "id": "00000000-0000-0000-0000-100000000028" }
+                    "variable": {
+                        "id": "00000000-0000-0000-0000-100000000028"
+                    }
                 },
                 "right": {
                     "resultType": "Boolean",
@@ -1197,7 +1277,9 @@
                 "resultType": "Boolean",
                 "left": {
                     "resultType": "Boolean",
-                    "variable": { "id": "00000000-0000-0000-0000-100000000021" }
+                    "variable": {
+                        "id": "00000000-0000-0000-0000-100000000021"
+                    }
                 },
                 "right": {
                     "resultType": "Boolean",
@@ -1213,7 +1295,9 @@
                 "resultType": "Boolean",
                 "left": {
                     "resultType": "Boolean",
-                    "variable": { "id": "00000000-0000-0000-0000-100000000022" }
+                    "variable": {
+                        "id": "00000000-0000-0000-0000-100000000022"
+                    }
                 },
                 "right": {
                     "resultType": "Boolean",
@@ -1234,18 +1318,28 @@
                         "resultType": "Boolean",
                         "left": {
                             "resultType": "Boolean",
-                            "variable": { "id": "00000000-0000-0000-0000-100000000023" }
+                            "variable": {
+                                "id": "00000000-0000-0000-0000-100000000023"
+                            }
                         },
-                        "right": { "resultType": "Boolean", "constant": true },
+                        "right": {
+                            "resultType": "Boolean",
+                            "constant": true
+                        },
                         "operator": "EQ"
                     },
                     "right": {
                         "resultType": "Boolean",
                         "left": {
                             "resultType": "Boolean",
-                            "variable": { "id": "00000000-0000-0000-0000-100000000024" }
+                            "variable": {
+                                "id": "00000000-0000-0000-0000-100000000024"
+                            }
                         },
-                        "right": { "resultType": "Boolean", "constant": true },
+                        "right": {
+                            "resultType": "Boolean",
+                            "constant": true
+                        },
                         "operator": "EQ"
                     },
                     "operator": "OR"
@@ -1256,18 +1350,28 @@
                         "resultType": "Boolean",
                         "left": {
                             "resultType": "Boolean",
-                            "variable": { "id": "00000000-0000-0000-0000-100000000044" }
+                            "variable": {
+                                "id": "00000000-0000-0000-0000-100000000044"
+                            }
                         },
-                        "right": { "resultType": "Boolean", "constant": true },
+                        "right": {
+                            "resultType": "Boolean",
+                            "constant": true
+                        },
                         "operator": "EQ"
                     },
                     "right": {
                         "resultType": "Boolean",
                         "left": {
                             "resultType": "Boolean",
-                            "variable": { "id": "00000000-0000-0000-0000-100000000042" }
+                            "variable": {
+                                "id": "00000000-0000-0000-0000-100000000042"
+                            }
                         },
-                        "right": { "resultType": "Boolean", "constant": true },
+                        "right": {
+                            "resultType": "Boolean",
+                            "constant": true
+                        },
                         "operator": "EQ"
                     },
                     "operator": "OR"
@@ -1284,18 +1388,28 @@
                     "resultType": "Boolean",
                     "left": {
                         "resultType": "Boolean",
-                        "variable": { "id": "00000000-0000-0000-0000-100000000030" }
+                        "variable": {
+                            "id": "00000000-0000-0000-0000-100000000030"
+                        }
                     },
-                    "right": { "resultType": "Boolean", "constant": true },
+                    "right": {
+                        "resultType": "Boolean",
+                        "constant": true
+                    },
                     "operator": "EQ"
                 },
                 "right": {
                     "resultType": "Boolean",
                     "left": {
                         "resultType": "Boolean",
-                        "variable": { "id": "00000000-0000-0000-0000-100000000051" }
+                        "variable": {
+                            "id": "00000000-0000-0000-0000-100000000051"
+                        }
                     },
-                    "right": { "resultType": "Boolean", "constant": true },
+                    "right": {
+                        "resultType": "Boolean",
+                        "constant": true
+                    },
                     "operator": "EQ"
                 },
                 "operator": "OR"
@@ -1310,7 +1424,9 @@
                     "resultType": "Boolean",
                     "left": {
                         "resultType": "Boolean",
-                        "variable": { "id": "00000000-0000-0000-0000-100000000031" }
+                        "variable": {
+                            "id": "00000000-0000-0000-0000-100000000031"
+                        }
                     },
                     "right": {
                         "resultType": "Boolean",
@@ -1322,7 +1438,9 @@
                     "resultType": "Boolean",
                     "left": {
                         "resultType": "Boolean",
-                        "variable": { "id": "00000000-0000-0000-0000-100000000032" }
+                        "variable": {
+                            "id": "00000000-0000-0000-0000-100000000032"
+                        }
                     },
                     "right": {
                         "resultType": "Boolean",
@@ -1342,7 +1460,9 @@
                     "resultType": "Boolean",
                     "left": {
                         "resultType": "Boolean",
-                        "variable": { "id": "00000000-0000-0000-0000-100000000033" }
+                        "variable": {
+                            "id": "00000000-0000-0000-0000-100000000033"
+                        }
                     },
                     "right": {
                         "resultType": "Boolean",
@@ -1354,7 +1474,9 @@
                     "resultType": "Boolean",
                     "left": {
                         "resultType": "Boolean",
-                        "variable": { "id": "00000000-0000-0000-0000-100000000055" }
+                        "variable": {
+                            "id": "00000000-0000-0000-0000-100000000055"
+                        }
                     },
                     "right": {
                         "resultType": "Boolean",
@@ -1373,7 +1495,9 @@
                 "resultType": "Boolean",
                 "left": {
                     "resultType": "Boolean",
-                    "variable": { "id": "00000000-0000-0000-0000-100000000034" }
+                    "variable": {
+                        "id": "00000000-0000-0000-0000-100000000034"
+                    }
                 },
                 "right": {
                     "resultType": "Boolean",
@@ -1389,7 +1513,9 @@
                 "resultType": "Boolean",
                 "left": {
                     "resultType": "Boolean",
-                    "variable": { "id": "00000000-0000-0000-0000-100000000035" }
+                    "variable": {
+                        "id": "00000000-0000-0000-0000-100000000035"
+                    }
                 },
                 "right": {
                     "resultType": "Boolean",
@@ -1408,7 +1534,9 @@
                     "resultType": "Boolean",
                     "left": {
                         "resultType": "Boolean",
-                        "variable": { "id": "00000000-0000-0000-0000-100000000036" }
+                        "variable": {
+                            "id": "00000000-0000-0000-0000-100000000036"
+                        }
                     },
                     "right": {
                         "resultType": "Boolean",
@@ -1420,7 +1548,9 @@
                     "resultType": "Boolean",
                     "left": {
                         "resultType": "Boolean",
-                        "variable": { "id": "00000000-0000-0000-0000-100000000037" }
+                        "variable": {
+                            "id": "00000000-0000-0000-0000-100000000037"
+                        }
                     },
                     "right": {
                         "resultType": "Boolean",
@@ -1440,7 +1570,9 @@
                     "resultType": "Boolean",
                     "left": {
                         "resultType": "Boolean",
-                        "variable": { "id": "00000000-0000-0000-0000-100000000053" }
+                        "variable": {
+                            "id": "00000000-0000-0000-0000-100000000053"
+                        }
                     },
                     "right": {
                         "resultType": "Boolean",
@@ -1454,7 +1586,9 @@
                         "resultType": "Boolean",
                         "left": {
                             "resultType": "Boolean",
-                            "variable": { "id": "00000000-0000-0000-0000-100000000039" }
+                            "variable": {
+                                "id": "00000000-0000-0000-0000-100000000039"
+                            }
                         },
                         "right": {
                             "resultType": "Boolean",
@@ -1466,7 +1600,9 @@
                         "resultType": "Boolean",
                         "left": {
                             "resultType": "Boolean",
-                            "variable": { "id": "00000000-0000-0000-0000-100000000040" }
+                            "variable": {
+                                "id": "00000000-0000-0000-0000-100000000040"
+                            }
                         },
                         "right": {
                             "resultType": "Boolean",
@@ -1486,7 +1622,9 @@
                 "resultType": "Boolean",
                 "left": {
                     "resultType": "Boolean",
-                    "variable": { "id": "00000000-0000-0000-0000-100000000021" }
+                    "variable": {
+                        "id": "00000000-0000-0000-0000-100000000021"
+                    }
                 },
                 "right": {
                     "resultType": "Boolean",
@@ -1506,18 +1644,28 @@
                         "resultType": "Boolean",
                         "left": {
                             "resultType": "Boolean",
-                            "variable": { "id": "00000000-0000-0000-0000-100000000023" }
+                            "variable": {
+                                "id": "00000000-0000-0000-0000-100000000023"
+                            }
                         },
-                        "right": { "resultType": "Boolean", "constant": true },
+                        "right": {
+                            "resultType": "Boolean",
+                            "constant": true
+                        },
                         "operator": "EQ"
                     },
                     "right": {
                         "resultType": "Boolean",
                         "left": {
                             "resultType": "Boolean",
-                            "variable": { "id": "00000000-0000-0000-0000-100000000024" }
+                            "variable": {
+                                "id": "00000000-0000-0000-0000-100000000024"
+                            }
                         },
-                        "right": { "resultType": "Boolean", "constant": true },
+                        "right": {
+                            "resultType": "Boolean",
+                            "constant": true
+                        },
                         "operator": "EQ"
                     },
                     "operator": "OR"
@@ -1526,7 +1674,9 @@
                     "resultType": "Boolean",
                     "left": {
                         "resultType": "Boolean",
-                        "variable": { "id": "00000000-0000-0000-0000-100000000030" }
+                        "variable": {
+                            "id": "00000000-0000-0000-0000-100000000030"
+                        }
                     },
                     "right": {
                         "resultType": "Boolean",
@@ -1544,7 +1694,9 @@
                 "resultType": "Boolean",
                 "left": {
                     "resultType": "Boolean",
-                    "variable": { "id": "00000000-0000-0000-0000-100000000041" }
+                    "variable": {
+                        "id": "00000000-0000-0000-0000-100000000041"
+                    }
                 },
                 "right": {
                     "resultType": "Boolean",
@@ -1563,7 +1715,9 @@
                     "resultType": "Boolean",
                     "left": {
                         "resultType": "Boolean",
-                        "variable": { "id": "00000000-0000-0000-0000-100000000042" }
+                        "variable": {
+                            "id": "00000000-0000-0000-0000-100000000042"
+                        }
                     },
                     "right": {
                         "resultType": "Boolean",
@@ -1577,7 +1731,9 @@
                         "resultType": "Boolean",
                         "left": {
                             "resultType": "Boolean",
-                            "variable": { "id": "00000000-0000-0000-0000-100000000043" }
+                            "variable": {
+                                "id": "00000000-0000-0000-0000-100000000043"
+                            }
                         },
                         "right": {
                             "resultType": "Boolean",
@@ -1589,7 +1745,9 @@
                         "resultType": "Boolean",
                         "left": {
                             "resultType": "Boolean",
-                            "variable": { "id": "00000000-0000-0000-0000-100000000024" }
+                            "variable": {
+                                "id": "00000000-0000-0000-0000-100000000024"
+                            }
                         },
                         "right": {
                             "resultType": "Boolean",
@@ -1609,7 +1767,9 @@
                 "resultType": "Boolean",
                 "left": {
                     "resultType": "Boolean",
-                    "variable": { "id": "00000000-0000-0000-0000-100000000045" }
+                    "variable": {
+                        "id": "00000000-0000-0000-0000-100000000045"
+                    }
                 },
                 "right": {
                     "resultType": "Boolean",
@@ -1625,7 +1785,9 @@
                 "resultType": "Boolean",
                 "left": {
                     "resultType": "Boolean",
-                    "variable": { "id": "00000000-0000-0000-0000-100000000035" }
+                    "variable": {
+                        "id": "00000000-0000-0000-0000-100000000035"
+                    }
                 },
                 "right": {
                     "resultType": "Boolean",
@@ -1644,7 +1806,9 @@
                     "resultType": "Boolean",
                     "left": {
                         "resultType": "Boolean",
-                        "variable": { "id": "00000000-0000-0000-0000-100000000021" }
+                        "variable": {
+                            "id": "00000000-0000-0000-0000-100000000021"
+                        }
                     },
                     "right": {
                         "resultType": "Boolean",
@@ -1658,7 +1822,9 @@
                         "resultType": "Boolean",
                         "left": {
                             "resultType": "Numeric",
-                            "variable": { "id": "00000000-0000-0000-0000-100000000001" }
+                            "variable": {
+                                "id": "00000000-0000-0000-0000-100000000001"
+                            }
                         },
                         "right": {
                             "resultType": "Numeric",
@@ -1670,7 +1836,9 @@
                         "resultType": "Boolean",
                         "left": {
                             "resultType": "Boolean",
-                            "variable": { "id": "00000000-0000-0000-0000-100000000048" }
+                            "variable": {
+                                "id": "00000000-0000-0000-0000-100000000048"
+                            }
                         },
                         "right": {
                             "resultType": "Boolean",
@@ -1695,7 +1863,9 @@
                         "resultType": "Boolean",
                         "left": {
                             "resultType": "Boolean",
-                            "variable": { "id": "00000000-0000-0000-0000-100000000044" }
+                            "variable": {
+                                "id": "00000000-0000-0000-0000-100000000044"
+                            }
                         },
                         "right": {
                             "resultType": "Boolean",
@@ -1707,7 +1877,9 @@
                         "resultType": "Boolean",
                         "left": {
                             "resultType": "Boolean",
-                            "variable": { "id": "00000000-0000-0000-0000-100000000043" }
+                            "variable": {
+                                "id": "00000000-0000-0000-0000-100000000043"
+                            }
                         },
                         "right": {
                             "resultType": "Boolean",
@@ -1723,7 +1895,9 @@
                         "resultType": "Boolean",
                         "left": {
                             "resultType": "Boolean",
-                            "variable": { "id": "00000000-0000-0000-0000-100000000049" }
+                            "variable": {
+                                "id": "00000000-0000-0000-0000-100000000049"
+                            }
                         },
                         "right": {
                             "resultType": "Boolean",
@@ -1735,7 +1909,9 @@
                         "resultType": "Boolean",
                         "left": {
                             "resultType": "Boolean",
-                            "variable": { "id": "00000000-0000-0000-0000-100000000046" }
+                            "variable": {
+                                "id": "00000000-0000-0000-0000-100000000046"
+                            }
                         },
                         "right": {
                             "resultType": "Boolean",
@@ -1755,7 +1931,9 @@
                 "resultType": "Boolean",
                 "left": {
                     "resultType": "Boolean",
-                    "variable": { "id": "00000000-0000-0000-0000-100000000047" }
+                    "variable": {
+                        "id": "00000000-0000-0000-0000-100000000047"
+                    }
                 },
                 "right": {
                     "resultType": "Boolean",
@@ -1764,6 +1942,244 @@
                 "operator": "EQ"
             }
         },
+        // ---- Treatments criteria ---- 
+        {
+            "id": "00000000-0000-0000-0000-400000000044",
+            "name": "Beta-lactam allergy",
+            "formula": {
+                "resultType": "Boolean",
+                "left": {
+                    "resultType": "Boolean",
+                    "variable": {
+                        "id": "00000000-0000-0000-0000-100000000016"
+                    }
+                },
+                "right": {
+                    "resultType": "Boolean",
+                    "constant": true
+                },
+                "operator": "EQ"
+            }
+        },
+        {
+            "id": "00000000-0000-0000-0000-400000000045",
+            "name": "Elderly patients with comorbidities and immunodeficiency",
+            "formula": {
+                "resultType": "Boolean",
+                // Bệnh đồng mắc
+                "left": {
+                    "resultType": "Boolean",
+                    "left": {
+                        "resultType": "Boolean",
+                        "left": {
+                            "resultType": "Boolean",
+                            "left": {
+                                "resultType": "Boolean",
+                                "left": {
+                                    "resultType": "Boolean",
+                                    "left": {
+                                        "resultType": "Boolean",
+                                        "variable": {
+                                            "id": "00000000-0000-0000-0000-100000000050"
+                                        }
+                                    },
+                                    "right": {
+                                        "resultType": "Boolean",
+                                        "constant": true
+                                    },
+                                    "operator": "EQ"
+                                },
+                                "right": {
+                                    "resultType": "Boolean",
+                                    "left": {
+                                        "resultType": "Boolean",
+                                        "variable": {
+                                            "id": "00000000-0000-0000-0000-100000000051"
+                                        }
+                                    },
+                                    "right": {
+                                        "resultType": "Boolean",
+                                        "constant": true
+                                    },
+                                    "operator": "EQ"
+                                },
+                                "operator": "OR"
+                            },
+                            "right": {
+                                "resultType": "Boolean",
+                                "left": {
+                                    "resultType": "Boolean",
+                                    "variable": {
+                                        "id": "00000000-0000-0000-0000-100000000052"
+                                    }
+                                },
+                                "right": {
+                                    "resultType": "Boolean",
+                                    "constant": true
+                                },
+                                "operator": "EQ"
+                            },
+                            "operator": "OR"
+                        },
+                        "right": {
+                            "resultType": "Boolean",
+                            "left": {
+                                "resultType": "Boolean",
+                                "left": {
+                                    "resultType": "Boolean",
+                                    "variable": {
+                                        "id": "00000000-0000-0000-0000-100000000025"
+                                    }
+                                },
+                                "right": {
+                                    "resultType": "Boolean",
+                                    "constant": true
+                                },
+                                "operator": "EQ"
+                            },
+                            "right": {
+                                "resultType": "Boolean",
+                                "left": {
+                                    "resultType": "Boolean",
+                                    "variable": {
+                                        "id": "00000000-0000-0000-0000-100000000026"
+                                    }
+                                },
+                                "right": {
+                                    "resultType": "Boolean",
+                                    "constant": true
+                                },
+                                "operator": "EQ"
+                            },
+                            "operator": "OR"
+                        },
+                        "operator": "OR"
+                    },
+                    "right": {
+                        "resultType": "Boolean",
+                        "left": {
+                            "resultType": "Boolean",
+                            "left": {
+                                "resultType": "Boolean",
+                                "left": {
+                                    "resultType": "Boolean",
+                                    "variable": {
+                                        "id": "00000000-0000-0000-0000-100000000023"
+                                    }
+                                },
+                                "right": {
+                                    "resultType": "Boolean",
+                                    "constant": true
+                                },
+                                "operator": "EQ"
+                            },
+                            "right": {
+                                "resultType": "Boolean",
+                                "left": {
+                                    "resultType": "Boolean",
+                                    "variable": {
+                                        "id": "00000000-0000-0000-0000-100000000024"
+                                    }
+                                },
+                                "right": {
+                                    "resultType": "Boolean",
+                                    "constant": true
+                                },
+                                "operator": "EQ"
+                            },
+                            "operator": "OR"
+                        },
+                        "right": {
+                            "resultType": "Boolean",
+                            "left": {
+                                "resultType": "Boolean",
+                                "left": {
+                                    "resultType": "Boolean",
+                                    "variable": {
+                                        "id": "00000000-0000-0000-0000-100000000027"
+                                    }
+                                },
+                                "right": {
+                                    "resultType": "Boolean",
+                                    "constant": true
+                                },
+                                "operator": "EQ"
+                            },
+                            "right": {
+                                "resultType": "Boolean",
+                                "left": {
+                                    "resultType": "Boolean",
+                                    "left": {
+                                        "resultType": "Boolean",
+                                        "variable": {
+                                            "id": "00000000-0000-0000-0000-100000000028"
+                                        }
+                                    },
+                                    "right": {
+                                        "resultType": "Boolean",
+                                        "constant": true
+                                    },
+                                    "operator": "EQ"
+                                },
+                                "right": {
+                                    "resultType": "Boolean",
+                                    "left": {
+                                        "resultType": "Boolean",
+                                        "variable": {
+                                            "id": "00000000-0000-0000-0000-100000000029"
+                                        }
+                                    },
+                                    "right": {
+                                        "resultType": "Boolean",
+                                        "constant": true
+                                    },
+                                    "operator": "EQ"
+                                },
+                                "operator": "OR"
+                            },
+                            "operator": "OR"
+                        },
+                        "operator": "OR"
+                    },
+                    "operator": "OR"
+                },
+                "right": {
+                    "resultType": "Boolean",
+                    // Bệnh nhân lớn tuổi
+                    "left": {
+                        "resultType": "Boolean",
+                        "left": {
+                            "resultType": "Numeric",
+                            "variable": {
+                                "id": "00000000-0000-0000-0000-100000000001"
+                            }
+                        },
+                        "right": {
+                            "resultType": "Numeric",
+                            "constant": 65
+                        },
+                        "operator": "GTE"
+                    },
+                    // Bệnh nhân suy giảm miễn dịch
+                    "right": {
+                        "resultType": "Boolean",
+                        "left": {
+                            "resultType": "Boolean",
+                            "variable": {
+                                "id": "00000000-0000-0000-0000-100000000027"
+                            }
+                        },
+                        "right": {
+                            "resultType": "Boolean",
+                            "constant": true
+                        },
+                        "operator": "EQ"
+                    },
+                    "operator": "AND"
+                },
+                "operator": "AND"
+            }
+        }
     ],
     "pathogens": [
         // ---- Pathogens with risk factors (Table 3.2) ----
@@ -1773,9 +2189,18 @@
             "description": "Most common bacterial cause of community-acquired pneumonia",
             "isAtypical": false,
             "riskFactors": [
-                { "criterionId": "00000000-0000-0000-0000-400000000019", "priority": 1 },
-                { "criterionId": "00000000-0000-0000-0000-400000000020", "priority": 2 },
-                { "criterionId": "00000000-0000-0000-0000-400000000021", "priority": 3 }
+                {
+                    "criterionId": "00000000-0000-0000-0000-400000000019",
+                    "priority": 1
+                },
+                {
+                    "criterionId": "00000000-0000-0000-0000-400000000020",
+                    "priority": 2
+                },
+                {
+                    "criterionId": "00000000-0000-0000-0000-400000000021",
+                    "priority": 3
+                }
             ]
         },
         {
@@ -1784,11 +2209,26 @@
             "description": "Common pathogen in patients with chronic lung disease",
             "isAtypical": false,
             "riskFactors": [
-                { "criterionId": "00000000-0000-0000-0000-400000000022", "priority": 1 },
-                { "criterionId": "00000000-0000-0000-0000-400000000023", "priority": 2 },
-                { "criterionId": "00000000-0000-0000-0000-400000000024", "priority": 3 },
-                { "criterionId": "00000000-0000-0000-0000-400000000025", "priority": 4 },
-                { "criterionId": "00000000-0000-0000-0000-400000000026", "priority": 5 }
+                {
+                    "criterionId": "00000000-0000-0000-0000-400000000022",
+                    "priority": 1
+                },
+                {
+                    "criterionId": "00000000-0000-0000-0000-400000000023",
+                    "priority": 2
+                },
+                {
+                    "criterionId": "00000000-0000-0000-0000-400000000024",
+                    "priority": 3
+                },
+                {
+                    "criterionId": "00000000-0000-0000-0000-400000000025",
+                    "priority": 4
+                },
+                {
+                    "criterionId": "00000000-0000-0000-0000-400000000026",
+                    "priority": 5
+                }
             ]
         },
         {
@@ -1797,10 +2237,22 @@
             "description": "Common in structural lung disease or post-viral infection",
             "isAtypical": false,
             "riskFactors": [
-                { "criterionId": "00000000-0000-0000-0000-400000000027", "priority": 1 },
-                { "criterionId": "00000000-0000-0000-0000-400000000028", "priority": 2 },
-                { "criterionId": "00000000-0000-0000-0000-400000000029", "priority": 3 },
-                { "criterionId": "00000000-0000-0000-0000-400000000030", "priority": 4 }
+                {
+                    "criterionId": "00000000-0000-0000-0000-400000000027",
+                    "priority": 1
+                },
+                {
+                    "criterionId": "00000000-0000-0000-0000-400000000028",
+                    "priority": 2
+                },
+                {
+                    "criterionId": "00000000-0000-0000-0000-400000000029",
+                    "priority": 3
+                },
+                {
+                    "criterionId": "00000000-0000-0000-0000-400000000030",
+                    "priority": 4
+                }
             ]
         },
         {
@@ -1809,8 +2261,14 @@
             "description": "Healthcare-associated resistant staph",
             "isAtypical": false,
             "riskFactors": [
-                { "criterionId": "00000000-0000-0000-0000-400000000031", "priority": 1 },
-                { "criterionId": "00000000-0000-0000-0000-400000000032", "priority": 2 }
+                {
+                    "criterionId": "00000000-0000-0000-0000-400000000031",
+                    "priority": 1
+                },
+                {
+                    "criterionId": "00000000-0000-0000-0000-400000000032",
+                    "priority": 2
+                }
             ]
         },
         {
@@ -1819,11 +2277,26 @@
             "description": "Enteric Gram-negative bacillus associated with aspiration",
             "isAtypical": false,
             "riskFactors": [
-                { "criterionId": "00000000-0000-0000-0000-400000000033", "priority": 1 },
-                { "criterionId": "00000000-0000-0000-0000-400000000034", "priority": 2 },
-                { "criterionId": "00000000-0000-0000-0000-400000000035", "priority": 3 },
-                { "criterionId": "00000000-0000-0000-0000-400000000036", "priority": 4 },
-                { "criterionId": "00000000-0000-0000-0000-400000000037", "priority": 5 }
+                {
+                    "criterionId": "00000000-0000-0000-0000-400000000033",
+                    "priority": 1
+                },
+                {
+                    "criterionId": "00000000-0000-0000-0000-400000000034",
+                    "priority": 2
+                },
+                {
+                    "criterionId": "00000000-0000-0000-0000-400000000035",
+                    "priority": 3
+                },
+                {
+                    "criterionId": "00000000-0000-0000-0000-400000000036",
+                    "priority": 4
+                },
+                {
+                    "criterionId": "00000000-0000-0000-0000-400000000037",
+                    "priority": 5
+                }
             ]
         },
         {
@@ -1832,9 +2305,18 @@
             "description": "Pathogen in structural lung disease and prior Pseudomonas infection",
             "isAtypical": false,
             "riskFactors": [
-                { "criterionId": "00000000-0000-0000-0000-400000000038", "priority": 1 },
-                { "criterionId": "00000000-0000-0000-0000-400000000039", "priority": 2 },
-                { "criterionId": "00000000-0000-0000-0000-400000000040", "priority": 3 }
+                {
+                    "criterionId": "00000000-0000-0000-0000-400000000038",
+                    "priority": 1
+                },
+                {
+                    "criterionId": "00000000-0000-0000-0000-400000000039",
+                    "priority": 2
+                },
+                {
+                    "criterionId": "00000000-0000-0000-0000-400000000040",
+                    "priority": 3
+                }
             ]
         },
         {
@@ -1843,7 +2325,10 @@
             "description": "Multidrug-resistant pathogen in severe illness",
             "isAtypical": false,
             "riskFactors": [
-                { "criterionId": "00000000-0000-0000-0000-400000000041", "priority": 1 }
+                {
+                    "criterionId": "00000000-0000-0000-0000-400000000041",
+                    "priority": 1
+                }
             ]
         },
         {
@@ -1852,8 +2337,14 @@
             "description": "Associated with aspiration pneumonia",
             "isAtypical": false,
             "riskFactors": [
-                { "criterionId": "00000000-0000-0000-0000-400000000042", "priority": 1 },
-                { "criterionId": "00000000-0000-0000-0000-400000000043", "priority": 2 }
+                {
+                    "criterionId": "00000000-0000-0000-0000-400000000042",
+                    "priority": 1
+                },
+                {
+                    "criterionId": "00000000-0000-0000-0000-400000000043",
+                    "priority": 2
+                }
             ]
         },
         // ---- Pathogens from Table 1 with no specific risk factors ----
@@ -2008,88 +2499,404 @@
     ],
     "suspectedCauses": [
         // Group A: Mild / Outpatient
-        { "pathogenId": "00000000-0000-0000-0000-500000000001", "severity": "Mild", "treatmentSite": "Outpatient" },
-        { "pathogenId": "00000000-0000-0000-0000-500000000002", "severity": "Mild", "treatmentSite": "Outpatient" },
-        { "pathogenId": "00000000-0000-0000-0000-500000000009", "severity": "Mild", "treatmentSite": "Outpatient" },
-        { "pathogenId": "00000000-0000-0000-0000-500000000010", "severity": "Mild", "treatmentSite": "Outpatient" },
-        { "pathogenId": "00000000-0000-0000-0000-500000000011", "severity": "Mild", "treatmentSite": "Outpatient" },
-        { "pathogenId": "00000000-0000-0000-0000-500000000017", "severity": "Mild", "treatmentSite": "Outpatient" },
-        { "pathogenId": "00000000-0000-0000-0000-500000000018", "severity": "Mild", "treatmentSite": "Outpatient" },
-        { "pathogenId": "00000000-0000-0000-0000-500000000019", "severity": "Mild", "treatmentSite": "Outpatient" },
-        { "pathogenId": "00000000-0000-0000-0000-500000000020", "severity": "Mild", "treatmentSite": "Outpatient" },
-        { "pathogenId": "00000000-0000-0000-0000-500000000021", "severity": "Mild", "treatmentSite": "Outpatient" },
-        { "pathogenId": "00000000-0000-0000-0000-500000000022", "severity": "Mild", "treatmentSite": "Outpatient" },
-        { "pathogenId": "00000000-0000-0000-0000-500000000023", "severity": "Mild", "treatmentSite": "Outpatient" },
-        { "pathogenId": "00000000-0000-0000-0000-500000000024", "severity": "Mild", "treatmentSite": "Outpatient" },
-        { "pathogenId": "00000000-0000-0000-0000-500000000025", "severity": "Mild", "treatmentSite": "Outpatient" },
+        {
+            "pathogenId": "00000000-0000-0000-0000-500000000001",
+            "severity": "Mild",
+            "treatmentSite": "Outpatient"
+        },
+        {
+            "pathogenId": "00000000-0000-0000-0000-500000000002",
+            "severity": "Mild",
+            "treatmentSite": "Outpatient"
+        },
+        {
+            "pathogenId": "00000000-0000-0000-0000-500000000009",
+            "severity": "Mild",
+            "treatmentSite": "Outpatient"
+        },
+        {
+            "pathogenId": "00000000-0000-0000-0000-500000000010",
+            "severity": "Mild",
+            "treatmentSite": "Outpatient"
+        },
+        {
+            "pathogenId": "00000000-0000-0000-0000-500000000011",
+            "severity": "Mild",
+            "treatmentSite": "Outpatient"
+        },
+        {
+            "pathogenId": "00000000-0000-0000-0000-500000000017",
+            "severity": "Mild",
+            "treatmentSite": "Outpatient"
+        },
+        {
+            "pathogenId": "00000000-0000-0000-0000-500000000018",
+            "severity": "Mild",
+            "treatmentSite": "Outpatient"
+        },
+        {
+            "pathogenId": "00000000-0000-0000-0000-500000000019",
+            "severity": "Mild",
+            "treatmentSite": "Outpatient"
+        },
+        {
+            "pathogenId": "00000000-0000-0000-0000-500000000020",
+            "severity": "Mild",
+            "treatmentSite": "Outpatient"
+        },
+        {
+            "pathogenId": "00000000-0000-0000-0000-500000000021",
+            "severity": "Mild",
+            "treatmentSite": "Outpatient"
+        },
+        {
+            "pathogenId": "00000000-0000-0000-0000-500000000022",
+            "severity": "Mild",
+            "treatmentSite": "Outpatient"
+        },
+        {
+            "pathogenId": "00000000-0000-0000-0000-500000000023",
+            "severity": "Mild",
+            "treatmentSite": "Outpatient"
+        },
+        {
+            "pathogenId": "00000000-0000-0000-0000-500000000024",
+            "severity": "Mild",
+            "treatmentSite": "Outpatient"
+        },
+        {
+            "pathogenId": "00000000-0000-0000-0000-500000000025",
+            "severity": "Mild",
+            "treatmentSite": "Outpatient"
+        },
         // Group B: Moderate / Inpatient
-        { "pathogenId": "00000000-0000-0000-0000-500000000001", "severity": "Moderate", "treatmentSite": "Inpatient" },
-        { "pathogenId": "00000000-0000-0000-0000-500000000010", "severity": "Moderate", "treatmentSite": "Inpatient" },
-        { "pathogenId": "00000000-0000-0000-0000-500000000011", "severity": "Moderate", "treatmentSite": "Inpatient" },
-        { "pathogenId": "00000000-0000-0000-0000-500000000002", "severity": "Moderate", "treatmentSite": "Inpatient" },
-        { "pathogenId": "00000000-0000-0000-0000-500000000014", "severity": "Moderate", "treatmentSite": "Inpatient" },
-        { "pathogenId": "00000000-0000-0000-0000-500000000015", "severity": "Moderate", "treatmentSite": "Inpatient" },
-        { "pathogenId": "00000000-0000-0000-0000-500000000005", "severity": "Moderate", "treatmentSite": "Inpatient" },
-        { "pathogenId": "00000000-0000-0000-0000-500000000016", "severity": "Moderate", "treatmentSite": "Inpatient" },
-        { "pathogenId": "00000000-0000-0000-0000-500000000008", "severity": "Moderate", "treatmentSite": "Inpatient" },
-        { "pathogenId": "00000000-0000-0000-0000-500000000012", "severity": "Moderate", "treatmentSite": "Inpatient" },
-        { "pathogenId": "00000000-0000-0000-0000-500000000013", "severity": "Moderate", "treatmentSite": "Inpatient" },
-        { "pathogenId": "00000000-0000-0000-0000-500000000017", "severity": "Moderate", "treatmentSite": "Inpatient" },
-        { "pathogenId": "00000000-0000-0000-0000-500000000018", "severity": "Moderate", "treatmentSite": "Inpatient" },
-        { "pathogenId": "00000000-0000-0000-0000-500000000019", "severity": "Moderate", "treatmentSite": "Inpatient" },
-        { "pathogenId": "00000000-0000-0000-0000-500000000024", "severity": "Moderate", "treatmentSite": "Inpatient" },
-        { "pathogenId": "00000000-0000-0000-0000-500000000023", "severity": "Moderate", "treatmentSite": "Inpatient" },
-        { "pathogenId": "00000000-0000-0000-0000-500000000020", "severity": "Moderate", "treatmentSite": "Inpatient" },
-        { "pathogenId": "00000000-0000-0000-0000-500000000021", "severity": "Moderate", "treatmentSite": "Inpatient" },
-        { "pathogenId": "00000000-0000-0000-0000-500000000022", "severity": "Moderate", "treatmentSite": "Inpatient" },
-        { "pathogenId": "00000000-0000-0000-0000-500000000025", "severity": "Moderate", "treatmentSite": "Inpatient" },
-        { "pathogenId": "00000000-0000-0000-0000-500000000026", "severity": "Moderate", "treatmentSite": "Inpatient" },
-        { "pathogenId": "00000000-0000-0000-0000-500000000027", "severity": "Moderate", "treatmentSite": "Inpatient" },
-        { "pathogenId": "00000000-0000-0000-0000-500000000028", "severity": "Moderate", "treatmentSite": "Inpatient" },
-        { "pathogenId": "00000000-0000-0000-0000-500000000029", "severity": "Moderate", "treatmentSite": "Inpatient" },
+        {
+            "pathogenId": "00000000-0000-0000-0000-500000000001",
+            "severity": "Moderate",
+            "treatmentSite": "Inpatient"
+        },
+        {
+            "pathogenId": "00000000-0000-0000-0000-500000000010",
+            "severity": "Moderate",
+            "treatmentSite": "Inpatient"
+        },
+        {
+            "pathogenId": "00000000-0000-0000-0000-500000000011",
+            "severity": "Moderate",
+            "treatmentSite": "Inpatient"
+        },
+        {
+            "pathogenId": "00000000-0000-0000-0000-500000000002",
+            "severity": "Moderate",
+            "treatmentSite": "Inpatient"
+        },
+        {
+            "pathogenId": "00000000-0000-0000-0000-500000000014",
+            "severity": "Moderate",
+            "treatmentSite": "Inpatient"
+        },
+        {
+            "pathogenId": "00000000-0000-0000-0000-500000000015",
+            "severity": "Moderate",
+            "treatmentSite": "Inpatient"
+        },
+        {
+            "pathogenId": "00000000-0000-0000-0000-500000000005",
+            "severity": "Moderate",
+            "treatmentSite": "Inpatient"
+        },
+        {
+            "pathogenId": "00000000-0000-0000-0000-500000000016",
+            "severity": "Moderate",
+            "treatmentSite": "Inpatient"
+        },
+        {
+            "pathogenId": "00000000-0000-0000-0000-500000000008",
+            "severity": "Moderate",
+            "treatmentSite": "Inpatient"
+        },
+        {
+            "pathogenId": "00000000-0000-0000-0000-500000000012",
+            "severity": "Moderate",
+            "treatmentSite": "Inpatient"
+        },
+        {
+            "pathogenId": "00000000-0000-0000-0000-500000000013",
+            "severity": "Moderate",
+            "treatmentSite": "Inpatient"
+        },
+        {
+            "pathogenId": "00000000-0000-0000-0000-500000000017",
+            "severity": "Moderate",
+            "treatmentSite": "Inpatient"
+        },
+        {
+            "pathogenId": "00000000-0000-0000-0000-500000000018",
+            "severity": "Moderate",
+            "treatmentSite": "Inpatient"
+        },
+        {
+            "pathogenId": "00000000-0000-0000-0000-500000000019",
+            "severity": "Moderate",
+            "treatmentSite": "Inpatient"
+        },
+        {
+            "pathogenId": "00000000-0000-0000-0000-500000000024",
+            "severity": "Moderate",
+            "treatmentSite": "Inpatient"
+        },
+        {
+            "pathogenId": "00000000-0000-0000-0000-500000000023",
+            "severity": "Moderate",
+            "treatmentSite": "Inpatient"
+        },
+        {
+            "pathogenId": "00000000-0000-0000-0000-500000000020",
+            "severity": "Moderate",
+            "treatmentSite": "Inpatient"
+        },
+        {
+            "pathogenId": "00000000-0000-0000-0000-500000000021",
+            "severity": "Moderate",
+            "treatmentSite": "Inpatient"
+        },
+        {
+            "pathogenId": "00000000-0000-0000-0000-500000000022",
+            "severity": "Moderate",
+            "treatmentSite": "Inpatient"
+        },
+        {
+            "pathogenId": "00000000-0000-0000-0000-500000000025",
+            "severity": "Moderate",
+            "treatmentSite": "Inpatient"
+        },
+        {
+            "pathogenId": "00000000-0000-0000-0000-500000000026",
+            "severity": "Moderate",
+            "treatmentSite": "Inpatient"
+        },
+        {
+            "pathogenId": "00000000-0000-0000-0000-500000000027",
+            "severity": "Moderate",
+            "treatmentSite": "Inpatient"
+        },
+        {
+            "pathogenId": "00000000-0000-0000-0000-500000000028",
+            "severity": "Moderate",
+            "treatmentSite": "Inpatient"
+        },
+        {
+            "pathogenId": "00000000-0000-0000-0000-500000000029",
+            "severity": "Moderate",
+            "treatmentSite": "Inpatient"
+        },
         // Group B also covers Severe / Inpatient
-        { "pathogenId": "00000000-0000-0000-0000-500000000001", "severity": "Severe", "treatmentSite": "Inpatient" },
-        { "pathogenId": "00000000-0000-0000-0000-500000000010", "severity": "Severe", "treatmentSite": "Inpatient" },
-        { "pathogenId": "00000000-0000-0000-0000-500000000011", "severity": "Severe", "treatmentSite": "Inpatient" },
-        { "pathogenId": "00000000-0000-0000-0000-500000000002", "severity": "Severe", "treatmentSite": "Inpatient" },
-        { "pathogenId": "00000000-0000-0000-0000-500000000014", "severity": "Severe", "treatmentSite": "Inpatient" },
-        { "pathogenId": "00000000-0000-0000-0000-500000000015", "severity": "Severe", "treatmentSite": "Inpatient" },
-        { "pathogenId": "00000000-0000-0000-0000-500000000005", "severity": "Severe", "treatmentSite": "Inpatient" },
-        { "pathogenId": "00000000-0000-0000-0000-500000000016", "severity": "Severe", "treatmentSite": "Inpatient" },
-        { "pathogenId": "00000000-0000-0000-0000-500000000008", "severity": "Severe", "treatmentSite": "Inpatient" },
-        { "pathogenId": "00000000-0000-0000-0000-500000000012", "severity": "Severe", "treatmentSite": "Inpatient" },
-        { "pathogenId": "00000000-0000-0000-0000-500000000013", "severity": "Severe", "treatmentSite": "Inpatient" },
-        { "pathogenId": "00000000-0000-0000-0000-500000000017", "severity": "Severe", "treatmentSite": "Inpatient" },
-        { "pathogenId": "00000000-0000-0000-0000-500000000018", "severity": "Severe", "treatmentSite": "Inpatient" },
-        { "pathogenId": "00000000-0000-0000-0000-500000000019", "severity": "Severe", "treatmentSite": "Inpatient" },
-        { "pathogenId": "00000000-0000-0000-0000-500000000024", "severity": "Severe", "treatmentSite": "Inpatient" },
-        { "pathogenId": "00000000-0000-0000-0000-500000000023", "severity": "Severe", "treatmentSite": "Inpatient" },
-        { "pathogenId": "00000000-0000-0000-0000-500000000020", "severity": "Severe", "treatmentSite": "Inpatient" },
-        { "pathogenId": "00000000-0000-0000-0000-500000000021", "severity": "Severe", "treatmentSite": "Inpatient" },
-        { "pathogenId": "00000000-0000-0000-0000-500000000022", "severity": "Severe", "treatmentSite": "Inpatient" },
-        { "pathogenId": "00000000-0000-0000-0000-500000000025", "severity": "Severe", "treatmentSite": "Inpatient" },
-        { "pathogenId": "00000000-0000-0000-0000-500000000026", "severity": "Severe", "treatmentSite": "Inpatient" },
-        { "pathogenId": "00000000-0000-0000-0000-500000000027", "severity": "Severe", "treatmentSite": "Inpatient" },
-        { "pathogenId": "00000000-0000-0000-0000-500000000028", "severity": "Severe", "treatmentSite": "Inpatient" },
-        { "pathogenId": "00000000-0000-0000-0000-500000000029", "severity": "Severe", "treatmentSite": "Inpatient" },
+        {
+            "pathogenId": "00000000-0000-0000-0000-500000000001",
+            "severity": "Severe",
+            "treatmentSite": "Inpatient"
+        },
+        {
+            "pathogenId": "00000000-0000-0000-0000-500000000010",
+            "severity": "Severe",
+            "treatmentSite": "Inpatient"
+        },
+        {
+            "pathogenId": "00000000-0000-0000-0000-500000000011",
+            "severity": "Severe",
+            "treatmentSite": "Inpatient"
+        },
+        {
+            "pathogenId": "00000000-0000-0000-0000-500000000002",
+            "severity": "Severe",
+            "treatmentSite": "Inpatient"
+        },
+        {
+            "pathogenId": "00000000-0000-0000-0000-500000000014",
+            "severity": "Severe",
+            "treatmentSite": "Inpatient"
+        },
+        {
+            "pathogenId": "00000000-0000-0000-0000-500000000015",
+            "severity": "Severe",
+            "treatmentSite": "Inpatient"
+        },
+        {
+            "pathogenId": "00000000-0000-0000-0000-500000000005",
+            "severity": "Severe",
+            "treatmentSite": "Inpatient"
+        },
+        {
+            "pathogenId": "00000000-0000-0000-0000-500000000016",
+            "severity": "Severe",
+            "treatmentSite": "Inpatient"
+        },
+        {
+            "pathogenId": "00000000-0000-0000-0000-500000000008",
+            "severity": "Severe",
+            "treatmentSite": "Inpatient"
+        },
+        {
+            "pathogenId": "00000000-0000-0000-0000-500000000012",
+            "severity": "Severe",
+            "treatmentSite": "Inpatient"
+        },
+        {
+            "pathogenId": "00000000-0000-0000-0000-500000000013",
+            "severity": "Severe",
+            "treatmentSite": "Inpatient"
+        },
+        {
+            "pathogenId": "00000000-0000-0000-0000-500000000017",
+            "severity": "Severe",
+            "treatmentSite": "Inpatient"
+        },
+        {
+            "pathogenId": "00000000-0000-0000-0000-500000000018",
+            "severity": "Severe",
+            "treatmentSite": "Inpatient"
+        },
+        {
+            "pathogenId": "00000000-0000-0000-0000-500000000019",
+            "severity": "Severe",
+            "treatmentSite": "Inpatient"
+        },
+        {
+            "pathogenId": "00000000-0000-0000-0000-500000000024",
+            "severity": "Severe",
+            "treatmentSite": "Inpatient"
+        },
+        {
+            "pathogenId": "00000000-0000-0000-0000-500000000023",
+            "severity": "Severe",
+            "treatmentSite": "Inpatient"
+        },
+        {
+            "pathogenId": "00000000-0000-0000-0000-500000000020",
+            "severity": "Severe",
+            "treatmentSite": "Inpatient"
+        },
+        {
+            "pathogenId": "00000000-0000-0000-0000-500000000021",
+            "severity": "Severe",
+            "treatmentSite": "Inpatient"
+        },
+        {
+            "pathogenId": "00000000-0000-0000-0000-500000000022",
+            "severity": "Severe",
+            "treatmentSite": "Inpatient"
+        },
+        {
+            "pathogenId": "00000000-0000-0000-0000-500000000025",
+            "severity": "Severe",
+            "treatmentSite": "Inpatient"
+        },
+        {
+            "pathogenId": "00000000-0000-0000-0000-500000000026",
+            "severity": "Severe",
+            "treatmentSite": "Inpatient"
+        },
+        {
+            "pathogenId": "00000000-0000-0000-0000-500000000027",
+            "severity": "Severe",
+            "treatmentSite": "Inpatient"
+        },
+        {
+            "pathogenId": "00000000-0000-0000-0000-500000000028",
+            "severity": "Severe",
+            "treatmentSite": "Inpatient"
+        },
+        {
+            "pathogenId": "00000000-0000-0000-0000-500000000029",
+            "severity": "Severe",
+            "treatmentSite": "Inpatient"
+        },
         // Group C: Severe / ICU
-        { "pathogenId": "00000000-0000-0000-0000-500000000001", "severity": "Severe", "treatmentSite": "IntensiveCareUnit" },
-        { "pathogenId": "00000000-0000-0000-0000-500000000014", "severity": "Severe", "treatmentSite": "IntensiveCareUnit" },
-        { "pathogenId": "00000000-0000-0000-0000-500000000015", "severity": "Severe", "treatmentSite": "IntensiveCareUnit" },
-        { "pathogenId": "00000000-0000-0000-0000-500000000005", "severity": "Severe", "treatmentSite": "IntensiveCareUnit" },
-        { "pathogenId": "00000000-0000-0000-0000-500000000016", "severity": "Severe", "treatmentSite": "IntensiveCareUnit" },
-        { "pathogenId": "00000000-0000-0000-0000-500000000003", "severity": "Severe", "treatmentSite": "IntensiveCareUnit" },
-        { "pathogenId": "00000000-0000-0000-0000-500000000012", "severity": "Severe", "treatmentSite": "IntensiveCareUnit" },
-        { "pathogenId": "00000000-0000-0000-0000-500000000010", "severity": "Severe", "treatmentSite": "IntensiveCareUnit" },
-        { "pathogenId": "00000000-0000-0000-0000-500000000006", "severity": "Severe", "treatmentSite": "IntensiveCareUnit" },
-        { "pathogenId": "00000000-0000-0000-0000-500000000017", "severity": "Severe", "treatmentSite": "IntensiveCareUnit" },
-        { "pathogenId": "00000000-0000-0000-0000-500000000018", "severity": "Severe", "treatmentSite": "IntensiveCareUnit" },
-        { "pathogenId": "00000000-0000-0000-0000-500000000019", "severity": "Severe", "treatmentSite": "IntensiveCareUnit" },
-        { "pathogenId": "00000000-0000-0000-0000-500000000020", "severity": "Severe", "treatmentSite": "IntensiveCareUnit" },
-        { "pathogenId": "00000000-0000-0000-0000-500000000021", "severity": "Severe", "treatmentSite": "IntensiveCareUnit" },
-        { "pathogenId": "00000000-0000-0000-0000-500000000022", "severity": "Severe", "treatmentSite": "IntensiveCareUnit" },
-        { "pathogenId": "00000000-0000-0000-0000-500000000026", "severity": "Severe", "treatmentSite": "IntensiveCareUnit" },
-        { "pathogenId": "00000000-0000-0000-0000-500000000027", "severity": "Severe", "treatmentSite": "IntensiveCareUnit" }
+        {
+            "pathogenId": "00000000-0000-0000-0000-500000000001",
+            "severity": "Severe",
+            "treatmentSite": "IntensiveCareUnit"
+        },
+        {
+            "pathogenId": "00000000-0000-0000-0000-500000000014",
+            "severity": "Severe",
+            "treatmentSite": "IntensiveCareUnit"
+        },
+        {
+            "pathogenId": "00000000-0000-0000-0000-500000000015",
+            "severity": "Severe",
+            "treatmentSite": "IntensiveCareUnit"
+        },
+        {
+            "pathogenId": "00000000-0000-0000-0000-500000000005",
+            "severity": "Severe",
+            "treatmentSite": "IntensiveCareUnit"
+        },
+        {
+            "pathogenId": "00000000-0000-0000-0000-500000000016",
+            "severity": "Severe",
+            "treatmentSite": "IntensiveCareUnit"
+        },
+        {
+            "pathogenId": "00000000-0000-0000-0000-500000000003",
+            "severity": "Severe",
+            "treatmentSite": "IntensiveCareUnit"
+        },
+        {
+            "pathogenId": "00000000-0000-0000-0000-500000000012",
+            "severity": "Severe",
+            "treatmentSite": "IntensiveCareUnit"
+        },
+        {
+            "pathogenId": "00000000-0000-0000-0000-500000000010",
+            "severity": "Severe",
+            "treatmentSite": "IntensiveCareUnit"
+        },
+        {
+            "pathogenId": "00000000-0000-0000-0000-500000000006",
+            "severity": "Severe",
+            "treatmentSite": "IntensiveCareUnit"
+        },
+        {
+            "pathogenId": "00000000-0000-0000-0000-500000000017",
+            "severity": "Severe",
+            "treatmentSite": "IntensiveCareUnit"
+        },
+        {
+            "pathogenId": "00000000-0000-0000-0000-500000000018",
+            "severity": "Severe",
+            "treatmentSite": "IntensiveCareUnit"
+        },
+        {
+            "pathogenId": "00000000-0000-0000-0000-500000000019",
+            "severity": "Severe",
+            "treatmentSite": "IntensiveCareUnit"
+        },
+        {
+            "pathogenId": "00000000-0000-0000-0000-500000000020",
+            "severity": "Severe",
+            "treatmentSite": "IntensiveCareUnit"
+        },
+        {
+            "pathogenId": "00000000-0000-0000-0000-500000000021",
+            "severity": "Severe",
+            "treatmentSite": "IntensiveCareUnit"
+        },
+        {
+            "pathogenId": "00000000-0000-0000-0000-500000000022",
+            "severity": "Severe",
+            "treatmentSite": "IntensiveCareUnit"
+        },
+        {
+            "pathogenId": "00000000-0000-0000-0000-500000000026",
+            "severity": "Severe",
+            "treatmentSite": "IntensiveCareUnit"
+        },
+        {
+            "pathogenId": "00000000-0000-0000-0000-500000000027",
+            "severity": "Severe",
+            "treatmentSite": "IntensiveCareUnit"
+        }
     ],
     "antibioticGroups": [
         {
@@ -2363,7 +3170,7 @@
                     "routeOfAdministration": "oral",
                     "dose": "1 g mỗi 8h",
                     "crcl": null
-                }, 
+                },
                 {
                     "id": "00000000-0000-0000-0000-000000000411",
                     "routeOfAdministration": "oral",
@@ -4280,4 +5087,504 @@
             ]
         }
     ],
+    "treatments": [
+        // Amoxicillin đơn trị cho bệnh nhân nhẹ, ngoại trú (nghi ngờ H influenza, M catarrhalis)
+        {
+            "id": "00000000-0000-0000-0000-900000000001",
+            "severity": "Mild",
+            "treatmentSite": "Outpatient",
+            "medicineIds": [
+                "00000000-0000-0000-0000-000000000303"
+            ],
+            "pathogenIds": [
+                "00000000-0000-0000-0000-500000000002",
+                "00000000-0000-0000-0000-500000000009"
+            ],
+            "criteriaIds": []
+        },
+        // Amoxicillin kết hợp beta-lactam cho bệnh nhân nhẹ, ngoại trú (nghi ngờ H influenza, M catarrhalis)
+        {
+            "id": "00000000-0000-0000-0000-900000000002",
+            "severity": "Mild",
+            "treatmentSite": "Outpatient",
+            "medicineIds": [
+                "00000000-0000-0000-0000-000000000303",
+                "00000000-0000-0000-0000-000000000304"
+            ],
+            "pathogenIds": [
+                "00000000-0000-0000-0000-500000000002",
+                "00000000-0000-0000-0000-500000000009"
+            ],
+            "criteriaIds": []
+        },
+        {
+            "id": "00000000-0000-0000-0000-900000000003",
+            "severity": "Mild",
+            "treatmentSite": "Outpatient",
+            "medicineIds": [
+                "00000000-0000-0000-0000-000000000303",
+                "00000000-0000-0000-0000-000000000305"
+            ],
+            "pathogenIds": [
+                "00000000-0000-0000-0000-500000000002",
+                "00000000-0000-0000-0000-500000000009"
+            ],
+            "criteriaIds": []
+        },
+        // Bệnh nhân nhẹ, ngoại trú nghi ngờ vi khuẩn không điển hình
+        {
+            "id": "00000000-0000-0000-0000-900000000004",
+            "severity": "Mild",
+            "treatmentSite": "Outpatient",
+            "medicineIds": [
+                "00000000-0000-0000-0000-000000000321"
+            ],
+            "pathogenIds": [
+                "00000000-0000-0000-0000-500000000010",
+                "00000000-0000-0000-0000-500000000011",
+                "00000000-0000-0000-0000-500000000012"
+            ],
+            "criteriaIds": []
+        },
+        {
+            "id": "00000000-0000-0000-0000-900000000005",
+            "severity": "Mild",
+            "treatmentSite": "Outpatient",
+            "medicineIds": [
+                "00000000-0000-0000-0000-000000000320"
+            ],
+            "pathogenIds": [
+                "00000000-0000-0000-0000-500000000010",
+                "00000000-0000-0000-0000-500000000011",
+                "00000000-0000-0000-0000-500000000012"
+            ],
+            "criteriaIds": []
+        },
+        // Bệnh nhân nhẹ, ngoại trú bị dị ứng với beta-lactam
+        {
+            "id": "00000000-0000-0000-0000-900000000006",
+            "severity": "Mild",
+            "treatmentSite": "Outpatient",
+            "medicineIds": [
+                "00000000-0000-0000-0000-00000000031e"
+            ],
+            "pathogenIds": [],
+            "criteriaIds": [
+                "00000000-0000-0000-0000-400000000044"
+            ]
+        },
+        {
+            "id": "00000000-0000-0000-0000-900000000007",
+            "severity": "Mild",
+            "treatmentSite": "Outpatient",
+            "medicineIds": [
+                "00000000-0000-0000-0000-00000000031d"
+            ],
+            "pathogenIds": [],
+            "criteriaIds": [
+                "00000000-0000-0000-0000-400000000044"
+            ]
+        },
+        {
+            "id": "00000000-0000-0000-0000-900000000008",
+            "severity": "Mild",
+            "treatmentSite": "Outpatient",
+            "medicineIds": [
+                "00000000-0000-0000-0000-00000000031c"
+            ],
+            "pathogenIds": [],
+            "criteriaIds": [
+                "00000000-0000-0000-0000-400000000044"
+            ]
+        },
+        // Bệnh nhân nhẹ, ngoại trú nghi ngờ S. pneumoniae kháng thuốc
+        {
+            "id": "00000000-0000-0000-0000-900000000009",
+            "severity": "Mild",
+            "treatmentSite": "Outpatient",
+            "medicineIds": [
+                "00000000-0000-0000-0000-000000000303"
+            ],
+            "pathogenIds": [
+                "00000000-0000-0000-0000-500000000001"
+            ],
+            "criteriaIds": []
+        },
+        {
+            "id": "00000000-0000-0000-0000-900000000010",
+            "severity": "Mild",
+            "treatmentSite": "Outpatient",
+            "medicineIds": [
+                "00000000-0000-0000-0000-00000000031e"
+            ],
+            "pathogenIds": [
+                "00000000-0000-0000-0000-500000000001"
+            ],
+            "criteriaIds": []
+        },
+        {
+            "id": "00000000-0000-0000-0000-900000000011",
+            "severity": "Mild",
+            "treatmentSite": "Outpatient",
+            "medicineIds": [
+                "00000000-0000-0000-0000-00000000031d"
+            ],
+            "pathogenIds": [
+                "00000000-0000-0000-0000-500000000001"
+            ],
+            "criteriaIds": []
+        },
+        // Bệnh nhân nhẹ, ngoại trú là người cao tuổi có bệnh đồng mắc, suy giảm miễn dịch
+        // Quinolon hô hấp đơn trị
+        {
+            "id": "00000000-0000-0000-0000-900000000012",
+            "severity": "Mild",
+            "treatmentSite": "Outpatient",
+            "medicineIds": [
+                "00000000-0000-0000-0000-00000000031c"
+            ],
+            "pathogenIds": [],
+            "criteriaIds": [
+                "00000000-0000-0000-0000-400000000045"
+            ]
+        },
+        {
+            "id": "00000000-0000-0000-0000-900000000013",
+            "severity": "Mild",
+            "treatmentSite": "Outpatient",
+            "medicineIds": [
+                "00000000-0000-0000-0000-00000000031d"
+            ],
+            "pathogenIds": [],
+            "criteriaIds": [
+                "00000000-0000-0000-0000-400000000045"
+            ]
+        },
+        {
+            "id": "00000000-0000-0000-0000-900000000014",
+            "severity": "Mild",
+            "treatmentSite": "Outpatient",
+            "medicineIds": [
+                "00000000-0000-0000-0000-00000000031e"
+            ],
+            "pathogenIds": [],
+            "criteriaIds": [
+                "00000000-0000-0000-0000-400000000045"
+            ]
+        },
+        // Beta-lactam/ức chế beta lactamase + macrolide
+        {
+            "id": "00000000-0000-0000-0000-900000000015",
+            "severity": "Mild",
+            "treatmentSite": "Outpatient",
+            "medicineIds": [
+                "00000000-0000-0000-0000-000000000304",
+                "00000000-0000-0000-0000-00000000031f"
+            ],
+            "pathogenIds": [],
+            "criteriaIds": [
+                "00000000-0000-0000-0000-400000000045"
+            ]
+        },
+        {
+            "id": "00000000-0000-0000-0000-900000000016",
+            "severity": "Mild",
+            "treatmentSite": "Outpatient",
+            "medicineIds": [
+                "00000000-0000-0000-0000-000000000304",
+                "00000000-0000-0000-0000-000000000320"
+            ],
+            "pathogenIds": [],
+            "criteriaIds": [
+                "00000000-0000-0000-0000-400000000045"
+            ]
+        },
+        {
+            "id": "00000000-0000-0000-0000-900000000017",
+            "severity": "Mild",
+            "treatmentSite": "Outpatient",
+            "medicineIds": [
+                "00000000-0000-0000-0000-000000000304",
+                "00000000-0000-0000-0000-000000000321"
+            ],
+            "pathogenIds": [],
+            "criteriaIds": [
+                "00000000-0000-0000-0000-400000000045"
+            ]
+        },
+        {
+            "id": "00000000-0000-0000-0000-900000000018",
+            "severity": "Mild",
+            "treatmentSite": "Outpatient",
+            "medicineIds": [
+                "00000000-0000-0000-0000-000000000305",
+                "00000000-0000-0000-0000-00000000031f"
+            ],
+            "pathogenIds": [],
+            "criteriaIds": [
+                "00000000-0000-0000-0000-400000000045"
+            ]
+        },
+        {
+            "id": "00000000-0000-0000-0000-900000000019",
+            "severity": "Mild",
+            "treatmentSite": "Outpatient",
+            "medicineIds": [
+                "00000000-0000-0000-0000-000000000305",
+                "00000000-0000-0000-0000-000000000320"
+            ],
+            "pathogenIds": [],
+            "criteriaIds": [
+                "00000000-0000-0000-0000-400000000045"
+            ]
+        },
+        {
+            "id": "00000000-0000-0000-0000-900000000020",
+            "severity": "Mild",
+            "treatmentSite": "Outpatient",
+            "medicineIds": [
+                "00000000-0000-0000-0000-000000000305",
+                "00000000-0000-0000-0000-000000000321"
+            ],
+            "pathogenIds": [],
+            "criteriaIds": [
+                "00000000-0000-0000-0000-400000000045"
+            ]
+        },
+        // cephalosporin uống phổ rộng + macrolid
+        {
+            "id": "00000000-0000-0000-0000-900000000021",
+            "severity": "Mild",
+            "treatmentSite": "Outpatient",
+            "medicineIds": [
+                "00000000-0000-0000-0000-000000000308",
+                "00000000-0000-0000-0000-00000000031f"
+            ],
+            "pathogenIds": [],
+            "criteriaIds": [
+                "00000000-0000-0000-0000-400000000045"
+            ]
+        },
+        {
+            "id": "00000000-0000-0000-0000-900000000022",
+            "severity": "Mild",
+            "treatmentSite": "Outpatient",
+            "medicineIds": [
+                "00000000-0000-0000-0000-000000000308",
+                "00000000-0000-0000-0000-000000000320"
+            ],
+            "pathogenIds": [],
+            "criteriaIds": [
+                "00000000-0000-0000-0000-400000000045"
+            ]
+        },
+        {
+            "id": "00000000-0000-0000-0000-900000000023",
+            "severity": "Mild",
+            "treatmentSite": "Outpatient",
+            "medicineIds": [
+                "00000000-0000-0000-0000-000000000308",
+                "00000000-0000-0000-0000-000000000321"
+            ],
+            "pathogenIds": [],
+            "criteriaIds": [
+                "00000000-0000-0000-0000-400000000045"
+            ]
+        },
+        {
+            "id": "00000000-0000-0000-0000-900000000024",
+            "severity": "Mild",
+            "treatmentSite": "Outpatient",
+            "medicineIds": [
+                "00000000-0000-0000-0000-000000000309",
+                "00000000-0000-0000-0000-00000000031f"
+            ],
+            "pathogenIds": [],
+            "criteriaIds": [
+                "00000000-0000-0000-0000-400000000045"
+            ]
+        },
+        {
+            "id": "00000000-0000-0000-0000-900000000025",
+            "severity": "Mild",
+            "treatmentSite": "Outpatient",
+            "medicineIds": [
+                "00000000-0000-0000-0000-000000000309",
+                "00000000-0000-0000-0000-000000000320"
+            ],
+            "pathogenIds": [],
+            "criteriaIds": [
+                "00000000-0000-0000-0000-400000000045"
+            ]
+        },
+        {
+            "id": "00000000-0000-0000-0000-900000000026",
+            "severity": "Mild",
+            "treatmentSite": "Outpatient",
+            "medicineIds": [
+                "00000000-0000-0000-0000-000000000309",
+                "00000000-0000-0000-0000-000000000321"
+            ],
+            "pathogenIds": [],
+            "criteriaIds": [
+                "00000000-0000-0000-0000-400000000045"
+            ]
+        },
+        {
+            "id": "00000000-0000-0000-0000-900000000027",
+            "severity": "Mild",
+            "treatmentSite": "Outpatient",
+            "medicineIds": [
+                "00000000-0000-0000-0000-00000000030a",
+                "00000000-0000-0000-0000-00000000031f"
+            ],
+            "pathogenIds": [],
+            "criteriaIds": [
+                "00000000-0000-0000-0000-400000000045"
+            ]
+        },
+        {
+            "id": "00000000-0000-0000-0000-900000000028",
+            "severity": "Mild",
+            "treatmentSite": "Outpatient",
+            "medicineIds": [
+                "00000000-0000-0000-0000-00000000030a",
+                "00000000-0000-0000-0000-000000000320"
+            ],
+            "pathogenIds": [],
+            "criteriaIds": [
+                "00000000-0000-0000-0000-400000000045"
+            ]
+        },
+        {
+            "id": "00000000-0000-0000-0000-900000000029",
+            "severity": "Mild",
+            "treatmentSite": "Outpatient",
+            "medicineIds": [
+                "00000000-0000-0000-0000-00000000030a",
+                "00000000-0000-0000-0000-000000000321"
+            ],
+            "pathogenIds": [],
+            "criteriaIds": [
+                "00000000-0000-0000-0000-400000000045"
+            ]
+        },
+        {
+            "id": "00000000-0000-0000-0000-900000000030",
+            "severity": "Mild",
+            "treatmentSite": "Outpatient",
+            "medicineIds": [
+                "00000000-0000-0000-0000-00000000030b",
+                "00000000-0000-0000-0000-00000000031f"
+            ],
+            "pathogenIds": [],
+            "criteriaIds": [
+                "00000000-0000-0000-0000-400000000045"
+            ]
+        },
+        {
+            "id": "00000000-0000-0000-0000-900000000031",
+            "severity": "Mild",
+            "treatmentSite": "Outpatient",
+            "medicineIds": [
+                "00000000-0000-0000-0000-00000000030b",
+                "00000000-0000-0000-0000-000000000320"
+            ],
+            "pathogenIds": [],
+            "criteriaIds": [
+                "00000000-0000-0000-0000-400000000045"
+            ]
+        },
+        {
+            "id": "00000000-0000-0000-0000-900000000032",
+            "severity": "Mild",
+            "treatmentSite": "Outpatient",
+            "medicineIds": [
+                "00000000-0000-0000-0000-00000000030b",
+                "00000000-0000-0000-0000-000000000321"
+            ],
+            "pathogenIds": [],
+            "criteriaIds": [
+                "00000000-0000-0000-0000-400000000045"
+            ]
+        },
+        {
+            "id": "00000000-0000-0000-0000-900000000033",
+            "severity": "Mild",
+            "treatmentSite": "Outpatient",
+            "medicineIds": [
+                "00000000-0000-0000-0000-00000000030c",
+                "00000000-0000-0000-0000-00000000031f"
+            ],
+            "pathogenIds": [],
+            "criteriaIds": [
+                "00000000-0000-0000-0000-400000000045"
+            ]
+        },
+        {
+            "id": "00000000-0000-0000-0000-900000000034",
+            "severity": "Mild",
+            "treatmentSite": "Outpatient",
+            "medicineIds": [
+                "00000000-0000-0000-0000-00000000030c",
+                "00000000-0000-0000-0000-000000000320"
+            ],
+            "pathogenIds": [],
+            "criteriaIds": [
+                "00000000-0000-0000-0000-400000000045"
+            ]
+        },
+        {
+            "id": "00000000-0000-0000-0000-900000000035",
+            "severity": "Mild",
+            "treatmentSite": "Outpatient",
+            "medicineIds": [
+                "00000000-0000-0000-0000-00000000030c",
+                "00000000-0000-0000-0000-000000000321"
+            ],
+            "pathogenIds": [],
+            "criteriaIds": [
+                "00000000-0000-0000-0000-400000000045"
+            ]
+        },
+        {
+            "id": "00000000-0000-0000-0000-900000000036",
+            "severity": "Mild",
+            "treatmentSite": "Outpatient",
+            "medicineIds": [
+                "00000000-0000-0000-0000-00000000030d",
+                "00000000-0000-0000-0000-00000000031f"
+            ],
+            "pathogenIds": [],
+            "criteriaIds": [
+                "00000000-0000-0000-0000-400000000045"
+            ]
+        },
+        {
+            "id": "00000000-0000-0000-0000-900000000037",
+            "severity": "Mild",
+            "treatmentSite": "Outpatient",
+            "medicineIds": [
+                "00000000-0000-0000-0000-00000000030d",
+                "00000000-0000-0000-0000-000000000320"
+            ],
+            "pathogenIds": [],
+            "criteriaIds": [
+                "00000000-0000-0000-0000-400000000045"
+            ]
+        },
+        {
+            "id": "00000000-0000-0000-0000-900000000038",
+            "severity": "Mild",
+            "treatmentSite": "Outpatient",
+            "medicineIds": [
+                "00000000-0000-0000-0000-00000000030d",
+                "00000000-0000-0000-0000-000000000321"
+            ],
+            "pathogenIds": [],
+            "criteriaIds": [
+                "00000000-0000-0000-0000-400000000045"
+            ]
+        }
+    ]
 }
