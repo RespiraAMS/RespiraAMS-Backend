@@ -36,6 +36,13 @@ builder
     });
 builder.Services.AddAuthorization();
 
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+        _ = policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()
+    );
+});
+
 builder.Services.AddRateLimiter(options =>
 {
     options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(context =>
@@ -102,6 +109,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseCors();
 app.UseRateLimiter();
 
 app.MapReverseProxy();

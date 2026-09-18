@@ -9,6 +9,7 @@ var postgres = builder.AddPostgres("postgres").WithPgWeb().WithDataVolume();
 var rabbitmq = builder.AddRabbitMQ("rabbitmq").WithManagementPlugin();
 
 var authDb = postgres.AddDatabase("authdb");
+var mediaDb = postgres.AddDatabase("mediadb");
 
 var authService = builder
     .AddProject<Projects.Authentication_API>("auth-service")
@@ -16,6 +17,15 @@ var authService = builder
     .WithReference(rabbitmq)
     .WithReference(cache)
     .WaitFor(authDb)
+    .WaitFor(rabbitmq)
+    .WaitFor(cache);
+
+var mediaService = builder
+    .AddProject<Projects.Media_API>("media-service")
+    .WithReference(mediaDb)
+    .WithReference(rabbitmq)
+    .WithReference(cache)
+    .WaitFor(mediaDb)
     .WaitFor(rabbitmq)
     .WaitFor(cache);
 
