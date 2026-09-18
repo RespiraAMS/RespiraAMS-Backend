@@ -1,6 +1,6 @@
-using Respira.Domain.Entities;
+using Respira.Clinical.Domain.Entities;
 
-namespace Respira.Domain.Models
+namespace Respira.Clinical.Domain.Models
 {
     /// <summary>
     /// Clinical context. This class contains all information required to perform

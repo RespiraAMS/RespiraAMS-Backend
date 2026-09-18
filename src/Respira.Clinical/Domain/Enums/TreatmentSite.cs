@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
-namespace Respira.Domain.Enums
+namespace Respira.Clinical.Domain.Enums
 {
     /// <summary>
     /// Where to receive treatment. It can also be used to deduce the severity of the patient

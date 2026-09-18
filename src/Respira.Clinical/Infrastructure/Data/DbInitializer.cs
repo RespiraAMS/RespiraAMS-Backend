@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace Respira.Infrastructure.Data
+namespace Respira.Clinical.Infrastructure.Data
 {
     public class DbInitializer
     {
@@ -11,7 +11,11 @@ namespace Respira.Infrastructure.Data
             return await context.ClinicalVariables.AnyAsync() ||
                 await context.Criteria.AnyAsync() ||
                 await context.ScoreMetrics.AnyAsync() ||
-                await context.Pathogens.AnyAsync();
+                await context.Pathogens.AnyAsync() ||
+                await context.RiskFactors.AnyAsync() ||
+                await context.SuspectedCauses.AnyAsync() ||
+                await context.AntibioticGroups.AnyAsync() ||
+                await context.Antibiotics.AnyAsync();
         }
 
         public static async Task InitializeAsync(ClinicalDbContext context, IOptions<SeedDataOptions> options, ILogger<DbInitializer> logger)
@@ -32,6 +36,8 @@ namespace Respira.Infrastructure.Data
             await context.Pathogens.AddRangeAsync(seedData.Pathogens);
             await context.RiskFactors.AddRangeAsync(seedData.RiskFactors);
             await context.SuspectedCauses.AddRangeAsync(seedData.SuspectedCauses);
+            await context.AntibioticGroups.AddRangeAsync(seedData.AntibioticGroups);
+            await context.Antibiotics.AddRangeAsync(seedData.Antibiotics);
 
             var count = await context.SaveChangesAsync();
             logger.LogInformation("Seeded {Count} records into database", count);

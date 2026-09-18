@@ -1,6 +1,6 @@
 using Respira.ServiceDefaults.Models;
 
-namespace Respira.Domain.Entities
+namespace Respira.Clinical.Domain.Entities
 {
     /// <summary>
     /// This is the class represent a scoring metric, like CURB-65 or PSI

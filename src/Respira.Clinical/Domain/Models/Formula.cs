@@ -1,8 +1,8 @@
 using System.Text.Json.Serialization;
-using Respira.Domain.Entities;
-using Respira.Domain.Enums;
+using Respira.Clinical.Domain.Entities;
+using Respira.Clinical.Domain.Enums;
 
-namespace Respira.Domain.Models
+namespace Respira.Clinical.Domain.Models
 {
     /// <summary>
     /// This is the class represent a clinical formula, like BUN, Systoloc blood pressure,...

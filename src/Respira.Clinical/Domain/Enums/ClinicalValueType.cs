@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace Respira.Domain.Enums
+namespace Respira.Clinical.Domain.Enums
 {
     /// <summary>
     /// Clinical variable value type

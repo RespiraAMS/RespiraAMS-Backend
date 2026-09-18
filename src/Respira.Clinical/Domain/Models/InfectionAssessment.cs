@@ -1,6 +1,6 @@
-using Respira.Domain.Entities;
+using Respira.Clinical.Domain.Entities;
 
-namespace Respira.Domain.Models
+namespace Respira.Clinical.Domain.Models
 {
     /// <summary>
     /// This record is used to indicate pathogen with probability for infection,

@@ -1,15 +1,13 @@
-using System.Text.Json;
-using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Storage;
-using Respira.Application.Contracts.Data;
-using Respira.Domain.Entities;
-using Respira.Domain.Models;
+using Respira.Clinical.Application.Contracts.Data;
+using Respira.Clinical.Domain.Entities;
+using Respira.Clinical.Domain.Models;
 using Respira.Infrastructure.Util.Database;
 using Respira.ServiceDefaults.Models;
 
-namespace Respira.Infrastructure.Data
+namespace Respira.Clinical.Infrastructure.Data
 {
     public class ClinicalDbContext(DbContextOptions<ClinicalDbContext> options) : DbContext(options), IDbContext
     {
@@ -27,6 +25,9 @@ namespace Respira.Infrastructure.Data
         public DbSet<ScoreMetrics> ScoreMetrics { get; set; }
         public DbSet<ScoringRule> ScoringRules { get; set; }
         public DbSet<SuspectedCause> SuspectedCauses { get; set; }
+        public DbSet<Antibiotic> Antibiotics { get; set; }
+        public DbSet<AntibioticGroup> AntibioticGroups { get; set; }
+        public DbSet<Dosage> Dosages { get; set; }
 
         public async Task ExecuteInTransactionAsync(Func<Task> action, CancellationToken cancellationToken = default)
         {
@@ -185,6 +186,39 @@ namespace Respira.Infrastructure.Data
                     v => FormulaSerializer.Serialize(v),
                     v => FormulaSerializer.Deserialize(v))
                 .Metadata.SetValueComparer(s_formulaComparer);
+
+            // Config on antibiotic group
+            modelBuilder.Entity<AntibioticGroup>().ToTable("antibiotic_groups");
+            modelBuilder.Entity<AntibioticGroup>()
+                .HasOne(x => x.Parent)
+                .WithMany()
+                .HasForeignKey(x => x.ParentId);
+            modelBuilder.Entity<AntibioticGroup>()
+                .HasIndex(x => x.Name);
+
+            // Config on dosage
+            modelBuilder.Entity<Dosage>().ToTable("dosages");
+            modelBuilder.Entity<Dosage>()
+                .HasOne(x => x.Antibiotic)
+                .WithMany(x => x.Dosages)
+                .HasForeignKey(x => x.AntibioticId);
+            modelBuilder.Entity<Dosage>()
+                .Property(x => x.RouteOfAdministration)
+                .HasConversion<string>();
+            modelBuilder.Entity<Dosage>()
+                .OwnsOne(x => x.Crcl, builder => builder.ToJson());
+
+            // Config on antibiotic
+            modelBuilder.Entity<Antibiotic>().ToTable("antibiotics");
+            modelBuilder.Entity<Antibiotic>()
+                .HasOne(x => x.AntibioticGroup)
+                .WithMany()
+                .HasForeignKey(x => x.AntibioticGroupId);
+            modelBuilder.Entity<Antibiotic>()
+                .HasIndex(x => new { x.Name, x.Classification });
+            modelBuilder.Entity<Antibiotic>()
+                .Property(x => x.Classification)
+                .HasConversion<string>();
         }
 
         public override async ValueTask DisposeAsync()

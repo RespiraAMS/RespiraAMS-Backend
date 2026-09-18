@@ -1,13 +1,13 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Respira.Application.Contracts.Data;
-using Respira.Domain.Enums;
-using Respira.Domain.Models;
-using Respira.Domain.Services;
+using Respira.Clinical.Application.Contracts.Data;
+using Respira.Clinical.Domain.Enums;
+using Respira.Clinical.Domain.Models;
+using Respira.Clinical.Domain.Services;
 using Respira.ServiceDefaults.Contracts.CQRS;
 using Respira.ServiceDefaults.Contracts.Results;
 
-namespace Respira.Application.Features.Diagnosis.EmpiricalDiagnosis.Diagnose
+namespace Respira.Clinical.Application.Features.Diagnosis.EmpiricalDiagnosis.Diagnose
 {
     public class DiagnoseHandler(IDbContext context, IDiagnoseService service, ILogger<DiagnoseHandler> logger)
         : IQueryHandler<DiagnoseQuery, Result<DiagnoseResult>>

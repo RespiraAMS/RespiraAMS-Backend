@@ -1,6 +1,6 @@
-using Respira.Domain.Enums;
+using Respira.Clinical.Domain.Enums;
 
-namespace Respira.Domain.Models
+namespace Respira.Clinical.Domain.Models
 {
     /// <summary>
     /// Individual severity diagnosis for a metrics

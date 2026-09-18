@@ -1,14 +1,14 @@
 using Asp.Versioning;
 using Respira.ServiceDefaults.Extensions;
 using Respira.ServiceDefaults.Utils.OpenApiTransformers;
-using Respira.DI;
 using Wolverine;
 using Wolverine.Postgresql;
 using Wolverine.EntityFrameworkCore;
 using Wolverine.FluentValidation;
 using Wolverine.RabbitMQ;
 using Scalar.AspNetCore;
-using Respira.Application;
+using Respira.Clinical.Application;
+using Respira.Clinical.DI;
 
 var builder = WebApplication.CreateBuilder(args);
 

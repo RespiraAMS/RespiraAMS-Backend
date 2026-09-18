@@ -1,5 +1,5 @@
-using Respira.Domain.Enums;
-using Respira.Domain.Models;
+using Respira.Clinical.Domain.Enums;
+using Respira.Clinical.Domain.Models;
 using Xunit;
 
 namespace Respira.Domain.Test.Models

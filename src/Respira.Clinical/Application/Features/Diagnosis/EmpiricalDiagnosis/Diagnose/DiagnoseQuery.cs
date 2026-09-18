@@ -1,7 +1,7 @@
-using Respira.Domain.Enums;
+using Respira.Clinical.Domain.Enums;
 using Respira.ServiceDefaults.Contracts.CQRS;
 
-namespace Respira.Application.Features.Diagnosis.EmpiricalDiagnosis.Diagnose
+namespace Respira.Clinical.Application.Features.Diagnosis.EmpiricalDiagnosis.Diagnose
 {
     public record Observation(Guid VariableId, string Value);
     public record DiagnoseQuery : IQuery

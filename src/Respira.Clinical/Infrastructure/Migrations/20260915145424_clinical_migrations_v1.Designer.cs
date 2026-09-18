@@ -5,15 +5,16 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using Respira.Infrastructure.Data;
+using Respira.Clinical.Infrastructure.Data;
+
 
 #nullable disable
 
-namespace Respira.Infrastructure.Migrations
+namespace Respira.Clinical.Infrastructure.Migrations
 {
     [DbContext(typeof(ClinicalDbContext))]
     [Migration("20260915145424_clinical_migrations_v1")]
-    partial class clinical_migrations_v1
+    partial class Clinical_migrations_v1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

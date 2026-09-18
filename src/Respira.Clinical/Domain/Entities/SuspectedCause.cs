@@ -1,7 +1,7 @@
-using Respira.Domain.Enums;
+using Respira.Clinical.Domain.Enums;
 using Respira.ServiceDefaults.Models;
 
-namespace Respira.Domain.Entities
+namespace Respira.Clinical.Domain.Entities
 {
     /// <summary>
     /// This class represent suspected causes of a patient knowing their severity and treatment site

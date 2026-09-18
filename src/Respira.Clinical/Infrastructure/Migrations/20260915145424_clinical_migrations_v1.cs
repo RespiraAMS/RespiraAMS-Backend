@@ -1,12 +1,11 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Respira.Infrastructure.Migrations
+namespace Respira.Clinical.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class clinical_migrations_v1 : Migration
+    public partial class Clinical_migrations_v1 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

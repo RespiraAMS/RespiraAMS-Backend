@@ -1,10 +1,10 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Respira.Application.Contracts.Data;
+using Respira.Clinical.Application.Contracts.Data;
 using Respira.ServiceDefaults.Contracts.CQRS;
 using Respira.ServiceDefaults.Contracts.Results;
 
-namespace Respira.Application.Features.Diagnosis.EmpiricalDiagnosis.GetDiagnosisForm
+namespace Respira.Clinical.Application.Features.Diagnosis.EmpiricalDiagnosis.GetDiagnosisForm
 {
     public class GetDiagnosisFormHandler(IDbContext context, ILogger<GetDiagnosisFormHandler> logger)
         : IQueryHandler<GetDiagnosisFormQuery, Result<GetDiagnosisFormResult>>

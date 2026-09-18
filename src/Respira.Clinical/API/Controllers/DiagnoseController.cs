@@ -1,7 +1,7 @@
 using Asp.Versioning;
 using Microsoft.AspNetCore.Mvc;
-using Respira.Application.Features.Diagnosis.EmpiricalDiagnosis.Diagnose;
-using Respira.Application.Features.Diagnosis.EmpiricalDiagnosis.GetDiagnosisForm;
+using Respira.Clinical.Application.Features.Diagnosis.EmpiricalDiagnosis.Diagnose;
+using Respira.Clinical.Application.Features.Diagnosis.EmpiricalDiagnosis.GetDiagnosisForm;
 using Respira.ServiceDefaults.Contracts.Results;
 using Wolverine;
 

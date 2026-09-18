@@ -1,8 +1,8 @@
 using System.Text.Json.Serialization;
-using Respira.Domain.Models;
+using Respira.Clinical.Domain.Models;
 using Respira.ServiceDefaults.Models;
 
-namespace Respira.Domain.Entities
+namespace Respira.Clinical.Domain.Entities
 {
     /// <summary>
     /// Scoring rule is used to calculate a score for a specific criterion in a scoring metric

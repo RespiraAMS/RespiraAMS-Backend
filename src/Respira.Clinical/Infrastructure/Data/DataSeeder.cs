@@ -1,9 +1,9 @@
 using System.Text.Json;
-using Respira.Domain.Entities;
-using Respira.Domain.Enums;
-using Respira.Domain.Models;
+using Respira.Clinical.Domain.Entities;
+using Respira.Clinical.Domain.Enums;
+using Respira.Clinical.Domain.Models;
 
-namespace Respira.Infrastructure.Data
+namespace Respira.Clinical.Infrastructure.Data
 {
     public class SeedData
     {
@@ -13,6 +13,8 @@ namespace Respira.Infrastructure.Data
         public required List<Pathogen> Pathogens { get; init; }
         public required List<RiskFactor> RiskFactors { get; init; }
         public required List<SuspectedCause> SuspectedCauses { get; init; }
+        public required List<AntibioticGroup> AntibioticGroups { get; init; }
+        public required List<Antibiotic> Antibiotics { get; init; }
     }
 
     public static class DataSeeder
@@ -141,6 +143,41 @@ namespace Respira.Infrastructure.Data
                 };
             });
 
+            var antibioticGroups = dto.AntibioticGroups.ConvertAll(g => new AntibioticGroup
+            {
+                Id = GenerateId(g.Id),
+                Name = g.Name,
+                Description = g.Description,
+                ParentId = ParseNullableId(g.ParentId),
+            });
+
+
+            var antibiotics = dto.Antibiotics.ConvertAll(a =>
+            {
+                var antibioticId = GenerateId(a.Id);
+                var antibiotic = new Antibiotic
+                {
+                    Id = antibioticId,
+                    Name = a.Name,
+                    AntibioticGroupId = ParseRequiredId(a.AntibioticGroupId, "antibiotic.antibioticGroupId"),
+                    Classification = ParseEnum(a.Classification, AwareClassification.Unclassified),
+                    PathogenIds = a.PathogenIds.ConvertAll(ParseRequiredId),
+                    Dosages = a.Dosages.ConvertAll(d => new Dosage
+                    {
+                        Id = GenerateId(d.Id),
+                        AntibioticId = antibioticId,
+                        RouteOfAdministration = ParseEnum(d.RouteOfAdministration, RouteOfAdministration.Intravenous),
+                        Dose = d.Dose,
+                        Crcl = MapRange(d.Crcl),
+                    }),
+                };
+
+                antibiotic.DosageIds = antibiotic.Dosages.ConvertAll(d => d.Id);
+
+                return antibiotic;
+            });
+
+
             return new SeedData
             {
                 ClinicalVariables = variables,
@@ -149,6 +186,8 @@ namespace Respira.Infrastructure.Data
                 Pathogens = pathogens,
                 RiskFactors = allRiskFactors,
                 SuspectedCauses = suspectedCauses,
+                AntibioticGroups = antibioticGroups,
+                Antibiotics = antibiotics,
             };
         }
 
@@ -201,9 +240,45 @@ namespace Respira.Infrastructure.Data
             return string.IsNullOrWhiteSpace(id) ? Guid.CreateVersion7() : Guid.Parse(id);
         }
 
+        private static Guid ParseRequiredId(string? id)
+        {
+            return Guid.TryParse(id, out var result)
+                ? result
+                : throw new InvalidOperationException($"Seed data: '{id}' is not a valid id.");
+        }
+
+        private static Guid ParseRequiredId(string? id, string field)
+        {
+            return Guid.TryParse(id, out var result)
+                ? result
+                : throw new InvalidOperationException($"Seed data: '{field}' must reference a valid id, got '{id}'.");
+        }
+
+        private static Guid? ParseNullableId(string? id)
+        {
+            return string.IsNullOrWhiteSpace(id) ? null : Guid.Parse(id);
+        }
+
         private static T ParseEnum<T>(string value, T fallback) where T : struct, Enum
         {
             return Enum.TryParse(value, true, out T result) ? result : fallback;
+        }
+
+        private static Domain.Models.Range? MapRange(RangeDto? dto)
+        {
+            if (dto is null)
+            {
+                return null;
+            }
+
+            return new Domain.Models.Range
+            {
+                Min = dto.Min,
+                IsMinExclusive = dto.IsMinExclusive,
+                Max = dto.Max ?? decimal.MaxValue,
+                IsMaxExclusive = dto.IsMaxExclusive,
+                Unit = dto.Unit,
+            };
         }
     }
 }

@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
-namespace Respira.Domain.Enums
+namespace Respira.Clinical.Domain.Enums
 {
     /// <summary>
     /// Disease severity

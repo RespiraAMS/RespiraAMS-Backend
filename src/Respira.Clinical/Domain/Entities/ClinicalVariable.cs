@@ -1,7 +1,7 @@
-using Respira.Domain.Enums;
+using Respira.Clinical.Domain.Enums;
 using Respira.ServiceDefaults.Models;
 
-namespace Respira.Domain.Entities
+namespace Respira.Clinical.Domain.Entities
 {
     /// <summary>
     /// This is the class represent a clinical variable, like BUN, Systoloc blood pressure,...

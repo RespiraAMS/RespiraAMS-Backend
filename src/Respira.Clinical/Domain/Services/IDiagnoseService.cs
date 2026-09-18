@@ -1,9 +1,9 @@
-using Respira.Domain.Entities;
-using Respira.Domain.Enums;
-using Respira.Domain.Models;
+using Respira.Clinical.Domain.Entities;
+using Respira.Clinical.Domain.Enums;
+using Respira.Clinical.Domain.Models;
 using Respira.ServiceDefaults.Contracts.Results;
 
-namespace Respira.Domain.Services
+namespace Respira.Clinical.Domain.Services
 {
     public interface IDiagnoseService
     {

@@ -4,11 +4,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Respira.Application.Contracts.Data;
-using Respira.Domain.Services;
-using Respira.Infrastructure.Data;
+using Respira.Clinical.Application.Contracts.Data;
+using Respira.Clinical.Domain.Services;
+using Respira.Clinical.Infrastructure.Data;
 
-namespace Respira.DI
+namespace Respira.Clinical.DI
 {
     public static class DependencyInjection
     {

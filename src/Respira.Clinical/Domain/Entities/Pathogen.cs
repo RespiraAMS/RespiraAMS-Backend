@@ -1,6 +1,6 @@
 using Respira.ServiceDefaults.Models;
 
-namespace Respira.Domain.Entities
+namespace Respira.Clinical.Domain.Entities
 {
     /// <summary>
     /// Pathogen: cause of the disease, which can either be a virus, bacteria or fungi

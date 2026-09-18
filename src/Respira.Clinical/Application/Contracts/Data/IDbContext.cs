@@ -1,8 +1,8 @@
 using Microsoft.EntityFrameworkCore;
-using Respira.Domain.Entities;
+using Respira.Clinical.Domain.Entities;
 using Respira.ServiceDefaults.Models;
 
-namespace Respira.Application.Contracts.Data
+namespace Respira.Clinical.Application.Contracts.Data
 {
     public interface IDbContext
     {
@@ -13,6 +13,9 @@ namespace Respira.Application.Contracts.Data
         DbSet<ScoreMetrics> ScoreMetrics { get; set; }
         DbSet<ScoringRule> ScoringRules { get; set; }
         DbSet<SuspectedCause> SuspectedCauses { get; set; }
+        DbSet<Antibiotic> Antibiotics { get; set; }
+        DbSet<AntibioticGroup> AntibioticGroups { get; set; }
+        DbSet<Dosage> Dosages { get; set; }
 
         /// <summary>
         /// Save all changes to database

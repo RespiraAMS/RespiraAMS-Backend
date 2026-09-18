@@ -1,8 +1,8 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using Respira.Domain.Entities;
-using Respira.Domain.Enums;
-using Respira.Domain.Models;
+using Respira.Clinical.Domain.Entities;
+using Respira.Clinical.Domain.Enums;
+using Respira.Clinical.Domain.Models;
 
 namespace Respira.Infrastructure.Util.Database
 {

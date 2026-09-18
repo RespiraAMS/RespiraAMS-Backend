@@ -1,9 +1,9 @@
 using Microsoft.Extensions.Logging;
 using Moq;
-using Respira.Domain.Entities;
-using Respira.Domain.Enums;
-using Respira.Domain.Models;
-using Respira.Domain.Services;
+using Respira.Clinical.Domain.Entities;
+using Respira.Clinical.Domain.Enums;
+using Respira.Clinical.Domain.Models;
+using Respira.Clinical.Domain.Services;
 using Respira.ServiceDefaults.Contracts.Results;
 using Xunit;
 

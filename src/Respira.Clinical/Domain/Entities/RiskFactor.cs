@@ -1,8 +1,8 @@
 using System.Text.Json.Serialization;
-using Respira.Domain.Models;
+using Respira.Clinical.Domain.Models;
 using Respira.ServiceDefaults.Models;
 
-namespace Respira.Domain.Entities
+namespace Respira.Clinical.Domain.Entities
 {
     /// <summary>
     /// Risk factors are used to evaluate if patient is at risk of infection with a specefic pathogen.

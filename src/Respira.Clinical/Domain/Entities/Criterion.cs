@@ -1,8 +1,8 @@
-using Respira.Domain.Enums;
-using Respira.Domain.Models;
+using Respira.Clinical.Domain.Enums;
+using Respira.Clinical.Domain.Models;
 using Respira.ServiceDefaults.Models;
 
-namespace Respira.Domain.Entities
+namespace Respira.Clinical.Domain.Entities
 {
     /// <summary>
     /// Criterion used to evaluate condition, severity,...

@@ -1,4 +1,4 @@
-namespace Respira.Infrastructure.Data
+namespace Respira.Clinical.Infrastructure.Data
 {
     public class SeedDataOptions
     {

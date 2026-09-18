@@ -1,4 +1,4 @@
-namespace Respira.Infrastructure.Data
+namespace Respira.Clinical.Infrastructure.Data
 {
     public record SeedDataDto
     {
@@ -7,6 +7,8 @@ namespace Respira.Infrastructure.Data
         public List<CriterionDto> Criteria { get; init; } = [];
         public List<PathogenDto> Pathogens { get; init; } = [];
         public List<SuspectedCauseDto> SuspectedCauses { get; init; } = [];
+        public List<AntibioticGroupDto> AntibioticGroups { get; init; } = [];
+        public List<AntibioticDto> Antibiotics { get; init; } = [];
     }
 
     public record ClinicalVariableDto
@@ -81,5 +83,40 @@ namespace Respira.Infrastructure.Data
         public string PathogenId { get; init; } = string.Empty;
         public string Severity { get; init; } = string.Empty;
         public string TreatmentSite { get; init; } = string.Empty;
+    }
+
+    public record AntibioticGroupDto
+    {
+        public string Id { get; init; } = string.Empty;
+        public string Name { get; init; } = string.Empty;
+        public string Description { get; init; } = string.Empty;
+        public string? ParentId { get; init; }
+    }
+
+    public record AntibioticDto
+    {
+        public string Id { get; init; } = string.Empty;
+        public string Name { get; init; } = string.Empty;
+        public string AntibioticGroupId { get; init; } = string.Empty;
+        public string Classification { get; init; } = string.Empty;
+        public List<string> PathogenIds { get; init; } = [];
+        public List<DosageDto> Dosages { get; init; } = [];
+    }
+
+    public record DosageDto
+    {
+        public string Id { get; init; } = string.Empty;
+        public string RouteOfAdministration { get; init; } = string.Empty;
+        public string Dose { get; init; } = string.Empty;
+        public RangeDto? Crcl { get; init; }
+    }
+
+    public record RangeDto
+    {
+        public decimal Min { get; init; }
+        public bool IsMinExclusive { get; init; }
+        public decimal? Max { get; init; }
+        public bool IsMaxExclusive { get; init; }
+        public string? Unit { get; init; }
     }
 }
