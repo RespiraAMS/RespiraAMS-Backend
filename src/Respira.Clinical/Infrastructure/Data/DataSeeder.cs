@@ -1,4 +1,5 @@
 using System.Text.Json;
+using ImTools;
 using Respira.Clinical.Domain.Entities;
 using Respira.Clinical.Domain.Enums;
 using Respira.Clinical.Domain.Models;
@@ -7,15 +8,15 @@ namespace Respira.Clinical.Infrastructure.Data
 {
     public class SeedData
     {
-        public required List<ClinicalVariable> ClinicalVariables { get; init; }
-        public required List<Criterion> Criteria { get; init; }
-        public required List<ScoreMetrics> ScoreMetrics { get; init; }
-        public required List<Pathogen> Pathogens { get; init; }
-        public required List<RiskFactor> RiskFactors { get; init; }
-        public required List<SuspectedCause> SuspectedCauses { get; init; }
-        public required List<AntibioticGroup> AntibioticGroups { get; init; }
-        public required List<Antibiotic> Antibiotics { get; init; }
-        public required List<Treatment> Treatments { get; init; }
+        public required ICollection<ClinicalVariable> ClinicalVariables { get; init; }
+        public required ICollection<Criterion> Criteria { get; init; }
+        public required ICollection<ScoreMetrics> ScoreMetrics { get; init; }
+        public required ICollection<Pathogen> Pathogens { get; init; }
+        public required ICollection<RiskFactor> RiskFactors { get; init; }
+        public required ICollection<SuspectedCause> SuspectedCauses { get; init; }
+        public required ICollection<AntibioticGroup> AntibioticGroups { get; init; }
+        public required ICollection<Antibiotic> Antibiotics { get; init; }
+        public required ICollection<Treatment> Treatments { get; init; }
     }
 
     public static class DataSeeder
@@ -43,7 +44,7 @@ namespace Respira.Clinical.Infrastructure.Data
 
         private static SeedData MapToDomain(SeedDataDto dto)
         {
-            var variables = dto.ClinicalVariables.ConvertAll(v =>
+            var variables = dto.ClinicalVariables.Select(v =>
             {
                 var variableId = GenerateId(v.Id);
                 return new ClinicalVariable
@@ -55,11 +56,11 @@ namespace Respira.Clinical.Infrastructure.Data
                     ValueType = ParseEnum(v.ValueType, ClinicalValueType.Boolean),
                     CanonicalUnit = v.CanonicalUnit,
                 };
-            });
+            }).ToList();
 
             var variableLookup = variables.ToDictionary(v => v.Id);
 
-            var criteria = dto.Criteria.ConvertAll(c =>
+            var criteria = dto.Criteria.Select(c =>
             {
                 var criterionId = GenerateId(c.Id);
                 var formula = MapFormula(c.Formula, variableLookup);
@@ -67,14 +68,14 @@ namespace Respira.Clinical.Infrastructure.Data
                 {
                     Id = criterionId,
                 };
-            });
+            }).ToList();
 
             var criterionLookup = criteria.ToDictionary(c => c.Id);
 
-            var scoreMetrics = dto.ScoreMetrics.ConvertAll(s =>
+            var scoreMetrics = dto.ScoreMetrics.Select(s =>
             {
                 var metricId = GenerateId(s.Id);
-                var scoringRules = s.ScoringRules.ConvertAll(r =>
+                var scoringRules = s.ScoringRules.Select(r =>
                 {
                     var ruleId = GenerateId(r.Id);
                     var criterionId = GenerateId(r.CriterionId);
@@ -96,15 +97,15 @@ namespace Respira.Clinical.Infrastructure.Data
                     Name = s.Name,
                     Code = s.Code,
                     Description = s.Description,
-                    ScoringRules = scoringRules,
+                    ScoringRules = [.. scoringRules],
                 };
-            });
+            }).ToList();
 
             var allRiskFactors = new List<RiskFactor>();
-            var pathogens = dto.Pathogens.ConvertAll(p =>
+            var pathogens = dto.Pathogens.Select(p =>
             {
                 var pathogenId = GenerateId(p.Id);
-                var riskFactors = p.RiskFactors.ConvertAll(rf =>
+                var riskFactors = p.RiskFactors.Select(rf =>
                 {
                     var criterionId = GenerateId(rf.CriterionId);
                     var criterion = criterionLookup[criterionId];
@@ -125,13 +126,13 @@ namespace Respira.Clinical.Infrastructure.Data
                     Name = p.Name,
                     Description = p.Description,
                     IsAtypical = p.IsAtypical,
-                    RiskFactors = riskFactors,
+                    RiskFactors = [.. riskFactors],
                 };
-            });
+            }).ToList();
 
             var pathogenLookup = pathogens.ToDictionary(p => p.Id);
 
-            var suspectedCauses = dto.SuspectedCauses.ConvertAll(sc =>
+            var suspectedCauses = dto.SuspectedCauses.Select(sc =>
             {
                 var pathogenId = GenerateId(sc.PathogenId);
                 var pathogen = pathogenLookup[pathogenId];
@@ -144,72 +145,71 @@ namespace Respira.Clinical.Infrastructure.Data
                 };
             });
 
-            var antibioticGroups = dto.AntibioticGroups.ConvertAll(g => new AntibioticGroup
+            var antibioticGroups = dto.AntibioticGroups.Select(g => new AntibioticGroup
             {
                 Id = GenerateId(g.Id),
                 Name = g.Name,
                 Description = g.Description,
                 ParentId = ParseNullableId(g.ParentId),
-            });
+            }).ToList();
 
 
-            var antibiotics = dto.Antibiotics.ConvertAll(a =>
+            var antibiotics = dto.Antibiotics.Select(a =>
             {
                 var antibioticId = GenerateId(a.Id);
-                var antibiotic = new Antibiotic
+                return new Antibiotic
                 {
                     Id = antibioticId,
                     Name = a.Name,
                     AntibioticGroupId = ParseRequiredId(a.AntibioticGroupId, "antibiotic.antibioticGroupId"),
                     Classification = ParseEnum(a.Classification, AwareClassification.Unclassified),
-                    PathogenIds = a.PathogenIds.ConvertAll(ParseRequiredId),
-                    Dosages = a.Dosages.ConvertAll(d => new Dosage
+                    Dosages = [.. a.Dosages.Select(d => new Dosage
                     {
                         Id = GenerateId(d.Id),
                         AntibioticId = antibioticId,
                         RouteOfAdministration = ParseEnum(d.RouteOfAdministration, RouteOfAdministration.Intravenous),
                         Dose = d.Dose,
                         Crcl = MapRange(d.Crcl),
-                    }),
+                    })],
                 };
+            }).ToList();
 
-                antibiotic.DosageIds = antibiotic.Dosages.ConvertAll(d => d.Id);
-
-                return antibiotic;
-            });
-
-            var treatments = dto.Treatments.ConvertAll(t =>
+            var treatments = dto.Treatments.Select(t =>
             {
                 var treatmentId = GenerateId(t.Id);
-                var pathogens = t.PathogenIds.ConvertAll(p => pathogenLookup[p]);
-                var criteria = t.CriteriaIds.ConvertAll(c => criterionLookup[c]);
-                var medicines = t.MedicineIds.ConvertAll(m => antibiotics.First(a => a.Id == m));
+                var pathogens = t.PathogenIds.Select(p => pathogenLookup[p]);
+                var criteria = t.CriteriaIds.Select(c => criterionLookup[c]);
+                var medicines = t.MedicineIds
+                    .Select(composition => new MedicineComposition
+                    {
+                        TreatmentId = treatmentId,
+                        Antibiotics = [.. composition.Select(m => antibiotics.First(a => a.Id == m))]
+                    })
+                    .ToList();
+
                 return new Treatment
                 {
                     Id = treatmentId,
                     Severity = ParseEnum(t.Severity, Severity.Mild),
                     TreatmentSite = ParseEnum(t.TreatmentSite, TreatmentSite.Outpatient),
-                    PathogenIds = t.PathogenIds,
-                    Pathogens = pathogens,
-                    CriteriaIds = t.CriteriaIds,
-                    Criteria = criteria,
-                    MedicineIds = t.MedicineIds,
-                    Medicines = medicines,
+                    Pathogens = [.. pathogens],
+                    Criteria = [.. criteria],
+                    Medicines = [.. medicines],
                 };
-            });
+            }).ToList();
 
 
             return new SeedData
             {
-                ClinicalVariables = variables,
-                Criteria = criteria,
-                ScoreMetrics = scoreMetrics,
-                Pathogens = pathogens,
+                ClinicalVariables = [.. variables],
+                Criteria = [.. criteria],
+                ScoreMetrics = [.. scoreMetrics],
+                Pathogens = [.. pathogens],
                 RiskFactors = allRiskFactors,
-                SuspectedCauses = suspectedCauses,
-                AntibioticGroups = antibioticGroups,
-                Antibiotics = antibiotics,
-                Treatments = treatments,
+                SuspectedCauses = [.. suspectedCauses],
+                AntibioticGroups = [.. antibioticGroups],
+                Antibiotics = [.. antibiotics],
+                Treatments = [.. treatments],
             };
         }
 
@@ -261,14 +261,6 @@ namespace Respira.Clinical.Infrastructure.Data
         {
             return string.IsNullOrWhiteSpace(id) ? Guid.CreateVersion7() : Guid.Parse(id);
         }
-
-        private static Guid ParseRequiredId(string? id)
-        {
-            return Guid.TryParse(id, out var result)
-                ? result
-                : throw new InvalidOperationException($"Seed data: '{id}' is not a valid id.");
-        }
-
         private static Guid ParseRequiredId(string? id, string field)
         {
             return Guid.TryParse(id, out var result)

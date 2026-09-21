@@ -2,14 +2,14 @@ namespace Respira.Clinical.Infrastructure.Data
 {
     public record SeedDataDto
     {
-        public List<ClinicalVariableDto> ClinicalVariables { get; init; } = [];
-        public List<ScoreMetricsDto> ScoreMetrics { get; init; } = [];
-        public List<CriterionDto> Criteria { get; init; } = [];
-        public List<PathogenDto> Pathogens { get; init; } = [];
-        public List<SuspectedCauseDto> SuspectedCauses { get; init; } = [];
-        public List<AntibioticGroupDto> AntibioticGroups { get; init; } = [];
-        public List<AntibioticDto> Antibiotics { get; init; } = [];
-        public List<TreatmentDto> Treatments { get; init; } = [];
+        public ICollection<ClinicalVariableDto> ClinicalVariables { get; init; } = [];
+        public ICollection<ScoreMetricsDto> ScoreMetrics { get; init; } = [];
+        public ICollection<CriterionDto> Criteria { get; init; } = [];
+        public ICollection<PathogenDto> Pathogens { get; init; } = [];
+        public ICollection<SuspectedCauseDto> SuspectedCauses { get; init; } = [];
+        public ICollection<AntibioticGroupDto> AntibioticGroups { get; init; } = [];
+        public ICollection<AntibioticDto> Antibiotics { get; init; } = [];
+        public ICollection<TreatmentDto> Treatments { get; init; } = [];
     }
 
     public record ClinicalVariableDto
@@ -28,7 +28,7 @@ namespace Respira.Clinical.Infrastructure.Data
         public string Name { get; init; } = string.Empty;
         public string Code { get; init; } = string.Empty;
         public string Description { get; init; } = string.Empty;
-        public List<ScoringRuleDto> ScoringRules { get; init; } = [];
+        public ICollection<ScoringRuleDto> ScoringRules { get; init; } = [];
     }
 
     public record ScoringRuleDto
@@ -70,7 +70,7 @@ namespace Respira.Clinical.Infrastructure.Data
         public string Name { get; init; } = string.Empty;
         public string Description { get; init; } = string.Empty;
         public bool IsAtypical { get; init; }
-        public List<RiskFactorDto> RiskFactors { get; init; } = [];
+        public ICollection<RiskFactorDto> RiskFactors { get; init; } = [];
     }
 
     public record RiskFactorDto
@@ -100,8 +100,8 @@ namespace Respira.Clinical.Infrastructure.Data
         public string Name { get; init; } = string.Empty;
         public string AntibioticGroupId { get; init; } = string.Empty;
         public string Classification { get; init; } = string.Empty;
-        public List<string> PathogenIds { get; init; } = [];
-        public List<DosageDto> Dosages { get; init; } = [];
+        public ICollection<string> PathogenIds { get; init; } = [];
+        public ICollection<DosageDto> Dosages { get; init; } = [];
     }
 
     public record DosageDto
@@ -126,8 +126,8 @@ namespace Respira.Clinical.Infrastructure.Data
         public string Id { get; init; } = string.Empty;
         public string Severity { get; init; } = string.Empty;
         public string TreatmentSite { get; init; } = string.Empty;
-        public List<Guid> MedicineIds { get; init; } = [];
-        public List<Guid> PathogenIds { get; init; } = [];
-        public List<Guid> CriteriaIds { get; init; } = [];
+        public ICollection<ICollection<Guid>> MedicineIds { get; init; } = [];
+        public ICollection<Guid> PathogenIds { get; init; } = [];
+        public ICollection<Guid> CriteriaIds { get; init; } = [];
     }
 }

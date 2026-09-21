@@ -7,11 +7,8 @@ namespace Respira.Clinical.Domain.Entities
     {
         public required Severity Severity { get; set; }
         public required TreatmentSite TreatmentSite { get; set; }
-        public List<Guid> MedicineIds { get; set; } = [];
-        public List<Antibiotic> Medicines { get; set; } = [];
-        public List<Guid> PathogenIds { get; set; } = [];
-        public List<Pathogen> Pathogens { get; set; } = [];
-        public List<Guid> CriteriaIds { get; set; } = [];
-        public List<Criterion> Criteria { get; set; } = [];
+        public ICollection<MedicineComposition> Medicines { get; set; } = [];
+        public ICollection<Pathogen> Pathogens { get; set; } = [];
+        public ICollection<Criterion> Criteria { get; set; } = [];
     }
 }

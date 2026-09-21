@@ -28,6 +28,7 @@ namespace Respira.Clinical.Infrastructure.Data
         public DbSet<Antibiotic> Antibiotics { get; set; }
         public DbSet<AntibioticGroup> AntibioticGroups { get; set; }
         public DbSet<Dosage> Dosages { get; set; }
+        public DbSet<MedicineComposition> MedicineCompositions { get; set; }
         public DbSet<Treatment> Treatments { get; set; }
 
         public async Task ExecuteInTransactionAsync(Func<Task> action, CancellationToken cancellationToken = default)
@@ -221,6 +222,17 @@ namespace Respira.Clinical.Infrastructure.Data
                 .Property(x => x.Classification)
                 .HasConversion<string>();
 
+            // Config on medicine composition
+            modelBuilder.Entity<MedicineComposition>().ToTable("treatment_medicine_compositions");
+            modelBuilder.Entity<MedicineComposition>()
+                .HasMany(x => x.Antibiotics)
+                .WithMany()
+                .UsingEntity(t => t.ToTable("medicine_composition_antibiotics"));
+            modelBuilder.Entity<MedicineComposition>()
+                .HasOne(x => x.Treatment)
+                .WithMany(x => x.Medicines)
+                .HasForeignKey(x => x.TreatmentId);
+
             // Config on treatment
             modelBuilder.Entity<Treatment>().ToTable("treatments");
             modelBuilder.Entity<Treatment>()
@@ -232,8 +244,11 @@ namespace Respira.Clinical.Infrastructure.Data
                 .WithMany()
                 .UsingEntity(t => t.ToTable("treatment_criteria"));
             modelBuilder.Entity<Treatment>()
-                .HasMany(x => x.Medicines)
-                .WithMany();
+                .Property(x => x.Severity)
+                .HasConversion<string>();
+            modelBuilder.Entity<Treatment>()
+                .Property(x => x.TreatmentSite)
+                .HasConversion<string>();
         }
 
         public override async ValueTask DisposeAsync()

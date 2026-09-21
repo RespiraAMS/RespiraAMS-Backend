@@ -16,6 +16,7 @@ namespace Respira.Clinical.Infrastructure.Data
                 await context.SuspectedCauses.AnyAsync() ||
                 await context.AntibioticGroups.AnyAsync() ||
                 await context.Antibiotics.AnyAsync() ||
+                await context.MedicineCompositions.AnyAsync() ||
                 await context.Treatments.AnyAsync();
         }
 

@@ -10,26 +10,7 @@ namespace Respira.Clinical.Domain.Entities
         public required Guid AntibioticGroupId { get; set; }
         public AntibioticGroup AntibioticGroup { get; set; } = null!;
         public required AwareClassification Classification { get; set; }
-
-        /// <summary>
-        /// List of dosage IDs
-        /// </summary>
-        public List<Guid> DosageIds { get; set; } = [];
-
-        /// <summary>
-        /// Antibiotic dosages
-        /// </summary>
-        public List<Dosage> Dosages { get; set; } = [];
-
-        /// <summary>
-        /// List of pathogen IDs (which is corresponding to <see cref="AntibioticSpectra"/>)
-        /// </summary>
-        public List<Guid> PathogenIds { get; set; } = [];
-
-        /// <summary>
-        /// Antibiotic spectra
-        /// </summary>
-        public List<Pathogen> AntibioticSpectra { get; set; } = [];
+        public ICollection<Dosage> Dosages { get; set; } = [];
 
         /// <summary>
         /// Validate if antibiotic's dosage is valid according to business rules

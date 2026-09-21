@@ -2,7 +2,7 @@
     "clinicalVariables": [
         {
             "id": "00000000-0000-0000-0000-100000000001",
-            "name": "Age",
+            "name": "Tuổi",
             "code": "AGE",
             "description": "Tuổi bệnh nhân",
             "valueType": "Numeric",
@@ -10,7 +10,7 @@
         },
         {
             "id": "00000000-0000-0000-0000-100000000002",
-            "name": "Is female sex",
+            "name": "Giới tính",
             "code": "FEMALE",
             "description": "Bệnh nhân này có phải giới tính nữ không?",
             "valueType": "Boolean",
@@ -18,7 +18,7 @@
         },
         {
             "id": "00000000-0000-0000-0000-100000000003",
-            "name": "Height",
+            "name": "Chiều cao",
             "code": "HEIGHT",
             "description": "Chiều cao bệnh nhân",
             "valueType": "Numeric",
@@ -26,7 +26,7 @@
         },
         {
             "id": "00000000-0000-0000-0000-100000000004",
-            "name": "Weight",
+            "name": "Cân nặng",
             "code": "WEIGHT",
             "description": "Cân nặng bệnh nhân",
             "valueType": "Numeric",
@@ -34,71 +34,71 @@
         },
         {
             "id": "00000000-0000-0000-0000-100000000005",
-            "name": "Confusion",
+            "name": "Dấu hiện suy giảm tri giác",
             "code": "CONFUSION",
-            "description": "Does the patient have altered mental status",
+            "description": "Bệnh nhân có dấu hiệu bị suy giảm tri giác không?",
             "valueType": "Boolean",
             "canonicalUnit": null
         },
         {
             "id": "00000000-0000-0000-0000-100000000006",
-            "name": "Respiratory rate",
+            "name": "Nhịp thở",
             "code": "RR",
-            "description": "Nhịp thở",
+            "description": "Nhịp thở bệnh nhân",
             "valueType": "Numeric",
             "canonicalUnit": "breaths/min"
         },
         {
             "id": "00000000-0000-0000-0000-100000000007",
-            "name": "Systolic blood pressure",
+            "name": "Huyết áp tâm thu",
             "code": "SBP",
-            "description": "Huyết áp tâm thu",
+            "description": "Huyết áp tâm thu của bệnh nhân",
             "valueType": "Numeric",
             "canonicalUnit": "mmHg"
         },
         {
             "id": "00000000-0000-0000-0000-100000000008",
-            "name": "Diastolic blood pressure",
+            "name": "Huyết áp tâm trương",
             "code": "DBP",
-            "description": "Huyết áp tâm trương",
+            "description": "Huyết áp tâm trương của bệnh nhân",
             "valueType": "Numeric",
             "canonicalUnit": "mmHg"
         },
         {
             "id": "00000000-0000-0000-0000-100000000009",
-            "name": "Temperature",
+            "name": "Nhiệt độ cơ thể",
             "code": "TEMPERATURE",
-            "description": "Nhiệt độ cơ thể",
+            "description": "Nhiệt độ cơ thể của bệnh nhân",
             "valueType": "Numeric",
             "canonicalUnit": "Celcius"
         },
         {
             "id": "00000000-0000-0000-0000-100000000010",
-            "name": "Urea",
+            "name": "Urea máu",
             "code": "UREA",
-            "description": "Urea máu",
+            "description": "Urea máu của bệnh nhân",
             "valueType": "Numeric",
             "canonicalUnit": "mmol/L"
         },
         {
             "id": "00000000-0000-0000-0000-100000000011",
-            "name": "White blood cell count",
+            "name": "Số lượng bạch cầu",
             "code": "WBC",
-            "description": "Số lượng bạch cầu",
+            "description": "Số lượng bạch cầu bệnh nhân",
             "valueType": "Numeric",
             "canonicalUnit": "cells/mm3"
         },
         {
             "id": "00000000-0000-0000-0000-100000000012",
-            "name": "Platelet count",
+            "name": "Số lượng tiểu cầu",
             "code": "PLATELET",
-            "description": "Số lượng tiểu cầu",
+            "description": "Số lượng tiểu cầu bệnh nhân",
             "valueType": "Numeric",
             "canonicalUnit": "cells/mm3"
         },
         {
             "id": "00000000-0000-0000-0000-100000000013",
-            "name": "Partial pressure of arterial oxygen (PaO₂)",
+            "name": "Phân áp oxy trong máu động mạch bệnh nhân (PaO₂)",
             "code": "PAO2",
             "description": "Phân áp oxy trong máu động mạch",
             "valueType": "Numeric",
@@ -106,7 +106,7 @@
         },
         {
             "id": "00000000-0000-0000-0000-100000000014",
-            "name": "Fraction of inspired oxygen (FiO₂)",
+            "name": "Phân suất oxy trong khí hít vào bệnh nhân (FiO₂)",
             "code": "FIO2",
             "description": "Phân suất oxy trong khí hít vào",
             "valueType": "Numeric",
@@ -114,7 +114,7 @@
         },
         {
             "id": "00000000-0000-0000-0000-100000000015",
-            "name": "Peripheral oxygen saturation (SpO₂)",
+            "name": "Độ bão hòa oxy trong máu ngoại vi bệnh nhân (SpO₂)",
             "code": "SPO2",
             "description": "Độ bão hòa oxy trong máu ngoại vi",
             "valueType": "Numeric",
@@ -122,7 +122,7 @@
         },
         {
             "id": "00000000-0000-0000-0000-100000000016",
-            "name": "Beta-lactam allergy",
+            "name": "Tiền sử dị ứng beta-lactam",
             "code": "BETA-LACTAM-ALLERGY",
             "description": "Bệnh nhân có bị dị ứng với beta-lactam không?",
             "valueType": "Boolean",
@@ -130,7 +130,7 @@
         },
         {
             "id": "00000000-0000-0000-0000-100000000017",
-            "name": "Multilobar pulmonary lesions on chest X-ray",
+            "name": "Tổn thương nhiều thùy phổi trên phim X-quang",
             "code": "MULTILOBAR-PULMONARY-LESION",
             "description": "Bệnh nhân có bị tổn thương nhiều thùy phổi trên phim X-quang không?",
             "valueType": "Boolean",
@@ -138,7 +138,7 @@
         },
         {
             "id": "00000000-0000-0000-0000-100000000018",
-            "name": "Hypotension requiring aggressive fluid resuscitation",
+            "name": "Hạ huyết áp cần phải bù dịch tích cực",
             "code": "HYPOTENSION",
             "description": "Bệnh nhân có bị hạ huyết áp cần phải bù dịch tích cực không?",
             "valueType": "Boolean",
@@ -146,7 +146,7 @@
         },
         {
             "id": "00000000-0000-0000-0000-100000000019",
-            "name": "Requires mechanical ventilation",
+            "name": "Suy hô hấp cần phải thông khí cơ học",
             "code": "REQUIRES-MECHANICAL-VENTILATION",
             "description": "Bệnh nhân có bị suy hô hấp cần phải thông khí cơ học không?",
             "valueType": "Boolean",
@@ -154,7 +154,7 @@
         },
         {
             "id": "00000000-0000-0000-0000-100000000020",
-            "name": "Septic shock requiring vasopressor support",
+            "name": "Sốc nhiễm khuẩn cần phải dùng thuốc vận mạch",
             "code": "SEPTIC-SHOCK",
             "description": "Bệnh nhân có bị sốc nhiễm khuẩn cần phải dùng thuốc vận mạch không?",
             "valueType": "Boolean",
@@ -162,7 +162,7 @@
         },
         {
             "id": "00000000-0000-0000-0000-100000000021",
-            "name": "Alcohol abuse",
+            "name": "Tiền sử nghiện rượu",
             "code": "ALCOHOL-ABUSE",
             "description": "Bệnh nhân có tiền sử nghiện rượu không?",
             "valueType": "Boolean",
@@ -170,7 +170,7 @@
         },
         {
             "id": "00000000-0000-0000-0000-100000000022",
-            "name": "Smoking",
+            "name": "Hút thuốc lá",
             "code": "SMOKING",
             "description": "Bệnh nhân có hút thuốc lá không?",
             "valueType": "Boolean",
@@ -178,7 +178,7 @@
         },
         {
             "id": "00000000-0000-0000-0000-100000000023",
-            "name": "Chronic obstructive pulmonary disease",
+            "name": "Bệnh phổi tắc nghẽn mãn tính",
             "code": "COPD",
             "description": "Bệnh nhân có mắc bệnh phổi tắc nghẽn mãn tính không?",
             "valueType": "Boolean",
@@ -186,7 +186,7 @@
         },
         {
             "id": "00000000-0000-0000-0000-100000000024",
-            "name": "Severe chronic obstructive pulmonary disease",
+            "name": "Bệnh phổi tắc nghẽn mãn tính nặng",
             "code": "SEVERE-COPD",
             "description": "Bệnh nhân có bị mắc bệnh phổi tắc nghẽn mãn tính nặng (FEV1 < 30%) không?",
             "valueType": "Boolean",
@@ -194,7 +194,7 @@
         },
         {
             "id": "00000000-0000-0000-0000-100000000025",
-            "name": "Malnutrition",
+            "name": "Suy dinh dưỡng",
             "code": "MALNUTRITION",
             "description": "Bệnh nhân có bị suy dinh dưỡng không?",
             "valueType": "Boolean",
@@ -202,7 +202,7 @@
         },
         {
             "id": "00000000-0000-0000-0000-100000000026",
-            "name": "Mental illness",
+            "name": "Mắc bệnh tâm thần",
             "code": "MENTAL-ILLNESS",
             "description": "Bệnh nhân có bị mắc bệnh tâm thần không?",
             "valueType": "Boolean",
@@ -210,7 +210,7 @@
         },
         {
             "id": "00000000-0000-0000-0000-100000000027",
-            "name": "Immunocompromised",
+            "name": "Suy giảm miễn dịch",
             "code": "IMMUNOCOMPROMISED",
             "description": "Bệnh nhân có bị suy giảm miễn dịch không?",
             "valueType": "Boolean",
@@ -218,7 +218,7 @@
         },
         {
             "id": "00000000-0000-0000-0000-100000000028",
-            "name": "HIV infection",
+            "name": "Nhiễm HIV",
             "code": "HIV",
             "description": "Bệnh nhân có nhiễm HIV không?",
             "valueType": "Boolean",
@@ -226,7 +226,7 @@
         },
         {
             "id": "00000000-0000-0000-0000-100000000029",
-            "name": "Organ transplant",
+            "name": "Ghép tạng",
             "code": "ORGAN-TRANSPLANT",
             "description": "Bệnh nhân có từng ghép tạng không?",
             "valueType": "Boolean",
@@ -234,7 +234,7 @@
         },
         {
             "id": "00000000-0000-0000-0000-100000000030",
-            "name": "Diabetes mellitus",
+            "name": "Đái tháo đường",
             "code": "DIABETES",
             "description": "Bệnh nhân có bị đái tháo đường không?",
             "valueType": "Boolean",
@@ -242,7 +242,7 @@
         },
         {
             "id": "00000000-0000-0000-0000-100000000031",
-            "name": "Influenza infection",
+            "name": "Nhiễm virus influenza",
             "code": "INFLUENZA",
             "description": "Bệnh nhân có bị nhiễm virus influenza không?",
             "valueType": "Boolean",
@@ -250,7 +250,7 @@
         },
         {
             "id": "00000000-0000-0000-0000-100000000032",
-            "name": "Measles infection",
+            "name": "Nhiễm virus sởi",
             "code": "MEASLES",
             "description": "Bệnh nhân có bị nhiễm virus sởi không?",
             "valueType": "Boolean",
@@ -258,15 +258,15 @@
         },
         {
             "id": "00000000-0000-0000-0000-100000000033",
-            "name": "IV drug use",
+            "name": "Tiêm chích",
             "code": "IV-DRUG-USE",
-            "description": "Bệnh nhân có từng tiêm chính không?",
+            "description": "Bệnh nhân có từng tiêm chích không?",
             "valueType": "Boolean",
             "canonicalUnit": null
         },
         {
             "id": "00000000-0000-0000-0000-100000000034",
-            "name": "Prior MRSA infection",
+            "name": "Tiền sử nhiễm MRSA",
             "code": "PRIOR-MRSA-INFECTION",
             "description": "Bệnh nhân có tiền sử nhiễm MRSA không?",
             "valueType": "Boolean",
@@ -274,7 +274,7 @@
         },
         {
             "id": "00000000-0000-0000-0000-100000000035",
-            "name": "Hospitalization and IV antibiotics within 90 days",
+            "name": "Nằm viện và dùng kháng sinh tĩnh mạch trong vòng 90 ngày",
             "code": "HOSPITALIZATION-90D",
             "description": "Bệnh nhân có từng nằm viện và dùng kháng sinh tĩnh mạch trong vòng 90 ngày không?",
             "valueType": "Boolean",
@@ -282,7 +282,7 @@
         },
         {
             "id": "00000000-0000-0000-0000-100000000036",
-            "name": "ICU stay",
+            "name": "Điều trị tại khoa điều trị tích cực",
             "code": "ICU-STAY",
             "description": "Bệnh nhân có từng nằm ICU gần đây không?",
             "valueType": "Boolean",
@@ -290,7 +290,7 @@
         },
         {
             "id": "00000000-0000-0000-0000-100000000037",
-            "name": "Intubation",
+            "name": "Đặt nội khí quản",
             "code": "INTUBATION",
             "description": "Bệnh nhân có từng đặt nội khí quản gần đây không?",
             "valueType": "Boolean",
@@ -298,7 +298,7 @@
         },
         {
             "id": "00000000-0000-0000-0000-100000000039",
-            "name": "Epilepsy",
+            "name": "Động kinh",
             "code": "EPILEPSY",
             "description": "Bệnh nhân có bị động kinh không?",
             "valueType": "Boolean",
@@ -306,7 +306,7 @@
         },
         {
             "id": "00000000-0000-0000-0000-100000000040",
-            "name": "Anesthesia",
+            "name": "Gây mê",
             "code": "ANESTHESIA",
             "description": "Bệnh nhân có bị gây mê gần đây không?",
             "valueType": "Boolean",
@@ -314,7 +314,7 @@
         },
         {
             "id": "00000000-0000-0000-0000-100000000041",
-            "name": "Prior antibiotic use",
+            "name": "Sử dụng kháng sinh trước đó",
             "code": "PRIOR-ANTIBIOTIC-USE",
             "description": "Bệnh nhân có từng sử dụng kháng sinh gần đây không?",
             "valueType": "Boolean",
@@ -322,7 +322,7 @@
         },
         {
             "id": "00000000-0000-0000-0000-100000000042",
-            "name": "Cystic fibrosis",
+            "name": "Bệnh xơ nang",
             "code": "CYSTIC-FIBROSIS",
             "description": "Bệnh nhân có bị bệnh xơ nang không?",
             "valueType": "Boolean",
@@ -330,7 +330,7 @@
         },
         {
             "id": "00000000-0000-0000-0000-100000000043",
-            "name": "Bronchiectasis",
+            "name": "Giãn phế quản",
             "code": "BRONCHIECTASIS",
             "description": "Bệnh nhân có bị giãn phế quản không?",
             "valueType": "Boolean",
@@ -338,7 +338,7 @@
         },
         {
             "id": "00000000-0000-0000-0000-100000000044",
-            "name": "Lung cancer",
+            "name": "Ung thư phổi",
             "code": "LUNG-CANCER",
             "description": "Bệnh nhân có bị ung thư phổi không?",
             "valueType": "Boolean",
@@ -346,7 +346,7 @@
         },
         {
             "id": "00000000-0000-0000-0000-100000000045",
-            "name": "Prior Pseudomonas infection",
+            "name": "Tiền sử nhiễm Pseudomonas aeruginosa",
             "code": "PRIOR-PSEUDOMONAS",
             "description": "Bệnh nhân có tiền sử nhiễm Pseudomonas aeruginosa không?",
             "valueType": "Boolean",
@@ -354,7 +354,7 @@
         },
         {
             "id": "00000000-0000-0000-0000-100000000046",
-            "name": "Aspiration pneumonia",
+            "name": "Viêm phổi hít",
             "code": "ASPIRATION-PNEUMONIA",
             "description": "Bệnh nhân có bị viêm phổi hít không?",
             "valueType": "Boolean",
@@ -362,15 +362,15 @@
         },
         {
             "id": "00000000-0000-0000-0000-100000000047",
-            "name": "Oropharyngeal anaerobic infection",
+            "name": "Nhiễm khuẩn kỵ khí vùng hầu họng.",
             "code": "OROPHARYNGEAL-ANAEROBIC",
-            "description": "Has oropharyngeal anaerobic infection",
+            "description": "Bệnh nhân có bị nhiễm khuẩn kỵ khí vùng hầu họng không?",
             "valueType": "Boolean",
             "canonicalUnit": null
         },
         {
             "id": "00000000-0000-0000-0000-100000000048",
-            "name": "Severe internal medicine disease",
+            "name": "Bệnh nội khoa nặng.",
             "code": "SEVERE-INTERNAL-DISEASE",
             "description": "Bệnh nhân có bị mắc các bệnh nội khoa nặng không?",
             "valueType": "Boolean",
@@ -378,7 +378,7 @@
         },
         {
             "id": "00000000-0000-0000-0000-100000000049",
-            "name": "Pulmonary infarction",
+            "name": "Nhồi máu phổi",
             "code": "PULMONARY-INFARCTION",
             "description": "Bệnh nhân có bị nhồi máu phổi không?",
             "valueType": "Boolean",
@@ -386,23 +386,23 @@
         },
         {
             "id": "00000000-0000-0000-0000-100000000050",
-            "name": "Has liver disease history",
-            "code": "LIVER",
+            "name": "Bệnh gan mạn,",
+            "code": "CHRONIC-LIVER",
             "description": "Does the patient have liver disease history",
             "valueType": "Boolean",
             "canonicalUnit": null
         },
         {
             "id": "00000000-0000-0000-0000-100000000051",
-            "name": "Has renal disease history",
-            "code": "RENAL",
+            "name": "Bệnh thận mạn",
+            "code": "CHRONIC-RENAL",
             "description": "Bệnh nhân có bị bệnh thận mạn không?",
             "valueType": "Boolean",
             "canonicalUnit": null
         },
         {
             "id": "00000000-0000-0000-0000-100000000052",
-            "name": "Has congestive heart failure (CHF)",
+            "name": "Suy tim ứ huyết",
             "code": "CHF",
             "description": "Bệnh nhân có bị suy tim ứ huyết không?",
             "valueType": "Boolean",
@@ -410,7 +410,7 @@
         },
         {
             "id": "00000000-0000-0000-0000-100000000053",
-            "name": "Has cerebrovascular disease history",
+            "name": "Tai biến mạch máu não",
             "code": "CEREBROVASCULAR",
             "description": "Bệnh nhân có bị tai biến mạch máu não không?",
             "valueType": "Boolean",
@@ -418,7 +418,7 @@
         },
         {
             "id": "00000000-0000-0000-0000-100000000054",
-            "name": "Has neoplastic disease",
+            "name": "Bệnh ác tính",
             "code": "NEOPLASTIC",
             "description": "Bệnh nhân có bị ung thư ác tính không?",
             "valueType": "Boolean",
@@ -426,9 +426,17 @@
         },
         {
             "id": "00000000-0000-0000-0000-100000000055",
-            "name": "Septic thromboembolism in infective endocarditis.",
+            "name": "Thuyên tắc huyết khối nhiễm trùng trong viêm nội tâm mạc nhiễm khuẩn.",
             "code": "SEPTIC-THROMBOEMBOLISM",
             "description": "Bệnh nhân có bị thuyên tắc huyết khối nhiễm trùng trong viêm nội tâm mạc nhiễm khuẩn không?",
+            "valueType": "Boolean",
+            "canonicalUnit": null
+        },
+        {
+            "id": "00000000-0000-0000-0000-100000000056",
+            "name": "Bệnh phổi mạn tính",
+            "code": "CHRONIC-LUNG",
+            "description": "Bệnh nhân có bị mắc bệnh phổi mạn tính không?",
             "valueType": "Boolean",
             "canonicalUnit": null
         }
@@ -5085,1513 +5093,6 @@
                     }
                 }
             ]
-        }
-    ],
-    "treatments": [
-        // Amoxicillin đơn trị cho bệnh nhân nhẹ, ngoại trú (nghi ngờ H influenza, M catarrhalis)
-        {
-            "id": "00000000-0000-0000-0000-900000000001",
-            "severity": "Mild",
-            "treatmentSite": "Outpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-000000000303"
-            ],
-            "pathogenIds": [
-                "00000000-0000-0000-0000-500000000002",
-                "00000000-0000-0000-0000-500000000009"
-            ],
-            "criteriaIds": []
-        },
-        // Amoxicillin kết hợp beta-lactam cho bệnh nhân nhẹ, ngoại trú (nghi ngờ H influenza, M catarrhalis)
-        {
-            "id": "00000000-0000-0000-0000-900000000002",
-            "severity": "Mild",
-            "treatmentSite": "Outpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-000000000303",
-                "00000000-0000-0000-0000-000000000304"
-            ],
-            "pathogenIds": [
-                "00000000-0000-0000-0000-500000000002",
-                "00000000-0000-0000-0000-500000000009"
-            ],
-            "criteriaIds": []
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000003",
-            "severity": "Mild",
-            "treatmentSite": "Outpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-000000000303",
-                "00000000-0000-0000-0000-000000000305"
-            ],
-            "pathogenIds": [
-                "00000000-0000-0000-0000-500000000002",
-                "00000000-0000-0000-0000-500000000009"
-            ],
-            "criteriaIds": []
-        },
-        // Bệnh nhân nhẹ, ngoại trú nghi ngờ vi khuẩn không điển hình
-        {
-            "id": "00000000-0000-0000-0000-900000000004",
-            "severity": "Mild",
-            "treatmentSite": "Outpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-000000000321"
-            ],
-            "pathogenIds": [
-                "00000000-0000-0000-0000-500000000010",
-                "00000000-0000-0000-0000-500000000011",
-                "00000000-0000-0000-0000-500000000012"
-            ],
-            "criteriaIds": []
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000005",
-            "severity": "Mild",
-            "treatmentSite": "Outpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-000000000320"
-            ],
-            "pathogenIds": [
-                "00000000-0000-0000-0000-500000000010",
-                "00000000-0000-0000-0000-500000000011",
-                "00000000-0000-0000-0000-500000000012"
-            ],
-            "criteriaIds": []
-        },
-        // Bệnh nhân nhẹ, ngoại trú bị dị ứng với beta-lactam
-        {
-            "id": "00000000-0000-0000-0000-900000000006",
-            "severity": "Mild",
-            "treatmentSite": "Outpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-00000000031e"
-            ],
-            "pathogenIds": [],
-            "criteriaIds": [
-                "00000000-0000-0000-0000-400000000044"
-            ]
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000007",
-            "severity": "Mild",
-            "treatmentSite": "Outpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-00000000031d"
-            ],
-            "pathogenIds": [],
-            "criteriaIds": [
-                "00000000-0000-0000-0000-400000000044"
-            ]
-        },
-        // Bệnh nhân nhẹ, ngoại trú nghi ngờ S. pneumoniae kháng thuốc
-        {
-            "id": "00000000-0000-0000-0000-900000000008",
-            "severity": "Mild",
-            "treatmentSite": "Outpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-000000000303"
-            ],
-            "pathogenIds": [
-                "00000000-0000-0000-0000-500000000001"
-            ],
-            "criteriaIds": []
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000009",
-            "severity": "Mild",
-            "treatmentSite": "Outpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-00000000031e"
-            ],
-            "pathogenIds": [
-                "00000000-0000-0000-0000-500000000001"
-            ],
-            "criteriaIds": []
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000010",
-            "severity": "Mild",
-            "treatmentSite": "Outpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-00000000031d"
-            ],
-            "pathogenIds": [
-                "00000000-0000-0000-0000-500000000001"
-            ],
-            "criteriaIds": []
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000011",
-            "severity": "Mild",
-            "treatmentSite": "Outpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-00000000031c"
-            ],
-            "pathogenIds": [
-                "00000000-0000-0000-0000-500000000001"
-            ],
-            "criteriaIds": []
-        },
-        // Bệnh nhân nhẹ, ngoại trú là người cao tuổi có bệnh đồng mắc, suy giảm miễn dịch
-        // Quinolon hô hấp đơn trị
-        {
-            "id": "00000000-0000-0000-0000-900000000012",
-            "severity": "Mild",
-            "treatmentSite": "Outpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-00000000031c"
-            ],
-            "pathogenIds": [],
-            "criteriaIds": [
-                "00000000-0000-0000-0000-400000000045"
-            ]
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000013",
-            "severity": "Mild",
-            "treatmentSite": "Outpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-00000000031d"
-            ],
-            "pathogenIds": [],
-            "criteriaIds": [
-                "00000000-0000-0000-0000-400000000045"
-            ]
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000014",
-            "severity": "Mild",
-            "treatmentSite": "Outpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-00000000031e"
-            ],
-            "pathogenIds": [],
-            "criteriaIds": [
-                "00000000-0000-0000-0000-400000000045"
-            ]
-        },
-        // Beta-lactam/ức chế beta lactamase + macrolide
-        {
-            "id": "00000000-0000-0000-0000-900000000015",
-            "severity": "Mild",
-            "treatmentSite": "Outpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-000000000304",
-                "00000000-0000-0000-0000-00000000031f"
-            ],
-            "pathogenIds": [],
-            "criteriaIds": [
-                "00000000-0000-0000-0000-400000000045"
-            ]
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000016",
-            "severity": "Mild",
-            "treatmentSite": "Outpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-000000000304",
-                "00000000-0000-0000-0000-000000000320"
-            ],
-            "pathogenIds": [],
-            "criteriaIds": [
-                "00000000-0000-0000-0000-400000000045"
-            ]
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000017",
-            "severity": "Mild",
-            "treatmentSite": "Outpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-000000000304",
-                "00000000-0000-0000-0000-000000000321"
-            ],
-            "pathogenIds": [],
-            "criteriaIds": [
-                "00000000-0000-0000-0000-400000000045"
-            ]
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000018",
-            "severity": "Mild",
-            "treatmentSite": "Outpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-000000000305",
-                "00000000-0000-0000-0000-00000000031f"
-            ],
-            "pathogenIds": [],
-            "criteriaIds": [
-                "00000000-0000-0000-0000-400000000045"
-            ]
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000019",
-            "severity": "Mild",
-            "treatmentSite": "Outpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-000000000305",
-                "00000000-0000-0000-0000-000000000320"
-            ],
-            "pathogenIds": [],
-            "criteriaIds": [
-                "00000000-0000-0000-0000-400000000045"
-            ]
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000020",
-            "severity": "Mild",
-            "treatmentSite": "Outpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-000000000305",
-                "00000000-0000-0000-0000-000000000321"
-            ],
-            "pathogenIds": [],
-            "criteriaIds": [
-                "00000000-0000-0000-0000-400000000045"
-            ]
-        },
-        // cephalosporin uống phổ rộng + macrolid
-        {
-            "id": "00000000-0000-0000-0000-900000000021",
-            "severity": "Mild",
-            "treatmentSite": "Outpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-000000000308",
-                "00000000-0000-0000-0000-00000000031f"
-            ],
-            "pathogenIds": [],
-            "criteriaIds": [
-                "00000000-0000-0000-0000-400000000045"
-            ]
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000022",
-            "severity": "Mild",
-            "treatmentSite": "Outpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-000000000308",
-                "00000000-0000-0000-0000-000000000320"
-            ],
-            "pathogenIds": [],
-            "criteriaIds": [
-                "00000000-0000-0000-0000-400000000045"
-            ]
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000023",
-            "severity": "Mild",
-            "treatmentSite": "Outpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-000000000308",
-                "00000000-0000-0000-0000-000000000321"
-            ],
-            "pathogenIds": [],
-            "criteriaIds": [
-                "00000000-0000-0000-0000-400000000045"
-            ]
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000024",
-            "severity": "Mild",
-            "treatmentSite": "Outpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-000000000309",
-                "00000000-0000-0000-0000-00000000031f"
-            ],
-            "pathogenIds": [],
-            "criteriaIds": [
-                "00000000-0000-0000-0000-400000000045"
-            ]
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000025",
-            "severity": "Mild",
-            "treatmentSite": "Outpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-000000000309",
-                "00000000-0000-0000-0000-000000000320"
-            ],
-            "pathogenIds": [],
-            "criteriaIds": [
-                "00000000-0000-0000-0000-400000000045"
-            ]
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000026",
-            "severity": "Mild",
-            "treatmentSite": "Outpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-000000000309",
-                "00000000-0000-0000-0000-000000000321"
-            ],
-            "pathogenIds": [],
-            "criteriaIds": [
-                "00000000-0000-0000-0000-400000000045"
-            ]
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000027",
-            "severity": "Mild",
-            "treatmentSite": "Outpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-00000000030a",
-                "00000000-0000-0000-0000-00000000031f"
-            ],
-            "pathogenIds": [],
-            "criteriaIds": [
-                "00000000-0000-0000-0000-400000000045"
-            ]
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000028",
-            "severity": "Mild",
-            "treatmentSite": "Outpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-00000000030a",
-                "00000000-0000-0000-0000-000000000320"
-            ],
-            "pathogenIds": [],
-            "criteriaIds": [
-                "00000000-0000-0000-0000-400000000045"
-            ]
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000029",
-            "severity": "Mild",
-            "treatmentSite": "Outpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-00000000030a",
-                "00000000-0000-0000-0000-000000000321"
-            ],
-            "pathogenIds": [],
-            "criteriaIds": [
-                "00000000-0000-0000-0000-400000000045"
-            ]
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000030",
-            "severity": "Mild",
-            "treatmentSite": "Outpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-00000000030b",
-                "00000000-0000-0000-0000-00000000031f"
-            ],
-            "pathogenIds": [],
-            "criteriaIds": [
-                "00000000-0000-0000-0000-400000000045"
-            ]
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000031",
-            "severity": "Mild",
-            "treatmentSite": "Outpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-00000000030b",
-                "00000000-0000-0000-0000-000000000320"
-            ],
-            "pathogenIds": [],
-            "criteriaIds": [
-                "00000000-0000-0000-0000-400000000045"
-            ]
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000032",
-            "severity": "Mild",
-            "treatmentSite": "Outpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-00000000030b",
-                "00000000-0000-0000-0000-000000000321"
-            ],
-            "pathogenIds": [],
-            "criteriaIds": [
-                "00000000-0000-0000-0000-400000000045"
-            ]
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000033",
-            "severity": "Mild",
-            "treatmentSite": "Outpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-00000000030c",
-                "00000000-0000-0000-0000-00000000031f"
-            ],
-            "pathogenIds": [],
-            "criteriaIds": [
-                "00000000-0000-0000-0000-400000000045"
-            ]
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000034",
-            "severity": "Mild",
-            "treatmentSite": "Outpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-00000000030c",
-                "00000000-0000-0000-0000-000000000320"
-            ],
-            "pathogenIds": [],
-            "criteriaIds": [
-                "00000000-0000-0000-0000-400000000045"
-            ]
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000035",
-            "severity": "Mild",
-            "treatmentSite": "Outpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-00000000030c",
-                "00000000-0000-0000-0000-000000000321"
-            ],
-            "pathogenIds": [],
-            "criteriaIds": [
-                "00000000-0000-0000-0000-400000000045"
-            ]
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000036",
-            "severity": "Mild",
-            "treatmentSite": "Outpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-00000000030d",
-                "00000000-0000-0000-0000-00000000031f"
-            ],
-            "pathogenIds": [],
-            "criteriaIds": [
-                "00000000-0000-0000-0000-400000000045"
-            ]
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000037",
-            "severity": "Mild",
-            "treatmentSite": "Outpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-00000000030d",
-                "00000000-0000-0000-0000-000000000320"
-            ],
-            "pathogenIds": [],
-            "criteriaIds": [
-                "00000000-0000-0000-0000-400000000045"
-            ]
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000038",
-            "severity": "Mild",
-            "treatmentSite": "Outpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-00000000030d",
-                "00000000-0000-0000-0000-000000000321"
-            ],
-            "pathogenIds": [],
-            "criteriaIds": [
-                "00000000-0000-0000-0000-400000000045"
-            ]
-        },
-        // Bệnh nhân trung bình, nội trú
-        {
-            "id": "00000000-0000-0000-0000-900000000039",
-            "severity": "Moderate",
-            "treatmentSite": "Inpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-00000000031d"
-            ],
-            "pathogenIds": [],
-            "criteriaIds": []
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000040",
-            "severity": "Moderate",
-            "treatmentSite": "Inpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-00000000031e"
-            ],
-            "pathogenIds": [],
-            "criteriaIds": []
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000041",
-            "severity": "Moderate",
-            "treatmentSite": "Inpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-00000000031d",
-                "00000000-0000-0000-0000-00000000030e"
-            ],
-            "pathogenIds": [],
-            "criteriaIds": []
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000042",
-            "severity": "Moderate",
-            "treatmentSite": "Inpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-00000000031e",
-                "00000000-0000-0000-0000-00000000030e"
-            ],
-            "pathogenIds": [],
-            "criteriaIds": []
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000043",
-            "severity": "Moderate",
-            "treatmentSite": "Inpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-00000000031d",
-                "00000000-0000-0000-0000-00000000030f"
-            ],
-            "pathogenIds": [],
-            "criteriaIds": []
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000044",
-            "severity": "Moderate",
-            "treatmentSite": "Inpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-00000000031e",
-                "00000000-0000-0000-0000-00000000030f"
-            ],
-            "pathogenIds": [],
-            "criteriaIds": []
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000045",
-            "severity": "Moderate",
-            "treatmentSite": "Inpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-00000000031d",
-                "00000000-0000-0000-0000-000000000314"
-            ],
-            "pathogenIds": [],
-            "criteriaIds": []
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000046",
-            "severity": "Moderate",
-            "treatmentSite": "Inpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-00000000031e",
-                "00000000-0000-0000-0000-000000000314"
-            ],
-            "pathogenIds": [],
-            "criteriaIds": []
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000047",
-            "severity": "Moderate",
-            "treatmentSite": "Inpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-00000000031d",
-                "00000000-0000-0000-0000-000000000305"
-            ],
-            "pathogenIds": [],
-            "criteriaIds": []
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000048",
-            "severity": "Moderate",
-            "treatmentSite": "Inpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-00000000031e",
-                "00000000-0000-0000-0000-000000000305"
-            ],
-            "pathogenIds": [],
-            "criteriaIds": []
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000049",
-            "severity": "Moderate",
-            "treatmentSite": "Inpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-00000000031d",
-                "00000000-0000-0000-0000-000000000304"
-            ],
-            "pathogenIds": [],
-            "criteriaIds": []
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000050",
-            "severity": "Moderate",
-            "treatmentSite": "Inpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-00000000031e",
-                "00000000-0000-0000-0000-000000000304"
-            ],
-            "pathogenIds": [],
-            "criteriaIds": []
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000051",
-            "severity": "Moderate",
-            "treatmentSite": "Inpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-00000000031d",
-                "00000000-0000-0000-0000-000000000312"
-            ],
-            "pathogenIds": [],
-            "criteriaIds": []
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000052",
-            "severity": "Moderate",
-            "treatmentSite": "Inpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-00000000031e",
-                "00000000-0000-0000-0000-000000000312"
-            ],
-            "pathogenIds": [],
-            "criteriaIds": []
-        },
-        // Bệnh nhân nặng, nội trú (không nghi ngờ nhiễm Pseudomonas)
-        {
-            "id": "00000000-0000-0000-0000-900000000053",
-            "severity": "Severe",
-            "treatmentSite": "Inpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-00000000030e",
-                "00000000-0000-0000-0000-00000000031d"
-            ],
-            "pathogenIds": [],
-            "criteriaIds": []
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000054",
-            "severity": "Severe",
-            "treatmentSite": "Inpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-00000000030e",
-                "00000000-0000-0000-0000-00000000031e"
-            ],
-            "pathogenIds": [],
-            "criteriaIds": []
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000055",
-            "severity": "Severe",
-            "treatmentSite": "Inpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-00000000030e",
-                "00000000-0000-0000-0000-00000000031c"
-            ],
-            "pathogenIds": [],
-            "criteriaIds": []
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000056",
-            "severity": "Severe",
-            "treatmentSite": "Inpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-00000000030e",
-                "00000000-0000-0000-0000-00000000031f"
-            ],
-            "pathogenIds": [],
-            "criteriaIds": []
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000057",
-            "severity": "Severe",
-            "treatmentSite": "Inpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-00000000030e",
-                "00000000-0000-0000-0000-000000000320"
-            ],
-            "pathogenIds": [],
-            "criteriaIds": []
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000058",
-            "severity": "Severe",
-            "treatmentSite": "Inpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-00000000030e",
-                "00000000-0000-0000-0000-000000000321"
-            ],
-            "pathogenIds": [],
-            "criteriaIds": []
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000059",
-            "severity": "Severe",
-            "treatmentSite": "Inpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-00000000030f",
-                "00000000-0000-0000-0000-00000000031d"
-            ],
-            "pathogenIds": [],
-            "criteriaIds": []
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000060",
-            "severity": "Severe",
-            "treatmentSite": "Inpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-00000000030f",
-                "00000000-0000-0000-0000-00000000031e"
-            ],
-            "pathogenIds": [],
-            "criteriaIds": []
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000061",
-            "severity": "Severe",
-            "treatmentSite": "Inpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-00000000030f",
-                "00000000-0000-0000-0000-00000000031c"
-            ],
-            "pathogenIds": [],
-            "criteriaIds": []
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000062",
-            "severity": "Severe",
-            "treatmentSite": "Inpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-00000000030f",
-                "00000000-0000-0000-0000-00000000031f"
-            ],
-            "pathogenIds": [],
-            "criteriaIds": []
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000063",
-            "severity": "Severe",
-            "treatmentSite": "Inpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-00000000030f",
-                "00000000-0000-0000-0000-000000000320"
-            ],
-            "pathogenIds": [],
-            "criteriaIds": []
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000064",
-            "severity": "Severe",
-            "treatmentSite": "Inpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-00000000030f",
-                "00000000-0000-0000-0000-000000000321"
-            ],
-            "pathogenIds": [],
-            "criteriaIds": []
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000065",
-            "severity": "Severe",
-            "treatmentSite": "Inpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-000000000314",
-                "00000000-0000-0000-0000-00000000031d"
-            ],
-            "pathogenIds": [],
-            "criteriaIds": []
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000066",
-            "severity": "Severe",
-            "treatmentSite": "Inpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-000000000314",
-                "00000000-0000-0000-0000-00000000031e"
-            ],
-            "pathogenIds": [],
-            "criteriaIds": []
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000067",
-            "severity": "Severe",
-            "treatmentSite": "Inpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-000000000314",
-                "00000000-0000-0000-0000-00000000031c"
-            ],
-            "pathogenIds": [],
-            "criteriaIds": []
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000068",
-            "severity": "Severe",
-            "treatmentSite": "Inpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-000000000314",
-                "00000000-0000-0000-0000-00000000031f"
-            ],
-            "pathogenIds": [],
-            "criteriaIds": []
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000069",
-            "severity": "Severe",
-            "treatmentSite": "Inpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-000000000314",
-                "00000000-0000-0000-0000-000000000320"
-            ],
-            "pathogenIds": [],
-            "criteriaIds": []
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000070",
-            "severity": "Severe",
-            "treatmentSite": "Inpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-000000000314",
-                "00000000-0000-0000-0000-000000000321"
-            ],
-            "pathogenIds": [],
-            "criteriaIds": []
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000071",
-            "severity": "Severe",
-            "treatmentSite": "Inpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-000000000305",
-                "00000000-0000-0000-0000-00000000031d"
-            ],
-            "pathogenIds": [],
-            "criteriaIds": []
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000072",
-            "severity": "Severe",
-            "treatmentSite": "Inpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-000000000305",
-                "00000000-0000-0000-0000-00000000031e"
-            ],
-            "pathogenIds": [],
-            "criteriaIds": []
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000073",
-            "severity": "Severe",
-            "treatmentSite": "Inpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-000000000305",
-                "00000000-0000-0000-0000-00000000031c"
-            ],
-            "pathogenIds": [],
-            "criteriaIds": []
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000074",
-            "severity": "Severe",
-            "treatmentSite": "Inpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-000000000305",
-                "00000000-0000-0000-0000-00000000031f"
-            ],
-            "pathogenIds": [],
-            "criteriaIds": []
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000075",
-            "severity": "Severe",
-            "treatmentSite": "Inpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-000000000305",
-                "00000000-0000-0000-0000-000000000320"
-            ],
-            "pathogenIds": [],
-            "criteriaIds": []
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000076",
-            "severity": "Severe",
-            "treatmentSite": "Inpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-000000000305",
-                "00000000-0000-0000-0000-000000000321"
-            ],
-            "pathogenIds": [],
-            "criteriaIds": []
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000077",
-            "severity": "Severe",
-            "treatmentSite": "Inpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-000000000304",
-                "00000000-0000-0000-0000-00000000031d"
-            ],
-            "pathogenIds": [],
-            "criteriaIds": []
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000078",
-            "severity": "Severe",
-            "treatmentSite": "Inpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-000000000304",
-                "00000000-0000-0000-0000-00000000031e"
-            ],
-            "pathogenIds": [],
-            "criteriaIds": []
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000079",
-            "severity": "Severe",
-            "treatmentSite": "Inpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-000000000304",
-                "00000000-0000-0000-0000-00000000031c"
-            ],
-            "pathogenIds": [],
-            "criteriaIds": []
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000080",
-            "severity": "Severe",
-            "treatmentSite": "Inpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-000000000304",
-                "00000000-0000-0000-0000-00000000031f"
-            ],
-            "pathogenIds": [],
-            "criteriaIds": []
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000081",
-            "severity": "Severe",
-            "treatmentSite": "Inpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-000000000304",
-                "00000000-0000-0000-0000-000000000320"
-            ],
-            "pathogenIds": [],
-            "criteriaIds": []
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000082",
-            "severity": "Severe",
-            "treatmentSite": "Inpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-000000000304",
-                "00000000-0000-0000-0000-000000000321"
-            ],
-            "pathogenIds": [],
-            "criteriaIds": []
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000083",
-            "severity": "Severe",
-            "treatmentSite": "Inpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-000000000312",
-                "00000000-0000-0000-0000-00000000031d"
-            ],
-            "pathogenIds": [],
-            "criteriaIds": []
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000084",
-            "severity": "Severe",
-            "treatmentSite": "Inpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-000000000312",
-                "00000000-0000-0000-0000-00000000031e"
-            ],
-            "pathogenIds": [],
-            "criteriaIds": []
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000085",
-            "severity": "Severe",
-            "treatmentSite": "Inpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-000000000312",
-                "00000000-0000-0000-0000-00000000031c"
-            ],
-            "pathogenIds": [],
-            "criteriaIds": []
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000086",
-            "severity": "Severe",
-            "treatmentSite": "Inpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-000000000312",
-                "00000000-0000-0000-0000-00000000031f"
-            ],
-            "pathogenIds": [],
-            "criteriaIds": []
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000087",
-            "severity": "Severe",
-            "treatmentSite": "Inpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-000000000312",
-                "00000000-0000-0000-0000-000000000320"
-            ],
-            "pathogenIds": [],
-            "criteriaIds": []
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000088",
-            "severity": "Severe",
-            "treatmentSite": "Inpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-000000000312",
-                "00000000-0000-0000-0000-000000000321"
-            ],
-            "pathogenIds": [],
-            "criteriaIds": []
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000089",
-            "severity": "Severe",
-            "treatmentSite": "Inpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-000000000318",
-                "00000000-0000-0000-0000-00000000031d"
-            ],
-            "pathogenIds": [],
-            "criteriaIds": []
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000090",
-            "severity": "Severe",
-            "treatmentSite": "Inpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-000000000318",
-                "00000000-0000-0000-0000-00000000031e"
-            ],
-            "pathogenIds": [],
-            "criteriaIds": []
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000091",
-            "severity": "Severe",
-            "treatmentSite": "Inpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-000000000318",
-                "00000000-0000-0000-0000-00000000031c"
-            ],
-            "pathogenIds": [],
-            "criteriaIds": []
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000092",
-            "severity": "Severe",
-            "treatmentSite": "Inpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-000000000318",
-                "00000000-0000-0000-0000-00000000031f"
-            ],
-            "pathogenIds": [],
-            "criteriaIds": []
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000093",
-            "severity": "Severe",
-            "treatmentSite": "Inpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-000000000318",
-                "00000000-0000-0000-0000-000000000320"
-            ],
-            "pathogenIds": [],
-            "criteriaIds": []
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000094",
-            "severity": "Severe",
-            "treatmentSite": "Inpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-000000000318",
-                "00000000-0000-0000-0000-000000000321"
-            ],
-            "pathogenIds": [],
-            "criteriaIds": []
-        },
-        // Bệnh nhân nặng, nội trú, nghi ngờ nhiễm Pseudomonas aeruginosa
-        {
-            "id": "00000000-0000-0000-0000-900000000095",
-            "severity": "Severe",
-            "treatmentSite": "Inpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-000000000315",
-                "00000000-0000-0000-0000-00000000031d"
-            ],
-            "pathogenIds": [
-                "00000000-0000-0000-0000-500000000006"
-            ],
-            "criteriaIds": []
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000096",
-            "severity": "Severe",
-            "treatmentSite": "Inpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-000000000315",
-                "00000000-0000-0000-0000-00000000031e"
-            ],
-            "pathogenIds": [
-                "00000000-0000-0000-0000-500000000006"
-            ],
-            "criteriaIds": []
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000097",
-            "severity": "Severe",
-            "treatmentSite": "Inpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-000000000315",
-                "00000000-0000-0000-0000-00000000031c"
-            ],
-            "pathogenIds": [
-                "00000000-0000-0000-0000-500000000006"
-            ],
-            "criteriaIds": []
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000098",
-            "severity": "Severe",
-            "treatmentSite": "Inpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-000000000315",
-                "00000000-0000-0000-0000-00000000031f"
-            ],
-            "pathogenIds": [
-                "00000000-0000-0000-0000-500000000006"
-            ],
-            "criteriaIds": []
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000099",
-            "severity": "Severe",
-            "treatmentSite": "Inpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-000000000315",
-                "00000000-0000-0000-0000-000000000320"
-            ],
-            "pathogenIds": [
-                "00000000-0000-0000-0000-500000000006"
-            ],
-            "criteriaIds": []
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000100",
-            "severity": "Severe",
-            "treatmentSite": "Inpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-000000000315",
-                "00000000-0000-0000-0000-000000000321"
-            ],
-            "pathogenIds": [
-                "00000000-0000-0000-0000-500000000006"
-            ],
-            "criteriaIds": []
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000101",
-            "severity": "Severe",
-            "treatmentSite": "Inpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-000000000310",
-                "00000000-0000-0000-0000-00000000031d"
-            ],
-            "pathogenIds": [
-                "00000000-0000-0000-0000-500000000006"
-            ],
-            "criteriaIds": []
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000102",
-            "severity": "Severe",
-            "treatmentSite": "Inpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-000000000310",
-                "00000000-0000-0000-0000-00000000031e"
-            ],
-            "pathogenIds": [
-                "00000000-0000-0000-0000-500000000006"
-            ],
-            "criteriaIds": []
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000103",
-            "severity": "Severe",
-            "treatmentSite": "Inpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-000000000310",
-                "00000000-0000-0000-0000-00000000031c"
-            ],
-            "pathogenIds": [
-                "00000000-0000-0000-0000-500000000006"
-            ],
-            "criteriaIds": []
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000104",
-            "severity": "Severe",
-            "treatmentSite": "Inpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-000000000310",
-                "00000000-0000-0000-0000-00000000031f"
-            ],
-            "pathogenIds": [
-                "00000000-0000-0000-0000-500000000006"
-            ],
-            "criteriaIds": []
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000105",
-            "severity": "Severe",
-            "treatmentSite": "Inpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-000000000310",
-                "00000000-0000-0000-0000-000000000320"
-            ],
-            "pathogenIds": [
-                "00000000-0000-0000-0000-500000000006"
-            ],
-            "criteriaIds": []
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000106",
-            "severity": "Severe",
-            "treatmentSite": "Inpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-000000000310",
-                "00000000-0000-0000-0000-000000000321"
-            ],
-            "pathogenIds": [
-                "00000000-0000-0000-0000-500000000006"
-            ],
-            "criteriaIds": []
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000107",
-            "severity": "Severe",
-            "treatmentSite": "Inpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-000000000313",
-                "00000000-0000-0000-0000-00000000031d"
-            ],
-            "pathogenIds": [
-                "00000000-0000-0000-0000-500000000006"
-            ],
-            "criteriaIds": []
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000108",
-            "severity": "Severe",
-            "treatmentSite": "Inpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-000000000313",
-                "00000000-0000-0000-0000-00000000031e"
-            ],
-            "pathogenIds": [
-                "00000000-0000-0000-0000-500000000006"
-            ],
-            "criteriaIds": []
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000109",
-            "severity": "Severe",
-            "treatmentSite": "Inpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-000000000313",
-                "00000000-0000-0000-0000-00000000031c"
-            ],
-            "pathogenIds": [
-                "00000000-0000-0000-0000-500000000006"
-            ],
-            "criteriaIds": []
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000110",
-            "severity": "Severe",
-            "treatmentSite": "Inpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-000000000313",
-                "00000000-0000-0000-0000-00000000031f"
-            ],
-            "pathogenIds": [
-                "00000000-0000-0000-0000-500000000006"
-            ],
-            "criteriaIds": []
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000111",
-            "severity": "Severe",
-            "treatmentSite": "Inpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-000000000313",
-                "00000000-0000-0000-0000-000000000320"
-            ],
-            "pathogenIds": [
-                "00000000-0000-0000-0000-500000000006"
-            ],
-            "criteriaIds": []
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000112",
-            "severity": "Severe",
-            "treatmentSite": "Inpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-000000000313",
-                "00000000-0000-0000-0000-000000000321"
-            ],
-            "pathogenIds": [
-                "00000000-0000-0000-0000-500000000006"
-            ],
-            "criteriaIds": []
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000113",
-            "severity": "Severe",
-            "treatmentSite": "Inpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-000000000316",
-                "00000000-0000-0000-0000-00000000031d"
-            ],
-            "pathogenIds": [
-                "00000000-0000-0000-0000-500000000006"
-            ],
-            "criteriaIds": []
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000114",
-            "severity": "Severe",
-            "treatmentSite": "Inpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-000000000316",
-                "00000000-0000-0000-0000-00000000031e"
-            ],
-            "pathogenIds": [
-                "00000000-0000-0000-0000-500000000006"
-            ],
-            "criteriaIds": []
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000115",
-            "severity": "Severe",
-            "treatmentSite": "Inpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-000000000316",
-                "00000000-0000-0000-0000-00000000031c"
-            ],
-            "pathogenIds": [
-                "00000000-0000-0000-0000-500000000006"
-            ],
-            "criteriaIds": []
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000116",
-            "severity": "Severe",
-            "treatmentSite": "Inpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-000000000316",
-                "00000000-0000-0000-0000-00000000031f"
-            ],
-            "pathogenIds": [
-                "00000000-0000-0000-0000-500000000006"
-            ],
-            "criteriaIds": []
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000117",
-            "severity": "Severe",
-            "treatmentSite": "Inpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-000000000316",
-                "00000000-0000-0000-0000-000000000320"
-            ],
-            "pathogenIds": [
-                "00000000-0000-0000-0000-500000000006"
-            ],
-            "criteriaIds": []
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000118",
-            "severity": "Severe",
-            "treatmentSite": "Inpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-000000000316",
-                "00000000-0000-0000-0000-000000000321"
-            ],
-            "pathogenIds": [
-                "00000000-0000-0000-0000-500000000006"
-            ],
-            "criteriaIds": []
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000119",
-            "severity": "Severe",
-            "treatmentSite": "Inpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-000000000317",
-                "00000000-0000-0000-0000-00000000031d"
-            ],
-            "pathogenIds": [
-                "00000000-0000-0000-0000-500000000006"
-            ],
-            "criteriaIds": []
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000120",
-            "severity": "Severe",
-            "treatmentSite": "Inpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-000000000317",
-                "00000000-0000-0000-0000-00000000031e"
-            ],
-            "pathogenIds": [
-                "00000000-0000-0000-0000-500000000006"
-            ],
-            "criteriaIds": []
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000121",
-            "severity": "Severe",
-            "treatmentSite": "Inpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-000000000317",
-                "00000000-0000-0000-0000-00000000031c"
-            ],
-            "pathogenIds": [
-                "00000000-0000-0000-0000-500000000006"
-            ],
-            "criteriaIds": []
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000122",
-            "severity": "Severe",
-            "treatmentSite": "Inpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-000000000317",
-                "00000000-0000-0000-0000-00000000031f"
-            ],
-            "pathogenIds": [
-                "00000000-0000-0000-0000-500000000006"
-            ],
-            "criteriaIds": []
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000123",
-            "severity": "Severe",
-            "treatmentSite": "Inpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-000000000317",
-                "00000000-0000-0000-0000-000000000320"
-            ],
-            "pathogenIds": [
-                "00000000-0000-0000-0000-500000000006"
-            ],
-            "criteriaIds": []
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000124",
-            "severity": "Severe",
-            "treatmentSite": "Inpatient",
-            "medicineIds": [
-                "00000000-0000-0000-0000-000000000317",
-                "00000000-0000-0000-0000-000000000321"
-            ],
-            "pathogenIds": [
-                "00000000-0000-0000-0000-500000000006"
-            ],
-            "criteriaIds": []
         }
     ]
 }
