@@ -1,0 +1,1179 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Respira - Treatments</title>
+		<style>
+			:root {
+				--primary: #0f6dbc;
+				--primary-hover: #0b568f;
+				--primary-light: #e8f2fb;
+				--accent: #0e9384;
+				--bg: #eef1f5;
+				--card: #ffffff;
+				--border: #dfe4ea;
+				--text: #172436;
+				--text-muted: #64748b;
+				--danger: #d92d20;
+				--success: #0e9384;
+			}
+
+			* { margin: 0; padding: 0; box-sizing: border-box; }
+
+			body {
+				font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+				background: var(--bg);
+				color: var(--text);
+				line-height: 1.6;
+			}
+
+			.top-bar {
+				background: linear-gradient(90deg, var(--primary), #0b4f78);
+				height: 6px;
+				width: 100%;
+			}
+
+			.container {
+				max-width: 900px;
+				margin: 0 auto;
+				padding: 0 1rem 3rem;
+			}
+
+			header {
+				text-align: center;
+				padding: 2rem 1rem 1.5rem;
+			}
+
+			.header-icon {
+				width: 52px;
+				height: 52px;
+				margin: 0 auto 0.75rem;
+				border-radius: 14px;
+				background: linear-gradient(135deg, var(--primary), var(--accent));
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				box-shadow: 0 6px 16px rgba(15,109,188,0.25);
+			}
+
+			.header-icon svg { width: 28px; height: 28px; stroke: white; }
+
+			header h1 {
+				font-size: 1.6rem;
+				font-weight: 800;
+				letter-spacing: -0.01em;
+			}
+
+			header p {
+				color: var(--text-muted);
+				margin-top: 0.35rem;
+				font-size: 0.9rem;
+			}
+
+			.tabs {
+				display: flex;
+				border: 1px solid var(--border);
+				border-radius: 10px;
+				overflow: hidden;
+				margin-bottom: 1.25rem;
+				background: var(--card);
+				box-shadow: 0 2px 8px rgba(15,23,42,0.06);
+			}
+
+			.tab-btn {
+				flex: 1;
+				padding: 0.85rem 1rem;
+				border: none;
+				background: var(--card);
+				color: var(--text-muted);
+				font-weight: 700;
+				font-size: 0.95rem;
+				cursor: pointer;
+				transition: background 0.15s, color 0.15s;
+			}
+
+			.tab-btn + .tab-btn { border-left: 1px solid var(--border); }
+
+			.tab-btn:hover:not(.active) { background: #eef2f6; }
+
+			.tab-btn.active {
+				background: var(--primary);
+				color: white;
+			}
+
+			.tab-panel { display: none; }
+			.tab-panel.active { display: block; }
+
+			.card {
+				background: var(--card);
+				border: 1px solid var(--border);
+				border-radius: 14px;
+				padding: 1.5rem;
+				margin-bottom: 1.25rem;
+				box-shadow: 0 2px 8px rgba(15,23,42,0.06);
+			}
+
+			.card h2 {
+				display: flex;
+				align-items: center;
+				gap: 0.6rem;
+				font-size: 1.05rem;
+				font-weight: 700;
+				margin-bottom: 1.1rem;
+				padding-bottom: 0.85rem;
+				border-bottom: 1px solid var(--border);
+				color: var(--text);
+			}
+
+			.card h2 .step-num {
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				min-width: 24px;
+				height: 24px;
+				padding: 0 0.35rem;
+				border-radius: 50%;
+				background: var(--primary);
+				color: white;
+				font-size: 0.75rem;
+				font-weight: 800;
+				flex-shrink: 0;
+			}
+
+			.form-group {
+				margin-bottom: 1.1rem;
+				padding: 0.9rem 1rem;
+				background: #fbfcfe;
+				border: 1px solid var(--border);
+				border-radius: 10px;
+				transition: border-color 0.15s, background 0.15s;
+			}
+
+			.form-group:focus-within {
+				border-color: var(--primary);
+				background: var(--primary-light);
+			}
+
+			.form-group:last-child { margin-bottom: 0; }
+
+			.form-label {
+				display: block;
+				font-weight: 700;
+				font-size: 0.9rem;
+				margin-bottom: 0.3rem;
+				color: var(--text);
+			}
+
+			.form-desc {
+				font-size: 0.8rem;
+				color: var(--text-muted);
+				margin-bottom: 0.6rem;
+			}
+
+			.form-input {
+				width: 100%;
+				padding: 0.65rem 0.85rem;
+				border: 1px solid var(--border);
+				border-radius: 8px;
+				font-size: 0.95rem;
+				font-weight: 600;
+				transition: border-color 0.15s, box-shadow 0.15s;
+				background: var(--card);
+				color: var(--text);
+			}
+
+			.form-input:focus {
+				outline: none;
+				border-color: var(--primary);
+				box-shadow: 0 0 0 3px rgba(15,109,188,0.15);
+			}
+
+			.form-input::placeholder { color: #b7c0cc; font-weight: 400; }
+
+			.segmented-toggle {
+				display: flex;
+				border: 1px solid var(--border);
+				border-radius: 8px;
+				overflow: hidden;
+			}
+
+			.segment-btn {
+				flex: 1;
+				padding: 0.7rem 1rem;
+				border: none;
+				background: #f8fafc;
+				color: var(--text);
+				font-weight: 700;
+				font-size: 0.9rem;
+				cursor: pointer;
+				transition: background 0.15s, color 0.15s;
+				white-space: nowrap;
+			}
+
+			.segment-btn + .segment-btn { border-left: 1px solid var(--border); }
+
+			.segment-btn:hover:not(.active) { background: #eef2f6; }
+
+			.segment-btn.active {
+				background: var(--accent);
+				color: white;
+			}
+
+			.chip-box {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 0.45rem;
+				max-height: 220px;
+				overflow-y: auto;
+				padding: 0.65rem;
+				background: var(--card);
+				border: 1px solid var(--border);
+				border-radius: 8px;
+			}
+
+			.chip {
+				display: inline-flex;
+				align-items: center;
+				padding: 0.35rem 0.75rem;
+				border: 1px solid var(--border);
+				border-radius: 20px;
+				background: #f8fafc;
+				color: var(--text);
+				font-size: 0.82rem;
+				font-weight: 600;
+				cursor: pointer;
+				transition: background 0.15s, border-color 0.15s, color 0.15s;
+				text-align: left;
+			}
+
+			.chip:hover { border-color: var(--primary); }
+
+			.chip.active {
+				background: var(--primary-light);
+				border-color: var(--primary);
+				color: var(--primary-hover);
+			}
+
+			.chip-count {
+				font-size: 0.78rem;
+				font-weight: 700;
+				color: var(--primary);
+				background: var(--primary-light);
+				padding: 0.1rem 0.45rem;
+				border-radius: 12px;
+				margin-left: 0.35rem;
+			}
+
+			.filter-input {
+				width: 100%;
+				padding: 0.5rem 0.75rem;
+				border: 1px solid var(--border);
+				border-radius: 8px;
+				font-size: 0.85rem;
+				font-weight: 500;
+				margin-bottom: 0.55rem;
+				background: var(--card);
+				color: var(--text);
+			}
+
+			.filter-input:focus {
+				outline: none;
+				border-color: var(--primary);
+				box-shadow: 0 0 0 3px rgba(15,109,188,0.15);
+			}
+
+			.composition-card {
+				background: var(--card);
+				border: 1px solid var(--border);
+				border-radius: 10px;
+				padding: 0.85rem 1rem;
+				margin-bottom: 0.75rem;
+			}
+
+			.composition-header {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				margin-bottom: 0.55rem;
+			}
+
+			.composition-title {
+				font-size: 0.85rem;
+				font-weight: 800;
+				color: var(--text-muted);
+				text-transform: uppercase;
+				letter-spacing: 0.03em;
+			}
+
+			.btn-remove {
+				border: none;
+				background: #fef2f2;
+				color: var(--danger);
+				font-size: 0.78rem;
+				font-weight: 700;
+				padding: 0.25rem 0.65rem;
+				border-radius: 6px;
+				cursor: pointer;
+				transition: background 0.15s;
+			}
+
+			.btn-remove:hover { background: #fee2e2; }
+
+			.btn-add {
+				display: inline-flex;
+				align-items: center;
+				gap: 0.35rem;
+				border: 1px dashed var(--primary);
+				background: var(--primary-light);
+				color: var(--primary-hover);
+				font-size: 0.85rem;
+				font-weight: 700;
+				padding: 0.5rem 1rem;
+				border-radius: 8px;
+				cursor: pointer;
+				transition: background 0.15s;
+			}
+
+			.btn-add:hover { background: #d7e8f8; }
+
+			.btn {
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				padding: 0.85rem 1.5rem;
+				border: none;
+				border-radius: 10px;
+				font-size: 0.95rem;
+				font-weight: 700;
+				letter-spacing: 0.01em;
+				cursor: pointer;
+				transition: background 0.15s, opacity 0.15s, transform 0.05s;
+				width: 100%;
+				box-shadow: 0 4px 12px rgba(15,109,188,0.25);
+			}
+
+			.btn:active:not(:disabled) { transform: translateY(1px); }
+
+			.btn-primary { background: var(--primary); color: white; }
+			.btn-primary:hover:not(:disabled) { background: var(--primary-hover); }
+			.btn:disabled { opacity: 0.5; cursor: not-allowed; box-shadow: none; }
+
+			.spinner {
+				display: inline-block;
+				width: 18px;
+				height: 18px;
+				border: 2px solid rgba(255,255,255,0.3);
+				border-top-color: white;
+				border-radius: 50%;
+				animation: spin 0.6s linear infinite;
+				margin-right: 0.5rem;
+			}
+
+			.spinner.dark {
+				border-color: var(--border);
+				border-top-color: var(--primary);
+			}
+
+			@keyframes spin { to { transform: rotate(360deg); } }
+
+			.error-banner {
+				background: #fef2f2;
+				border: 1px solid #fecaca;
+				color: #991b1b;
+				padding: 0.85rem 1.1rem;
+				border-radius: 10px;
+				font-size: 0.875rem;
+				margin: 0 0 1rem;
+				display: none;
+				word-break: break-word;
+				font-weight: 500;
+			}
+
+			.success-banner {
+				background: #ecfdf5;
+				border: 1px solid #a7f3d0;
+				color: #065f46;
+				padding: 0.85rem 1.1rem;
+				border-radius: 10px;
+				font-size: 0.875rem;
+				margin: 0 0 1rem;
+				display: none;
+				word-break: break-word;
+				font-weight: 500;
+			}
+
+			.success-banner code {
+				background: #d1fae5;
+				padding: 0.1rem 0.4rem;
+				border-radius: 5px;
+				font-size: 0.82rem;
+				user-select: all;
+			}
+
+			.results-section { display: none; }
+
+			.result-item {
+				background: #fbfcfe;
+				border: 1px solid var(--border);
+				border-radius: 10px;
+				padding: 0.9rem 1rem;
+				margin-bottom: 0.85rem;
+			}
+
+			.result-item:last-child { margin-bottom: 0; }
+
+			.result-item-header {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				gap: 0.75rem;
+				flex-wrap: wrap;
+				margin-bottom: 0.65rem;
+			}
+
+			.result-item-title {
+				font-size: 0.9rem;
+				font-weight: 800;
+				color: var(--text);
+			}
+
+			.result-item-subtitle {
+				font-size: 0.78rem;
+				font-weight: 600;
+				color: var(--text-muted);
+				margin-top: 0.1rem;
+			}
+
+			.composition-box {
+				display: flex;
+				flex-direction: column;
+				gap: 0.4rem;
+				padding: 0.7rem;
+				background: var(--card);
+				border: 1px dashed var(--primary);
+				border-radius: 10px;
+				margin-bottom: 0.5rem;
+			}
+
+			.composition-box:last-child { margin-bottom: 0; }
+
+			.composition-box-header {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				gap: 0.75rem;
+			}
+
+			.composition-label {
+				font-size: 0.72rem;
+				font-weight: 800;
+				color: var(--primary);
+				text-transform: uppercase;
+				letter-spacing: 0.04em;
+			}
+
+			.composition-meds {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 0.4rem;
+			}
+
+			.composition-med {
+				display: flex;
+				flex-direction: column;
+				align-items: flex-start;
+				justify-content: center;
+				gap: 0.2rem;
+				padding: 0.45rem 0.75rem;
+				background: var(--primary-light);
+				border: 1px solid #c9e0f5;
+				border-radius: 8px;
+				min-width: 140px;
+			}
+
+			.composition-med .medicine-name {
+				font-weight: 700;
+				font-size: 0.88rem;
+				color: var(--text);
+				line-height: 1.3;
+			}
+
+			.group-badge {
+				display: inline-block;
+				padding: 0.1rem 0.5rem;
+				border-radius: 10px;
+				font-weight: 700;
+				font-size: 0.72rem;
+				background: var(--card);
+				border: 1px solid var(--border);
+				color: var(--primary-hover);
+				white-space: nowrap;
+			}
+
+			.empty-state {
+				color: var(--text-muted);
+				font-size: 0.85rem;
+				font-style: italic;
+				padding: 0.5rem 0;
+			}
+
+			.loading-state {
+				text-align: center;
+				padding: 3rem 1rem;
+				color: var(--text-muted);
+			}
+
+			.loading-state .spinner {
+				border-color: var(--border);
+				border-top-color: var(--primary);
+				width: 34px;
+				height: 34px;
+				margin: 0 auto 1rem;
+				display: block;
+			}
+
+			.disclaimer {
+				text-align: center;
+				font-size: 0.75rem;
+				color: var(--text-muted);
+				margin-top: 1.5rem;
+				padding: 0 1rem;
+			}
+
+			.hint {
+				font-size: 0.78rem;
+				color: var(--text-muted);
+				margin-top: 0.4rem;
+			}
+
+			@media (max-width: 640px) {
+				.container { padding: 0 0.75rem 3rem; }
+				.card { padding: 1.1rem; }
+				.tab-btn { font-size: 0.85rem; padding: 0.75rem 0.5rem; }
+				.composition-med { min-width: 120px; }
+			}
+		</style>
+	</head>
+	<body>
+		<div class="top-bar"></div>
+		<div class="container">
+			<header>
+				<div class="header-icon">
+					<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+						<path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+					</svg>
+				</div>
+				<h1>Respira Treatments</h1>
+				<p>Search, create and update treatment protocols</p>
+			</header>
+
+			<nav class="tabs" role="tablist">
+				<button type="button" class="tab-btn active" data-tab="search" role="tab">Search</button>
+				<button type="button" class="tab-btn" data-tab="create" role="tab">Create</button>
+				<button type="button" class="tab-btn" data-tab="update" role="tab">Update</button>
+			</nav>
+
+			<div id="errorBanner" class="error-banner"></div>
+			<div id="successBanner" class="success-banner"></div>
+
+			<div id="loadingState" class="loading-state">
+				<div class="spinner"></div>
+				<p>Loading reference data...</p>
+			</div>
+
+			<main id="appContent" style="display:none;">
+				<!-- ============ SEARCH ============ -->
+				<section id="panel-search" class="tab-panel active">
+					<form id="searchForm">
+						<div class="card">
+							<h2><span class="step-num">1</span> Filter Criteria</h2>
+
+							<div class="form-group">
+								<label class="form-label">Severity <span class="chip-count">required</span></label>
+								<div class="segmented-toggle" data-toggle="search-severity">
+									<button type="button" class="segment-btn active" data-value="Mild">Mild</button>
+									<button type="button" class="segment-btn" data-value="Moderate">Moderate</button>
+									<button type="button" class="segment-btn" data-value="Severe">Severe</button>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="form-label">Treatment Site <span class="chip-count">required</span></label>
+								<div class="segmented-toggle" data-toggle="search-site">
+									<button type="button" class="segment-btn active" data-value="Outpatient">Outpatient</button>
+									<button type="button" class="segment-btn" data-value="Inpatient">Inpatient</button>
+									<button type="button" class="segment-btn" data-value="IntensiveCareUnit">ICU</button>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="form-label">Pathogens <span class="chip-count" id="searchPathogenCount">0 selected</span></label>
+								<div class="form-desc">Optional. A treatment matches only if it covers all selected pathogens. Leave empty for no pathogen filter.</div>
+								<input type="text" class="filter-input" placeholder="Filter pathogens..." data-filter="search-pathogens">
+								<div class="chip-box" id="search-pathogens"></div>
+							</div>
+
+							<div class="form-group">
+								<label class="form-label">Criteria <span class="chip-count" id="searchCriteriaCount">0 selected</span></label>
+								<div class="form-desc">Optional. A treatment matches only if it satisfies all selected criteria.</div>
+								<input type="text" class="filter-input" placeholder="Filter criteria..." data-filter="search-criteria">
+								<div class="chip-box" id="search-criteria"></div>
+							</div>
+						</div>
+
+						<button type="submit" class="btn btn-primary" id="searchBtn">Search Treatments</button>
+					</form>
+
+					<div id="searchResults" class="results-section">
+						<div class="card">
+							<h2><span class="step-num">&#10003;</span> Results <span class="chip-count" id="searchResultCount"></span></h2>
+							<div id="searchResultsList"></div>
+						</div>
+					</div>
+				</section>
+
+				<!-- ============ CREATE ============ -->
+				<section id="panel-create" class="tab-panel">
+					<form id="createForm">
+						<div class="card">
+							<h2><span class="step-num">1</span> Classification</h2>
+
+							<div class="form-group">
+								<label class="form-label">Severity</label>
+								<div class="segmented-toggle" data-toggle="create-severity">
+									<button type="button" class="segment-btn active" data-value="Mild">Mild</button>
+									<button type="button" class="segment-btn" data-value="Moderate">Moderate</button>
+									<button type="button" class="segment-btn" data-value="Severe">Severe</button>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="form-label">Treatment Site</label>
+								<div class="segmented-toggle" data-toggle="create-site">
+									<button type="button" class="segment-btn active" data-value="Outpatient">Outpatient</button>
+									<button type="button" class="segment-btn" data-value="Inpatient">Inpatient</button>
+									<button type="button" class="segment-btn" data-value="IntensiveCareUnit">ICU</button>
+								</div>
+							</div>
+						</div>
+
+						<div class="card">
+							<h2><span class="step-num">2</span> Medicine Compositions</h2>
+							<div class="form-desc">Each composition is one regimen (a single antibiotic or a combination). Add multiple compositions to offer alternatives.</div>
+							<div id="create-compositions"></div>
+							<button type="button" class="btn-add" id="createAddComposition">+ Add Composition</button>
+						</div>
+
+						<div class="card">
+							<h2><span class="step-num">3</span> Pathogens</h2>
+							<div class="form-desc">Select the pathogens this treatment covers.</div>
+							<input type="text" class="filter-input" placeholder="Filter pathogens..." data-filter="create-pathogens">
+							<div class="chip-box" id="create-pathogens"></div>
+						</div>
+
+						<div class="card">
+							<h2><span class="step-num">4</span> Criteria</h2>
+							<div class="form-desc">Select the criteria required for this treatment.</div>
+							<input type="text" class="filter-input" placeholder="Filter criteria..." data-filter="create-criteria">
+							<div class="chip-box" id="create-criteria"></div>
+						</div>
+
+						<button type="submit" class="btn btn-primary" id="createBtn">Create Treatment</button>
+					</form>
+				</section>
+
+				<!-- ============ UPDATE ============ -->
+				<section id="panel-update" class="tab-panel">
+					<form id="updateForm">
+						<div class="card">
+							<h2><span class="step-num">1</span> Treatment</h2>
+							<div class="form-group">
+								<label class="form-label" for="updateId">Treatment ID</label>
+								<div class="form-desc">The GUID of the treatment to update (as returned when it was created).</div>
+								<input type="text" class="form-input" id="updateId" required
+									placeholder="00000000-0000-0000-0000-000000000000"
+									pattern="[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}"
+									title="Please enter a valid GUID">
+							</div>
+						</div>
+
+						<div class="card">
+							<h2><span class="step-num">2</span> Classification</h2>
+
+							<div class="form-group">
+								<label class="form-label">Severity</label>
+								<div class="segmented-toggle" data-toggle="update-severity">
+									<button type="button" class="segment-btn active" data-value="Mild">Mild</button>
+									<button type="button" class="segment-btn" data-value="Moderate">Moderate</button>
+									<button type="button" class="segment-btn" data-value="Severe">Severe</button>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="form-label">Treatment Site</label>
+								<div class="segmented-toggle" data-toggle="update-site">
+									<button type="button" class="segment-btn active" data-value="Outpatient">Outpatient</button>
+									<button type="button" class="segment-btn" data-value="Inpatient">Inpatient</button>
+									<button type="button" class="segment-btn" data-value="IntensiveCareUnit">ICU</button>
+								</div>
+							</div>
+						</div>
+
+						<div class="card">
+							<h2><span class="step-num">3</span> Medicine Compositions</h2>
+							<div class="form-desc">The full new set of compositions. Existing compositions are replaced on update.</div>
+							<div id="update-compositions"></div>
+							<button type="button" class="btn-add" id="updateAddComposition">+ Add Composition</button>
+						</div>
+
+						<div class="card">
+							<h2><span class="step-num">4</span> Pathogens</h2>
+							<div class="form-desc">The full new set of pathogens. Existing pathogens are replaced on update.</div>
+							<input type="text" class="filter-input" placeholder="Filter pathogens..." data-filter="update-pathogens">
+							<div class="chip-box" id="update-pathogens"></div>
+						</div>
+
+						<div class="card">
+							<h2><span class="step-num">5</span> Criteria</h2>
+							<div class="form-desc">The full new set of criteria. Existing criteria are replaced on update.</div>
+							<input type="text" class="filter-input" placeholder="Filter criteria..." data-filter="update-criteria">
+							<div class="chip-box" id="update-criteria"></div>
+						</div>
+
+						<button type="submit" class="btn btn-primary" id="updateBtn">Update Treatment</button>
+					</form>
+				</section>
+			</main>
+
+			<p class="disclaimer">For clinical decision support use only. Always correlate with clinical judgment.</p>
+		</div>
+
+		<script>
+			const API_BASE = 'https://clinical-service-respira.dev.localhost:7145';
+			const ENDPOINTS = {
+				treatments: `${API_BASE}/api/1.0/treatments`,
+				antibiotics: `${API_BASE}/api/1.0/antibiotics/list`,
+				criteria: `${API_BASE}/api/1.0/criteria/list`
+			};
+
+			// There is no pathogens list endpoint yet, so the seeded pathogens are listed here.
+			// Keep in sync with Infrastructure/Data/seed-data.jsonc
+			const PATHOGENS = [
+				{ id: '00000000-0000-0000-0000-500000000001', name: 'Streptococcus pneumoniae' },
+				{ id: '00000000-0000-0000-0000-500000000002', name: 'Haemophilus influenzae' },
+				{ id: '00000000-0000-0000-0000-500000000003', name: 'Staphylococcus aureus' },
+				{ id: '00000000-0000-0000-0000-500000000004', name: 'Methicillin-Resistant Staphylococcus aureus (MRSA)' },
+				{ id: '00000000-0000-0000-0000-500000000005', name: 'Klebsiella pneumoniae' },
+				{ id: '00000000-0000-0000-0000-500000000006', name: 'Pseudomonas aeruginosa' },
+				{ id: '00000000-0000-0000-0000-500000000007', name: 'Acinetobacter baumannii' },
+				{ id: '00000000-0000-0000-0000-500000000008', name: 'Anaerobic bacteria' },
+				{ id: '00000000-0000-0000-0000-500000000009', name: 'Moraxella catarrhalis' },
+				{ id: '00000000-0000-0000-0000-500000000010', name: 'Mycoplasma pneumoniae' },
+				{ id: '00000000-0000-0000-0000-500000000011', name: 'Chlamydia pneumoniae' },
+				{ id: '00000000-0000-0000-0000-500000000012', name: 'Legionella spp' },
+				{ id: '00000000-0000-0000-0000-500000000013', name: 'Bordetella pertussis' },
+				{ id: '00000000-0000-0000-0000-500000000014', name: 'Escherichia coli (E. coli)' },
+				{ id: '00000000-0000-0000-0000-500000000015', name: 'Salmonella' },
+				{ id: '00000000-0000-0000-0000-500000000016', name: 'Enterobacter' },
+				{ id: '00000000-0000-0000-0000-500000000017', name: 'Influenza virus' },
+				{ id: '00000000-0000-0000-0000-500000000018', name: 'Parainfluenza virus' },
+				{ id: '00000000-0000-0000-0000-500000000019', name: 'Respiratory syncytial virus (RSV)' },
+				{ id: '00000000-0000-0000-0000-500000000020', name: 'Adenovirus' },
+				{ id: '00000000-0000-0000-0000-500000000021', name: 'Coronavirus' },
+				{ id: '00000000-0000-0000-0000-500000000022', name: 'SARS-CoV-2' },
+				{ id: '00000000-0000-0000-0000-500000000023', name: 'Rhinovirus' },
+				{ id: '00000000-0000-0000-0000-500000000024', name: 'Enterovirus' },
+				{ id: '00000000-0000-0000-0000-500000000025', name: 'Bocavirus' },
+				{ id: '00000000-0000-0000-0000-500000000026', name: 'Metapneumovirus' },
+				{ id: '00000000-0000-0000-0000-500000000027', name: 'Human metapneumovirus (HMPV)' },
+				{ id: '00000000-0000-0000-0000-500000000028', name: 'Cytomegalovirus (CMV)' },
+				{ id: '00000000-0000-0000-0000-500000000029', name: 'Epstein-Barr virus (EBV)' }
+			];
+
+			let antibiotics = [];
+			let criteria = [];
+
+			const selection = {
+				search: { pathogens: new Set(), criteria: new Set() },
+				create: { pathogens: new Set(), criteria: new Set() },
+				update: { pathogens: new Set(), criteria: new Set() }
+			};
+
+			const compositions = { create: [], update: [] };
+
+			async function apiFetch(url, options = {}) {
+				console.log('Fetching:', url, options.method || 'GET');
+				const res = await fetch(url, options);
+				const raw = await res.text();
+				console.log('Response status:', res.status);
+				console.log('Response body:', raw);
+				let body;
+				try { body = JSON.parse(raw); }
+				catch { throw new Error('Invalid JSON from server: ' + raw.substring(0, 200)); }
+
+				if (!res.ok || body.statusCode !== 'SUCCESS') {
+					throw new Error(body.error?.description || body.error?.Description || `HTTP ${res.status}: ${res.statusText}`);
+				}
+				return body;
+			}
+
+			// ---------- Tabs ----------
+			document.querySelectorAll('.tab-btn').forEach(btn => {
+				btn.addEventListener('click', () => {
+					document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+					document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+					btn.classList.add('active');
+					document.getElementById('panel-' + btn.dataset.tab).classList.add('active');
+					hideError();
+					hideSuccess();
+				});
+			});
+
+			// ---------- Segmented toggles ----------
+			document.querySelectorAll('.segmented-toggle').forEach(toggle => {
+				toggle.querySelectorAll('.segment-btn').forEach(btn => {
+					btn.addEventListener('click', () => {
+						toggle.querySelectorAll('.segment-btn').forEach(b => b.classList.remove('active'));
+						btn.classList.add('active');
+					});
+				});
+			});
+
+			function getSegmentValue(name) {
+				const active = document.querySelector(`.segmented-toggle[data-toggle="${name}"] .segment-btn.active`);
+				return active ? active.dataset.value : null;
+			}
+
+			// ---------- Chips ----------
+			function renderChips(boxId, items, selectedSet, countId) {
+				const box = document.getElementById(boxId);
+				const prefix = boxId;
+				box.innerHTML = '';
+				if (!items.length) {
+					box.innerHTML = '<div class="empty-state">No items available</div>';
+					return;
+				}
+				items.forEach(item => {
+					const chip = document.createElement('button');
+					chip.type = 'button';
+					chip.className = 'chip' + (selectedSet.has(item.id) ? ' active' : '');
+					chip.textContent = item.name;
+					chip.dataset.id = item.id;
+					chip.dataset.name = item.name.toLowerCase();
+					chip.addEventListener('click', () => {
+						if (selectedSet.has(item.id)) selectedSet.delete(item.id);
+						else selectedSet.add(item.id);
+						chip.classList.toggle('active');
+						updateCount(countId, selectedSet.size);
+					});
+					box.appendChild(chip);
+				});
+				updateCount(countId, selectedSet.size);
+			}
+
+			function updateCount(countId, size) {
+				if (countId) document.getElementById(countId).textContent = size + ' selected';
+			}
+
+			document.querySelectorAll('[data-filter]').forEach(input => {
+				input.addEventListener('input', () => {
+					const boxId = input.dataset.filter;
+					const q = input.value.trim().toLowerCase();
+					document.querySelectorAll(`#${boxId} .chip`).forEach(chip => {
+						chip.style.display = chip.dataset.name.includes(q) ? '' : 'none';
+					});
+				});
+			});
+
+			// ---------- Medicine compositions ----------
+			function addComposition(prefix) {
+				compositions[prefix].push(new Set());
+				renderCompositions(prefix);
+			}
+
+			function removeComposition(prefix, index) {
+				compositions[prefix].splice(index, 1);
+				renderCompositions(prefix);
+			}
+
+			function renderCompositions(prefix) {
+				const container = document.getElementById(prefix + '-compositions');
+				container.innerHTML = '';
+				if (!compositions[prefix].length) {
+					container.innerHTML = '<div class="empty-state">No compositions yet. Add one below.</div>';
+					return;
+				}
+				compositions[prefix].forEach((comp, idx) => {
+					const card = document.createElement('div');
+					card.className = 'composition-card';
+
+					const header = document.createElement('div');
+					header.className = 'composition-header';
+					header.innerHTML = `<span class="composition-title">Composition ${idx + 1}</span>`;
+					if (compositions[prefix].length > 0) {
+						const removeBtn = document.createElement('button');
+						removeBtn.type = 'button';
+						removeBtn.className = 'btn-remove';
+						removeBtn.textContent = 'Remove';
+						removeBtn.addEventListener('click', () => removeComposition(prefix, idx));
+						header.appendChild(removeBtn);
+					}
+					card.appendChild(header);
+
+					const filter = document.createElement('input');
+					filter.type = 'text';
+					filter.className = 'filter-input';
+					filter.placeholder = 'Filter antibiotics...';
+					card.appendChild(filter);
+
+					const box = document.createElement('div');
+					box.className = 'chip-box';
+					antibiotics.forEach(ab => {
+						const chip = document.createElement('button');
+						chip.type = 'button';
+						chip.className = 'chip' + (comp.has(ab.id) ? ' active' : '');
+						chip.textContent = ab.name;
+						chip.dataset.name = ab.name.toLowerCase();
+						chip.addEventListener('click', () => {
+							if (comp.has(ab.id)) comp.delete(ab.id);
+							else comp.add(ab.id);
+							chip.classList.toggle('active');
+						});
+						box.appendChild(chip);
+					});
+					filter.addEventListener('input', () => {
+						const q = filter.value.trim().toLowerCase();
+						box.querySelectorAll('.chip').forEach(chip => {
+							chip.style.display = chip.dataset.name.includes(q) ? '' : 'none';
+						});
+					});
+					card.appendChild(box);
+					container.appendChild(card);
+				});
+			}
+
+			document.getElementById('createAddComposition').addEventListener('click', () => addComposition('create'));
+			document.getElementById('updateAddComposition').addEventListener('click', () => addComposition('update'));
+
+			function collectPayload(prefix) {
+				return {
+					severity: getSegmentValue(prefix + '-severity'),
+					treatmentSite: getSegmentValue(prefix + '-site'),
+					medicines: compositions[prefix]
+						.map(comp => [...comp])
+						.filter(comp => comp.length > 0),
+					pathogens: [...selection[prefix].pathogens],
+					criteria: [...selection[prefix].criteria]
+				};
+			}
+
+			// ---------- Search ----------
+			document.getElementById('searchForm').addEventListener('submit', async (e) => {
+				e.preventDefault();
+				hideError();
+				hideSuccess();
+
+				const params = new URLSearchParams();
+				params.set('Severity', getSegmentValue('search-severity'));
+				params.set('TreatmentSite', getSegmentValue('search-site'));
+				selection.search.pathogens.forEach(id => params.append('PathogenIds', id));
+				selection.search.criteria.forEach(id => params.append('CriteriaIds', id));
+
+				const btn = document.getElementById('searchBtn');
+				btn.disabled = true;
+				btn.innerHTML = '<span class="spinner"></span> Searching...';
+
+				try {
+					const url = `${ENDPOINTS.treatments}?${params.toString()}`;
+					const body = await apiFetch(url);
+					renderSearchResults(body.data?.solutions || body.data?.Solutions || []);
+				} catch (err) {
+					console.error('Search error:', err);
+					showError('Search failed: ' + err.message);
+					document.getElementById('searchResults').style.display = 'none';
+				} finally {
+					btn.disabled = false;
+					btn.innerHTML = 'Search Treatments';
+				}
+			});
+
+			function renderSearchResults(solutions) {
+				const section = document.getElementById('searchResults');
+				const list = document.getElementById('searchResultsList');
+				section.style.display = 'block';
+				document.getElementById('searchResultCount').textContent =
+					solutions.length + (solutions.length === 1 ? ' solution' : ' solutions');
+
+				if (!solutions.length) {
+					list.innerHTML = '<div class="empty-state">No solutions matched the given filters.</div>';
+					window.scrollTo({ top: section.offsetTop - 20, behavior: 'smooth' });
+					return;
+				}
+
+				list.innerHTML = '';
+				solutions.forEach((s, si) => {
+					const meds = s.medicines || s.Medicines || [];
+					const item = document.createElement('div');
+					item.className = 'result-item';
+
+					const header = document.createElement('div');
+					header.className = 'result-item-header';
+
+					const titleWrap = document.createElement('div');
+					const title = document.createElement('div');
+					title.className = 'result-item-title';
+					title.textContent = 'Solution ' + (si + 1);
+					titleWrap.appendChild(title);
+					header.appendChild(titleWrap);
+
+					const medCount = document.createElement('span');
+					medCount.className = 'chip-count';
+					medCount.textContent = meds.length + (meds.length === 1 ? ' medicine' : ' medicines');
+					header.appendChild(medCount);
+					item.appendChild(header);
+
+					const medWrap = document.createElement('div');
+					medWrap.className = 'composition-meds';
+					if (!meds.length) {
+						const empty = document.createElement('div');
+						empty.className = 'empty-state';
+						empty.textContent = 'No medicines';
+						medWrap.appendChild(empty);
+					} else {
+						meds.forEach(m => {
+							const med = document.createElement('div');
+							med.className = 'composition-med';
+							const name = document.createElement('span');
+							name.className = 'medicine-name';
+							name.textContent = m.name || m.Name;
+							const badge = document.createElement('span');
+							badge.className = 'group-badge';
+							badge.textContent = m.antibioticGroupName || m.AntibioticGroupName || '—';
+							med.appendChild(name);
+							med.appendChild(badge);
+							medWrap.appendChild(med);
+						});
+					}
+					item.appendChild(medWrap);
+					list.appendChild(item);
+				});
+
+				window.scrollTo({ top: section.offsetTop - 20, behavior: 'smooth' });
+			}
+
+			// ---------- Create ----------
+			document.getElementById('createForm').addEventListener('submit', async (e) => {
+				e.preventDefault();
+				hideError();
+				hideSuccess();
+
+				const payload = collectPayload('create');
+				const btn = document.getElementById('createBtn');
+				btn.disabled = true;
+				btn.innerHTML = '<span class="spinner"></span> Creating...';
+
+				try {
+					const body = await apiFetch(ENDPOINTS.treatments, {
+						method: 'POST',
+						headers: { 'Content-Type': 'application/json' },
+						body: JSON.stringify(payload)
+					});
+					const id = body.data?.id || body.data?.Id;
+					showSuccess(`Treatment created successfully. ID: <code>${id}</code>`);
+				} catch (err) {
+					console.error('Create error:', err);
+					showError('Create failed: ' + err.message);
+				} finally {
+					btn.disabled = false;
+					btn.innerHTML = 'Create Treatment';
+				}
+			});
+
+			// ---------- Update ----------
+			document.getElementById('updateForm').addEventListener('submit', async (e) => {
+				e.preventDefault();
+				hideError();
+				hideSuccess();
+
+				const id = document.getElementById('updateId').value.trim();
+				const payload = collectPayload('update');
+				const btn = document.getElementById('updateBtn');
+				btn.disabled = true;
+				btn.innerHTML = '<span class="spinner"></span> Updating...';
+
+				try {
+					await apiFetch(`${ENDPOINTS.treatments}/${id}`, {
+						method: 'PUT',
+						headers: { 'Content-Type': 'application/json' },
+						body: JSON.stringify(payload)
+					});
+					showSuccess(`Treatment <code>${id}</code> updated successfully.`);
+				} catch (err) {
+					console.error('Update error:', err);
+					showError('Update failed: ' + err.message);
+				} finally {
+					btn.disabled = false;
+					btn.innerHTML = 'Update Treatment';
+				}
+			});
+
+			// ---------- Banners ----------
+			function showError(msg) {
+				const banner = document.getElementById('errorBanner');
+				banner.textContent = msg;
+				banner.style.display = 'block';
+				hideSuccess();
+				window.scrollTo({ top: 0, behavior: 'smooth' });
+			}
+
+			function hideError() {
+				document.getElementById('errorBanner').style.display = 'none';
+			}
+
+			function showSuccess(html) {
+				const banner = document.getElementById('successBanner');
+				banner.innerHTML = html;
+				banner.style.display = 'block';
+				hideError();
+				window.scrollTo({ top: 0, behavior: 'smooth' });
+			}
+
+			function hideSuccess() {
+				document.getElementById('successBanner').style.display = 'none';
+			}
+
+			// ---------- Init ----------
+			async function init() {
+				try {
+					const [abBody, crBody] = await Promise.all([
+						apiFetch(ENDPOINTS.antibiotics),
+						apiFetch(ENDPOINTS.criteria)
+					]);
+					antibiotics = abBody.data?.antibiotics || abBody.data?.Antibiotics || [];
+					criteria = crBody.data?.criteria || crBody.data?.Criteria || [];
+
+					renderChips('search-pathogens', PATHOGENS, selection.search.pathogens, 'searchPathogenCount');
+					renderChips('search-criteria', criteria, selection.search.criteria, 'searchCriteriaCount');
+					renderChips('create-pathogens', PATHOGENS, selection.create.pathogens, null);
+					renderChips('create-criteria', criteria, selection.create.criteria, null);
+					renderChips('update-pathogens', PATHOGENS, selection.update.pathogens, null);
+					renderChips('update-criteria', criteria, selection.update.criteria, null);
+
+					addComposition('create');
+					addComposition('update');
+
+					document.getElementById('loadingState').style.display = 'none';
+					document.getElementById('appContent').style.display = '';
+				} catch (err) {
+					console.error('Init error:', err);
+					showError('Failed to load reference data: ' + err.message);
+					document.getElementById('loadingState').innerHTML =
+						'<p style="color:var(--danger);">Failed to load reference data. Check console for details.</p>';
+				}
+			}
+
+			init();
+		</script>
+	</body>
+</html>

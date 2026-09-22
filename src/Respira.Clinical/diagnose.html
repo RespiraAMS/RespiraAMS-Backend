@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Respira - Empirical Diagnosis</title>
+		<style>
+			:root {
+				--primary: #0f6dbc;
+				--primary-hover: #0b568f;
+				--primary-light: #e8f2fb;
+				--accent: #0e9384;
+				--bg: #eef1f5;
+				--card: #ffffff;
+				--border: #dfe4ea;
+				--text: #172436;
+				--text-muted: #64748b;
+				--danger: #d92d20;
+			}
+			
+			* { margin: 0; padding: 0; box-sizing: border-box; }
+			
+			body {
+				font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+				background: var(--bg);
+				color: var(--text);
+				line-height: 1.6;
+			}
+			
+			.top-bar {
+				background: linear-gradient(90deg, var(--primary), #0b4f78);
+				height: 6px;
+				width: 100%;
+			}
+			
+			.container {
+				max-width: 800px;
+				margin: 0 auto;
+				padding: 0 1rem 3rem;
+			}
+			
+			header {
+				text-align: center;
+				padding: 2rem 1rem 1.5rem;
+			}
+			
+			.header-icon {
+				width: 52px;
+				height: 52px;
+				margin: 0 auto 0.75rem;
+				border-radius: 14px;
+				background: linear-gradient(135deg, var(--primary), var(--accent));
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				box-shadow: 0 6px 16px rgba(15,109,188,0.25);
+			}
+			
+			.header-icon svg { width: 28px; height: 28px; stroke: white; }
+			
+			header h1 {
+				font-size: 1.6rem;
+				font-weight: 800;
+				letter-spacing: -0.01em;
+			}
+			
+			header p {
+				color: var(--text-muted);
+				margin-top: 0.35rem;
+				font-size: 0.9rem;
+			}
+			
+			.card {
+				background: var(--card);
+				border: 1px solid var(--border);
+				border-radius: 14px;
+				padding: 1.5rem;
+				margin-bottom: 1.25rem;
+				box-shadow: 0 2px 8px rgba(15,23,42,0.06);
+			}
+			
+			.card h2 {
+				display: flex;
+				align-items: center;
+				gap: 0.6rem;
+				font-size: 1.05rem;
+				font-weight: 700;
+				margin-bottom: 1.1rem;
+				padding-bottom: 0.85rem;
+				border-bottom: 1px solid var(--border);
+				color: var(--text);
+			}
+			
+			.card h2 .step-num {
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				width: 24px;
+				height: 24px;
+				border-radius: 50%;
+				background: var(--primary);
+				color: white;
+				font-size: 0.75rem;
+				font-weight: 800;
+				flex-shrink: 0;
+			}
+			
+			.form-group {
+				margin-bottom: 1.1rem;
+				padding: 0.9rem 1rem;
+				background: #fbfcfe;
+				border: 1px solid var(--border);
+				border-radius: 10px;
+				transition: border-color 0.15s, background 0.15s;
+			}
+			
+			.form-group:focus-within {
+				border-color: var(--primary);
+				background: var(--primary-light);
+			}
+			
+			.form-group:last-child { margin-bottom: 0; }
+			
+			.form-label {
+				display: block;
+				font-weight: 700;
+				font-size: 0.9rem;
+				margin-bottom: 0.3rem;
+				color: var(--text);
+			}
+			
+			.form-label .unit {
+				font-weight: 500;
+				color: var(--primary);
+				font-size: 0.78rem;
+				background: var(--primary-light);
+				padding: 0.1rem 0.4rem;
+				border-radius: 5px;
+				margin-left: 0.2rem;
+			}
+			
+			.form-desc {
+				font-size: 0.8rem;
+				color: var(--text-muted);
+				margin-bottom: 0.6rem;
+			}
+			
+			.form-input {
+				width: 100%;
+				padding: 0.65rem 0.85rem;
+				border: 1px solid var(--border);
+				border-radius: 8px;
+				font-size: 0.95rem;
+				font-weight: 600;
+				transition: border-color 0.15s, box-shadow 0.15s;
+				background: var(--card);
+				color: var(--text);
+			}
+			
+			.form-input:focus {
+				outline: none;
+				border-color: var(--primary);
+				box-shadow: 0 0 0 3px rgba(15,109,188,0.15);
+			}
+			
+			.form-input::placeholder { color: #b7c0cc; font-weight: 400; }
+			
+			.form-group.numeric-group {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				gap: 1.5rem;
+				flex-wrap: wrap;
+			}
+			
+			.numeric-field-info { flex: 1; min-width: 160px; }
+			.numeric-field-info .form-label,
+			.numeric-field-info .form-desc { margin-bottom: 0; }
+			.numeric-field-info .form-desc { margin-top: 0.3rem; }
+			
+			.numeric-input-wrap {
+				display: flex;
+				align-items: stretch;
+				border: 1px solid var(--border);
+				border-radius: 8px;
+				overflow: hidden;
+				flex-shrink: 0;
+				min-width: 220px;
+				background: var(--card);
+				transition: border-color 0.15s, box-shadow 0.15s;
+			}
+			
+			.numeric-input-wrap:focus-within {
+				border-color: var(--primary);
+				box-shadow: 0 0 0 3px rgba(15,109,188,0.15);
+			}
+			
+			.numeric-input-wrap .form-input {
+				border: none;
+				border-radius: 0;
+				flex: 1;
+				min-width: 0;
+			}
+			
+			.numeric-input-wrap .form-input:focus { box-shadow: none; }
+			
+			.numeric-unit-suffix {
+				display: flex;
+				align-items: center;
+				padding: 0 0.9rem;
+				background: #f8fafc;
+				color: var(--text-muted);
+				font-weight: 700;
+				font-size: 0.85rem;
+				border-left: 1px solid var(--border);
+				white-space: nowrap;
+			}
+			
+			.form-group.bool-group {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				gap: 1.5rem;
+				flex-wrap: wrap;
+			}
+			
+			.bool-field-info { flex: 1; min-width: 160px; }
+			.bool-field-info .form-label,
+			.bool-field-info .form-desc { margin-bottom: 0; }
+			.bool-field-info .form-desc { margin-top: 0.3rem; }
+			
+			.segmented-toggle {
+				display: flex;
+				border: 1px solid var(--border);
+				border-radius: 8px;
+				overflow: hidden;
+				flex-shrink: 0;
+				min-width: 220px;
+			}
+			
+			.segment-btn {
+				flex: 1;
+				padding: 0.7rem 1.5rem;
+				border: none;
+				background: #f8fafc;
+				color: var(--text);
+				font-weight: 700;
+				font-size: 0.9rem;
+				cursor: pointer;
+				transition: background 0.15s, color 0.15s;
+				white-space: nowrap;
+			}
+			
+			.segment-btn + .segment-btn { border-left: 1px solid var(--border); }
+			
+			.segment-btn:hover:not(.active) { background: #eef2f6; }
+			
+			.segment-btn.active {
+				background: var(--accent);
+				color: white;
+			}
+			
+			@media (max-width: 640px) {
+				.form-group.bool-group,
+				.form-group.numeric-group { flex-direction: column; align-items: stretch; }
+				.segmented-toggle,
+				.numeric-input-wrap { min-width: unset; }
+			}
+			
+			.btn {
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				padding: 0.85rem 1.5rem;
+				border: none;
+				border-radius: 10px;
+				font-size: 0.95rem;
+				font-weight: 700;
+				letter-spacing: 0.01em;
+				cursor: pointer;
+				transition: background 0.15s, opacity 0.15s, transform 0.05s;
+				width: 100%;
+				box-shadow: 0 4px 12px rgba(15,109,188,0.25);
+			}
+			
+			.btn:active:not(:disabled) { transform: translateY(1px); }
+			
+			.btn-primary { background: var(--primary); color: white; }
+			.btn-primary:hover:not(:disabled) { background: var(--primary-hover); }
+			.btn:disabled { opacity: 0.5; cursor: not-allowed; box-shadow: none; }
+			
+			.spinner {
+				display: inline-block;
+				width: 18px;
+				height: 18px;
+				border: 2px solid rgba(255,255,255,0.3);
+				border-top-color: white;
+				border-radius: 50%;
+				animation: spin 0.6s linear infinite;
+				margin-right: 0.5rem;
+			}
+			
+			@keyframes spin { to { transform: rotate(360deg); } }
+			
+			.error-banner {
+				background: #fef2f2;
+				border: 1px solid #fecaca;
+				color: #991b1b;
+				padding: 0.85rem 1.1rem;
+				border-radius: 10px;
+				font-size: 0.875rem;
+				margin: 1rem 0;
+				display: none;
+				word-break: break-word;
+				font-weight: 500;
+			}
+			
+			.results-section { display: none; }
+			
+			.severity-badge {
+				display: inline-block;
+				padding: 0.35rem 1rem;
+				border-radius: 20px;
+				font-weight: 800;
+				font-size: 0.85rem;
+				text-transform: uppercase;
+				letter-spacing: 0.04em;
+			}
+			
+			.severity-mild { background: #dcfce7; color: #166534; }
+			.severity-moderate { background: #fef3c7; color: #92400e; }
+			.severity-severe { background: #fee2e2; color: #991b1b; }
+			
+			.treatment-badge {
+				display: inline-block;
+				padding: 0.35rem 1rem;
+				border-radius: 20px;
+				font-weight: 700;
+				font-size: 0.85rem;
+				background: var(--primary-light);
+				color: var(--primary-hover);
+			}
+			
+			.result-row {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				gap: 1rem;
+				padding: 0.85rem 1rem;
+				margin-bottom: 0.6rem;
+				background: #fbfcfe;
+				border: 1px solid var(--border);
+				border-radius: 10px;
+			}
+			
+			.result-row:last-child { margin-bottom: 0; }
+			
+			.result-label {
+				font-size: 0.82rem;
+				font-weight: 700;
+				color: var(--text-muted);
+				text-transform: uppercase;
+				letter-spacing: 0.03em;
+				min-width: 120px;
+			}
+			
+			.heavy-suspected-box {
+				background: linear-gradient(135deg, #fef2f2, #fff1f2);
+				border: 2px solid #fca5a5;
+				border-radius: 12px;
+				padding: 1.1rem 1.3rem;
+				margin-bottom: 1rem;
+			}
+			
+			.heavy-suspected-box h3 {
+				display: flex;
+				align-items: center;
+				gap: 0.4rem;
+				color: #991b1b;
+				font-size: 1rem;
+				font-weight: 800;
+				margin-bottom: 0.6rem;
+			}
+			
+			.worth-suspected-box {
+				background: #f8fafc;
+				border: 1px solid var(--border);
+				border-radius: 12px;
+				padding: 1.1rem 1.3rem;
+			}
+			
+			.worth-suspected-box h3 {
+				display: flex;
+				align-items: center;
+				gap: 0.4rem;
+				color: var(--text-muted);
+				font-size: 0.9rem;
+				font-weight: 700;
+				margin-bottom: 0.6rem;
+			}
+			
+			.pathogen-item {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				padding: 0.55rem 0.1rem;
+				font-size: 0.9rem;
+			}
+			
+			.pathogen-item + .pathogen-item {
+				border-top: 1px solid rgba(0,0,0,0.06);
+			}
+			
+			.pathogen-name { font-weight: 600; }
+			
+			.pathogen-score {
+				font-size: 0.78rem;
+				color: white;
+				font-weight: 700;
+				background: #991b1b;
+				padding: 0.15rem 0.55rem;
+				border-radius: 12px;
+			}
+			
+			.empty-state {
+				color: var(--text-muted);
+				font-size: 0.85rem;
+				font-style: italic;
+			}
+			
+			.loading-state {
+				text-align: center;
+				padding: 3.5rem 1rem;
+				color: var(--text-muted);
+			}
+			
+			.loading-state .spinner {
+				border-color: var(--border);
+				border-top-color: var(--primary);
+				width: 34px;
+				height: 34px;
+				margin-bottom: 1rem;
+			}
+			
+			.disclaimer {
+				text-align: center;
+				font-size: 0.75rem;
+				color: var(--text-muted);
+				margin-top: 1.5rem;
+				padding: 0 1rem;
+			}
+			
+			@media (max-width: 640px) {
+				.container { padding: 0 0.75rem 3rem; }
+				.card { padding: 1.1rem; }
+				.result-row { flex-direction: column; align-items: flex-start; gap: 0.35rem; }
+				.result-label { min-width: unset; }
+			}
+		</style>
+	</head>
+	<body>
+		<div class="top-bar"></div>
+		<div class="container">
+			<header>
+				<div class="header-icon">
+					<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+						<path d="M6 2v6a4 4 0 0 0 4 4h0a4 4 0 0 0 4-4V2"/>
+						<path d="M6 12v3a6 6 0 0 0 12 0v-3"/>
+						<circle cx="20" cy="10" r="2"/>
+					</svg>
+				</div>
+				<h1>Respira Empirical Diagnosis</h1>
+				<p>Fill in clinical observations to generate a diagnosis</p>
+			</header>
+
+			<div id="errorBanner" class="error-banner"></div>
+
+			<div id="loadingState" class="loading-state">
+				<div class="spinner"></div>
+				<p>Loading diagnosis form...</p>
+			</div>
+
+			<form id="diagnoseForm" style="display:none;">
+				<div class="card">
+					<h2><span class="step-num">1</span>
+					Clinical Observations</h2>
+					<div id="formFields"></div>
+				</div>
+				<button type="submit" class="btn btn-primary" id="submitBtn">
+					Submit Diagnosis
+				</button>
+			</form>
+
+			<div id="resultsSection" class="results-section">
+				<div class="card">
+					<h2><span class="step-num">✓</span>
+					Diagnosis Result</h2>
+					<div class="result-row">
+						<span class="result-label">Severity</span>
+						<span id="severityBadge" class="severity-badge"></span>
+					</div>
+					<div class="result-row" style="margin-top:0.5rem;">
+						<span class="result-label">Treatment Site</span>
+						<span id="treatmentBadge" class="treatment-badge"></span>
+					</div>
+				</div>
+
+				<div class="card">
+					<h2><span class="step-num">2</span>
+					Infection Assessment</h2>
+
+					<div id="heavySection" class="heavy-suspected-box">
+						<h3>Heavy Suspected</h3>
+						<div id="heavyList"></div>
+					</div>
+
+					<div id="worthSection" class="worth-suspected-box">
+						<h3>Worth Suspected</h3>
+						<div id="worthList"></div>
+					</div>
+				</div>
+
+				<button class="btn btn-primary" onclick="resetForm()" style="margin-top:0.5rem;">
+					New Diagnosis
+				</button>
+			</div>
+
+			<p class="disclaimer">For clinical decision support use only. Always correlate with clinical judgment.</p>
+		</div>
+
+		<script>
+			const API_BASE = 'https://clinical-service-respira.dev.localhost:7145';
+			const ENDPOINTS = {
+				form: `${API_BASE}/api/1.0/diagnose/empirical`,
+				diagnose: `${API_BASE}/api/1.0/diagnose/empirical`
+			};
+
+			let formVariables = [];
+
+			async function init() {
+				try {
+					console.log('Fetching form from:', ENDPOINTS.form);
+					const res = await fetch(ENDPOINTS.form);
+					console.log('Form response status:', res.status);
+					if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+					const raw = await res.text();
+					console.log('Form response body:', raw);
+					let body;
+					try { body = JSON.parse(raw); } catch { throw new Error('Invalid JSON from server: ' + raw.substring(0, 200)); }
+
+					if (body.statusCode !== 'SUCCESS') {
+						throw new Error(body.error?.description || 'Failed to load form');
+					}
+
+					const data = body.data;
+					formVariables = data.variables || data.Variables || [];
+					renderForm(formVariables);
+					document.getElementById('loadingState').style.display = 'none';
+					document.getElementById('diagnoseForm').style.display = '';
+				} catch (err) {
+					showError('Failed to load diagnosis form: ' + err.message);
+					document.getElementById('loadingState').innerHTML =
+					'<p style="color:var(--danger);">Failed to load form. Check console for details.</p>';
+				}
+			}
+
+			function renderForm(variables) {
+				const container = document.getElementById('formFields');
+				container.innerHTML = '';
+				variables.forEach(v => {
+					const group = document.createElement('div');
+					group.className = 'form-group';
+
+					if (v.valueType === 'Numeric' || v.ValueType === 'Numeric') {
+						const name = v.name || v.Name;
+						const desc = v.description || v.Description;
+						const unit = v.canonicalUnit || v.CanonicalUnit;
+						const id = v.id || v.Id;
+						group.className = 'form-group numeric-group';
+						group.innerHTML = `
+						<div class="numeric-field-info">
+						<label class="form-label" for="var-${id}">
+						${name}
+						</label>
+						<div class="form-desc">${desc}</div>
+						</div>
+						<div class="numeric-input-wrap">
+						<input
+						class="form-input"
+						type="number"
+						id="var-${id}"
+						step="any"
+						required
+						placeholder="Enter value"
+						data-variable-id="${id}"
+						data-value-type="Numeric"
+						>
+						${unit ? `<span class="numeric-unit-suffix">${unit}</span>` : ''}
+						</div>
+						`;
+					} else {
+						const name = v.name || v.Name;
+						const desc = v.description || v.Description;
+						const id = v.id || v.Id;
+						group.className = 'form-group bool-group';
+						group.innerHTML = `
+						<div class="bool-field-info">
+						<label class="form-label" for="var-${id}">
+						${name}
+						</label>
+						<div class="form-desc">${desc}</div>
+						</div>
+						<div class="segmented-toggle" data-toggle-for="${id}">
+						<button type="button" class="segment-btn active" data-value="false">No</button>
+						<button type="button" class="segment-btn" data-value="true">Yes</button>
+						</div>
+						<input
+						type="checkbox"
+						id="var-${id}"
+						data-variable-id="${id}"
+						data-value-type="Boolean"
+						style="display:none;"
+						>
+						<span id="label-${id}" style="display:none;">False</span>
+						`;
+					}
+					container.appendChild(group);
+				});
+
+			const boolVars = variables.filter(v => (v.valueType || v.ValueType) === 'Boolean');
+			boolVars.forEach(v => {
+				const id = v.id || v.Id;
+				const input = document.getElementById(`var-${id}`);
+				const label = document.getElementById(`label-${id}`);
+				input.addEventListener('change', () => {
+					label.textContent = input.checked ? 'True' : 'False';
+				});
+
+			const toggle = container.querySelector(`.segmented-toggle[data-toggle-for="${id}"]`);
+			if (toggle) {
+				const buttons = toggle.querySelectorAll('.segment-btn');
+				buttons.forEach(btn => {
+					btn.addEventListener('click', () => {
+						const newValue = btn.getAttribute('data-value') === 'true';
+						if (input.checked === newValue) return;
+						input.checked = newValue;
+						buttons.forEach(b => b.classList.toggle('active', b === btn));
+						input.dispatchEvent(new Event('change'));
+					});
+			});
+	}
+});
+}
+
+document.getElementById('diagnoseForm').addEventListener('submit', async (e) => {
+	e.preventDefault();
+	hideError();
+
+	const observations = formVariables.map(v => {
+		const id = v.id || v.Id;
+		const vt = v.valueType || v.ValueType;
+		const input = document.getElementById(`var-${id}`);
+		if (vt === 'Numeric') {
+			return { variableId: id, value: input.value };
+		} else {
+			return { variableId: id, value: input.checked ? 'true' : 'false' };
+		}
+	});
+
+const btn = document.getElementById('submitBtn');
+btn.disabled = true;
+btn.innerHTML = '<span class="spinner"></span> Diagnosing...';
+
+try {
+	console.log('Sending observations:', JSON.stringify(observations, null, 2));
+	const res = await fetch(ENDPOINTS.diagnose, {
+		method: 'POST',
+		headers: { 'Content-Type': 'application/json' },
+		body: JSON.stringify(observations)
+	});
+console.log('Response status:', res.status);
+const raw = await res.text();
+console.log('Response body:', raw);
+let body;
+try { body = JSON.parse(raw); } catch { throw new Error('Invalid JSON from server: ' + raw.substring(0, 200)); }
+
+if (body.statusCode !== 'SUCCESS') {
+	throw new Error(body.error?.description || 'Diagnosis failed');
+}
+showResults(body.data);
+} catch (err) {
+	console.error('Diagnosis error:', err);
+	showError('Diagnosis failed: ' + err.message);
+} finally {
+	btn.disabled = false;
+	btn.innerHTML = 'Submit Diagnosis';
+}
+});
+
+function showResults(data) {
+	document.getElementById('diagnoseForm').style.display = 'none';
+	document.getElementById('resultsSection').style.display = 'block';
+
+	const sev = data.severity || data.Severity;
+	const badge = document.getElementById('severityBadge');
+	badge.textContent = sev;
+	badge.className = 'severity-badge severity-' + sev.toLowerCase();
+
+	const site = data.treatmentSite || data.TreatmentSite;
+	const siteBadge = document.getElementById('treatmentBadge');
+	siteBadge.textContent = site === 'IntensiveCareUnit' ? 'ICU' : site;
+
+	const heavySuspected = data.heavySuspected || data.HeavySuspected || [];
+	const heavyList = document.getElementById('heavyList');
+	if (heavySuspected.length > 0) {
+		heavyList.innerHTML = heavySuspected
+		.sort((a, b) => (b.score || b.Score) - (a.score || a.Score))
+		.map(p => `
+			<div class="pathogen-item">
+			<span class="pathogen-name">${p.name || p.Name}</span>
+			<span class="pathogen-score">Score: ${(p.score || p.Score).toFixed(2)}</span>
+			</div>
+			`).join('');
+		} else {
+			heavyList.innerHTML = '<div class="empty-state">No heavy suspected pathogens</div>';
+		}
+
+		const worthSuspected = data.worthSuspected || data.WorthSuspected || [];
+		const worthList = document.getElementById('worthList');
+		if (worthSuspected.length > 0) {
+			worthList.innerHTML = worthSuspected
+			.map(p => `
+				<div class="pathogen-item">
+				<span class="pathogen-name">${p.name || p.Name}</span>
+				</div>
+				`).join('');
+			} else {
+				worthList.innerHTML = '<div class="empty-state">No worth suspected pathogens</div>';
+			}
+
+			window.scrollTo({ top: 0, behavior: 'smooth' });
+		}
+
+		function resetForm() {
+			document.getElementById('resultsSection').style.display = 'none';
+			document.getElementById('diagnoseForm').style.display = '';
+			hideError();
+			window.scrollTo({ top: 0, behavior: 'smooth' });
+		}
+
+		function showError(msg) {
+			const banner = document.getElementById('errorBanner');
+			banner.textContent = msg;
+			banner.style.display = 'block';
+		}
+
+		function hideError() {
+			document.getElementById('errorBanner').style.display = 'none';
+		}
+
+		init();
+		</script>
+	</body>
+</html>

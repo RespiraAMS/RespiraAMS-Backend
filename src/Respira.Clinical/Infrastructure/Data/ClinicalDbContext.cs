@@ -139,6 +139,12 @@ namespace Respira.Clinical.Infrastructure.Data
             modelBuilder.Entity<ScoreMetrics>().HasQueryFilter(x => !x.IsDeleted);
             modelBuilder.Entity<ScoringRule>().HasQueryFilter(x => !x.IsDeleted);
             modelBuilder.Entity<SuspectedCause>().HasQueryFilter(x => !x.IsDeleted);
+            modelBuilder.Entity<MedicineComposition>().HasQueryFilter(x => !x.IsDeleted);
+            modelBuilder.Entity<Treatment>().HasQueryFilter(x => !x.IsDeleted);
+            modelBuilder.Entity<Antibiotic>().HasQueryFilter(x => !x.IsDeleted);
+            modelBuilder.Entity<AntibioticGroup>().HasQueryFilter(x => !x.IsDeleted);
+            modelBuilder.Entity<Dosage>().HasQueryFilter(x => !x.IsDeleted);
+
 
             // Config on clinical variable
             modelBuilder.Entity<ClinicalVariable>().ToTable("clinical_variables");
@@ -170,6 +176,9 @@ namespace Respira.Clinical.Infrastructure.Data
 
             // Config on score metrics
             modelBuilder.Entity<ScoreMetrics>().ToTable("score_metrics");
+
+            // Config on suspected cause
+            modelBuilder.Entity<SuspectedCause>().ToTable("suspected_causes");
 
             // Config on scoring rule
             modelBuilder.Entity<ScoringRule>().ToTable("scoring_rules");
