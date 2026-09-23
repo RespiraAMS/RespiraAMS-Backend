@@ -25,9 +25,9 @@ namespace Respira.Clinical.Domain.Entities
         public IEnumerable<ClinicalVariable> Variables => Formula.Variables;
 
         /// <summary>
-        /// This is just a parameterless constructor for EF Core
+        /// This is just a parameterless constructor for EF Core stuff
         /// </summary>
-        private Criterion()
+        public Criterion()
         {
             Name = string.Empty;
             Formula = new BooleanConstantFormula(true);
