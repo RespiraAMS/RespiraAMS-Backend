@@ -37,7 +37,7 @@ namespace Respira.Clinical.Domain.Services
         /// <exception cref="InvalidOperationException">Throw if received invalid score</exception>
         public MetricsSeverityDiagnosis Curb65(int score, bool isBunMissing = false)
         {
-            const string code = "CURB-65";
+            string code = isBunMissing ? "CRB-65" : "CURB-65";
             // If BUN is missing (to be more exact, urea), then this would still be valid
             // (CRB-65, which has different value matching)
             if (isBunMissing)
@@ -48,7 +48,7 @@ namespace Respira.Clinical.Domain.Services
                     0 => new MetricsSeverityDiagnosis(code, score, Severity.Mild, TreatmentSite.Outpatient),
                     1 or 2 => new MetricsSeverityDiagnosis(code, score, Severity.Moderate, TreatmentSite.Inpatient),
                     3 or 4 => new MetricsSeverityDiagnosis(code, score, Severity.Severe, TreatmentSite.Inpatient),
-                    _ => throw new InvalidOperationException($"Unexpected CURB-65 score: {score}"),
+                    _ => throw new InvalidOperationException($"Unexpected CRB-65 score: {score}"),
                 };
             }
 
@@ -103,7 +103,7 @@ namespace Respira.Clinical.Domain.Services
         /// </summary>
         /// <param name="score">AST score</param>
         /// <returns>True if need ICU, false otherwise</returns>
-        public bool Ast(int score)
+        public bool Ats(int score)
         {
             // AST metrics actually used to check if you need ICU or not
             // Since ICU case is actually severe already, we will return
@@ -144,7 +144,7 @@ namespace Respira.Clinical.Domain.Services
                 else if (metric.Code.Equals("IDSA/ATS"))
                 {
                     var score = (int)CalculateMetricsScore(metric, observations);
-                    var needIcu = Ast(score);
+                    var needIcu = Ats(score);
                     if (needIcu)
                     {
                         // If you need ICU, then the severity is obviously severe

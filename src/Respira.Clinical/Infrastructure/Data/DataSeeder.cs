@@ -44,16 +44,45 @@ namespace Respira.Clinical.Infrastructure.Data
 
         private static SeedData MapToDomain(SeedDataDto dto)
         {
-            var variables = dto.ClinicalVariables.Select(v =>
+            var variables = dto.ClinicalVariables.Select<ClinicalVariableDto, ClinicalVariable>(v =>
             {
                 var variableId = GenerateId(v.Id);
-                return new ClinicalVariable
+                if (v.AcceptedRange is not null && v.AcceptedValues.Count > 0)
+                {
+                    throw new InvalidOperationException("Seed data: accepted range and accepted values are mutually exclusive");
+                }
+
+                if (v.AcceptedRange is not null)
+                {
+                    return new NumericClinicalVariable
+                    {
+                        Id = variableId,
+                        Name = v.Name,
+                        Code = v.Code,
+                        Description = v.Description,
+                        CanonicalUnit = v.CanonicalUnit,
+                        AcceptedRange = MapRange(v.AcceptedRange)!,
+                    };
+                }
+
+                if (v.AcceptedValues.Count > 0)
+                {
+                    return new CategoricalClinicalVariable([.. v.AcceptedValues])
+                    {
+                        Id = variableId,
+                        Name = v.Name,
+                        Code = v.Code,
+                        Description = v.Description,
+                        CanonicalUnit = v.CanonicalUnit,
+                    };
+                }
+
+                return new BooleanClinicalVariable
                 {
                     Id = variableId,
                     Name = v.Name,
                     Code = v.Code,
                     Description = v.Description,
-                    ValueType = ParseEnum(v.ValueType, ClinicalValueType.Boolean),
                     CanonicalUnit = v.CanonicalUnit,
                 };
             }).ToList();
@@ -221,6 +250,10 @@ namespace Respira.Clinical.Infrastructure.Data
                 if (dto.ResultType == "Boolean")
                 {
                     return new BooleanConstantFormula(element.GetBoolean());
+                }
+                if (dto.ResultType == "String")
+                {
+                    return new CategoricalConstantFormula(element.GetString() ?? "");
                 }
                 return new NumericConstantFormula(element.GetDecimal());
             }

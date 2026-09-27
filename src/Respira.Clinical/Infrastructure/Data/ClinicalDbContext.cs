@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Storage;
 using Respira.Clinical.Application.Contracts.Data;
 using Respira.Clinical.Domain.Entities;
 using Respira.Clinical.Domain.Models;
-using Respira.Infrastructure.Util.Database;
+using Respira.Clinical.Infrastructure.Util.Database;
 using Respira.ServiceDefaults.Models;
 
 namespace Respira.Clinical.Infrastructure.Data
@@ -147,8 +147,16 @@ namespace Respira.Clinical.Infrastructure.Data
 
 
             // Config on clinical variable
-            modelBuilder.Entity<ClinicalVariable>().ToTable("clinical_variables");
-            modelBuilder.Entity<ClinicalVariable>().Property(x => x.ValueType).HasConversion<string>();
+            modelBuilder.Entity<ClinicalVariable>()
+                .UseTphMappingStrategy()
+                .ToTable("clinical_variables")
+                .Ignore(x => x.ValueType)
+                .HasDiscriminator<string>("value_type")
+                .HasValue<BooleanClinicalVariable>("boolean_clinical_variable")
+                .HasValue<NumericClinicalVariable>("numeric_clinical_variable")
+                .HasValue<CategoricalClinicalVariable>("categorical_clinical_variable");
+            modelBuilder.Entity<NumericClinicalVariable>()
+                .OwnsOne(x => x.AcceptedRange, builder => builder.ToJson());
 
             modelBuilder.Entity<Criterion>().ToTable("criteria");
             modelBuilder.Entity<Criterion>().Ignore(x => x.Variables);

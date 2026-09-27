@@ -1,4 +1,4 @@
-using Respira.Clinical.Domain.Enums;
+using Respira.Clinical.Domain.Models;
 using Respira.ServiceDefaults.Contracts.CQRS;
 
 namespace Respira.Clinical.Application.Features.Diagnosis.EmpiricalDiagnosis.Diagnose
@@ -14,8 +14,7 @@ namespace Respira.Clinical.Application.Features.Diagnosis.EmpiricalDiagnosis.Dia
 
     public record DiagnoseResult
     {
-        public required Severity Severity { get; set; }
-        public required TreatmentSite TreatmentSite { get; set; }
+        public required SeverityDiagnosis SeverityDiagnosis { get; set; }
         public required IEnumerable<PathogenResult> WorthSuspected { get; set; }
         public required IEnumerable<ScoredPathogenResult> HeavySuspected { get; set; }
     }

@@ -6,8 +6,9 @@ using Respira.Clinical.Domain.Models;
 using Respira.Clinical.Domain.Services;
 using Respira.ServiceDefaults.Contracts.Results;
 using Xunit;
+using Range = Respira.Clinical.Domain.Models.Range;
 
-namespace Respira.Domain.Test.Services
+namespace Respira.Clinical.Domain.Test.Services
 {
     public class DiagnoseServiceTest
     {
@@ -23,544 +24,612 @@ namespace Respira.Domain.Test.Services
         private static ClinicalContext CreateContext()
         {
             List<ClinicalVariable> variables = [
-                new ClinicalVariable
+                new NumericClinicalVariable
                 {
                     Name = "Age",
                     Code = "AGE",
                     Description = "Patient age",
-                    ValueType = ClinicalValueType.Numeric,
-                    CanonicalUnit = "year"
+                    CanonicalUnit = "year",
+                    AcceptedRange = new Range {
+                        Min = 0m,
+                        Max = 120m,
+                        IsMinExclusive = true,
+                        IsMaxExclusive = false,
+                        Unit = "year"
+                    },
                 },
 
-                new ClinicalVariable
+                new BooleanClinicalVariable
                 {
                     Name = "Female sex",
                     Code = "FEMALE",
                     Description = "Is the patient female",
-                    ValueType = ClinicalValueType.Boolean,
                     CanonicalUnit = null
                 },
 
-                new ClinicalVariable
+                new NumericClinicalVariable
                 {
                     Name = "Height",
                     Code = "HEIGHT",
                     Description = "Patient height",
-                    ValueType = ClinicalValueType.Numeric,
-                    CanonicalUnit = "cm"
+                    CanonicalUnit = "cm",
+                    AcceptedRange = new Range {
+                        Min = 0m,
+                        Max = 250m,
+                        IsMinExclusive = true,
+                        IsMaxExclusive = false,
+                        Unit = "cm"
+                    },
                 },
 
-                new ClinicalVariable
+                new NumericClinicalVariable
                 {
                     Name = "Weight",
                     Code = "WEIGHT",
                     Description = "Patient weight",
-                    ValueType = ClinicalValueType.Numeric,
-                    CanonicalUnit = "kg"
+                    CanonicalUnit = "kg",
+                    AcceptedRange = new Range {
+                        Min = 0m,
+                        // Apparently, the current heaviest person ever recorded is around 600kg,
+                        // so we'll set the max to 1000kg
+                        Max = 1000m,
+                        IsMinExclusive = true,
+                        IsMaxExclusive = false,
+                        Unit = "kg"
+                    },
                 },
 
-                new ClinicalVariable
+                new BooleanClinicalVariable
                 {
                     Name = "Live at nursing home",
                     Code = "NURSING-HOME-RESIDENCE",
                     Description = "Does the patient live at a nursing home",
-                    ValueType = ClinicalValueType.Boolean,
                     CanonicalUnit = null
                 },
 
-                new ClinicalVariable
+                new BooleanClinicalVariable
                 {
                     Name = "Has neoplastic disease",
                     Code = "NEOPLASTIC",
                     Description = "Does the patient have neoplastic disease",
-                    ValueType = ClinicalValueType.Boolean,
                     CanonicalUnit = null
                 },
 
-                new ClinicalVariable
+                new BooleanClinicalVariable
                 {
                     Name = "Has liver disease history",
                     Code = "LIVER",
                     Description = "Does the patient have liver disease history",
-                    ValueType = ClinicalValueType.Boolean,
                     CanonicalUnit = null
                 },
 
-                new ClinicalVariable
+                new BooleanClinicalVariable
                 {
                     Name = "Has congestive heart failure (CHF)",
                     Code = "CHF",
                     Description = "Does the patient have congestive heart failure",
-                    ValueType = ClinicalValueType.Boolean,
                     CanonicalUnit = null
                 },
 
-                new ClinicalVariable
+                new BooleanClinicalVariable
                 {
                     Name = "Has cerebrovascular disease history",
                     Code = "CEREBROVASCULAR",
                     Description = "Does the patient have cerebrovascular disease history",
-                    ValueType = ClinicalValueType.Boolean,
                     CanonicalUnit = null
                 },
 
-                new ClinicalVariable
+                new BooleanClinicalVariable
                 {
                     Name = "Has renal disease history",
                     Code = "RENAL",
                     Description = "Does the patient have renal disease history",
-                    ValueType = ClinicalValueType.Boolean,
                     CanonicalUnit = null
                 },
 
-                new ClinicalVariable
+                new BooleanClinicalVariable
                 {
                     Name = "Confusion",
                     Code = "CONFUSION",
                     Description = "Does the patient have altered mental status",
-                    ValueType = ClinicalValueType.Boolean,
                     CanonicalUnit = null
                 },
 
-                new ClinicalVariable
+                new NumericClinicalVariable
                 {
                     Name = "Respiratory rate",
                     Code = "RR",
                     Description = "Patient respiratory rate",
-                    ValueType = ClinicalValueType.Numeric,
-                    CanonicalUnit = "breaths/min"
+                    CanonicalUnit = "breaths/min",
+                    AcceptedRange = new Range {
+                        Min = 0m,
+                        Max = decimal.MaxValue,
+                        IsMinExclusive = true,
+                        IsMaxExclusive = false,
+                        Unit = "breaths/min"
+                    },
                 },
 
-                new ClinicalVariable
+                new NumericClinicalVariable
                 {
                     Name = "Systolic blood pressure",
                     Code = "SBP",
                     Description = "Patient systolic blood pressure",
-                    ValueType = ClinicalValueType.Numeric,
-                    CanonicalUnit = "mmHg"
+                    CanonicalUnit = "mmHg",
+                    AcceptedRange = new Range {
+                        Min = 0m,
+                        Max = decimal.MaxValue,
+                        IsMinExclusive = true,
+                        IsMaxExclusive = false,
+                        Unit = "mmHg"
+                    },
                 },
 
-                new ClinicalVariable
+                new NumericClinicalVariable
                 {
                     Name = "Diastolic blood pressure",
                     Code = "DBP",
                     Description = "Patient diastolic blood pressure",
-                    ValueType = ClinicalValueType.Numeric,
-                    CanonicalUnit = "mmHg"
+                    CanonicalUnit = "mmHg",
+                    AcceptedRange = new Range {
+                        Min = 0m,
+                        Max = decimal.MaxValue,
+                        IsMinExclusive = true,
+                        IsMaxExclusive = false,
+                        Unit = "mmHg"
+                    },
                 },
 
-                new ClinicalVariable
+                new NumericClinicalVariable
                 {
                     Name = "Temperature",
                     Code = "TEMPERATURE",
                     Description = "Patient body temperature",
-                    ValueType = ClinicalValueType.Numeric,
-                    CanonicalUnit = "Celcius"
+                    CanonicalUnit = "Celcius",
+                    AcceptedRange = new Range {
+                        Min = 0m,
+                        Max = decimal.MaxValue,
+                        IsMinExclusive = true,
+                        IsMaxExclusive = false,
+                        Unit = "Celcius"
+                    },
                 },
 
-                new ClinicalVariable
+                new NumericClinicalVariable
                 {
                     Name = "Pulse rate",
                     Code = "PULSE",
                     Description = "Patient pulse rate",
-                    ValueType = ClinicalValueType.Numeric,
-                    CanonicalUnit = "bpm"
+                    CanonicalUnit = "bpm",
+                    AcceptedRange = new Range {
+                        Min = 0m,
+                        Max = decimal.MaxValue,
+                        IsMinExclusive = true,
+                        IsMaxExclusive = false,
+                        Unit = "bpm"
+                    },
                 },
 
-                new ClinicalVariable
+                new NumericClinicalVariable
                 {
                     Name = "Blood urea nitrogen",
                     Code = "BUN",
                     Description = "Blood urea nitrogen concentration",
-                    ValueType = ClinicalValueType.Numeric,
-                    CanonicalUnit = "mg/dL"
+                    CanonicalUnit = "mg/dL",
+                    AcceptedRange = new Range {
+                        Min = 0m,
+                        Max = decimal.MaxValue,
+                        IsMinExclusive = true,
+                        IsMaxExclusive = false,
+                        Unit = "mg/dL"
+                    },
                 },
 
-                new ClinicalVariable
+                new NumericClinicalVariable
                 {
                     Name = "pH",
                     Code = "PH",
                     Description = "Patient blood pH",
-                    ValueType = ClinicalValueType.Numeric,
-                    CanonicalUnit = null
+                    CanonicalUnit = null,
+                    AcceptedRange = new Range {
+                        Min = 0m,
+                        Max = 14m,
+                        IsMinExclusive = false,
+                        IsMaxExclusive = false,
+                        Unit = "pH"
+                    },
                 },
 
-                new ClinicalVariable
+                new NumericClinicalVariable
                 {
                     Name = "Hematocrit",
                     Code = "HEMATOCRIT",
                     Description = "Patient hematocrit",
-                    ValueType = ClinicalValueType.Numeric,
-                    CanonicalUnit = "%"
+                    CanonicalUnit = "%",
+                    AcceptedRange = new Range {
+                        Min = 0m,
+                        Max = 100m,
+                        IsMinExclusive = false,
+                        IsMaxExclusive = false,
+                        Unit = "%"
+                    },
                 },
 
-                new ClinicalVariable
+                new NumericClinicalVariable
                 {
                     Name = "Blood glucose",
                     Code = "GLUCOSE",
                     Description = "Patient blood glucose",
-                    ValueType = ClinicalValueType.Numeric,
-                    CanonicalUnit = "mg/dL"
+                    CanonicalUnit = "mg/dL",
+                    AcceptedRange = new Range {
+                        Min = 0m,
+                        Max = decimal.MaxValue,
+                        IsMinExclusive = true,
+                        IsMaxExclusive = false,
+                        Unit = "mg/dL"
+                    },
                 },
 
-                new ClinicalVariable
+                new NumericClinicalVariable
                 {
                     Name = "Blood sodium",
                     Code = "NA",
                     Description = "Patient blood sodium concentration",
-                    ValueType = ClinicalValueType.Numeric,
-                    CanonicalUnit = "mmol/L"
+                    CanonicalUnit = "mmol/L",
+                    AcceptedRange = new Range {
+                        Min = 0m,
+                        Max = decimal.MaxValue,
+                        IsMinExclusive = true,
+                        IsMaxExclusive = false,
+                        Unit = "mmol/L"
+                    },
                 },
 
-                new ClinicalVariable
+                new NumericClinicalVariable
                 {
                     Name = "White blood cell count",
                     Code = "WBC",
                     Description = "Patient white blood cell count",
-                    ValueType = ClinicalValueType.Numeric,
-                    CanonicalUnit = "cells/mm3"
+                    CanonicalUnit = "cells/mm3",
+                    AcceptedRange = new Range {
+                        Min = 0,
+                        Max = decimal.MaxValue,
+                        IsMinExclusive = true,
+                        IsMaxExclusive = false,
+                        Unit = "cells/mm3"
+                    }
                 },
 
-                new ClinicalVariable
+                new NumericClinicalVariable
                 {
                     Name = "Platelet count",
                     Code = "PLATELET",
                     Description = "Patient platelet count",
-                    ValueType = ClinicalValueType.Numeric,
-                    CanonicalUnit = "cells/mm3"
+                    CanonicalUnit = "cells/mm3",
+                    AcceptedRange = new Range {
+                        Min = 0,
+                        Max = decimal.MaxValue,
+                        IsMinExclusive = true,
+                        IsMaxExclusive = false,
+                        Unit = "cells/mm3"
+                    }
                 },
 
-                new ClinicalVariable
+                new NumericClinicalVariable
                 {
                     Name = "Partial pressure of arterial oxygen (PaO₂)",
                     Code = "PAO2",
                     Description = "Arterial partial pressure of oxygen",
-                    ValueType = ClinicalValueType.Numeric,
-                    CanonicalUnit = "mmHg"
+                    CanonicalUnit = "mmHg",
+                    AcceptedRange = new Range {
+                        Min = 0,
+                        Max = decimal.MaxValue,
+                        IsMinExclusive = true,
+                        IsMaxExclusive = false,
+                        Unit = "mmHg"
+                    }
                 },
 
-                new ClinicalVariable
+                new NumericClinicalVariable
                 {
                     Name = "Fraction of inspired oxygen (FiO₂)",
                     Code = "FIO2",
                     Description = "Fraction of inspired oxygen",
-                    ValueType = ClinicalValueType.Numeric,
-                    CanonicalUnit = null // FiO2 is normally used as fraction between 0 and 1 than express as a percentage
+                    CanonicalUnit = null, // FiO2 is normally used as fraction between 0 and 1 than express as a percentage
+                    AcceptedRange = new Range {
+                        Min = 0,
+                        Max = 1,
+                        IsMinExclusive = false,
+                        IsMaxExclusive = false,
+                        Unit = null
+                    }
                 },
 
-                new ClinicalVariable
+                new NumericClinicalVariable
                 {
                     Name = "Peripheral oxygen saturation (SpO2)",
                     Code = "SPO2",
                     Description = "Peripheral oxygen saturation",
-                    ValueType = ClinicalValueType.Numeric,
-                    CanonicalUnit = "%"
+                    CanonicalUnit = "%",
+                    AcceptedRange = new Range {
+                        Min = 0,
+                        Max = 100,
+                        IsMinExclusive = false,
+                        IsMaxExclusive = false,
+                        Unit = "%"
+                    }
                 },
 
-                new ClinicalVariable
+                new BooleanClinicalVariable
                 {
                     Name = "Has pleural effusion on X-Ray",
                     Code = "PLEURAL-EFFUSION",
                     Description = "Does the patient have pleural effusion on X-Ray",
-                    ValueType = ClinicalValueType.Boolean,
                     CanonicalUnit = null
                 },
 
-                new ClinicalVariable
+                new BooleanClinicalVariable
                 {
                     Name = "Multilobar pulmonary lesions on chest X-ray",
                     Code = "MULTILOBAR-PULMONARY-LESION",
                     Description = "Does the patient have multilobar pulmonary lesions on chest X-ray",
-                    ValueType = ClinicalValueType.Boolean,
                     CanonicalUnit = null
                 },
 
-                new ClinicalVariable
+                new BooleanClinicalVariable
                 {
                     Name = "Hypotension requiring aggressive fluid resuscitation",
                     Code = "HYPOTENSION",
                     Description = "Does the patient have hypotension requiring aggressive fluid resuscitation",
-                    ValueType = ClinicalValueType.Boolean,
                     CanonicalUnit = null
                 },
 
-                new ClinicalVariable
+                new BooleanClinicalVariable
                 {
                     Name = "Requires mechanical ventilation",
                     Code = "REQUIRES-MECHANICAL-VENTILATION",
                     Description = "Does the patient require invasive mechanical ventilation",
-                    ValueType = ClinicalValueType.Boolean,
                     CanonicalUnit = null
                 },
 
-                new ClinicalVariable
+                new BooleanClinicalVariable
                 {
                     Name = "Septic shock requiring vasopressor support",
                     Code = "SEPTIC-SHOCK",
                     Description = "Does the patient have septic shock requiring vasopressors",
-                    ValueType = ClinicalValueType.Boolean,
                     CanonicalUnit = null
                 },
 
                 // ---- Risk-factor clinical variables ----
-                new ClinicalVariable
+                new BooleanClinicalVariable
                 {
                     Name = "Alcohol abuse",
                     Code = "ALCOHOL-ABUSE",
                     Description = "History of alcohol abuse",
-                    ValueType = ClinicalValueType.Boolean,
                     CanonicalUnit = null
                 },
 
-                new ClinicalVariable
+                new BooleanClinicalVariable
                 {
                     Name = "Smoking",
                     Code = "SMOKING",
                     Description = "Current or former smoker",
-                    ValueType = ClinicalValueType.Boolean,
                     CanonicalUnit = null
                 },
 
-                new ClinicalVariable
+                new BooleanClinicalVariable
                 {
                     Name = "Chronic obstructive pulmonary disease",
                     Code = "COPD",
                     Description = "Has chronic obstructive pulmonary disease (COPD) or other chronic lung disease",
-                    ValueType = ClinicalValueType.Boolean,
                     CanonicalUnit = null
                 },
 
-                new ClinicalVariable
+                new BooleanClinicalVariable
                 {
                     Name = "Severe chronic obstructive pulmonary disease",
                     Code = "SEVERE-COPD",
                     Description = "Has severe COPD (FEV1 < 30%)",
-                    ValueType = ClinicalValueType.Boolean,
                     CanonicalUnit = null
                 },
 
-                new ClinicalVariable
+                new BooleanClinicalVariable
                 {
                     Name = "Malnutrition",
                     Code = "MALNUTRITION",
                     Description = "Has malnutrition",
-                    ValueType = ClinicalValueType.Boolean,
                     CanonicalUnit = null
                 },
 
-                new ClinicalVariable
+                new BooleanClinicalVariable
                 {
                     Name = "Mental illness",
                     Code = "MENTAL-ILLNESS",
                     Description = "Has mental illness",
-                    ValueType = ClinicalValueType.Boolean,
                     CanonicalUnit = null
                 },
 
-                new ClinicalVariable
+                new BooleanClinicalVariable
                 {
                     Name = "Immunocompromised",
                     Code = "IMMUNOCOMPROMISED",
                     Description = "Is immunocompromised",
-                    ValueType = ClinicalValueType.Boolean,
                     CanonicalUnit = null
                 },
 
-                new ClinicalVariable
+                new BooleanClinicalVariable
                 {
                     Name = "HIV infection",
                     Code = "HIV",
                     Description = "Has HIV infection",
-                    ValueType = ClinicalValueType.Boolean,
                     CanonicalUnit = null
                 },
 
-                new ClinicalVariable
+                new BooleanClinicalVariable
                 {
                     Name = "Organ transplant",
                     Code = "ORGAN-TRANSPLANT",
                     Description = "Has had an organ transplant",
-                    ValueType = ClinicalValueType.Boolean,
                     CanonicalUnit = null
                 },
 
-                new ClinicalVariable
+                new BooleanClinicalVariable
                 {
                     Name = "Diabetes mellitus",
                     Code = "DIABETES",
                     Description = "Has diabetes mellitus",
-                    ValueType = ClinicalValueType.Boolean,
                     CanonicalUnit = null
                 },
 
-                new ClinicalVariable
+                new BooleanClinicalVariable
                 {
                     Name = "Influenza infection",
                     Code = "INFLUENZA",
                     Description = "Has influenza infection",
-                    ValueType = ClinicalValueType.Boolean,
                     CanonicalUnit = null
                 },
 
-                new ClinicalVariable
+                new BooleanClinicalVariable
                 {
                     Name = "Measles infection",
                     Code = "MEASLES",
                     Description = "Has measles infection",
-                    ValueType = ClinicalValueType.Boolean,
                     CanonicalUnit = null
                 },
 
-                new ClinicalVariable
+                new BooleanClinicalVariable
                 {
                     Name = "IV drug use",
                     Code = "IV-DRUG-USE",
                     Description = "History of intravenous drug use",
-                    ValueType = ClinicalValueType.Boolean,
                     CanonicalUnit = null
                 },
 
-                new ClinicalVariable
+                new BooleanClinicalVariable
                 {
                     Name = "Prior MRSA infection",
                     Code = "PRIOR-MRSA-INFECTION",
                     Description = "History of MRSA infection",
-                    ValueType = ClinicalValueType.Boolean,
                     CanonicalUnit = null
                 },
 
-                new ClinicalVariable
+                new BooleanClinicalVariable
                 {
                     Name = "Recent hospitalization with IV antibiotics",
                     Code = "HOSPITALIZATION-90D",
                     Description = "Hospitalization and IV antibiotics within 90 days",
-                    ValueType = ClinicalValueType.Boolean,
                     CanonicalUnit = null
                 },
 
-                new ClinicalVariable
+                new BooleanClinicalVariable
                 {
                     Name = "ICU stay",
                     Code = "ICU-STAY",
                     Description = "Recent ICU stay",
-                    ValueType = ClinicalValueType.Boolean,
                     CanonicalUnit = null
                 },
 
-                new ClinicalVariable
+                new BooleanClinicalVariable
                 {
                     Name = "Intubation",
                     Code = "INTUBATION",
                     Description = "Recent endotracheal intubation",
-                    ValueType = ClinicalValueType.Boolean,
                     CanonicalUnit = null
                 },
 
-                new ClinicalVariable
+                new BooleanClinicalVariable
                 {
                     Name = "Stroke",
                     Code = "STROKE",
                     Description = "Has stroke history",
-                    ValueType = ClinicalValueType.Boolean,
                     CanonicalUnit = null
                 },
 
-                new ClinicalVariable
+                new BooleanClinicalVariable
                 {
                     Name = "Epilepsy",
                     Code = "EPILEPSY",
                     Description = "Has epilepsy",
-                    ValueType = ClinicalValueType.Boolean,
                     CanonicalUnit = null
                 },
 
-                new ClinicalVariable
+                new BooleanClinicalVariable
                 {
                     Name = "Anesthesia",
                     Code = "ANESTHESIA",
                     Description = "Recent anesthesia",
-                    ValueType = ClinicalValueType.Boolean,
                     CanonicalUnit = null
                 },
 
-                new ClinicalVariable
+                new BooleanClinicalVariable
                 {
                     Name = "Prior antibiotic use",
                     Code = "PRIOR-ANTIBIOTIC-USE",
                     Description = "Recent antibiotic use",
-                    ValueType = ClinicalValueType.Boolean,
                     CanonicalUnit = null
                 },
 
-                new ClinicalVariable
+                new BooleanClinicalVariable
                 {
                     Name = "Cystic fibrosis",
                     Code = "CYSTIC-FIBROSIS",
                     Description = "Has cystic fibrosis",
-                    ValueType = ClinicalValueType.Boolean,
                     CanonicalUnit = null
                 },
 
-                new ClinicalVariable
+                new BooleanClinicalVariable
                 {
                     Name = "Bronchiectasis",
                     Code = "BRONCHIECTASIS",
                     Description = "Has bronchiectasis",
-                    ValueType = ClinicalValueType.Boolean,
                     CanonicalUnit = null
                 },
 
-                new ClinicalVariable
+                new BooleanClinicalVariable
                 {
                     Name = "Lung cancer",
                     Code = "LUNG-CANCER",
                     Description = "Has lung cancer",
-                    ValueType = ClinicalValueType.Boolean,
                     CanonicalUnit = null
                 },
 
-                new ClinicalVariable
+                new BooleanClinicalVariable
                 {
                     Name = "Prior Pseudomonas infection",
                     Code = "PRIOR-PSEUDOMONAS",
                     Description = "History of Pseudomonas aeruginosa infection",
-                    ValueType = ClinicalValueType.Boolean,
                     CanonicalUnit = null
                 },
 
-                new ClinicalVariable
+                new BooleanClinicalVariable
                 {
                     Name = "Aspiration pneumonia",
                     Code = "ASPIRATION-PNEUMONIA",
                     Description = "Has aspiration pneumonia",
-                    ValueType = ClinicalValueType.Boolean,
                     CanonicalUnit = null
                 },
 
-                new ClinicalVariable
+                new BooleanClinicalVariable
                 {
                     Name = "Oropharyngeal anaerobic infection",
                     Code = "OROPHARYNGEAL-ANAEROBIC",
                     Description = "Has oropharyngeal anaerobic infection",
-                    ValueType = ClinicalValueType.Boolean,
                     CanonicalUnit = null
                 },
 
-                new ClinicalVariable
+                new BooleanClinicalVariable
                 {
                     Name = "Severe internal medicine disease",
                     Code = "SEVERE-INTERNAL-DISEASE",
                     Description = "Has severe internal medicine disease",
-                    ValueType = ClinicalValueType.Boolean,
                     CanonicalUnit = null
                 },
 
-                new ClinicalVariable
+                new BooleanClinicalVariable
                 {
                     Name = "Pulmonary infarction",
                     Code = "PULMONARY-INFARCTION",
                     Description = "Has pulmonary infarction",
-                    ValueType = ClinicalValueType.Boolean,
                     CanonicalUnit = null
                 },
             ];

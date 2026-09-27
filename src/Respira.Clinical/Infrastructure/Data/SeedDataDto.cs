@@ -20,6 +20,8 @@ namespace Respira.Clinical.Infrastructure.Data
         public string Description { get; init; } = string.Empty;
         public string ValueType { get; init; } = string.Empty;
         public string? CanonicalUnit { get; init; }
+        public RangeDto? AcceptedRange { get; init; }
+        public ICollection<string> AcceptedValues { get; init; } = [];
     }
 
     public record ScoreMetricsDto

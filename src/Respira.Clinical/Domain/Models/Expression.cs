@@ -58,6 +58,16 @@ namespace Respira.Clinical.Domain.Models
         }
     }
 
+    public class CategoricalExpression(string value) : Expression
+    {
+        public override ExpressionResultType ResultType => ExpressionResultType.String;
+
+        public override object Evaluate()
+        {
+            return value;
+        }
+    }
+
     /// <summary>
     /// This is used to accept a clinical observation for a variable operand.
     /// </summary>
@@ -72,17 +82,23 @@ namespace Respira.Clinical.Domain.Models
         /// </summary>
         public ClinicalVariable Variable { get; init; } = observation.Variable;
 
-        public override ExpressionResultType ResultType => Variable.ValueType == ClinicalValueType.Boolean ? ExpressionResultType.Boolean : ExpressionResultType.Numeric;
+        public override ExpressionResultType ResultType => Variable.ValueType switch
+        {
+            ClinicalValueType.Boolean => ExpressionResultType.Boolean,
+            ClinicalValueType.Numeric => ExpressionResultType.Numeric,
+            ClinicalValueType.Categorical => ExpressionResultType.String,
+            _ => throw new InvalidOperationException($"Unexpected clinical value type: {Variable.ValueType}")
+        };
 
         public override object Evaluate()
         {
-            // The null check is ClinicalObservation responsibility
-            if (Variable.ValueType == ClinicalValueType.Boolean)
+            return Variable.ValueType switch
             {
-                return observation.BooleanValue!;
-            }
-
-            return observation.NumericValue!;
+                ClinicalValueType.Boolean => observation.BooleanValue!,
+                ClinicalValueType.Numeric => observation.NumericValue!,
+                ClinicalValueType.Categorical => observation.CategoricalValue!,
+                _ => throw new InvalidOperationException($"Unexpected clinical value type: {Variable.ValueType}")
+            };
         }
     }
 
@@ -151,6 +167,11 @@ namespace Respira.Clinical.Domain.Models
                 throw new ArgumentException($"Invalid expression: applying non mathematical operator to numeric operand: result {left.ResultType} | operator {op}");
             }
 
+            if (left.ResultType == ExpressionResultType.String && !(op == ExpressionOperator.EQ || op == ExpressionOperator.NE))
+            {
+                throw new ArgumentException($"Invalid expression: applying non string operator to string operand: result {left.ResultType} | operator {op}");
+            }
+
             // Check for division by zero.
             if (op == ExpressionOperator.DIV && right.ResultType == ExpressionResultType.Numeric && (decimal)right.Evaluate() == 0)
             {
@@ -164,6 +185,18 @@ namespace Respira.Clinical.Domain.Models
 
         public override object Evaluate()
         {
+            // For categorical expression, only EQ and NE are supported
+            if (Left.ResultType == ExpressionResultType.String && Right.ResultType == ExpressionResultType.String)
+            {
+                return Operator switch
+                {
+                    ExpressionOperator.EQ => (string)Left.Evaluate() == (string)Right.Evaluate(),
+                    ExpressionOperator.NE => (string)Left.Evaluate() != (string)Right.Evaluate(),
+                    _ => throw new Exception($"Unexpected logical operator: {Operator}"),
+                };
+            }
+
+            // Handle logical expression
             if (Operator.IsLogicalOperator())
             {
                 return Operator switch
@@ -240,6 +273,11 @@ namespace Respira.Clinical.Domain.Models
             if (condition.ResultType != ExpressionResultType.Boolean)
             {
                 throw new ArgumentException("Ternary condition must be boolean expression");
+            }
+
+            if (ifTrue.ResultType != ifFalse.ResultType)
+            {
+                throw new ArgumentException("Ternary ifTrue and ifFalse must have the same result type");
             }
 
             if (ifTrue.ResultType == ExpressionResultType.Boolean || ifFalse.ResultType == ExpressionResultType.Boolean)

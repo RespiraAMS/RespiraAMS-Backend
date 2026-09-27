@@ -13,6 +13,7 @@ namespace Respira.Clinical.Domain.Models
     [JsonPolymorphic(TypeDiscriminatorPropertyName = "$type")]
     [JsonDerivedType(typeof(NumericConstantFormula), typeDiscriminator: "numeric")]
     [JsonDerivedType(typeof(BooleanConstantFormula), typeDiscriminator: "boolean")]
+    [JsonDerivedType(typeof(CategoricalConstantFormula), typeDiscriminator: "categorical")]
     [JsonDerivedType(typeof(VariableFormula), typeDiscriminator: "variable")]
     [JsonDerivedType(typeof(UnaryFormula), typeDiscriminator: "unary")]
     [JsonDerivedType(typeof(BinaryFormula), typeDiscriminator: "binary")]
@@ -73,6 +74,21 @@ namespace Respira.Clinical.Domain.Models
         }
     }
 
+    public class CategoricalConstantFormula(string constant) : Formula
+    {
+        // Need to store this for JSON serialization
+        public string Constant { get; } = constant;
+
+        public override ExpressionResultType ResultType => ExpressionResultType.String;
+
+        public override IEnumerable<ClinicalVariable> Variables => [];
+
+        public override Expression ToExpression(IEnumerable<ClinicalObservation> observations)
+        {
+            return new CategoricalExpression(Constant);
+        }
+    }
+
     /// <summary>
     /// This formula is used to represent a clinical variable
     /// </summary>
@@ -83,10 +99,13 @@ namespace Respira.Clinical.Domain.Models
 
         public override IEnumerable<ClinicalVariable> Variables => [Variable];
 
-        public override ExpressionResultType ResultType => Variable.ValueType == ClinicalValueType.Boolean
-            ? ExpressionResultType.Boolean
-            : ExpressionResultType.Numeric;
-
+        public override ExpressionResultType ResultType => Variable.ValueType switch
+        {
+            ClinicalValueType.Boolean => ExpressionResultType.Boolean,
+            ClinicalValueType.Numeric => ExpressionResultType.Numeric,
+            ClinicalValueType.Categorical => ExpressionResultType.String,
+            _ => throw new InvalidOperationException($"Unexpected clinical value type: {Variable.ValueType}")
+        };
         public override Expression ToExpression(IEnumerable<ClinicalObservation> observations)
         {
             var observation = observations.SingleOrDefault(x => x.Variable.Code == Variable.Code);
@@ -167,6 +186,11 @@ namespace Respira.Clinical.Domain.Models
                 throw new ArgumentException("Invalid expression: applying invalid operator to numeric operands.");
             }
 
+            if (left.ResultType == ExpressionResultType.String && !(op == ExpressionOperator.EQ || op == ExpressionOperator.NE))
+            {
+                throw new ArgumentException("Invalid expression: applying non-string operator to string operands.");
+            }
+
             Left = left;
             Right = right;
             Operator = op;
@@ -212,6 +236,11 @@ namespace Respira.Clinical.Domain.Models
             if (ifTrue.ResultType == ExpressionResultType.Boolean && ifFalse.ResultType == ExpressionResultType.Boolean)
             {
                 throw new ArgumentException("Ternary ifTrue and ifFalse must be non-boolean expression");
+            }
+
+            if (ifTrue.ResultType != ifFalse.ResultType)
+            {
+                throw new ArgumentException("Ternary ifTrue and ifFalse must have the same result type");
             }
 
             Condition = condition;

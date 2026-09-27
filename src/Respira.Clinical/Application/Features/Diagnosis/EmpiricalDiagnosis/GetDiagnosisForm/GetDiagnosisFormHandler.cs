@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Respira.Clinical.Application.Contracts.Data;
+using Respira.Clinical.Domain.Entities;
 using Respira.ServiceDefaults.Contracts.CQRS;
 using Respira.ServiceDefaults.Contracts.Results;
 
@@ -11,18 +12,21 @@ namespace Respira.Clinical.Application.Features.Diagnosis.EmpiricalDiagnosis.Get
     {
         public async Task<Result<GetDiagnosisFormResult>> HandleAsync(GetDiagnosisFormQuery query, CancellationToken cancellationToken = default)
         {
-            var variables = await context.ClinicalVariables
+            var entities = await context.ClinicalVariables
                 .AsNoTracking()
-                .Select(x => new ClinicalVariableResult
-                {
-                    Id = x.Id,
-                    Name = x.Name,
-                    Description = x.Description,
-                    Code = x.Code,
-                    ValueType = x.ValueType,
-                    CanonicalUnit = x.CanonicalUnit
-                })
+                .OrderBy(x => x.Code)
                 .ToListAsync(cancellationToken);
+
+            var variables = entities.ConvertAll(x => new ClinicalVariableResult
+            {
+                Id = x.Id,
+                Name = x.Name,
+                Description = x.Description,
+                Code = x.Code,
+                ValueType = x.ValueType,
+                CanonicalUnit = x.CanonicalUnit,
+                AcceptedValues = (x as CategoricalClinicalVariable)?.AcceptedValues,
+            });
 
             if (variables.Count == 0)
             {
@@ -33,15 +37,7 @@ namespace Respira.Clinical.Application.Features.Diagnosis.EmpiricalDiagnosis.Get
 
             return Result<GetDiagnosisFormResult>.Success(ApplicationStatus.Success, new GetDiagnosisFormResult
             {
-                Variables = variables.Select(x => new ClinicalVariableResult
-                {
-                    Id = x.Id,
-                    Name = x.Name,
-                    Description = x.Description,
-                    Code = x.Code,
-                    ValueType = x.ValueType,
-                    CanonicalUnit = x.CanonicalUnit
-                })
+                Variables = variables
             });
         }
     }

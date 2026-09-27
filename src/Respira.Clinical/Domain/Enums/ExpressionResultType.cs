@@ -10,5 +10,6 @@ namespace Respira.Clinical.Domain.Enums
     {
         Numeric,
         Boolean,
+        String,
     }
 }

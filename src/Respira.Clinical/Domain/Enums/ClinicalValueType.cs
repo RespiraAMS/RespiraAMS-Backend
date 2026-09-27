@@ -9,6 +9,7 @@ namespace Respira.Clinical.Domain.Enums
     public enum ClinicalValueType
     {
         Numeric,
-        Boolean
+        Boolean,
+        Categorical,
     }
 }

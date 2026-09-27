@@ -1,12 +1,24 @@
 {
     "clinicalVariables": [
+        // For accepted range of numerical variables, we will not set
+        // the maximum value for those that doesn't have a strict, concrete value.
+        // For example, we know that age wouldn't be too large like 150, but since
+        // we can pinpoint the exact upper limit, we will not set it. For those that
+        // clearly have a limit (pH, or % value,...), we must set the maximum value.
         {
             "id": "00000000-0000-0000-0000-100000000001",
             "name": "Tuổi",
             "code": "AGE",
             "description": "Tuổi bệnh nhân",
             "valueType": "Numeric",
-            "canonicalUnit": "year"
+            "canonicalUnit": "year",
+            "acceptedRange": {
+                "min": 0,
+                "isMinExclusive": true,
+                "max": null,
+                "isMaxExclusive": false,
+                "unit": "year"
+            }
         },
         {
             "id": "00000000-0000-0000-0000-100000000002",
@@ -22,7 +34,14 @@
             "code": "HEIGHT",
             "description": "Chiều cao bệnh nhân",
             "valueType": "Numeric",
-            "canonicalUnit": "cm"
+            "canonicalUnit": "cm",
+            "acceptedRange": {
+                "min": 0,
+                "isMinExclusive": true,
+                "max": null,
+                "isMaxExclusive": false,
+                "unit": "cm"
+            }
         },
         {
             "id": "00000000-0000-0000-0000-100000000004",
@@ -30,7 +49,14 @@
             "code": "WEIGHT",
             "description": "Cân nặng bệnh nhân",
             "valueType": "Numeric",
-            "canonicalUnit": "kg"
+            "canonicalUnit": "kg",
+            "acceptedRange": {
+                "min": 0,
+                "isMinExclusive": true,
+                "max": null,
+                "isMaxExclusive": false,
+                "unit": "kg"
+            }
         },
         {
             "id": "00000000-0000-0000-0000-100000000005",
@@ -46,7 +72,14 @@
             "code": "RR",
             "description": "Nhịp thở bệnh nhân",
             "valueType": "Numeric",
-            "canonicalUnit": "breaths/min"
+            "canonicalUnit": "breaths/min",
+            "acceptedRange": {
+                "min": 0,
+                "isMinExclusive": true,
+                "max": null,
+                "isMaxExclusive": false,
+                "unit": "breaths/min"
+            }
         },
         {
             "id": "00000000-0000-0000-0000-100000000007",
@@ -54,7 +87,14 @@
             "code": "SBP",
             "description": "Huyết áp tâm thu của bệnh nhân",
             "valueType": "Numeric",
-            "canonicalUnit": "mmHg"
+            "canonicalUnit": "mmHg",
+            "acceptedRange": {
+                "min": 0,
+                "isMinInclusive": true,
+                "max": null,
+                "isMaxExclusive": false,
+                "unit": "mmHg"
+            }
         },
         {
             "id": "00000000-0000-0000-0000-100000000008",
@@ -62,7 +102,14 @@
             "code": "DBP",
             "description": "Huyết áp tâm trương của bệnh nhân",
             "valueType": "Numeric",
-            "canonicalUnit": "mmHg"
+            "canonicalUnit": "mmHg",
+            "acceptedRange": {
+                "min": 0,
+                "isMinInclusive": true,
+                "max": null,
+                "isMaxExclusive": false,
+                "unit": "mmHg"
+            }
         },
         {
             "id": "00000000-0000-0000-0000-100000000009",
@@ -70,7 +117,14 @@
             "code": "TEMPERATURE",
             "description": "Nhiệt độ cơ thể của bệnh nhân",
             "valueType": "Numeric",
-            "canonicalUnit": "Celcius"
+            "canonicalUnit": "Celcius",
+            "acceptedRange": {
+                "min": 0,
+                "isMinExclusive": true,
+                "max": 100,
+                "isMaxExclusive": false,
+                "unit": "Celcius"
+            }
         },
         {
             "id": "00000000-0000-0000-0000-100000000010",
@@ -78,7 +132,14 @@
             "code": "UREA",
             "description": "Urea máu của bệnh nhân",
             "valueType": "Numeric",
-            "canonicalUnit": "mmol/L"
+            "canonicalUnit": "mmol/L",
+            "acceptedRange": {
+                "min": 0,
+                "isMinExclusive": true,
+                "max": null,
+                "isMaxExclusive": false,
+                "unit": "mmol/L"
+            }
         },
         {
             "id": "00000000-0000-0000-0000-100000000011",
@@ -86,7 +147,14 @@
             "code": "WBC",
             "description": "Số lượng bạch cầu bệnh nhân",
             "valueType": "Numeric",
-            "canonicalUnit": "cells/mm3"
+            "canonicalUnit": "cells/mm3",
+            "acceptedRange": {
+                "min": 0,
+                "isMinExclusive": true,
+                "max": null,
+                "isMaxExclusive": false,
+                "unit": "cells/mm3"
+            }
         },
         {
             "id": "00000000-0000-0000-0000-100000000012",
@@ -94,7 +162,14 @@
             "code": "PLATELET",
             "description": "Số lượng tiểu cầu bệnh nhân",
             "valueType": "Numeric",
-            "canonicalUnit": "cells/mm3"
+            "canonicalUnit": "cells/mm3",
+            "acceptedRange": {
+                "min": 0,
+                "isMinExclusive": true,
+                "max": 1000,
+                "isMaxExclusive": false,
+                "unit": "cells/mm3"
+            }
         },
         {
             "id": "00000000-0000-0000-0000-100000000013",
@@ -102,7 +177,14 @@
             "code": "PAO2",
             "description": "Phân áp oxy trong máu động mạch",
             "valueType": "Numeric",
-            "canonicalUnit": "mmHg"
+            "canonicalUnit": "mmHg",
+            "acceptedRange": {
+                "min": 0,
+                "isMinExclusive": true,
+                "max": null,
+                "isMaxExclusive": false,
+                "unit": "mmHg"
+            }
         },
         {
             "id": "00000000-0000-0000-0000-100000000014",
@@ -110,7 +192,14 @@
             "code": "FIO2",
             "description": "Phân suất oxy trong khí hít vào",
             "valueType": "Numeric",
-            "canonicalUnit": null
+            "canonicalUnit": null,
+            "acceptedRange": {
+                "min": 0,
+                "isMinExclusive": true,
+                "max": 1,
+                "isMaxExclusive": false,
+                "unit": null
+            }
         },
         {
             "id": "00000000-0000-0000-0000-100000000015",
@@ -118,15 +207,27 @@
             "code": "SPO2",
             "description": "Độ bão hòa oxy trong máu ngoại vi",
             "valueType": "Numeric",
-            "canonicalUnit": "%"
+            "canonicalUnit": "%",
+            "acceptedRange": {
+                "min": 0,
+                "isMinExclusive": true,
+                "max": 100,
+                "isMaxExclusive": false,
+                "unit": "%"
+            }
         },
         {
             "id": "00000000-0000-0000-0000-100000000016",
             "name": "Tiền sử dị ứng beta-lactam",
             "code": "BETA-LACTAM-ALLERGY",
             "description": "Bệnh nhân có bị dị ứng với beta-lactam không?",
-            "valueType": "Boolean",
-            "canonicalUnit": null
+            "valueType": "Categorical",
+            "canonicalUnit": null,
+            "acceptedValues": [
+                "Có",
+                "Không",
+                "Không xác định"
+            ]
         },
         {
             "id": "00000000-0000-0000-0000-100000000017",
@@ -1957,14 +2058,14 @@
             "formula": {
                 "resultType": "Boolean",
                 "left": {
-                    "resultType": "Boolean",
+                    "resultType": "String",
                     "variable": {
                         "id": "00000000-0000-0000-0000-100000000016"
                     }
                 },
                 "right": {
-                    "resultType": "Boolean",
-                    "constant": true
+                    "resultType": "String",
+                    "constant": "Có"
                 },
                 "operator": "EQ"
             }

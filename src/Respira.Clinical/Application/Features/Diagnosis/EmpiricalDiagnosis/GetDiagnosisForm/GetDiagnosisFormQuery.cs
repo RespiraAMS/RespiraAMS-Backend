@@ -13,6 +13,7 @@ namespace Respira.Clinical.Application.Features.Diagnosis.EmpiricalDiagnosis.Get
         public required string Code { get; set; }
         public required ClinicalValueType ValueType { get; set; }
         public string? CanonicalUnit { get; set; }
+        public IReadOnlyCollection<string>? AcceptedValues { get; set; }
     }
 
     public record GetDiagnosisFormResult

@@ -24,6 +24,11 @@ namespace Respira.Clinical.Domain.Models
         public bool? BooleanValue { get; set; }
 
         /// <summary>
+        /// Clinical observation value. This would be not null if the variable is of type Categorical
+        /// </summary>
+        public string? CategoricalValue { get; set; }
+
+        /// <summary>
         /// Constructor for ClinicalObservation with numeric value
         /// </summary>
         /// <param name="variable">Clinical variable</param>
@@ -57,6 +62,19 @@ namespace Respira.Clinical.Domain.Models
             Variable = variable;
             NumericValue = null;
             BooleanValue = booleanValue;
+        }
+
+        public ClinicalObservation(ClinicalVariable variable, string categoricalValue)
+        {
+            if (variable.ValueType != ClinicalValueType.Categorical)
+            {
+                throw new ArgumentException("Cannot construct a categorical clinical observation: variable is not Categorical");
+            }
+
+            Variable = variable;
+            NumericValue = null;
+            BooleanValue = null;
+            CategoricalValue = categoricalValue;
         }
     }
 }

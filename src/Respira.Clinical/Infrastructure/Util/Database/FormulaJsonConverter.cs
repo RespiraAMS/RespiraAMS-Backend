@@ -4,7 +4,7 @@ using Respira.Clinical.Domain.Entities;
 using Respira.Clinical.Domain.Enums;
 using Respira.Clinical.Domain.Models;
 
-namespace Respira.Infrastructure.Util.Database
+namespace Respira.Clinical.Infrastructure.Util.Database
 {
     /// <summary>
     /// Handles serialization/deserialization of <see cref="Formula"/> trees.
@@ -35,8 +35,11 @@ namespace Respira.Infrastructure.Util.Database
         {
             if (element.TryGetProperty("variable", out _))
             {
-                var clinicalVar = JsonSerializer.Deserialize<ClinicalVariable>(
-                    element.GetProperty("variable").GetRawText(), s_options)!;
+                var variableElement = element.GetProperty("variable");
+                var clinicalVar = (ClinicalVariable)JsonSerializer.Deserialize(
+                    variableElement.GetRawText(),
+                    ResolveClinicalVariableType(element),
+                    s_options)!;
                 return new VariableFormula(clinicalVar);
             }
 
@@ -77,6 +80,44 @@ namespace Respira.Infrastructure.Util.Database
             }
 
             throw new JsonException("Unable to determine Formula type from JSON structure.");
+        }
+
+        /// <summary>
+        /// ClinicalVariable is abstract, so System.Text.Json cannot deserialize into it directly.
+        /// Resolve the concrete subtype from the embedded variable's own valueType, falling back
+        /// to the owning formula node's resultType (variable nodes derive resultType 1:1 from
+        /// ValueType: Boolean/Numeric map to themselves, String maps to Categorical).
+        /// </summary>
+        private static Type ResolveClinicalVariableType(JsonElement node)
+        {
+            var variableElement = node.GetProperty("variable");
+
+            string? valueType = variableElement.TryGetProperty("valueType", out var vt)
+                ? vt.GetString()
+                : null;
+            if (valueType is not null)
+            {
+                return valueType switch
+                {
+                    nameof(ClinicalValueType.Boolean) => typeof(BooleanClinicalVariable),
+                    nameof(ClinicalValueType.Numeric) => typeof(NumericClinicalVariable),
+                    nameof(ClinicalValueType.Categorical) => typeof(CategoricalClinicalVariable),
+                    _ => throw new JsonException($"Unknown clinical variable valueType: {valueType}")
+                };
+            }
+
+            string? resultType = node.TryGetProperty("resultType", out var rt)
+                ? rt.GetString()
+                : null;
+            return resultType switch
+            {
+                nameof(ExpressionResultType.Boolean) => typeof(BooleanClinicalVariable),
+                nameof(ExpressionResultType.Numeric) => typeof(NumericClinicalVariable),
+                nameof(ExpressionResultType.String) => typeof(CategoricalClinicalVariable),
+                _ => throw new JsonException(
+                    "Unable to resolve concrete ClinicalVariable type: " +
+                    $"missing valueType (got '{valueType ?? "<none>"}') and unsupported resultType (got '{resultType ?? "<none>"}')")
+            };
         }
     }
 }

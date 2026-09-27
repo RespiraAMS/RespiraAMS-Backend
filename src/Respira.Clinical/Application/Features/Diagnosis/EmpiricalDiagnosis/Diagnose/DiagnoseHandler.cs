@@ -77,10 +77,43 @@ namespace Respira.Clinical.Application.Features.Diagnosis.EmpiricalDiagnosis.Dia
 
                         observations.Add(new ClinicalObservation(variable, numericValue));
                         break;
+                    case ClinicalValueType.Categorical:
+                        if (string.IsNullOrWhiteSpace(observation.Value))
+                        {
+                            logger.LogDebug("Receive categorical variable, but value observed is empty: {observation}", observation);
+                            return Result<DiagnoseResult>.Failure(new Error(ApplicationStatus.BadRequest, "Invalid observation value"));
+                        }
+
+                        observations.Add(new ClinicalObservation(variable, observation.Value));
+                        break;
+                }
+            }
+
+            // Internal validation of each observations
+            logger.LogDebug("Validating observations by each internal rule");
+            foreach (var observation in observations)
+            {
+                if (observation.Variable.ValueType == ClinicalValueType.Boolean && !observation.Variable.IsValidValue(observation.BooleanValue))
+                {
+                    logger.LogInformation("Invalid observation value for variable {code}: {value}", observation.Variable.Code, observation.BooleanValue);
+                    return Result<DiagnoseResult>.Failure(new Error(ApplicationStatus.BadRequest, "Invalid observation value"));
+                }
+
+                if (observation.Variable.ValueType == ClinicalValueType.Numeric && !observation.Variable.IsValidValue(observation.NumericValue))
+                {
+                    logger.LogInformation("Invalid observation value for variable {code}: {value}", observation.Variable.Code, observation.NumericValue);
+                    return Result<DiagnoseResult>.Failure(new Error(ApplicationStatus.BadRequest, "Invalid observation value"));
+                }
+
+                if (observation.Variable.ValueType == ClinicalValueType.Categorical && !observation.Variable.IsValidValue(observation.CategoricalValue))
+                {
+                    logger.LogInformation("Invalid observation value for variable {code}: {value}", observation.Variable.Code, observation.CategoricalValue);
+                    return Result<DiagnoseResult>.Failure(new Error(ApplicationStatus.BadRequest, "Invalid observation value"));
                 }
             }
 
             // Start diagnosis
+            logger.LogDebug("Start severity diagnosis");
             var severityDiagnosis = service.DiagnoseSeverity(clinicalContext, observations);
             if (severityDiagnosis.IsFailure())
             {
@@ -107,8 +140,7 @@ namespace Respira.Clinical.Application.Features.Diagnosis.EmpiricalDiagnosis.Dia
 
             return Result<DiagnoseResult>.Success(ApplicationStatus.Success, new DiagnoseResult
             {
-                Severity = severityDiagnosis.Data.Severity,
-                TreatmentSite = severityDiagnosis.Data.TreatmentSite,
+                SeverityDiagnosis = severityDiagnosis.Data,
                 WorthSuspected = infectionAssessment.Data!.WorthSuspected.Select(x => new PathogenResult(x.Id, x.Name)),
                 HeavySuspected = infectionAssessment.Data.HeavySuspected.Select(x => new ScoredPathogenResult(x.Pathogen.Id, x.Pathogen.Name, x.PriorityScore))
             });
