@@ -128,7 +128,7 @@ namespace Respira.Clinical.Domain.Services
                 if (metric.Code.Equals("CURB-65"))
                 {
                     // Check if BUN is missing
-                    var isBunMissing = !observations.Any(x => x.Variable.Code.Equals("BUN"));
+                    var isBunMissing = !observations.Any(x => x.Variable.Code.Equals("UREA"));
                     var diagnosis = Curb65((int)CalculateMetricsScore(metric, observations), isBunMissing);
                     metricsDiagnoses = metricsDiagnoses.Append(diagnosis);
                     severities.Add(metric.Code, diagnosis.Severity);

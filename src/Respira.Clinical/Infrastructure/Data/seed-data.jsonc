@@ -166,7 +166,7 @@
             "acceptedRange": {
                 "min": 0,
                 "isMinExclusive": true,
-                "max": 1000,
+                "max": null,
                 "isMaxExclusive": false,
                 "unit": "cells/mm3"
             }
