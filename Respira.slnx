@@ -7,6 +7,7 @@
     <Project Path="src/Respira.Clinical/Infrastructure/Respira.Clinical.Infrastructure.csproj" />
     <Project Path="src/Respira.Gateway/Respira.Gateway.csproj" />
     <Project Path="src/Respira.ServiceDefaults/Respira.ServiceDefaults.csproj" />
+    <Project Path="test/Respira.Clinical.Test/Application.Test/Respira.Application.Test.csproj" />
     <Project Path="test/Respira.Clinical.Test/Domain.Test/Respira.Clinical.Domain.Test.csproj" />
     <Target Name="Husky" AfterTargets="Restore" Condition="'$(HUSKY)' != 0" Inputs="./.config/dotnet-tools.json" Outputs="./.husky/_/install.stamp">
         <Exec Command="dotnet tool restore" StandardOutputImportance="Low" StandardErrorImportance="High" />

@@ -1,10 +1,16 @@
+using FluentValidation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Respira.Clinical.Application;
 using Respira.Clinical.Application.Contracts.Data;
+using Respira.Clinical.Application.Contracts.Mappers;
+using Respira.Clinical.Application.Features.AntibioticGroups.CreateAntibioticGroup;
+using Respira.Clinical.Application.Features.AntibioticGroups.UpdateAntibioticGroup;
+using Respira.Clinical.Domain.Entities;
 using Respira.Clinical.Domain.Services;
 using Respira.Clinical.Infrastructure.Data;
 
@@ -16,6 +22,8 @@ namespace Respira.Clinical.DI
         {
             AddDomain(builder);
             AddInfrastructure(builder);
+            AddProfiles(builder.Services);
+            AddFluentValidators(builder.Services);
         }
 
         # region Domain DI
@@ -23,6 +31,21 @@ namespace Respira.Clinical.DI
         public static void AddDomain(this IHostApplicationBuilder builder)
         {
             builder.Services.AddScoped<IDiagnoseService, DiagnoseService>();
+        }
+
+        #endregion
+
+        #region Application DI
+
+        public static void AddProfiles(this IServiceCollection services)
+        {
+            services.AddScoped<ICreateMapper<AntibioticGroup, CreateAntibioticGroupCommand>, CreateAntibioticGroupMapper>();
+            services.AddScoped<IUpdateMapper<AntibioticGroup, UpdateAntibioticGroupCommand>, UpdateAntibioticGroupMapper>();
+        }
+
+        public static void AddFluentValidators(this IServiceCollection services)
+        {
+            services.AddValidatorsFromAssemblyContaining<ApplicationMarker>();
         }
 
         #endregion
