@@ -1,6 +1,14 @@
 @Media.API_HostAddress = http://localhost:5088
 
-GET {{Media.API_HostAddress}}/weatherforecast/
-Accept: application/json
+### Upload an image (file name and content type are derived server-side)
+POST {{Media.API_HostAddress}}/api/v1/media-assets
+Content-Type: multipart/form-data; boundary=----RespiraBoundary
+
+------RespiraBoundary
+Content-Disposition: form-data; name="file"; filename="avatar.png"
+Content-Type: image/png
+
+< ./avatar.png
+------RespiraBoundary--
 
 ###
