@@ -13,6 +13,9 @@
     <Project Path="src/Respira.Media/Media.Infrastructure/Media.Infrastructure.csproj" />
   </Folder>
   <Project Path="src/Respira.AppHost/Respira.AppHost.csproj" />
+  <Project Path="src/Respira.Doctor/Doctor.Application/Respira.Doctor.Application.csproj" />
+  <Project Path="src/Respira.Doctor/Doctor.Domain/Respira.Doctor.Domain.csproj" />
+  <Project Path="src/Respira.Doctor/Doctor.Infrastructure/Respira.Doctor.Infrastructure.csproj" />
   <Project Path="src/Respira.Gateway/Respira.Gateway.csproj" />
   <Project Path="src/Respira.Saga/Saga.Application/Respira.Saga.Application.csproj" />
   <Project Path="src/Respira.Saga/Saga.Application/Respira.Saga.Application/.csproj" />

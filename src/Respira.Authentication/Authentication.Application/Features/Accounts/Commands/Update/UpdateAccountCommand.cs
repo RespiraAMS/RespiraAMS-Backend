@@ -1,3 +1,4 @@
+using Authentication.Domain.Enums;
 using Respira.ServiceDefaults.Contracts.CQRS;
 
 namespace Authentication.Application.Features.Accounts.Commands.Update
