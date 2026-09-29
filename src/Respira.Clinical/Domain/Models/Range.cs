@@ -45,7 +45,16 @@ namespace Respira.Clinical.Domain.Models
 
         public override string ToString()
         {
-            return $"{(IsMinExclusive ? "(" : "[")}{Min}, {(Max == decimal.MaxValue ? "∞" : Max)}{(IsMaxExclusive ? ")" : "]")}";
+            if (Max == decimal.MaxValue)
+            {
+                return $"{(IsMinExclusive ? ">" : "≥")} {Min}";
+            }
+            else
+            {
+                return $"{(IsMinExclusive ? ">" : "≥")} {Min} và {(IsMaxExclusive ? "<" : "≤")} {Max}";
+            }
+
+            // return $"{(IsMinExclusive ? "(" : "[")}{Min}, {(Max == decimal.MaxValue ? "∞" : Max)}{(IsMaxExclusive ? ")" : "]")}";
         }
     }
 }

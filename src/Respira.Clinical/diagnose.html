@@ -119,6 +119,53 @@
 				background: var(--primary-light);
 			}
 			
+			.form-group.has-error,
+			.form-group.has-error:focus-within {
+				border-color: var(--danger);
+				background: #fff5f5;
+			}
+			
+			.form-group.has-error .form-label { color: var(--danger); }
+			
+			.form-group.has-error .form-input {
+				border-color: var(--danger);
+				background: #fffafa;
+			}
+			
+			.form-group.has-error .numeric-input-wrap,
+			.form-group.has-error .segmented-toggle {
+				border-color: var(--danger);
+				box-shadow: 0 0 0 3px rgba(217, 45, 32, 0.12);
+			}
+			
+			.field-error-msg {
+				width: 100%;
+				display: flex;
+				align-items: flex-start;
+				gap: 0.4rem;
+				margin-top: 0.55rem;
+				color: var(--danger);
+				font-size: 0.8rem;
+				font-weight: 700;
+				line-height: 1.45;
+			}
+			
+			.field-error-msg::before {
+				content: '!';
+				flex-shrink: 0;
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				width: 15px;
+				height: 15px;
+				margin-top: 1px;
+				border-radius: 50%;
+				background: var(--danger);
+				color: #fff;
+				font-size: 0.7rem;
+				font-weight: 800;
+			}
+			
 			.form-group:last-child { margin-bottom: 0; }
 			
 			.form-label {
@@ -346,6 +393,20 @@
 				margin-bottom: 1.1rem;
 			}
 			
+			.error-modal .error-detail-list {
+				display: none;
+				margin: -0.5rem 0 1.1rem;
+				padding: 0.7rem 0.9rem 0.7rem 2.1rem;
+				background: #fff5f5;
+				border: 1px solid #fecdca;
+				border-radius: 8px;
+				color: var(--danger);
+				font-size: 0.85rem;
+				font-weight: 600;
+			}
+			
+			.error-modal .error-detail-list li + li { margin-top: 0.35rem; }
+			
 			.error-modal-actions { display: flex; justify-content: flex-end; }
 			.error-modal-actions .btn { width: auto; padding: 0.6rem 1.5rem; }
 			
@@ -551,6 +612,7 @@
 						Error
 					</h3>
 					<p id="errorModalMsg"></p>
+					<ul id="errorModalDetail" class="error-detail-list"></ul>
 					<div class="error-modal-actions">
 						<button type="button" class="btn btn-primary" id="errorModalClose">OK</button>
 					</div>
@@ -773,6 +835,7 @@
 document.getElementById('diagnoseForm').addEventListener('submit', async (e) => {
 	e.preventDefault();
 	hideError();
+	clearFieldErrors();
 
 	const observations = [];
 	formVariables.forEach(v => {
@@ -802,12 +865,20 @@ let body;
 try { body = JSON.parse(raw); } catch { throw new Error('Invalid JSON from server: ' + raw.substring(0, 200)); }
 
 if (body.statusCode !== 'SUCCESS') {
-	throw new Error(body.error?.description || 'Diagnosis failed');
+	const description = body.error?.description || 'Diagnosis failed';
+	const detail = body.error?.detail;
+	const invalidCount = applyFieldErrors(detail);
+	const err = new Error(invalidCount > 0
+		? `${description}. Please review the ${invalidCount === 1 ? 'field' : 'fields'} highlighted below.`
+		: description);
+	err.detail = detail;
+	throw err;
 }
 showResults(body.data);
 } catch (err) {
 	console.error('Diagnosis error:', err);
-	showError('Diagnosis failed: ' + err.message);
+	showError('Diagnosis failed: ' + err.message, err.detail);
+	scrollToFirstError();
 } finally {
 	btn.disabled = false;
 	btn.innerHTML = 'Submit Diagnosis';
@@ -882,17 +953,81 @@ showResults(body.data);
 			window.scrollTo({ top: 0, behavior: 'smooth' });
 		}
 
-		function resetForm() {
-			document.getElementById('resultsSection').style.display = 'none';
-			document.getElementById('diagnoseForm').style.display = '';
-			hideError();
-			window.scrollTo({ top: 0, behavior: 'smooth' });
-		}
+	function resetForm() {
+		document.getElementById('resultsSection').style.display = 'none';
+		document.getElementById('diagnoseForm').style.display = '';
+		hideError();
+		clearFieldErrors();
+		window.scrollTo({ top: 0, behavior: 'smooth' });
+	}
 
-		function showError(msg) {
-			document.getElementById('errorModalMsg').textContent = msg;
-			document.getElementById('errorModal').classList.add('open');
+	function findFieldInput(variableId) {
+		const direct = document.getElementById(`var-${variableId}`);
+		if (direct) return direct;
+		const key = String(variableId ?? '').toLowerCase();
+		return Array.from(document.querySelectorAll('[data-variable-id]'))
+			.find(el => (el.getAttribute('data-variable-id') || '').toLowerCase() === key) || null;
+	}
+
+	function clearFieldErrors() {
+		document.querySelectorAll('.form-group.has-error').forEach(clearGroupError);
+	}
+
+	function clearGroupError(group) {
+		if (!group) return;
+		group.classList.remove('has-error');
+		group.querySelectorAll('.field-error-msg').forEach(msg => msg.remove());
+		group.querySelectorAll('[aria-invalid]').forEach(el => el.removeAttribute('aria-invalid'));
+	}
+
+	/*
+	 * Maps error.detail (variableId -> message) returned by the server onto the
+	 * rendered form: highlights the field and shows the message under it.
+	 * Returns how many field errors could be attached to a rendered input.
+	 */
+	function applyFieldErrors(detail) {
+		if (!detail || typeof detail !== 'object') return 0;
+
+		let applied = 0;
+		for (const [variableId, message] of Object.entries(detail)) {
+			if (!message) continue;
+			const input = findFieldInput(variableId);
+			if (!input) continue;
+
+			const group = input.closest('.form-group');
+			if (!group) continue;
+
+			clearGroupError(group);
+			group.classList.add('has-error');
+			input.setAttribute('aria-invalid', 'true');
+
+			const msg = document.createElement('div');
+			msg.className = 'field-error-msg';
+			msg.setAttribute('role', 'alert');
+			msg.textContent = message;
+			group.appendChild(msg);
+			applied++;
 		}
+		return applied;
+	}
+
+	function scrollToFirstError() {
+		const first = document.querySelector('.form-group.has-error');
+		if (first) first.scrollIntoView({ behavior: 'smooth', block: 'center' });
+	}
+
+	function showError(msg, detail) {
+		document.getElementById('errorModalMsg').textContent = msg;
+
+		const list = document.getElementById('errorModalDetail');
+		const messages = detail && typeof detail === 'object'
+			? Object.values(detail).filter(Boolean)
+			: [];
+		list.innerHTML = messages.map(m => `<li>${esc(m)}</li>`).join('');
+		list.style.display = messages.length > 0 ? 'block' : 'none';
+
+		document.getElementById('errorModal').classList.add('open');
+	}
 
 		function hideError() {
 			document.getElementById('errorModal').classList.remove('open');
@@ -904,6 +1039,16 @@ showResults(body.data);
 		});
 		document.addEventListener('keydown', (e) => {
 			if (e.key === 'Escape') hideError();
+		});
+
+		// Drop a field's server-side error as soon as the user edits it
+		document.getElementById('diagnoseForm').addEventListener('input', (e) => {
+			clearGroupError(e.target.closest('.form-group'));
+		});
+		document.getElementById('diagnoseForm').addEventListener('click', (e) => {
+			if (e.target.closest('.segment-btn')) {
+				clearGroupError(e.target.closest('.form-group'));
+			}
 		});
 
 		init();

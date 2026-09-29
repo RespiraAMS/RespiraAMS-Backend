@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Respira.Clinical.Application.Contracts.Data;
+using Respira.Clinical.Domain.Entities;
 using Respira.Clinical.Domain.Enums;
 using Respira.Clinical.Domain.Models;
 using Respira.Clinical.Domain.Services;
@@ -91,25 +92,41 @@ namespace Respira.Clinical.Application.Features.Diagnosis.EmpiricalDiagnosis.Dia
 
             // Internal validation of each observations
             logger.LogDebug("Validating observations by each internal rule");
+            var errors = new Dictionary<Guid, string>();
             foreach (var observation in observations)
             {
-                if (observation.Variable.ValueType == ClinicalValueType.Boolean && !observation.Variable.IsValidValue(observation.BooleanValue))
-                {
-                    logger.LogInformation("Invalid observation value for variable {code}: {value}", observation.Variable.Code, observation.BooleanValue);
-                    return Result<DiagnoseResult>.Failure(new Error(ApplicationStatus.BadRequest, "Invalid observation value"));
-                }
-
                 if (observation.Variable.ValueType == ClinicalValueType.Numeric && !observation.Variable.IsValidValue(observation.NumericValue))
                 {
                     logger.LogInformation("Invalid observation value for variable {code}: {value}", observation.Variable.Code, observation.NumericValue);
-                    return Result<DiagnoseResult>.Failure(new Error(ApplicationStatus.BadRequest, "Invalid observation value"));
+
+                    // Add the error to the list
+                    var variable = (NumericClinicalVariable)observation.Variable;
+                    errors.Add(variable.Id, $"{variable.Name} phải {variable.AcceptedRange}");
+                    continue;
+                }
+
+                if (observation.Variable.ValueType == ClinicalValueType.Boolean && !observation.Variable.IsValidValue(observation.BooleanValue))
+                {
+                    logger.LogInformation("Invalid observation value for variable {code}: {value}", observation.Variable.Code, observation.BooleanValue);
+
+                    // Add the error to the list (though this case is unlikely to happen because of C# type checking)
+                    var variable = (BooleanClinicalVariable)observation.Variable;
+                    errors.Add(variable.Id, $"{variable.Name} should be a valid boolean value");
+                    continue;
                 }
 
                 if (observation.Variable.ValueType == ClinicalValueType.Categorical && !observation.Variable.IsValidValue(observation.CategoricalValue))
                 {
                     logger.LogInformation("Invalid observation value for variable {code}: {value}", observation.Variable.Code, observation.CategoricalValue);
-                    return Result<DiagnoseResult>.Failure(new Error(ApplicationStatus.BadRequest, "Invalid observation value"));
+
+                    // Add the error to the list
+                    var variable = (CategoricalClinicalVariable)observation.Variable;
+                    errors.Add(variable.Id, $"{variable.Name} should be in this value range {string.Join(", ", variable.AcceptedValues)}");
                 }
+            }
+            if (errors.Count > 0)
+            {
+                return Result<DiagnoseResult>.Failure(new Error(ApplicationStatus.BadRequest, "Invalid observation value", errors));
             }
 
             // Start diagnosis
