@@ -14,6 +14,8 @@ using Respira.Clinical.Application.Features.Antibiotics.AddDosage;
 using Respira.Clinical.Application.Features.Antibiotics.CreateAntibiotic;
 using Respira.Clinical.Application.Features.Antibiotics.UpdateAntibiotic;
 using Respira.Clinical.Application.Features.Antibiotics.UpdateDosage;
+using Respira.Clinical.Application.Features.Pathogens.CreatePathogen;
+using Respira.Clinical.Application.Features.Pathogens.UpdatePathogen;
 using Respira.Clinical.Domain.Entities;
 using Respira.Clinical.Domain.Services;
 using Respira.Clinical.Infrastructure.Data;
@@ -50,6 +52,9 @@ namespace Respira.Clinical.DI
             services.AddScoped<ICreateMapper<Dosage, AddDosageCommand>, AddDosageMapper>();
             services.AddScoped<IUpdateMapper<Antibiotic, UpdateAntibioticCommand>, UpdateAntibioticMapper>();
             services.AddScoped<IUpdateMapper<Dosage, UpdateDosageCommand>, UpdateDosageMapper>();
+
+            services.AddScoped<ICreateMapper<Pathogen, CreatePathogenCommand>, CreatePathogenMapper>();
+            services.AddScoped<IUpdateMapper<Pathogen, UpdatePathogenCommand>, UpdatePathogenMapper>();
         }
 
         public static void AddFluentValidators(this IServiceCollection services)
