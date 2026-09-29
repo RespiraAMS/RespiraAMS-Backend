@@ -14,6 +14,10 @@
   </Folder>
   <Project Path="src/Respira.AppHost/Respira.AppHost.csproj" />
   <Project Path="src/Respira.Gateway/Respira.Gateway.csproj" />
+  <Project Path="src/Respira.Saga/Saga.Application/Respira.Saga.Application.csproj" />
+  <Project Path="src/Respira.Saga/Saga.Application/Respira.Saga.Application/.csproj" />
+  <Project Path="src/Respira.Saga/Saga.Domain/Respira.Saga.Domain.csproj" />
+  <Project Path="src/Respira.Saga/Saga.Infrastructure/Respira.Saga.Infrastructure.csproj" />
   <Project Path="src/Respira.ServiceDefaults/Respira.ServiceDefaults.csproj" />
   <Target Name="Husky" AfterTargets="Restore" Condition="'$(HUSKY)' != 0" Inputs="./.config/dotnet-tools.json" Outputs="./.husky/_/install.stamp">
     <Exec Command="dotnet tool restore" StandardOutputImportance="Low" StandardErrorImportance="High" />

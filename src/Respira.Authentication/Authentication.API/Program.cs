@@ -21,6 +21,11 @@ builder.Services
     .BindConfiguration(EmailOption.SectionName)
     .ValidateDataAnnotations()
     .ValidateOnStart();
+builder.Services
+    .AddOptions<EmailVerificationOption>()
+    .BindConfiguration(EmailVerificationOption.SectionName)
+    .ValidateDataAnnotations()
+    .ValidateOnStart();
 
 builder.AddNpgsqlDbContext<AuthDbContext>("authdb");
 builder.Services.AddScoped<IAuthDbContext>(serviceProvider =>

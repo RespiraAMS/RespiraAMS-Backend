@@ -1,5 +1,4 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
@@ -9,11 +8,15 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" />
     <PackageReference Include="X.PagedList.EF" />
+    <PackageReference Include="WolverineFx" />
+    <PackageReference Include="WolverineFx.EntityFrameworkCore" />
+    <PackageReference Include="WolverineFx.FluentValidation" />
+    <PackageReference Include="WolverineFx.RabbitMQ" />
+    <PackageReference Include="WolverineFx.RuntimeCompilation" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Authentication.Domain\Authentication.Domain.csproj" />
     <ProjectReference Include="..\..\Respira.ServiceDefaults\Respira.ServiceDefaults.csproj" />
   </ItemGroup>
-
 </Project>
