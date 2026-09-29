@@ -5,9 +5,9 @@ using Respira.ServiceDefaults.Contracts.Results;
 
 namespace Respira.Clinical.Application.Features.Antibiotics.GetAntibiotics
 {
-    public class GetAntibioticsHandler(IDbContext context) : IQueryHandler<GetAntibioticQuery, Result<GetAntibioticsResult>>
+    public class GetAntibioticsHandler(IDbContext context) : IQueryHandler<GetAntibioticsQuery, Result<GetAntibioticsResult>>
     {
-        public async Task<Result<GetAntibioticsResult>> HandleAsync(GetAntibioticQuery query, CancellationToken cancellationToken = default)
+        public async Task<Result<GetAntibioticsResult>> HandleAsync(GetAntibioticsQuery query, CancellationToken cancellationToken = default)
         {
             var antibiotics = await context.Antibiotics
                 .AsNoTracking()

@@ -15,7 +15,7 @@ namespace Respira.Clinical.API.Controllers
         [Route("list")]
         public async Task<IActionResult> List()
         {
-            var result = await bus.InvokeAsync<Result<GetAntibioticsResult>>(new GetAntibioticQuery());
+            var result = await bus.InvokeAsync<Result<GetAntibioticsResult>>(new GetAntibioticsQuery());
             return result.ToApiResponse();
         }
     }
