@@ -14,19 +14,26 @@ namespace Respira.Clinical.Application.Features.Diagnosis.EmpiricalDiagnosis.Get
         {
             var entities = await context.ClinicalVariables
                 .AsNoTracking()
-                .OrderBy(x => x.Code)
                 .ToListAsync(cancellationToken);
 
-            var variables = entities.ConvertAll(x => new ClinicalVariableResult
-            {
-                Id = x.Id,
-                Name = x.Name,
-                Description = x.Description,
-                Code = x.Code,
-                ValueType = x.ValueType,
-                CanonicalUnit = x.CanonicalUnit,
-                AcceptedValues = (x as CategoricalClinicalVariable)?.AcceptedValues,
-            });
+            var variables = entities
+                .OrderBy(x => x.Category)
+                .ThenBy(x => x.ValueType)
+                .Select(x => new ClinicalVariableResult
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    Description = x.Description,
+                    Code = x.Code,
+                    ValueType = x.ValueType,
+                    CanonicalUnit = x.CanonicalUnit,
+                    IsRequired = x.IsRequired,
+                    Category = x.Category,
+                    AcceptedValues = (x as CategoricalClinicalVariable)?.AcceptedValues,
+                    NormalRange = (x as NumericClinicalVariable)?.NormalRange,
+                    AcceptedRange = (x as NumericClinicalVariable)?.AcceptedRange
+                })
+                .ToList();
 
             if (variables.Count == 0)
             {

@@ -2,7 +2,7 @@ using Respira.Clinical.Domain.Enums;
 using Respira.Clinical.Domain.Models;
 using Xunit;
 
-namespace Respira.Domain.Test.Models
+namespace Respira.Clinical.Domain.Test.Models
 {
     public class ExpressionTest
     {

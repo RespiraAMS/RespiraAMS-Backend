@@ -1,3 +1,4 @@
+using System.Globalization;
 using Microsoft.Extensions.Logging;
 using Respira.Clinical.Domain.Entities;
 using Respira.Clinical.Domain.Enums;
@@ -19,14 +20,74 @@ namespace Respira.Clinical.Domain.Services
         /// <param name="metrics">Metrics</param>
         /// <param name="observations">Clinical observations</param>
         /// <returns>Score result</returns>
-        public decimal CalculateMetricsScore(ScoreMetrics metrics, IEnumerable<ClinicalObservation> observations)
+        public (decimal, List<string>) CalculateMetricsScore(ScoreMetrics metrics, IEnumerable<ClinicalObservation> observations)
         {
-            return metrics.ScoringRules.Sum(sr =>
+            var evidences = new List<string>();
+            var totalScore = metrics.ScoringRules.Sum(sr =>
             {
                 var score = sr.GetScore(observations);
                 logger.LogDebug($"Calculated score for {metrics.Name}/{sr.Criterion.Name}: {score}");
+                evidences.Add(BuildEvidence($"{metrics.Name} - {sr.Criterion.Name}", sr.Criterion.Formula, observations));
                 return score;
             });
+
+            return (totalScore, evidences);
+        }
+
+        /// <summary>
+        /// Render an evidence entry for a criterion. A formula cannot be evaluated when the
+        /// observations do not contain every variable it uses, so the evidence reports the
+        /// missing variables instead of throwing (the score itself is already handled by
+        /// <see cref="Criterion.IsCriterionSatisfied(IEnumerable{ClinicalObservation})"/>).
+        /// The entry is multi-line (<c>\n</c> between sections, <c>\t</c> per observation);
+        /// clients render it with preserved whitespace.
+        /// </summary>
+        /// <param name="source">Where the criterion comes from, e.g. metric or pathogen name</param>
+        /// <param name="formula">Criterion formula</param>
+        /// <param name="observations">Clinical observations</param>
+        /// <returns>Evidence string</returns>
+        private static string BuildEvidence(string source, Formula formula, IEnumerable<ClinicalObservation> observations)
+        {
+            var observationList = observations
+                .Where(x => formula.Variables.Select(x => x.Code).ToList().Contains(x.Variable.Code))
+                .ToList();
+
+            var missing = formula.Variables
+                .Where(v => !observationList.Any(o => o.Variable.Code.Equals(v.Code)))
+                .Select(v => v.Code)
+                .ToList();
+
+            var variables = observationList.Count > 0
+                ? string.Join("\n", observationList.Select(FormatObservation))
+                : "\t(none)";
+
+            var value = missing.Count > 0
+                ? $"not evaluated (missing {string.Join(", ", missing)})"
+                : formula.ToExpression(observationList).Evaluate();
+
+            return $"{source}:\nFormula: {formula}\nVariables:\n{variables}\nValue: {value}";
+        }
+
+        /// <summary>
+        /// Render one observation as an indented evidence line. Each value type carries its own
+        /// slot on <see cref="ClinicalObservation"/>, so the right one has to be picked - reading
+        /// <c>NumericValue</c> for a boolean observation would render an empty value.
+        /// </summary>
+        private static string FormatObservation(ClinicalObservation observation)
+        {
+            var value = observation.Variable.ValueType switch
+            {
+                ClinicalValueType.Numeric => observation.NumericValue?.ToString(CultureInfo.InvariantCulture),
+                ClinicalValueType.Boolean => observation.BooleanValue switch
+                {
+                    true => "true",
+                    false => "false",
+                    null => null,
+                },
+                _ => observation.CategoricalValue,
+            };
+
+            return $"\t{observation.Variable.Code}: {value ?? "(no value)"}";
         }
 
         /// <summary>
@@ -35,7 +96,7 @@ namespace Respira.Clinical.Domain.Services
         /// <param name="score">Score</param>
         /// <returns>Severity diagnosis</returns>
         /// <exception cref="InvalidOperationException">Throw if received invalid score</exception>
-        public MetricsSeverityDiagnosis Curb65(int score, bool isBunMissing = false)
+        public MetricsSeverityDiagnosis Curb65(int score, List<string> evidences, bool isBunMissing = false)
         {
             string code = isBunMissing ? "CRB-65" : "CURB-65";
             // If BUN is missing (to be more exact, urea), then this would still be valid
@@ -45,9 +106,9 @@ namespace Respira.Clinical.Domain.Services
                 return score switch
                 {
                     < 0 => throw new ArgumentOutOfRangeException(nameof(score), "Score cannot be negative"),
-                    0 => new MetricsSeverityDiagnosis(code, score, Severity.Mild, TreatmentSite.Outpatient),
-                    1 or 2 => new MetricsSeverityDiagnosis(code, score, Severity.Moderate, TreatmentSite.Inpatient),
-                    3 or 4 => new MetricsSeverityDiagnosis(code, score, Severity.Severe, TreatmentSite.Inpatient),
+                    0 => new MetricsSeverityDiagnosis(code, score, Severity.Mild, TreatmentSite.Outpatient, evidences),
+                    1 or 2 => new MetricsSeverityDiagnosis(code, score, Severity.Moderate, TreatmentSite.Inpatient, evidences),
+                    3 or 4 => new MetricsSeverityDiagnosis(code, score, Severity.Severe, TreatmentSite.Inpatient, evidences),
                     _ => throw new InvalidOperationException($"Unexpected CRB-65 score: {score}"),
                 };
             }
@@ -56,9 +117,9 @@ namespace Respira.Clinical.Domain.Services
             return score switch
             {
                 < 0 => throw new ArgumentOutOfRangeException(nameof(score), "Score cannot be negative"),
-                0 or 1 => new MetricsSeverityDiagnosis(code, score, Severity.Mild, TreatmentSite.Outpatient),
-                2 => new MetricsSeverityDiagnosis(code, score, Severity.Moderate, TreatmentSite.Inpatient),
-                >= 3 and <= 5 => new MetricsSeverityDiagnosis(code, score, Severity.Severe, TreatmentSite.Inpatient),
+                0 or 1 => new MetricsSeverityDiagnosis(code, score, Severity.Mild, TreatmentSite.Outpatient, evidences),
+                2 => new MetricsSeverityDiagnosis(code, score, Severity.Moderate, TreatmentSite.Inpatient, evidences),
+                >= 3 and <= 5 => new MetricsSeverityDiagnosis(code, score, Severity.Severe, TreatmentSite.Inpatient, evidences),
                 _ => throw new InvalidOperationException($"Unexpected CURB-65 score: {score}"),
             };
         }
@@ -71,7 +132,7 @@ namespace Respira.Clinical.Domain.Services
         /// <param name="score">Score</param>
         /// <returns>Severity diagnosis</returns>
         /// <exception cref="InvalidOperationException">Throw if received invalid score</exception>
-        public MetricsSeverityDiagnosis Psi(int score)
+        public MetricsSeverityDiagnosis Psi(int score, List<string> evidences)
         {
             const string code = "PSI";
             // PSI return a more detail classification with 5 levels, and
@@ -88,10 +149,10 @@ namespace Respira.Clinical.Domain.Services
             return score switch
             {
                 < 0 => throw new ArgumentOutOfRangeException(nameof(score), "Score cannot be negative"),
-                >= 0 and <= 70 => new MetricsSeverityDiagnosis(code, score, Severity.Mild, TreatmentSite.Outpatient),
-                <= 90 => new MetricsSeverityDiagnosis(code, score, Severity.Moderate, TreatmentSite.Inpatient),
-                <= 130 => new MetricsSeverityDiagnosis(code, score, Severity.Severe, TreatmentSite.Inpatient),
-                _ => new MetricsSeverityDiagnosis(code, score, Severity.Severe, TreatmentSite.IntensiveCareUnit),
+                >= 0 and <= 70 => new MetricsSeverityDiagnosis(code, score, Severity.Mild, TreatmentSite.Outpatient, evidences),
+                <= 90 => new MetricsSeverityDiagnosis(code, score, Severity.Moderate, TreatmentSite.Inpatient, evidences),
+                <= 130 => new MetricsSeverityDiagnosis(code, score, Severity.Severe, TreatmentSite.Inpatient, evidences),
+                _ => new MetricsSeverityDiagnosis(code, score, Severity.Severe, TreatmentSite.IntensiveCareUnit, evidences),
             };
         }
 
@@ -129,30 +190,34 @@ namespace Respira.Clinical.Domain.Services
                 {
                     // Check if BUN is missing
                     var isBunMissing = !observations.Any(x => x.Variable.Code.Equals("UREA"));
-                    var diagnosis = Curb65((int)CalculateMetricsScore(metric, observations), isBunMissing);
+
+                    var (score, evidences) = CalculateMetricsScore(metric, observations);
+                    var diagnosis = Curb65((int)score, evidences, isBunMissing);
                     metricsDiagnoses = metricsDiagnoses.Append(diagnosis);
                     severities.Add(metric.Code, diagnosis.Severity);
                     treatmentSites.Add(metric.Code, diagnosis.TreatmentSite);
                 }
                 else if (metric.Code.Equals("PSI"))
                 {
-                    var diagnosis = Psi((int)CalculateMetricsScore(metric, observations));
+                    var (score, evidences) = CalculateMetricsScore(metric, observations);
+                    var diagnosis = Psi((int)score, evidences);
                     metricsDiagnoses = metricsDiagnoses.Append(diagnosis);
                     severities.Add(metric.Code, diagnosis.Severity);
                     treatmentSites.Add(metric.Code, diagnosis.TreatmentSite);
                 }
                 else if (metric.Code.Equals("IDSA/ATS"))
                 {
-                    var score = (int)CalculateMetricsScore(metric, observations);
-                    var needIcu = Ats(score);
+                    var (score, evidences) = CalculateMetricsScore(metric, observations);
+                    var needIcu = Ats((int)score);
                     if (needIcu)
                     {
                         // If you need ICU, then the severity is obviously severe
                         metricsDiagnoses = metricsDiagnoses.Append(new MetricsSeverityDiagnosis(
                             metric.Code,
-                            score,
+                            (int)score,
                             Severity.Severe,
-                            TreatmentSite.IntensiveCareUnit));
+                            TreatmentSite.IntensiveCareUnit,
+                            evidences));
                         severities.Add(metric.Code, Severity.Severe);
                         treatmentSites.Add(metric.Code, TreatmentSite.IntensiveCareUnit);
                     }
@@ -233,12 +298,6 @@ namespace Respira.Clinical.Domain.Services
             throw new InvalidOperationException("Unexpected diagnosis result");
         }
 
-        private decimal CalculatePriorityScore(int priority)
-        {
-            // Reciprocal Rank
-            return 1m / priority;
-        }
-
         public Result<InfectionAssessment> AssessInfection(ClinicalContext context, IEnumerable<ClinicalObservation> observations, Severity severity, TreatmentSite treatmentSite)
         {
             /*
@@ -246,9 +305,10 @@ namespace Respira.Clinical.Domain.Services
              * 1. Check for suspected pathogens. This list is the easiest to check, but
              * since the only factors used is severity and treatment site, this may not
              * be a strong evidence for infection.
-             * 2. Check for risk factors. Since factors have priority, we will use
-             * the some mathematical models to calculate a factor score.
-             * The final score of a pathogen simply is the sum of all factor scores.
+             * 2. Check for risk factors. Each satisfied risk factor counts 1 point,
+             * and a pathogen that is also in the suspected list gets an extra point.
+             * The final score of a pathogen simply is the number of satisfied risk
+             * factors (plus the suspected boost).
              * 3. Assessment. 
              * 3.1. Any pathogen with risk factors would be included in the
              * heavy suspected list.
@@ -260,6 +320,7 @@ namespace Respira.Clinical.Domain.Services
 
             IEnumerable<HeavySuspected> heavySuspected = [];
             IEnumerable<Pathogen> worthSuspected = [];
+            var evidences = new List<string>();
 
             // Step 1: Check for suspected pathogens
             var suspected = context.SuspectedCauses
@@ -269,9 +330,11 @@ namespace Respira.Clinical.Domain.Services
             // Step 2: Check for risk factors
             foreach (var pathogen in context.Pathogens)
             {
-                var score = pathogen.RiskFactors
-                    .Where(r => r.IsFactorSasified(observations))
-                    .Sum(r => CalculatePriorityScore(r.Priority));
+                var score = pathogen.RiskFactors.Count(r =>
+                {
+                    evidences.Add(BuildEvidence($"{pathogen.Name} - {r.Criterion.Name}", r.Criterion.Formula, observations));
+                    return r.IsFactorSasified(observations);
+                });
                 logger.LogDebug("Risk factor calculate: score for {pathogen}: {score}", pathogen.Name, score);
 
                 if (score == 0)
@@ -282,8 +345,9 @@ namespace Respira.Clinical.Domain.Services
                 // Check if this pathogen also exists in the suspected list
                 if (suspected.Any(s => s.Id == pathogen.Id))
                 {
-                    // If yes, add a boost. Since we use reciprocal rank, which is
-                    // always <= 1, so a adding 1 will serve
+                    // If yes, add a boost. The score counts satisfied risk factors,
+                    // so +1 ranks a suspected pathogen above one with the same
+                    // number of satisfied risk factors
                     logger.LogDebug("Pathogen {pathogen} is also in the suspected list, adding boost", pathogen.Name);
                     score++;
                 }
@@ -298,6 +362,7 @@ namespace Respira.Clinical.Domain.Services
             {
                 HeavySuspected = [.. heavySuspected.OrderByDescending(x => x.PriorityScore)],
                 WorthSuspected = worthSuspected,
+                Evidences = evidences,
             });
         }
     }

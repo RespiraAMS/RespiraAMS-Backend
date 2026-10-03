@@ -16,6 +16,7 @@
 				--text: #172436;
 				--text-muted: #64748b;
 				--danger: #d92d20;
+				--warning: #b54708;
 			}
 			
 			* { margin: 0; padding: 0; box-sizing: border-box; }
@@ -165,9 +166,93 @@
 				font-size: 0.7rem;
 				font-weight: 800;
 			}
+
+			.form-group.has-warning,
+			.form-group.has-warning:focus-within {
+				border-color: var(--warning);
+				background: #fffaeb;
+			}
+
+			.form-group.has-warning .form-label { color: var(--warning); }
+
+			.form-group.has-warning .form-input {
+				border-color: var(--warning);
+				background: #fffdf7;
+			}
+
+			.form-group.has-warning .numeric-input-wrap,
+			.form-group.has-warning .segmented-toggle {
+				border-color: var(--warning);
+				box-shadow: 0 0 0 3px rgba(181, 71, 8, 0.12);
+			}
+
+			.field-warn-msg {
+				width: 100%;
+				display: flex;
+				align-items: flex-start;
+				gap: 0.4rem;
+				margin-top: 0.55rem;
+				color: var(--warning);
+				font-size: 0.8rem;
+				font-weight: 600;
+				line-height: 1.45;
+			}
+
+			.field-warn-msg::before {
+				content: '!';
+				flex-shrink: 0;
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				width: 15px;
+				height: 15px;
+				margin-top: 1px;
+				border-radius: 50%;
+				background: var(--warning);
+				color: #fff;
+				font-size: 0.7rem;
+				font-weight: 800;
+			}
+
+			.required-mark {
+				color: var(--danger);
+				margin-left: 0.15rem;
+			}
 			
 			.form-group:last-child { margin-bottom: 0; }
-			
+
+			.category-section { margin-bottom: 1.5rem; }
+			.category-section:last-child { margin-bottom: 0; }
+
+			.category-title {
+				display: flex;
+				align-items: center;
+				gap: 0.5rem;
+				margin-bottom: 0.8rem;
+				padding-bottom: 0.5rem;
+				border-bottom: 1px dashed var(--border);
+				font-size: 0.78rem;
+				font-weight: 800;
+				letter-spacing: 0.07em;
+				text-transform: uppercase;
+				color: var(--text-muted);
+			}
+
+			.category-count {
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				min-width: 1.45rem;
+				height: 1.45rem;
+				padding: 0 0.4rem;
+				border-radius: 999px;
+				background: var(--border);
+				color: var(--text-muted);
+				font-size: 0.7rem;
+				font-weight: 800;
+				letter-spacing: 0;
+			}
+
 			.form-label {
 				display: block;
 				font-weight: 700;
@@ -339,6 +424,60 @@
 			.btn-primary { background: var(--primary); color: white; }
 			.btn-primary:hover:not(:disabled) { background: var(--primary-hover); }
 			.btn:disabled { opacity: 0.5; cursor: not-allowed; box-shadow: none; }
+			
+			.btn-secondary {
+				background: var(--primary-light);
+				color: var(--primary-hover);
+				box-shadow: none;
+				border: 1px solid rgba(15,109,188,0.25);
+			}
+			
+			.btn-secondary:hover:not(:disabled) { background: #dcecfb; }
+			
+			.btn[hidden] { display: none; }
+			
+			.evidence-toggle {
+				width: 100%;
+				margin-top: 0.75rem;
+				padding: 0.7rem 1.2rem;
+				font-size: 0.88rem;
+			}
+			
+			.evidence-panel {
+				margin-top: 0.75rem;
+				padding: 1rem 1.2rem;
+				background: #f8fafc;
+				border: 1px dashed var(--border);
+				border-radius: 10px;
+			}
+			
+			.evidence-panel h3 {
+				font-size: 0.82rem;
+				font-weight: 800;
+				text-transform: uppercase;
+				letter-spacing: 0.03em;
+				color: var(--text-muted);
+				margin-bottom: 0.6rem;
+			}
+			
+			.evidence-list {
+				margin: 0;
+				padding-left: 1.15rem;
+				display: flex;
+				flex-direction: column;
+				gap: 0.45rem;
+			}
+			
+			.evidence-list li {
+				font-size: 0.85rem;
+				line-height: 1.5;
+				color: var(--text);
+				word-break: break-word;
+				/* Evidence text is multi-line (source / Formula / Variables / Value);
+				   preserve the \n separators and \t indents coming from the API. */
+				white-space: pre-wrap;
+				tab-size: 4;
+			}
 			
 			.spinner {
 				display: inline-block;
@@ -624,7 +763,7 @@
 				<p>Loading diagnosis form...</p>
 			</div>
 
-			<form id="diagnoseForm" style="display:none;">
+			<form id="diagnoseForm" style="display:none;" novalidate>
 				<div class="card">
 					<h2><span class="step-num">1</span>
 					Clinical Observations</h2>
@@ -646,6 +785,14 @@
 					<div class="result-row" style="margin-top:0.5rem;">
 						<span class="result-label">Treatment Site</span>
 						<span id="treatmentBadge" class="treatment-badge"></span>
+					</div>
+					<button type="button" class="btn btn-secondary evidence-toggle" id="evidenceToggle"
+						aria-expanded="false" aria-controls="evidencePanel">
+						View Evidences
+					</button>
+					<div id="evidencePanel" class="evidence-panel" hidden>
+						<h3>Evidences</h3>
+						<ul id="evidenceList" class="evidence-list"></ul>
 					</div>
 				</div>
 
@@ -686,6 +833,82 @@
 			};
 
 			let formVariables = [];
+			let variableMeta = {};
+
+			// Values beyond this magnitude come from the API as decimal.MaxValue /
+			// decimal.MinValue stand-ins for "unbounded" - treat them as open ends.
+			const UNBOUNDED = 1e20;
+
+			function normalizeRange(raw) {
+				if (!raw) return null;
+				const pick = (a, b) => (a !== undefined && a !== null) ? a : b;
+				const min = pick(raw.min, raw.Min);
+				const max = pick(raw.max, raw.Max);
+				const range = {
+					min: (min !== undefined && min !== null && min !== '') ? Number(min) : null,
+					max: (max !== undefined && max !== null && max !== '') ? Number(max) : null,
+					isMinExclusive: !!(pick(raw.isMinExclusive, raw.IsMinExclusive)),
+					isMaxExclusive: !!(pick(raw.isMaxExclusive, raw.IsMaxExclusive)),
+					unit: pick(raw.unit, raw.Unit) || null,
+				};
+				if (range.min !== null) {
+					if (!Number.isFinite(range.min) || range.min < -UNBOUNDED) range.min = null;
+				}
+				if (range.max !== null) {
+					if (!Number.isFinite(range.max) || range.max > UNBOUNDED) range.max = null;
+				}
+				if (range.min === null && range.max === null) return null;
+				return range;
+			}
+
+			// Same semantics as the backend Range.IsInRange
+			function inRange(value, range) {
+				if (!range) return true;
+				if (range.min !== null) {
+					if (range.isMinExclusive ? value <= range.min : value < range.min) return false;
+				}
+				if (range.max !== null) {
+					if (range.isMaxExclusive ? value >= range.max : value > range.max) return false;
+				}
+				return true;
+			}
+
+			function describeRange(range, unit) {
+				if (!range) return '';
+				const u = unit || range.unit;
+				const suffix = u ? ` ${u}` : '';
+				const minOp = range.isMinExclusive ? '>' : '≥';
+				const maxOp = range.isMaxExclusive ? '<' : '≤';
+				if (range.min !== null && range.max !== null) return `${minOp} ${range.min} and ${maxOp} ${range.max}${suffix}`;
+				if (range.min !== null) return `${minOp} ${range.min}${suffix}`;
+				if (range.max !== null) return `${maxOp} ${range.max}${suffix}`;
+				return '';
+			}
+
+			// Placeholder for numeric inputs, following the "normal: min-max" template
+			function normalPlaceholder(meta) {
+				const range = meta && meta.normalRange;
+				if (!range) return 'Enter value';
+				if (range.min !== null && range.max !== null) return `normal: ${range.min}-${range.max}`;
+				if (range.min !== null) return `normal: ${range.min}+`;
+				return `normal: up to ${range.max}`;
+			}
+
+			function buildVariableMeta(variables) {
+				variableMeta = {};
+				variables.forEach(v => {
+					const id = String(v.id || v.Id);
+					variableMeta[id] = {
+						id: id,
+						name: v.name || v.Name || 'Field',
+						valueType: v.valueType || v.ValueType,
+						isRequired: !!(v.isRequired !== undefined ? v.isRequired : v.IsRequired),
+						unit: v.canonicalUnit || v.CanonicalUnit || null,
+						acceptedRange: normalizeRange(v.acceptedRange !== undefined ? v.acceptedRange : v.AcceptedRange),
+						normalRange: normalizeRange(v.normalRange !== undefined ? v.normalRange : v.NormalRange),
+					};
+				});
+			}
 
 			async function init() {
 				try {
@@ -723,89 +946,159 @@
 					.replace(/'/g, '&#39;');
 			}
 
+			const CATEGORY_ENUM_ORDER = ['PersonalInformation', 'Paraclinical', 'Clinical'];
+			const CATEGORY_DISPLAY_ORDER = ['PersonalInformation', 'Clinical', 'Paraclinical'];
+			const CATEGORY_LABELS = {
+				PersonalInformation: 'Personal Information',
+				Clinical: 'Clinical',
+				Paraclinical: 'Paraclinical',
+			};
+
+			function normalizeCategoryKey(raw) {
+				if (raw === undefined || raw === null || raw === '') return null;
+				const text = String(raw).trim();
+				if (/^\d+$/.test(text)) {
+					const idx = Number(text);
+					return CATEGORY_ENUM_ORDER[idx] || null;
+				}
+				const match = Object.keys(CATEGORY_LABELS)
+					.find(key => key.toLowerCase() === text.toLowerCase());
+				return match || text;
+			}
+
+			function categoryLabel(key) {
+				if (!key) return 'Other';
+				return CATEGORY_LABELS[key] || key;
+			}
+
+			function categoryRank(key) {
+				const idx = CATEGORY_DISPLAY_ORDER.indexOf(key);
+				return idx === -1 ? CATEGORY_DISPLAY_ORDER.length : idx;
+			}
+
+			function buildFieldGroup(v) {
+				const group = document.createElement('div');
+				group.className = 'form-group';
+
+				const id = v.id || v.Id;
+				const name = v.name || v.Name;
+				const desc = v.description || v.Description;
+				const vt = v.valueType || v.ValueType;
+				const meta = variableMeta[String(id)];
+				const reqMark = meta && meta.isRequired
+					? ' <span class="required-mark" title="Required field">*</span>'
+					: '';
+
+				if (vt === 'Numeric') {
+					const unit = v.canonicalUnit || v.CanonicalUnit;
+					group.className = 'form-group numeric-group';
+					group.innerHTML = `
+					<div class="numeric-field-info">
+					<label class="form-label" for="var-${id}">
+					${esc(name)}${reqMark}
+					</label>
+					<div class="form-desc">${esc(desc)}</div>
+					</div>
+					<div class="numeric-input-wrap">
+					<input
+					class="form-input"
+					type="number"
+					id="var-${id}"
+					step="any"
+					placeholder="${esc(normalPlaceholder(meta))}"
+					data-variable-id="${id}"
+					data-value-type="Numeric"
+					>
+					${unit ? `<span class="numeric-unit-suffix">${esc(unit)}</span>` : ''}
+					</div>
+					`;
+				} else if (vt === 'Categorical') {
+					const options = v.acceptedValues || v.AcceptedValues || [];
+					group.className = 'form-group bool-group';
+					group.innerHTML = `
+					<div class="bool-field-info">
+					<label class="form-label" for="var-${id}">
+					${esc(name)}${reqMark}
+					</label>
+					<div class="form-desc">${esc(desc)}</div>
+					</div>
+					<div class="segmented-toggle" data-toggle-for="${id}">
+					${options.length > 0
+						? options.map((o, i) => `
+						<button type="button" class="segment-btn${i === 0 ? ' active' : ''}" data-value="${esc(o)}">${esc(String(o).replace(/_/g, ' '))}</button>
+						`).join('')
+						: '<span class="empty-state" style="padding:0.7rem 1rem;">No options</span>'}
+					</div>
+					<input
+					type="hidden"
+					id="var-${id}"
+					data-variable-id="${id}"
+					data-value-type="Categorical"
+					value="${esc(options[0] ?? '')}"
+					>
+					`;
+				} else {
+					group.className = 'form-group bool-group';
+					group.innerHTML = `
+					<div class="bool-field-info">
+					<label class="form-label" for="var-${id}">
+					${esc(name)}${reqMark}
+					</label>
+					<div class="form-desc">${esc(desc)}</div>
+					</div>
+					<div class="segmented-toggle" data-toggle-for="${id}">
+					<button type="button" class="segment-btn active" data-value="false">No</button>
+					<button type="button" class="segment-btn" data-value="true">Yes</button>
+					</div>
+					<input
+					type="hidden"
+					id="var-${id}"
+					data-variable-id="${id}"
+					data-value-type="Boolean"
+					value="false"
+					>
+					`;
+				}
+				return group;
+			}
+
 			function renderForm(variables) {
 				const container = document.getElementById('formFields');
 				container.innerHTML = '';
+				buildVariableMeta(variables);
+
+				const buckets = new Map();
 				variables.forEach(v => {
-					const group = document.createElement('div');
-					group.className = 'form-group';
+					const key = normalizeCategoryKey(v.category ?? v.Category);
+					if (!buckets.has(key)) buckets.set(key, []);
+					buckets.get(key).push(v);
+				});
 
-					const id = v.id || v.Id;
-					const name = v.name || v.Name;
-					const desc = v.description || v.Description;
-					const vt = v.valueType || v.ValueType;
+				const orderedKeys = [...buckets.keys()]
+					.map((key, order) => ({ key, order }))
+					.sort((a, b) => (categoryRank(a.key) - categoryRank(b.key)) || (a.order - b.order))
+					.map(entry => entry.key);
 
-					if (vt === 'Numeric') {
-						const unit = v.canonicalUnit || v.CanonicalUnit;
-						group.className = 'form-group numeric-group';
-						group.innerHTML = `
-						<div class="numeric-field-info">
-						<label class="form-label" for="var-${id}">
-						${esc(name)}
-						</label>
-						<div class="form-desc">${esc(desc)}</div>
-						</div>
-						<div class="numeric-input-wrap">
-						<input
-						class="form-input"
-						type="number"
-						id="var-${id}"
-						step="any"
-						placeholder="Enter value"
-						data-variable-id="${id}"
-						data-value-type="Numeric"
-						>
-						${unit ? `<span class="numeric-unit-suffix">${esc(unit)}</span>` : ''}
-						</div>
-						`;
-					} else if (vt === 'Categorical') {
-						const options = v.acceptedValues || v.AcceptedValues || [];
-						group.className = 'form-group bool-group';
-						group.innerHTML = `
-						<div class="bool-field-info">
-						<label class="form-label" for="var-${id}">
-						${esc(name)}
-						</label>
-						<div class="form-desc">${esc(desc)}</div>
-						</div>
-						<div class="segmented-toggle" data-toggle-for="${id}">
-						${options.length > 0
-							? options.map((o, i) => `
-							<button type="button" class="segment-btn${i === 0 ? ' active' : ''}" data-value="${esc(o)}">${esc(String(o).replace(/_/g, ' '))}</button>
-							`).join('')
-							: '<span class="empty-state" style="padding:0.7rem 1rem;">No options</span>'}
-						</div>
-						<input
-						type="hidden"
-						id="var-${id}"
-						data-variable-id="${id}"
-						data-value-type="Categorical"
-						value="${esc(options[0] ?? '')}"
-						>
-						`;
-					} else {
-						group.className = 'form-group bool-group';
-						group.innerHTML = `
-						<div class="bool-field-info">
-						<label class="form-label" for="var-${id}">
-						${esc(name)}
-						</label>
-						<div class="form-desc">${esc(desc)}</div>
-						</div>
-						<div class="segmented-toggle" data-toggle-for="${id}">
-						<button type="button" class="segment-btn active" data-value="false">No</button>
-						<button type="button" class="segment-btn" data-value="true">Yes</button>
-						</div>
-						<input
-						type="hidden"
-						id="var-${id}"
-						data-variable-id="${id}"
-						data-value-type="Boolean"
-						value="false"
-						>
-						`;
-					}
-					container.appendChild(group);
+				orderedKeys.forEach(key => {
+					const list = buckets.get(key);
+					const section = document.createElement('section');
+					section.className = 'category-section';
+
+					const title = document.createElement('h3');
+					title.className = 'category-title';
+					title.textContent = categoryLabel(key);
+					const count = document.createElement('span');
+					count.className = 'category-count';
+					count.textContent = list.length;
+					title.appendChild(count);
+
+					const fields = document.createElement('div');
+					fields.className = 'category-fields';
+					list.forEach(v => fields.appendChild(buildFieldGroup(v)));
+
+					section.appendChild(title);
+					section.appendChild(fields);
+					container.appendChild(section);
 				});
 
 				variables.forEach(v => {
@@ -835,7 +1128,15 @@
 document.getElementById('diagnoseForm').addEventListener('submit', async (e) => {
 	e.preventDefault();
 	hideError();
-	clearFieldErrors();
+
+	// Blocking validation: required fields must be filled and numeric values must
+	// stay inside the accepted range. Normal-range violations only warn.
+	const invalidCount = validateAllFields();
+	if (invalidCount > 0) {
+		showError(`Please fix the highlighted ${invalidCount === 1 ? 'field' : 'fields'} before submitting.`);
+		scrollToFirstError();
+		return;
+	}
 
 	const observations = [];
 	formVariables.forEach(v => {
@@ -950,6 +1251,23 @@ showResults(body.data);
 				worthList.innerHTML = '<div class="empty-state">No worth suspected pathogens</div>';
 			}
 
+		let evidences = data.evidences || data.Evidences || [];
+		if (!Array.isArray(evidences)) evidences = [];
+		if (evidences.length === 0) {
+			evidences = metricsDiagnoses.flatMap(m => m.evidences || m.Evidences || []);
+		}
+		const evidenceToggle = document.getElementById('evidenceToggle');
+		const evidencePanel = document.getElementById('evidencePanel');
+		const evidenceList = document.getElementById('evidenceList');
+		evidenceList.innerHTML = evidences.length > 0
+			? evidences.map(e => `<li>${esc(e)}</li>`).join('')
+			: '<li class="empty-state">No evidences available</li>';
+		evidenceToggle.hidden = evidences.length === 0;
+		evidenceToggle.dataset.count = String(evidences.length);
+		evidenceToggle.textContent = `View Evidences (${evidences.length})`;
+		evidencePanel.hidden = true;
+		evidenceToggle.setAttribute('aria-expanded', 'false');
+
 			window.scrollTo({ top: 0, behavior: 'smooth' });
 		}
 
@@ -970,14 +1288,110 @@ showResults(body.data);
 	}
 
 	function clearFieldErrors() {
-		document.querySelectorAll('.form-group.has-error').forEach(clearGroupError);
+		document.querySelectorAll('.form-group.has-error, .form-group.has-warning').forEach(clearGroupError);
 	}
 
 	function clearGroupError(group) {
 		if (!group) return;
+		group.classList.remove('has-error', 'has-warning');
+		group.querySelectorAll('.field-error-msg, .field-warn-msg').forEach(msg => msg.remove());
+		group.querySelectorAll('[aria-invalid]').forEach(el => el.removeAttribute('aria-invalid'));
+	}
+
+	function showGroupError(group, message) {
+		if (!group) return;
+		group.classList.remove('has-warning');
+		group.querySelectorAll('.field-warn-msg').forEach(msg => msg.remove());
+		group.classList.add('has-error');
+		const input = group.querySelector('[data-variable-id]');
+		if (input) input.setAttribute('aria-invalid', 'true');
+
+		let msg = group.querySelector('.field-error-msg');
+		if (!msg) {
+			msg = document.createElement('div');
+			msg.className = 'field-error-msg';
+			msg.setAttribute('role', 'alert');
+			group.appendChild(msg);
+		}
+		msg.textContent = message;
+	}
+
+	function showGroupWarning(group, message) {
+		if (!group) return;
 		group.classList.remove('has-error');
 		group.querySelectorAll('.field-error-msg').forEach(msg => msg.remove());
 		group.querySelectorAll('[aria-invalid]').forEach(el => el.removeAttribute('aria-invalid'));
+		group.classList.add('has-warning');
+
+		let msg = group.querySelector('.field-warn-msg');
+		if (!msg) {
+			msg = document.createElement('div');
+			msg.className = 'field-warn-msg';
+			msg.setAttribute('role', 'status');
+			group.appendChild(msg);
+		}
+		msg.textContent = message;
+	}
+
+	/*
+	 * Validates a single rendered field against its metadata.
+	 *  - empty required field          -> blocking error
+	 *  - numeric outside acceptedRange -> blocking error
+	 *  - numeric outside normalRange   -> non-blocking warning
+	 * Returns { hasError, hasWarning }.
+	 */
+	function validateField(input) {
+		const group = input ? input.closest('.form-group') : null;
+		const meta = input ? variableMeta[String(input.dataset.variableId || '')] : null;
+		if (!meta) return { hasError: false, hasWarning: false };
+
+		clearGroupError(group);
+		const value = String(input.value ?? '').trim();
+
+		if (value === '') {
+			if (meta.isRequired) {
+				showGroupError(group, `${meta.name} is required.`);
+				return { hasError: true, hasWarning: false };
+			}
+			return { hasError: false, hasWarning: false };
+		}
+
+		if (meta.valueType !== 'Numeric') {
+			return { hasError: false, hasWarning: false };
+		}
+
+		const num = Number(value);
+		if (!Number.isFinite(num)) {
+			showGroupError(group, `${meta.name} must be a valid number.`);
+			return { hasError: true, hasWarning: false };
+		}
+
+		if (meta.acceptedRange && !inRange(num, meta.acceptedRange)) {
+			showGroupError(group,
+				`Value must be within the accepted range (${describeRange(meta.acceptedRange, meta.unit)}).`);
+			return { hasError: true, hasWarning: false };
+		}
+
+		if (meta.normalRange && !inRange(num, meta.normalRange)) {
+			showGroupWarning(group,
+				`Outside the normal range (${describeRange(meta.normalRange, meta.unit)}). This value is accepted and can still be submitted.`);
+			return { hasError: false, hasWarning: true };
+		}
+
+		return { hasError: false, hasWarning: false };
+	}
+
+	/*
+	 * Validates every rendered field. Returns how many fields have a blocking error.
+	 */
+	function validateAllFields() {
+		let invalidCount = 0;
+		formVariables.forEach(v => {
+			const input = document.getElementById(`var-${v.id || v.Id}`);
+			if (!input) return;
+			if (validateField(input).hasError) invalidCount++;
+		});
+		return invalidCount;
 	}
 
 	/*
@@ -998,14 +1412,7 @@ showResults(body.data);
 			if (!group) continue;
 
 			clearGroupError(group);
-			group.classList.add('has-error');
-			input.setAttribute('aria-invalid', 'true');
-
-			const msg = document.createElement('div');
-			msg.className = 'field-error-msg';
-			msg.setAttribute('role', 'alert');
-			msg.textContent = message;
-			group.appendChild(msg);
+			showGroupError(group, message);
 			applied++;
 		}
 		return applied;
@@ -1041,14 +1448,28 @@ showResults(body.data);
 			if (e.key === 'Escape') hideError();
 		});
 
-		// Drop a field's server-side error as soon as the user edits it
+		// Re-validate a field as soon as the user edits it: this drops any stale
+		// server-side error and immediately applies the accepted/normal range rules.
 		document.getElementById('diagnoseForm').addEventListener('input', (e) => {
-			clearGroupError(e.target.closest('.form-group'));
+			const input = e.target.closest('[data-variable-id]');
+			if (!input) return;
+			validateField(input);
 		});
 		document.getElementById('diagnoseForm').addEventListener('click', (e) => {
-			if (e.target.closest('.segment-btn')) {
-				clearGroupError(e.target.closest('.form-group'));
-			}
+			const btn = e.target.closest('.segment-btn');
+			if (!btn) return;
+			const group = btn.closest('.form-group');
+			const input = group ? group.querySelector('[data-variable-id]') : null;
+			if (input) validateField(input);
+		});
+
+		document.getElementById('evidenceToggle').addEventListener('click', () => {
+			const toggle = document.getElementById('evidenceToggle');
+			const panel = document.getElementById('evidencePanel');
+			const show = panel.hidden;
+			panel.hidden = !show;
+			toggle.setAttribute('aria-expanded', String(show));
+			toggle.textContent = `${show ? 'Hide' : 'View'} Evidences (${toggle.dataset.count || 0})`;
 		});
 
 		init();

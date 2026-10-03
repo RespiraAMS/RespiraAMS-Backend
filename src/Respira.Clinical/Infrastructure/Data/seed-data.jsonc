@@ -12,10 +12,19 @@
             "description": "Tuổi bệnh nhân",
             "valueType": "Numeric",
             "canonicalUnit": "year",
+            "isRequired": true,
+            "category": "PersonalInformation",
             "acceptedRange": {
-                "min": 0,
-                "isMinExclusive": true,
+                "min": 16,
+                "isMinExclusive": false,
                 "max": null,
+                "isMaxExclusive": false,
+                "unit": "year"
+            },
+            "normalRange": {
+                "min": 16,
+                "isMinExclusive": false,
+                "max": 100,
                 "isMaxExclusive": false,
                 "unit": "year"
             }
@@ -26,7 +35,9 @@
             "code": "FEMALE",
             "description": "Bệnh nhân này có phải giới tính nữ không?",
             "valueType": "Boolean",
-            "canonicalUnit": null
+            "canonicalUnit": null,
+            "isRequired": true,
+            "category": "PersonalInformation"
         },
         {
             "id": "00000000-0000-0000-0000-100000000003",
@@ -35,10 +46,19 @@
             "description": "Chiều cao bệnh nhân",
             "valueType": "Numeric",
             "canonicalUnit": "cm",
+            "isRequired": true,
+            "category": "PersonalInformation",
             "acceptedRange": {
                 "min": 0,
                 "isMinExclusive": true,
                 "max": null,
+                "isMaxExclusive": false,
+                "unit": "cm"
+            },
+            "normalRange": {
+                "min": 100,
+                "isMinExclusive": false,
+                "max": 200,
                 "isMaxExclusive": false,
                 "unit": "cm"
             }
@@ -50,21 +70,32 @@
             "description": "Cân nặng bệnh nhân",
             "valueType": "Numeric",
             "canonicalUnit": "kg",
+            "isRequired": true,
+            "category": "PersonalInformation",
             "acceptedRange": {
                 "min": 0,
                 "isMinExclusive": true,
                 "max": null,
                 "isMaxExclusive": false,
                 "unit": "kg"
+            },
+            "normalRange": {
+                "min": 20,
+                "isMinExclusive": false,
+                "max": 100,
+                "isMaxExclusive": false,
+                "unit": "kg"
             }
         },
         {
             "id": "00000000-0000-0000-0000-100000000005",
-            "name": "Dấu hiện suy giảm tri giác",
+            "name": "Dấu hiện suy giảm tri giác mới",
             "code": "CONFUSION",
-            "description": "Bệnh nhân có dấu hiệu bị suy giảm tri giác không?",
+            "description": "Bệnh nhân có dấu hiệu bị suy giảm tri giác mới không?",
             "valueType": "Boolean",
-            "canonicalUnit": null
+            "canonicalUnit": null,
+            "isRequired": false,
+            "category": "Clinical"
         },
         {
             "id": "00000000-0000-0000-0000-100000000006",
@@ -73,10 +104,19 @@
             "description": "Nhịp thở bệnh nhân",
             "valueType": "Numeric",
             "canonicalUnit": "breaths/min",
+            "isRequired": false,
+            "category": "Clinical",
             "acceptedRange": {
-                "min": 0,
-                "isMinExclusive": true,
-                "max": null,
+                "min": 5,
+                "isMinExclusive": false,
+                "max": 50,
+                "isMaxExclusive": false,
+                "unit": "breaths/min"
+            },
+            "normalRange": {
+                "min": 12,
+                "isMinExclusive": false,
+                "max": 20,
                 "isMaxExclusive": false,
                 "unit": "breaths/min"
             }
@@ -88,10 +128,19 @@
             "description": "Huyết áp tâm thu của bệnh nhân",
             "valueType": "Numeric",
             "canonicalUnit": "mmHg",
+            "isRequired": false,
+            "category": "Clinical",
             "acceptedRange": {
                 "min": 0,
                 "isMinExclusive": true,
                 "max": null,
+                "isMaxExclusive": false,
+                "unit": "mmHg"
+            },
+            "normalRange": {
+                "min": 60,
+                "isMinExclusive": false,
+                "max": 120,
                 "isMaxExclusive": false,
                 "unit": "mmHg"
             }
@@ -103,10 +152,19 @@
             "description": "Huyết áp tâm trương của bệnh nhân",
             "valueType": "Numeric",
             "canonicalUnit": "mmHg",
+            "isRequired": false,
+            "category": "Clinical",
             "acceptedRange": {
                 "min": 0,
                 "isMinExclusive": true,
                 "max": null,
+                "isMaxExclusive": false,
+                "unit": "mmHg"
+            },
+            "normalRange": {
+                "min": 90,
+                "isMinExclusive": true,
+                "max": 200,
                 "isMaxExclusive": false,
                 "unit": "mmHg"
             }
@@ -118,10 +176,19 @@
             "description": "Nhiệt độ cơ thể của bệnh nhân",
             "valueType": "Numeric",
             "canonicalUnit": "Celcius",
+            "isRequired": false,
+            "category": "Clinical",
             "acceptedRange": {
                 "min": 0,
                 "isMinExclusive": true,
                 "max": 100,
+                "isMaxExclusive": false,
+                "unit": "Celcius"
+            },
+            "normalRange": {
+                "min": 36,
+                "isMinExclusive": false,
+                "max": 37,
                 "isMaxExclusive": false,
                 "unit": "Celcius"
             }
@@ -133,6 +200,8 @@
             "description": "Urea máu của bệnh nhân",
             "valueType": "Numeric",
             "canonicalUnit": "mmol/L",
+            "isRequired": false,
+            "category": "Paraclinical",
             "acceptedRange": {
                 "min": 0,
                 "isMinExclusive": true,
@@ -148,6 +217,8 @@
             "description": "Số lượng bạch cầu bệnh nhân",
             "valueType": "Numeric",
             "canonicalUnit": "cells/mm3",
+            "isRequired": false,
+            "category": "Paraclinical",
             "acceptedRange": {
                 "min": 0,
                 "isMinExclusive": true,
@@ -163,6 +234,8 @@
             "description": "Số lượng tiểu cầu bệnh nhân",
             "valueType": "Numeric",
             "canonicalUnit": "cells/mm3",
+            "isRequired": false,
+            "category": "Paraclinical",
             "acceptedRange": {
                 "min": 0,
                 "isMinExclusive": true,
@@ -178,6 +251,8 @@
             "description": "Phân áp oxy trong máu động mạch",
             "valueType": "Numeric",
             "canonicalUnit": "mmHg",
+            "isRequired": false,
+            "category": "Paraclinical",
             "acceptedRange": {
                 "min": 0,
                 "isMinExclusive": true,
@@ -193,6 +268,8 @@
             "description": "Phân suất oxy trong khí hít vào",
             "valueType": "Numeric",
             "canonicalUnit": null,
+            "isRequired": false,
+            "category": "Paraclinical",
             "acceptedRange": {
                 "min": 0,
                 "isMinExclusive": true,
@@ -208,6 +285,8 @@
             "description": "Độ bão hòa oxy trong máu ngoại vi",
             "valueType": "Numeric",
             "canonicalUnit": "%",
+            "isRequired": true,
+            "category": "Paraclinical",
             "acceptedRange": {
                 "min": 0,
                 "isMinExclusive": true,
@@ -218,16 +297,20 @@
         },
         {
             "id": "00000000-0000-0000-0000-100000000016",
-            "name": "Tiền sử dị ứng beta-lactam",
-            "code": "BETA-LACTAM-ALLERGY",
-            "description": "Bệnh nhân có bị dị ứng với beta-lactam không?",
-            "valueType": "Categorical",
-            "canonicalUnit": null,
-            "acceptedValues": [
-                "Có",
-                "Không",
-                "Không xác định"
-            ]
+            "name": "Mạch đập",
+            "code": "PULSE",
+            "description": "Mạch đập bệnh nhân",
+            "valueType": "Numeric",
+            "canonicalUnit": "bpm",
+            "isRequired": false,
+            "category": "Clinical",
+            "acceptedRange": {
+                "min": 0,
+                "isMinExclusive": false,
+                "max": null,
+                "isMaxExclusive": false,
+                "unit": "bpm"
+            }
         },
         {
             "id": "00000000-0000-0000-0000-100000000017",
@@ -235,7 +318,9 @@
             "code": "MULTILOBAR-PULMONARY-LESION",
             "description": "Bệnh nhân có bị tổn thương nhiều thùy phổi trên phim X-quang không?",
             "valueType": "Boolean",
-            "canonicalUnit": null
+            "canonicalUnit": null,
+            "isRequired": false,
+            "category": "Paraclinical"
         },
         {
             "id": "00000000-0000-0000-0000-100000000018",
@@ -243,7 +328,9 @@
             "code": "HYPOTENSION",
             "description": "Bệnh nhân có bị hạ huyết áp cần phải bù dịch tích cực không?",
             "valueType": "Boolean",
-            "canonicalUnit": null
+            "canonicalUnit": null,
+            "isRequired": false,
+            "category": "Clinical"
         },
         {
             "id": "00000000-0000-0000-0000-100000000019",
@@ -251,7 +338,9 @@
             "code": "REQUIRES-MECHANICAL-VENTILATION",
             "description": "Bệnh nhân có bị suy hô hấp cần phải thông khí cơ học không?",
             "valueType": "Boolean",
-            "canonicalUnit": null
+            "canonicalUnit": null,
+            "isRequired": false,
+            "category": "Clinical"
         },
         {
             "id": "00000000-0000-0000-0000-100000000020",
@@ -259,7 +348,9 @@
             "code": "SEPTIC-SHOCK",
             "description": "Bệnh nhân có bị sốc nhiễm khuẩn cần phải dùng thuốc vận mạch không?",
             "valueType": "Boolean",
-            "canonicalUnit": null
+            "canonicalUnit": null,
+            "isRequired": false,
+            "category": "Clinical"
         },
         {
             "id": "00000000-0000-0000-0000-100000000021",
@@ -267,7 +358,9 @@
             "code": "ALCOHOL-ABUSE",
             "description": "Bệnh nhân có tiền sử nghiện rượu không?",
             "valueType": "Boolean",
-            "canonicalUnit": null
+            "canonicalUnit": null,
+            "isRequired": false,
+            "category": "Clinical"
         },
         {
             "id": "00000000-0000-0000-0000-100000000022",
@@ -275,7 +368,9 @@
             "code": "SMOKING",
             "description": "Bệnh nhân có hút thuốc lá không?",
             "valueType": "Boolean",
-            "canonicalUnit": null
+            "canonicalUnit": null,
+            "isRequired": false,
+            "category": "Clinical"
         },
         {
             "id": "00000000-0000-0000-0000-100000000023",
@@ -283,263 +378,329 @@
             "code": "COPD",
             "description": "Bệnh nhân có mắc bệnh phổi tắc nghẽn mãn tính không?",
             "valueType": "Boolean",
-            "canonicalUnit": null
+            "canonicalUnit": null,
+            "isRequired": false,
+            "category": "Clinical"
         },
         {
             "id": "00000000-0000-0000-0000-100000000024",
-            "name": "Bệnh phổi tắc nghẽn mãn tính nặng",
-            "code": "SEVERE-COPD",
-            "description": "Bệnh nhân có bị mắc bệnh phổi tắc nghẽn mãn tính nặng (FEV1 < 30%) không?",
-            "valueType": "Boolean",
-            "canonicalUnit": null
-        },
-        {
-            "id": "00000000-0000-0000-0000-100000000025",
             "name": "Suy dinh dưỡng",
             "code": "MALNUTRITION",
             "description": "Bệnh nhân có bị suy dinh dưỡng không?",
             "valueType": "Boolean",
-            "canonicalUnit": null
+            "canonicalUnit": null,
+            "isRequired": false,
+            "category": "Clinical"
         },
         {
-            "id": "00000000-0000-0000-0000-100000000026",
+            "id": "00000000-0000-0000-0000-100000000025",
             "name": "Mắc bệnh tâm thần",
             "code": "MENTAL-ILLNESS",
             "description": "Bệnh nhân có bị mắc bệnh tâm thần không?",
             "valueType": "Boolean",
-            "canonicalUnit": null
+            "canonicalUnit": null,
+            "isRequired": false,
+            "category": "Clinical"
         },
         {
-            "id": "00000000-0000-0000-0000-100000000027",
+            "id": "00000000-0000-0000-0000-100000000026",
             "name": "Suy giảm miễn dịch",
             "code": "IMMUNOCOMPROMISED",
             "description": "Bệnh nhân có bị suy giảm miễn dịch không?",
             "valueType": "Boolean",
-            "canonicalUnit": null
+            "canonicalUnit": null,
+            "isRequired": false,
+            "category": "Clinical"
         },
         {
-            "id": "00000000-0000-0000-0000-100000000028",
+            "id": "00000000-0000-0000-0000-100000000027",
             "name": "Nhiễm HIV",
             "code": "HIV",
             "description": "Bệnh nhân có nhiễm HIV không?",
             "valueType": "Boolean",
-            "canonicalUnit": null
+            "canonicalUnit": null,
+            "isRequired": false,
+            "category": "Clinical"
         },
         {
-            "id": "00000000-0000-0000-0000-100000000029",
+            "id": "00000000-0000-0000-0000-100000000028",
             "name": "Ghép tạng",
             "code": "ORGAN-TRANSPLANT",
             "description": "Bệnh nhân có từng ghép tạng không?",
             "valueType": "Boolean",
-            "canonicalUnit": null
+            "canonicalUnit": null,
+            "isRequired": false,
+            "category": "Clinical"
         },
         {
-            "id": "00000000-0000-0000-0000-100000000030",
+            "id": "00000000-0000-0000-0000-100000000029",
             "name": "Đái tháo đường",
             "code": "DIABETES",
             "description": "Bệnh nhân có bị đái tháo đường không?",
             "valueType": "Boolean",
-            "canonicalUnit": null
+            "canonicalUnit": null,
+            "isRequired": false,
+            "category": "Clinical"
         },
         {
-            "id": "00000000-0000-0000-0000-100000000031",
+            "id": "00000000-0000-0000-0000-100000000030",
             "name": "Nhiễm virus influenza",
             "code": "INFLUENZA",
             "description": "Bệnh nhân có bị nhiễm virus influenza không?",
             "valueType": "Boolean",
-            "canonicalUnit": null
+            "canonicalUnit": null,
+            "isRequired": false,
+            "category": "Clinical"
         },
         {
-            "id": "00000000-0000-0000-0000-100000000032",
+            "id": "00000000-0000-0000-0000-100000000031",
             "name": "Nhiễm virus sởi",
             "code": "MEASLES",
             "description": "Bệnh nhân có bị nhiễm virus sởi không?",
             "valueType": "Boolean",
-            "canonicalUnit": null
+            "canonicalUnit": null,
+            "isRequired": false,
+            "category": "Clinical"
         },
         {
-            "id": "00000000-0000-0000-0000-100000000033",
+            "id": "00000000-0000-0000-0000-100000000032",
             "name": "Tiêm chích",
             "code": "IV-DRUG-USE",
             "description": "Bệnh nhân có từng tiêm chích không?",
             "valueType": "Boolean",
-            "canonicalUnit": null
+            "canonicalUnit": null,
+            "isRequired": false,
+            "category": "Clinical"
         },
         {
-            "id": "00000000-0000-0000-0000-100000000034",
+            "id": "00000000-0000-0000-0000-100000000033",
             "name": "Tiền sử nhiễm MRSA",
             "code": "PRIOR-MRSA-INFECTION",
             "description": "Bệnh nhân có tiền sử nhiễm MRSA không?",
             "valueType": "Boolean",
-            "canonicalUnit": null
+            "canonicalUnit": null,
+            "isRequired": false,
+            "category": "Clinical"
         },
         {
-            "id": "00000000-0000-0000-0000-100000000035",
+            "id": "00000000-0000-0000-0000-100000000034",
             "name": "Nằm viện và dùng kháng sinh tĩnh mạch trong vòng 90 ngày",
             "code": "HOSPITALIZATION-90D",
             "description": "Bệnh nhân có từng nằm viện và dùng kháng sinh tĩnh mạch trong vòng 90 ngày không?",
             "valueType": "Boolean",
-            "canonicalUnit": null
+            "canonicalUnit": null,
+            "isRequired": false,
+            "category": "Clinical"
         },
         {
-            "id": "00000000-0000-0000-0000-100000000036",
+            "id": "00000000-0000-0000-0000-100000000035",
             "name": "Điều trị tại khoa điều trị tích cực",
             "code": "ICU-STAY",
             "description": "Bệnh nhân có từng nằm ICU gần đây không?",
             "valueType": "Boolean",
-            "canonicalUnit": null
+            "canonicalUnit": null,
+            "isRequired": false,
+            "category": "Clinical"
         },
         {
-            "id": "00000000-0000-0000-0000-100000000037",
+            "id": "00000000-0000-0000-0000-100000000036",
             "name": "Đặt nội khí quản",
             "code": "INTUBATION",
             "description": "Bệnh nhân có từng đặt nội khí quản gần đây không?",
             "valueType": "Boolean",
-            "canonicalUnit": null
+            "canonicalUnit": null,
+            "isRequired": false,
+            "category": "Clinical"
         },
         {
-            "id": "00000000-0000-0000-0000-100000000039",
+            "id": "00000000-0000-0000-0000-100000000037",
             "name": "Động kinh",
             "code": "EPILEPSY",
             "description": "Bệnh nhân có bị động kinh không?",
             "valueType": "Boolean",
-            "canonicalUnit": null
+            "canonicalUnit": null,
+            "isRequired": false,
+            "category": "Clinical"
         },
         {
-            "id": "00000000-0000-0000-0000-100000000040",
+            "id": "00000000-0000-0000-0000-100000000038",
             "name": "Gây mê",
             "code": "ANESTHESIA",
             "description": "Bệnh nhân có bị gây mê gần đây không?",
             "valueType": "Boolean",
-            "canonicalUnit": null
+            "canonicalUnit": null,
+            "isRequired": false,
+            "category": "Clinical"
         },
         {
-            "id": "00000000-0000-0000-0000-100000000041",
+            "id": "00000000-0000-0000-0000-100000000039",
             "name": "Sử dụng kháng sinh trước đó",
             "code": "PRIOR-ANTIBIOTIC-USE",
             "description": "Bệnh nhân có từng sử dụng kháng sinh gần đây không?",
             "valueType": "Boolean",
-            "canonicalUnit": null
+            "canonicalUnit": null,
+            "isRequired": false,
+            "category": "Clinical"
         },
         {
-            "id": "00000000-0000-0000-0000-100000000042",
+            "id": "00000000-0000-0000-0000-100000000040",
             "name": "Bệnh xơ nang",
             "code": "CYSTIC-FIBROSIS",
             "description": "Bệnh nhân có bị bệnh xơ nang không?",
             "valueType": "Boolean",
-            "canonicalUnit": null
+            "canonicalUnit": null,
+            "isRequired": false,
+            "category": "Clinical"
         },
         {
-            "id": "00000000-0000-0000-0000-100000000043",
+            "id": "00000000-0000-0000-0000-100000000041",
             "name": "Giãn phế quản",
             "code": "BRONCHIECTASIS",
             "description": "Bệnh nhân có bị giãn phế quản không?",
             "valueType": "Boolean",
-            "canonicalUnit": null
+            "canonicalUnit": null,
+            "isRequired": false,
+            "category": "Clinical"
         },
         {
-            "id": "00000000-0000-0000-0000-100000000044",
+            "id": "00000000-0000-0000-0000-100000000042",
             "name": "Ung thư phổi",
             "code": "LUNG-CANCER",
             "description": "Bệnh nhân có bị ung thư phổi không?",
             "valueType": "Boolean",
-            "canonicalUnit": null
+            "canonicalUnit": null,
+            "isRequired": false,
+            "category": "Clinical"
         },
         {
-            "id": "00000000-0000-0000-0000-100000000045",
+            "id": "00000000-0000-0000-0000-100000000043",
             "name": "Tiền sử nhiễm Pseudomonas aeruginosa",
             "code": "PRIOR-PSEUDOMONAS",
             "description": "Bệnh nhân có tiền sử nhiễm Pseudomonas aeruginosa không?",
             "valueType": "Boolean",
-            "canonicalUnit": null
+            "canonicalUnit": null,
+            "isRequired": false,
+            "category": "Clinical"
         },
         {
-            "id": "00000000-0000-0000-0000-100000000046",
+            "id": "00000000-0000-0000-0000-100000000044",
             "name": "Viêm phổi hít",
             "code": "ASPIRATION-PNEUMONIA",
             "description": "Bệnh nhân có bị viêm phổi hít không?",
             "valueType": "Boolean",
-            "canonicalUnit": null
+            "canonicalUnit": null,
+            "isRequired": false,
+            "category": "Clinical"
         },
         {
-            "id": "00000000-0000-0000-0000-100000000047",
+            "id": "00000000-0000-0000-0000-100000000045",
             "name": "Nhiễm khuẩn kỵ khí vùng hầu họng.",
             "code": "OROPHARYNGEAL-ANAEROBIC",
             "description": "Bệnh nhân có bị nhiễm khuẩn kỵ khí vùng hầu họng không?",
             "valueType": "Boolean",
-            "canonicalUnit": null
+            "canonicalUnit": null,
+            "isRequired": false,
+            "category": "Clinical"
         },
         {
-            "id": "00000000-0000-0000-0000-100000000048",
+            "id": "00000000-0000-0000-0000-100000000046",
             "name": "Bệnh nội khoa nặng.",
             "code": "SEVERE-INTERNAL-DISEASE",
             "description": "Bệnh nhân có bị mắc các bệnh nội khoa nặng không?",
             "valueType": "Boolean",
-            "canonicalUnit": null
+            "canonicalUnit": null,
+            "isRequired": false,
+            "category": "Clinical"
         },
         {
-            "id": "00000000-0000-0000-0000-100000000049",
+            "id": "00000000-0000-0000-0000-100000000047",
             "name": "Nhồi máu phổi",
             "code": "PULMONARY-INFARCTION",
             "description": "Bệnh nhân có bị nhồi máu phổi không?",
             "valueType": "Boolean",
-            "canonicalUnit": null
+            "canonicalUnit": null,
+            "isRequired": false,
+            "category": "Clinical"
         },
         {
-            "id": "00000000-0000-0000-0000-100000000050",
+            "id": "00000000-0000-0000-0000-100000000048",
             "name": "Bệnh gan mạn,",
             "code": "CHRONIC-LIVER",
             "description": "Does the patient have liver disease history",
             "valueType": "Boolean",
-            "canonicalUnit": null
+            "canonicalUnit": null,
+            "isRequired": false,
+            "category": "Clinical"
         },
         {
-            "id": "00000000-0000-0000-0000-100000000051",
+            "id": "00000000-0000-0000-0000-100000000049",
             "name": "Bệnh thận mạn",
             "code": "CHRONIC-RENAL",
             "description": "Bệnh nhân có bị bệnh thận mạn không?",
             "valueType": "Boolean",
-            "canonicalUnit": null
+            "canonicalUnit": null,
+            "isRequired": false,
+            "category": "Clinical"
         },
         {
-            "id": "00000000-0000-0000-0000-100000000052",
+            "id": "00000000-0000-0000-0000-100000000050",
             "name": "Suy tim ứ huyết",
             "code": "CHF",
             "description": "Bệnh nhân có bị suy tim ứ huyết không?",
             "valueType": "Boolean",
-            "canonicalUnit": null
+            "canonicalUnit": null,
+            "isRequired": false,
+            "category": "Clinical"
         },
         {
-            "id": "00000000-0000-0000-0000-100000000053",
+            "id": "00000000-0000-0000-0000-100000000051",
             "name": "Tai biến mạch máu não",
             "code": "CEREBROVASCULAR",
             "description": "Bệnh nhân có bị tai biến mạch máu não không?",
             "valueType": "Boolean",
-            "canonicalUnit": null
+            "canonicalUnit": null,
+            "isRequired": false,
+            "category": "Clinical"
         },
         {
-            "id": "00000000-0000-0000-0000-100000000054",
+            "id": "00000000-0000-0000-0000-100000000052",
             "name": "Bệnh ác tính",
             "code": "NEOPLASTIC",
             "description": "Bệnh nhân có bị ung thư ác tính không?",
             "valueType": "Boolean",
-            "canonicalUnit": null
+            "canonicalUnit": null,
+            "isRequired": false,
+            "category": "Clinical"
         },
         {
-            "id": "00000000-0000-0000-0000-100000000055",
+            "id": "00000000-0000-0000-0000-100000000053",
             "name": "Thuyên tắc huyết khối nhiễm trùng trong viêm nội tâm mạc nhiễm khuẩn.",
             "code": "SEPTIC-THROMBOEMBOLISM",
             "description": "Bệnh nhân có bị thuyên tắc huyết khối nhiễm trùng trong viêm nội tâm mạc nhiễm khuẩn không?",
             "valueType": "Boolean",
-            "canonicalUnit": null
+            "canonicalUnit": null,
+            "isRequired": false,
+            "category": "Clinical"
         },
         {
-            "id": "00000000-0000-0000-0000-100000000056",
+            "id": "00000000-0000-0000-0000-100000000054",
             "name": "Bệnh phổi mạn tính",
             "code": "CHRONIC-LUNG",
             "description": "Bệnh nhân có bị mắc bệnh phổi mạn tính không?",
             "valueType": "Boolean",
-            "canonicalUnit": null
+            "canonicalUnit": null,
+            "isRequired": false,
+            "category": "Clinical"
+        },
+        {
+            "id": "00000000-0000-0000-0000-100000000055",
+            "name": "Phụ nữ có thai hoặc đang cho con bú",
+            "code": "PREGNANT-OR-LACTATING",
+            "description": "Bệnh nhân có đang có thai hoặc đang cho con bú không?",
+            "valueType": "Boolean",
+            "canonicalUnit": null,
+            "isRequired": false,
+            "category": "Clinical"
         }
     ],
     "scoreMetrics": [
@@ -693,7 +854,7 @@
         // CURB-65 criteria
         {
             "id": "00000000-0000-0000-0000-400000000001",
-            "name": "Has confusion",
+            "name": "Có dấu hiệu suy giảm tri giác mới",
             "formula": {
                 "resultType": "Boolean",
                 "left": {
@@ -711,7 +872,7 @@
         },
         {
             "id": "00000000-0000-0000-0000-400000000002",
-            "name": "Uremia > 7 mmol/L",
+            "name": "Ure > 7 mmol/L",
             "formula": {
                 "resultType": "Boolean",
                 "left": {
@@ -730,7 +891,7 @@
         // This is a custom criteria of CURB-65, it's not wrong, our stakeholders required that
         {
             "id": "00000000-0000-0000-0000-400000000003",
-            "name": "Respiratory rate > 30 or SpO2 < 90%",
+            "name": "Nhịp thở > 30 hoặc SpO2 < 90%",
             "formula": {
                 "resultType": "Boolean",
                 "left": {
@@ -766,7 +927,7 @@
         },
         {
             "id": "00000000-0000-0000-0000-400000000004",
-            "name": "Low blood pressure",
+            "name": "Huyết áp thấp",
             "formula": {
                 "resultType": "Boolean",
                 "left": {
@@ -802,7 +963,7 @@
         },
         {
             "id": "00000000-0000-0000-0000-400000000005",
-            "name": "Age > 65",
+            "name": "Tuổi ≥ 65",
             "formula": {
                 "resultType": "Boolean",
                 "left": {
@@ -821,7 +982,7 @@
         // IDSA/ATS criteria
         {
             "id": "00000000-0000-0000-0000-400000000006",
-            "name": "Respiratory failure requiring mechanical ventilation",
+            "name": "Suy hô hấp cần phải thông khí cơ học",
             "formula": {
                 "resultType": "Boolean",
                 "left": {
@@ -839,7 +1000,7 @@
         },
         {
             "id": "00000000-0000-0000-0000-400000000007",
-            "name": "Septic shock requiring vasopressor support",
+            "name": "Sốc nhiễm khuẩn cần phải dùng thuốc vận mạch",
             "formula": {
                 "resultType": "Boolean",
                 "left": {
@@ -857,7 +1018,7 @@
         },
         {
             "id": "00000000-0000-0000-0000-400000000008",
-            "name": "Tachypnea",
+            "name": "Thở nhanh",
             "formula": {
                 "resultType": "Boolean",
                 "left": {
@@ -875,7 +1036,7 @@
         },
         {
             "id": "00000000-0000-0000-0000-400000000009",
-            "name": "Hypoxia",
+            "name": "Thiếu oxy",
             "formula": {
                 "resultType": "Boolean",
                 "left": {
@@ -903,7 +1064,7 @@
         },
         {
             "id": "00000000-0000-0000-0000-400000000010",
-            "name": "Radiographic Extension",
+            "name": "Tổn thương nhiều thùy phổi trên phim X-quang",
             "formula": {
                 "resultType": "Boolean",
                 "left": {
@@ -921,7 +1082,7 @@
         },
         {
             "id": "00000000-0000-0000-0000-400000000011",
-            "name": "Neurological disorder",
+            "name": "Lú lẫn, mất định hướng",
             "formula": {
                 "resultType": "Boolean",
                 "left": {
@@ -965,7 +1126,7 @@
         },
         {
             "id": "00000000-0000-0000-0000-400000000013",
-            "name": "Leukopenia",
+            "name": "Giảm bạch cầu",
             "formula": {
                 "resultType": "Boolean",
                 "left": {
@@ -983,7 +1144,7 @@
         },
         {
             "id": "00000000-0000-0000-0000-400000000014",
-            "name": "Thrombocytopenia",
+            "name": "Giảm tiểu cầu",
             "formula": {
                 "resultType": "Boolean",
                 "left": {
@@ -1001,7 +1162,7 @@
         },
         {
             "id": "00000000-0000-0000-0000-400000000015",
-            "name": "Hypothermia",
+            "name": "Hạ thân nhiệt",
             "formula": {
                 "resultType": "Boolean",
                 "left": {
@@ -1019,7 +1180,7 @@
         },
         {
             "id": "00000000-0000-0000-0000-400000000016",
-            "name": "Hypotension",
+            "name": "Hạ huyết áp cần phải bù dịch tích cực.",
             "formula": {
                 "resultType": "Boolean",
                 "left": {
@@ -1035,10 +1196,10 @@
                 "operator": "EQ"
             }
         },
-        // ---- Risk factor criteria for Streptococcus pneumoniae ----
+        // Risk factor criteria
         {
             "id": "00000000-0000-0000-0000-400000000019",
-            "name": "Age - Sex factor",
+            "name": "Yếu tố Tuổi - Giới",
             "formula": {
                 "resultType": "Boolean",
                 "left": {
@@ -1092,7 +1253,7 @@
         },
         {
             "id": "00000000-0000-0000-0000-400000000020",
-            "name": "Lifestyle habits",
+            "name": "Thói quen sinh hoạt",
             "formula": {
                 "resultType": "Boolean",
                 "left": {
@@ -1128,96 +1289,163 @@
         },
         {
             "id": "00000000-0000-0000-0000-400000000021",
-            "name": "Comorbidities (S. pneumoniae)",
+            "name": "Bệnh đồng mắc: bệnh gan mạn",
+            "formula": {
+                "left": {
+                    "resultType": "Boolean",
+                    "variable": {
+                        "id": "00000000-0000-0000-0000-100000000048"
+                    }
+                },
+                "right": {
+                    "resultType": "Boolean",
+                    "constant": true
+                },
+                "operator": "EQ"
+            }
+        },
+        {
+            "id": "00000000-0000-0000-0000-400000000022",
+            "name": "Bệnh đồng mắc: bệnh thận mạn",
+            "formula": {
+                "left": {
+                    "resultType": "Boolean",
+                    "variable": {
+                        "id": "00000000-0000-0000-0000-100000000049"
+                    }
+                },
+                "right": {
+                    "resultType": "Boolean",
+                    "constant": true
+                },
+                "operator": "EQ"
+            }
+        },
+        {
+            "id": "00000000-0000-0000-0000-400000000023",
+            "name": "Bệnh đồng mắc: suy tim ứ huyết",
+            "formula": {
+                "left": {
+                    "resultType": "Boolean",
+                    "variable": {
+                        "id": "00000000-0000-0000-0000-100000000050"
+                    }
+                },
+                "right": {
+                    "resultType": "Boolean",
+                    "constant": true
+                },
+                "operator": "EQ"
+            }
+        },
+        {
+            "id": "00000000-0000-0000-0000-400000000024",
+            "name": "Bệnh đồng mắc: suy dinh dưỡng",
+            "formula": {
+                "left": {
+                    "resultType": "Boolean",
+                    "variable": {
+                        "id": "00000000-0000-0000-0000-100000000024"
+                    }
+                },
+                "right": {
+                    "resultType": "Boolean",
+                    "constant": true
+                },
+                "operator": "EQ"
+            }
+        },
+        {
+            "id": "00000000-0000-0000-0000-400000000025",
+            "name": "Bệnh đồng mắc: bệnh tâm thần",
+            "formula": {
+                "left": {
+                    "resultType": "Boolean",
+                    "variable": {
+                        "id": "00000000-0000-0000-0000-100000000025"
+                    }
+                },
+                "right": {
+                    "resultType": "Boolean",
+                    "constant": true
+                },
+                "operator": "EQ"
+            }
+        },
+        {
+            "id": "00000000-0000-0000-0000-400000000026",
+            "name": "Bệnh đồng mắc: bệnh phổi tắc nghẽn mạn tính",
+            "formula": {
+                "left": {
+                    "resultType": "Boolean",
+                    "variable": {
+                        "id": "00000000-0000-0000-0000-100000000023"
+                    }
+                },
+                "right": {
+                    "resultType": "Boolean",
+                    "constant": true
+                },
+                "operator": "EQ"
+            }
+        },
+        {
+            "id": "00000000-0000-0000-0000-400000000027",
+            "name": "Bệnh đồng mắc: suy giảm miễn dịch",
+            "formula": {
+                "left": {
+                    "resultType": "Boolean",
+                    "variable": {
+                        "id": "00000000-0000-0000-0000-100000000026"
+                    }
+                },
+                "right": {
+                    "resultType": "Boolean",
+                    "constant": true
+                },
+                "operator": "EQ"
+            }
+        },
+        {
+            "id": "00000000-0000-0000-0000-400000000028",
+            "name": "Bệnh đồng mắc: nhiễm HIV",
+            "formula": {
+                "left": {
+                    "resultType": "Boolean",
+                    "variable": {
+                        "id": "00000000-0000-0000-0000-100000000027"
+                    }
+                },
+                "right": {
+                    "resultType": "Boolean",
+                    "constant": true
+                },
+                "operator": "EQ"
+            }
+        },
+        {
+            "id": "00000000-0000-0000-0000-400000000029",
+            "name": "Bệnh đồng mắc: ghép tạng",
+            "formula": {
+                "left": {
+                    "resultType": "Boolean",
+                    "variable": {
+                        "id": "00000000-0000-0000-0000-100000000028"
+                    }
+                },
+                "right": {
+                    "resultType": "Boolean",
+                    "constant": true
+                },
+                "operator": "EQ"
+            }
+        },
+        {
+            "id": "00000000-0000-0000-0000-400000000030",
+            "name": "Bệnh phổi mạn tính",
             "formula": {
                 "resultType": "Boolean",
                 "left": {
-                    "resultType": "Boolean",
-                    "left": {
-                        "resultType": "Boolean",
-                        "left": {
-                            "resultType": "Boolean",
-                            "left": {
-                                "resultType": "Boolean",
-                                "left": {
-                                    "resultType": "Boolean",
-                                    "variable": {
-                                        "id": "00000000-0000-0000-0000-100000000050"
-                                    }
-                                },
-                                "right": {
-                                    "resultType": "Boolean",
-                                    "constant": true
-                                },
-                                "operator": "EQ"
-                            },
-                            "right": {
-                                "resultType": "Boolean",
-                                "left": {
-                                    "resultType": "Boolean",
-                                    "variable": {
-                                        "id": "00000000-0000-0000-0000-100000000051"
-                                    }
-                                },
-                                "right": {
-                                    "resultType": "Boolean",
-                                    "constant": true
-                                },
-                                "operator": "EQ"
-                            },
-                            "operator": "OR"
-                        },
-                        "right": {
-                            "resultType": "Boolean",
-                            "left": {
-                                "resultType": "Boolean",
-                                "variable": {
-                                    "id": "00000000-0000-0000-0000-100000000052"
-                                }
-                            },
-                            "right": {
-                                "resultType": "Boolean",
-                                "constant": true
-                            },
-                            "operator": "EQ"
-                        },
-                        "operator": "OR"
-                    },
-                    "right": {
-                        "resultType": "Boolean",
-                        "left": {
-                            "resultType": "Boolean",
-                            "left": {
-                                "resultType": "Boolean",
-                                "variable": {
-                                    "id": "00000000-0000-0000-0000-100000000025"
-                                }
-                            },
-                            "right": {
-                                "resultType": "Boolean",
-                                "constant": true
-                            },
-                            "operator": "EQ"
-                        },
-                        "right": {
-                            "resultType": "Boolean",
-                            "left": {
-                                "resultType": "Boolean",
-                                "variable": {
-                                    "id": "00000000-0000-0000-0000-100000000026"
-                                }
-                            },
-                            "right": {
-                                "resultType": "Boolean",
-                                "constant": true
-                            },
-                            "operator": "EQ"
-                        },
-                        "operator": "OR"
-                    },
-                    "operator": "OR"
-                },
-                "right": {
                     "resultType": "Boolean",
                     "left": {
                         "resultType": "Boolean",
@@ -1240,7 +1468,7 @@
                             "left": {
                                 "resultType": "Boolean",
                                 "variable": {
-                                    "id": "00000000-0000-0000-0000-100000000024"
+                                    "id": "00000000-0000-0000-0000-100000000042"
                                 }
                             },
                             "right": {
@@ -1258,7 +1486,7 @@
                             "left": {
                                 "resultType": "Boolean",
                                 "variable": {
-                                    "id": "00000000-0000-0000-0000-100000000027"
+                                    "id": "00000000-0000-0000-0000-100000000040"
                                 }
                             },
                             "right": {
@@ -1271,67 +1499,26 @@
                             "resultType": "Boolean",
                             "left": {
                                 "resultType": "Boolean",
-                                "left": {
-                                    "resultType": "Boolean",
-                                    "variable": {
-                                        "id": "00000000-0000-0000-0000-100000000028"
-                                    }
-                                },
-                                "right": {
-                                    "resultType": "Boolean",
-                                    "constant": true
-                                },
-                                "operator": "EQ"
+                                "variable": {
+                                    "id": "00000000-0000-0000-0000-100000000041"
+                                }
                             },
                             "right": {
                                 "resultType": "Boolean",
-                                "left": {
-                                    "resultType": "Boolean",
-                                    "variable": {
-                                        "id": "00000000-0000-0000-0000-100000000029"
-                                    }
-                                },
-                                "right": {
-                                    "resultType": "Boolean",
-                                    "constant": true
-                                },
-                                "operator": "EQ"
+                                "constant": true
                             },
-                            "operator": "OR"
+                            "operator": "EQ"
                         },
                         "operator": "OR"
                     },
                     "operator": "OR"
                 },
-                "operator": "OR"
-            }
-        },
-        // ---- Risk factor criteria for Haemophilus influenzae ----
-        {
-            "id": "00000000-0000-0000-0000-400000000022",
-            "name": "Chronic lung disease (H. influenzae)",
-            "formula": {
-                "resultType": "Boolean",
-                "left": {
-                    "resultType": "Boolean",
-                    "left": {
-                        "resultType": "Boolean",
-                        "variable": {
-                            "id": "00000000-0000-0000-0000-100000000023"
-                        }
-                    },
-                    "right": {
-                        "resultType": "Boolean",
-                        "constant": true
-                    },
-                    "operator": "EQ"
-                },
                 "right": {
                     "resultType": "Boolean",
                     "left": {
                         "resultType": "Boolean",
                         "variable": {
-                            "id": "00000000-0000-0000-0000-100000000024"
+                            "id": "00000000-0000-0000-0000-100000000054"
                         }
                     },
                     "right": {
@@ -1344,14 +1531,14 @@
             }
         },
         {
-            "id": "00000000-0000-0000-0000-400000000023",
-            "name": "Malignancy (H. influenzae)",
+            "id": "00000000-0000-0000-0000-400000000031",
+            "name": "Bệnh ác tính.",
             "formula": {
                 "resultType": "Boolean",
                 "left": {
                     "resultType": "Boolean",
                     "variable": {
-                        "id": "00000000-0000-0000-0000-100000000054"
+                        "id": "00000000-0000-0000-0000-100000000052"
                     }
                 },
                 "right": {
@@ -1362,14 +1549,14 @@
             }
         },
         {
-            "id": "00000000-0000-0000-0000-400000000024",
-            "name": "HIV infection (H. influenzae)",
+            "id": "00000000-0000-0000-0000-400000000032",
+            "name": "Nhiễm HIV.",
             "formula": {
                 "resultType": "Boolean",
                 "left": {
                     "resultType": "Boolean",
                     "variable": {
-                        "id": "00000000-0000-0000-0000-100000000028"
+                        "id": "00000000-0000-0000-0000-100000000027"
                     }
                 },
                 "right": {
@@ -1380,8 +1567,8 @@
             }
         },
         {
-            "id": "00000000-0000-0000-0000-400000000025",
-            "name": "Alcohol abuse (H. influenzae)",
+            "id": "00000000-0000-0000-0000-400000000033",
+            "name": "Nghiện rượu",
             "formula": {
                 "resultType": "Boolean",
                 "left": {
@@ -1398,8 +1585,8 @@
             }
         },
         {
-            "id": "00000000-0000-0000-0000-400000000026",
-            "name": "Smoking (H. influenzae)",
+            "id": "00000000-0000-0000-0000-400000000034",
+            "name": "Hút thuốc lá",
             "formula": {
                 "resultType": "Boolean",
                 "left": {
@@ -1415,82 +1602,99 @@
                 "operator": "EQ"
             }
         },
-        // ---- Risk factor criteria for Staphylococcus aureus ----
         {
-            "id": "00000000-0000-0000-0000-400000000027",
-            "name": "COPD, lung cancer or cystic fibrosis (S. aureus)",
+            "id": "00000000-0000-0000-0000-400000000035",
+            "name": "Bệnh phổi tắc nghẽn mạn tính",
+            "formula": {
+                "resultType": "Boolean",
+                "left": {
+                    "resultType": "Boolean",
+                    "variable": {
+                        "id": "00000000-0000-0000-0000-100000000023"
+                    }
+                },
+                "right": {
+                    "resultType": "Boolean",
+                    "constant": true
+                },
+                "operator": "EQ"
+            }
+        },
+        {
+            "id": "00000000-0000-0000-0000-400000000036",
+            "name": "Ung thư phổi",
+            "formula": {
+                "resultType": "Boolean",
+                "left": {
+                    "resultType": "Boolean",
+                    "variable": {
+                        "id": "00000000-0000-0000-0000-100000000042"
+                    }
+                },
+                "right": {
+                    "resultType": "Boolean",
+                    "constant": true
+                },
+                "operator": "EQ"
+            }
+        },
+        {
+            "id": "00000000-0000-0000-0000-400000000037",
+            "name": "Bệnh xơ nang",
+            "formula": {
+                "resultType": "Boolean",
+                "left": {
+                    "resultType": "Boolean",
+                    "variable": {
+                        "id": "00000000-0000-0000-0000-100000000040"
+                    }
+                },
+                "right": {
+                    "resultType": "Boolean",
+                    "constant": true
+                },
+                "operator": "EQ"
+            }
+        },
+        {
+            "id": "00000000-0000-0000-0000-400000000038",
+            "name": "Bệnh nội khoa mạn tính: đái tháo đường, suy thận",
             "formula": {
                 "resultType": "Boolean",
                 "left": {
                     "resultType": "Boolean",
                     "left": {
                         "resultType": "Boolean",
-                        "left": {
-                            "resultType": "Boolean",
-                            "variable": {
-                                "id": "00000000-0000-0000-0000-100000000023"
-                            }
-                        },
-                        "right": {
-                            "resultType": "Boolean",
-                            "constant": true
-                        },
-                        "operator": "EQ"
+                        "variable": {
+                            "id": "00000000-0000-0000-0000-100000000029"
+                        }
                     },
                     "right": {
                         "resultType": "Boolean",
-                        "left": {
-                            "resultType": "Boolean",
-                            "variable": {
-                                "id": "00000000-0000-0000-0000-100000000024"
-                            }
-                        },
-                        "right": {
-                            "resultType": "Boolean",
-                            "constant": true
-                        },
-                        "operator": "EQ"
+                        "constant": true
                     },
-                    "operator": "OR"
+                    "operator": "EQ"
                 },
                 "right": {
                     "resultType": "Boolean",
                     "left": {
                         "resultType": "Boolean",
-                        "left": {
-                            "resultType": "Boolean",
-                            "variable": {
-                                "id": "00000000-0000-0000-0000-100000000044"
-                            }
-                        },
-                        "right": {
-                            "resultType": "Boolean",
-                            "constant": true
-                        },
-                        "operator": "EQ"
+                        "variable": {
+                            "id": "00000000-0000-0000-0000-100000000049"
+                        }
                     },
                     "right": {
                         "resultType": "Boolean",
-                        "left": {
-                            "resultType": "Boolean",
-                            "variable": {
-                                "id": "00000000-0000-0000-0000-100000000042"
-                            }
-                        },
-                        "right": {
-                            "resultType": "Boolean",
-                            "constant": true
-                        },
-                        "operator": "EQ"
+                        "constant": true
                     },
-                    "operator": "OR"
+                    "operator": "EQ"
                 },
                 "operator": "OR"
             }
         },
         {
-            "id": "00000000-0000-0000-0000-400000000028",
-            "name": "Diabetes or renal failure (S. aureus)",
+            "id": "00000000-0000-0000-0000-400000000039",
+            "name": "Nhiễm virus: Influenza, sởi",
             "formula": {
                 "resultType": "Boolean",
                 "left": {
@@ -1512,7 +1716,7 @@
                     "left": {
                         "resultType": "Boolean",
                         "variable": {
-                            "id": "00000000-0000-0000-0000-100000000051"
+                            "id": "00000000-0000-0000-0000-100000000031"
                         }
                     },
                     "right": {
@@ -1525,25 +1729,11 @@
             }
         },
         {
-            "id": "00000000-0000-0000-0000-400000000029",
-            "name": "Influenza or measles infection (S. aureus)",
+            "id": "00000000-0000-0000-0000-400000000040",
+            "name": "Tiêm chích, thuyên tắc huyết khối nhiễm trùng trong viêm nội tâm mạc nhiễm khuẩn",
             "formula": {
                 "resultType": "Boolean",
                 "left": {
-                    "resultType": "Boolean",
-                    "left": {
-                        "resultType": "Boolean",
-                        "variable": {
-                            "id": "00000000-0000-0000-0000-100000000031"
-                        }
-                    },
-                    "right": {
-                        "resultType": "Boolean",
-                        "constant": true
-                    },
-                    "operator": "EQ"
-                },
-                "right": {
                     "resultType": "Boolean",
                     "left": {
                         "resultType": "Boolean",
@@ -1557,34 +1747,12 @@
                     },
                     "operator": "EQ"
                 },
-                "operator": "OR"
-            }
-        },
-        {
-            "id": "00000000-0000-0000-0000-400000000030",
-            "name": "IV drug use (S. aureus)",
-            "formula": {
-                "resultType": "Boolean",
-                "left": {
-                    "resultType": "Boolean",
-                    "left": {
-                        "resultType": "Boolean",
-                        "variable": {
-                            "id": "00000000-0000-0000-0000-100000000033"
-                        }
-                    },
-                    "right": {
-                        "resultType": "Boolean",
-                        "constant": true
-                    },
-                    "operator": "EQ"
-                },
                 "right": {
                     "resultType": "Boolean",
                     "left": {
                         "resultType": "Boolean",
                         "variable": {
-                            "id": "00000000-0000-0000-0000-100000000055"
+                            "id": "00000000-0000-0000-0000-100000000053"
                         }
                     },
                     "right": {
@@ -1596,10 +1764,27 @@
                 "operator": "OR"
             }
         },
-        // ---- Risk factor criteria for MRSA ----
         {
-            "id": "00000000-0000-0000-0000-400000000031",
-            "name": "Prior MRSA infection",
+            "id": "00000000-0000-0000-0000-400000000041",
+            "name": "Tiền sử nhiễm MRSA",
+            "formula": {
+                "resultType": "Boolean",
+                "left": {
+                    "resultType": "Boolean",
+                    "variable": {
+                        "id": "00000000-0000-0000-0000-100000000033"
+                    }
+                },
+                "right": {
+                    "resultType": "Boolean",
+                    "constant": true
+                },
+                "operator": "EQ"
+            }
+        },
+        {
+            "id": "00000000-0000-0000-0000-400000000042",
+            "name": "Nằm viện và dùng kháng sinh tĩnh mạch trong vòng 90 ngày",
             "formula": {
                 "resultType": "Boolean",
                 "left": {
@@ -1615,680 +1800,6 @@
                 "operator": "EQ"
             }
         },
-        {
-            "id": "00000000-0000-0000-0000-400000000032",
-            "name": "Hospitalization and IV antibiotics within 90 days (MRSA)",
-            "formula": {
-                "resultType": "Boolean",
-                "left": {
-                    "resultType": "Boolean",
-                    "variable": {
-                        "id": "00000000-0000-0000-0000-100000000035"
-                    }
-                },
-                "right": {
-                    "resultType": "Boolean",
-                    "constant": true
-                },
-                "operator": "EQ"
-            }
-        },
-        // ---- Risk factor criteria for Klebsiella pneumoniae ----
-        {
-            "id": "00000000-0000-0000-0000-400000000033",
-            "name": "ICU stay or intubation (Klebsiella)",
-            "formula": {
-                "resultType": "Boolean",
-                "left": {
-                    "resultType": "Boolean",
-                    "left": {
-                        "resultType": "Boolean",
-                        "variable": {
-                            "id": "00000000-0000-0000-0000-100000000036"
-                        }
-                    },
-                    "right": {
-                        "resultType": "Boolean",
-                        "constant": true
-                    },
-                    "operator": "EQ"
-                },
-                "right": {
-                    "resultType": "Boolean",
-                    "left": {
-                        "resultType": "Boolean",
-                        "variable": {
-                            "id": "00000000-0000-0000-0000-100000000037"
-                        }
-                    },
-                    "right": {
-                        "resultType": "Boolean",
-                        "constant": true
-                    },
-                    "operator": "EQ"
-                },
-                "operator": "OR"
-            }
-        },
-        {
-            "id": "00000000-0000-0000-0000-400000000034",
-            "name": "Aspiration risk (Klebsiella)",
-            "formula": {
-                "resultType": "Boolean",
-                "left": {
-                    "resultType": "Boolean",
-                    "left": {
-                        "resultType": "Boolean",
-                        "variable": {
-                            "id": "00000000-0000-0000-0000-100000000053"
-                        }
-                    },
-                    "right": {
-                        "resultType": "Boolean",
-                        "constant": true
-                    },
-                    "operator": "EQ"
-                },
-                "right": {
-                    "resultType": "Boolean",
-                    "left": {
-                        "resultType": "Boolean",
-                        "left": {
-                            "resultType": "Boolean",
-                            "variable": {
-                                "id": "00000000-0000-0000-0000-100000000039"
-                            }
-                        },
-                        "right": {
-                            "resultType": "Boolean",
-                            "constant": true
-                        },
-                        "operator": "EQ"
-                    },
-                    "right": {
-                        "resultType": "Boolean",
-                        "left": {
-                            "resultType": "Boolean",
-                            "variable": {
-                                "id": "00000000-0000-0000-0000-100000000040"
-                            }
-                        },
-                        "right": {
-                            "resultType": "Boolean",
-                            "constant": true
-                        },
-                        "operator": "EQ"
-                    },
-                    "operator": "OR"
-                },
-                "operator": "OR"
-            }
-        },
-        {
-            "id": "00000000-0000-0000-0000-400000000035",
-            "name": "Alcohol abuse (Klebsiella)",
-            "formula": {
-                "resultType": "Boolean",
-                "left": {
-                    "resultType": "Boolean",
-                    "variable": {
-                        "id": "00000000-0000-0000-0000-100000000021"
-                    }
-                },
-                "right": {
-                    "resultType": "Boolean",
-                    "constant": true
-                },
-                "operator": "EQ"
-            }
-        },
-        {
-            "id": "00000000-0000-0000-0000-400000000036",
-            "name": "Chronic lung disease or diabetes (Klebsiella)",
-            "formula": {
-                "resultType": "Boolean",
-                "left": {
-                    "resultType": "Boolean",
-                    "left": {
-                        "resultType": "Boolean",
-                        "left": {
-                            "resultType": "Boolean",
-                            "variable": {
-                                "id": "00000000-0000-0000-0000-100000000023"
-                            }
-                        },
-                        "right": {
-                            "resultType": "Boolean",
-                            "constant": true
-                        },
-                        "operator": "EQ"
-                    },
-                    "right": {
-                        "resultType": "Boolean",
-                        "left": {
-                            "resultType": "Boolean",
-                            "variable": {
-                                "id": "00000000-0000-0000-0000-100000000024"
-                            }
-                        },
-                        "right": {
-                            "resultType": "Boolean",
-                            "constant": true
-                        },
-                        "operator": "EQ"
-                    },
-                    "operator": "OR"
-                },
-                "right": {
-                    "resultType": "Boolean",
-                    "left": {
-                        "resultType": "Boolean",
-                        "variable": {
-                            "id": "00000000-0000-0000-0000-100000000030"
-                        }
-                    },
-                    "right": {
-                        "resultType": "Boolean",
-                        "constant": true
-                    },
-                    "operator": "EQ"
-                },
-                "operator": "OR"
-            }
-        },
-        {
-            "id": "00000000-0000-0000-0000-400000000037",
-            "name": "Prior antibiotic use (Klebsiella)",
-            "formula": {
-                "resultType": "Boolean",
-                "left": {
-                    "resultType": "Boolean",
-                    "variable": {
-                        "id": "00000000-0000-0000-0000-100000000041"
-                    }
-                },
-                "right": {
-                    "resultType": "Boolean",
-                    "constant": true
-                },
-                "operator": "EQ"
-            }
-        },
-        // ---- Risk factor criteria for Pseudomonas aeruginosa ----
-        {
-            "id": "00000000-0000-0000-0000-400000000038",
-            "name": "Structural lung disease (Pseudomonas)",
-            "formula": {
-                "resultType": "Boolean",
-                "left": {
-                    "resultType": "Boolean",
-                    "left": {
-                        "resultType": "Boolean",
-                        "variable": {
-                            "id": "00000000-0000-0000-0000-100000000042"
-                        }
-                    },
-                    "right": {
-                        "resultType": "Boolean",
-                        "constant": true
-                    },
-                    "operator": "EQ"
-                },
-                "right": {
-                    "resultType": "Boolean",
-                    "left": {
-                        "resultType": "Boolean",
-                        "left": {
-                            "resultType": "Boolean",
-                            "variable": {
-                                "id": "00000000-0000-0000-0000-100000000043"
-                            }
-                        },
-                        "right": {
-                            "resultType": "Boolean",
-                            "constant": true
-                        },
-                        "operator": "EQ"
-                    },
-                    "right": {
-                        "resultType": "Boolean",
-                        "left": {
-                            "resultType": "Boolean",
-                            "variable": {
-                                "id": "00000000-0000-0000-0000-100000000024"
-                            }
-                        },
-                        "right": {
-                            "resultType": "Boolean",
-                            "constant": true
-                        },
-                        "operator": "EQ"
-                    },
-                    "operator": "OR"
-                },
-                "operator": "OR"
-            }
-        },
-        {
-            "id": "00000000-0000-0000-0000-400000000039",
-            "name": "Prior Pseudomonas infection",
-            "formula": {
-                "resultType": "Boolean",
-                "left": {
-                    "resultType": "Boolean",
-                    "variable": {
-                        "id": "00000000-0000-0000-0000-100000000045"
-                    }
-                },
-                "right": {
-                    "resultType": "Boolean",
-                    "constant": true
-                },
-                "operator": "EQ"
-            }
-        },
-        {
-            "id": "00000000-0000-0000-0000-400000000040",
-            "name": "Hospitalization and IV antibiotics within 90 days (Pseudomonas)",
-            "formula": {
-                "resultType": "Boolean",
-                "left": {
-                    "resultType": "Boolean",
-                    "variable": {
-                        "id": "00000000-0000-0000-0000-100000000035"
-                    }
-                },
-                "right": {
-                    "resultType": "Boolean",
-                    "constant": true
-                },
-                "operator": "EQ"
-            }
-        },
-        // ---- Risk factor criteria for Acinetobacter baumannii ----
-        {
-            "id": "00000000-0000-0000-0000-400000000041",
-            "name": "Alcohol abuse, old age or severe internal medicine disease (Acinetobacter)",
-            "formula": {
-                "resultType": "Boolean",
-                "left": {
-                    "resultType": "Boolean",
-                    "left": {
-                        "resultType": "Boolean",
-                        "variable": {
-                            "id": "00000000-0000-0000-0000-100000000021"
-                        }
-                    },
-                    "right": {
-                        "resultType": "Boolean",
-                        "constant": true
-                    },
-                    "operator": "EQ"
-                },
-                "right": {
-                    "resultType": "Boolean",
-                    "left": {
-                        "resultType": "Boolean",
-                        "left": {
-                            "resultType": "Numeric",
-                            "variable": {
-                                "id": "00000000-0000-0000-0000-100000000001"
-                            }
-                        },
-                        "right": {
-                            "resultType": "Numeric",
-                            "constant": 65
-                        },
-                        "operator": "GT"
-                    },
-                    "right": {
-                        "resultType": "Boolean",
-                        "left": {
-                            "resultType": "Boolean",
-                            "variable": {
-                                "id": "00000000-0000-0000-0000-100000000048"
-                            }
-                        },
-                        "right": {
-                            "resultType": "Boolean",
-                            "constant": true
-                        },
-                        "operator": "EQ"
-                    },
-                    "operator": "OR"
-                },
-                "operator": "OR"
-            }
-        },
-        // ---- Risk factor criteria for Anaerobic bacteria ----
-        {
-            "id": "00000000-0000-0000-0000-400000000042",
-            "name": "Lung disease (Anaerobic)",
-            "formula": {
-                "resultType": "Boolean",
-                "left": {
-                    "resultType": "Boolean",
-                    "left": {
-                        "resultType": "Boolean",
-                        "left": {
-                            "resultType": "Boolean",
-                            "variable": {
-                                "id": "00000000-0000-0000-0000-100000000044"
-                            }
-                        },
-                        "right": {
-                            "resultType": "Boolean",
-                            "constant": true
-                        },
-                        "operator": "EQ"
-                    },
-                    "right": {
-                        "resultType": "Boolean",
-                        "left": {
-                            "resultType": "Boolean",
-                            "variable": {
-                                "id": "00000000-0000-0000-0000-100000000043"
-                            }
-                        },
-                        "right": {
-                            "resultType": "Boolean",
-                            "constant": true
-                        },
-                        "operator": "EQ"
-                    },
-                    "operator": "OR"
-                },
-                "right": {
-                    "resultType": "Boolean",
-                    "left": {
-                        "resultType": "Boolean",
-                        "left": {
-                            "resultType": "Boolean",
-                            "variable": {
-                                "id": "00000000-0000-0000-0000-100000000049"
-                            }
-                        },
-                        "right": {
-                            "resultType": "Boolean",
-                            "constant": true
-                        },
-                        "operator": "EQ"
-                    },
-                    "right": {
-                        "resultType": "Boolean",
-                        "left": {
-                            "resultType": "Boolean",
-                            "variable": {
-                                "id": "00000000-0000-0000-0000-100000000046"
-                            }
-                        },
-                        "right": {
-                            "resultType": "Boolean",
-                            "constant": true
-                        },
-                        "operator": "EQ"
-                    },
-                    "operator": "OR"
-                },
-                "operator": "OR"
-            }
-        },
-        {
-            "id": "00000000-0000-0000-0000-400000000043",
-            "name": "Oropharyngeal anaerobic infection",
-            "formula": {
-                "resultType": "Boolean",
-                "left": {
-                    "resultType": "Boolean",
-                    "variable": {
-                        "id": "00000000-0000-0000-0000-100000000047"
-                    }
-                },
-                "right": {
-                    "resultType": "Boolean",
-                    "constant": true
-                },
-                "operator": "EQ"
-            }
-        },
-        // ---- Treatments criteria ---- 
-        {
-            "id": "00000000-0000-0000-0000-400000000044",
-            "name": "Beta-lactam allergy",
-            "formula": {
-                "resultType": "Boolean",
-                "left": {
-                    "resultType": "String",
-                    "variable": {
-                        "id": "00000000-0000-0000-0000-100000000016"
-                    }
-                },
-                "right": {
-                    "resultType": "String",
-                    "constant": "Có"
-                },
-                "operator": "EQ"
-            }
-        },
-        {
-            "id": "00000000-0000-0000-0000-400000000045",
-            "name": "Elderly patients with comorbidities and immunodeficiency",
-            "formula": {
-                "resultType": "Boolean",
-                // Bệnh đồng mắc
-                "left": {
-                    "resultType": "Boolean",
-                    "left": {
-                        "resultType": "Boolean",
-                        "left": {
-                            "resultType": "Boolean",
-                            "left": {
-                                "resultType": "Boolean",
-                                "left": {
-                                    "resultType": "Boolean",
-                                    "left": {
-                                        "resultType": "Boolean",
-                                        "variable": {
-                                            "id": "00000000-0000-0000-0000-100000000050"
-                                        }
-                                    },
-                                    "right": {
-                                        "resultType": "Boolean",
-                                        "constant": true
-                                    },
-                                    "operator": "EQ"
-                                },
-                                "right": {
-                                    "resultType": "Boolean",
-                                    "left": {
-                                        "resultType": "Boolean",
-                                        "variable": {
-                                            "id": "00000000-0000-0000-0000-100000000051"
-                                        }
-                                    },
-                                    "right": {
-                                        "resultType": "Boolean",
-                                        "constant": true
-                                    },
-                                    "operator": "EQ"
-                                },
-                                "operator": "OR"
-                            },
-                            "right": {
-                                "resultType": "Boolean",
-                                "left": {
-                                    "resultType": "Boolean",
-                                    "variable": {
-                                        "id": "00000000-0000-0000-0000-100000000052"
-                                    }
-                                },
-                                "right": {
-                                    "resultType": "Boolean",
-                                    "constant": true
-                                },
-                                "operator": "EQ"
-                            },
-                            "operator": "OR"
-                        },
-                        "right": {
-                            "resultType": "Boolean",
-                            "left": {
-                                "resultType": "Boolean",
-                                "left": {
-                                    "resultType": "Boolean",
-                                    "variable": {
-                                        "id": "00000000-0000-0000-0000-100000000025"
-                                    }
-                                },
-                                "right": {
-                                    "resultType": "Boolean",
-                                    "constant": true
-                                },
-                                "operator": "EQ"
-                            },
-                            "right": {
-                                "resultType": "Boolean",
-                                "left": {
-                                    "resultType": "Boolean",
-                                    "variable": {
-                                        "id": "00000000-0000-0000-0000-100000000026"
-                                    }
-                                },
-                                "right": {
-                                    "resultType": "Boolean",
-                                    "constant": true
-                                },
-                                "operator": "EQ"
-                            },
-                            "operator": "OR"
-                        },
-                        "operator": "OR"
-                    },
-                    "right": {
-                        "resultType": "Boolean",
-                        "left": {
-                            "resultType": "Boolean",
-                            "left": {
-                                "resultType": "Boolean",
-                                "left": {
-                                    "resultType": "Boolean",
-                                    "variable": {
-                                        "id": "00000000-0000-0000-0000-100000000023"
-                                    }
-                                },
-                                "right": {
-                                    "resultType": "Boolean",
-                                    "constant": true
-                                },
-                                "operator": "EQ"
-                            },
-                            "right": {
-                                "resultType": "Boolean",
-                                "left": {
-                                    "resultType": "Boolean",
-                                    "variable": {
-                                        "id": "00000000-0000-0000-0000-100000000024"
-                                    }
-                                },
-                                "right": {
-                                    "resultType": "Boolean",
-                                    "constant": true
-                                },
-                                "operator": "EQ"
-                            },
-                            "operator": "OR"
-                        },
-                        "right": {
-                            "resultType": "Boolean",
-                            "left": {
-                                "resultType": "Boolean",
-                                "left": {
-                                    "resultType": "Boolean",
-                                    "variable": {
-                                        "id": "00000000-0000-0000-0000-100000000027"
-                                    }
-                                },
-                                "right": {
-                                    "resultType": "Boolean",
-                                    "constant": true
-                                },
-                                "operator": "EQ"
-                            },
-                            "right": {
-                                "resultType": "Boolean",
-                                "left": {
-                                    "resultType": "Boolean",
-                                    "left": {
-                                        "resultType": "Boolean",
-                                        "variable": {
-                                            "id": "00000000-0000-0000-0000-100000000028"
-                                        }
-                                    },
-                                    "right": {
-                                        "resultType": "Boolean",
-                                        "constant": true
-                                    },
-                                    "operator": "EQ"
-                                },
-                                "right": {
-                                    "resultType": "Boolean",
-                                    "left": {
-                                        "resultType": "Boolean",
-                                        "variable": {
-                                            "id": "00000000-0000-0000-0000-100000000029"
-                                        }
-                                    },
-                                    "right": {
-                                        "resultType": "Boolean",
-                                        "constant": true
-                                    },
-                                    "operator": "EQ"
-                                },
-                                "operator": "OR"
-                            },
-                            "operator": "OR"
-                        },
-                        "operator": "OR"
-                    },
-                    "operator": "OR"
-                },
-                "right": {
-                    "resultType": "Boolean",
-                    // Bệnh nhân lớn tuổi
-                    "left": {
-                        "resultType": "Boolean",
-                        "left": {
-                            "resultType": "Numeric",
-                            "variable": {
-                                "id": "00000000-0000-0000-0000-100000000001"
-                            }
-                        },
-                        "right": {
-                            "resultType": "Numeric",
-                            "constant": 65
-                        },
-                        "operator": "GTE"
-                    },
-                    // Bệnh nhân suy giảm miễn dịch
-                    "right": {
-                        "resultType": "Boolean",
-                        "left": {
-                            "resultType": "Boolean",
-                            "variable": {
-                                "id": "00000000-0000-0000-0000-100000000027"
-                            }
-                        },
-                        "right": {
-                            "resultType": "Boolean",
-                            "constant": true
-                        },
-                        "operator": "EQ"
-                    },
-                    "operator": "AND"
-                },
-                "operator": "AND"
-            }
-        }
     ],
     "pathogens": [
         // ---- Pathogens with risk factors (Table 3.2) ----
@@ -2304,11 +1815,43 @@
                 },
                 {
                     "criterionId": "00000000-0000-0000-0000-400000000020",
-                    "priority": 2
+                    "priority": 1
                 },
                 {
                     "criterionId": "00000000-0000-0000-0000-400000000021",
-                    "priority": 3
+                    "priority": 1
+                },
+                {
+                    "criterionId": "00000000-0000-0000-0000-400000000022",
+                    "priority": 1
+                },
+                {
+                    "criterionId": "00000000-0000-0000-0000-400000000023",
+                    "priority": 1
+                },
+                {
+                    "criterionId": "00000000-0000-0000-0000-400000000024",
+                    "priority": 1
+                },
+                {
+                    "criterionId": "00000000-0000-0000-0000-400000000025",
+                    "priority": 1
+                },
+                {
+                    "criterionId": "00000000-0000-0000-0000-400000000026",
+                    "priority": 1
+                },
+                {
+                    "criterionId": "00000000-0000-0000-0000-400000000027",
+                    "priority": 1
+                },
+                {
+                    "criterionId": "00000000-0000-0000-0000-400000000028",
+                    "priority": 1
+                },
+                {
+                    "criterionId": "00000000-0000-0000-0000-400000000029",
+                    "priority": 1
                 }
             ]
         },
@@ -2319,24 +1862,24 @@
             "isAtypical": false,
             "riskFactors": [
                 {
-                    "criterionId": "00000000-0000-0000-0000-400000000022",
+                    "criterionId": "00000000-0000-0000-0000-400000000030",
                     "priority": 1
                 },
                 {
-                    "criterionId": "00000000-0000-0000-0000-400000000023",
-                    "priority": 2
+                    "criterionId": "00000000-0000-0000-0000-400000000031",
+                    "priority": 1
                 },
                 {
-                    "criterionId": "00000000-0000-0000-0000-400000000024",
-                    "priority": 3
+                    "criterionId": "00000000-0000-0000-0000-400000000032",
+                    "priority": 1
                 },
                 {
-                    "criterionId": "00000000-0000-0000-0000-400000000025",
-                    "priority": 4
+                    "criterionId": "00000000-0000-0000-0000-400000000033",
+                    "priority": 1
                 },
                 {
-                    "criterionId": "00000000-0000-0000-0000-400000000026",
-                    "priority": 5
+                    "criterionId": "00000000-0000-0000-0000-400000000034",
+                    "priority": 1
                 }
             ]
         },
@@ -2347,20 +1890,28 @@
             "isAtypical": false,
             "riskFactors": [
                 {
-                    "criterionId": "00000000-0000-0000-0000-400000000027",
+                    "criterionId": "00000000-0000-0000-0000-400000000035",
                     "priority": 1
                 },
                 {
-                    "criterionId": "00000000-0000-0000-0000-400000000028",
-                    "priority": 2
+                    "criterionId": "00000000-0000-0000-0000-400000000036",
+                    "priority": 1
                 },
                 {
-                    "criterionId": "00000000-0000-0000-0000-400000000029",
-                    "priority": 3
+                    "criterionId": "00000000-0000-0000-0000-400000000037",
+                    "priority": 1
                 },
                 {
-                    "criterionId": "00000000-0000-0000-0000-400000000030",
-                    "priority": 4
+                    "criterionId": "00000000-0000-0000-0000-400000000038",
+                    "priority": 1
+                },
+                {
+                    "criterionId": "00000000-0000-0000-0000-400000000039",
+                    "priority": 1
+                },
+                {
+                    "criterionId": "00000000-0000-0000-0000-400000000040",
+                    "priority": 1
                 }
             ]
         },
@@ -2371,12 +1922,12 @@
             "isAtypical": false,
             "riskFactors": [
                 {
-                    "criterionId": "00000000-0000-0000-0000-400000000031",
+                    "criterionId": "00000000-0000-0000-0000-400000000041",
                     "priority": 1
                 },
                 {
-                    "criterionId": "00000000-0000-0000-0000-400000000032",
-                    "priority": 2
+                    "criterionId": "00000000-0000-0000-0000-400000000042",
+                    "priority": 1
                 }
             ]
         },
@@ -2385,76 +1936,28 @@
             "name": "Klebsiella pneumoniae",
             "description": "Enteric Gram-negative bacillus associated with aspiration",
             "isAtypical": false,
-            "riskFactors": [
-                {
-                    "criterionId": "00000000-0000-0000-0000-400000000033",
-                    "priority": 1
-                },
-                {
-                    "criterionId": "00000000-0000-0000-0000-400000000034",
-                    "priority": 2
-                },
-                {
-                    "criterionId": "00000000-0000-0000-0000-400000000035",
-                    "priority": 3
-                },
-                {
-                    "criterionId": "00000000-0000-0000-0000-400000000036",
-                    "priority": 4
-                },
-                {
-                    "criterionId": "00000000-0000-0000-0000-400000000037",
-                    "priority": 5
-                }
-            ]
+            "riskFactors": []
         },
         {
             "id": "00000000-0000-0000-0000-500000000006",
             "name": "Pseudomonas aeruginosa",
             "description": "Pathogen in structural lung disease and prior Pseudomonas infection",
             "isAtypical": false,
-            "riskFactors": [
-                {
-                    "criterionId": "00000000-0000-0000-0000-400000000038",
-                    "priority": 1
-                },
-                {
-                    "criterionId": "00000000-0000-0000-0000-400000000039",
-                    "priority": 2
-                },
-                {
-                    "criterionId": "00000000-0000-0000-0000-400000000040",
-                    "priority": 3
-                }
-            ]
+            "riskFactors": []
         },
         {
             "id": "00000000-0000-0000-0000-500000000007",
             "name": "Acinetobacter baumannii",
             "description": "Multidrug-resistant pathogen in severe illness",
             "isAtypical": false,
-            "riskFactors": [
-                {
-                    "criterionId": "00000000-0000-0000-0000-400000000041",
-                    "priority": 1
-                }
-            ]
+            "riskFactors": []
         },
         {
             "id": "00000000-0000-0000-0000-500000000008",
             "name": "Anaerobic bacteria",
             "description": "Associated with aspiration pneumonia",
             "isAtypical": false,
-            "riskFactors": [
-                {
-                    "criterionId": "00000000-0000-0000-0000-400000000042",
-                    "priority": 1
-                },
-                {
-                    "criterionId": "00000000-0000-0000-0000-400000000043",
-                    "priority": 2
-                }
-            ]
+            "riskFactors": []
         },
         // ---- Pathogens from Table 1 with no specific risk factors ----
         {
@@ -5196,50 +4699,5 @@
             ]
         }
     ],
-    "treatments": [
-        {
-            "id": "00000000-0000-0000-0000-900000000001",
-            "severity": "Mild",
-            "treatmentSite": "Outpatient",
-            "medicineIds": [
-                [
-                    "00000000-0000-0000-0000-000000000303"
-                ],
-                [
-                    "00000000-0000-0000-0000-000000000303",
-                    "00000000-0000-0000-0000-000000000304"
-                ],
-                [
-                    "00000000-0000-0000-0000-000000000303",
-                    "00000000-0000-0000-0000-000000000305"
-                ]
-            ],
-            "pathogenIds": [
-                "00000000-0000-0000-0000-500000000002"
-            ],
-            "criteriaIds": []
-        },
-        {
-            "id": "00000000-0000-0000-0000-900000000002",
-            "severity": "Mild",
-            "treatmentSite": "Outpatient",
-            "medicineIds": [
-                [
-                    "00000000-0000-0000-0000-000000000303"
-                ],
-                [
-                    "00000000-0000-0000-0000-000000000303",
-                    "00000000-0000-0000-0000-000000000304"
-                ],
-                [
-                    "00000000-0000-0000-0000-000000000303",
-                    "00000000-0000-0000-0000-000000000305"
-                ]
-            ],
-            "pathogenIds": [
-                "00000000-0000-0000-0000-500000000009"
-            ],
-            "criteriaIds": []
-        }
-    ]
+    "treatments": []
 }

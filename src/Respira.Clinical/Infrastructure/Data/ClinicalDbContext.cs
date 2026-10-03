@@ -157,6 +157,8 @@ namespace Respira.Clinical.Infrastructure.Data
                 .HasValue<CategoricalClinicalVariable>("categorical_clinical_variable");
             modelBuilder.Entity<NumericClinicalVariable>()
                 .OwnsOne(x => x.AcceptedRange, builder => builder.ToJson());
+            modelBuilder.Entity<NumericClinicalVariable>()
+                .OwnsOne(x => x.NormalRange, builder => builder.ToJson());
 
             modelBuilder.Entity<Criterion>().ToTable("criteria");
             modelBuilder.Entity<Criterion>().Ignore(x => x.Variables);

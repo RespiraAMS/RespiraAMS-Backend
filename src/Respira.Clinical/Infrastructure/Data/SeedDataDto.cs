@@ -19,8 +19,11 @@ namespace Respira.Clinical.Infrastructure.Data
         public string Code { get; init; } = string.Empty;
         public string Description { get; init; } = string.Empty;
         public string ValueType { get; init; } = string.Empty;
+        public bool IsRequired { get; init; }
+        public string Category { get; init; } = string.Empty;
         public string? CanonicalUnit { get; init; }
         public RangeDto? AcceptedRange { get; init; }
+        public RangeDto? NormalRange { get; init; }
         public ICollection<string> AcceptedValues { get; init; } = [];
     }
 

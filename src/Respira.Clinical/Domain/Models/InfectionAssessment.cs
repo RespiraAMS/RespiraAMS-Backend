@@ -34,5 +34,7 @@ namespace Respira.Clinical.Domain.Models
         /// As long as data exists, this list should be non-empty
         /// </summary>
         public required IEnumerable<Pathogen> WorthSuspected { get; set; }
+
+        public required List<string> Evidences { get; set; }
     }
 }

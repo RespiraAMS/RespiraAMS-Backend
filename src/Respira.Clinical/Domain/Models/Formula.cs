@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Text.Json.Serialization;
 using Respira.Clinical.Domain.Entities;
 using Respira.Clinical.Domain.Enums;
@@ -35,6 +36,20 @@ namespace Respira.Clinical.Domain.Models
         /// The variables used by this formula
         /// </summary>
         public abstract IEnumerable<ClinicalVariable> Variables { get; }
+
+        /// <summary>
+        /// Renders a sub-formula, wrapping anything that is not a leaf (constant or
+        /// variable) in parentheses so the mathematical representation stays unambiguous
+        /// </summary>
+        private protected static string Parenthesize(Formula formula)
+        {
+            return formula switch
+            {
+                NumericConstantFormula or BooleanConstantFormula or CategoricalConstantFormula or VariableFormula
+                    => formula.ToString() ?? string.Empty,
+                _ => $"({formula})",
+            };
+        }
     }
 
     /// <summary>
@@ -54,6 +69,11 @@ namespace Respira.Clinical.Domain.Models
         {
             return new NumericalExpression(Constant);
         }
+
+        public override string ToString()
+        {
+            return Constant.ToString(CultureInfo.InvariantCulture);
+        }
     }
 
     /// <summary>
@@ -72,6 +92,11 @@ namespace Respira.Clinical.Domain.Models
         {
             return new BooleanExpression(Constant);
         }
+
+        public override string ToString()
+        {
+            return Constant ? "true" : "false";
+        }
     }
 
     public class CategoricalConstantFormula(string constant) : Formula
@@ -86,6 +111,11 @@ namespace Respira.Clinical.Domain.Models
         public override Expression ToExpression(IEnumerable<ClinicalObservation> observations)
         {
             return new CategoricalExpression(Constant);
+        }
+
+        public override string ToString()
+        {
+            return $"\"{Constant}\"";
         }
     }
 
@@ -114,6 +144,11 @@ namespace Respira.Clinical.Domain.Models
                 ? throw new ArgumentException($"Observation not found for variable: {Variable.Code}")
                 : (Expression)new ObservationExpression(observation);
         }
+
+        public override string ToString()
+        {
+            return $"{Variable.Code}";
+        }
     }
 
     /// <summary>
@@ -140,6 +175,11 @@ namespace Respira.Clinical.Domain.Models
         public override Expression ToExpression(IEnumerable<ClinicalObservation> observations)
         {
             return new UnaryExpression(Formula.ToExpression(observations));
+        }
+
+        public override string ToString()
+        {
+            return ExpressionOperator.NOT.ToSymbol() + Parenthesize(Formula);
         }
     }
 
@@ -200,6 +240,11 @@ namespace Respira.Clinical.Domain.Models
         {
             return new BinaryExpression(Left.ToExpression(observations), Right.ToExpression(observations), Operator);
         }
+
+        public override string ToString()
+        {
+            return $"{Parenthesize(Left)} {Operator.ToSymbol()} {Parenthesize(Right)}";
+        }
     }
 
     /// <summary>
@@ -250,6 +295,11 @@ namespace Respira.Clinical.Domain.Models
         public override Expression ToExpression(IEnumerable<ClinicalObservation> observations)
         {
             return new TernaryExpression(Condition.ToExpression(observations), IfTrue.ToExpression(observations), IfFalse.ToExpression(observations));
+        }
+
+        public override string ToString()
+        {
+            return $"If {Parenthesize(Condition)} then {Parenthesize(IfTrue)} else {Parenthesize(IfFalse)}";
         }
     }
 }

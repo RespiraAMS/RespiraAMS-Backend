@@ -37,6 +37,8 @@ namespace Respira.Clinical.Domain.Test.Services
                         IsMaxExclusive = false,
                         Unit = "year"
                     },
+                    IsRequired = true,
+                    Category = ClinicalVariableCategory.PersonalInformation
                 },
 
                 new BooleanClinicalVariable
@@ -44,7 +46,10 @@ namespace Respira.Clinical.Domain.Test.Services
                     Name = "Female sex",
                     Code = "FEMALE",
                     Description = "Is the patient female",
-                    CanonicalUnit = null
+                    CanonicalUnit = null,
+                    IsRequired = true,
+                    Category = ClinicalVariableCategory.PersonalInformation
+
                 },
 
                 new NumericClinicalVariable
@@ -60,6 +65,8 @@ namespace Respira.Clinical.Domain.Test.Services
                         IsMaxExclusive = false,
                         Unit = "cm"
                     },
+                    IsRequired = true,
+                    Category = ClinicalVariableCategory.PersonalInformation
                 },
 
                 new NumericClinicalVariable
@@ -77,6 +84,8 @@ namespace Respira.Clinical.Domain.Test.Services
                         IsMaxExclusive = false,
                         Unit = "kg"
                     },
+                    IsRequired = true,
+                    Category = ClinicalVariableCategory.PersonalInformation
                 },
 
                 new BooleanClinicalVariable
@@ -84,7 +93,9 @@ namespace Respira.Clinical.Domain.Test.Services
                     Name = "Live at nursing home",
                     Code = "NURSING-HOME-RESIDENCE",
                     Description = "Does the patient live at a nursing home",
-                    CanonicalUnit = null
+                    CanonicalUnit = null,
+                    IsRequired = false,
+                    Category = ClinicalVariableCategory.Clinical
                 },
 
                 new BooleanClinicalVariable
@@ -92,7 +103,9 @@ namespace Respira.Clinical.Domain.Test.Services
                     Name = "Has neoplastic disease",
                     Code = "NEOPLASTIC",
                     Description = "Does the patient have neoplastic disease",
-                    CanonicalUnit = null
+                    CanonicalUnit = null,
+                    IsRequired = false,
+                    Category = ClinicalVariableCategory.Clinical
                 },
 
                 new BooleanClinicalVariable
@@ -100,7 +113,9 @@ namespace Respira.Clinical.Domain.Test.Services
                     Name = "Has liver disease history",
                     Code = "LIVER",
                     Description = "Does the patient have liver disease history",
-                    CanonicalUnit = null
+                    CanonicalUnit = null,
+                    IsRequired = false,
+                    Category = ClinicalVariableCategory.Clinical
                 },
 
                 new BooleanClinicalVariable
@@ -108,7 +123,9 @@ namespace Respira.Clinical.Domain.Test.Services
                     Name = "Has congestive heart failure (CHF)",
                     Code = "CHF",
                     Description = "Does the patient have congestive heart failure",
-                    CanonicalUnit = null
+                    CanonicalUnit = null,
+                    IsRequired = false,
+                    Category = ClinicalVariableCategory.Clinical
                 },
 
                 new BooleanClinicalVariable
@@ -116,7 +133,9 @@ namespace Respira.Clinical.Domain.Test.Services
                     Name = "Has cerebrovascular disease history",
                     Code = "CEREBROVASCULAR",
                     Description = "Does the patient have cerebrovascular disease history",
-                    CanonicalUnit = null
+                    CanonicalUnit = null,
+                    IsRequired = false,
+                    Category = ClinicalVariableCategory.Clinical
                 },
 
                 new BooleanClinicalVariable
@@ -124,7 +143,9 @@ namespace Respira.Clinical.Domain.Test.Services
                     Name = "Has renal disease history",
                     Code = "RENAL",
                     Description = "Does the patient have renal disease history",
-                    CanonicalUnit = null
+                    CanonicalUnit = null,
+                    IsRequired = false,
+                    Category = ClinicalVariableCategory.Clinical
                 },
 
                 new BooleanClinicalVariable
@@ -132,7 +153,9 @@ namespace Respira.Clinical.Domain.Test.Services
                     Name = "Confusion",
                     Code = "CONFUSION",
                     Description = "Does the patient have altered mental status",
-                    CanonicalUnit = null
+                    CanonicalUnit = null,
+                    IsRequired = false,
+                    Category = ClinicalVariableCategory.Clinical
                 },
 
                 new NumericClinicalVariable
@@ -148,6 +171,8 @@ namespace Respira.Clinical.Domain.Test.Services
                         IsMaxExclusive = false,
                         Unit = "breaths/min"
                     },
+                    IsRequired = false,
+                    Category = ClinicalVariableCategory.Clinical
                 },
 
                 new NumericClinicalVariable
@@ -163,6 +188,8 @@ namespace Respira.Clinical.Domain.Test.Services
                         IsMaxExclusive = false,
                         Unit = "mmHg"
                     },
+                    IsRequired = false,
+                    Category = ClinicalVariableCategory.Clinical
                 },
 
                 new NumericClinicalVariable
@@ -178,6 +205,8 @@ namespace Respira.Clinical.Domain.Test.Services
                         IsMaxExclusive = false,
                         Unit = "mmHg"
                     },
+                    IsRequired = false,
+                    Category = ClinicalVariableCategory.Clinical
                 },
 
                 new NumericClinicalVariable
@@ -193,6 +222,8 @@ namespace Respira.Clinical.Domain.Test.Services
                         IsMaxExclusive = false,
                         Unit = "Celcius"
                     },
+                    IsRequired = false,
+                    Category = ClinicalVariableCategory.Clinical
                 },
 
                 new NumericClinicalVariable
@@ -208,6 +239,8 @@ namespace Respira.Clinical.Domain.Test.Services
                         IsMaxExclusive = false,
                         Unit = "bpm"
                     },
+                    IsRequired = false,
+                    Category = ClinicalVariableCategory.Clinical
                 },
 
                 new NumericClinicalVariable
@@ -223,6 +256,8 @@ namespace Respira.Clinical.Domain.Test.Services
                         IsMaxExclusive = false,
                         Unit = "mg/dL"
                     },
+                    IsRequired = false,
+                    Category = ClinicalVariableCategory.Paraclinical
                 },
 
                 new NumericClinicalVariable
@@ -238,6 +273,8 @@ namespace Respira.Clinical.Domain.Test.Services
                         IsMaxExclusive = false,
                         Unit = "pH"
                     },
+                    IsRequired = false,
+                    Category = ClinicalVariableCategory.Paraclinical
                 },
 
                 new NumericClinicalVariable
@@ -253,6 +290,8 @@ namespace Respira.Clinical.Domain.Test.Services
                         IsMaxExclusive = false,
                         Unit = "%"
                     },
+                    IsRequired = false,
+                    Category = ClinicalVariableCategory.Paraclinical
                 },
 
                 new NumericClinicalVariable
@@ -268,6 +307,8 @@ namespace Respira.Clinical.Domain.Test.Services
                         IsMaxExclusive = false,
                         Unit = "mg/dL"
                     },
+                    IsRequired = false,
+                    Category = ClinicalVariableCategory.Paraclinical
                 },
 
                 new NumericClinicalVariable
@@ -283,6 +324,8 @@ namespace Respira.Clinical.Domain.Test.Services
                         IsMaxExclusive = false,
                         Unit = "mmol/L"
                     },
+                    IsRequired = false,
+                    Category = ClinicalVariableCategory.Paraclinical
                 },
 
                 new NumericClinicalVariable
@@ -297,7 +340,9 @@ namespace Respira.Clinical.Domain.Test.Services
                         IsMinExclusive = true,
                         IsMaxExclusive = false,
                         Unit = "cells/mm3"
-                    }
+                    },
+                    IsRequired = false,
+                    Category = ClinicalVariableCategory.Paraclinical
                 },
 
                 new NumericClinicalVariable
@@ -312,7 +357,9 @@ namespace Respira.Clinical.Domain.Test.Services
                         IsMinExclusive = true,
                         IsMaxExclusive = false,
                         Unit = "cells/mm3"
-                    }
+                    },
+                    IsRequired = false,
+                    Category = ClinicalVariableCategory.Paraclinical
                 },
 
                 new NumericClinicalVariable
@@ -327,7 +374,9 @@ namespace Respira.Clinical.Domain.Test.Services
                         IsMinExclusive = true,
                         IsMaxExclusive = false,
                         Unit = "mmHg"
-                    }
+                    },
+                    IsRequired = false,
+                    Category = ClinicalVariableCategory.Paraclinical
                 },
 
                 new NumericClinicalVariable
@@ -342,7 +391,9 @@ namespace Respira.Clinical.Domain.Test.Services
                         IsMinExclusive = false,
                         IsMaxExclusive = false,
                         Unit = null
-                    }
+                    },
+                    IsRequired = false,
+                    Category = ClinicalVariableCategory.Paraclinical
                 },
 
                 new NumericClinicalVariable
@@ -357,7 +408,9 @@ namespace Respira.Clinical.Domain.Test.Services
                         IsMinExclusive = false,
                         IsMaxExclusive = false,
                         Unit = "%"
-                    }
+                    },
+                    IsRequired = false,
+                    Category = ClinicalVariableCategory.Paraclinical
                 },
 
                 new BooleanClinicalVariable
@@ -365,7 +418,9 @@ namespace Respira.Clinical.Domain.Test.Services
                     Name = "Has pleural effusion on X-Ray",
                     Code = "PLEURAL-EFFUSION",
                     Description = "Does the patient have pleural effusion on X-Ray",
-                    CanonicalUnit = null
+                    CanonicalUnit = null,
+                    IsRequired = false,
+                    Category = ClinicalVariableCategory.Paraclinical
                 },
 
                 new BooleanClinicalVariable
@@ -373,7 +428,9 @@ namespace Respira.Clinical.Domain.Test.Services
                     Name = "Multilobar pulmonary lesions on chest X-ray",
                     Code = "MULTILOBAR-PULMONARY-LESION",
                     Description = "Does the patient have multilobar pulmonary lesions on chest X-ray",
-                    CanonicalUnit = null
+                    CanonicalUnit = null,
+                    IsRequired = false,
+                    Category = ClinicalVariableCategory.Paraclinical
                 },
 
                 new BooleanClinicalVariable
@@ -381,7 +438,9 @@ namespace Respira.Clinical.Domain.Test.Services
                     Name = "Hypotension requiring aggressive fluid resuscitation",
                     Code = "HYPOTENSION",
                     Description = "Does the patient have hypotension requiring aggressive fluid resuscitation",
-                    CanonicalUnit = null
+                    CanonicalUnit = null,
+                    IsRequired = false,
+                    Category = ClinicalVariableCategory.Clinical
                 },
 
                 new BooleanClinicalVariable
@@ -389,7 +448,9 @@ namespace Respira.Clinical.Domain.Test.Services
                     Name = "Requires mechanical ventilation",
                     Code = "REQUIRES-MECHANICAL-VENTILATION",
                     Description = "Does the patient require invasive mechanical ventilation",
-                    CanonicalUnit = null
+                    CanonicalUnit = null,
+                    IsRequired = false,
+                    Category = ClinicalVariableCategory.Clinical
                 },
 
                 new BooleanClinicalVariable
@@ -397,7 +458,9 @@ namespace Respira.Clinical.Domain.Test.Services
                     Name = "Septic shock requiring vasopressor support",
                     Code = "SEPTIC-SHOCK",
                     Description = "Does the patient have septic shock requiring vasopressors",
-                    CanonicalUnit = null
+                    CanonicalUnit = null,
+                    IsRequired = false,
+                    Category = ClinicalVariableCategory.Clinical
                 },
 
                 // ---- Risk-factor clinical variables ----
@@ -406,7 +469,9 @@ namespace Respira.Clinical.Domain.Test.Services
                     Name = "Alcohol abuse",
                     Code = "ALCOHOL-ABUSE",
                     Description = "History of alcohol abuse",
-                    CanonicalUnit = null
+                    CanonicalUnit = null,
+                    IsRequired = false,
+                    Category = ClinicalVariableCategory.Clinical
                 },
 
                 new BooleanClinicalVariable
@@ -414,7 +479,9 @@ namespace Respira.Clinical.Domain.Test.Services
                     Name = "Smoking",
                     Code = "SMOKING",
                     Description = "Current or former smoker",
-                    CanonicalUnit = null
+                    CanonicalUnit = null,
+                    IsRequired = false,
+                    Category = ClinicalVariableCategory.Clinical
                 },
 
                 new BooleanClinicalVariable
@@ -422,7 +489,9 @@ namespace Respira.Clinical.Domain.Test.Services
                     Name = "Chronic obstructive pulmonary disease",
                     Code = "COPD",
                     Description = "Has chronic obstructive pulmonary disease (COPD) or other chronic lung disease",
-                    CanonicalUnit = null
+                    CanonicalUnit = null,
+                    IsRequired = false,
+                    Category = ClinicalVariableCategory.Clinical
                 },
 
                 new BooleanClinicalVariable
@@ -430,7 +499,9 @@ namespace Respira.Clinical.Domain.Test.Services
                     Name = "Severe chronic obstructive pulmonary disease",
                     Code = "SEVERE-COPD",
                     Description = "Has severe COPD (FEV1 < 30%)",
-                    CanonicalUnit = null
+                    CanonicalUnit = null,
+                    IsRequired = false,
+                    Category = ClinicalVariableCategory.Clinical
                 },
 
                 new BooleanClinicalVariable
@@ -438,7 +509,9 @@ namespace Respira.Clinical.Domain.Test.Services
                     Name = "Malnutrition",
                     Code = "MALNUTRITION",
                     Description = "Has malnutrition",
-                    CanonicalUnit = null
+                    CanonicalUnit = null,
+                    IsRequired = false,
+                    Category = ClinicalVariableCategory.Clinical
                 },
 
                 new BooleanClinicalVariable
@@ -446,7 +519,9 @@ namespace Respira.Clinical.Domain.Test.Services
                     Name = "Mental illness",
                     Code = "MENTAL-ILLNESS",
                     Description = "Has mental illness",
-                    CanonicalUnit = null
+                    CanonicalUnit = null,
+                    IsRequired = false,
+                    Category = ClinicalVariableCategory.Clinical
                 },
 
                 new BooleanClinicalVariable
@@ -454,7 +529,9 @@ namespace Respira.Clinical.Domain.Test.Services
                     Name = "Immunocompromised",
                     Code = "IMMUNOCOMPROMISED",
                     Description = "Is immunocompromised",
-                    CanonicalUnit = null
+                    CanonicalUnit = null,
+                    IsRequired = false,
+                    Category = ClinicalVariableCategory.Clinical
                 },
 
                 new BooleanClinicalVariable
@@ -462,7 +539,9 @@ namespace Respira.Clinical.Domain.Test.Services
                     Name = "HIV infection",
                     Code = "HIV",
                     Description = "Has HIV infection",
-                    CanonicalUnit = null
+                    CanonicalUnit = null,
+                    IsRequired = false,
+                    Category = ClinicalVariableCategory.Clinical
                 },
 
                 new BooleanClinicalVariable
@@ -470,7 +549,9 @@ namespace Respira.Clinical.Domain.Test.Services
                     Name = "Organ transplant",
                     Code = "ORGAN-TRANSPLANT",
                     Description = "Has had an organ transplant",
-                    CanonicalUnit = null
+                    CanonicalUnit = null,
+                    IsRequired = false,
+                    Category = ClinicalVariableCategory.Clinical
                 },
 
                 new BooleanClinicalVariable
@@ -478,7 +559,9 @@ namespace Respira.Clinical.Domain.Test.Services
                     Name = "Diabetes mellitus",
                     Code = "DIABETES",
                     Description = "Has diabetes mellitus",
-                    CanonicalUnit = null
+                    CanonicalUnit = null,
+                    IsRequired = false,
+                    Category = ClinicalVariableCategory.Clinical
                 },
 
                 new BooleanClinicalVariable
@@ -486,7 +569,9 @@ namespace Respira.Clinical.Domain.Test.Services
                     Name = "Influenza infection",
                     Code = "INFLUENZA",
                     Description = "Has influenza infection",
-                    CanonicalUnit = null
+                    CanonicalUnit = null,
+                    IsRequired = false,
+                    Category = ClinicalVariableCategory.Clinical
                 },
 
                 new BooleanClinicalVariable
@@ -494,7 +579,9 @@ namespace Respira.Clinical.Domain.Test.Services
                     Name = "Measles infection",
                     Code = "MEASLES",
                     Description = "Has measles infection",
-                    CanonicalUnit = null
+                    CanonicalUnit = null,
+                    IsRequired = false,
+                    Category = ClinicalVariableCategory.Clinical
                 },
 
                 new BooleanClinicalVariable
@@ -502,7 +589,9 @@ namespace Respira.Clinical.Domain.Test.Services
                     Name = "IV drug use",
                     Code = "IV-DRUG-USE",
                     Description = "History of intravenous drug use",
-                    CanonicalUnit = null
+                    CanonicalUnit = null,
+                    IsRequired = false,
+                    Category = ClinicalVariableCategory.Clinical
                 },
 
                 new BooleanClinicalVariable
@@ -510,7 +599,9 @@ namespace Respira.Clinical.Domain.Test.Services
                     Name = "Prior MRSA infection",
                     Code = "PRIOR-MRSA-INFECTION",
                     Description = "History of MRSA infection",
-                    CanonicalUnit = null
+                    CanonicalUnit = null,
+                    IsRequired = false,
+                    Category = ClinicalVariableCategory.Clinical
                 },
 
                 new BooleanClinicalVariable
@@ -518,7 +609,9 @@ namespace Respira.Clinical.Domain.Test.Services
                     Name = "Recent hospitalization with IV antibiotics",
                     Code = "HOSPITALIZATION-90D",
                     Description = "Hospitalization and IV antibiotics within 90 days",
-                    CanonicalUnit = null
+                    CanonicalUnit = null,
+                    IsRequired = false,
+                    Category = ClinicalVariableCategory.Clinical
                 },
 
                 new BooleanClinicalVariable
@@ -526,7 +619,9 @@ namespace Respira.Clinical.Domain.Test.Services
                     Name = "ICU stay",
                     Code = "ICU-STAY",
                     Description = "Recent ICU stay",
-                    CanonicalUnit = null
+                    CanonicalUnit = null,
+                    IsRequired = false,
+                    Category = ClinicalVariableCategory.Clinical
                 },
 
                 new BooleanClinicalVariable
@@ -534,7 +629,9 @@ namespace Respira.Clinical.Domain.Test.Services
                     Name = "Intubation",
                     Code = "INTUBATION",
                     Description = "Recent endotracheal intubation",
-                    CanonicalUnit = null
+                    CanonicalUnit = null,
+                    IsRequired = false,
+                    Category = ClinicalVariableCategory.Clinical
                 },
 
                 new BooleanClinicalVariable
@@ -542,7 +639,9 @@ namespace Respira.Clinical.Domain.Test.Services
                     Name = "Stroke",
                     Code = "STROKE",
                     Description = "Has stroke history",
-                    CanonicalUnit = null
+                    CanonicalUnit = null,
+                    IsRequired = false,
+                    Category = ClinicalVariableCategory.Clinical
                 },
 
                 new BooleanClinicalVariable
@@ -550,7 +649,9 @@ namespace Respira.Clinical.Domain.Test.Services
                     Name = "Epilepsy",
                     Code = "EPILEPSY",
                     Description = "Has epilepsy",
-                    CanonicalUnit = null
+                    CanonicalUnit = null,
+                    IsRequired = false,
+                    Category = ClinicalVariableCategory.Clinical
                 },
 
                 new BooleanClinicalVariable
@@ -558,7 +659,9 @@ namespace Respira.Clinical.Domain.Test.Services
                     Name = "Anesthesia",
                     Code = "ANESTHESIA",
                     Description = "Recent anesthesia",
-                    CanonicalUnit = null
+                    CanonicalUnit = null,
+                    IsRequired = false,
+                    Category = ClinicalVariableCategory.Clinical
                 },
 
                 new BooleanClinicalVariable
@@ -566,7 +669,9 @@ namespace Respira.Clinical.Domain.Test.Services
                     Name = "Prior antibiotic use",
                     Code = "PRIOR-ANTIBIOTIC-USE",
                     Description = "Recent antibiotic use",
-                    CanonicalUnit = null
+                    CanonicalUnit = null,
+                    IsRequired = false,
+                    Category = ClinicalVariableCategory.Clinical
                 },
 
                 new BooleanClinicalVariable
@@ -574,7 +679,9 @@ namespace Respira.Clinical.Domain.Test.Services
                     Name = "Cystic fibrosis",
                     Code = "CYSTIC-FIBROSIS",
                     Description = "Has cystic fibrosis",
-                    CanonicalUnit = null
+                    CanonicalUnit = null,
+                    IsRequired = false,
+                    Category = ClinicalVariableCategory.Clinical
                 },
 
                 new BooleanClinicalVariable
@@ -582,7 +689,9 @@ namespace Respira.Clinical.Domain.Test.Services
                     Name = "Bronchiectasis",
                     Code = "BRONCHIECTASIS",
                     Description = "Has bronchiectasis",
-                    CanonicalUnit = null
+                    CanonicalUnit = null,
+                    IsRequired = false,
+                    Category = ClinicalVariableCategory.Clinical
                 },
 
                 new BooleanClinicalVariable
@@ -590,7 +699,9 @@ namespace Respira.Clinical.Domain.Test.Services
                     Name = "Lung cancer",
                     Code = "LUNG-CANCER",
                     Description = "Has lung cancer",
-                    CanonicalUnit = null
+                    CanonicalUnit = null,
+                    IsRequired = false,
+                    Category = ClinicalVariableCategory.Clinical
                 },
 
                 new BooleanClinicalVariable
@@ -598,7 +709,9 @@ namespace Respira.Clinical.Domain.Test.Services
                     Name = "Prior Pseudomonas infection",
                     Code = "PRIOR-PSEUDOMONAS",
                     Description = "History of Pseudomonas aeruginosa infection",
-                    CanonicalUnit = null
+                    CanonicalUnit = null,
+                    IsRequired = false,
+                    Category = ClinicalVariableCategory.Clinical
                 },
 
                 new BooleanClinicalVariable
@@ -606,7 +719,9 @@ namespace Respira.Clinical.Domain.Test.Services
                     Name = "Aspiration pneumonia",
                     Code = "ASPIRATION-PNEUMONIA",
                     Description = "Has aspiration pneumonia",
-                    CanonicalUnit = null
+                    CanonicalUnit = null,
+                    IsRequired = false,
+                    Category = ClinicalVariableCategory.Clinical
                 },
 
                 new BooleanClinicalVariable
@@ -614,7 +729,9 @@ namespace Respira.Clinical.Domain.Test.Services
                     Name = "Oropharyngeal anaerobic infection",
                     Code = "OROPHARYNGEAL-ANAEROBIC",
                     Description = "Has oropharyngeal anaerobic infection",
-                    CanonicalUnit = null
+                    CanonicalUnit = null,
+                    IsRequired = false,
+                    Category = ClinicalVariableCategory.Clinical
                 },
 
                 new BooleanClinicalVariable
@@ -622,7 +739,9 @@ namespace Respira.Clinical.Domain.Test.Services
                     Name = "Severe internal medicine disease",
                     Code = "SEVERE-INTERNAL-DISEASE",
                     Description = "Has severe internal medicine disease",
-                    CanonicalUnit = null
+                    CanonicalUnit = null,
+                    IsRequired = false,
+                    Category = ClinicalVariableCategory.Clinical
                 },
 
                 new BooleanClinicalVariable
@@ -630,7 +749,9 @@ namespace Respira.Clinical.Domain.Test.Services
                     Name = "Pulmonary infarction",
                     Code = "PULMONARY-INFARCTION",
                     Description = "Has pulmonary infarction",
-                    CanonicalUnit = null
+                    CanonicalUnit = null,
+                    IsRequired = false,
+                    Category = ClinicalVariableCategory.Clinical
                 },
             ];
 
@@ -1309,8 +1430,10 @@ namespace Respira.Clinical.Domain.Test.Services
                 Severity.Mild,
                 TreatmentSite.Outpatient,
                 [
-                    new HeavySuspected(_context.Pathogens.First(x => x.Name.Equals("Pseudomonas aeruginosa")), (1m / 3m) + 0.5m),
-                    new HeavySuspected(_context.Pathogens.First(x => x.Name.Equals("Methicillin-Resistant Staphylococcus aureus (MRSA)")), 1m / 2m),
+                    // Score = satisfied risk factors: prior pseudomonas + recent hospitalization = 2
+                    new HeavySuspected(_context.Pathogens.First(x => x.Name.Equals("Pseudomonas aeruginosa")), 2m),
+                    // Score = satisfied risk factors: recent hospitalization = 1
+                    new HeavySuspected(_context.Pathogens.First(x => x.Name.Equals("Methicillin-Resistant Staphylococcus aureus (MRSA)")), 1m),
                 ],
                 [
                     _context.Pathogens.First(x => x.Name.Equals("Streptococcus pneumoniae")),
@@ -1345,14 +1468,14 @@ namespace Respira.Clinical.Domain.Test.Services
                 Severity.Mild,
                 TreatmentSite.Outpatient,
                 [
-                    // Score = sum(1st_priority_score + 2nd) + 1 = 1 + 1/2 + 1 = 2.5
-                    new HeavySuspected(_context.Pathogens.First(x => x.Name.Equals("Streptococcus pneumoniae")), 2.5m),
-                    // Score = sum(3rd_priority_score) = 1/3
-                    new HeavySuspected(_context.Pathogens.First(x => x.Name.Equals("Klebsiella pneumoniae")), 1m / 3m),
-                    // Score = sum(1st_priority_score) = 1
+                    // Score = satisfied risk factors (male/old age + alcohol abuse) + 1 suspected boost = 3
+                    new HeavySuspected(_context.Pathogens.First(x => x.Name.Equals("Streptococcus pneumoniae")), 3m),
+                    // Score = satisfied risk factors (alcohol abuse) = 1
+                    new HeavySuspected(_context.Pathogens.First(x => x.Name.Equals("Klebsiella pneumoniae")), 1m),
+                    // Score = satisfied risk factors (alcohol abuse or old age) = 1
                     new HeavySuspected(_context.Pathogens.First(x => x.Name.Equals("Acinetobacter baumannii")), 1m),
-                    // Score = sum(4th_priority_score) + 1 = 1/4 + 1 = 1.25
-                    new HeavySuspected(_context.Pathogens.First(x => x.Name.Equals("Haemophilus influenzae")), 1.25m),
+                    // Score = satisfied risk factors (alcohol abuse) + 1 suspected boost = 2
+                    new HeavySuspected(_context.Pathogens.First(x => x.Name.Equals("Haemophilus influenzae")), 2m),
                 ],
                 [
                     // _context.Pathogens.First(x => x.Name.Equals("Streptococcus pneumoniae")),
@@ -1382,7 +1505,9 @@ namespace Respira.Clinical.Domain.Test.Services
         {
             // Assert CURB-65 score
             var curb65 = _context.Metrics.First(x => x.Code.Equals("CURB-65"));
-            Assert.Equal(curbScore, _service.CalculateMetricsScore(curb65, observations));
+            var (score, evidiences) = _service.CalculateMetricsScore(curb65, observations);
+            Assert.Equal(curbScore, score);
+            Assert.NotEmpty(evidiences);
         }
 
         [Theory]
@@ -1391,7 +1516,9 @@ namespace Respira.Clinical.Domain.Test.Services
         {
             // Assert PSI score
             var psi = _context.Metrics.First(x => x.Code.Equals("PSI"));
-            Assert.Equal(psiScore, _service.CalculateMetricsScore(psi, observations));
+            var (score, evidiences) = _service.CalculateMetricsScore(psi, observations);
+            Assert.Equal(psiScore, score);
+            Assert.NotEmpty(evidiences);
         }
 
         [Theory]
@@ -1400,7 +1527,9 @@ namespace Respira.Clinical.Domain.Test.Services
         {
             // Assert IDSA/ATS score
             var idsa_ats = _context.Metrics.First(x => x.Code.Equals("IDSA/ATS"));
-            Assert.Equal(idsa_atsScore, _service.CalculateMetricsScore(idsa_ats, observations));
+            var (score, evidiences) = _service.CalculateMetricsScore(idsa_ats, observations);
+            Assert.Equal(idsa_atsScore, score);
+            Assert.NotEmpty(evidiences);
         }
 
         [Theory]

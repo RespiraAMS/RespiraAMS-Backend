@@ -124,6 +124,20 @@ namespace Respira.Clinical.Application.Features.Diagnosis.EmpiricalDiagnosis.Dia
                     errors.Add(variable.Id, $"{variable.Name} should be in this value range {string.Join(", ", variable.AcceptedValues)}");
                 }
             }
+
+            // Validation: if is pregnant variable is true, check if sex if female or not
+            var pregnant = observations.FirstOrDefault(x => x.Variable.Code.Equals("PREGNANT-OR-LACTATING"));
+            if (pregnant is not null && pregnant.BooleanValue == true)
+            {
+                logger.LogDebug("Pregnant variable is true, check if sex is female");
+                var isFemale = observations.FirstOrDefault(x => x.Variable.Code.Equals("FEMALE"));
+                if (isFemale is null || isFemale.BooleanValue == false)
+                {
+                    logger.LogDebug("Sex is not female when pregnant is true");
+                    errors.Add(pregnant.Variable.Id, "Sex should be female when pregnant is true");
+                }
+            }
+
             if (errors.Count > 0)
             {
                 return Result<DiagnoseResult>.Failure(new Error(ApplicationStatus.BadRequest, "Invalid observation value", errors));
@@ -155,11 +169,15 @@ namespace Respira.Clinical.Application.Features.Diagnosis.EmpiricalDiagnosis.Dia
                 Infection = infectionAssessment.Data,
             });
 
+            var evidences = severityDiagnosis.Data.MetricsDiagnoses.SelectMany(x => x.Evidences)
+                .Concat(infectionAssessment.Data!.Evidences);
+
             return Result<DiagnoseResult>.Success(ApplicationStatus.Success, new DiagnoseResult
             {
                 SeverityDiagnosis = severityDiagnosis.Data,
                 WorthSuspected = infectionAssessment.Data!.WorthSuspected.Select(x => new PathogenResult(x.Id, x.Name)),
-                HeavySuspected = infectionAssessment.Data.HeavySuspected.Select(x => new ScoredPathogenResult(x.Pathogen.Id, x.Pathogen.Name, x.PriorityScore))
+                HeavySuspected = infectionAssessment.Data.HeavySuspected.Select(x => new ScoredPathogenResult(x.Pathogen.Id, x.Pathogen.Name, x.PriorityScore)),
+                Evidences = evidences,
             });
         }
     }

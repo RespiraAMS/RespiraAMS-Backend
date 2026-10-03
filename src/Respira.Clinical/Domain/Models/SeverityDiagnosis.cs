@@ -9,7 +9,8 @@ namespace Respira.Clinical.Domain.Models
     /// <param name="Score">Metrics score</param>
     /// <param name="Severity">Diagnosis severity</param>
     /// <param name="TreatmentSite">Diagnosis treatment site</param>
-    public record MetricsSeverityDiagnosis(string Code, int Score, Severity Severity, TreatmentSite TreatmentSite);
+    /// <param name="Evidences">Evidences for the diagnosis</param>
+    public record MetricsSeverityDiagnosis(string Code, int Score, Severity Severity, TreatmentSite TreatmentSite, List<string> Evidences);
 
     /// <summary>
     /// Final severity diagnosis, after combining all metrics results.

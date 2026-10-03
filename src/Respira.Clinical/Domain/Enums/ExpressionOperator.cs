@@ -94,5 +94,32 @@ namespace Respira.Clinical.Domain.Enums
                 _ => false,
             };
         }
+
+        /// <summary>
+        /// Renders an operator as its mathematical symbol, for example GTE as ≥.
+        /// Note that this is an extension method (and not an override), so it must be
+        /// called as <c>op.ToSymbol()</c> - a plain <c>op.ToString()</c> would resolve
+        /// to the enum name instead
+        /// </summary>
+        public static string ToSymbol(this ExpressionOperator op)
+        {
+            return op switch
+            {
+                ExpressionOperator.ADD => "+",
+                ExpressionOperator.SUB => "−",
+                ExpressionOperator.MUL => "×",
+                ExpressionOperator.DIV => "÷",
+                ExpressionOperator.GT => ">",
+                ExpressionOperator.LT => "<",
+                ExpressionOperator.GTE => "≥",
+                ExpressionOperator.LTE => "≤",
+                ExpressionOperator.EQ => "=",
+                ExpressionOperator.NE => "≠",
+                ExpressionOperator.AND => "AND",
+                ExpressionOperator.OR => "OR",
+                ExpressionOperator.NOT => "NOT",
+                _ => op.ToString(),
+            };
+        }
     }
 }

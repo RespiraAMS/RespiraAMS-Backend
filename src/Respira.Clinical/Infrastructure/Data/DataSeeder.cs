@@ -61,7 +61,10 @@ namespace Respira.Clinical.Infrastructure.Data
                         Code = v.Code,
                         Description = v.Description,
                         CanonicalUnit = v.CanonicalUnit,
+                        IsRequired = v.IsRequired,
+                        Category = ParseEnum(v.Category, ClinicalVariableCategory.PersonalInformation),
                         AcceptedRange = MapRange(v.AcceptedRange)!,
+                        NormalRange = MapRange(v.NormalRange),
                     };
                 }
 
@@ -74,6 +77,8 @@ namespace Respira.Clinical.Infrastructure.Data
                         Code = v.Code,
                         Description = v.Description,
                         CanonicalUnit = v.CanonicalUnit,
+                        IsRequired = v.IsRequired,
+                        Category = ParseEnum(v.Category, ClinicalVariableCategory.PersonalInformation),
                     };
                 }
 
@@ -84,6 +89,8 @@ namespace Respira.Clinical.Infrastructure.Data
                     Code = v.Code,
                     Description = v.Description,
                     CanonicalUnit = v.CanonicalUnit,
+                    IsRequired = v.IsRequired,
+                    Category = ParseEnum(v.Category, ClinicalVariableCategory.PersonalInformation),
                 };
             }).ToList();
 

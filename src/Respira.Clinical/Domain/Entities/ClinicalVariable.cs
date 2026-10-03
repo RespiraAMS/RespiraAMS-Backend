@@ -34,6 +34,16 @@ namespace Respira.Clinical.Domain.Entities
         /// </summary>
         public string? CanonicalUnit { get; set; }
 
+        /// <summary>
+        /// Clinical variable that is required when diagnosis or not
+        /// </summary>
+        public required bool IsRequired { get; set; }
+
+        /// <summary>
+        /// Clinical variable category
+        /// </summary>
+        public required ClinicalVariableCategory Category { get; set; }
+
         public abstract bool IsValidValue(object? value);
     }
 
@@ -49,7 +59,17 @@ namespace Respira.Clinical.Domain.Entities
 
     public class NumericClinicalVariable : ClinicalVariable
     {
-        public Range AcceptedRange { get; set; } = null!;
+        /// <summary>
+        /// The numeric range that the value can be
+        /// </summary>
+        public required Range AcceptedRange { get; set; }
+
+        /// <summary>
+        /// The numeric range that the value should be normally.
+        /// If value inputted outside of this range, but still within <see cref="AcceptedRange"/>,
+        /// it will still be accepted, but the client should be warned
+        /// </summary>
+        public Range? NormalRange { get; set; }
 
         public override ClinicalValueType ValueType => ClinicalValueType.Numeric;
 

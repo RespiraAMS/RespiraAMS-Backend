@@ -17,5 +17,6 @@ namespace Respira.Clinical.Application.Features.Diagnosis.EmpiricalDiagnosis.Dia
         public required SeverityDiagnosis SeverityDiagnosis { get; set; }
         public required IEnumerable<PathogenResult> WorthSuspected { get; set; }
         public required IEnumerable<ScoredPathogenResult> HeavySuspected { get; set; }
+        public required IEnumerable<string> Evidences { get; set; }
     }
 }
