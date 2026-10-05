@@ -21,6 +21,7 @@ using Respira.Clinical.Application.Features.SuspectedCauses.UpdateSuspectedCause
 using Respira.Clinical.Domain.Entities;
 using Respira.Clinical.Domain.Services;
 using Respira.Clinical.Infrastructure.Data;
+using Respira.Clinical.Infrastructure.Mapper;
 
 namespace Respira.Clinical.DI
 {
@@ -77,6 +78,7 @@ namespace Respira.Clinical.DI
             builder.AddNpgsqlDbContext<ClinicalDbContext>("clinicalDb");
             builder.Services.AddScoped<IDbContext, ClinicalDbContext>();
             builder.Services.Configure<SeedDataOptions>(builder.Configuration.GetSection(SeedDataOptions.SectionName));
+            builder.Services.AddScoped<IPaginationFactory, PaginationFactory>();
         }
 
         public static void ApplyMigrations(this IHost host, bool isDevEnv)
