@@ -1,5 +1,3 @@
-using Aspire.Hosting;
-
 var builder = DistributedApplication.CreateBuilder(args);
 
 // Kubernetes settings
@@ -9,5 +7,15 @@ var k8s = builder.AddKubernetesEnvironment("k8s");
 var cache = builder.AddRedis("cache");
 var postgres = builder.AddPostgres("postgres").WithPgWeb().WithDataVolume();
 var rabbitmq = builder.AddRabbitMQ("rabbitmq").WithManagementPlugin();
+
+// Clinical service
+var clinicalDb = postgres.AddDatabase("clinicalDb");
+var _ = builder
+    .AddProject<Projects.Respira_Clinical_API>("clinical-service")
+    .WithReference(clinicalDb)
+    .WithReference(cache)
+    .WaitFor(cache)
+    .WithReference(rabbitmq)
+    .WaitFor(rabbitmq);
 
 builder.Build().Run();

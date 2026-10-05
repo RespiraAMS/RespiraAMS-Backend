@@ -1,0 +1,55 @@
+using Microsoft.EntityFrameworkCore;
+using Respira.Clinical.Application.Contracts.Data;
+using Respira.Clinical.Application.Contracts.Mappers;
+using Respira.ServiceDefaults.Contracts.CQRS;
+using Respira.ServiceDefaults.Contracts.Pagination;
+using Respira.ServiceDefaults.Contracts.Results;
+using X.PagedList.EF;
+
+namespace Respira.Clinical.Application.Features.Antibiotics.GetPagedAntibiotic
+{
+    public class GetPagedAntibioticHandler(IDbContext context, IPaginationFactory factory)
+    : IQueryHandler<GetPagedAntibioticQuery, Result<Pagination<PagedAntibioticItem>>>
+    {
+        public async Task<Result<Pagination<PagedAntibioticItem>>> HandleAsync(GetPagedAntibioticQuery query, CancellationToken cancellationToken = default)
+        {
+            // Apply filter
+            var queryable = context.Antibiotics.AsQueryable();
+            if (query.Filter is not null)
+            {
+                if (query.Filter.Name is not null)
+                {
+                    queryable = queryable.Where(x => EF.Functions.ILike(x.Name, $"%{query.Filter.Name}%"));
+                }
+
+                if (query.Filter.AntibioticGroupId is not null)
+                {
+                    queryable = queryable.Where(x => x.AntibioticGroupId == query.Filter.AntibioticGroupId);
+                }
+
+                if (query.Filter.Classification is not null)
+                {
+                    queryable = queryable.Where(x => x.Classification == query.Filter.Classification);
+                }
+            }
+
+            // Get paged antibiotics
+            var antibiotics = await queryable
+                .AsNoTracking()
+                .OrderByDescending(x => x.CreatedAt)
+                .Select(x => new PagedAntibioticItem()
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    AntibioticGroup = new AntibioticGroupResult()
+                    {
+                        Id = x.AntibioticGroupId,
+                        Name = x.AntibioticGroup.Name,
+                    },
+                    Classification = x.Classification
+                })
+                .ToPagedListAsync(query.Param.Page, query.Param.Size);
+            return Result<Pagination<PagedAntibioticItem>>.Success(ApplicationStatus.Success, factory.Create(antibiotics));
+        }
+    }
+}
