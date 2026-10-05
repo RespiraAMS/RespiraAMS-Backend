@@ -1,4 +1,5 @@
 using Respira.Clinical.Domain.Enums;
+using Respira.Clinical.Domain.Models;
 using Respira.ServiceDefaults.Models;
 using Range = Respira.Clinical.Domain.Models.Range;
 
@@ -43,6 +44,13 @@ namespace Respira.Clinical.Domain.Entities
         /// Clinical variable category
         /// </summary>
         public required ClinicalVariableCategory Category { get; set; }
+
+        /// <summary>
+        /// Prerequisite formula for this variable. For example,
+        /// for a PREGNANT-OR-LACTATING variable to be true, then
+        /// FEMALE must be true
+        /// </summary>
+        public Formula? Prerequisite { get; set; }
 
         public abstract bool IsValidValue(object? value);
     }

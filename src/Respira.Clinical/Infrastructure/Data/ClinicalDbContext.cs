@@ -2,7 +2,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using Respira.Clinical.Application.Contracts.Data;
 using Respira.Clinical.Domain.Entities;
-using Respira.Clinical.Domain.Models;
 using Respira.Clinical.Infrastructure.Util.Database;
 using Respira.ServiceDefaults.Models;
 
@@ -149,6 +148,9 @@ namespace Respira.Clinical.Infrastructure.Data
                 .HasValue<BooleanClinicalVariable>("boolean_clinical_variable")
                 .HasValue<NumericClinicalVariable>("numeric_clinical_variable")
                 .HasValue<CategoricalClinicalVariable>("categorical_clinical_variable");
+            modelBuilder.Entity<ClinicalVariable>()
+                .Property(x => x.Prerequisite)
+                .HasFormulaConversion();
             modelBuilder.Entity<NumericClinicalVariable>()
                 .OwnsOne(x => x.AcceptedRange, builder => builder.ToJson());
             modelBuilder.Entity<NumericClinicalVariable>()
@@ -156,7 +158,8 @@ namespace Respira.Clinical.Infrastructure.Data
 
             modelBuilder.Entity<Criterion>().ToTable("criteria");
             modelBuilder.Entity<Criterion>().Ignore(x => x.Variables);
-            modelBuilder.Entity<Criterion>().Property(x => x.Formula)
+            modelBuilder.Entity<Criterion>()
+                .Property(x => x.Formula)
                 .HasFormulaConversion();
 
             // Config on pathogen
@@ -202,8 +205,7 @@ namespace Respira.Clinical.Infrastructure.Data
                 .WithMany()
                 .HasForeignKey(x => x.CriterionId);
             modelBuilder.Entity<ScoringRule>().Ignore(x => x.Variables);
-            modelBuilder.Entity<ScoringRule>().Property(x => x.ScoreFunction)
-                .HasFormulaConversion();
+            modelBuilder.Entity<ScoringRule>().Property(x => x.ScoreFunction).HasFormulaConversion();
 
             // Config on antibiotic group
             modelBuilder.Entity<AntibioticGroup>().ToTable("antibiotic_groups");

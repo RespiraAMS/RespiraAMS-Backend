@@ -24,6 +24,7 @@ namespace Respira.Clinical.Infrastructure.Data
         public bool IsRequired { get; init; }
         public string Category { get; init; } = string.Empty;
         public string? CanonicalUnit { get; init; }
+        public FormulaDto? Prerequisite { get; init; }
         public RangeDto? AcceptedRange { get; init; }
         public RangeDto? NormalRange { get; init; }
         public ICollection<string> AcceptedValues { get; init; } = [];

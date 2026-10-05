@@ -449,9 +449,6 @@ namespace Respira.Clinical.Domain.Services
             // First, check if all the required variables are present
             // Since this error is often the client dev team problem when implemeting,
             // not a user error, we won't return a detail message here
-            // var present = observations
-            //     .Select(o => o.Variable.Code)
-            //     .All(ov => context.Variables.Where(v => v.IsRequired).Select(v => v.Code).Contains(ov));
             var present = context.Variables
                 .Where(v => v.IsRequired)
                 .Select(x => x.Code)
@@ -496,16 +493,13 @@ namespace Respira.Clinical.Domain.Services
                 }
             }
 
-            // Validation for special variables: if is pregnant variable is true, check if sex if female or not
-            var pregnant = observations.FirstOrDefault(x => x.Variable.Code.Equals("PREGNANT-OR-LACTATING"));
-            if (pregnant is not null && pregnant.BooleanValue == true)
+            // Validation on variables that has prerequisite formula
+            foreach (var variable in context.Variables.Where(x => x.Prerequisite is not null))
             {
-                logger.LogDebug("Pregnant variable is true, check if sex is female");
-                var isFemale = observations.FirstOrDefault(x => x.Variable.Code.Equals("FEMALE"));
-                if (isFemale is null || isFemale.BooleanValue == false)
+                if (!(bool)variable.Prerequisite!.ToExpression(observations).Evaluate())
                 {
-                    logger.LogDebug("Sex is not female when pregnant is true");
-                    errors.Add(pregnant.Variable.Id, "Sex should be female when pregnant is true");
+                    logger.LogDebug("Prerequisite formula for variable {code} is not satisfied", variable.Code);
+                    errors.Add(variable.Id, $"Prerequisite ({variable.Prerequisite}) of variable {variable.Code} is not satisfied");
                 }
             }
 

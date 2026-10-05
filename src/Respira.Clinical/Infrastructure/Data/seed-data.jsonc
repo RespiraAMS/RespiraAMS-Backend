@@ -762,6 +762,20 @@
             "description": "Bệnh nhân có phải là người già yếu không?",
             "valueType": "Boolean",
             "canonicalUnit": null,
+            "prerequisite": {
+                "resultType": "Boolean",
+                "left": {
+                    "resultType": "Numeric",
+                    "variable": {
+                        "id": "00000000-0000-0000-0000-100000000001"
+                    }
+                },
+                "right": {
+                    "resultType": "Numeric",
+                    "constant": 60
+                },
+                "operator": "GTE"
+            },
             "isRequired": false,
             "category": "Clinical"
         },
@@ -822,6 +836,20 @@
             "description": "Bệnh nhân có đang có thai hoặc đang cho con bú không?",
             "valueType": "Boolean",
             "canonicalUnit": null,
+            "prerequisite": {
+                "resultType": "Boolean",
+                "left": {
+                    "resultType": "Boolean",
+                    "variable": {
+                        "id": "00000000-0000-0000-0000-100000000002"
+                    }
+                },
+                "right": {
+                    "resultType": "Boolean",
+                    "constant": true
+                },
+                "operator": "EQ"
+            },
             "isRequired": false,
             "category": "Clinical"
         }

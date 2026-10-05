@@ -96,6 +96,19 @@ namespace Respira.Clinical.Infrastructure.Data
 
             var variableLookup = variables.ToDictionary(v => v.Id);
 
+            // Prerequisite formulas reference other variables, so they are mapped in a second
+            // pass once every variable entity exists. Pair DTOs with entities by position:
+            // re-deriving the id with GenerateId would mint a new Guid for blank DTO ids.
+            foreach (var (variableDto, variable) in dto.ClinicalVariables.Zip(variables))
+            {
+                if (variableDto.Prerequisite is null)
+                {
+                    continue;
+                }
+
+                variable.Prerequisite = MapFormula(variableDto.Prerequisite, variableLookup);
+            }
+
             var criteria = dto.Criteria.Select(c =>
             {
                 var criterionId = GenerateId(c.Id);
