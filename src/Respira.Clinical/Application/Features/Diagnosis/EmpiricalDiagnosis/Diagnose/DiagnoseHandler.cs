@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Respira.Clinical.Application.Contracts.Data;
-using Respira.Clinical.Domain.Entities;
 using Respira.Clinical.Domain.Enums;
 using Respira.Clinical.Domain.Models;
 using Respira.Clinical.Domain.Services;
@@ -32,10 +31,19 @@ namespace Respira.Clinical.Application.Features.Diagnosis.EmpiricalDiagnosis.Dia
                     .ThenInclude(p => p.RiskFactors)
                     .ThenInclude(f => f.Criterion)
                     .ToListAsync(),
-                Metrics = await context.ScoreMetrics
+                Metrics = await context.ClinicalMetrics
                     .AsNoTracking()
-                    .Include(x => x.ScoringRules)
+                    .Include(x => x.Rules)
                     .ThenInclude(r => r.Criterion)
+                    .ToListAsync(),
+                AntibioticGroups = await context.AntibioticGroups
+                    .AsNoTracking()
+                    .Include(x => x.Parent)
+                    .ToListAsync(),
+                Antibiotics = await context.Antibiotics
+                    .AsNoTracking()
+                    .Include(x => x.AntibioticGroup)
+                    .Include(x => x.Dosages)
                     .ToListAsync(),
             };
 
@@ -90,94 +98,39 @@ namespace Respira.Clinical.Application.Features.Diagnosis.EmpiricalDiagnosis.Dia
                 }
             }
 
-            // Internal validation of each observations
-            logger.LogDebug("Validating observations by each internal rule");
-            var errors = new Dictionary<Guid, string>();
-            foreach (var observation in observations)
+            // Validate the allergies list: check if antibiotic IDs exist
+            if (!query.Allergies.All(a => clinicalContext.Antibiotics.Select(x => x.Id).Contains(a)))
             {
-                if (observation.Variable.ValueType == ClinicalValueType.Numeric && !observation.Variable.IsValidValue(observation.NumericValue))
-                {
-                    logger.LogInformation("Invalid observation value for variable {code}: {value}", observation.Variable.Code, observation.NumericValue);
-
-                    // Add the error to the list
-                    var variable = (NumericClinicalVariable)observation.Variable;
-                    errors.Add(variable.Id, $"{variable.Name} phải {variable.AcceptedRange}");
-                    continue;
-                }
-
-                if (observation.Variable.ValueType == ClinicalValueType.Boolean && !observation.Variable.IsValidValue(observation.BooleanValue))
-                {
-                    logger.LogInformation("Invalid observation value for variable {code}: {value}", observation.Variable.Code, observation.BooleanValue);
-
-                    // Add the error to the list (though this case is unlikely to happen because of C# type checking)
-                    var variable = (BooleanClinicalVariable)observation.Variable;
-                    errors.Add(variable.Id, $"{variable.Name} should be a valid boolean value");
-                    continue;
-                }
-
-                if (observation.Variable.ValueType == ClinicalValueType.Categorical && !observation.Variable.IsValidValue(observation.CategoricalValue))
-                {
-                    logger.LogInformation("Invalid observation value for variable {code}: {value}", observation.Variable.Code, observation.CategoricalValue);
-
-                    // Add the error to the list
-                    var variable = (CategoricalClinicalVariable)observation.Variable;
-                    errors.Add(variable.Id, $"{variable.Name} should be in this value range {string.Join(", ", variable.AcceptedValues)}");
-                }
+                logger.LogDebug("Allergies list contains invalid antibiotic IDs");
+                return Result<DiagnoseResult>.Failure(new Error(ApplicationStatus.BadRequest, "Invalid allergies list, all IDs must be valid antibiotic IDs"));
             }
 
-            // Validation: if is pregnant variable is true, check if sex if female or not
-            var pregnant = observations.FirstOrDefault(x => x.Variable.Code.Equals("PREGNANT-OR-LACTATING"));
-            if (pregnant is not null && pregnant.BooleanValue == true)
+            // Construct clinical picture
+            var picture = new ClinicalPicture
             {
-                logger.LogDebug("Pregnant variable is true, check if sex is female");
-                var isFemale = observations.FirstOrDefault(x => x.Variable.Code.Equals("FEMALE"));
-                if (isFemale is null || isFemale.BooleanValue == false)
-                {
-                    logger.LogDebug("Sex is not female when pregnant is true");
-                    errors.Add(pregnant.Variable.Id, "Sex should be female when pregnant is true");
-                }
-            }
-
-            if (errors.Count > 0)
-            {
-                return Result<DiagnoseResult>.Failure(new Error(ApplicationStatus.BadRequest, "Invalid observation value", errors));
-            }
+                Observations = observations,
+                Allergies = [.. query.Allergies.Select(a => clinicalContext.Antibiotics.First(ab => ab.Id == a))],
+            };
 
             // Start diagnosis
-            logger.LogDebug("Start severity diagnosis");
-            var severityDiagnosis = service.DiagnoseSeverity(clinicalContext, observations);
-            if (severityDiagnosis.IsFailure())
+            logger.LogDebug("Start diagnosis");
+            var diagnosisResult = service.Diagnose(clinicalContext, picture);
+            if (diagnosisResult.IsFailure())
             {
-                logger.LogDebug("Diagnose severity failed: {detail}", severityDiagnosis.Error);
-                return Result<DiagnoseResult>.Failure(severityDiagnosis.Error!);
+                logger.LogDebug("Diagnosis failed: {error}", diagnosisResult.Error);
+                return Result<DiagnoseResult>.Failure(diagnosisResult.Error!);
             }
-
-            var infectionAssessment = service.AssessInfection(
-                clinicalContext,
-                observations,
-                severityDiagnosis.Data!.Severity,
-                severityDiagnosis.Data.TreatmentSite);
-            if (infectionAssessment.IsFailure())
-            {
-                logger.LogDebug("Assess infection failed: {detail}", infectionAssessment.Error);
-                return Result<DiagnoseResult>.Failure(infectionAssessment.Error!);
-            }
-
-            logger.LogDebug("Diagnose result: {detail}", new
-            {
-                Severity = severityDiagnosis.Data,
-                Infection = infectionAssessment.Data,
-            });
-
-            var evidences = severityDiagnosis.Data.MetricsDiagnoses.SelectMany(x => x.Evidences)
-                .Concat(infectionAssessment.Data!.Evidences);
 
             return Result<DiagnoseResult>.Success(ApplicationStatus.Success, new DiagnoseResult
             {
-                SeverityDiagnosis = severityDiagnosis.Data,
-                WorthSuspected = infectionAssessment.Data!.WorthSuspected.Select(x => new PathogenResult(x.Id, x.Name)),
-                HeavySuspected = infectionAssessment.Data.HeavySuspected.Select(x => new ScoredPathogenResult(x.Pathogen.Id, x.Pathogen.Name, x.PriorityScore)),
-                Evidences = evidences,
+                Severity = diagnosisResult.Data!.Severity,
+                TreatmentSite = diagnosisResult.Data.TreatmentSite,
+                WorthSuspected = [.. diagnosisResult.Data.WorthSuspected.Select(p => new PathogenResult(p.Id, p.Name))],
+                HeavySuspected = [.. diagnosisResult.Data.HeavySuspected.Select(p => new PathogenResult(p.Id, p.Name))],
+                Evidences = [.. diagnosisResult.Data.Evidences],
+                MissingVariables = [.. diagnosisResult.Data.MissingVariables.Select(v => new ClinicalVariableResult(v.Id, v.Name, v.Code))],
+                Allergies = [.. diagnosisResult.Data.Allergies.Select(a => new AntibioticResult(a.Id, a.Name))],
+                IsPatientPregnantOrInLactationPhase = diagnosisResult.Data.IsPatientPregnantOrInLactationPhase,
             });
         }
     }

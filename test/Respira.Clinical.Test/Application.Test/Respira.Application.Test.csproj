@@ -22,4 +22,3 @@
         <ProjectReference Include="../../../src/Respira.Clinical/Infrastructure/Respira.Clinical.Infrastructure.csproj" />
     </ItemGroup>
 </Project>
-

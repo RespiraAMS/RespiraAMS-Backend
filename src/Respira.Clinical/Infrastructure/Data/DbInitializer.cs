@@ -10,7 +10,7 @@ namespace Respira.Clinical.Infrastructure.Data
         {
             return await context.ClinicalVariables.AnyAsync() ||
                 await context.Criteria.AnyAsync() ||
-                await context.ScoreMetrics.AnyAsync() ||
+                await context.ClinicalMetrics.AnyAsync() ||
                 await context.Pathogens.AnyAsync() ||
                 await context.RiskFactors.AnyAsync() ||
                 await context.SuspectedCauses.AnyAsync() ||
@@ -34,7 +34,7 @@ namespace Respira.Clinical.Infrastructure.Data
 
             await context.ClinicalVariables.AddRangeAsync(seedData.ClinicalVariables);
             await context.Criteria.AddRangeAsync(seedData.Criteria);
-            await context.ScoreMetrics.AddRangeAsync(seedData.ScoreMetrics);
+            await context.ClinicalMetrics.AddRangeAsync(seedData.ClinicalMetrics);
             await context.Pathogens.AddRangeAsync(seedData.Pathogens);
             await context.RiskFactors.AddRangeAsync(seedData.RiskFactors);
             await context.SuspectedCauses.AddRangeAsync(seedData.SuspectedCauses);

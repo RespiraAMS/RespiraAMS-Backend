@@ -3,17 +3,6 @@ using Respira.Clinical.Domain.Entities;
 namespace Respira.Clinical.Domain.Models
 {
     /// <summary>
-    /// This record is used to indicate pathogen with probability for infection,
-    /// based on its risk factors
-    /// </summary>
-    /// <param name="Pathogen">The suspected pathogen for infection</param>
-    /// <param name="PriorityScore">
-    /// Priority score. Note that, this score does not indicate the probability of infection,
-    /// this is simply used to rank the pathogens.
-    /// </param>
-    public record HeavySuspected(Pathogen Pathogen, decimal PriorityScore);
-
-    /// <summary>
     /// Infection assessment result
     /// </summary>
     public class InfectionAssessment
@@ -24,7 +13,7 @@ namespace Respira.Clinical.Domain.Models
         /// If this list if not empty, then both engine and doctor should focus more
         /// on this list than the <see cref="WorthSuspected"/> list
         /// </summary>
-        public IEnumerable<HeavySuspected> HeavySuspected { get; set; } = [];
+        public required List<Pathogen> HeavySuspected { get; set; } = [];
 
         /// <summary>
         /// This list contains pathogens that are worth considering, based on diagnosis
@@ -33,7 +22,7 @@ namespace Respira.Clinical.Domain.Models
         /// <see cref="HeavySuspected"/> list.
         /// As long as data exists, this list should be non-empty
         /// </summary>
-        public required IEnumerable<Pathogen> WorthSuspected { get; set; }
+        public required List<Pathogen> WorthSuspected { get; set; }
 
         public required List<string> Evidences { get; set; }
     }

@@ -10,7 +10,7 @@ namespace Respira.Clinical.Infrastructure.Data
     {
         public required ICollection<ClinicalVariable> ClinicalVariables { get; init; }
         public required ICollection<Criterion> Criteria { get; init; }
-        public required ICollection<ScoreMetrics> ScoreMetrics { get; init; }
+        public required ICollection<ClinicalMetrics> ClinicalMetrics { get; init; }
         public required ICollection<Pathogen> Pathogens { get; init; }
         public required ICollection<RiskFactor> RiskFactors { get; init; }
         public required ICollection<SuspectedCause> SuspectedCauses { get; init; }
@@ -104,36 +104,52 @@ namespace Respira.Clinical.Infrastructure.Data
                 {
                     Id = criterionId,
                 };
+
             }).ToList();
 
             var criterionLookup = criteria.ToDictionary(c => c.Id);
 
-            var scoreMetrics = dto.ScoreMetrics.Select(s =>
+            var clinicalMetrics = dto.ClinicalMetrics.Select(s =>
             {
                 var metricId = GenerateId(s.Id);
-                var scoringRules = s.ScoringRules.Select(r =>
+                var scoringRules = s.Rules.Select<MetricsRuleDto, MetricsRule>(r =>
                 {
                     var ruleId = GenerateId(r.Id);
                     var criterionId = GenerateId(r.CriterionId);
                     var criterion = criterionLookup[criterionId];
-                    var scoreFunction = MapFormula(r.ScoreFunction, variableLookup);
-                    return new ScoringRule
+
+                    // If score function provided, return ScoringRule
+                    if (r.ScoreFunction is not null)
                     {
-                        Id = ruleId,
-                        ScoreMetricsId = metricId,
-                        CriterionId = criterionId,
-                        Criterion = criterion,
-                        ScoreFunction = scoreFunction,
-                    };
+                        var scoreFunction = MapFormula(r.ScoreFunction, variableLookup);
+                        return new ScoringRule
+                        {
+                            Id = ruleId,
+                            ClinicalMetricsId = metricId,
+                            CriterionId = criterionId,
+                            Criterion = criterion,
+                            ScoreFunction = scoreFunction,
+                        };
+                    }
+
+                    if (r.IsMajor is not null)
+                    {
+                        return new MajorMinorRule
+                        {
+                            Id = ruleId,
+                            ClinicalMetricsId = metricId,
+                            CriterionId = criterionId,
+                            Criterion = criterion,
+                            IsMajor = r.IsMajor.Value,
+                        };
+                    }
+
+                    throw new ArgumentException("Invalid rule type for metrics rule: either score function or is major be provided");
                 });
 
-                return new ScoreMetrics
+                return new ClinicalMetrics(s.Name, s.Code, s.Description, [.. scoringRules])
                 {
                     Id = metricId,
-                    Name = s.Name,
-                    Code = s.Code,
-                    Description = s.Description,
-                    ScoringRules = [.. scoringRules],
                 };
             }).ToList();
 
@@ -150,7 +166,6 @@ namespace Respira.Clinical.Infrastructure.Data
                         PathogenId = pathogenId,
                         CriterionId = criterionId,
                         Criterion = criterion,
-                        Priority = rf.Priority,
                     };
                     allRiskFactors.Add(riskFactor);
                     return riskFactor;
@@ -239,7 +254,7 @@ namespace Respira.Clinical.Infrastructure.Data
             {
                 ClinicalVariables = [.. variables],
                 Criteria = [.. criteria],
-                ScoreMetrics = [.. scoreMetrics],
+                ClinicalMetrics = [.. clinicalMetrics],
                 Pathogens = [.. pathogens],
                 RiskFactors = allRiskFactors,
                 SuspectedCauses = [.. suspectedCauses],
@@ -294,7 +309,7 @@ namespace Respira.Clinical.Infrastructure.Data
                 return new TernaryFormula(condition, ifTrue, ifFalse);
             }
 
-            throw new ArgumentException("Invalid formula DTO: unable to determine formula type");
+            throw new ArgumentException("Invalid formula DTO: unable to determine formula type: {dto}", JsonSerializer.Serialize(dto));
         }
 
         private static Guid GenerateId(string id)

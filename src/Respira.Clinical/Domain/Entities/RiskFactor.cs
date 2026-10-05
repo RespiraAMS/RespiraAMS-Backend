@@ -31,17 +31,9 @@ namespace Respira.Clinical.Domain.Entities
         /// </summary>
         public Criterion Criterion { get; set; } = null!;
 
-        /// <summary>
-        /// A risk factor may have priority, but since they don't have any official scoring
-        /// rule, we don't reuse the <see cref="ScoringRule"/> entity, but instead use this
-        /// attribute to indicate the priority of the risk factor.
-        /// The smaller the value, the higher the priority. Highest priority is 1.
-        /// </summary>
-        public required int Priority { get; set; }
+        public IEnumerable<VariableRef> Variables => Criterion.Variables.DistinctBy(x => x.Code);
 
-        public IEnumerable<ClinicalVariable> Variables => Criterion.Variables.DistinctBy(x => x.Code);
-
-        public bool IsFactorSasified(IEnumerable<ClinicalObservation> observations)
+        public bool IsFactorSastified(IEnumerable<ClinicalObservation> observations)
         {
             var result = Criterion.IsCriterionSatisfied(observations);
             if (result is bool x)

@@ -5,20 +5,20 @@ using Respira.ServiceDefaults.Models;
 namespace Respira.Clinical.Domain.Entities
 {
     /// <summary>
-    /// Scoring rule is used to calculate a score for a specific criterion in a scoring metric
+    /// Metrics rule is a rule used to calculate for a specific criterion in a metric
     /// </summary>
-    public class ScoringRule : Base
+    public abstract class MetricsRule : Base
     {
         /// <summary>
         /// Scoring metric ID
         /// </summary>
-        public required Guid ScoreMetricsId { get; set; }
+        public required Guid ClinicalMetricsId { get; set; }
 
         /// <summary>
         /// Scoring metric
         /// </summary>
         [JsonIgnore]
-        public ScoreMetrics ScoreMetrics { get; set; } = null!;
+        public ClinicalMetrics ClinicalMetrics { get; set; } = null!;
 
         /// <summary>
         /// Criterion ID
@@ -29,7 +29,13 @@ namespace Respira.Clinical.Domain.Entities
         /// Criterion used to evaluate the score
         /// </summary>
         public Criterion Criterion { get; set; } = null!;
+    }
 
+    /// <summary>
+    /// Rule that use score system
+    /// </summary>
+    public class ScoringRule : MetricsRule
+    {
         /// <summary>
         /// Score function (formula)
         /// </summary>
@@ -39,7 +45,7 @@ namespace Respira.Clinical.Domain.Entities
         /// The variables used by this scoring rule. This is not database attribute,
         /// but runtime attribute
         /// </summary>
-        public IEnumerable<ClinicalVariable> Variables => Criterion.Variables.Concat(ScoreFunction.Variables).DistinctBy(x => x.Code);
+        public IEnumerable<VariableRef> Variables => Criterion.Variables.Concat(ScoreFunction.Variables).DistinctBy(x => x.Code);
 
         /// <summary>
         /// Get the score
@@ -76,6 +82,14 @@ namespace Respira.Clinical.Domain.Entities
 
             throw new Exception($"Criterion result type should be boolean, but get {sastified.GetType()}");
         }
+    }
 
+    /// <summary>
+    /// This rule represent a major/minor system (like IDSA/ATS), where it didn't use
+    /// score, but instead count the number of major/minor criteria matched
+    /// </summary>
+    public class MajorMinorRule : MetricsRule
+    {
+        public required bool IsMajor { get; set; }
     }
 }

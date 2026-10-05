@@ -166,26 +166,26 @@
 				font-size: 0.7rem;
 				font-weight: 800;
 			}
-
+			
 			.form-group.has-warning,
 			.form-group.has-warning:focus-within {
 				border-color: var(--warning);
 				background: #fffaeb;
 			}
-
+			
 			.form-group.has-warning .form-label { color: var(--warning); }
-
+			
 			.form-group.has-warning .form-input {
 				border-color: var(--warning);
 				background: #fffdf7;
 			}
-
+			
 			.form-group.has-warning .numeric-input-wrap,
 			.form-group.has-warning .segmented-toggle {
 				border-color: var(--warning);
 				box-shadow: 0 0 0 3px rgba(181, 71, 8, 0.12);
 			}
-
+			
 			.field-warn-msg {
 				width: 100%;
 				display: flex;
@@ -197,7 +197,7 @@
 				font-weight: 600;
 				line-height: 1.45;
 			}
-
+			
 			.field-warn-msg::before {
 				content: '!';
 				flex-shrink: 0;
@@ -213,17 +213,17 @@
 				font-size: 0.7rem;
 				font-weight: 800;
 			}
-
+			
 			.required-mark {
 				color: var(--danger);
 				margin-left: 0.15rem;
 			}
 			
 			.form-group:last-child { margin-bottom: 0; }
-
+			
 			.category-section { margin-bottom: 1.5rem; }
 			.category-section:last-child { margin-bottom: 0; }
-
+			
 			.category-title {
 				display: flex;
 				align-items: center;
@@ -237,7 +237,7 @@
 				text-transform: uppercase;
 				color: var(--text-muted);
 			}
-
+			
 			.category-count {
 				display: inline-flex;
 				align-items: center;
@@ -252,7 +252,7 @@
 				font-weight: 800;
 				letter-spacing: 0;
 			}
-
+			
 			.form-label {
 				display: block;
 				font-weight: 700;
@@ -474,7 +474,7 @@
 				color: var(--text);
 				word-break: break-word;
 				/* Evidence text is multi-line (source / Formula / Variables / Value);
-				   preserve the \n separators and \t indents coming from the API. */
+				preserve the \n separators and \t indents coming from the API. */
 				white-space: pre-wrap;
 				tab-size: 4;
 			}
@@ -598,6 +598,13 @@
 				min-width: 120px;
 			}
 			
+			.result-value {
+				font-size: 0.9rem;
+				font-weight: 600;
+				text-align: right;
+				word-break: break-word;
+			}
+			
 			.heavy-suspected-box {
 				background: linear-gradient(135deg, #fef2f2, #fff1f2);
 				border: 2px solid #fca5a5;
@@ -636,7 +643,8 @@
 			.pathogen-item {
 				display: flex;
 				align-items: center;
-				justify-content: space-between;
+				justify-content: flex-start;
+				gap: 0.75rem;
 				padding: 0.55rem 0.1rem;
 				font-size: 0.9rem;
 			}
@@ -645,15 +653,32 @@
 				border-top: 1px solid rgba(0,0,0,0.06);
 			}
 			
-			.pathogen-name { font-weight: 600; }
+			.pathogen-name { font-weight: 600; flex: 1; }
 			
-			.pathogen-score {
-				font-size: 0.78rem;
-				color: white;
-				font-weight: 700;
+			.pathogen-rank {
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				min-width: 2rem;
+				height: 1.6rem;
+				padding: 0 0.45rem;
+				border-radius: 999px;
+				background: #fee2e2;
+				color: #991b1b;
+				font-size: 0.75rem;
+				font-weight: 800;
+				flex-shrink: 0;
+			}
+			
+			.pathogen-item:first-child .pathogen-rank {
 				background: #991b1b;
-				padding: 0.15rem 0.55rem;
-				border-radius: 12px;
+				color: #fff;
+			}
+			
+			.box-hint {
+				font-size: 0.78rem;
+				color: #7f1d1d;
+				margin: -0.3rem 0 0.6rem;
 			}
 			
 			.metric-item {
@@ -680,13 +705,6 @@
 				font-size: 0.8rem;
 				font-weight: 700;
 				color: var(--text-muted);
-			}
-			
-			.metric-meta {
-				display: flex;
-				align-items: center;
-				gap: 0.5rem;
-				flex-wrap: wrap;
 			}
 			
 			.empty-state {
@@ -717,11 +735,163 @@
 				padding: 0 1rem;
 			}
 			
+			/* Multi-step form */
+			.stepper {
+				display: flex;
+				gap: 0.6rem;
+				margin-bottom: 1.25rem;
+			}
+			
+			.step-pill {
+				flex: 1;
+				display: flex;
+				align-items: center;
+				gap: 0.55rem;
+				padding: 0.7rem 0.9rem;
+				border: 1px solid var(--border);
+				border-radius: 10px;
+				background: var(--card);
+				color: var(--text-muted);
+				font-family: inherit;
+				font-size: 0.85rem;
+				font-weight: 700;
+				text-align: left;
+				cursor: pointer;
+				transition: border-color 0.15s, background 0.15s, color 0.15s;
+			}
+			
+			.step-pill:hover { border-color: var(--primary); }
+			
+			.step-pill.active {
+				border-color: var(--primary);
+				background: var(--primary-light);
+				color: var(--primary-hover);
+			}
+			
+			.step-pill .step-num {
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				width: 22px;
+				height: 22px;
+				border-radius: 50%;
+				background: var(--border);
+				color: var(--text-muted);
+				font-size: 0.72rem;
+				font-weight: 800;
+				flex-shrink: 0;
+			}
+			
+			.step-pill.active .step-num {
+				background: var(--primary);
+				color: #fff;
+			}
+			
+			.step-actions {
+				display: flex;
+				gap: 0.75rem;
+			}
+			
+			.step-actions .btn { flex: 1; box-shadow: none; }
+			
+			/* Allergy picker */
+			.allergy-list {
+				display: grid;
+				grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+				gap: 0.5rem;
+				max-height: 340px;
+				overflow-y: auto;
+				padding: 0.2rem;
+				margin-top: 0.75rem;
+			}
+			
+			.allergy-option {
+				display: flex;
+				align-items: center;
+				gap: 0.6rem;
+				padding: 0.6rem 0.75rem;
+				border: 1px solid var(--border);
+				border-radius: 8px;
+				background: #fbfcfe;
+				font-size: 0.88rem;
+				font-weight: 600;
+				cursor: pointer;
+				transition: border-color 0.15s, background 0.15s;
+			}
+			
+			.allergy-option:hover { border-color: var(--primary); }
+			
+			.allergy-option.selected {
+				border-color: var(--accent);
+				background: #e9f7f4;
+			}
+			
+			.allergy-option input {
+				width: 16px;
+				height: 16px;
+				accent-color: var(--accent);
+				flex-shrink: 0;
+			}
+			
+			.allergy-selected-title {
+				display: flex;
+				align-items: center;
+				gap: 0.5rem;
+				margin: 1.25rem 0 0.35rem;
+				padding-bottom: 0.5rem;
+				border-bottom: 1px dashed var(--border);
+				font-size: 0.78rem;
+				font-weight: 800;
+				letter-spacing: 0.07em;
+				text-transform: uppercase;
+				color: var(--text-muted);
+			}
+			
+			.selected-allergies {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 0.5rem;
+			}
+			
+			.allergy-chip {
+				display: inline-flex;
+				align-items: center;
+				gap: 0.4rem;
+				padding: 0.35rem 0.45rem 0.35rem 0.8rem;
+				border-radius: 999px;
+				background: var(--primary-light);
+				color: var(--primary-hover);
+				font-size: 0.82rem;
+				font-weight: 700;
+			}
+			
+			.allergy-chip-remove {
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				width: 18px;
+				height: 18px;
+				border: none;
+				border-radius: 50%;
+				background: rgba(15,109,188,0.15);
+				color: inherit;
+				font-size: 0.85rem;
+				line-height: 1;
+				cursor: pointer;
+			}
+			
+			.allergy-chip-remove:hover {
+				background: var(--danger);
+				color: #fff;
+			}
+			
 			@media (max-width: 640px) {
 				.container { padding: 0 0.75rem 3rem; }
 				.card { padding: 1.1rem; }
 				.result-row { flex-direction: column; align-items: flex-start; gap: 0.35rem; }
 				.result-label { min-width: unset; }
+				.stepper { flex-direction: column; }
+				.step-actions { flex-direction: column; }
 			}
 		</style>
 	</head>
@@ -764,19 +934,57 @@
 			</div>
 
 			<form id="diagnoseForm" style="display:none;" novalidate>
-				<div class="card">
-					<h2><span class="step-num">1</span>
-					Clinical Observations</h2>
-					<div id="formFields"></div>
+				<div class="stepper" id="stepper">
+					<button type="button" class="step-pill active" data-step="1" id="stepPill1">
+						<span class="step-num">1</span>
+						Clinical Observations
+					</button>
+					<button type="button" class="step-pill" data-step="2" id="stepPill2">
+						<span class="step-num">2</span>
+						Antibiotic Allergies
+					</button>
 				</div>
-				<button type="submit" class="btn btn-primary" id="submitBtn">
-					Submit Diagnosis
-				</button>
+
+				<section class="step-panel" id="stepObservations">
+					<div class="card">
+						<h2><span class="step-num">1</span>
+						Clinical Observations</h2>
+						<div id="formFields"></div>
+					</div>
+					<button type="button" class="btn btn-primary" id="toStep2Btn">
+						Next: Antibiotic Allergies
+					</button>
+				</section>
+
+				<section class="step-panel" id="stepAllergies" hidden>
+					<div class="card">
+						<h2><span class="step-num">2</span>
+						Antibiotic Allergies</h2>
+						<div class="form-desc">
+							Select every antibiotic the patient is allergic to. Selected ones are added to the
+							diagnosis request and excluded from treatment suggestions. None selected is valid.
+						</div>
+						<label class="form-label" for="antibioticSearch">Search antibiotics</label>
+						<input class="form-input" type="search" id="antibioticSearch" placeholder="Type to filter..." autocomplete="off">
+						<div id="antibioticList" class="allergy-list"></div>
+						<div class="allergy-selected-title">
+							Selected allergies
+							<span class="category-count" id="allergyCount">0</span>
+						</div>
+						<div id="selectedAllergies" class="selected-allergies"></div>
+					</div>
+					<div class="step-actions">
+						<button type="button" class="btn btn-secondary" id="backBtn">Back</button>
+						<button type="submit" class="btn btn-primary" id="submitBtn">
+							Submit Diagnosis
+						</button>
+					</div>
+				</section>
 			</form>
 
 			<div id="resultsSection" class="results-section">
 				<div class="card">
-					<h2><span class="step-num">✓</span>
+					<h2><span class="step-num">1</span>
 					Diagnosis Result</h2>
 					<div class="result-row">
 						<span class="result-label">Severity</span>
@@ -786,8 +994,15 @@
 						<span class="result-label">Treatment Site</span>
 						<span id="treatmentBadge" class="treatment-badge"></span>
 					</div>
-					<button type="button" class="btn btn-secondary evidence-toggle" id="evidenceToggle"
-						aria-expanded="false" aria-controls="evidencePanel">
+					<div class="result-row">
+						<span class="result-label">Pregnant / Lactating</span>
+						<span id="pregnantValue" class="result-value"></span>
+					</div>
+					<div class="result-row">
+						<span class="result-label">Allergies</span>
+						<span id="allergiesValue" class="result-value"></span>
+					</div>
+					<button type="button" class="btn btn-secondary evidence-toggle" id="evidenceToggle" aria-expanded="false" aria-controls="evidencePanel">
 						View Evidences
 					</button>
 					<div id="evidencePanel" class="evidence-panel" hidden>
@@ -798,8 +1013,8 @@
 
 				<div class="card">
 					<h2><span class="step-num">2</span>
-					Score Metrics</h2>
-					<div id="metricsList"></div>
+					Missing Variables</h2>
+					<div id="missingList"></div>
 				</div>
 
 				<div class="card">
@@ -808,6 +1023,7 @@
 
 					<div id="heavySection" class="heavy-suspected-box">
 						<h3>Heavy Suspected</h3>
+						<p class="box-hint">Ranked from most to least suspected - rank 1 is the most likely.</p>
 						<div id="heavyList"></div>
 					</div>
 
@@ -829,11 +1045,16 @@
 			const API_BASE = 'https://clinical-service-respira.dev.localhost:7145';
 			const ENDPOINTS = {
 				form: `${API_BASE}/api/1.0/diagnose/empirical`,
-				diagnose: `${API_BASE}/api/1.0/diagnose/empirical`
+				diagnose: `${API_BASE}/api/1.0/diagnose/empirical`,
+				antibiotics: `${API_BASE}/api/1.0/antibiotics/list`
 			};
 
 			let formVariables = [];
 			let variableMeta = {};
+			let antibiotics = [];
+			// id -> name, insertion-ordered so the chips keep the picking order
+			let selectedAllergies = new Map();
+			let currentStep = 1;
 
 			// Values beyond this magnitude come from the API as decimal.MaxValue /
 			// decimal.MinValue stand-ins for "unbounded" - treat them as open ends.
@@ -908,123 +1129,125 @@
 						normalRange: normalizeRange(v.normalRange !== undefined ? v.normalRange : v.NormalRange),
 					};
 				});
-			}
+		}
 
-			async function init() {
-				try {
-					console.log('Fetching form from:', ENDPOINTS.form);
-					const res = await fetch(ENDPOINTS.form);
-					console.log('Form response status:', res.status);
-					if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
-					const raw = await res.text();
-					console.log('Form response body:', raw);
-					let body;
-					try { body = JSON.parse(raw); } catch { throw new Error('Invalid JSON from server: ' + raw.substring(0, 200)); }
+		async function init() {
+			loadAntibiotics();
+			try {
+				console.log('Fetching form from:', ENDPOINTS.form);
+				const res = await fetch(ENDPOINTS.form);
+				console.log('Form response status:', res.status);
+				if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+				const raw = await res.text();
+				console.log('Form response body:', raw);
+				let body;
+				try { body = JSON.parse(raw); } catch { throw new Error('Invalid JSON from server: ' + raw.substring(0, 200)); }
 
-					if (body.statusCode !== 'SUCCESS') {
-						throw new Error(body.error?.description || 'Failed to load form');
-					}
-
-					const data = body.data;
-					formVariables = data.variables || data.Variables || [];
-					renderForm(formVariables);
-					document.getElementById('loadingState').style.display = 'none';
-					document.getElementById('diagnoseForm').style.display = '';
-				} catch (err) {
-					showError('Failed to load diagnosis form: ' + err.message);
-					document.getElementById('loadingState').innerHTML =
-					'<p style="color:var(--danger);">Failed to load form. Check console for details.</p>';
+				if (body.statusCode !== 'SUCCESS') {
+					throw new Error(body.error?.description || 'Failed to load form');
 				}
+
+				const data = body.data;
+				formVariables = data.variables || data.Variables || [];
+				renderForm(formVariables);
+				renderSelectedAllergies();
+				document.getElementById('loadingState').style.display = 'none';
+				document.getElementById('diagnoseForm').style.display = '';
+			} catch (err) {
+				showError('Failed to load diagnosis form: ' + err.message);
+				document.getElementById('loadingState').innerHTML =
+				'<p style="color:var(--danger);">Failed to load form. Check console for details.</p>';
 			}
+		}
 
-			function esc(str) {
-				return String(str ?? '')
-					.replace(/&/g, '&amp;')
-					.replace(/</g, '&lt;')
-					.replace(/>/g, '&gt;')
-					.replace(/"/g, '&quot;')
-					.replace(/'/g, '&#39;');
+		function esc(str) {
+			return String(str ?? '')
+			.replace(/&/g, '&amp;')
+			.replace(/</g, '&lt;')
+			.replace(/>/g, '&gt;')
+			.replace(/"/g, '&quot;')
+			.replace(/'/g, '&#39;');
+		}
+
+		const CATEGORY_ENUM_ORDER = ['PersonalInformation', 'Paraclinical', 'Clinical'];
+		const CATEGORY_DISPLAY_ORDER = ['PersonalInformation', 'Clinical', 'Paraclinical'];
+		const CATEGORY_LABELS = {
+			PersonalInformation: 'Personal Information',
+			Clinical: 'Clinical',
+			Paraclinical: 'Paraclinical',
+		};
+
+		function normalizeCategoryKey(raw) {
+			if (raw === undefined || raw === null || raw === '') return null;
+			const text = String(raw).trim();
+			if (/^\d+$/.test(text)) {
+				const idx = Number(text);
+				return CATEGORY_ENUM_ORDER[idx] || null;
 			}
+			const match = Object.keys(CATEGORY_LABELS)
+			.find(key => key.toLowerCase() === text.toLowerCase());
+			return match || text;
+		}
 
-			const CATEGORY_ENUM_ORDER = ['PersonalInformation', 'Paraclinical', 'Clinical'];
-			const CATEGORY_DISPLAY_ORDER = ['PersonalInformation', 'Clinical', 'Paraclinical'];
-			const CATEGORY_LABELS = {
-				PersonalInformation: 'Personal Information',
-				Clinical: 'Clinical',
-				Paraclinical: 'Paraclinical',
-			};
+		function categoryLabel(key) {
+			if (!key) return 'Other';
+			return CATEGORY_LABELS[key] || key;
+		}
 
-			function normalizeCategoryKey(raw) {
-				if (raw === undefined || raw === null || raw === '') return null;
-				const text = String(raw).trim();
-				if (/^\d+$/.test(text)) {
-					const idx = Number(text);
-					return CATEGORY_ENUM_ORDER[idx] || null;
-				}
-				const match = Object.keys(CATEGORY_LABELS)
-					.find(key => key.toLowerCase() === text.toLowerCase());
-				return match || text;
-			}
+		function categoryRank(key) {
+			const idx = CATEGORY_DISPLAY_ORDER.indexOf(key);
+			return idx === -1 ? CATEGORY_DISPLAY_ORDER.length : idx;
+		}
 
-			function categoryLabel(key) {
-				if (!key) return 'Other';
-				return CATEGORY_LABELS[key] || key;
-			}
+		function buildFieldGroup(v) {
+			const group = document.createElement('div');
+			group.className = 'form-group';
 
-			function categoryRank(key) {
-				const idx = CATEGORY_DISPLAY_ORDER.indexOf(key);
-				return idx === -1 ? CATEGORY_DISPLAY_ORDER.length : idx;
-			}
+			const id = v.id || v.Id;
+			const name = v.name || v.Name;
+			const desc = v.description || v.Description;
+			const vt = v.valueType || v.ValueType;
+			const meta = variableMeta[String(id)];
+			const reqMark = meta && meta.isRequired
+			? ' <span class="required-mark" title="Required field">*</span>'
+			: '';
 
-			function buildFieldGroup(v) {
-				const group = document.createElement('div');
-				group.className = 'form-group';
-
-				const id = v.id || v.Id;
-				const name = v.name || v.Name;
-				const desc = v.description || v.Description;
-				const vt = v.valueType || v.ValueType;
-				const meta = variableMeta[String(id)];
-				const reqMark = meta && meta.isRequired
-					? ' <span class="required-mark" title="Required field">*</span>'
-					: '';
-
-				if (vt === 'Numeric') {
-					const unit = v.canonicalUnit || v.CanonicalUnit;
-					group.className = 'form-group numeric-group';
-					group.innerHTML = `
-					<div class="numeric-field-info">
-					<label class="form-label" for="var-${id}">
-					${esc(name)}${reqMark}
-					</label>
-					<div class="form-desc">${esc(desc)}</div>
-					</div>
-					<div class="numeric-input-wrap">
-					<input
-					class="form-input"
-					type="number"
-					id="var-${id}"
-					step="any"
-					placeholder="${esc(normalPlaceholder(meta))}"
-					data-variable-id="${id}"
-					data-value-type="Numeric"
-					>
-					${unit ? `<span class="numeric-unit-suffix">${esc(unit)}</span>` : ''}
-					</div>
-					`;
-				} else if (vt === 'Categorical') {
-					const options = v.acceptedValues || v.AcceptedValues || [];
-					group.className = 'form-group bool-group';
-					group.innerHTML = `
-					<div class="bool-field-info">
-					<label class="form-label" for="var-${id}">
-					${esc(name)}${reqMark}
-					</label>
-					<div class="form-desc">${esc(desc)}</div>
-					</div>
-					<div class="segmented-toggle" data-toggle-for="${id}">
-					${options.length > 0
-						? options.map((o, i) => `
+			if (vt === 'Numeric') {
+				const unit = v.canonicalUnit || v.CanonicalUnit;
+				group.className = 'form-group numeric-group';
+				group.innerHTML = `
+				<div class="numeric-field-info">
+				<label class="form-label" for="var-${id}">
+				${esc(name)}${reqMark}
+				</label>
+				<div class="form-desc">${esc(desc)}</div>
+				</div>
+				<div class="numeric-input-wrap">
+				<input
+				class="form-input"
+				type="number"
+				id="var-${id}"
+				step="any"
+				placeholder="${esc(normalPlaceholder(meta))}"
+				data-variable-id="${id}"
+				data-value-type="Numeric"
+				>
+				${unit ? `<span class="numeric-unit-suffix">${esc(unit)}</span>` : ''}
+				</div>
+				`;
+			} else if (vt === 'Categorical') {
+				const options = v.acceptedValues || v.AcceptedValues || [];
+				group.className = 'form-group bool-group';
+				group.innerHTML = `
+				<div class="bool-field-info">
+				<label class="form-label" for="var-${id}">
+				${esc(name)}${reqMark}
+				</label>
+				<div class="form-desc">${esc(desc)}</div>
+				</div>
+				<div class="segmented-toggle" data-toggle-for="${id}">
+				${options.length > 0
+					? options.map((o, i) => `
 						<button type="button" class="segment-btn${i === 0 ? ' active' : ''}" data-value="${esc(o)}">${esc(String(o).replace(/_/g, ' '))}</button>
 						`).join('')
 						: '<span class="empty-state" style="padding:0.7rem 1rem;">No options</span>'}
@@ -1074,59 +1297,206 @@
 					buckets.get(key).push(v);
 				});
 
-				const orderedKeys = [...buckets.keys()]
-					.map((key, order) => ({ key, order }))
-					.sort((a, b) => (categoryRank(a.key) - categoryRank(b.key)) || (a.order - b.order))
-					.map(entry => entry.key);
+			const orderedKeys = [...buckets.keys()]
+			.map((key, order) => ({ key, order }))
+			.sort((a, b) => (categoryRank(a.key) - categoryRank(b.key)) || (a.order - b.order))
+			.map(entry => entry.key);
 
-				orderedKeys.forEach(key => {
-					const list = buckets.get(key);
-					const section = document.createElement('section');
-					section.className = 'category-section';
+			orderedKeys.forEach(key => {
+				const list = buckets.get(key);
+				const section = document.createElement('section');
+				section.className = 'category-section';
 
-					const title = document.createElement('h3');
-					title.className = 'category-title';
-					title.textContent = categoryLabel(key);
-					const count = document.createElement('span');
-					count.className = 'category-count';
-					count.textContent = list.length;
-					title.appendChild(count);
+				const title = document.createElement('h3');
+				title.className = 'category-title';
+				title.textContent = categoryLabel(key);
+				const count = document.createElement('span');
+				count.className = 'category-count';
+				count.textContent = list.length;
+				title.appendChild(count);
 
-					const fields = document.createElement('div');
-					fields.className = 'category-fields';
-					list.forEach(v => fields.appendChild(buildFieldGroup(v)));
+				const fields = document.createElement('div');
+				fields.className = 'category-fields';
+				list.forEach(v => fields.appendChild(buildFieldGroup(v)));
 
-					section.appendChild(title);
-					section.appendChild(fields);
-					container.appendChild(section);
+				section.appendChild(title);
+				section.appendChild(fields);
+				container.appendChild(section);
+			});
+
+		variables.forEach(v => {
+			const id = v.id || v.Id;
+			const vt = v.valueType || v.ValueType;
+			if (vt === 'Numeric') return;
+
+			const toggle = container.querySelector(`.segmented-toggle[data-toggle-for="${id}"]`);
+			if (!toggle) return;
+
+			const input = document.getElementById(`var-${id}`);
+			const buttons = toggle.querySelectorAll('.segment-btn');
+			buttons.forEach(btn => {
+				btn.addEventListener('click', () => {
+					if (btn.classList.contains('active')) {
+						btn.classList.remove('active');
+						input.value = '';
+						return;
+					}
+					input.value = btn.getAttribute('data-value');
+					buttons.forEach(b => b.classList.toggle('active', b === btn));
 				});
+		});
+});
+}
 
-				variables.forEach(v => {
-					const id = v.id || v.Id;
-					const vt = v.valueType || v.ValueType;
-					if (vt === 'Numeric') return;
+/* ---------------- Multi-step navigation ---------------- */
 
-					const toggle = container.querySelector(`.segmented-toggle[data-toggle-for="${id}"]`);
-					if (!toggle) return;
+function showStep(step) {
+	currentStep = step;
+	document.getElementById('stepObservations').hidden = step !== 1;
+	document.getElementById('stepAllergies').hidden = step !== 2;
+	document.querySelectorAll('.step-pill').forEach(pill => {
+		pill.classList.toggle('active', Number(pill.dataset.step) === step);
+	});
+window.scrollTo({ top: 0, behavior: 'smooth' });
+}
 
-					const input = document.getElementById(`var-${id}`);
-					const buttons = toggle.querySelectorAll('.segment-btn');
-					buttons.forEach(btn => {
-						btn.addEventListener('click', () => {
-							if (btn.classList.contains('active')) {
-								btn.classList.remove('active');
-								input.value = '';
-								return;
-							}
-							input.value = btn.getAttribute('data-value');
-							buttons.forEach(b => b.classList.toggle('active', b === btn));
-						});
-					});
-				});
+// Jumping backwards is always allowed; moving forward requires step 1 to be
+// valid, otherwise the step stays put and the offending fields are highlighted.
+function tryGoToStep(target) {
+	if (target <= currentStep) {
+		hideError();
+		showStep(target);
+		return true;
+	}
+
+	const invalidCount = validateAllFields();
+	if (invalidCount > 0) {
+		showError(`Please fix the highlighted ${invalidCount === 1 ? 'field' : 'fields'} before continuing to the next step.`);
+		scrollToFirstError();
+		return false;
+	}
+
+	hideError();
+	showStep(target);
+	return true;
+}
+
+/* ---------------- Antibiotic allergy picker ---------------- */
+
+function antibioticId(a) { return String(a.id ?? a.Id); }
+function antibioticName(a) { return a.name ?? a.Name ?? ''; }
+
+async function loadAntibiotics() {
+	const list = document.getElementById('antibioticList');
+	try {
+		const res = await fetch(ENDPOINTS.antibiotics);
+		if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+		const raw = await res.text();
+		let body;
+		try { body = JSON.parse(raw); } catch { throw new Error('Invalid JSON from server'); }
+		if (body.statusCode !== 'SUCCESS') {
+			throw new Error(body.error?.description || 'Failed to load antibiotics');
+		}
+		antibiotics = body.data?.antibiotics ?? body.data?.Antibiotics ?? [];
+		renderAntibioticList();
+	} catch (err) {
+		console.error('Antibiotics load error:', err);
+		list.innerHTML = `<div class="empty-state">Failed to load antibiotics: ${esc(err.message)}</div>`;
+	}
+}
+
+function renderAntibioticList() {
+	const list = document.getElementById('antibioticList');
+	const query = document.getElementById('antibioticSearch').value.trim().toLowerCase();
+	const visible = antibiotics.filter(a => antibioticName(a).toLowerCase().includes(query));
+
+	if (visible.length === 0) {
+		list.innerHTML = '<div class="empty-state">No antibiotics match your search</div>';
+		return;
+	}
+
+	list.innerHTML = visible.map(a => {
+		const id = antibioticId(a);
+		const checked = selectedAllergies.has(id);
+		return `
+		<label class="allergy-option${checked ? ' selected' : ''}">
+		<input type="checkbox" data-antibiotic-id="${esc(id)}"${checked ? ' checked' : ''}>
+		<span>${esc(antibioticName(a))}</span>
+		</label>
+		`;
+	}).join('');
+}
+
+function renderSelectedAllergies() {
+	const container = document.getElementById('selectedAllergies');
+	document.getElementById('allergyCount').textContent = String(selectedAllergies.size);
+
+	if (selectedAllergies.size === 0) {
+		container.innerHTML = '<div class="empty-state">No allergies selected</div>';
+		return;
+	}
+
+	container.innerHTML = [...selectedAllergies.entries()]
+	.map(([id, name]) => `
+		<span class="allergy-chip">
+		${esc(name)}
+		<button type="button" class="allergy-chip-remove" data-remove-id="${esc(id)}"
+		aria-label="Remove ${esc(name)}">&times;</button>
+		</span>
+		`).join('');
+	}
+
+	function setAllergySelected(id, selected) {
+		if (selected) {
+			if (!selectedAllergies.has(id)) {
+				const antibiotic = antibiotics.find(a => antibioticId(a) === id);
+				selectedAllergies.set(id, antibiotic ? antibioticName(antibiotic) : id);
 			}
+		} else {
+			selectedAllergies.delete(id);
+		}
+		renderSelectedAllergies();
+	}
+
+	document.getElementById('antibioticSearch').addEventListener('input', renderAntibioticList);
+
+	document.getElementById('antibioticList').addEventListener('change', (e) => {
+		const checkbox = e.target.closest('input[type="checkbox"][data-antibiotic-id]');
+		if (!checkbox) return;
+		setAllergySelected(checkbox.getAttribute('data-antibiotic-id'), checkbox.checked);
+		const option = checkbox.closest('.allergy-option');
+		if (option) option.classList.toggle('selected', checkbox.checked);
+	});
+
+document.getElementById('selectedAllergies').addEventListener('click', (e) => {
+	const removeBtn = e.target.closest('.allergy-chip-remove');
+	if (!removeBtn) return;
+	const id = removeBtn.getAttribute('data-remove-id');
+	setAllergySelected(id, false);
+	const checkbox = document.querySelector(`#antibioticList input[data-antibiotic-id="${CSS.escape(id)}"]`);
+	if (checkbox) {
+		checkbox.checked = false;
+		const option = checkbox.closest('.allergy-option');
+		if (option) option.classList.remove('selected');
+	}
+});
+
+document.getElementById('toStep2Btn').addEventListener('click', () => tryGoToStep(2));
+document.getElementById('backBtn').addEventListener('click', () => tryGoToStep(1));
+document.querySelectorAll('.step-pill').forEach(pill => {
+	pill.addEventListener('click', () => tryGoToStep(Number(pill.dataset.step)));
+});
 
 document.getElementById('diagnoseForm').addEventListener('submit', async (e) => {
 	e.preventDefault();
+
+	// Enter in a step 1 input can submit implicitly: forward to step 2 instead
+	// (tryGoToStep validates step 1 and blocks with an error when invalid).
+	if (currentStep !== 2) {
+		tryGoToStep(2);
+		return;
+	}
+
 	hideError();
 
 	// Blocking validation: required fields must be filled and numeric values must
@@ -1153,11 +1523,15 @@ btn.disabled = true;
 btn.innerHTML = '<span class="spinner"></span> Diagnosing...';
 
 try {
-	console.log('Sending observations:', JSON.stringify(observations, null, 2));
+	const payload = {
+		observations,
+		allergies: [...selectedAllergies.keys()]
+	};
+	console.log('Sending payload:', JSON.stringify(payload, null, 2));
 	const res = await fetch(ENDPOINTS.diagnose, {
 		method: 'POST',
 		headers: { 'Content-Type': 'application/json' },
-		body: JSON.stringify(observations)
+		body: JSON.stringify(payload)
 	});
 console.log('Response status:', res.status);
 const raw = await res.text();
@@ -1186,255 +1560,248 @@ showResults(body.data);
 }
 });
 
-	function showResults(data) {
-		document.getElementById('diagnoseForm').style.display = 'none';
-		document.getElementById('resultsSection').style.display = 'block';
+function showResults(data) {
+	document.getElementById('diagnoseForm').style.display = 'none';
+	document.getElementById('resultsSection').style.display = 'block';
 
-		const sevDiag = data.severityDiagnosis || data.SeverityDiagnosis || data;
-		const sev = sevDiag.severity || sevDiag.Severity;
-		const badge = document.getElementById('severityBadge');
-		badge.textContent = sev;
-		badge.className = 'severity-badge severity-' + String(sev).toLowerCase();
+	// Severity + treatment site
+	const sev = data.severity ?? data.Severity ?? '';
+	const badge = document.getElementById('severityBadge');
+	badge.textContent = sev;
+	badge.className = 'severity-badge severity-' + String(sev).toLowerCase();
 
-		const site = sevDiag.treatmentSite || sevDiag.TreatmentSite;
-		const siteBadge = document.getElementById('treatmentBadge');
-		siteBadge.textContent = site === 'IntensiveCareUnit' ? 'ICU' : site;
+	const site = data.treatmentSite ?? data.TreatmentSite ?? '';
+	const siteBadge = document.getElementById('treatmentBadge');
+	siteBadge.textContent = site === 'IntensiveCareUnit' ? 'ICU' : site;
 
-		const metricsDiagnoses = sevDiag.metricsDiagnoses || sevDiag.MetricsDiagnoses || [];
-		const metricsList = document.getElementById('metricsList');
-		if (metricsDiagnoses.length > 0) {
-			metricsList.innerHTML = metricsDiagnoses.map(m => {
-				const code = m.code || m.Code;
-				const score = m.score ?? m.Score;
-				const mSev = m.severity || m.Severity;
-				const mSite = m.treatmentSite || m.TreatmentSite;
-				return `
-				<div class="metric-item">
-					<span class="metric-code">${esc(code)}</span>
-					<span class="metric-score">Score: ${score}</span>
-					<span class="metric-meta">
-						<span class="severity-badge severity-${esc(String(mSev).toLowerCase())}">${esc(mSev)}</span>
-						<span class="treatment-badge">${mSite === 'IntensiveCareUnit' ? 'ICU' : esc(mSite)}</span>
-					</span>
-				</div>
-				`;
-			}).join('');
-		} else {
-			metricsList.innerHTML = '<div class="empty-state">No individual metric diagnostics available</div>';
-		}
+	// Pregnancy / lactation flag
+	const pregnant = !!(data.isPatientPregnantOrInLactationPhase ?? data.IsPatientPregnantOrInLactationPhase);
+	document.getElementById('pregnantValue').textContent = pregnant ? 'Yes' : 'No';
 
-		const heavySuspected = data.heavySuspected || data.HeavySuspected || [];
-	const heavyList = document.getElementById('heavyList');
-	if (heavySuspected.length > 0) {
-		heavyList.innerHTML = heavySuspected
-		.sort((a, b) => (b.score || b.Score) - (a.score || a.Score))
-		.map(p => `
+	// Allergies (antibiotics the patient is allergic to)
+	const allergies = data.allergies ?? data.Allergies ?? [];
+	document.getElementById('allergiesValue').textContent = allergies.length > 0
+	? allergies.map(a => a.name || a.Name || '').filter(Boolean).join(', ')
+	: 'None';
+
+	// Evidences
+	let evidences = data.evidences ?? data.Evidences ?? [];
+	if (!Array.isArray(evidences)) evidences = [];
+	const evidenceToggle = document.getElementById('evidenceToggle');
+	const evidencePanel = document.getElementById('evidencePanel');
+	const evidenceList = document.getElementById('evidenceList');
+	evidenceList.innerHTML = evidences.length > 0
+	? evidences.map(e => `<li>${esc(e)}</li>`).join('')
+	: '<li class="empty-state">No evidences available</li>';
+	evidenceToggle.hidden = evidences.length === 0;
+	evidenceToggle.dataset.count = String(evidences.length);
+	evidenceToggle.textContent = `View Evidences (${evidences.length})`;
+	evidencePanel.hidden = true;
+	evidenceToggle.setAttribute('aria-expanded', 'false');
+
+	// Variables the observation set did not cover
+	const missingVariables = data.missingVariables ?? data.MissingVariables ?? [];
+	const missingList = document.getElementById('missingList');
+	missingList.innerHTML = missingVariables.length > 0
+	? missingVariables.map(v => `
+		<div class="metric-item">
+		<span class="metric-code">${esc(v.code || v.Code)}</span>
+		<span class="metric-score">${esc(v.name || v.Name)}</span>
+		</div>
+		`).join('')
+		: '<div class="empty-state">All variables were provided</div>';
+
+		// Infection assessment - heavy suspected (already ordered by score server-side,
+		// so the position in the list is the suspicion rank)
+		const heavySuspected = data.heavySuspected ?? data.HeavySuspected ?? [];
+		const heavyList = document.getElementById('heavyList');
+		heavyList.innerHTML = heavySuspected.length > 0
+		? heavySuspected.map((p, index) => `
 			<div class="pathogen-item">
-			<span class="pathogen-name">${p.name || p.Name}</span>
-			<span class="pathogen-score">Score: ${(p.score || p.Score).toFixed(2)}</span>
+			<span class="pathogen-rank">#${index + 1}</span>
+			<span class="pathogen-name">${esc(p.name || p.Name)}</span>
 			</div>
-			`).join('');
-		} else {
-			heavyList.innerHTML = '<div class="empty-state">No heavy suspected pathogens</div>';
-		}
+			`).join('')
+			: '<div class="empty-state">No heavy suspected pathogens</div>';
 
-		const worthSuspected = data.worthSuspected || data.WorthSuspected || [];
-		const worthList = document.getElementById('worthList');
-		if (worthSuspected.length > 0) {
-			worthList.innerHTML = worthSuspected
-			.map(p => `
+			const worthSuspected = data.worthSuspected ?? data.WorthSuspected ?? [];
+			const worthList = document.getElementById('worthList');
+			worthList.innerHTML = worthSuspected.length > 0
+			? worthSuspected.map(p => `
 				<div class="pathogen-item">
-				<span class="pathogen-name">${p.name || p.Name}</span>
+				<span class="pathogen-name">${esc(p.name || p.Name)}</span>
 				</div>
-				`).join('');
-			} else {
-				worthList.innerHTML = '<div class="empty-state">No worth suspected pathogens</div>';
+				`).join('')
+				: '<div class="empty-state">No worth suspected pathogens</div>';
+
+				window.scrollTo({ top: 0, behavior: 'smooth' });
 			}
 
-		let evidences = data.evidences || data.Evidences || [];
-		if (!Array.isArray(evidences)) evidences = [];
-		if (evidences.length === 0) {
-			evidences = metricsDiagnoses.flatMap(m => m.evidences || m.Evidences || []);
-		}
-		const evidenceToggle = document.getElementById('evidenceToggle');
-		const evidencePanel = document.getElementById('evidencePanel');
-		const evidenceList = document.getElementById('evidenceList');
-		evidenceList.innerHTML = evidences.length > 0
-			? evidences.map(e => `<li>${esc(e)}</li>`).join('')
-			: '<li class="empty-state">No evidences available</li>';
-		evidenceToggle.hidden = evidences.length === 0;
-		evidenceToggle.dataset.count = String(evidences.length);
-		evidenceToggle.textContent = `View Evidences (${evidences.length})`;
-		evidencePanel.hidden = true;
-		evidenceToggle.setAttribute('aria-expanded', 'false');
-
-			window.scrollTo({ top: 0, behavior: 'smooth' });
-		}
-
-	function resetForm() {
-		document.getElementById('resultsSection').style.display = 'none';
-		document.getElementById('diagnoseForm').style.display = '';
-		hideError();
-		clearFieldErrors();
-		window.scrollTo({ top: 0, behavior: 'smooth' });
-	}
-
-	function findFieldInput(variableId) {
-		const direct = document.getElementById(`var-${variableId}`);
-		if (direct) return direct;
-		const key = String(variableId ?? '').toLowerCase();
-		return Array.from(document.querySelectorAll('[data-variable-id]'))
-			.find(el => (el.getAttribute('data-variable-id') || '').toLowerCase() === key) || null;
-	}
-
-	function clearFieldErrors() {
-		document.querySelectorAll('.form-group.has-error, .form-group.has-warning').forEach(clearGroupError);
-	}
-
-	function clearGroupError(group) {
-		if (!group) return;
-		group.classList.remove('has-error', 'has-warning');
-		group.querySelectorAll('.field-error-msg, .field-warn-msg').forEach(msg => msg.remove());
-		group.querySelectorAll('[aria-invalid]').forEach(el => el.removeAttribute('aria-invalid'));
-	}
-
-	function showGroupError(group, message) {
-		if (!group) return;
-		group.classList.remove('has-warning');
-		group.querySelectorAll('.field-warn-msg').forEach(msg => msg.remove());
-		group.classList.add('has-error');
-		const input = group.querySelector('[data-variable-id]');
-		if (input) input.setAttribute('aria-invalid', 'true');
-
-		let msg = group.querySelector('.field-error-msg');
-		if (!msg) {
-			msg = document.createElement('div');
-			msg.className = 'field-error-msg';
-			msg.setAttribute('role', 'alert');
-			group.appendChild(msg);
-		}
-		msg.textContent = message;
-	}
-
-	function showGroupWarning(group, message) {
-		if (!group) return;
-		group.classList.remove('has-error');
-		group.querySelectorAll('.field-error-msg').forEach(msg => msg.remove());
-		group.querySelectorAll('[aria-invalid]').forEach(el => el.removeAttribute('aria-invalid'));
-		group.classList.add('has-warning');
-
-		let msg = group.querySelector('.field-warn-msg');
-		if (!msg) {
-			msg = document.createElement('div');
-			msg.className = 'field-warn-msg';
-			msg.setAttribute('role', 'status');
-			group.appendChild(msg);
-		}
-		msg.textContent = message;
-	}
-
-	/*
-	 * Validates a single rendered field against its metadata.
-	 *  - empty required field          -> blocking error
-	 *  - numeric outside acceptedRange -> blocking error
-	 *  - numeric outside normalRange   -> non-blocking warning
-	 * Returns { hasError, hasWarning }.
-	 */
-	function validateField(input) {
-		const group = input ? input.closest('.form-group') : null;
-		const meta = input ? variableMeta[String(input.dataset.variableId || '')] : null;
-		if (!meta) return { hasError: false, hasWarning: false };
-
-		clearGroupError(group);
-		const value = String(input.value ?? '').trim();
-
-		if (value === '') {
-			if (meta.isRequired) {
-				showGroupError(group, `${meta.name} is required.`);
-				return { hasError: true, hasWarning: false };
+			function resetForm() {
+				document.getElementById('resultsSection').style.display = 'none';
+				document.getElementById('diagnoseForm').style.display = '';
+				showStep(1);
+				hideError();
+				clearFieldErrors();
+				window.scrollTo({ top: 0, behavior: 'smooth' });
 			}
-			return { hasError: false, hasWarning: false };
+
+			function findFieldInput(variableId) {
+				const direct = document.getElementById(`var-${variableId}`);
+				if (direct) return direct;
+				const key = String(variableId ?? '').toLowerCase();
+				return Array.from(document.querySelectorAll('[data-variable-id]'))
+				.find(el => (el.getAttribute('data-variable-id') || '').toLowerCase() === key) || null;
+			}
+
+			function clearFieldErrors() {
+				document.querySelectorAll('.form-group.has-error, .form-group.has-warning').forEach(clearGroupError);
+			}
+
+			function clearGroupError(group) {
+				if (!group) return;
+				group.classList.remove('has-error', 'has-warning');
+				group.querySelectorAll('.field-error-msg, .field-warn-msg').forEach(msg => msg.remove());
+				group.querySelectorAll('[aria-invalid]').forEach(el => el.removeAttribute('aria-invalid'));
+			}
+
+			function showGroupError(group, message) {
+				if (!group) return;
+				group.classList.remove('has-warning');
+				group.querySelectorAll('.field-warn-msg').forEach(msg => msg.remove());
+				group.classList.add('has-error');
+				const input = group.querySelector('[data-variable-id]');
+				if (input) input.setAttribute('aria-invalid', 'true');
+
+				let msg = group.querySelector('.field-error-msg');
+				if (!msg) {
+					msg = document.createElement('div');
+					msg.className = 'field-error-msg';
+					msg.setAttribute('role', 'alert');
+					group.appendChild(msg);
+				}
+				msg.textContent = message;
+			}
+
+			function showGroupWarning(group, message) {
+				if (!group) return;
+				group.classList.remove('has-error');
+				group.querySelectorAll('.field-error-msg').forEach(msg => msg.remove());
+				group.querySelectorAll('[aria-invalid]').forEach(el => el.removeAttribute('aria-invalid'));
+				group.classList.add('has-warning');
+
+				let msg = group.querySelector('.field-warn-msg');
+				if (!msg) {
+					msg = document.createElement('div');
+					msg.className = 'field-warn-msg';
+					msg.setAttribute('role', 'status');
+					group.appendChild(msg);
+				}
+				msg.textContent = message;
+			}
+
+			/*
+			* Validates a single rendered field against its metadata.
+			*  - empty required field          -> blocking error
+			*  - numeric outside acceptedRange -> blocking error
+			*  - numeric outside normalRange   -> non-blocking warning
+			* Returns { hasError, hasWarning }.
+			*/
+			function validateField(input) {
+				const group = input ? input.closest('.form-group') : null;
+				const meta = input ? variableMeta[String(input.dataset.variableId || '')] : null;
+				if (!meta) return { hasError: false, hasWarning: false };
+
+				clearGroupError(group);
+				const value = String(input.value ?? '').trim();
+
+				if (value === '') {
+					if (meta.isRequired) {
+						showGroupError(group, `${meta.name} is required.`);
+						return { hasError: true, hasWarning: false };
+					}
+					return { hasError: false, hasWarning: false };
+				}
+
+				if (meta.valueType !== 'Numeric') {
+					return { hasError: false, hasWarning: false };
+				}
+
+				const num = Number(value);
+				if (!Number.isFinite(num)) {
+					showGroupError(group, `${meta.name} must be a valid number.`);
+					return { hasError: true, hasWarning: false };
+				}
+
+				if (meta.acceptedRange && !inRange(num, meta.acceptedRange)) {
+					showGroupError(group,
+						`Value must be within the accepted range (${describeRange(meta.acceptedRange, meta.unit)}).`);
+					return { hasError: true, hasWarning: false };
+				}
+
+				if (meta.normalRange && !inRange(num, meta.normalRange)) {
+					showGroupWarning(group,
+						`Outside the normal range (${describeRange(meta.normalRange, meta.unit)}). This value is accepted and can still be submitted.`);
+					return { hasError: false, hasWarning: true };
+				}
+
+				return { hasError: false, hasWarning: false };
+			}
+
+			/*
+			* Validates every rendered field. Returns how many fields have a blocking error.
+			*/
+			function validateAllFields() {
+				let invalidCount = 0;
+				formVariables.forEach(v => {
+					const input = document.getElementById(`var-${v.id || v.Id}`);
+					if (!input) return;
+					if (validateField(input).hasError) invalidCount++;
+				});
+			return invalidCount;
 		}
 
-		if (meta.valueType !== 'Numeric') {
-			return { hasError: false, hasWarning: false };
+		/*
+		* Maps error.detail (variableId -> message) returned by the server onto the
+		* rendered form: highlights the field and shows the message under it.
+		* Returns how many field errors could be attached to a rendered input.
+		*/
+		function applyFieldErrors(detail) {
+			if (!detail || typeof detail !== 'object') return 0;
+
+			let applied = 0;
+			for (const [variableId, message] of Object.entries(detail)) {
+				if (!message) continue;
+				const input = findFieldInput(variableId);
+				if (!input) continue;
+
+				const group = input.closest('.form-group');
+				if (!group) continue;
+
+				clearGroupError(group);
+				showGroupError(group, message);
+				applied++;
+			}
+			return applied;
 		}
 
-		const num = Number(value);
-		if (!Number.isFinite(num)) {
-			showGroupError(group, `${meta.name} must be a valid number.`);
-			return { hasError: true, hasWarning: false };
+		function scrollToFirstError() {
+			const first = document.querySelector('.form-group.has-error');
+			if (first) first.scrollIntoView({ behavior: 'smooth', block: 'center' });
 		}
 
-		if (meta.acceptedRange && !inRange(num, meta.acceptedRange)) {
-			showGroupError(group,
-				`Value must be within the accepted range (${describeRange(meta.acceptedRange, meta.unit)}).`);
-			return { hasError: true, hasWarning: false };
-		}
+		function showError(msg, detail) {
+			document.getElementById('errorModalMsg').textContent = msg;
 
-		if (meta.normalRange && !inRange(num, meta.normalRange)) {
-			showGroupWarning(group,
-				`Outside the normal range (${describeRange(meta.normalRange, meta.unit)}). This value is accepted and can still be submitted.`);
-			return { hasError: false, hasWarning: true };
-		}
-
-		return { hasError: false, hasWarning: false };
-	}
-
-	/*
-	 * Validates every rendered field. Returns how many fields have a blocking error.
-	 */
-	function validateAllFields() {
-		let invalidCount = 0;
-		formVariables.forEach(v => {
-			const input = document.getElementById(`var-${v.id || v.Id}`);
-			if (!input) return;
-			if (validateField(input).hasError) invalidCount++;
-		});
-		return invalidCount;
-	}
-
-	/*
-	 * Maps error.detail (variableId -> message) returned by the server onto the
-	 * rendered form: highlights the field and shows the message under it.
-	 * Returns how many field errors could be attached to a rendered input.
-	 */
-	function applyFieldErrors(detail) {
-		if (!detail || typeof detail !== 'object') return 0;
-
-		let applied = 0;
-		for (const [variableId, message] of Object.entries(detail)) {
-			if (!message) continue;
-			const input = findFieldInput(variableId);
-			if (!input) continue;
-
-			const group = input.closest('.form-group');
-			if (!group) continue;
-
-			clearGroupError(group);
-			showGroupError(group, message);
-			applied++;
-		}
-		return applied;
-	}
-
-	function scrollToFirstError() {
-		const first = document.querySelector('.form-group.has-error');
-		if (first) first.scrollIntoView({ behavior: 'smooth', block: 'center' });
-	}
-
-	function showError(msg, detail) {
-		document.getElementById('errorModalMsg').textContent = msg;
-
-		const list = document.getElementById('errorModalDetail');
-		const messages = detail && typeof detail === 'object'
+			const list = document.getElementById('errorModalDetail');
+			const messages = detail && typeof detail === 'object'
 			? Object.values(detail).filter(Boolean)
 			: [];
-		list.innerHTML = messages.map(m => `<li>${esc(m)}</li>`).join('');
-		list.style.display = messages.length > 0 ? 'block' : 'none';
+			list.innerHTML = messages.map(m => `<li>${esc(m)}</li>`).join('');
+			list.style.display = messages.length > 0 ? 'block' : 'none';
 
-		document.getElementById('errorModal').classList.add('open');
-	}
+			document.getElementById('errorModal').classList.add('open');
+		}
 
 		function hideError() {
 			document.getElementById('errorModal').classList.remove('open');
@@ -1444,35 +1811,35 @@ showResults(body.data);
 		document.getElementById('errorModal').addEventListener('click', (e) => {
 			if (e.target.id === 'errorModal') hideError();
 		});
-		document.addEventListener('keydown', (e) => {
-			if (e.key === 'Escape') hideError();
-		});
+	document.addEventListener('keydown', (e) => {
+		if (e.key === 'Escape') hideError();
+	});
 
-		// Re-validate a field as soon as the user edits it: this drops any stale
-		// server-side error and immediately applies the accepted/normal range rules.
-		document.getElementById('diagnoseForm').addEventListener('input', (e) => {
-			const input = e.target.closest('[data-variable-id]');
-			if (!input) return;
-			validateField(input);
-		});
-		document.getElementById('diagnoseForm').addEventListener('click', (e) => {
-			const btn = e.target.closest('.segment-btn');
-			if (!btn) return;
-			const group = btn.closest('.form-group');
-			const input = group ? group.querySelector('[data-variable-id]') : null;
-			if (input) validateField(input);
-		});
+// Re-validate a field as soon as the user edits it: this drops any stale
+// server-side error and immediately applies the accepted/normal range rules.
+document.getElementById('diagnoseForm').addEventListener('input', (e) => {
+	const input = e.target.closest('[data-variable-id]');
+	if (!input) return;
+	validateField(input);
+});
+document.getElementById('diagnoseForm').addEventListener('click', (e) => {
+	const btn = e.target.closest('.segment-btn');
+	if (!btn) return;
+	const group = btn.closest('.form-group');
+	const input = group ? group.querySelector('[data-variable-id]') : null;
+	if (input) validateField(input);
+});
 
-		document.getElementById('evidenceToggle').addEventListener('click', () => {
-			const toggle = document.getElementById('evidenceToggle');
-			const panel = document.getElementById('evidencePanel');
-			const show = panel.hidden;
-			panel.hidden = !show;
-			toggle.setAttribute('aria-expanded', String(show));
-			toggle.textContent = `${show ? 'Hide' : 'View'} Evidences (${toggle.dataset.count || 0})`;
-		});
+document.getElementById('evidenceToggle').addEventListener('click', () => {
+	const toggle = document.getElementById('evidenceToggle');
+	const panel = document.getElementById('evidencePanel');
+	const show = panel.hidden;
+	panel.hidden = !show;
+	toggle.setAttribute('aria-expanded', String(show));
+	toggle.textContent = `${show ? 'Hide' : 'View'} Evidences (${toggle.dataset.count || 0})`;
+});
 
-		init();
+init();
 		</script>
 	</body>
 </html>

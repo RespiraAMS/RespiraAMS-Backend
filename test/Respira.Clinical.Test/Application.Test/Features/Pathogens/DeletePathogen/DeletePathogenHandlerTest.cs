@@ -93,13 +93,11 @@ namespace Respira.Application.Test.Features.Pathogens.DeletePathogen
                     {
                         PathogenId = target.Id,
                         CriterionId = criterion.Id,
-                        Priority = 1
                     },
                     new RiskFactor
                     {
                         PathogenId = other.Id,
                         CriterionId = criterion.Id,
-                        Priority = 2
                     }], TestContext.Current.CancellationToken);
             }
 

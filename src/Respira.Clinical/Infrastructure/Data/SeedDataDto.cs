@@ -1,9 +1,11 @@
+using System.Text.Json;
+
 namespace Respira.Clinical.Infrastructure.Data
 {
     public record SeedDataDto
     {
         public ICollection<ClinicalVariableDto> ClinicalVariables { get; init; } = [];
-        public ICollection<ScoreMetricsDto> ScoreMetrics { get; init; } = [];
+        public ICollection<ClinicalMetricsDto> ClinicalMetrics { get; init; } = [];
         public ICollection<CriterionDto> Criteria { get; init; } = [];
         public ICollection<PathogenDto> Pathogens { get; init; } = [];
         public ICollection<SuspectedCauseDto> SuspectedCauses { get; init; } = [];
@@ -27,20 +29,21 @@ namespace Respira.Clinical.Infrastructure.Data
         public ICollection<string> AcceptedValues { get; init; } = [];
     }
 
-    public record ScoreMetricsDto
+    public record ClinicalMetricsDto
     {
         public string Id { get; init; } = string.Empty;
         public string Name { get; init; } = string.Empty;
         public string Code { get; init; } = string.Empty;
         public string Description { get; init; } = string.Empty;
-        public ICollection<ScoringRuleDto> ScoringRules { get; init; } = [];
+        public ICollection<MetricsRuleDto> Rules { get; init; } = [];
     }
 
-    public record ScoringRuleDto
+    public record MetricsRuleDto
     {
         public string Id { get; init; } = string.Empty;
         public string CriterionId { get; init; } = string.Empty;
-        public FormulaDto ScoreFunction { get; init; } = null!;
+        public FormulaDto? ScoreFunction { get; init; }
+        public bool? IsMajor { get; init; }
     }
 
     public record CriterionDto
@@ -53,7 +56,7 @@ namespace Respira.Clinical.Infrastructure.Data
     public record FormulaDto
     {
         public string ResultType { get; init; } = string.Empty;
-        public System.Text.Json.JsonElement? Constant { get; init; }
+        public JsonElement? Constant { get; init; }
         public FormulaVariableDto? Variable { get; init; }
         public FormulaDto? Left { get; init; }
         public FormulaDto? Right { get; init; }
@@ -81,7 +84,6 @@ namespace Respira.Clinical.Infrastructure.Data
     public record RiskFactorDto
     {
         public string CriterionId { get; init; } = string.Empty;
-        public int Priority { get; init; }
     }
 
     public record SuspectedCauseDto

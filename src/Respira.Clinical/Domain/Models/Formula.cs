@@ -1,6 +1,5 @@
 using System.Globalization;
 using System.Text.Json.Serialization;
-using Respira.Clinical.Domain.Entities;
 using Respira.Clinical.Domain.Enums;
 
 namespace Respira.Clinical.Domain.Models
@@ -24,6 +23,7 @@ namespace Respira.Clinical.Domain.Models
         /// <summary>
         /// The result type of the formula
         /// </summary>
+        [JsonIgnore]
         public abstract ExpressionResultType ResultType { get; }
 
         /// <summary>
@@ -33,9 +33,11 @@ namespace Respira.Clinical.Domain.Models
         public abstract Expression ToExpression(IEnumerable<ClinicalObservation> observations);
 
         /// <summary>
-        /// The variables used by this formula
+        /// The variables used by this formula. Derived, runtime-only data that must never
+        /// be written into (or read from) the stored JSONB payload.
         /// </summary>
-        public abstract IEnumerable<ClinicalVariable> Variables { get; }
+        [JsonIgnore]
+        public abstract IEnumerable<VariableRef> Variables { get; }
 
         /// <summary>
         /// Renders a sub-formula, wrapping anything that is not a leaf (constant or
@@ -61,9 +63,11 @@ namespace Respira.Clinical.Domain.Models
         // Need to store this for JSON serialization
         public decimal Constant { get; } = constant;
 
+        [JsonIgnore]
         public override ExpressionResultType ResultType => ExpressionResultType.Numeric;
 
-        public override IEnumerable<ClinicalVariable> Variables => [];
+        [JsonIgnore]
+        public override IEnumerable<VariableRef> Variables => [];
 
         public override Expression ToExpression(IEnumerable<ClinicalObservation> observations)
         {
@@ -84,9 +88,11 @@ namespace Respira.Clinical.Domain.Models
     {
         // Need to store this for JSON serialization
         public bool Constant { get; } = constant;
+        [JsonIgnore]
         public override ExpressionResultType ResultType => ExpressionResultType.Boolean;
 
-        public override IEnumerable<ClinicalVariable> Variables => [];
+        [JsonIgnore]
+        public override IEnumerable<VariableRef> Variables => [];
 
         public override Expression ToExpression(IEnumerable<ClinicalObservation> observations)
         {
@@ -104,9 +110,11 @@ namespace Respira.Clinical.Domain.Models
         // Need to store this for JSON serialization
         public string Constant { get; } = constant;
 
+        [JsonIgnore]
         public override ExpressionResultType ResultType => ExpressionResultType.String;
 
-        public override IEnumerable<ClinicalVariable> Variables => [];
+        [JsonIgnore]
+        public override IEnumerable<VariableRef> Variables => [];
 
         public override Expression ToExpression(IEnumerable<ClinicalObservation> observations)
         {
@@ -123,12 +131,14 @@ namespace Respira.Clinical.Domain.Models
     /// This formula is used to represent a clinical variable
     /// </summary>
     /// <param name="variable">Clinical variable</param>
-    public class VariableFormula(ClinicalVariable variable) : Formula
+    public class VariableFormula(VariableRef variable) : Formula
     {
-        public ClinicalVariable Variable { get; } = variable;
+        public VariableRef Variable { get; } = variable;
 
-        public override IEnumerable<ClinicalVariable> Variables => [Variable];
+        [JsonIgnore]
+        public override IEnumerable<VariableRef> Variables => [Variable];
 
+        [JsonIgnore]
         public override ExpressionResultType ResultType => Variable.ValueType switch
         {
             ClinicalValueType.Boolean => ExpressionResultType.Boolean,
@@ -156,9 +166,11 @@ namespace Respira.Clinical.Domain.Models
     /// </summary>
     public class UnaryFormula : Formula
     {
+        [JsonIgnore]
         public override ExpressionResultType ResultType => ExpressionResultType.Boolean;
 
-        public override IEnumerable<ClinicalVariable> Variables => Formula.Variables;
+        [JsonIgnore]
+        public override IEnumerable<VariableRef> Variables => Formula.Variables;
 
         public Formula Formula { get; }
 
@@ -203,37 +215,41 @@ namespace Respira.Clinical.Domain.Models
         /// </summary>
         public ExpressionOperator Operator { get; }
 
-        public override IEnumerable<ClinicalVariable> Variables => Left.Variables.Concat(Right.Variables).DistinctBy(x => x.Code);
+        [JsonIgnore]
+        public override IEnumerable<VariableRef> Variables => Left.Variables.Concat(Right.Variables).DistinctBy(x => x.Code);
 
+        [JsonIgnore]
         public override ExpressionResultType ResultType => Operator.IsBooleanResult()
             ? ExpressionResultType.Boolean
             : ExpressionResultType.Numeric;
 
-        public BinaryFormula(Formula left, Formula right, ExpressionOperator op)
+        // Parameter must be named '@operator' so System.Text.Json can bind it to the
+        // Operator property when deserializing (ctor params match property names).
+        public BinaryFormula(Formula left, Formula right, ExpressionOperator @operator)
         {
             if (left.ResultType != right.ResultType)
             {
                 throw new ArgumentException($"Operand type mismatch: (left) {left.ResultType} | (right) {right.ResultType}");
             }
 
-            if (left.ResultType == ExpressionResultType.Boolean && !op.IsLogicalOperator() && op != ExpressionOperator.EQ && op != ExpressionOperator.NE)
+            if (left.ResultType == ExpressionResultType.Boolean && !@operator.IsLogicalOperator() && @operator != ExpressionOperator.EQ && @operator != ExpressionOperator.NE)
             {
                 throw new ArgumentException("Invalid expression: applying non-logical operator to boolean operands.");
             }
 
-            if (left.ResultType == ExpressionResultType.Numeric && !op.IsMathematicalOperator())
+            if (left.ResultType == ExpressionResultType.Numeric && !@operator.IsMathematicalOperator())
             {
                 throw new ArgumentException("Invalid expression: applying invalid operator to numeric operands.");
             }
 
-            if (left.ResultType == ExpressionResultType.String && !(op == ExpressionOperator.EQ || op == ExpressionOperator.NE))
+            if (left.ResultType == ExpressionResultType.String && !(@operator == ExpressionOperator.EQ || @operator == ExpressionOperator.NE))
             {
                 throw new ArgumentException("Invalid expression: applying non-string operator to string operands.");
             }
 
             Left = left;
             Right = right;
-            Operator = op;
+            Operator = @operator;
         }
 
         public override Expression ToExpression(IEnumerable<ClinicalObservation> observations)
@@ -252,9 +268,11 @@ namespace Respira.Clinical.Domain.Models
     /// </summary>
     public class TernaryFormula : Formula
     {
+        [JsonIgnore]
         public override ExpressionResultType ResultType => ExpressionResultType.Boolean;
 
-        public override IEnumerable<ClinicalVariable> Variables => Condition.Variables.Concat(IfTrue.Variables).Concat(IfFalse.Variables).DistinctBy(x => x.Code);
+        [JsonIgnore]
+        public override IEnumerable<VariableRef> Variables => Condition.Variables.Concat(IfTrue.Variables).Concat(IfFalse.Variables).DistinctBy(x => x.Code);
 
         /// <summary>
         /// Condition formula

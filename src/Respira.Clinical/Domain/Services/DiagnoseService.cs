@@ -15,23 +15,25 @@ namespace Respira.Clinical.Domain.Services
     public class DiagnoseService(ILogger<DiagnoseService> logger) : IDiagnoseService
     {
         /// <summary>
-        /// Calculate metrics score
+        /// Render one observation as an indented evidence line. Each value type carries its own
+        /// slot on <see cref="ClinicalObservation"/>, so the right one has to be picked - reading
+        /// <c>NumericValue</c> for a boolean observation would render an empty value.
         /// </summary>
-        /// <param name="metrics">Metrics</param>
-        /// <param name="observations">Clinical observations</param>
-        /// <returns>Score result</returns>
-        public (decimal, List<string>) CalculateMetricsScore(ScoreMetrics metrics, IEnumerable<ClinicalObservation> observations)
+        private static string FormatObservation(ClinicalObservation observation)
         {
-            var evidences = new List<string>();
-            var totalScore = metrics.ScoringRules.Sum(sr =>
+            var value = observation.Variable.ValueType switch
             {
-                var score = sr.GetScore(observations);
-                logger.LogDebug($"Calculated score for {metrics.Name}/{sr.Criterion.Name}: {score}");
-                evidences.Add(BuildEvidence($"{metrics.Name} - {sr.Criterion.Name}", sr.Criterion.Formula, observations));
-                return score;
-            });
+                ClinicalValueType.Numeric => observation.NumericValue?.ToString(CultureInfo.InvariantCulture),
+                ClinicalValueType.Boolean => observation.BooleanValue switch
+                {
+                    true => "true",
+                    false => "false",
+                    null => null,
+                },
+                _ => observation.CategoricalValue,
+            };
 
-            return (totalScore, evidences);
+            return $"\t{observation.Variable.Code}: {value ?? "(no value)"}";
         }
 
         /// <summary>
@@ -69,57 +71,143 @@ namespace Respira.Clinical.Domain.Services
         }
 
         /// <summary>
-        /// Render one observation as an indented evidence line. Each value type carries its own
-        /// slot on <see cref="ClinicalObservation"/>, so the right one has to be picked - reading
-        /// <c>NumericValue</c> for a boolean observation would render an empty value.
+        /// Calculate metrics score
         /// </summary>
-        private static string FormatObservation(ClinicalObservation observation)
+        /// <param name="metrics">Metrics</param>
+        /// <param name="observations">Clinical observations</param>
+        /// <returns>Score result</returns>
+        public (decimal, List<string>) CalculateMetricsScore(ClinicalMetrics metrics, IEnumerable<ClinicalObservation> observations)
         {
-            var value = observation.Variable.ValueType switch
+            if (metrics.IsMajorMinorMetric)
             {
-                ClinicalValueType.Numeric => observation.NumericValue?.ToString(CultureInfo.InvariantCulture),
-                ClinicalValueType.Boolean => observation.BooleanValue switch
-                {
-                    true => "true",
-                    false => "false",
-                    null => null,
-                },
-                _ => observation.CategoricalValue,
-            };
+                throw new ArgumentException("Cannot calculate score for a Major/Minor metrics system");
+            }
 
-            return $"\t{observation.Variable.Code}: {value ?? "(no value)"}";
+            var evidences = new List<string>();
+            var totalScore = metrics.Rules.Sum(r =>
+            {
+                // Type casting to scoring rule
+                var rule = (ScoringRule)r;
+
+                // Calculate score
+                var score = rule.GetScore(observations);
+                logger.LogDebug($"Calculated score for {metrics.Name}/{rule.Criterion.Name}: {score}");
+
+                // Add evidence
+                evidences.Add(BuildEvidence($"{metrics.Name} - {rule.Criterion.Name}", rule.Criterion.Formula, observations));
+
+                // Return score
+                return score;
+            });
+
+            return (totalScore, evidences);
         }
 
         /// <summary>
-        /// CURB-65 severity diagnosis
+        /// CURB-65 severity diagnosis.
         /// </summary>
         /// <param name="score">Score</param>
         /// <returns>Severity diagnosis</returns>
         /// <exception cref="InvalidOperationException">Throw if received invalid score</exception>
-        public MetricsSeverityDiagnosis Curb65(int score, List<string> evidences, bool isBunMissing = false)
+        public ScoreMetricsSeverityDiagnosis Curb65(int score, List<string> evidences, bool isBunMissing = false)
         {
+            /*
+             * CURB-65 (according to our internal definition):
+             * 1. If BUN is missing, then this would still be valid (CRB-65)
+             * 2. For CURB-65:
+             * 2.1. 0 - 1: Mild + Outpatient
+             * 2.2. 2: Moderate + Inpatient
+             * 2.3. 3: Severe + Inpatient
+             * 2.4. 4 - 5: Severe + Intensive Care Unit
+             * 3. For CRB-65:
+             * 3.1. 0: Mild + Outpatient
+             * 3.2. 1 - 2: Moderate + Inpatient
+             * 3.3. 3: Severe + Inpatient
+             * 3.4. 4: Severe + Intensive Care Unit
+             */
+
             string code = isBunMissing ? "CRB-65" : "CURB-65";
-            // If BUN is missing (to be more exact, urea), then this would still be valid
+
+            // If BUN variable is missing (to be more exact, urea), then this would still be valid
             // (CRB-65, which has different value matching)
             if (isBunMissing)
             {
                 return score switch
                 {
                     < 0 => throw new ArgumentOutOfRangeException(nameof(score), "Score cannot be negative"),
-                    0 => new MetricsSeverityDiagnosis(code, score, Severity.Mild, TreatmentSite.Outpatient, evidences),
-                    1 or 2 => new MetricsSeverityDiagnosis(code, score, Severity.Moderate, TreatmentSite.Inpatient, evidences),
-                    3 or 4 => new MetricsSeverityDiagnosis(code, score, Severity.Severe, TreatmentSite.Inpatient, evidences),
+                    0 => new ScoreMetricsSeverityDiagnosis
+                    {
+                        Code = code,
+                        Score = score,
+                        Severity = Severity.Mild,
+                        TreatmentSite = TreatmentSite.Outpatient,
+                        Evidences = evidences,
+                    },
+                    1 or 2 => new ScoreMetricsSeverityDiagnosis
+                    {
+                        Code = code,
+                        Score = score,
+                        Severity = Severity.Moderate,
+                        TreatmentSite = TreatmentSite.Inpatient,
+                        Evidences = evidences,
+                    },
+                    3 => new ScoreMetricsSeverityDiagnosis
+                    {
+                        Code = code,
+                        Score = score,
+                        Severity = Severity.Severe,
+                        TreatmentSite = TreatmentSite.Inpatient,
+                        Evidences = evidences,
+                    },
+                    4 => new ScoreMetricsSeverityDiagnosis
+                    {
+                        Code = code,
+                        Score = score,
+                        Severity = Severity.Severe,
+                        TreatmentSite = TreatmentSite.IntensiveCareUnit,
+                        Evidences = evidences,
+                    },
                     _ => throw new InvalidOperationException($"Unexpected CRB-65 score: {score}"),
-                };
+                }
+            ;
             }
 
             // If BUN is present, then this would be CURB-65
             return score switch
             {
                 < 0 => throw new ArgumentOutOfRangeException(nameof(score), "Score cannot be negative"),
-                0 or 1 => new MetricsSeverityDiagnosis(code, score, Severity.Mild, TreatmentSite.Outpatient, evidences),
-                2 => new MetricsSeverityDiagnosis(code, score, Severity.Moderate, TreatmentSite.Inpatient, evidences),
-                >= 3 and <= 5 => new MetricsSeverityDiagnosis(code, score, Severity.Severe, TreatmentSite.Inpatient, evidences),
+                0 or 1 => new ScoreMetricsSeverityDiagnosis
+                {
+                    Code = code,
+                    Score = score,
+                    Severity = Severity.Mild,
+                    TreatmentSite = TreatmentSite.Outpatient,
+                    Evidences = evidences,
+                },
+                2 => new ScoreMetricsSeverityDiagnosis
+                {
+                    Code = code,
+                    Score = score,
+                    Severity = Severity.Moderate,
+                    TreatmentSite = TreatmentSite.Inpatient,
+                    Evidences = evidences,
+                },
+                3 => new ScoreMetricsSeverityDiagnosis
+                {
+                    Code = code,
+                    Score = score,
+                    Severity = Severity.Severe,
+                    TreatmentSite = TreatmentSite.Inpatient,
+                    Evidences = evidences,
+                },
+                4 or 5 => new ScoreMetricsSeverityDiagnosis
+                {
+                    Code = code,
+                    Score = score,
+                    Severity = Severity.Severe,
+                    TreatmentSite = TreatmentSite.IntensiveCareUnit,
+                    Evidences = evidences,
+                },
                 _ => throw new InvalidOperationException($"Unexpected CURB-65 score: {score}"),
             };
         }
@@ -132,9 +220,10 @@ namespace Respira.Clinical.Domain.Services
         /// <param name="score">Score</param>
         /// <returns>Severity diagnosis</returns>
         /// <exception cref="InvalidOperationException">Throw if received invalid score</exception>
-        public MetricsSeverityDiagnosis Psi(int score, List<string> evidences)
+        public ScoreMetricsSeverityDiagnosis Psi(int score, List<string> evidences)
         {
             const string code = "PSI";
+
             // PSI return a more detail classification with 5 levels, and
             // 4 type of treatment site: 
             // 1. I - II: Outpatient (score <= 70)
@@ -149,156 +238,124 @@ namespace Respira.Clinical.Domain.Services
             return score switch
             {
                 < 0 => throw new ArgumentOutOfRangeException(nameof(score), "Score cannot be negative"),
-                >= 0 and <= 70 => new MetricsSeverityDiagnosis(code, score, Severity.Mild, TreatmentSite.Outpatient, evidences),
-                <= 90 => new MetricsSeverityDiagnosis(code, score, Severity.Moderate, TreatmentSite.Inpatient, evidences),
-                <= 130 => new MetricsSeverityDiagnosis(code, score, Severity.Severe, TreatmentSite.Inpatient, evidences),
-                _ => new MetricsSeverityDiagnosis(code, score, Severity.Severe, TreatmentSite.IntensiveCareUnit, evidences),
+                >= 0 and <= 70 => new ScoreMetricsSeverityDiagnosis
+                {
+                    Code = code,
+                    Score = score,
+                    Severity = Severity.Mild,
+                    TreatmentSite = TreatmentSite.Outpatient,
+                    Evidences = evidences,
+                },
+                <= 90 => new ScoreMetricsSeverityDiagnosis
+                {
+                    Code = code,
+                    Score = score,
+                    Severity = Severity.Moderate,
+                    TreatmentSite = TreatmentSite.Inpatient,
+                    Evidences = evidences,
+                },
+                <= 130 => new ScoreMetricsSeverityDiagnosis
+                {
+                    Code = code,
+                    Score = score,
+                    Severity = Severity.Severe,
+                    TreatmentSite = TreatmentSite.Inpatient,
+                    Evidences = evidences,
+                },
+                _ => new ScoreMetricsSeverityDiagnosis
+                {
+                    Code = code,
+                    Score = score,
+                    Severity = Severity.Severe,
+                    TreatmentSite = TreatmentSite.IntensiveCareUnit,
+                    Evidences = evidences,
+                },
             };
         }
 
         /// <summary>
-        /// AST severity diagnosis. Note that, the actual IDSA/ATS use a major/minor criteria
-        /// system, which we have converted into a score system. Currently, this is still correct,
-        /// but it would be completely wrong if the scale was changed (e.g. required both major
-        /// and minor criteria to be met)
+        /// IDSA/ATS severity diagnosis. Note that, since IDSA/ATS is used to just
+        /// check if patient need ICU or not, so if the not matched, then it will return
+        /// null as result, and the final result should relied or other metrics.
+        /// If matched, then the result would be (Severe, ICU)
         /// </summary>
-        /// <param name="score">AST score</param>
-        /// <returns>True if need ICU, false otherwise</returns>
-        public bool Ats(int score)
+        public MajorMinorMetricsSeverityDiagnosis? IdsaAts(ClinicalMetrics metrics, List<ClinicalObservation> observations)
         {
-            // AST metrics actually used to check if you need ICU or not
-            // Since ICU case is actually severe already, we will return
-            // Severe if true, while false would be the severity and 
-            // treatment site passed in parameter
-            // Note that a case can still be severe without ICU
-            return score >= 3;
-        }
-
-        public Result<SeverityDiagnosis> DiagnoseSeverity(ClinicalContext context, IEnumerable<ClinicalObservation> observations)
-        {
-            // We will prioritize the highest severity and treatment site,
-            // but it must be a valid combination. For example, if severity
-            // is severe, but treatment site is outpatient, which is obviously
-            // invalid
-            var severities = new Dictionary<string, Severity>();
-            var treatmentSites = new Dictionary<string, TreatmentSite>();
-            IEnumerable<MetricsSeverityDiagnosis> metricsDiagnoses = [];
-
-            foreach (var metric in context.Metrics)
+            if (!metrics.IsMajorMinorMetric)
             {
-                if (metric.Code.Equals("CURB-65"))
-                {
-                    // Check if BUN is missing
-                    var isBunMissing = !observations.Any(x => x.Variable.Code.Equals("UREA"));
-
-                    var (score, evidences) = CalculateMetricsScore(metric, observations);
-                    var diagnosis = Curb65((int)score, evidences, isBunMissing);
-                    metricsDiagnoses = metricsDiagnoses.Append(diagnosis);
-                    severities.Add(metric.Code, diagnosis.Severity);
-                    treatmentSites.Add(metric.Code, diagnosis.TreatmentSite);
-                }
-                else if (metric.Code.Equals("PSI"))
-                {
-                    var (score, evidences) = CalculateMetricsScore(metric, observations);
-                    var diagnosis = Psi((int)score, evidences);
-                    metricsDiagnoses = metricsDiagnoses.Append(diagnosis);
-                    severities.Add(metric.Code, diagnosis.Severity);
-                    treatmentSites.Add(metric.Code, diagnosis.TreatmentSite);
-                }
-                else if (metric.Code.Equals("IDSA/ATS"))
-                {
-                    var (score, evidences) = CalculateMetricsScore(metric, observations);
-                    var needIcu = Ats((int)score);
-                    if (needIcu)
-                    {
-                        // If you need ICU, then the severity is obviously severe
-                        metricsDiagnoses = metricsDiagnoses.Append(new MetricsSeverityDiagnosis(
-                            metric.Code,
-                            (int)score,
-                            Severity.Severe,
-                            TreatmentSite.IntensiveCareUnit,
-                            evidences));
-                        severities.Add(metric.Code, Severity.Severe);
-                        treatmentSites.Add(metric.Code, TreatmentSite.IntensiveCareUnit);
-                    }
-                }
-                else
-                {
-                    logger.LogWarning($"Metric {metric.Code} is not supported");
-                    throw new NotSupportedException($"Metric {metric.Code} is not supported");
-                }
+                throw new ArgumentException("IDSA/ATS required a Major/Minor metrics system");
             }
 
-            logger.LogDebug("Diagnosis result: {detail}", new
+            var evidences = new List<string>();
+            var majorMatched = metrics.Rules.Count(r =>
             {
-                Severities = severities,
-                TreatmentSites = treatmentSites,
+                // Type casting to major/minor rule
+                var rule = (MajorMinorRule)r;
+
+                // If not major criteria, skip 
+                if (!rule.IsMajor)
+                {
+                    return false;
+                }
+
+                // Evaluate major criteria
+                var isSatisfied = rule.Criterion.IsCriterionSatisfied(observations);
+                logger.LogDebug($"Evaluate major criteria for {metrics.Name}/{rule.Criterion.Name}: {isSatisfied}");
+
+                evidences.Add(BuildEvidence($"{metrics.Name} - {rule.Criterion.Name}", rule.Criterion.Formula, observations));
+                return isSatisfied;
             });
 
-            // The matching groups should be:
-            // 1. Mild + Outpatient
-            // 2. Moderate + Inpatient
-            // 3. Severe + Inpatient
-            // 4. Severe + Intensive Care Unit
-            if (severities.ContainsValue(Severity.Severe))
+            var minorMatched = metrics.Rules.Count(r =>
             {
-                if (!treatmentSites.ContainsValue(TreatmentSite.Inpatient) && !treatmentSites.ContainsValue(TreatmentSite.IntensiveCareUnit))
+                // Type casting to major/minor rule
+                var rule = (MajorMinorRule)r;
+
+                // If not minor criteria, skip 
+                if (rule.IsMajor)
                 {
-                    const string msg = "Diagnosis return severe but the recommended treatment site is neither inpatient nor ICU";
-                    return Result<SeverityDiagnosis>.Failure(new Error(ApplicationStatus.BusinessRuleViolation, msg));
+                    return false;
                 }
 
-                if (treatmentSites.ContainsValue(TreatmentSite.IntensiveCareUnit))
-                {
-                    return Result<SeverityDiagnosis>.Success(
-                        ApplicationStatus.Success,
-                        new SeverityDiagnosis(
-                            Severity.Severe,
-                            TreatmentSite.IntensiveCareUnit,
-                            metricsDiagnoses));
-                }
+                // Evaluate minor criteria
+                var isSatisfied = rule.Criterion.IsCriterionSatisfied(observations);
+                logger.LogDebug($"Evaluate minor criteria for {metrics.Name}/{rule.Criterion.Name}: {isSatisfied}");
 
-                return Result<SeverityDiagnosis>.Success(
-                    ApplicationStatus.Success,
-                    new SeverityDiagnosis(
-                        Severity.Severe,
-                        TreatmentSite.Inpatient,
-                        metricsDiagnoses));
-            }
-            else if (severities.ContainsValue(Severity.Moderate))
+                evidences.Add(BuildEvidence($"{metrics.Name} - {rule.Criterion.Name}", rule.Criterion.Formula, observations));
+                return isSatisfied;
+            });
+
+            if (majorMatched >= 1 || minorMatched >= 3)
             {
-                if (!treatmentSites.ContainsValue(TreatmentSite.Inpatient))
+                logger.LogDebug("IDSA/ATS matched: {detail}", new
                 {
-                    const string msg = "Diagnosis return moderate but the recommended treatment site is not inpatient";
-                    logger.LogWarning(msg);
-                    return Result<SeverityDiagnosis>.Failure(new Error(ApplicationStatus.BusinessRuleViolation, msg));
-                }
-
-                return Result<SeverityDiagnosis>.Success(
-                        ApplicationStatus.Success,
-                        new SeverityDiagnosis(Severity.Moderate, TreatmentSite.Inpatient, metricsDiagnoses));
-            }
-            else if (severities.ContainsValue(Severity.Mild))
-            {
-                if (!treatmentSites.ContainsValue(TreatmentSite.Outpatient))
+                    MajorMatched = majorMatched,
+                    MinorMatched = minorMatched,
+                });
+                return new MajorMinorMetricsSeverityDiagnosis
                 {
-                    const string msg = "Diagnosis return mild but the recommended treatment site is not outpatient";
-                    logger.LogWarning(msg);
-                    return Result<SeverityDiagnosis>.Failure(new Error(ApplicationStatus.BusinessRuleViolation, msg));
-                }
-
-                return Result<SeverityDiagnosis>.Success(
-                    ApplicationStatus.Success,
-                    new SeverityDiagnosis(
-                        Severity.Mild,
-                        TreatmentSite.Outpatient,
-                        metricsDiagnoses));
+                    Code = metrics.Code,
+                    MajorMatched = majorMatched,
+                    MinorMatched = minorMatched,
+                    Severity = Severity.Severe,
+                    TreatmentSite = TreatmentSite.IntensiveCareUnit,
+                    Evidences = evidences,
+                };
             }
 
-            throw new InvalidOperationException("Unexpected diagnosis result");
+            logger.LogDebug("IDSA/ATS not matched");
+            return null;
         }
 
-        public Result<InfectionAssessment> AssessInfection(ClinicalContext context, IEnumerable<ClinicalObservation> observations, Severity severity, TreatmentSite treatmentSite)
+        /// <summary>
+        /// Assess infection based on diagnosis result, or based on risk factors.
+        /// </summary>
+        /// <param name="context">Clinical context</param>
+        /// <param name="observations">Clinical observations</param>
+        /// <param name="severity">Severity diagnosis</param>
+        /// <param name="treatmentSite">Treatment site diagnosis</param>
+        /// <returns>Infection assessment</returns>
+        public InfectionAssessment AssessInfection(ClinicalContext context, IEnumerable<ClinicalObservation> observations, Severity severity, TreatmentSite treatmentSite)
         {
             /*
              * To assess infection, we will proceed with these steps:
@@ -309,7 +366,7 @@ namespace Respira.Clinical.Domain.Services
              * and a pathogen that is also in the suspected list gets an extra point.
              * The final score of a pathogen simply is the number of satisfied risk
              * factors (plus the suspected boost).
-             * 3. Assessment. 
+             * 3. Assessment.
              * 3.1. Any pathogen with risk factors would be included in the
              * heavy suspected list.
              * 3.2. Any pathogen that is both in the suspected list and risk factors
@@ -318,29 +375,47 @@ namespace Respira.Clinical.Domain.Services
              * 3.3. If not, then the pathogen is worth considering
              */
 
-            IEnumerable<HeavySuspected> heavySuspected = [];
-            IEnumerable<Pathogen> worthSuspected = [];
+            var heavySuspected = new List<(decimal score, Pathogen pathogen)>();
+            var worthSuspected = new List<Pathogen>();
             var evidences = new List<string>();
 
             // Step 1: Check for suspected pathogens
             var suspected = context.SuspectedCauses
                 .Where(sc => sc.Severity == severity && sc.TreatmentSite == treatmentSite)
-                .Select(sc => sc.Pathogen);
+                .Select(sc => sc.Pathogen)
+                .ToList();
 
             // Step 2: Check for risk factors
             foreach (var pathogen in context.Pathogens)
             {
-                var score = pathogen.RiskFactors.Count(r =>
+                if (pathogen.RiskFactors.Count == 0)
                 {
-                    evidences.Add(BuildEvidence($"{pathogen.Name} - {r.Criterion.Name}", r.Criterion.Formula, observations));
-                    return r.IsFactorSasified(observations);
-                });
-                logger.LogDebug("Risk factor calculate: score for {pathogen}: {score}", pathogen.Name, score);
-
-                if (score == 0)
-                {
+                    logger.LogDebug("Pathogen {pathogen} has no risk factors, skipped", pathogen.Name);
                     continue;
                 }
+
+                // Calculate matched risk factors
+                var matched = pathogen.RiskFactors.Count(r =>
+                {
+                    evidences.Add(BuildEvidence($"{pathogen.Name} - {r.Criterion.Name}", r.Criterion.Formula, observations));
+                    return r.IsFactorSastified(observations);
+                });
+
+                if (matched == 0)
+                {
+                    logger.LogDebug("Pathogen {pathogen} has no matched risk factors, skipped", pathogen.Name);
+                    continue;
+                }
+
+                // Calculate score
+                var score = (decimal)matched / pathogen.RiskFactors.Count;
+                logger.LogDebug("Risk factor calculate: {detail}", new
+                {
+                    pathogen.Name,
+                    Matched = matched,
+                    Total = pathogen.RiskFactors.Count,
+                    Score = score,
+                });
 
                 // Check if this pathogen also exists in the suspected list
                 if (suspected.Any(s => s.Id == pathogen.Id))
@@ -352,17 +427,190 @@ namespace Respira.Clinical.Domain.Services
                     score++;
                 }
 
-                heavySuspected = heavySuspected.Append(new HeavySuspected(pathogen, score));
+                heavySuspected.Add((score, pathogen));
             }
 
             // Step 3: Assessment
-            worthSuspected = suspected.Where(s => !heavySuspected.Select(hs => hs.Pathogen).Contains(s));
+            worthSuspected = [.. suspected.Where(s => !heavySuspected.Select(hs => hs.pathogen).Contains(s))];
 
-            return Result<InfectionAssessment>.Success(ApplicationStatus.Success, new InfectionAssessment
+            return new InfectionAssessment
             {
-                HeavySuspected = [.. heavySuspected.OrderByDescending(x => x.PriorityScore)],
+                HeavySuspected = [.. heavySuspected.OrderByDescending(hs => hs.score).Select(hs => hs.pathogen)],
                 WorthSuspected = worthSuspected,
                 Evidences = evidences,
+            };
+        }
+
+        private Result ValidateObservations(ClinicalContext context, IEnumerable<ClinicalObservation> observations)
+        {
+            // Store all the errors for returning to client
+            var errors = new Dictionary<Guid, string>();
+
+            // First, check if all the required variables are present
+            // Since this error is often the client dev team problem when implemeting,
+            // not a user error, we won't return a detail message here
+            // var present = observations
+            //     .Select(o => o.Variable.Code)
+            //     .All(ov => context.Variables.Where(v => v.IsRequired).Select(v => v.Code).Contains(ov));
+            var present = context.Variables
+                .Where(v => v.IsRequired)
+                .Select(x => x.Code)
+                .All(v => observations.Select(o => o.Variable.Code).Contains(v));
+            if (!present)
+            {
+                logger.LogDebug("Missing required variables, cannot proceed with diagnosis");
+                return Result.Failure(new Error(ApplicationStatus.BadRequest, "Missing required variables"));
+            }
+
+            // Next, check internal validation rule of each observations
+            foreach (var observation in observations)
+            {
+                if (observation.Variable.ValueType == ClinicalValueType.Numeric && !observation.Variable.IsValidValue(observation.NumericValue))
+                {
+                    logger.LogDebug("Invalid observation value for variable {code}: {value}", observation.Variable.Code, observation.NumericValue);
+
+                    // Add the error to the list
+                    var variable = (NumericClinicalVariable)observation.Variable;
+                    errors.Add(variable.Id, $"{variable.Name} should be {variable.AcceptedRange}");
+                    continue;
+                }
+
+                if (observation.Variable.ValueType == ClinicalValueType.Boolean && !observation.Variable.IsValidValue(observation.BooleanValue))
+                {
+                    logger.LogInformation("Invalid observation value for variable {code}: {value}", observation.Variable.Code, observation.BooleanValue);
+
+                    // Add the error to the list (though this case is unlikely to happen because of C# type checking)
+                    var variable = (BooleanClinicalVariable)observation.Variable;
+                    errors.Add(variable.Id, $"{variable.Name} should be a valid boolean value");
+                    continue;
+                }
+
+                if (observation.Variable.ValueType == ClinicalValueType.Categorical && !observation.Variable.IsValidValue(observation.CategoricalValue))
+                {
+                    logger.LogInformation("Invalid observation value for variable {code}: {value}", observation.Variable.Code, observation.CategoricalValue);
+
+                    // Add the error to the list (this is also more of a client dev team problem that user problem),
+                    // so it's rare to happen
+                    var variable = (CategoricalClinicalVariable)observation.Variable;
+                    errors.Add(variable.Id, $"{variable.Name} should be in this value range {string.Join(", ", variable.AcceptedValues)}");
+                }
+            }
+
+            // Validation for special variables: if is pregnant variable is true, check if sex if female or not
+            var pregnant = observations.FirstOrDefault(x => x.Variable.Code.Equals("PREGNANT-OR-LACTATING"));
+            if (pregnant is not null && pregnant.BooleanValue == true)
+            {
+                logger.LogDebug("Pregnant variable is true, check if sex is female");
+                var isFemale = observations.FirstOrDefault(x => x.Variable.Code.Equals("FEMALE"));
+                if (isFemale is null || isFemale.BooleanValue == false)
+                {
+                    logger.LogDebug("Sex is not female when pregnant is true");
+                    errors.Add(pregnant.Variable.Id, "Sex should be female when pregnant is true");
+                }
+            }
+
+            if (errors.Count > 0)
+            {
+                return Result.Failure(new Error(ApplicationStatus.BadRequest, "Invalid observation value", errors));
+            }
+
+            return Result.Success(ApplicationStatus.Success);
+        }
+
+        public Result<Diagnosis> Diagnose(ClinicalContext context, ClinicalPicture clinicalPicture)
+        {
+            // Internal validation
+            var validationResult = ValidateObservations(context, clinicalPicture.Observations);
+            if (validationResult.IsFailure())
+            {
+                logger.LogDebug("Validation failed: {detail}", validationResult.Error);
+                return Result<Diagnosis>.Failure(validationResult.Error!);
+            }
+
+            // Store the severity diagnosis for final judgement
+            var severityDiagnosis = new HashSet<(Severity severity, TreatmentSite treatmentSite)>();
+
+            // Start evaluated metrics
+            var observations = clinicalPicture.Observations;
+            var totalEvidences = new List<string>();
+            foreach (var metric in context.Metrics)
+            {
+                if (metric.Code.Equals("CURB-65"))
+                {
+                    // Check if BUN is missing
+                    var isBunMissing = !observations.Any(x => x.Variable.Code.Equals("UREA"));
+
+                    // Perform diagnosis
+                    var (score, evidences) = CalculateMetricsScore(metric, observations);
+                    var diagnosis = Curb65((int)score, evidences, isBunMissing);
+                    severityDiagnosis.Add((diagnosis.Severity, diagnosis.TreatmentSite));
+                    totalEvidences.AddRange(evidences);
+
+                    logger.LogInformation("CURB-65 diagnosis: {diagnosis}", diagnosis);
+                }
+                else if (metric.Code.Equals("PSI"))
+                {
+                    var (score, evidences) = CalculateMetricsScore(metric, observations);
+                    var diagnosis = Psi((int)score, evidences);
+                    severityDiagnosis.Add((diagnosis.Severity, diagnosis.TreatmentSite));
+                    totalEvidences.AddRange(evidences);
+                    logger.LogInformation("PSI diagnosis: {diagnosis}", diagnosis);
+                }
+                else if (metric.Code.Equals("IDSA/ATS"))
+                {
+                    var diagnosis = IdsaAts(metric, observations);
+                    if (diagnosis is not null)
+                    {
+                        severityDiagnosis.Add((diagnosis.Severity, diagnosis.TreatmentSite));
+                        totalEvidences.AddRange(diagnosis.Evidences);
+                    }
+                    logger.LogInformation("IDSA/ATS diagnosis: {diagnosis}", diagnosis);
+                }
+                else
+                {
+                    logger.LogWarning($"Metric {metric.Code} is not supported");
+                }
+            }
+
+            // If there are several severity diagnosis, then we will choose the highest one
+            Severity finalSeverity;
+            TreatmentSite finalTreatmentSite;
+            if (severityDiagnosis.Count > 1)
+            {
+                (finalSeverity, finalTreatmentSite) = severityDiagnosis
+                    .OrderByDescending(x => x.severity)
+                    .ThenByDescending(x => x.treatmentSite)
+                    .First();
+            }
+            else if (severityDiagnosis.Count == 1)
+            {
+                (finalSeverity, finalTreatmentSite) = severityDiagnosis.First();
+            }
+            else
+            {
+                logger.LogWarning("No severity diagnosis found");
+                return Result<Diagnosis>.Failure(new Error(ApplicationStatus.ServerError, "Failed to perform severity diagnosis"));
+            }
+
+            // Assess infection
+            var infectionAssessment = AssessInfection(context, observations, finalSeverity, finalTreatmentSite);
+            totalEvidences.AddRange(infectionAssessment.Evidences);
+
+            // Get the list of missing variables
+            var missing = context.Variables
+                .Where(v => !observations.Select(o => o.Variable.Code).Contains(v.Code))
+                .ToList();
+
+            return Result<Diagnosis>.Success(ApplicationStatus.Success, new Diagnosis
+            {
+                Severity = finalSeverity,
+                TreatmentSite = finalTreatmentSite,
+                Evidences = totalEvidences,
+                HeavySuspected = infectionAssessment.HeavySuspected,
+                WorthSuspected = infectionAssessment.WorthSuspected,
+                MissingVariables = missing,
+                Allergies = clinicalPicture.Allergies,
+                IsPatientPregnantOrInLactationPhase = observations.Any(x => x.Variable.Code.Equals("PREGNANT-OR-LACTATING") && x.BooleanValue == true),
             });
         }
     }

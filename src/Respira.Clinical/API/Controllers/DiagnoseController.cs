@@ -22,12 +22,9 @@ namespace Respira.Clinical.API.Controllers
 
         [HttpPost]
         [Route("empirical")]
-        public async Task<IActionResult> PostEmpiricalDiagnosisForm([FromBody] IEnumerable<Observation> observations)
+        public async Task<IActionResult> PostEmpiricalDiagnosisForm([FromBody] DiagnoseQuery request)
         {
-            var result = await bus.InvokeAsync<Result<DiagnoseResult>>(new DiagnoseQuery
-            {
-                Observations = observations
-            });
+            var result = await bus.InvokeAsync<Result<DiagnoseResult>>(request);
             return result.ToApiResponse();
         }
     }

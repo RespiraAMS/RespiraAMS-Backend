@@ -22,7 +22,7 @@ namespace Respira.Clinical.Domain.Entities
         /// <summary>
         /// The variables used by this criterion
         /// </summary>
-        public IEnumerable<ClinicalVariable> Variables => Formula.Variables;
+        public IEnumerable<VariableRef> Variables => Formula.Variables;
 
         /// <summary>
         /// This is just a parameterless constructor for EF Core stuff
