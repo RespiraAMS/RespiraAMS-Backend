@@ -10,7 +10,7 @@ namespace Respira.Clinical.Application.Features.Antibiotics.AddDosage
 {
     public class AddDosageHandler(
         IDbContext context,
-        ICreateMapper<Dosage, AddDosageCommand> mapper,
+        ICreateMapper<AddDosageCommand, Dosage> mapper,
         ILogger<AddDosageHandler> logger) : ICommandHandler<AddDosageCommand, Result<AddDosageResult>>
     {
         public async Task<Result<AddDosageResult>> HandleAsync(AddDosageCommand command, CancellationToken cancellationToken = default)
@@ -26,7 +26,13 @@ namespace Respira.Clinical.Application.Features.Antibiotics.AddDosage
             }
 
             // Map from command to entity
-            var dosage = mapper.ToModel(command);
+            var mapResult = mapper.ToModel(command);
+            if (mapResult.IsFailure())
+            {
+                logger.LogDebug("Failed to map command to model: {Error}", mapResult.Error);
+                return Result<AddDosageResult>.Failure(mapResult.Error!);
+            }
+            var dosage = mapResult.Data!;
 
             // Try adding dosage into cloned and check for business validation
             var dosages = antibiotic.Dosages.Select(d => new Dosage() // Deep copy to avoid EF tracking issue

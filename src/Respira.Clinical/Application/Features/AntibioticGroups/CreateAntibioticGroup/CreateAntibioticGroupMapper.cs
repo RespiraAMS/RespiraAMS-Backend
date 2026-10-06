@@ -1,18 +1,19 @@
 using Respira.Clinical.Application.Contracts.Mappers;
 using Respira.Clinical.Domain.Entities;
+using Respira.ServiceDefaults.Contracts.Results;
 
 namespace Respira.Clinical.Application.Features.AntibioticGroups.CreateAntibioticGroup
 {
-    public class CreateAntibioticGroupMapper : ICreateMapper<AntibioticGroup, CreateAntibioticGroupCommand>
+    public class CreateAntibioticGroupMapper : ICreateMapper<CreateAntibioticGroupCommand, AntibioticGroup>
     {
-        public AntibioticGroup ToModel(CreateAntibioticGroupCommand command)
+        public Result<AntibioticGroup> ToModel(CreateAntibioticGroupCommand command)
         {
-            return new AntibioticGroup
+            return Result<AntibioticGroup>.Success(ApplicationStatus.Success, new AntibioticGroup
             {
                 Name = command.Name,
                 Description = command.Description,
                 ParentId = command.ParentId
-            };
+            });
         }
     }
 }

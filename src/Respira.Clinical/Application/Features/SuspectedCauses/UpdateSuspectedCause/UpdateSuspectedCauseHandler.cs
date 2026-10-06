@@ -48,7 +48,12 @@ namespace Respira.Clinical.Application.Features.SuspectedCauses.UpdateSuspectedC
             }
 
             // Map command to model
-            mapper.MapModel(cause, command);
+            var mapResult = mapper.MapModel(cause, command);
+            if (mapResult.IsFailure())
+            {
+                logger.LogDebug("Failed to map command to model: {Error}", mapResult.Error);
+                return Result.Failure(mapResult.Error!);
+            }
 
             // Save changes to database
             await context.SaveChangesAsync(cancellationToken);

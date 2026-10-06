@@ -48,18 +48,18 @@ namespace Respira.Clinical.DI
 
         public static void AddProfiles(this IServiceCollection services)
         {
-            services.AddScoped<ICreateMapper<AntibioticGroup, CreateAntibioticGroupCommand>, CreateAntibioticGroupMapper>();
+            services.AddScoped<ICreateMapper<CreateAntibioticGroupCommand, AntibioticGroup>, CreateAntibioticGroupMapper>();
             services.AddScoped<IUpdateMapper<AntibioticGroup, UpdateAntibioticGroupCommand>, UpdateAntibioticGroupMapper>();
 
-            services.AddScoped<ICreateMapper<Antibiotic, CreateAntibioticCommand>, CreateAntibioticMapper>();
-            services.AddScoped<ICreateMapper<Dosage, AddDosageCommand>, AddDosageMapper>();
+            services.AddScoped<ICreateMapper<CreateAntibioticCommand, Antibiotic>, CreateAntibioticMapper>();
+            services.AddScoped<ICreateMapper<AddDosageCommand, Dosage>, AddDosageMapper>();
             services.AddScoped<IUpdateMapper<Antibiotic, UpdateAntibioticCommand>, UpdateAntibioticMapper>();
             services.AddScoped<IUpdateMapper<Dosage, UpdateDosageCommand>, UpdateDosageMapper>();
 
-            services.AddScoped<ICreateMapper<Pathogen, CreatePathogenCommand>, CreatePathogenMapper>();
+            services.AddScoped<ICreateMapper<CreatePathogenCommand, Pathogen>, CreatePathogenMapper>();
             services.AddScoped<IUpdateMapper<Pathogen, UpdatePathogenCommand>, UpdatePathogenMapper>();
 
-            services.AddScoped<ICreateMapper<SuspectedCause, CreateSuspectedCauseCommand>, CreateSuspectedCauseMapper>();
+            services.AddScoped<ICreateMapper<CreateSuspectedCauseCommand, SuspectedCause>, CreateSuspectedCauseMapper>();
             services.AddScoped<IUpdateMapper<SuspectedCause, UpdateSuspectedCauseCommand>, UpdateSuspectedCauseMapper>();
         }
 

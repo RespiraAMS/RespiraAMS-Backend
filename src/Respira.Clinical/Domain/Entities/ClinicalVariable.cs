@@ -89,6 +89,9 @@ namespace Respira.Clinical.Domain.Entities
 
     public class CategoricalClinicalVariable : ClinicalVariable
     {
+        /// <summary>
+        /// The categorical values that the value can be
+        /// </summary>
         public List<string> AcceptedValues { get; set; } = [];
 
         public override ClinicalValueType ValueType => ClinicalValueType.Categorical;

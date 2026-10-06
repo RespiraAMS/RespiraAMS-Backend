@@ -1,11 +1,12 @@
 using Respira.Clinical.Application.Contracts.Mappers;
 using Respira.Clinical.Domain.Entities;
+using Respira.ServiceDefaults.Contracts.Results;
 
 namespace Respira.Clinical.Application.Features.Antibiotics.CreateAntibiotic
 {
-    public class CreateAntibioticMapper : ICreateMapper<Antibiotic, CreateAntibioticCommand>
+    public class CreateAntibioticMapper : ICreateMapper<CreateAntibioticCommand, Antibiotic>
     {
-        public Antibiotic ToModel(CreateAntibioticCommand command)
+        public Result<Antibiotic> ToModel(CreateAntibioticCommand command)
         {
             // Create antibiotic
             var antibiotic = new Antibiotic
@@ -26,7 +27,7 @@ namespace Respira.Clinical.Application.Features.Antibiotics.CreateAntibiotic
 
             // Add standard dose into antibiotic
             antibiotic.Dosages.Add(standardDose);
-            return antibiotic;
+            return Result<Antibiotic>.Success(ApplicationStatus.Success, antibiotic);
         }
     }
 }

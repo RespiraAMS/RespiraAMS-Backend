@@ -2,6 +2,7 @@ using Respira.Clinical.Application.Contracts.Mappers;
 using Respira.Clinical.Application.Features.Antibiotics.UpdateDosage;
 using Respira.Clinical.Domain.Entities;
 using Respira.Clinical.Domain.Enums;
+using Respira.ServiceDefaults.Contracts.Results;
 using Range = Respira.Clinical.Domain.Models.Range;
 
 namespace Respira.Application.Test.Features.Antibiotics.UpdateDosage
@@ -25,7 +26,7 @@ namespace Respira.Application.Test.Features.Antibiotics.UpdateDosage
             };
             var crcl = new Range { Min = 15, IsMinExclusive = true, Max = 29, IsMaxExclusive = false, Unit = "mL/min" };
 
-            _mapper.MapModel(dosage, new UpdateDosageCommand
+            var result = _mapper.MapModel(dosage, new UpdateDosageCommand
             {
                 Id = dosage.Id,
                 AntibioticId = dosage.AntibioticId,
@@ -33,6 +34,9 @@ namespace Respira.Application.Test.Features.Antibiotics.UpdateDosage
                 Dose = "1 g IV every 12 hours",
                 Crcl = crcl,
             });
+            Assert.True(result.IsSuccess());
+            Assert.Null(result.Error);
+            Assert.Equal(ApplicationStatus.Success, result.StatusCode);
 
             Assert.Equal(RouteOfAdministration.Intravenous, dosage.RouteOfAdministration);
             Assert.Equal("1 g IV every 12 hours", dosage.Dose);
@@ -64,7 +68,7 @@ namespace Respira.Application.Test.Features.Antibiotics.UpdateDosage
                 Crcl = new Range { Min = 15, IsMinExclusive = false, Max = 29, IsMaxExclusive = true, Unit = "mL/min" },
             };
 
-            _mapper.MapModel(dosage, new UpdateDosageCommand
+            var result = _mapper.MapModel(dosage, new UpdateDosageCommand
             {
                 Id = dosage.Id,
                 AntibioticId = antibioticId,
@@ -72,6 +76,9 @@ namespace Respira.Application.Test.Features.Antibiotics.UpdateDosage
                 Dose = "500 mg orally every 8 hours",
                 Crcl = null,
             });
+            Assert.True(result.IsSuccess());
+            Assert.Null(result.Error);
+            Assert.Equal(ApplicationStatus.Success, result.StatusCode);
 
             Assert.Null(dosage.Crcl);
             Assert.Equal("500 mg orally every 8 hours", dosage.Dose);

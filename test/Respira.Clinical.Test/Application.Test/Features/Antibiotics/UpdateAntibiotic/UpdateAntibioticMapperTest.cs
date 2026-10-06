@@ -2,13 +2,13 @@ using Respira.Clinical.Application.Contracts.Mappers;
 using Respira.Clinical.Application.Features.Antibiotics.UpdateAntibiotic;
 using Respira.Clinical.Domain.Entities;
 using Respira.Clinical.Domain.Enums;
+using Respira.ServiceDefaults.Contracts.Results;
 
 namespace Respira.Application.Test.Features.Antibiotics.UpdateAntibiotic
 {
     public class UpdateAntibioticMapperTest
     {
-        private readonly IUpdateMapper<Antibiotic, UpdateAntibioticCommand> _mapper =
-            new UpdateAntibioticMapper();
+        private readonly IUpdateMapper<Antibiotic, UpdateAntibioticCommand> _mapper = new UpdateAntibioticMapper();
 
         #region Happy path
 
@@ -33,7 +33,10 @@ namespace Respira.Application.Test.Features.Antibiotics.UpdateAntibiotic
                 Classification = AwareClassification.AccessWatch,
             };
 
-            _mapper.MapModel(model, command);
+            var result = _mapper.MapModel(model, command);
+            Assert.True(result.IsSuccess());
+            Assert.Null(result.Error);
+            Assert.Equal(ApplicationStatus.Success, result.StatusCode);
 
             Assert.Equal("Co-amoxiclav", model.Name);
             Assert.Equal(newGroupId, model.AntibioticGroupId);

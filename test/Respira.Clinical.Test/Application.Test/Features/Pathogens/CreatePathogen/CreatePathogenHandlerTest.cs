@@ -1,4 +1,6 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using Moq;
 using Respira.Clinical.Application.Contracts.Data;
 using Respira.Clinical.Application.Features.Pathogens.CreatePathogen;
 using Respira.Clinical.Infrastructure.Data;
@@ -18,9 +20,10 @@ namespace Respira.Application.Test.Features.Pathogens.CreatePathogen
             _options = new DbContextOptionsBuilder<ClinicalDbContext>().UseNpgsql(fixture.ConnectionString).Options;
             _context = new ClinicalDbContext(_options);
             var mapper = new CreatePathogenMapper();
+            var logger = new Mock<ILogger<CreatePathogenHandler>>().Object;
 
             // Initialize handler
-            _handler = new(_context, mapper);
+            _handler = new(_context, mapper, logger);
         }
 
         public async ValueTask DisposeAsync()

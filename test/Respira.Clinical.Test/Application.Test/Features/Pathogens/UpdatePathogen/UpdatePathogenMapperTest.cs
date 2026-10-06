@@ -1,6 +1,7 @@
 using Respira.Clinical.Application.Contracts.Mappers;
 using Respira.Clinical.Application.Features.Pathogens.UpdatePathogen;
 using Respira.Clinical.Domain.Entities;
+using Respira.ServiceDefaults.Contracts.Results;
 
 namespace Respira.Application.Test.Features.Pathogens.UpdatePathogen
 {
@@ -29,7 +30,10 @@ namespace Respira.Application.Test.Features.Pathogens.UpdatePathogen
                 IsAtypical = false,
             };
 
-            _mapper.MapModel(model, command);
+            var result = _mapper.MapModel(model, command);
+            Assert.True(result.IsSuccess());
+            Assert.Null(result.Error);
+            Assert.Equal(ApplicationStatus.Success, result.StatusCode);
 
             Assert.Equal(command.Name, model.Name);
             Assert.Equal(command.Description, model.Description);

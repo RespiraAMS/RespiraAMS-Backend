@@ -25,7 +25,12 @@ namespace Respira.Clinical.Application.Features.Pathogens.UpdatePathogen
             }
 
             // Map command to model
-            mapper.MapModel(pathogen, command);
+            var mapResult = mapper.MapModel(pathogen, command);
+            if (mapResult.IsFailure())
+            {
+                logger.LogDebug("Failed to map command to model: {Error}", mapResult.Error);
+                return Result.Failure(mapResult.Error!);
+            }
 
             // Save changes to database
             await context.SaveChangesAsync(cancellationToken);

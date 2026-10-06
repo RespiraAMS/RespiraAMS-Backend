@@ -10,7 +10,7 @@ namespace Respira.Clinical.Application.Features.SuspectedCauses.CreateSuspectedC
 {
     public class CreateSuspectedCauseHandler(
         IDbContext context,
-        ICreateMapper<SuspectedCause, CreateSuspectedCauseCommand> mapper,
+        ICreateMapper<CreateSuspectedCauseCommand, SuspectedCause> mapper,
         ILogger<CreateSuspectedCauseHandler> logger)
         : ICommandHandler<CreateSuspectedCauseCommand, Result<CreateSuspectedCauseResult>>
     {
@@ -40,7 +40,13 @@ namespace Respira.Clinical.Application.Features.SuspectedCauses.CreateSuspectedC
             }
 
             // Map command to model
-            var cause = mapper.ToModel(command);
+            var mapResult = mapper.ToModel(command);
+            if (mapResult.IsFailure())
+            {
+                logger.LogDebug("Failed to map command to model: {Error}", mapResult.Error);
+                return Result<CreateSuspectedCauseResult>.Failure(mapResult.Error!);
+            }
+            var cause = mapResult.Data!;
 
             // Save changes to database
             await context.SuspectedCauses.AddAsync(cause, cancellationToken);

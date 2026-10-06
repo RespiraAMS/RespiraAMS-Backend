@@ -10,7 +10,7 @@ namespace Respira.Clinical.Application.Features.AntibioticGroups.CreateAntibioti
 {
     public class CreateAntibioticGroupHandler(
         IDbContext context,
-        ICreateMapper<AntibioticGroup, CreateAntibioticGroupCommand> mapper,
+        ICreateMapper<CreateAntibioticGroupCommand, AntibioticGroup> mapper,
         ILogger<CreateAntibioticGroupHandler> logger)
         : ICommandHandler<CreateAntibioticGroupCommand, Result<CreateAntibioticGroupResult>>
     {
@@ -29,7 +29,13 @@ namespace Respira.Clinical.Application.Features.AntibioticGroups.CreateAntibioti
             }
 
             // Map command to model
-            var group = mapper.ToModel(command);
+            var mapResult = mapper.ToModel(command);
+            if (mapResult.IsFailure())
+            {
+                logger.LogDebug("Failed to map command to model: {Error}", mapResult.Error);
+                return Result<CreateAntibioticGroupResult>.Failure(mapResult.Error!);
+            }
+            var group = mapResult.Data!;
 
             // Save antibiotic group to database
             await context.AntibioticGroups.AddAsync(group, cancellationToken);
