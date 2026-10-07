@@ -5,10 +5,7 @@ namespace Respira.Clinical.Application.Features.Shared.ManageFormula
 {
     public record FormulaDto
     {
-        /// <summary>
-        /// Formula result type
-        /// </summary>
-        public ExpressionResultType ResultType { get; set; }
+        // Result type would be inferred from the other supplied properties
 
         /// <summary>
         /// Constant value, provided if this is a constant formula.

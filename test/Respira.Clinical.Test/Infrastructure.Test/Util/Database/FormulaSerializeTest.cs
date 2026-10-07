@@ -90,15 +90,15 @@ namespace Respira.Clinical.Infrastructure.Test.Util.Database
         [Fact]
         public void NestedTree_RoundTrips()
         {
-            var left = new BinaryFormula(new VariableFormula(s_bun), new NumericConstantFormula(20), ExpressionOperator.GT);
+            var left = new BinaryFormula(new VariableFormula(s_bun), new NumericConstantFormula(20), ExpressionOperator.ADD);
             var right = new TernaryFormula(
                 new BinaryFormula(new VariableFormula(s_bun), new NumericConstantFormula(10), ExpressionOperator.GT),
                 new BinaryFormula(new VariableFormula(s_bun), new NumericConstantFormula(1), ExpressionOperator.ADD),
                 new BinaryFormula(new VariableFormula(s_bun), new NumericConstantFormula(2), ExpressionOperator.ADD));
 
-            var back = (BinaryFormula)RoundTrip(new BinaryFormula(left, right, ExpressionOperator.AND));
+            var back = (BinaryFormula)RoundTrip(new BinaryFormula(left, right, ExpressionOperator.ADD));
 
-            Assert.Equal(ExpressionOperator.AND, back.Operator);
+            Assert.Equal(ExpressionOperator.ADD, back.Operator);
 
             // Every node references the same variable; Variables dedupes by code.
             Assert.Single(back.Variables);
@@ -128,7 +128,7 @@ namespace Respira.Clinical.Infrastructure.Test.Util.Database
             // Postgres jsonb reorders object keys on storage (shorter keys first), so the
             // "$type" discriminator ends up after "left" in binary nodes:
             // {"left": {...}, "$type": "binary", "right": {...}, "operator": "GT"}
-            var json = "{\"left\": {\"$type\": \"numeric\", \"constant\": 1}, \"$type\": \"binary\", " +
+            const string json = "{\"left\": {\"$type\": \"numeric\", \"constant\": 1}, \"$type\": \"binary\", " +
                 "\"right\": {\"$type\": \"numeric\", \"constant\": 2}, \"operator\": \"GT\"}";
 
             var back = FormulaSerializer.Deserialize(json);
@@ -144,7 +144,7 @@ namespace Respira.Clinical.Infrastructure.Test.Util.Database
         {
             // jsonb reorders keys per object: the ternary root keeps "$type" first but its
             // binary children get "left"/"right" ahead of it, and "variable" ahead of "$type".
-            var json = "{\"$type\": \"ternary\", " +
+            const string json = "{\"$type\": \"ternary\", " +
                 "\"ifTrue\": {\"$type\": \"numeric\", \"constant\": 1}, \"ifFalse\": {\"$type\": \"numeric\", \"constant\": 2}, " +
                 "\"condition\": {\"left\": {\"$type\": \"variable\", \"variable\": {\"id\": \"00000000-0000-0000-0000-000000000000\", \"code\": \"BUN\", \"valueType\": \"Numeric\"}}, " +
                 "\"$type\": \"binary\", \"right\": {\"$type\": \"numeric\", \"constant\": 10}, \"operator\": \"GT\"}}";

@@ -269,7 +269,7 @@ namespace Respira.Clinical.Domain.Models
     public class TernaryFormula : Formula
     {
         [JsonIgnore]
-        public override ExpressionResultType ResultType => ExpressionResultType.Boolean;
+        public override ExpressionResultType ResultType => IfTrue.ResultType;
 
         [JsonIgnore]
         public override IEnumerable<VariableRef> Variables => Condition.Variables.Concat(IfTrue.Variables).Concat(IfFalse.Variables).DistinctBy(x => x.Code);
