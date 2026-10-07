@@ -29,5 +29,10 @@ namespace Respira.Clinical.Application.Features.Antibiotics.CreateAntibiotic
             antibiotic.Dosages.Add(standardDose);
             return Result<Antibiotic>.Success(ApplicationStatus.Success, antibiotic);
         }
+
+        public Result<Antibiotic> ToModel(CreateAntibioticCommand command, object? dependencies = null)
+        {
+            return ToModel(command);
+        }
     }
 }

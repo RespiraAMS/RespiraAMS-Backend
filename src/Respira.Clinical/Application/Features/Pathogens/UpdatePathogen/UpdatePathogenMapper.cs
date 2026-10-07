@@ -14,5 +14,10 @@ namespace Respira.Clinical.Application.Features.Pathogens.UpdatePathogen
             model.UpdatedAt = DateTimeOffset.UtcNow;
             return Result.Success(ApplicationStatus.Success);
         }
+
+        public Result MapModel(Pathogen model, UpdatePathogenCommand command, object? dependencies = null)
+        {
+            return MapModel(model, command);
+        }
     }
 }

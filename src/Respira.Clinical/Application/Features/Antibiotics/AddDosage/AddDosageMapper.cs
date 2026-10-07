@@ -17,5 +17,10 @@ namespace Respira.Clinical.Application.Features.Antibiotics.AddDosage
                 Crcl = command.Crcl
             });
         }
+
+        public Result<Dosage> ToModel(AddDosageCommand command, object? dependencies = null)
+        {
+            return ToModel(command);
+        }
     }
 }

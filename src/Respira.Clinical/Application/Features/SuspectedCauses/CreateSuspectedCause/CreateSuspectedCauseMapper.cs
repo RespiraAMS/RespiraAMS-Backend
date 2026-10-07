@@ -15,5 +15,10 @@ namespace Respira.Clinical.Application.Features.SuspectedCauses.CreateSuspectedC
                 TreatmentSite = command.TreatmentSite,
             });
         }
+
+        public Result<SuspectedCause> ToModel(CreateSuspectedCauseCommand command, object? dependencies = null)
+        {
+            return ToModel(command);
+        }
     }
 }

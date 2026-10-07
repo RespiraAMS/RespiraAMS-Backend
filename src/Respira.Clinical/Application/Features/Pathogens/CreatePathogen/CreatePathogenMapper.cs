@@ -15,5 +15,10 @@ namespace Respira.Clinical.Application.Features.Pathogens.CreatePathogen
                 IsAtypical = command.IsAtypical
             });
         }
+
+        public Result<Pathogen> ToModel(CreatePathogenCommand command, object? dependencies = null)
+        {
+            return ToModel(command);
+        }
     }
 }

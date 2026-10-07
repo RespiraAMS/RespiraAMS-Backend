@@ -14,5 +14,10 @@ namespace Respira.Clinical.Application.Features.SuspectedCauses.UpdateSuspectedC
             model.UpdatedAt = DateTimeOffset.UtcNow;
             return Result.Success(ApplicationStatus.Success);
         }
+
+        public Result MapModel(SuspectedCause model, UpdateSuspectedCauseCommand command, object? dependencies = null)
+        {
+            return MapModel(model, command);
+        }
     }
 }

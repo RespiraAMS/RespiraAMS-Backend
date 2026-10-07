@@ -14,5 +14,10 @@ namespace Respira.Clinical.Application.Features.Antibiotics.UpdateDosage
             model.UpdatedAt = DateTimeOffset.UtcNow;
             return Result.Success(ApplicationStatus.Success);
         }
+
+        public Result MapModel(Dosage model, UpdateDosageCommand command, object? dependencies = null)
+        {
+            return MapModel(model, command);
+        }
     }
 }

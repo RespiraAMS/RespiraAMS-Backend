@@ -14,5 +14,10 @@ namespace Respira.Clinical.Application.Features.AntibioticGroups.UpdateAntibioti
             model.UpdatedAt = DateTimeOffset.UtcNow;
             return Result.Success(ApplicationStatus.Success);
         }
+
+        public Result MapModel(AntibioticGroup model, UpdateAntibioticGroupCommand command, object? dependencies = null)
+        {
+            return MapModel(model, command);
+        }
     }
 }

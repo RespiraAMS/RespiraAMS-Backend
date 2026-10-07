@@ -43,6 +43,21 @@ namespace Respira.Clinical.Domain.Models
             return true;
         }
 
+        /// <summary>
+        /// Check if the current range is contained within the other range.
+        /// Basically, all element in this range must be in the parameter range.
+        /// </summary>
+        /// <param name="range">Container range</param>
+        /// <returns>True if is contained</returns>
+        public bool IsRangeContained(Range? range)
+        {
+            if (range is null) return false;
+
+            var lower = range.Min < Min || (range.Min == Min && (!range.IsMinExclusive || IsMinExclusive));
+            var upper = range.Max > Max || (range.Max == Max && (!range.IsMaxExclusive || IsMaxExclusive));
+            return lower && upper;
+        }
+
         public override string ToString()
         {
             if (Max == decimal.MaxValue)
