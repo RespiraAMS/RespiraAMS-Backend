@@ -26,7 +26,7 @@ There are also 3 external projects:
 ### Prerequisites
 
 - `.NET` >= 10.0
-- `Aspire` >= 13.4.6 (https://aspire.dev/get-started/install-cli/)
+- `Aspire` >= 13.4.6 (<https://aspire.dev/get-started/install-cli/>)
 - `Docker` installed and running
 
 ### Run

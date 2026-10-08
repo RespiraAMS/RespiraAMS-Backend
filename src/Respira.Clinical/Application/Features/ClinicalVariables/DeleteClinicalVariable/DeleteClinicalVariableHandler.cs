@@ -19,10 +19,13 @@ namespace Respira.Clinical.Application.Features.ClinicalVariables.DeleteClinical
                 return Result.Failure(new Error(ApplicationStatus.BadRequest, "Clinical variable not found"));
             }
 
-            // Delete all variables that reference the current variable
-            // in their prerequisite formula.
-            // Since the Where clause cannot be translated to SQL, we need to
-            // load all variables first and then filter them in memory.
+            // Find all variables that have their prerequisite formula referencing the current variable,
+            // and set it to null. 
+            // NOTE:, we won't cascade delete, because the referenced variables can still exist
+            // independently (for example, the FEMALE variable deleted shouldn't make the
+            // PREGNANT-OR-LACTATING variable meaningless. Prerequisite formulas are only used
+            // to ensure that patient symptoms are consistent/make sense, not their existing 
+            // criteria
             var variables = await context.ClinicalVariables.ToListAsync(cancellationToken);
             var references = variables
                 .Where(x => x.Prerequisite?.Variables.Select(v => v.Id).Contains(command.Id) == true)
@@ -37,14 +40,9 @@ namespace Respira.Clinical.Application.Features.ClinicalVariables.DeleteClinical
 
                 // Delete all variables that reference the current variable
                 // in their prerequisite formula
-                foreach (var reference in references)
-                {
-                    reference.IsDeleted = true;
-                    reference.DeletedAt = DateTimeOffset.UtcNow;
-                }
-
+                references.ForEach(r => r.Prerequisite = null);
                 logger.LogDebug(
-                    "Deleted {count} variables that reference the current variable {Id}",
+                    "Deleted {count} variables' prerequisite formula that reference the current variable {Id}",
                     references.Count,
                     command.Id);
             }, cancellationToken);
