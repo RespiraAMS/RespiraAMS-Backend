@@ -4,6 +4,7 @@ using Respira.Clinical.API.Dtos;
 using Respira.Clinical.Application.Features.RiskFactors.CreateRiskFactor;
 using Respira.Clinical.Application.Features.RiskFactors.DeleteRiskFactor;
 using Respira.Clinical.Application.Features.RiskFactors.GetPagedRiskFactor;
+using Respira.Clinical.Application.Features.RiskFactors.GetRiskFactorById;
 using Respira.ServiceDefaults.Contracts.Pagination;
 using Respira.ServiceDefaults.Contracts.Results;
 using Wolverine;
@@ -36,6 +37,19 @@ namespace Respira.Clinical.API.Controllers
         public async Task<IActionResult> GetPagedRiskFactor([FromQuery] GetPagedRiskFactorRequestDto req)
         {
             var result = await bus.InvokeAsync<Result<Pagination<PagedRiskFactorItem>>>(req.ToQuery());
+            return result.ToApiResponse();
+        }
+
+        [HttpGet]
+        [Route("{id:guid}")]
+        [ProducesResponseType<Result<RiskFactorResult>>(StatusCodes.Status200OK)]
+        [ProducesResponseType<Result>(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType<Result>(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType<Result>(StatusCodes.Status404NotFound)]
+        [ProducesResponseType<Result>(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetRiskFactor(Guid id)
+        {
+            var result = await bus.InvokeAsync<Result<RiskFactorResult>>(new GetRiskFactorByIdQuery { Id = id });
             return result.ToApiResponse();
         }
 

@@ -16,6 +16,20 @@ namespace Respira.Clinical.Application.Features.RiskFactors.CreateRiskFactor
     {
         public async Task<Result<CreateRiskFactorResult>> HandleAsync(CreateRiskFactorCommand command, CancellationToken cancellationToken = default)
         {
+            // Check if pathogen ID exists
+            if (await context.Pathogens.FirstOrDefaultAsync(x => x.Id == command.PathogenId, cancellationToken) is null)
+            {
+                logger.LogDebug("Pathogen not found: {Id}", command.PathogenId);
+                return Result<CreateRiskFactorResult>.Failure(new Error(ApplicationStatus.BadRequest, "Pathogen not found"));
+            }
+
+            // Check if criterion ID exists
+            if (await context.Criteria.FirstOrDefaultAsync(x => x.Id == command.CriterionId, cancellationToken) is null)
+            {
+                logger.LogDebug("Criterion not found: {Id}", command.CriterionId);
+                return Result<CreateRiskFactorResult>.Failure(new Error(ApplicationStatus.BadRequest, "Criterion not found"));
+            }
+
             // Check for unique: if any risk factor with (pathogen, criterion) exists
             if (await context.RiskFactors.AnyAsync(x => x.PathogenId == command.PathogenId && x.CriterionId == command.CriterionId, cancellationToken))
             {
