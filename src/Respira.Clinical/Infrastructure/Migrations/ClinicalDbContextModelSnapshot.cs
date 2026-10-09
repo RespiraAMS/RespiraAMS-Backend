@@ -188,8 +188,9 @@ namespace Respira.Clinical.Infrastructure.Migrations
                     b.Property<string>("CanonicalUnit")
                         .HasColumnType("text");
 
-                    b.Property<int>("Category")
-                        .HasColumnType("integer");
+                    b.Property<string>("Category")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<string>("Code")
                         .IsRequired()

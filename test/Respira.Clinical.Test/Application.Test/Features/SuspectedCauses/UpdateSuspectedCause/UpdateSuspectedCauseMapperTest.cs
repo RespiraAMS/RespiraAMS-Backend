@@ -2,6 +2,7 @@ using Respira.Clinical.Application.Contracts.Mappers;
 using Respira.Clinical.Application.Features.SuspectedCauses.UpdateSuspectedCause;
 using Respira.Clinical.Domain.Entities;
 using Respira.Clinical.Domain.Enums;
+using Respira.ServiceDefaults.Contracts.Results;
 
 namespace Respira.Application.Test.Features.SuspectedCauses.UpdateSuspectedCause
 {
@@ -24,13 +25,16 @@ namespace Respira.Application.Test.Features.SuspectedCauses.UpdateSuspectedCause
                 TreatmentSite = TreatmentSite.Outpatient,
             };
 
-            _mapper.MapModel(cause, new UpdateSuspectedCauseCommand
+            var result = _mapper.MapModel(cause, new UpdateSuspectedCauseCommand
             {
                 Id = cause.Id,
                 PathogenId = newPathogenId,
                 Severity = Severity.Severe,
                 TreatmentSite = TreatmentSite.IntensiveCareUnit,
             });
+            Assert.True(result.IsSuccess());
+            Assert.Null(result.Error);
+            Assert.Equal(ApplicationStatus.Success, result.StatusCode);
 
             Assert.Equal(newPathogenId, cause.PathogenId);
             Assert.Equal(Severity.Severe, cause.Severity);

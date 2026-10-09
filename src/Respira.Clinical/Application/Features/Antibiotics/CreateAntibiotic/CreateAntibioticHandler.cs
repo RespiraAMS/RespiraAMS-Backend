@@ -10,7 +10,7 @@ namespace Respira.Clinical.Application.Features.Antibiotics.CreateAntibiotic
 {
     public class CreateAntibioticHandler(
         IDbContext context,
-        ICreateMapper<Antibiotic, CreateAntibioticCommand> mapper,
+        ICreateMapper<CreateAntibioticCommand, Antibiotic> mapper,
         ILogger<CreateAntibioticHandler> logger)
         : ICommandHandler<CreateAntibioticCommand, Result<CreateAntibioticResult>>
     {
@@ -26,7 +26,13 @@ namespace Respira.Clinical.Application.Features.Antibiotics.CreateAntibiotic
             }
 
             // Map command to model
-            var antibiotic = mapper.ToModel(command);
+            var mapResult = mapper.ToModel(command);
+            if (mapResult.IsFailure())
+            {
+                logger.LogDebug("Failed to map command to model: {Error}", mapResult.Error);
+                return Result<CreateAntibioticResult>.Failure(mapResult.Error!);
+            }
+            var antibiotic = mapResult.Data!;
 
             // Save changes to database
             await context.Antibiotics.AddAsync(antibiotic, cancellationToken);

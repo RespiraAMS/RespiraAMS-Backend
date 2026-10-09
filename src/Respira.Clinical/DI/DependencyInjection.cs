@@ -14,11 +14,19 @@ using Respira.Clinical.Application.Features.Antibiotics.AddDosage;
 using Respira.Clinical.Application.Features.Antibiotics.CreateAntibiotic;
 using Respira.Clinical.Application.Features.Antibiotics.UpdateAntibiotic;
 using Respira.Clinical.Application.Features.Antibiotics.UpdateDosage;
+using Respira.Clinical.Application.Features.ClinicalVariables.CreateClinicalVariable;
+using Respira.Clinical.Application.Features.ClinicalVariables.UpdateClinicalVariable;
+using Respira.Clinical.Application.Features.Criteria.CreateCriterion;
+using Respira.Clinical.Application.Features.Criteria.UpdateCriterion;
 using Respira.Clinical.Application.Features.Pathogens.CreatePathogen;
 using Respira.Clinical.Application.Features.Pathogens.UpdatePathogen;
+using Respira.Clinical.Application.Features.RiskFactors.CreateRiskFactor;
+using Respira.Clinical.Application.Features.RiskFactors.UpdateRiskFactor;
+using Respira.Clinical.Application.Features.Shared.ManageFormula;
 using Respira.Clinical.Application.Features.SuspectedCauses.CreateSuspectedCause;
 using Respira.Clinical.Application.Features.SuspectedCauses.UpdateSuspectedCause;
 using Respira.Clinical.Domain.Entities;
+using Respira.Clinical.Domain.Models;
 using Respira.Clinical.Domain.Services;
 using Respira.Clinical.Infrastructure.Data;
 using Respira.Clinical.Infrastructure.Mapper;
@@ -48,19 +56,30 @@ namespace Respira.Clinical.DI
 
         public static void AddProfiles(this IServiceCollection services)
         {
-            services.AddScoped<ICreateMapper<AntibioticGroup, CreateAntibioticGroupCommand>, CreateAntibioticGroupMapper>();
+            services.AddScoped<ICreateMapper<CreateAntibioticGroupCommand, AntibioticGroup>, CreateAntibioticGroupMapper>();
             services.AddScoped<IUpdateMapper<AntibioticGroup, UpdateAntibioticGroupCommand>, UpdateAntibioticGroupMapper>();
 
-            services.AddScoped<ICreateMapper<Antibiotic, CreateAntibioticCommand>, CreateAntibioticMapper>();
-            services.AddScoped<ICreateMapper<Dosage, AddDosageCommand>, AddDosageMapper>();
+            services.AddScoped<ICreateMapper<CreateAntibioticCommand, Antibiotic>, CreateAntibioticMapper>();
+            services.AddScoped<ICreateMapper<AddDosageCommand, Dosage>, AddDosageMapper>();
             services.AddScoped<IUpdateMapper<Antibiotic, UpdateAntibioticCommand>, UpdateAntibioticMapper>();
             services.AddScoped<IUpdateMapper<Dosage, UpdateDosageCommand>, UpdateDosageMapper>();
 
-            services.AddScoped<ICreateMapper<Pathogen, CreatePathogenCommand>, CreatePathogenMapper>();
+            services.AddScoped<ICreateMapper<CreatePathogenCommand, Pathogen>, CreatePathogenMapper>();
             services.AddScoped<IUpdateMapper<Pathogen, UpdatePathogenCommand>, UpdatePathogenMapper>();
 
-            services.AddScoped<ICreateMapper<SuspectedCause, CreateSuspectedCauseCommand>, CreateSuspectedCauseMapper>();
+            services.AddScoped<ICreateMapper<CreateSuspectedCauseCommand, SuspectedCause>, CreateSuspectedCauseMapper>();
             services.AddScoped<IUpdateMapper<SuspectedCause, UpdateSuspectedCauseCommand>, UpdateSuspectedCauseMapper>();
+
+            services.AddScoped<IMapper<Application.Features.Shared.ManageFormula.FormulaDto, Formula>, FormulaMapper>();
+
+            services.AddScoped<ICreateMapper<CreateClinicalVariableCommand, ClinicalVariable>, CreateClinicalVariableMapper>();
+            services.AddScoped<IUpdateMapper<ClinicalVariable, UpdateClinicalVariableCommand>, UpdateClinicalVariableMapper>();
+
+            services.AddScoped<ICreateMapper<CreateCriterionCommand, Criterion>, CreateCriterionMapper>();
+            services.AddScoped<IUpdateMapper<Criterion, UpdateCriterionCommand>, UpdateCriterionMapper>();
+
+            services.AddScoped<ICreateMapper<CreateRiskFactorCommand, RiskFactor>, CreateRiskFactorMapper>();
+            services.AddScoped<IUpdateMapper<RiskFactor, UpdateRiskFactorCommand>, UpdateRiskFactorMapper>();
         }
 
         public static void AddFluentValidators(this IServiceCollection services)

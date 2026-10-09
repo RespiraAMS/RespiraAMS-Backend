@@ -4,10 +4,14 @@ using Respira.Clinical.Domain.Entities;
 using Respira.ServiceDefaults.Contracts.CQRS;
 using Respira.ServiceDefaults.Contracts.Results;
 using Microsoft.EntityFrameworkCore;
+using Respira.Clinical.Application.Contracts.Mappers;
 
 namespace Respira.Clinical.Application.Features.Treatments.UpdateTreatment
 {
-    public class UpdateTreatmentHandler(IDbContext context, ILogger<UpdateTreatmentHandler> logger)
+    public class UpdateTreatmentHandler(
+        IDbContext context,
+        IUpdateMapper<Treatment, UpdateTreatmentCommand> mapper,
+        ILogger<UpdateTreatmentHandler> logger)
         : ICommandHandler<UpdateTreatmentCommand, Result>
     {
         public async Task<Result> HandleAsync(UpdateTreatmentCommand command, CancellationToken cancellationToken = default)
@@ -62,8 +66,12 @@ namespace Respira.Clinical.Application.Features.Treatments.UpdateTreatment
             }
 
             // Map from command to entities
-            treatment.Severity = command.Severity;
-            treatment.TreatmentSite = command.TreatmentSite;
+            var mapResult = mapper.MapModel(treatment, command);
+            if (mapResult.IsFailure())
+            {
+                logger.LogDebug("Failed to map command to model: {Error}", mapResult.Error);
+                return Result.Failure(mapResult.Error!);
+            }
 
             // Clean all the join tables data
             treatment.Medicines.Clear();
@@ -81,8 +89,6 @@ namespace Respira.Clinical.Application.Features.Treatments.UpdateTreatment
                 return composition;
             });
             await context.MedicineCompositions.AddRangeAsync(compositions);
-
-            treatment.UpdatedAt = DateTimeOffset.UtcNow;
 
             // Save changes to database
             await context.SaveChangesAsync(cancellationToken);

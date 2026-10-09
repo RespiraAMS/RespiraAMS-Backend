@@ -42,7 +42,12 @@ namespace Respira.Clinical.Application.Features.Antibiotics.UpdateDosage
             }
 
             // Map command to model
-            mapper.MapModel(dosage, command);
+            var mapResult = mapper.MapModel(dosage, command);
+            if (mapResult.IsFailure())
+            {
+                logger.LogDebug("Failed to map command to model: {Error}", mapResult.Error);
+                return Result.Failure(mapResult.Error!);
+            }
 
             // Validate dosage
             var validationResult = Antibiotic.IsAntibioticDosageValid(dosages);

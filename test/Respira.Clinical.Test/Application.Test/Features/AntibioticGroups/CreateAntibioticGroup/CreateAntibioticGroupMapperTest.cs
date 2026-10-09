@@ -1,12 +1,13 @@
 using Respira.Clinical.Application.Contracts.Mappers;
 using Respira.Clinical.Application.Features.AntibioticGroups.CreateAntibioticGroup;
 using Respira.Clinical.Domain.Entities;
+using Respira.ServiceDefaults.Contracts.Results;
 
 namespace Respira.Application.Test.Features.AntibioticGroups.CreateAntibioticGroup
 {
     public class CreateAntibioticGroupMapperTest
     {
-        private readonly ICreateMapper<AntibioticGroup, CreateAntibioticGroupCommand> _mapper =
+        private readonly ICreateMapper<CreateAntibioticGroupCommand, AntibioticGroup> _mapper =
             new CreateAntibioticGroupMapper();
 
         #region Happy path
@@ -22,7 +23,14 @@ namespace Respira.Application.Test.Features.AntibioticGroups.CreateAntibioticGro
                 ParentId = parentId,
             };
 
-            var model = _mapper.ToModel(command);
+            var result = _mapper.ToModel(command);
+
+            Assert.True(result.IsSuccess());
+            Assert.Null(result.Error);
+            Assert.Equal(ApplicationStatus.Success, result.StatusCode);
+            Assert.NotNull(result.Data);
+
+            var model = result.Data;
 
             Assert.Equal(command.Name, model.Name);
             Assert.Equal(command.Description, model.Description);
@@ -41,8 +49,13 @@ namespace Respira.Application.Test.Features.AntibioticGroups.CreateAntibioticGro
                 ParentId = null,
             };
 
-            var model = _mapper.ToModel(command);
+            var result = _mapper.ToModel(command);
+            Assert.True(result.IsSuccess());
+            Assert.Null(result.Error);
+            Assert.Equal(ApplicationStatus.Success, result.StatusCode);
+            Assert.NotNull(result.Data);
 
+            var model = result.Data;
             Assert.Equal(command.Name, model.Name);
             Assert.Equal(command.Description, model.Description);
             Assert.Null(model.ParentId);

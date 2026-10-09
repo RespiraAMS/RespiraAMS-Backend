@@ -48,7 +48,13 @@ namespace Respira.Clinical.Domain.Entities
         /// <summary>
         /// Prerequisite formula for this variable. For example,
         /// for a PREGNANT-OR-LACTATING variable to be true, then
-        /// FEMALE must be true
+        /// FEMALE must be true.
+        /// NOTE that, prerequisite only used to make sure that the observation
+        /// value won't contradict when performing diagnosis, it didn't use for
+        /// existing criteria. For example, deleting FEMALE wouldn't make
+        /// PREGNANT-OR-LACTATING deleted, its prerequisite simply delete (and
+        /// rebuild again, if the prerequisite is a complex formula involves multiple
+        /// variables, but client must actively rebuild the formula)
         /// </summary>
         public Formula? Prerequisite { get; set; }
 
@@ -89,7 +95,14 @@ namespace Respira.Clinical.Domain.Entities
 
     public class CategoricalClinicalVariable : ClinicalVariable
     {
-        public List<string> AcceptedValues { get; set; } = [];
+        /// <summary>
+        /// The categorical values that the value can be
+        /// </summary>
+        public List<string> AcceptedValues
+        {
+            get;
+            set { field = [.. value.Select(SanitizeCategory)]; }
+        } = [];
 
         public override ClinicalValueType ValueType => ClinicalValueType.Categorical;
 

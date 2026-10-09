@@ -151,6 +151,9 @@ namespace Respira.Clinical.Infrastructure.Data
             modelBuilder.Entity<ClinicalVariable>()
                 .Property(x => x.Prerequisite)
                 .HasFormulaConversion();
+            modelBuilder.Entity<ClinicalVariable>()
+                .Property(x => x.Category)
+                .HasConversion<string>();
             modelBuilder.Entity<NumericClinicalVariable>()
                 .OwnsOne(x => x.AcceptedRange, builder => builder.ToJson());
             modelBuilder.Entity<NumericClinicalVariable>()

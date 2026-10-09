@@ -34,7 +34,12 @@ namespace Respira.Clinical.Application.Features.Antibiotics.UpdateAntibiotic
             }
 
             // Map command to model
-            mapper.MapModel(antibiotic, command);
+            var mapResult = mapper.MapModel(antibiotic, command);
+            if (mapResult.IsFailure())
+            {
+                logger.LogDebug("Failed to map command to model: {Error}", mapResult.Error);
+                return Result.Failure(mapResult.Error!);
+            }
 
             // Save changes to database
             await context.SaveChangesAsync(cancellationToken);

@@ -1,7 +1,10 @@
+using Respira.ServiceDefaults.Contracts.Results;
+
 namespace Respira.Clinical.Application.Contracts.Mappers
 {
-    public interface ICreateMapper<out TModel, in TCreateCommand>
+    public interface ICreateMapper<TCreateCommand, TModel>
     {
-        TModel ToModel(TCreateCommand command);
+        Result<TModel> ToModel(TCreateCommand command);
+        Result<TModel> ToModel(TCreateCommand command, object? dependencies = null);
     }
 }

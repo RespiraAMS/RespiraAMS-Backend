@@ -2,13 +2,13 @@ using Respira.Clinical.Application.Contracts.Mappers;
 using Respira.Clinical.Application.Features.Antibiotics.CreateAntibiotic;
 using Respira.Clinical.Domain.Entities;
 using Respira.Clinical.Domain.Enums;
+using Respira.ServiceDefaults.Contracts.Results;
 
 namespace Respira.Application.Test.Features.Antibiotics.CreateAntibiotic
 {
     public class CreateAntibioticMapperTest
     {
-        private readonly ICreateMapper<Antibiotic, CreateAntibioticCommand> _mapper =
-            new CreateAntibioticMapper();
+        private readonly ICreateMapper<CreateAntibioticCommand, Antibiotic> _mapper = new CreateAntibioticMapper();
 
         #region Happy path
 
@@ -25,7 +25,13 @@ namespace Respira.Application.Test.Features.Antibiotics.CreateAntibiotic
                 StandardDose = "500 mg orally every 8 hours",
             };
 
-            var model = _mapper.ToModel(command);
+            var result = _mapper.ToModel(command);
+            Assert.True(result.IsSuccess());
+            Assert.Null(result.Error);
+            Assert.Equal(ApplicationStatus.Success, result.StatusCode);
+            Assert.NotNull(result.Data);
+
+            var model = result.Data;
 
             Assert.Equal("Amoxicillin", model.Name);
             Assert.Equal(groupId, model.AntibioticGroupId);

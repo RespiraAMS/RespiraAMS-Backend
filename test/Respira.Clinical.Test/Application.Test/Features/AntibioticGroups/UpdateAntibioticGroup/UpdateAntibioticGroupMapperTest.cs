@@ -1,6 +1,7 @@
 using Respira.Clinical.Application.Contracts.Mappers;
 using Respira.Clinical.Application.Features.AntibioticGroups.UpdateAntibioticGroup;
 using Respira.Clinical.Domain.Entities;
+using Respira.ServiceDefaults.Contracts.Results;
 
 namespace Respira.Application.Test.Features.AntibioticGroups.UpdateAntibioticGroup
 {
@@ -31,7 +32,10 @@ namespace Respira.Application.Test.Features.AntibioticGroups.UpdateAntibioticGro
                 ParentId = parentId,
             };
 
-            _mapper.MapModel(model, command);
+            var result = _mapper.MapModel(model, command);
+            Assert.True(result.IsSuccess());
+            Assert.Null(result.Error);
+            Assert.Equal(ApplicationStatus.Success, result.StatusCode);
 
             Assert.Equal(command.Name, model.Name);
             Assert.Equal(command.Description, model.Description);
@@ -58,7 +62,10 @@ namespace Respira.Application.Test.Features.AntibioticGroups.UpdateAntibioticGro
                 ParentId = null,
             };
 
-            _mapper.MapModel(model, command);
+            var result = _mapper.MapModel(model, command);
+            Assert.True(result.IsSuccess());
+            Assert.Null(result.Error);
+            Assert.Equal(ApplicationStatus.Success, result.StatusCode);
 
             Assert.Equal(command.Name, model.Name);
             Assert.Equal(command.Description, model.Description);

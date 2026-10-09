@@ -4,10 +4,14 @@ using Respira.ServiceDefaults.Contracts.Results;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Respira.Clinical.Domain.Entities;
+using Respira.Clinical.Application.Contracts.Mappers;
 
 namespace Respira.Clinical.Application.Features.Treatments.CreateTreatment
 {
-    public class CreateTreatmentHandler(IDbContext context, ILogger<CreateTreatmentHandler> logger)
+    public class CreateTreatmentHandler(
+        IDbContext context,
+        ICreateMapper<CreateTreatmentCommand, Treatment> mapper,
+        ILogger<CreateTreatmentHandler> logger)
         : ICommandHandler<CreateTreatmentCommand, Result<CreateTreatmentResult>>
     {
         public async Task<Result<CreateTreatmentResult>> HandleAsync(CreateTreatmentCommand command, CancellationToken cancellationToken = default)
@@ -50,11 +54,13 @@ namespace Respira.Clinical.Application.Features.Treatments.CreateTreatment
             }
 
             // Map from command to entities
-            var treatment = new Treatment
+            var mapResult = mapper.ToModel(command);
+            if (mapResult.IsFailure())
             {
-                Severity = command.Severity,
-                TreatmentSite = command.TreatmentSite,
-            };
+                logger.LogDebug("Failed to map command to model: {Error}", mapResult.Error);
+                return Result<CreateTreatmentResult>.Failure(mapResult.Error!);
+            }
+            var treatment = mapResult.Data!;
             context.UpdateRelations(treatment.Pathogens, command.Pathogens);
             context.UpdateRelations(treatment.Criteria, command.Criteria);
 

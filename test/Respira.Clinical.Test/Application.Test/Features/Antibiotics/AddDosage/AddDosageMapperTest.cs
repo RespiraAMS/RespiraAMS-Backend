@@ -2,13 +2,14 @@ using Respira.Clinical.Application.Contracts.Mappers;
 using Respira.Clinical.Application.Features.Antibiotics.AddDosage;
 using Respira.Clinical.Domain.Entities;
 using Respira.Clinical.Domain.Enums;
+using Respira.ServiceDefaults.Contracts.Results;
 using Range = Respira.Clinical.Domain.Models.Range;
 
 namespace Respira.Application.Test.Features.Antibiotics.AddDosage
 {
     public class AddDosageMapperTest
     {
-        private readonly ICreateMapper<Dosage, AddDosageCommand> _mapper = new AddDosageMapper();
+        private readonly ICreateMapper<AddDosageCommand, Dosage> _mapper = new AddDosageMapper();
 
         #region Happy path
 
@@ -24,7 +25,13 @@ namespace Respira.Application.Test.Features.Antibiotics.AddDosage
                 Crcl = null,
             };
 
-            var model = _mapper.ToModel(command);
+            var result = _mapper.ToModel(command);
+            Assert.True(result.IsSuccess());
+            Assert.Null(result.Error);
+            Assert.Equal(ApplicationStatus.Success, result.StatusCode);
+            Assert.NotNull(result.Data);
+
+            var model = result.Data;
 
             // Base generates the ID so the handler can return it right after saving
             Assert.NotEqual(Guid.Empty, model.Id);
@@ -47,7 +54,13 @@ namespace Respira.Application.Test.Features.Antibiotics.AddDosage
                 Crcl = crcl,
             };
 
-            var model = _mapper.ToModel(command);
+            var result = _mapper.ToModel(command);
+            Assert.True(result.IsSuccess());
+            Assert.Null(result.Error);
+            Assert.Equal(ApplicationStatus.Success, result.StatusCode);
+            Assert.NotNull(result.Data);
+
+            var model = result.Data;
 
             Assert.NotEqual(Guid.Empty, model.Id);
             Assert.Equal(antibioticId, model.AntibioticId);
