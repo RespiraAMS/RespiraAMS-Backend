@@ -254,6 +254,64 @@ namespace Respira.Clinical.Domain.Models
 
         public override Expression ToExpression(IEnumerable<ClinicalObservation> observations)
         {
+            // Handle the case for AND, OR operators
+            // For AND, if one operand is false, the result is false
+            // For OR, if one operand is true, the result is true
+            // So, in some rare cases, even if the observations are not supplied enough,
+            // the expression can still be evaluated
+
+            if (Operator == ExpressionOperator.AND)
+            {
+                // Check on left
+                try
+                {
+                    if (!(bool)Left.ToExpression(observations).Evaluate())
+                    {
+                        return new BooleanExpression(false);
+                    }
+                }
+                catch (ArgumentException) { }
+
+                // Check on right
+                try
+                {
+                    if (!(bool)Right.ToExpression(observations).Evaluate())
+                    {
+                        return new BooleanExpression(false);
+                    }
+                }
+                catch (ArgumentException) { }
+
+                // If neither left nor right is false, then we simply fall to the default
+                // case, which can either be evaluated (if all required observations are supplied) or
+                // throw if not enough observations are supplied
+            }
+
+            if (Operator == ExpressionOperator.OR)
+            {
+                // Check on left
+                try
+                {
+                    if ((bool)Left.ToExpression(observations).Evaluate())
+                    {
+                        return new BooleanExpression(true);
+                    }
+                }
+                catch (ArgumentException) { }
+
+                // Check on right
+                try
+                {
+                    if ((bool)Right.ToExpression(observations).Evaluate())
+                    {
+                        return new BooleanExpression(true);
+                    }
+                }
+                catch (ArgumentException) { }
+
+                // Same cases with AND
+            }
+
             return new BinaryExpression(Left.ToExpression(observations), Right.ToExpression(observations), Operator);
         }
 
@@ -312,7 +370,16 @@ namespace Respira.Clinical.Domain.Models
         }
         public override Expression ToExpression(IEnumerable<ClinicalObservation> observations)
         {
-            return new TernaryExpression(Condition.ToExpression(observations), IfTrue.ToExpression(observations), IfFalse.ToExpression(observations));
+            // Same cases with binary expression AND or OR, ternary expression can also got a special
+            // case: if condition true, only if true branch is required and vice versa.
+            // So, we will just build a dump expression on the unreachable branch so that
+            // the expression builder won't crash, while preserve the result since it's unreachable
+
+            // Condition and reachable branch are required, so we don't use try catch here so that it can throw
+            var condition = (bool)Condition.ToExpression(observations).Evaluate();
+            return condition
+                ? new TernaryExpression(Condition.ToExpression(observations), IfTrue.ToExpression(observations), IfTrue.ToExpression(observations))
+                : new TernaryExpression(Condition.ToExpression(observations), IfFalse.ToExpression(observations), IfFalse.ToExpression(observations));
         }
 
         public override string ToString()

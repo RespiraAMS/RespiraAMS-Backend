@@ -247,7 +247,7 @@ namespace Respira.Clinical.Domain.Models
     /// </summary>
     public class TernaryExpression : Expression
     {
-        public override ExpressionResultType ResultType => ExpressionResultType.Numeric;
+        public override ExpressionResultType ResultType => IfTrue.ResultType;
 
         /// <summary>
         /// Condition expression
@@ -292,7 +292,14 @@ namespace Respira.Clinical.Domain.Models
 
         public override object Evaluate()
         {
-            return (bool)Condition.Evaluate() ? (decimal)IfTrue.Evaluate() : (decimal)IfFalse.Evaluate();
+            return ResultType switch
+            {
+                ExpressionResultType.Numeric => (bool)Condition.Evaluate() ? (decimal)IfTrue.Evaluate() : (decimal)IfFalse.Evaluate(),
+                ExpressionResultType.String => (bool)Condition.Evaluate() ? (string)IfTrue.Evaluate() : (string)IfFalse.Evaluate(),
+                // If result type is boolean, then it the expression must be built while bypass the constructor
+                // which is an exception
+                _ => throw new Exception($"Unexpected ternary result type: {ResultType}"),
+            };
         }
     }
 }

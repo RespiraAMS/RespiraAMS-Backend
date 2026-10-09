@@ -35,7 +35,7 @@ namespace Respira.Clinical.Domain.Entities
 
         public bool IsFactorSastified(IEnumerable<ClinicalObservation> observations)
         {
-            var result = Criterion.IsCriterionSatisfied(observations);
+            var result = Criterion.IsCriterionSastisfied(observations);
             if (result is bool x)
             {
                 return x;

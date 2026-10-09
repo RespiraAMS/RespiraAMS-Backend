@@ -40,7 +40,7 @@ namespace Respira.Clinical.Domain.Services
         /// Render an evidence entry for a criterion. A formula cannot be evaluated when the
         /// observations do not contain every variable it uses, so the evidence reports the
         /// missing variables instead of throwing (the score itself is already handled by
-        /// <see cref="Criterion.IsCriterionSatisfied(IEnumerable{ClinicalObservation})"/>).
+        /// <see cref="Criterion.IsCriterionSastisfied(IEnumerable{ClinicalObservation})"/>).
         /// The entry is multi-line (<c>\n</c> between sections, <c>\t</c> per observation);
         /// clients render it with preserved whitespace.
         /// </summary>
@@ -299,7 +299,7 @@ namespace Respira.Clinical.Domain.Services
                 }
 
                 // Evaluate major criteria
-                var isSatisfied = rule.Criterion.IsCriterionSatisfied(observations);
+                var isSatisfied = rule.Criterion.IsCriterionSastisfied(observations);
                 logger.LogDebug($"Evaluate major criteria for {metrics.Name}/{rule.Criterion.Name}: {isSatisfied}");
 
                 evidences.Add(BuildEvidence($"{metrics.Name} - {rule.Criterion.Name}", rule.Criterion.Formula, observations));
@@ -318,7 +318,7 @@ namespace Respira.Clinical.Domain.Services
                 }
 
                 // Evaluate minor criteria
-                var isSatisfied = rule.Criterion.IsCriterionSatisfied(observations);
+                var isSatisfied = rule.Criterion.IsCriterionSastisfied(observations);
                 logger.LogDebug($"Evaluate minor criteria for {metrics.Name}/{rule.Criterion.Name}: {isSatisfied}");
 
                 evidences.Add(BuildEvidence($"{metrics.Name} - {rule.Criterion.Name}", rule.Criterion.Formula, observations));
