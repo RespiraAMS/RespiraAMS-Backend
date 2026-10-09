@@ -8,7 +8,7 @@ using X.PagedList.EF;
 
 namespace Respira.Clinical.Application.Features.Criteria.GetPagedCriterion
 {
-    public record GetPagedCriterionHandler(IDbContext context, IPaginationFactory factory)
+    public class GetPagedCriterionHandler(IDbContext context, IPaginationFactory factory)
         : IQueryHandler<GetPagedCriterionQuery, Result<Pagination<PagedCriterionItem>>>
     {
         public async Task<Result<Pagination<PagedCriterionItem>>> HandleAsync(GetPagedCriterionQuery query, CancellationToken cancellationToken = default)

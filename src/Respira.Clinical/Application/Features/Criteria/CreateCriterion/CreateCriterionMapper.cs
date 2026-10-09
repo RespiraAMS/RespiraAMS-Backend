@@ -1,6 +1,7 @@
 using Respira.Clinical.Application.Contracts.Mappers;
 using Respira.Clinical.Application.Features.Shared.ManageFormula;
 using Respira.Clinical.Domain.Entities;
+using Respira.Clinical.Domain.Enums;
 using Respira.Clinical.Domain.Models;
 using Respira.ServiceDefaults.Contracts.Results;
 
@@ -23,11 +24,14 @@ namespace Respira.Clinical.Application.Features.Criteria.CreateCriterion
                 return Result<Criterion>.Failure(formulaMapResult.Error!);
             }
 
-            return Result<Criterion>.Success(ApplicationStatus.Success, new Criterion
+            // Since the Criterion enforce the rule that, a criterion formula must evaluate to a boolean value,
+            // which we cannot check in the handler, so we will handler this case in the mapper
+            if (formulaMapResult.Data!.ResultType != ExpressionResultType.Boolean)
             {
-                Name = command.Name,
-                Formula = formulaMapResult.Data!
-            });
+                return Result<Criterion>.Failure(new Error(ApplicationStatus.BadRequest, "Formula result type should be boolean"));
+            }
+
+            return Result<Criterion>.Success(ApplicationStatus.Success, new Criterion(command.Name, formulaMapResult.Data!));
         }
     }
 }

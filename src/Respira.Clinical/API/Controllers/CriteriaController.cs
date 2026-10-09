@@ -5,6 +5,7 @@ using Respira.Clinical.Application.Features.Criteria.CreateCriterion;
 using Respira.Clinical.Application.Features.Criteria.DeleteCriterion;
 using Respira.Clinical.Application.Features.Criteria.GetCriteria;
 using Respira.Clinical.Application.Features.Criteria.GetPagedCriterion;
+using Respira.Clinical.Application.Features.Criteria.GetReferencedEntities;
 using Respira.ServiceDefaults.Contracts.Pagination;
 using Respira.ServiceDefaults.Contracts.Results;
 using Wolverine;
@@ -73,6 +74,19 @@ namespace Respira.Clinical.API.Controllers
         public async Task<IActionResult> DeleteCriterion(Guid id)
         {
             var result = await bus.InvokeAsync<Result>(new DeleteCriterionCommand { Id = id });
+            return result.ToApiResponse();
+        }
+
+        [HttpGet]
+        [Route("{id:guid}/referenced-entities")]
+        [ProducesResponseType<Result<ReferencedEntitiesResult>>(StatusCodes.Status200OK)]
+        [ProducesResponseType<Result>(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType<Result>(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType<Result>(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType<Result>(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetReferencedEntities(Guid id)
+        {
+            var result = await bus.InvokeAsync<Result<ReferencedEntitiesResult>>(new GetReferencedEntitiesQuery { Id = id });
             return result.ToApiResponse();
         }
     }

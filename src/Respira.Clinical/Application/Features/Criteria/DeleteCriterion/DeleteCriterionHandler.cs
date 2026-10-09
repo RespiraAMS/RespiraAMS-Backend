@@ -40,18 +40,14 @@ namespace Respira.Clinical.Application.Features.Criteria.DeleteCriterion
                         .SetProperty(mr => mr.IsDeleted, true)
                         .SetProperty(mr => mr.DeletedAt, DateTimeOffset.UtcNow), cancellationToken);
 
-                // Delete all treatments that used this criterion
-                var treatmentCount = await context.Treatments
-                    .Where(x => x.Criteria.Select(x => x.Id).Contains(command.Id))
-                    .ExecuteUpdateAsync(x => x
-                        .SetProperty(t => t.IsDeleted, true)
-                        .SetProperty(t => t.DeletedAt, DateTimeOffset.UtcNow), cancellationToken);
+                // NOTE: Unlike RiskFactor and MetricsRule, which depend heavy to criterion (risk factor and
+                // metrics rules are simply just criteria with additional information), treatment is
+                // a strong entity that can exist independently, so it won't be cascade deleted
 
                 logger.LogDebug("Cascade delete criterion success: {detail}", new
                 {
                     factorCount,
                     ruleCount,
-                    treatmentCount
                 });
             }, cancellationToken);
 

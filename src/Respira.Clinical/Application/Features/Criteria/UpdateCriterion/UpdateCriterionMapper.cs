@@ -1,6 +1,7 @@
 using Respira.Clinical.Application.Contracts.Mappers;
 using Respira.Clinical.Application.Features.Shared.ManageFormula;
 using Respira.Clinical.Domain.Entities;
+using Respira.Clinical.Domain.Enums;
 using Respira.Clinical.Domain.Models;
 using Respira.ServiceDefaults.Contracts.Results;
 
@@ -23,8 +24,14 @@ namespace Respira.Clinical.Application.Features.Criteria.UpdateCriterion
                 return Result.Failure(formulaMapResult.Error!);
             }
 
+            var formula = formulaMapResult.Data!;
+            if (formula.ResultType != ExpressionResultType.Boolean)
+            {
+                return Result.Failure(new Error(ApplicationStatus.BadRequest, "Formula result type should be boolean"));
+            }
+
             model.Name = command.Name;
-            model.Formula = formulaMapResult.Data!;
+            model.Formula = formula;
             model.UpdatedAt = DateTimeOffset.UtcNow;
             return Result.Success(ApplicationStatus.Success);
         }
