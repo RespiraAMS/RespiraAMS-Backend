@@ -48,7 +48,7 @@ namespace Respira.Clinical.Domain.Entities
         /// <summary>
         /// Prerequisite formula for this variable. For example,
         /// for a PREGNANT-OR-LACTATING variable to be true, then
-        /// FEMALE must be true.
+        /// FEMALE must be true, or PREGNANT-OR-LACTATING imply FEMALE (not vice versa)
         /// NOTE that, prerequisite only used to make sure that the observation
         /// value won't contradict when performing diagnosis, it didn't use for
         /// existing criteria. For example, deleting FEMALE wouldn't make

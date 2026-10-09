@@ -209,6 +209,7 @@ namespace Respira.Clinical.Infrastructure.Data
                 .HasForeignKey(x => x.CriterionId);
             modelBuilder.Entity<ScoringRule>().Ignore(x => x.Variables);
             modelBuilder.Entity<ScoringRule>().Property(x => x.ScoreFunction).HasFormulaConversion();
+            modelBuilder.Entity<MajorMinorRule>().Ignore(x => x.Variables);
 
             // Config on antibiotic group
             modelBuilder.Entity<AntibioticGroup>().ToTable("antibiotic_groups");
