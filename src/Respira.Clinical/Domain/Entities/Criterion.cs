@@ -49,27 +49,25 @@ namespace Respira.Clinical.Domain.Entities
         /// </summary>
         /// <param name="observations">Clinical observation</param>
         /// <returns>True if criterion is satisfied, false otherwise</returns>
-        public bool IsCriterionSatisfied(IEnumerable<ClinicalObservation> observations)
+        public bool IsCriterionSastisfied(IEnumerable<ClinicalObservation> observations)
         {
-            // Check if all the variables needed by this criterion are present.
-            // If any missing, this criterion will result to false
-            // NOTE: even though OR operation with 1 operand can be evaluated to true,
-            // or AND operation with 1 operand can be evaluated to false, 
-            // can theoratically works, we will NOT support this case to keep the logic simple
-            // and consistent with the other expressions
-
-            if (Variables.Any(v => !observations.Any(o => o.Variable.Code.Equals(v.Code))))
+            try
             {
+                var result = Formula.ToExpression(observations).Evaluate();
+                if (result is bool x)
+                {
+                    return x;
+                }
+
+                // The only way to reach this if the criterion is constructed not using
+                // constructor
+                throw new Exception($"Formula result type should be boolean, but get {result.GetType()}");
+            }
+            catch (ArgumentException)
+            {
+                // If the formula failed to construct/evaluate, then this criterion is not sastisfied
                 return false;
             }
-
-            var result = Formula.ToExpression(observations).Evaluate();
-            if (result is bool x)
-            {
-                return x;
-            }
-
-            throw new Exception($"Formula result type should be boolean, but get {result.GetType()}");
         }
     }
 }

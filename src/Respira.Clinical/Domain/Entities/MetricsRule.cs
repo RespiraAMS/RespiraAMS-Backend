@@ -61,7 +61,7 @@ namespace Respira.Clinical.Domain.Entities
             // }
 
             // Check if the result is safe to parse
-            var sastified = Criterion.IsCriterionSatisfied(observations);
+            var sastified = Criterion.IsCriterionSastisfied(observations);
             if (sastified is bool x)
             {
                 // Check if the obsevations provide enoughs information to evaluate the score function
