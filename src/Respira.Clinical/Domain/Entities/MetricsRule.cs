@@ -91,5 +91,11 @@ namespace Respira.Clinical.Domain.Entities
     public class MajorMinorRule : MetricsRule
     {
         public required bool IsMajor { get; set; }
+
+        /// <summary>
+        /// The variables used by this major/minor rule. This is not database attribute,
+        /// but runtime attribute
+        /// </summary>
+        public IEnumerable<VariableRef> Variables => Criterion.Variables.DistinctBy(x => x.Code);
     }
 }

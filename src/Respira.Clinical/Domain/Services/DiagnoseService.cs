@@ -48,10 +48,16 @@ namespace Respira.Clinical.Domain.Services
         /// <param name="formula">Criterion formula</param>
         /// <param name="observations">Clinical observations</param>
         /// <returns>Evidence string</returns>
-        private static string BuildEvidence(string source, Formula formula, IEnumerable<ClinicalObservation> observations)
+        private static string BuildEvidence(
+            string source,
+            Formula formula,
+            IEnumerable<VariableRef> variablesUsed,
+            IEnumerable<ClinicalObservation> observations,
+            decimal? score = null,
+            bool? isMajor = null)
         {
             var observationList = observations
-                .Where(x => formula.Variables.Select(x => x.Code).ToList().Contains(x.Variable.Code))
+                .Where(x => variablesUsed.Select(x => x.Code).Contains(x.Variable.Code))
                 .ToList();
 
             var missing = formula.Variables
@@ -63,11 +69,17 @@ namespace Respira.Clinical.Domain.Services
                 ? string.Join("\n", observationList.Select(FormatObservation))
                 : "\t(none)";
 
+            // If score is provided
+            var scoreValue = score is not null ? $"\tScore: {score.Value}" : "";
+
+            // If isMajor is provided
+            var isMajorValue = isMajor is not null ? $"\tIs Major criteria: {isMajor.Value}" : "";
+
             var value = missing.Count > 0
                 ? $"not evaluated (missing {string.Join(", ", missing)})"
                 : formula.ToExpression(observationList).Evaluate();
 
-            return $"{source}:\nFormula: {formula}\nVariables:\n{variables}\nValue: {value}";
+            return $"{source}:\nFormula: {formula}\nVariables:\n{variables}\nValue: {value}\n{scoreValue}\n{isMajorValue}";
         }
 
         /// <summary>
@@ -94,7 +106,12 @@ namespace Respira.Clinical.Domain.Services
                 logger.LogDebug($"Calculated score for {metrics.Name}/{rule.Criterion.Name}: {score}");
 
                 // Add evidence
-                evidences.Add(BuildEvidence($"{metrics.Name} - {rule.Criterion.Name}", rule.Criterion.Formula, observations));
+                evidences.Add(BuildEvidence(
+                    $"{metrics.Name} - {rule.Criterion.Name}",
+                    rule.Criterion.Formula,
+                    rule.Variables,
+                    observations,
+                    score: score));
 
                 // Return score
                 return score;
@@ -302,7 +319,12 @@ namespace Respira.Clinical.Domain.Services
                 var isSatisfied = rule.Criterion.IsCriterionSastisfied(observations);
                 logger.LogDebug($"Evaluate major criteria for {metrics.Name}/{rule.Criterion.Name}: {isSatisfied}");
 
-                evidences.Add(BuildEvidence($"{metrics.Name} - {rule.Criterion.Name}", rule.Criterion.Formula, observations));
+                evidences.Add(BuildEvidence(
+                    $"{metrics.Name} - {rule.Criterion.Name}",
+                    rule.Criterion.Formula,
+                    rule.Variables,
+                    observations,
+                    isMajor: true));
                 return isSatisfied;
             });
 
@@ -321,7 +343,12 @@ namespace Respira.Clinical.Domain.Services
                 var isSatisfied = rule.Criterion.IsCriterionSastisfied(observations);
                 logger.LogDebug($"Evaluate minor criteria for {metrics.Name}/{rule.Criterion.Name}: {isSatisfied}");
 
-                evidences.Add(BuildEvidence($"{metrics.Name} - {rule.Criterion.Name}", rule.Criterion.Formula, observations));
+                evidences.Add(BuildEvidence(
+                    $"{metrics.Name} - {rule.Criterion.Name}",
+                    rule.Criterion.Formula,
+                    rule.Criterion.Variables,
+                    observations,
+                    isMajor: false));
                 return isSatisfied;
             });
 
@@ -397,7 +424,11 @@ namespace Respira.Clinical.Domain.Services
                 // Calculate matched risk factors
                 var matched = pathogen.RiskFactors.Count(r =>
                 {
-                    evidences.Add(BuildEvidence($"{pathogen.Name} - {r.Criterion.Name}", r.Criterion.Formula, observations));
+                    evidences.Add(BuildEvidence(
+                        $"{pathogen.Name} - {r.Criterion.Name}",
+                        r.Criterion.Formula,
+                        r.Criterion.Variables,
+                        observations));
                     return r.IsFactorSastified(observations);
                 });
 

@@ -24,15 +24,23 @@
                 "unit": "year"
             }
         },
+        // Gender should be categorical, even if it can be express as boolean.
+        // Boolean variable has a characateristic: if it's false, it doesn't matter.
+        // But gender does matter whatever its value is, so categorical would suit more
+        // semantically.
         {
             "id": "00000000-0000-0000-0000-100000000002",
             "name": "Giới tính",
-            "code": "FEMALE",
+            "code": "GENDER",
             "description": "Bệnh nhân này có phải giới tính nữ không?",
             "valueType": "Boolean",
             "canonicalUnit": null,
             "isRequired": true,
-            "category": "PersonalInformation"
+            "category": "PersonalInformation",
+            "acceptedValues": [
+                "MALE",
+                "FEMALE"
+            ]
         },
         {
             "id": "00000000-0000-0000-0000-100000000003",
@@ -755,6 +763,11 @@
         // Người già thì chưa chắc đã yếu, nên đây sẽ là một biến riêng thay vì tính toán từ biến AGE.
         // Tuy nhiên, trong code sẽ có validation giữa 2 biến này (theo tiêu chuẩn WHO, AGE >= 60 sẽ
         // được xem là người già)
+        // Trong toán tử boolean, nó sẽ được diễn tả thành phép kéo theo (implication)
+        // WEAK-ELDERLY -> (AGE >= 60): người già yếu thì chắc chắn già, nhưng già thì chưa chắc yếu 
+        // Vì trong code không hỗ trợ phép kéo theo, và phép kéo theo có thể biễu diễn dưới dạng
+        // AND, OR, NOT, nên prerequisite của biến này sẽ là
+        // WEAK-ELDERLY -> (AGE >= 60) = Unary(WEAK-ELDERLY) OR (AGE >= 60)
         {
             "id": "00000000-0000-0000-0000-100000000057",
             "name": "Người già yếu",
@@ -765,16 +778,29 @@
             "prerequisite": {
                 "resultType": "Boolean",
                 "left": {
-                    "resultType": "Numeric",
-                    "variable": {
-                        "id": "00000000-0000-0000-0000-100000000001"
+                    "resultType": "Boolean",
+                    "operand": {
+                        "resultType": "Numeric",
+                        "variable": {
+                            "id": "00000000-0000-0000-0000-100000000057"
+                        }
                     }
                 },
                 "right": {
-                    "resultType": "Numeric",
-                    "constant": 60
+                    "resultType": "Boolean",
+                    "left": {
+                        "resultType": "Numeric",
+                        "variable": {
+                            "id": "00000000-0000-0000-0000-100000000001"
+                        }
+                    },
+                    "right": {
+                        "resultType": "Numeric",
+                        "constant": 60
+                    },
+                    "operator": "GTE"
                 },
-                "operator": "GTE"
+                "operator": "OR"
             },
             "isRequired": false,
             "category": "Clinical"
@@ -829,6 +855,8 @@
             "isRequired": false,
             "category": "Clinical"
         },
+        // Tương tự với trường hợp người già yếu:
+        // PREGNANT-OR-LACTATING -> (GENDER = FEMALE) = Unary(PREGNANT-OR-LACTATING) OR (GENDER = FEMALE)
         {
             "id": "00000000-0000-0000-0000-100000000063",
             "name": "Phụ nữ có thai hoặc đang cho con bú",
@@ -840,15 +868,28 @@
                 "resultType": "Boolean",
                 "left": {
                     "resultType": "Boolean",
-                    "variable": {
-                        "id": "00000000-0000-0000-0000-100000000002"
+                    "operand": {
+                        "resultType": "Boolean",
+                        "variable": {
+                            "id": "00000000-0000-0000-0000-100000000063"
+                        }
                     }
                 },
                 "right": {
                     "resultType": "Boolean",
-                    "constant": true
+                    "left": {
+                        "resultType": "String",
+                        "variable": {
+                            "id": "00000000-0000-0000-0000-100000000002"
+                        }
+                    },
+                    "right": {
+                        "resultType": "String",
+                        "constant": "FEMALE"
+                    },
+                    "operator": "EQ"
                 },
-                "operator": "EQ"
+                "operator": "OR"
             },
             "isRequired": false,
             "category": "Clinical"
@@ -927,14 +968,14 @@
             "formula": {
                 "resultType": "Boolean",
                 "left": {
-                    "resultType": "Boolean",
+                    "resultType": "String",
                     "variable": {
                         "id": "00000000-0000-0000-0000-100000000002"
                     }
                 },
                 "right": {
-                    "resultType": "Boolean",
-                    "constant": false
+                    "resultType": "String",
+                    "constant": "MALE"
                 },
                 "operator": "EQ"
             }
@@ -2318,7 +2359,7 @@
         // nên tiêu chí này là một tiêu chí đặc biệt: nó sẽ luôn đúng
         {
             "id": "00000000-0000-0000-0000-400000000065",
-            "name": "Always true",
+            "name": "Yếu tố giới tính - tuổi",
             "formula": {
                 "resultType": "Boolean",
                 "left": {
@@ -2395,9 +2436,17 @@
                         "resultType": "Numeric",
                         "condition": {
                             "resultType": "Boolean",
-                            "variable": {
-                                "id": "00000000-0000-0000-0000-100000000002"
-                            }
+                            "left": {
+                                "resultType": "String",
+                                "variable": {
+                                    "id": "00000000-0000-0000-0000-100000000002"
+                                }
+                            },
+                            "right": {
+                                "resultType": "String",
+                                "constant": "FEMALE"
+                            },
+                            "operator": "EQ"
                         },
                         "ifTrue": {
                             "resultType": "Numeric",
