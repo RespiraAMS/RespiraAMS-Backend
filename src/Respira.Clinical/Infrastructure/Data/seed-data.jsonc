@@ -961,7 +961,7 @@
                 "operator": "GTE"
             }
         },
-        // Yếu tố nguy cơ nhiễm khuẩn Streptococcus pneumoniae
+        // Yếu tố nguy cơ nhiễm khuẩn Streptococcus pneumoniae và yếu tố giới tính - tuổi của PSI
         {
             "id": "00000000-0000-0000-0000-400000000004",
             "name": "Giới tính nam",
@@ -2354,21 +2354,21 @@
                 "operator": "EQ"
             }
         },
-        // Tiêu chí đặc biệt của PSI: yếu tố giới tính - tuổi.
-        // Do yếu tố này áp dụng cho cả nam lẫn nữ (khác công thức điểm),
-        // nên tiêu chí này là một tiêu chí đặc biệt: nó sẽ luôn đúng
+        // Tiêu chí giới tính tuổi của PSI
         {
             "id": "00000000-0000-0000-0000-400000000065",
-            "name": "Yếu tố giới tính - tuổi",
+            "name": "Giới tính nữ",
             "formula": {
                 "resultType": "Boolean",
                 "left": {
-                    "resultType": "Boolean",
-                    "constant": true
+                    "resultType": "String",
+                    "variable": {
+                        "id": "00000000-0000-0000-0000-100000000002"
+                    }
                 },
                 "right": {
-                    "resultType": "Boolean",
-                    "constant": true
+                    "resultType": "String",
+                    "constant": "FEMALE"
                 },
                 "operator": "EQ"
             }
@@ -2434,39 +2434,26 @@
                     "criterionId": "00000000-0000-0000-0000-400000000065",
                     "scoreFunction": {
                         "resultType": "Numeric",
-                        "condition": {
-                            "resultType": "Boolean",
-                            "left": {
-                                "resultType": "String",
-                                "variable": {
-                                    "id": "00000000-0000-0000-0000-100000000002"
-                                }
-                            },
-                            "right": {
-                                "resultType": "String",
-                                "constant": "FEMALE"
-                            },
-                            "operator": "EQ"
-                        },
-                        "ifTrue": {
-                            "resultType": "Numeric",
-                            "left": {
-                                "resultType": "Numeric",
-                                "variable": {
-                                    "id": "00000000-0000-0000-0000-100000000001"
-                                }
-                            },
-                            "right": {
-                                "resultType": "Numeric",
-                                "constant": 10
-                            },
-                            "operator": "SUB"
-                        },
-                        "ifFalse": {
+                        "left": {
                             "resultType": "Numeric",
                             "variable": {
                                 "id": "00000000-0000-0000-0000-100000000001"
                             }
+                        },
+                        "right": {
+                            "resultType": "Numeric",
+                            "constant": 10
+                        },
+                        "operator": "SUB"
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-300000000036",
+                    "criterionId": "00000000-0000-0000-0000-400000000004",
+                    "scoreFunction": {
+                        "resultType": "Numeric",
+                        "variable": {
+                            "id": "00000000-0000-0000-0000-100000000001"
                         }
                     }
                 },
