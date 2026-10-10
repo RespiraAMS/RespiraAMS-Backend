@@ -144,7 +144,7 @@ namespace Respira.Clinical.Infrastructure.Migrations
                     b.ToTable("antibiotic_groups", (string)null);
                 });
 
-            modelBuilder.Entity("Respira.Clinical.Domain.Entities.ClinicalMetrics", b =>
+            modelBuilder.Entity("Respira.Clinical.Domain.Entities.ClinicalMetric", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -331,13 +331,13 @@ namespace Respira.Clinical.Infrastructure.Migrations
                     b.ToTable("treatment_medicine_compositions", (string)null);
                 });
 
-            modelBuilder.Entity("Respira.Clinical.Domain.Entities.MetricsRule", b =>
+            modelBuilder.Entity("Respira.Clinical.Domain.Entities.MetricRule", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("ClinicalMetricsId")
+                    b.Property<Guid>("ClinicalMetricId")
                         .HasColumnType("uuid");
 
                     b.Property<DateTimeOffset>("CreatedAt")
@@ -362,13 +362,13 @@ namespace Respira.Clinical.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ClinicalMetricsId");
+                    b.HasIndex("ClinicalMetricId");
 
                     b.HasIndex("CriterionId");
 
-                    b.ToTable("metrics_rules", (string)null);
+                    b.ToTable("metric_rules", (string)null);
 
-                    b.HasDiscriminator<string>("rule_type").HasValue("MetricsRule");
+                    b.HasDiscriminator<string>("rule_type").HasValue("MetricRule");
 
                     b.UseTphMappingStrategy();
                 });
@@ -534,7 +534,7 @@ namespace Respira.Clinical.Infrastructure.Migrations
 
             modelBuilder.Entity("Respira.Clinical.Domain.Entities.MajorMinorRule", b =>
                 {
-                    b.HasBaseType("Respira.Clinical.Domain.Entities.MetricsRule");
+                    b.HasBaseType("Respira.Clinical.Domain.Entities.MetricRule");
 
                     b.Property<bool>("IsMajor")
                         .HasColumnType("boolean");
@@ -544,7 +544,7 @@ namespace Respira.Clinical.Infrastructure.Migrations
 
             modelBuilder.Entity("Respira.Clinical.Domain.Entities.ScoringRule", b =>
                 {
-                    b.HasBaseType("Respira.Clinical.Domain.Entities.MetricsRule");
+                    b.HasBaseType("Respira.Clinical.Domain.Entities.MetricRule");
 
                     b.Property<string>("ScoreFunction")
                         .IsRequired()
@@ -668,11 +668,11 @@ namespace Respira.Clinical.Infrastructure.Migrations
                     b.Navigation("Treatment");
                 });
 
-            modelBuilder.Entity("Respira.Clinical.Domain.Entities.MetricsRule", b =>
+            modelBuilder.Entity("Respira.Clinical.Domain.Entities.MetricRule", b =>
                 {
-                    b.HasOne("Respira.Clinical.Domain.Entities.ClinicalMetrics", "ClinicalMetrics")
+                    b.HasOne("Respira.Clinical.Domain.Entities.ClinicalMetric", "ClinicalMetric")
                         .WithMany("Rules")
-                        .HasForeignKey("ClinicalMetricsId")
+                        .HasForeignKey("ClinicalMetricId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -682,7 +682,7 @@ namespace Respira.Clinical.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("ClinicalMetrics");
+                    b.Navigation("ClinicalMetric");
 
                     b.Navigation("Criterion");
                 });
@@ -782,7 +782,7 @@ namespace Respira.Clinical.Infrastructure.Migrations
                     b.Navigation("Dosages");
                 });
 
-            modelBuilder.Entity("Respira.Clinical.Domain.Entities.ClinicalMetrics", b =>
+            modelBuilder.Entity("Respira.Clinical.Domain.Entities.ClinicalMetric", b =>
                 {
                     b.Navigation("Rules");
                 });

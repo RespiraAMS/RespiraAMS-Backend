@@ -85,29 +85,29 @@ namespace Respira.Clinical.Domain.Services
         /// <summary>
         /// Calculate metrics score
         /// </summary>
-        /// <param name="metrics">Metrics</param>
+        /// <param name="metric">Metrics</param>
         /// <param name="observations">Clinical observations</param>
         /// <returns>Score result</returns>
-        public (decimal, List<string>) CalculateMetricsScore(ClinicalMetrics metrics, IEnumerable<ClinicalObservation> observations)
+        public (decimal, List<string>) CalculateMetricsScore(ClinicalMetric metric, IEnumerable<ClinicalObservation> observations)
         {
-            if (metrics.IsMajorMinorMetric)
+            if (metric.IsMajorMinorMetric)
             {
                 throw new ArgumentException("Cannot calculate score for a Major/Minor metrics system");
             }
 
             var evidences = new List<string>();
-            var totalScore = metrics.Rules.Sum(r =>
+            var totalScore = metric.Rules.Sum(r =>
             {
                 // Type casting to scoring rule
                 var rule = (ScoringRule)r;
 
                 // Calculate score
                 var score = rule.GetScore(observations);
-                logger.LogDebug($"Calculated score for {metrics.Name}/{rule.Criterion.Name}: {score}");
+                logger.LogDebug($"Calculated score for {metric.Name}/{rule.Criterion.Name}: {score}");
 
                 // Add evidence
                 evidences.Add(BuildEvidence(
-                    $"{metrics.Name} - {rule.Criterion.Name}",
+                    $"{metric.Name} - {rule.Criterion.Name}",
                     rule.Criterion.Formula,
                     rule.Variables,
                     observations,
@@ -296,15 +296,15 @@ namespace Respira.Clinical.Domain.Services
         /// null as result, and the final result should relied or other metrics.
         /// If matched, then the result would be (Severe, ICU)
         /// </summary>
-        public MajorMinorMetricsSeverityDiagnosis? IdsaAts(ClinicalMetrics metrics, List<ClinicalObservation> observations)
+        public MajorMinorMetricsSeverityDiagnosis? IdsaAts(ClinicalMetric metric, List<ClinicalObservation> observations)
         {
-            if (!metrics.IsMajorMinorMetric)
+            if (!metric.IsMajorMinorMetric)
             {
                 throw new ArgumentException("IDSA/ATS required a Major/Minor metrics system");
             }
 
             var evidences = new List<string>();
-            var majorMatched = metrics.Rules.Count(r =>
+            var majorMatched = metric.Rules.Count(r =>
             {
                 // Type casting to major/minor rule
                 var rule = (MajorMinorRule)r;
@@ -317,10 +317,10 @@ namespace Respira.Clinical.Domain.Services
 
                 // Evaluate major criteria
                 var isSatisfied = rule.Criterion.IsCriterionSastisfied(observations);
-                logger.LogDebug($"Evaluate major criteria for {metrics.Name}/{rule.Criterion.Name}: {isSatisfied}");
+                logger.LogDebug($"Evaluate major criteria for {metric.Name}/{rule.Criterion.Name}: {isSatisfied}");
 
                 evidences.Add(BuildEvidence(
-                    $"{metrics.Name} - {rule.Criterion.Name}",
+                    $"{metric.Name} - {rule.Criterion.Name}",
                     rule.Criterion.Formula,
                     rule.Variables,
                     observations,
@@ -328,7 +328,7 @@ namespace Respira.Clinical.Domain.Services
                 return isSatisfied;
             });
 
-            var minorMatched = metrics.Rules.Count(r =>
+            var minorMatched = metric.Rules.Count(r =>
             {
                 // Type casting to major/minor rule
                 var rule = (MajorMinorRule)r;
@@ -341,10 +341,10 @@ namespace Respira.Clinical.Domain.Services
 
                 // Evaluate minor criteria
                 var isSatisfied = rule.Criterion.IsCriterionSastisfied(observations);
-                logger.LogDebug($"Evaluate minor criteria for {metrics.Name}/{rule.Criterion.Name}: {isSatisfied}");
+                logger.LogDebug($"Evaluate minor criteria for {metric.Name}/{rule.Criterion.Name}: {isSatisfied}");
 
                 evidences.Add(BuildEvidence(
-                    $"{metrics.Name} - {rule.Criterion.Name}",
+                    $"{metric.Name} - {rule.Criterion.Name}",
                     rule.Criterion.Formula,
                     rule.Criterion.Variables,
                     observations,
@@ -361,7 +361,7 @@ namespace Respira.Clinical.Domain.Services
                 });
                 return new MajorMinorMetricsSeverityDiagnosis
                 {
-                    Code = metrics.Code,
+                    Code = metric.Code,
                     MajorMatched = majorMatched,
                     MinorMatched = minorMatched,
                     Severity = Severity.Severe,

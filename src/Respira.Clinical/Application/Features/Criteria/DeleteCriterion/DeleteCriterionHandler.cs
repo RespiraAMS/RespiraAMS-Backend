@@ -34,7 +34,7 @@ namespace Respira.Clinical.Application.Features.Criteria.DeleteCriterion
                         .SetProperty(rf => rf.DeletedAt, DateTimeOffset.UtcNow), cancellationToken);
 
                 // Delete all clinical metrics rule that used this criterion
-                var ruleCount = await context.MetricsRules
+                var ruleCount = await context.MetricRules
                     .Where(x => x.CriterionId == command.Id)
                     .ExecuteUpdateAsync(x => x
                         .SetProperty(mr => mr.IsDeleted, true)

@@ -10,8 +10,8 @@ namespace Respira.Clinical.Application.Contracts.Data
         DbSet<Criterion> Criteria { get; set; }
         DbSet<Pathogen> Pathogens { get; set; }
         DbSet<RiskFactor> RiskFactors { get; set; }
-        DbSet<ClinicalMetrics> ClinicalMetrics { get; set; }
-        DbSet<MetricsRule> MetricsRules { get; set; }
+        DbSet<ClinicalMetric> ClinicalMetrics { get; set; }
+        DbSet<MetricRule> MetricRules { get; set; }
         DbSet<SuspectedCause> SuspectedCauses { get; set; }
         DbSet<Antibiotic> Antibiotics { get; set; }
         DbSet<AntibioticGroup> AntibioticGroups { get; set; }

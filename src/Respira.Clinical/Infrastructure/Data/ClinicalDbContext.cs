@@ -15,8 +15,8 @@ namespace Respira.Clinical.Infrastructure.Data
         public DbSet<Criterion> Criteria { get; set; }
         public DbSet<Pathogen> Pathogens { get; set; }
         public DbSet<RiskFactor> RiskFactors { get; set; }
-        public DbSet<ClinicalMetrics> ClinicalMetrics { get; set; }
-        public DbSet<MetricsRule> MetricsRules { get; set; }
+        public DbSet<ClinicalMetric> ClinicalMetrics { get; set; }
+        public DbSet<MetricRule> MetricRules { get; set; }
         public DbSet<SuspectedCause> SuspectedCauses { get; set; }
         public DbSet<Antibiotic> Antibiotics { get; set; }
         public DbSet<AntibioticGroup> AntibioticGroups { get; set; }
@@ -129,8 +129,8 @@ namespace Respira.Clinical.Infrastructure.Data
             modelBuilder.Entity<Criterion>().HasQueryFilter(x => !x.IsDeleted);
             modelBuilder.Entity<Pathogen>().HasQueryFilter(x => !x.IsDeleted);
             modelBuilder.Entity<RiskFactor>().HasQueryFilter(x => !x.IsDeleted);
-            modelBuilder.Entity<ClinicalMetrics>().HasQueryFilter(x => !x.IsDeleted);
-            modelBuilder.Entity<MetricsRule>().HasQueryFilter(x => !x.IsDeleted);
+            modelBuilder.Entity<ClinicalMetric>().HasQueryFilter(x => !x.IsDeleted);
+            modelBuilder.Entity<MetricRule>().HasQueryFilter(x => !x.IsDeleted);
             modelBuilder.Entity<SuspectedCause>().HasQueryFilter(x => !x.IsDeleted);
             modelBuilder.Entity<MedicineComposition>().HasQueryFilter(x => !x.IsDeleted);
             modelBuilder.Entity<Treatment>().HasQueryFilter(x => !x.IsDeleted);
@@ -181,7 +181,7 @@ namespace Respira.Clinical.Infrastructure.Data
             modelBuilder.Entity<RiskFactor>().Ignore(x => x.Variables);
 
             // Config on clinical metrics
-            modelBuilder.Entity<ClinicalMetrics>().ToTable("clinical_metrics");
+            modelBuilder.Entity<ClinicalMetric>().ToTable("clinical_metrics");
 
             // Config on suspected cause
             modelBuilder.Entity<SuspectedCause>().ToTable("suspected_causes");
@@ -193,17 +193,17 @@ namespace Respira.Clinical.Infrastructure.Data
                 .HasConversion<string>();
 
             // Config on metrics rule (scoring / major-minor)
-            modelBuilder.Entity<MetricsRule>()
+            modelBuilder.Entity<MetricRule>()
                 .UseTphMappingStrategy()
-                .ToTable("metrics_rules")
+                .ToTable("metric_rules")
                 .HasDiscriminator<string>("rule_type")
                 .HasValue<ScoringRule>("scoring_rule")
                 .HasValue<MajorMinorRule>("major_minor_rule");
-            modelBuilder.Entity<MetricsRule>()
-                .HasOne(x => x.ClinicalMetrics)
+            modelBuilder.Entity<MetricRule>()
+                .HasOne(x => x.ClinicalMetric)
                 .WithMany(x => x.Rules)
-                .HasForeignKey(x => x.ClinicalMetricsId);
-            modelBuilder.Entity<MetricsRule>()
+                .HasForeignKey(x => x.ClinicalMetricId);
+            modelBuilder.Entity<MetricRule>()
                 .HasOne(x => x.Criterion)
                 .WithMany()
                 .HasForeignKey(x => x.CriterionId);

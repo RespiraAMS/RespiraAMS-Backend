@@ -5,7 +5,7 @@ namespace Respira.Clinical.Domain.Entities
     /// <summary>
     /// This is the class represent a scoring metric, like CURB-65 or PSI
     /// </summary>
-    public class ClinicalMetrics : Base
+    public class ClinicalMetric : Base
     {
         /// <summary>
         /// Scoring metric name
@@ -25,9 +25,9 @@ namespace Respira.Clinical.Domain.Entities
         /// <summary>
         /// Scoring rules
         /// </summary>
-        public ICollection<MetricsRule> Rules { get; set; } = [];
+        public ICollection<MetricRule> Rules { get; set; } = [];
 
-        public ClinicalMetrics(string name, string code, string description, ICollection<MetricsRule> rules)
+        public ClinicalMetric(string name, string code, string description, ICollection<MetricRule> rules)
         {
             if (!rules.All(r => r.GetType() == typeof(ScoringRule)) && !rules.All(r => r.GetType() == typeof(MajorMinorRule)))
             {
@@ -44,7 +44,7 @@ namespace Respira.Clinical.Domain.Entities
         /// This is just a parameterless constructor for EF Core stuff. For normal usage,
         /// it's better to use the parameter constructor
         /// </summary>
-        public ClinicalMetrics()
+        public ClinicalMetric()
         {
             Name = string.Empty;
             Code = string.Empty;

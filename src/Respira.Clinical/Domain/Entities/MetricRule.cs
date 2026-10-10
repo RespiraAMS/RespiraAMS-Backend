@@ -7,18 +7,18 @@ namespace Respira.Clinical.Domain.Entities
     /// <summary>
     /// Metrics rule is a rule used to calculate for a specific criterion in a metric
     /// </summary>
-    public abstract class MetricsRule : Base
+    public abstract class MetricRule : Base
     {
         /// <summary>
         /// Scoring metric ID
         /// </summary>
-        public required Guid ClinicalMetricsId { get; set; }
+        public required Guid ClinicalMetricId { get; set; }
 
         /// <summary>
         /// Scoring metric
         /// </summary>
         [JsonIgnore]
-        public ClinicalMetrics ClinicalMetrics { get; set; } = null!;
+        public ClinicalMetric ClinicalMetric { get; set; } = null!;
 
         /// <summary>
         /// Criterion ID
@@ -34,7 +34,7 @@ namespace Respira.Clinical.Domain.Entities
     /// <summary>
     /// Rule that use score system
     /// </summary>
-    public class ScoringRule : MetricsRule
+    public class ScoringRule : MetricRule
     {
         /// <summary>
         /// Score function (formula)
@@ -88,7 +88,7 @@ namespace Respira.Clinical.Domain.Entities
     /// This rule represent a major/minor system (like IDSA/ATS), where it didn't use
     /// score, but instead count the number of major/minor criteria matched
     /// </summary>
-    public class MajorMinorRule : MetricsRule
+    public class MajorMinorRule : MetricRule
     {
         public required bool IsMajor { get; set; }
 

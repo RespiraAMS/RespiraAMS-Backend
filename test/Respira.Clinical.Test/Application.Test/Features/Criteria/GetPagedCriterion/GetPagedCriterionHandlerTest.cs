@@ -39,7 +39,7 @@ namespace Respira.Application.Test.Features.Criteria.GetPagedCriterion
             // Clear leftover data (children first for FK constraints) so the ordering /
             // count assertions are deterministic across runs. IgnoreQueryFilters because
             // soft deleted rows are hidden by the query filter but still occupy the table
-            await _context.MetricsRules.IgnoreQueryFilters()
+            await _context.MetricRules.IgnoreQueryFilters()
                 .ExecuteDeleteAsync(TestContext.Current.CancellationToken);
             await _context.RiskFactors.IgnoreQueryFilters()
                 .ExecuteDeleteAsync(TestContext.Current.CancellationToken);

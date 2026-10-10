@@ -38,7 +38,7 @@ namespace Respira.Application.Test.Features.Criteria.GetReferencedEntities
             // Clear leftover data (children first for FK constraints) so the count and
             // id assertions are deterministic across runs. IgnoreQueryFilters because
             // soft deleted rows are hidden by the query filter but still occupy the table
-            await _context.MetricsRules.IgnoreQueryFilters()
+            await _context.MetricRules.IgnoreQueryFilters()
                 .ExecuteDeleteAsync(TestContext.Current.CancellationToken);
             await _context.RiskFactors.IgnoreQueryFilters()
                 .ExecuteDeleteAsync(TestContext.Current.CancellationToken);
@@ -90,9 +90,9 @@ namespace Respira.Application.Test.Features.Criteria.GetReferencedEntities
             return pathogen;
         }
 
-        private async Task<ClinicalMetrics> SeedMetricsAsync(string name, string code, string description)
+        private async Task<ClinicalMetric> SeedMetricsAsync(string name, string code, string description)
         {
-            var metrics = new ClinicalMetrics
+            var metrics = new ClinicalMetric
             {
                 Name = name,
                 Code = code,
@@ -120,18 +120,18 @@ namespace Respira.Application.Test.Features.Criteria.GetReferencedEntities
 
         // Every CURB-65 criterion contributes exactly 1 point, so the score function is
         // a constant 1 rather than an arbitrary number
-        private async Task<MetricsRule> SeedScoringRuleAsync(
+        private async Task<MetricRule> SeedScoringRuleAsync(
             Guid metricsId, Guid criterionId, bool isDeleted = false)
         {
             var rule = new ScoringRule
             {
-                ClinicalMetricsId = metricsId,
+                ClinicalMetricId = metricsId,
                 CriterionId = criterionId,
                 ScoreFunction = new NumericConstantFormula(1),
                 IsDeleted = isDeleted,
                 DeletedAt = isDeleted ? DateTimeOffset.UtcNow : null,
             };
-            await _context.MetricsRules.AddAsync(rule, TestContext.Current.CancellationToken);
+            await _context.MetricRules.AddAsync(rule, TestContext.Current.CancellationToken);
             await _context.SaveChangesAsync(TestContext.Current.CancellationToken);
             return rule;
         }
@@ -179,7 +179,7 @@ namespace Respira.Application.Test.Features.Criteria.GetReferencedEntities
 
             Assert.False(result.Data.HasReferencedEntities);
             Assert.Empty(result.Data.RiskFactorReference);
-            Assert.Empty(result.Data.MetricsRuleReference);
+            Assert.Empty(result.Data.MetricRuleReference);
             Assert.Empty(result.Data.TreatmentReference);
         }
 
@@ -202,12 +202,12 @@ namespace Respira.Application.Test.Features.Criteria.GetReferencedEntities
 
             Assert.True(result.Data.HasReferencedEntities);
             Assert.Equal([factor.Id], Sorted(result.Data.RiskFactorReference));
-            Assert.Empty(result.Data.MetricsRuleReference);
+            Assert.Empty(result.Data.MetricRuleReference);
             Assert.Empty(result.Data.TreatmentReference);
         }
 
         [Fact]
-        public async Task GetReferencedEntities_SingleMetricsRule_ReportsItsId_Success()
+        public async Task GetReferencedEntities_SingleMetricRule_ReportsItsId_Success()
         {
             var criterion = await SeedCriterionAsync(CreateHypotensionCriterion());
             var metrics = await SeedMetricsAsync(
@@ -224,7 +224,7 @@ namespace Respira.Application.Test.Features.Criteria.GetReferencedEntities
 
             Assert.True(result.Data.HasReferencedEntities);
             Assert.Empty(result.Data.RiskFactorReference);
-            Assert.Equal([rule.Id], Sorted(result.Data.MetricsRuleReference));
+            Assert.Equal([rule.Id], Sorted(result.Data.MetricRuleReference));
             Assert.Empty(result.Data.TreatmentReference);
         }
 
@@ -243,7 +243,7 @@ namespace Respira.Application.Test.Features.Criteria.GetReferencedEntities
 
             Assert.True(result.Data.HasReferencedEntities);
             Assert.Empty(result.Data.RiskFactorReference);
-            Assert.Empty(result.Data.MetricsRuleReference);
+            Assert.Empty(result.Data.MetricRuleReference);
             Assert.Equal([treatment.Id], Sorted(result.Data.TreatmentReference));
         }
 
@@ -278,7 +278,7 @@ namespace Respira.Application.Test.Features.Criteria.GetReferencedEntities
 
             Assert.True(result.Data.HasReferencedEntities);
             Assert.Equal(Sorted([factorOne.Id, factorTwo.Id]), Sorted(result.Data.RiskFactorReference));
-            Assert.Equal(Sorted([ruleOne.Id, ruleTwo.Id]), Sorted(result.Data.MetricsRuleReference));
+            Assert.Equal(Sorted([ruleOne.Id, ruleTwo.Id]), Sorted(result.Data.MetricRuleReference));
             Assert.Equal(Sorted([treatmentOne.Id, treatmentTwo.Id]), Sorted(result.Data.TreatmentReference));
         }
 
@@ -317,10 +317,10 @@ namespace Respira.Application.Test.Features.Criteria.GetReferencedEntities
 
             Assert.True(result.Data.HasReferencedEntities);
             Assert.Equal([targetFactor.Id], Sorted(result.Data.RiskFactorReference));
-            Assert.Equal([targetRule.Id], Sorted(result.Data.MetricsRuleReference));
+            Assert.Equal([targetRule.Id], Sorted(result.Data.MetricRuleReference));
             Assert.Equal([sharedTreatment.Id], Sorted(result.Data.TreatmentReference));
             Assert.DoesNotContain(otherFactor.Id, result.Data.RiskFactorReference);
-            Assert.DoesNotContain(otherRule.Id, result.Data.MetricsRuleReference);
+            Assert.DoesNotContain(otherRule.Id, result.Data.MetricRuleReference);
         }
 
         [Fact]
@@ -355,7 +355,7 @@ namespace Respira.Application.Test.Features.Criteria.GetReferencedEntities
 
             Assert.True(result.Data.HasReferencedEntities);
             Assert.Equal([liveFactor.Id], Sorted(result.Data.RiskFactorReference));
-            Assert.Equal([liveRule.Id], Sorted(result.Data.MetricsRuleReference));
+            Assert.Equal([liveRule.Id], Sorted(result.Data.MetricRuleReference));
             Assert.Equal([liveTreatment.Id], Sorted(result.Data.TreatmentReference));
         }
 
@@ -380,7 +380,7 @@ namespace Respira.Application.Test.Features.Criteria.GetReferencedEntities
 
             Assert.False(result.Data.HasReferencedEntities);
             Assert.Empty(result.Data.RiskFactorReference);
-            Assert.Empty(result.Data.MetricsRuleReference);
+            Assert.Empty(result.Data.MetricRuleReference);
             Assert.Empty(result.Data.TreatmentReference);
         }
 

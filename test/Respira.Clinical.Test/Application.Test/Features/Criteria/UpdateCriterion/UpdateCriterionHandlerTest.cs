@@ -45,7 +45,7 @@ namespace Respira.Application.Test.Features.Criteria.UpdateCriterion
             // SingleAsync assertions are deterministic across runs. IgnoreQueryFilters
             // because soft deleted rows are hidden by the query filter but still
             // occupy the table
-            await _context.MetricsRules.IgnoreQueryFilters()
+            await _context.MetricRules.IgnoreQueryFilters()
                 .ExecuteDeleteAsync(TestContext.Current.CancellationToken);
             await _context.RiskFactors.IgnoreQueryFilters()
                 .ExecuteDeleteAsync(TestContext.Current.CancellationToken);
@@ -70,9 +70,9 @@ namespace Respira.Application.Test.Features.Criteria.UpdateCriterion
             Pathogen Pathogen,
             RiskFactor TargetFactor,
             RiskFactor ControlFactor,
-            ClinicalMetrics Metrics,
-            MetricsRule TargetRule,
-            MetricsRule ControlRule,
+            ClinicalMetric Metrics,
+            MetricRule TargetRule,
+            MetricRule ControlRule,
             Treatment TargetTreatment,
             Treatment ControlTreatment,
             DateTimeOffset StoredTargetUpdatedAt,
@@ -139,7 +139,7 @@ namespace Respira.Application.Test.Features.Criteria.UpdateCriterion
                 IsAtypical = true,
             };
             await _context.Pathogens.AddAsync(pathogen, TestContext.Current.CancellationToken);
-            var metrics = new ClinicalMetrics
+            var metrics = new ClinicalMetric
             {
                 Name = "Severity metrics CURB-65",
                 Code = "CURB-65",
@@ -155,18 +155,18 @@ namespace Respira.Application.Test.Features.Criteria.UpdateCriterion
 
             var targetRule = new ScoringRule
             {
-                ClinicalMetricsId = metrics.Id,
+                ClinicalMetricId = metrics.Id,
                 CriterionId = target.Id,
                 // Every CURB-65 criterion contributes exactly 1 point
                 ScoreFunction = new NumericConstantFormula(1),
             };
             var controlRule = new ScoringRule
             {
-                ClinicalMetricsId = metrics.Id,
+                ClinicalMetricId = metrics.Id,
                 CriterionId = control.Id,
                 ScoreFunction = new NumericConstantFormula(1),
             };
-            await _context.MetricsRules.AddRangeAsync(
+            await _context.MetricRules.AddRangeAsync(
                 [targetRule, controlRule], TestContext.Current.CancellationToken);
 
             var targetTreatment = new Treatment
@@ -396,7 +396,7 @@ namespace Respira.Application.Test.Features.Criteria.UpdateCriterion
 
             Assert.False(await readContext.RiskFactors.IgnoreQueryFilters()
                 .AnyAsync(x => x.IsDeleted, TestContext.Current.CancellationToken));
-            Assert.False(await readContext.MetricsRules.IgnoreQueryFilters()
+            Assert.False(await readContext.MetricRules.IgnoreQueryFilters()
                 .AnyAsync(x => x.IsDeleted, TestContext.Current.CancellationToken));
             Assert.False(await readContext.Treatments.IgnoreQueryFilters()
                 .AnyAsync(x => x.IsDeleted, TestContext.Current.CancellationToken));
@@ -406,7 +406,7 @@ namespace Respira.Application.Test.Features.Criteria.UpdateCriterion
             Assert.False(targetFactor.IsDeleted);
             Assert.Null(targetFactor.DeletedAt);
 
-            var targetRule = await readContext.MetricsRules.IgnoreQueryFilters()
+            var targetRule = await readContext.MetricRules.IgnoreQueryFilters()
                 .SingleAsync(x => x.Id == data.TargetRule.Id, TestContext.Current.CancellationToken);
             Assert.False(targetRule.IsDeleted);
             Assert.Null(targetRule.DeletedAt);
