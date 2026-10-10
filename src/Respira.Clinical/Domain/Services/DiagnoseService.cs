@@ -1,4 +1,3 @@
-using System.Globalization;
 using Microsoft.Extensions.Logging;
 using Respira.Clinical.Domain.Entities;
 using Respira.Clinical.Domain.Enums;
@@ -15,87 +14,19 @@ namespace Respira.Clinical.Domain.Services
     public class DiagnoseService(ILogger<DiagnoseService> logger) : IDiagnoseService
     {
         /// <summary>
-        /// Render one observation as an indented evidence line. Each value type carries its own
-        /// slot on <see cref="ClinicalObservation"/>, so the right one has to be picked - reading
-        /// <c>NumericValue</c> for a boolean observation would render an empty value.
-        /// </summary>
-        private static string FormatObservation(ClinicalObservation observation)
-        {
-            var value = observation.Variable.ValueType switch
-            {
-                ClinicalValueType.Numeric => observation.NumericValue?.ToString(CultureInfo.InvariantCulture),
-                ClinicalValueType.Boolean => observation.BooleanValue switch
-                {
-                    true => "true",
-                    false => "false",
-                    null => null,
-                },
-                _ => observation.CategoricalValue,
-            };
-
-            return $"\t{observation.Variable.Code}: {value ?? "(no value)"}";
-        }
-
-        /// <summary>
-        /// Render an evidence entry for a criterion. A formula cannot be evaluated when the
-        /// observations do not contain every variable it uses, so the evidence reports the
-        /// missing variables instead of throwing (the score itself is already handled by
-        /// <see cref="Criterion.IsCriterionSastisfied(IEnumerable{ClinicalObservation})"/>).
-        /// The entry is multi-line (<c>\n</c> between sections, <c>\t</c> per observation);
-        /// clients render it with preserved whitespace.
-        /// </summary>
-        /// <param name="source">Where the criterion comes from, e.g. metric or pathogen name</param>
-        /// <param name="formula">Criterion formula</param>
-        /// <param name="observations">Clinical observations</param>
-        /// <returns>Evidence string</returns>
-        private static string BuildEvidence(
-            string source,
-            Formula formula,
-            IEnumerable<VariableRef> variablesUsed,
-            IEnumerable<ClinicalObservation> observations,
-            decimal? score = null,
-            bool? isMajor = null)
-        {
-            var observationList = observations
-                .Where(x => variablesUsed.Select(x => x.Code).Contains(x.Variable.Code))
-                .ToList();
-
-            var missing = formula.Variables
-                .Where(v => !observationList.Any(o => o.Variable.Code.Equals(v.Code)))
-                .Select(v => v.Code)
-                .ToList();
-
-            var variables = observationList.Count > 0
-                ? string.Join("\n", observationList.Select(FormatObservation))
-                : "\t(none)";
-
-            // If score is provided
-            var scoreValue = score is not null ? $"\tScore: {score.Value}" : "";
-
-            // If isMajor is provided
-            var isMajorValue = isMajor is not null ? $"\tIs Major criteria: {isMajor.Value}" : "";
-
-            var value = missing.Count > 0
-                ? $"not evaluated (missing {string.Join(", ", missing)})"
-                : formula.ToExpression(observationList).Evaluate();
-
-            return $"{source}:\nFormula: {formula}\nVariables:\n{variables}\nValue: {value}\n{scoreValue}\n{isMajorValue}";
-        }
-
-        /// <summary>
         /// Calculate metrics score
         /// </summary>
         /// <param name="metric">Metrics</param>
         /// <param name="observations">Clinical observations</param>
         /// <returns>Score result</returns>
-        public (decimal, List<string>) CalculateMetricsScore(ClinicalMetric metric, IEnumerable<ClinicalObservation> observations)
+        public (decimal, List<Evidence>) CalculateMetricsScore(ClinicalMetric metric, IEnumerable<ClinicalObservation> observations)
         {
             if (metric.IsMajorMinorMetric)
             {
                 throw new ArgumentException("Cannot calculate score for a Major/Minor metrics system");
             }
 
-            var evidences = new List<string>();
+            var evidences = new List<Evidence>();
             var totalScore = metric.Rules.Sum(r =>
             {
                 // Type casting to scoring rule
@@ -106,12 +37,12 @@ namespace Respira.Clinical.Domain.Services
                 logger.LogDebug($"Calculated score for {metric.Name}/{rule.Criterion.Name}: {score}");
 
                 // Add evidence
-                evidences.Add(BuildEvidence(
+                evidences.Add(new Evidence(
                     $"{metric.Name} - {rule.Criterion.Name}",
                     rule.Criterion.Formula,
-                    rule.Variables,
-                    observations,
-                    score: score));
+                    [.. rule.Variables],
+                    [.. observations],
+                    score));
 
                 // Return score
                 return score;
@@ -126,7 +57,7 @@ namespace Respira.Clinical.Domain.Services
         /// <param name="score">Score</param>
         /// <returns>Severity diagnosis</returns>
         /// <exception cref="InvalidOperationException">Throw if received invalid score</exception>
-        public ScoreMetricsSeverityDiagnosis Curb65(int score, List<string> evidences, bool isBunMissing = false)
+        public ScoreMetricsSeverityDiagnosis Curb65(int score, List<Evidence> evidences, bool isBunMissing = false)
         {
             /*
              * CURB-65 (according to our internal definition):
@@ -237,7 +168,7 @@ namespace Respira.Clinical.Domain.Services
         /// <param name="score">Score</param>
         /// <returns>Severity diagnosis</returns>
         /// <exception cref="InvalidOperationException">Throw if received invalid score</exception>
-        public ScoreMetricsSeverityDiagnosis Psi(int score, List<string> evidences)
+        public ScoreMetricsSeverityDiagnosis Psi(int score, List<Evidence> evidences)
         {
             const string code = "PSI";
 
@@ -303,7 +234,7 @@ namespace Respira.Clinical.Domain.Services
                 throw new ArgumentException("IDSA/ATS required a Major/Minor metrics system");
             }
 
-            var evidences = new List<string>();
+            var evidences = new List<Evidence>();
             var majorMatched = metric.Rules.Count(r =>
             {
                 // Type casting to major/minor rule
@@ -319,12 +250,12 @@ namespace Respira.Clinical.Domain.Services
                 var isSatisfied = rule.Criterion.IsCriterionSastisfied(observations);
                 logger.LogDebug($"Evaluate major criteria for {metric.Name}/{rule.Criterion.Name}: {isSatisfied}");
 
-                evidences.Add(BuildEvidence(
+                evidences.Add(new Evidence(
                     $"{metric.Name} - {rule.Criterion.Name}",
                     rule.Criterion.Formula,
-                    rule.Variables,
-                    observations,
-                    isMajor: true));
+                    [.. rule.Variables],
+                    [.. observations],
+                    true));
                 return isSatisfied;
             });
 
@@ -343,12 +274,12 @@ namespace Respira.Clinical.Domain.Services
                 var isSatisfied = rule.Criterion.IsCriterionSastisfied(observations);
                 logger.LogDebug($"Evaluate minor criteria for {metric.Name}/{rule.Criterion.Name}: {isSatisfied}");
 
-                evidences.Add(BuildEvidence(
+                evidences.Add(new Evidence(
                     $"{metric.Name} - {rule.Criterion.Name}",
                     rule.Criterion.Formula,
-                    rule.Criterion.Variables,
-                    observations,
-                    isMajor: false));
+                    [.. rule.Variables],
+                    [.. observations],
+                    false));
                 return isSatisfied;
             });
 
@@ -404,7 +335,7 @@ namespace Respira.Clinical.Domain.Services
 
             var heavySuspected = new List<(decimal score, Pathogen pathogen)>();
             var worthSuspected = new List<Pathogen>();
-            var evidences = new List<string>();
+            var evidences = new List<Evidence>();
 
             // Step 1: Check for suspected pathogens
             var suspected = context.SuspectedCauses
@@ -424,11 +355,11 @@ namespace Respira.Clinical.Domain.Services
                 // Calculate matched risk factors
                 var matched = pathogen.RiskFactors.Count(r =>
                 {
-                    evidences.Add(BuildEvidence(
+                    evidences.Add(new Evidence(
                         $"{pathogen.Name} - {r.Criterion.Name}",
                         r.Criterion.Formula,
-                        r.Criterion.Variables,
-                        observations));
+                        [.. r.Criterion.Variables],
+                        [.. observations]));
                     return r.IsFactorSastified(observations);
                 });
 
@@ -557,7 +488,7 @@ namespace Respira.Clinical.Domain.Services
 
             // Start evaluated metrics
             var observations = clinicalPicture.Observations;
-            var totalEvidences = new List<string>();
+            var totalEvidences = new List<Evidence>();
             foreach (var metric in context.Metrics)
             {
                 if (metric.Code.Equals("CURB-65"))

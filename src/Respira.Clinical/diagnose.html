@@ -462,10 +462,11 @@
 			
 			.evidence-list {
 				margin: 0;
-				padding-left: 1.15rem;
+				padding: 0;
+				list-style: none;
 				display: flex;
 				flex-direction: column;
-				gap: 0.45rem;
+				gap: 0.6rem;
 			}
 			
 			.evidence-list li {
@@ -473,8 +474,121 @@
 				line-height: 1.5;
 				color: var(--text);
 				word-break: break-word;
-				/* Evidence text is multi-line (source / Formula / Variables / Value);
-				preserve the \n separators and \t indents coming from the API. */
+			}
+			
+			.evidence-item {
+				padding: 0.75rem 0.9rem;
+				background: var(--card);
+				border: 1px solid var(--border);
+				border-radius: 10px;
+			}
+			
+			.evidence-source {
+				font-weight: 800;
+				font-size: 0.86rem;
+				color: var(--text);
+				margin-bottom: 0.35rem;
+			}
+			
+			.evidence-row {
+				display: flex;
+				align-items: baseline;
+				justify-content: space-between;
+				gap: 0.75rem;
+				padding: 0.15rem 0;
+			}
+			
+			.evidence-key {
+				flex-shrink: 0;
+				font-size: 0.7rem;
+				font-weight: 800;
+				letter-spacing: 0.04em;
+				text-transform: uppercase;
+				color: var(--text-muted);
+			}
+			
+			.evidence-formula {
+				font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+				font-size: 0.78rem;
+				background: #f1f5f9;
+				border: 1px solid var(--border);
+				border-radius: 6px;
+				padding: 0.1rem 0.45rem;
+				white-space: pre-wrap;
+				text-align: right;
+				word-break: break-word;
+			}
+			
+			.evidence-variables {
+				margin: 0.4rem 0;
+				padding: 0.45rem 0.6rem;
+				background: #f8fafc;
+				border: 1px dashed var(--border);
+				border-radius: 8px;
+			}
+			
+			.evidence-variables-title {
+				font-size: 0.7rem;
+				font-weight: 800;
+				letter-spacing: 0.04em;
+				text-transform: uppercase;
+				color: var(--text-muted);
+				margin-bottom: 0.25rem;
+			}
+			
+			.evidence-var {
+				display: flex;
+				align-items: baseline;
+				justify-content: space-between;
+				gap: 0.75rem;
+				font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+				font-size: 0.78rem;
+				padding: 0.1rem 0;
+			}
+			
+			.evidence-var-name {
+				color: var(--text);
+				word-break: break-word;
+			}
+			
+			.evidence-var-value {
+				flex-shrink: 0;
+				font-weight: 700;
+				color: var(--primary-hover);
+			}
+			
+			.evidence-value {
+				font-weight: 700;
+				text-align: right;
+				word-break: break-word;
+			}
+			
+			.evidence-value.is-missing { color: var(--warning); font-weight: 600; }
+			
+			.evidence-badges {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 0.4rem;
+				margin-top: 0.45rem;
+			}
+			
+			.evidence-badge {
+				display: inline-block;
+				padding: 0.15rem 0.6rem;
+				border-radius: 999px;
+				font-size: 0.72rem;
+				font-weight: 800;
+				background: var(--primary-light);
+				color: var(--primary-hover);
+			}
+			
+			.evidence-badge.badge-major { background: #fee2e2; color: #991b1b; }
+			.evidence-badge.badge-minor { background: #f1f5f9; color: var(--text-muted); }
+			
+			/* Legacy string evidence: multi-line text with \n separators and \t indents */
+			.evidence-item.evidence-legacy {
+				background: #f8fafc;
+				border: 1px dashed var(--border);
 				white-space: pre-wrap;
 				tab-size: 4;
 			}
@@ -1560,7 +1674,108 @@ showResults(body.data);
 }
 });
 
-function showResults(data) {
+	/* ---------------- Evidence rendering ---------------- */
+
+	function evPick(raw, lower, upper) {
+		if (!raw || typeof raw !== 'object') return undefined;
+		return raw[lower] !== undefined ? raw[lower] : raw[upper];
+	}
+
+	function evFormatValue(value) {
+		if (value === null || value === undefined || value === '') return null;
+		if (typeof value === 'boolean') return value ? 'true' : 'false';
+		if (typeof value === 'object') {
+			try { return JSON.stringify(value); } catch { return String(value); }
+		}
+		return String(value);
+	}
+
+	function evObservationValue(obs) {
+		const variable = evPick(obs, 'variable', 'Variable') || {};
+		const vt = evPick(variable, 'valueType', 'ValueType');
+		let value;
+		if (vt === 'Boolean') value = evPick(obs, 'booleanValue', 'BooleanValue');
+		else if (vt === 'Categorical') value = evPick(obs, 'categoricalValue', 'CategoricalValue');
+		else value = evPick(obs, 'numericValue', 'NumericValue');
+		if (value === undefined || value === null) {
+			value = evPick(obs, 'numericValue', 'NumericValue')
+				?? evPick(obs, 'booleanValue', 'BooleanValue')
+				?? evPick(obs, 'categoricalValue', 'CategoricalValue');
+		}
+		return evFormatValue(value) ?? '(no value)';
+	}
+
+	function renderEvidence(e) {
+		// Legacy fallback: evidence already rendered as a string
+		if (e === null || e === undefined) return '';
+		if (typeof e === 'string' || typeof e === 'number' || typeof e === 'boolean') {
+			return `<li class="evidence-item evidence-legacy">${esc(e)}</li>`;
+		}
+
+		const source = evPick(e, 'source', 'Source');
+		const formula = evPick(e, 'formula', 'Formula');
+		const related = evPick(e, 'relatedObservations', 'RelatedObservations') || [];
+		const missing = evPick(e, 'missingVariables', 'MissingVariables') || [];
+		const score = evPick(e, 'score', 'Score');
+		const isMajor = evPick(e, 'isMajor', 'IsMajor');
+
+		const observations = (Array.isArray(related) ? related : []).map(obs => {
+			const variable = evPick(obs, 'variable', 'Variable') || {};
+			const code = evPick(variable, 'code', 'Code') || '';
+			const name = evPick(variable, 'name', 'Name') || '';
+			const label = name && code ? `${code} - ${name}` : (code || name || 'Unknown');
+			return `
+			<div class="evidence-var">
+				<span class="evidence-var-name">${esc(label)}</span>
+				<span class="evidence-var-value">${esc(evObservationValue(obs))}</span>
+			</div>`;
+		}).join('');
+
+		const missingCodes = (Array.isArray(missing) ? missing : [])
+			.map(v => evPick(v, 'code', 'Code'))
+			.filter(Boolean);
+
+		let valueHtml;
+		if (missingCodes.length > 0) {
+			valueHtml = `<span class="evidence-value is-missing">not evaluated (missing ${esc(missingCodes.join(', '))})</span>`;
+		} else {
+			const rawValue = evPick(e, 'evaluatedValue', 'EvaluatedValue');
+			const formatted = evFormatValue(rawValue);
+			valueHtml = `<span class="evidence-value">${esc(formatted ?? 'not evaluated')}</span>`;
+		}
+
+		const badges = [];
+		if (score !== undefined && score !== null && score !== '') {
+			badges.push(`<span class="evidence-badge">Score: ${esc(score)}</span>`);
+		}
+		if (isMajor !== undefined && isMajor !== null) {
+			badges.push(isMajor
+				? '<span class="evidence-badge badge-major">Major criteria</span>'
+				: '<span class="evidence-badge badge-minor">Minor criteria</span>');
+		}
+
+		return `
+		<li class="evidence-item">
+			<div class="evidence-source">${esc(source ?? 'Evidence')}</div>
+			${formula ? `
+			<div class="evidence-row">
+				<span class="evidence-key">Formula</span>
+				<code class="evidence-formula">${esc(formula)}</code>
+			</div>` : ''}
+			${observations || missingCodes.length > 0 ? `
+			<div class="evidence-variables">
+				<div class="evidence-variables-title">Variables</div>
+				${observations || '<div class="evidence-var"><span class="evidence-var-name">(none)</span></div>'}
+			</div>` : ''}
+			<div class="evidence-row">
+				<span class="evidence-key">Value</span>
+				${valueHtml}
+			</div>
+			${badges.length > 0 ? `<div class="evidence-badges">${badges.join('')}</div>` : ''}
+		</li>`;
+	}
+
+	function showResults(data) {
 	document.getElementById('diagnoseForm').style.display = 'none';
 	document.getElementById('resultsSection').style.display = 'block';
 
@@ -1584,14 +1799,16 @@ function showResults(data) {
 	? allergies.map(a => a.name || a.Name || '').filter(Boolean).join(', ')
 	: 'None';
 
-	// Evidences
+	// Evidences: structured objects ({ source, formula, relatedObservations,
+	// missingVariables, evaluatedValue, score, isMajor }); plain strings are
+	// still accepted as a legacy fallback.
 	let evidences = data.evidences ?? data.Evidences ?? [];
 	if (!Array.isArray(evidences)) evidences = [];
 	const evidenceToggle = document.getElementById('evidenceToggle');
 	const evidencePanel = document.getElementById('evidencePanel');
 	const evidenceList = document.getElementById('evidenceList');
 	evidenceList.innerHTML = evidences.length > 0
-	? evidences.map(e => `<li>${esc(e)}</li>`).join('')
+	? evidences.map(renderEvidence).join('')
 	: '<li class="empty-state">No evidences available</li>';
 	evidenceToggle.hidden = evidences.length === 0;
 	evidenceToggle.dataset.count = String(evidences.length);
