@@ -26,7 +26,7 @@ namespace Respira.Clinical.Application.Features.Criteria.GetReferencedEntities
                 .Where(x => x.CriterionId == query.Id)
                 .Select(x => x.Id)
                 .ToListAsync(cancellationToken);
-            var metricsRules = await context.MetricsRules
+            var metricRules = await context.MetricRules
                 .Where(x => x.CriterionId == query.Id)
                 .Select(x => x.Id)
                 .ToListAsync(cancellationToken);
@@ -37,9 +37,9 @@ namespace Respira.Clinical.Application.Features.Criteria.GetReferencedEntities
 
             return Result<ReferencedEntitiesResult>.Success(ApplicationStatus.Success, new ReferencedEntitiesResult
             {
-                HasReferencedEntities = riskFactors.Count > 0 || metricsRules.Count > 0 || treatments.Count > 0,
+                HasReferencedEntities = riskFactors.Count > 0 || metricRules.Count > 0 || treatments.Count > 0,
                 RiskFactorReference = riskFactors,
-                MetricsRuleReference = metricsRules,
+                MetricRuleReference = metricRules,
                 TreatmentReference = treatments,
             });
         }

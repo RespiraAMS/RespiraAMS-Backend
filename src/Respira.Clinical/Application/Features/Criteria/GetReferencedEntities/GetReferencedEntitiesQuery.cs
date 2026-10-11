@@ -11,7 +11,7 @@ namespace Respira.Clinical.Application.Features.Criteria.GetReferencedEntities
     {
         public required bool HasReferencedEntities { get; set; }
         public required IEnumerable<Guid> RiskFactorReference { get; set; }
-        public required IEnumerable<Guid> MetricsRuleReference { get; set; }
+        public required IEnumerable<Guid> MetricRuleReference { get; set; }
         public required IEnumerable<Guid> TreatmentReference { get; set; }
     }
 }

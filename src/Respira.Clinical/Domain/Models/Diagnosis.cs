@@ -35,7 +35,7 @@ namespace Respira.Clinical.Domain.Models
         /// <summary>
         /// Evidences for the diagnosis result
         /// </summary>
-        public required List<string> Evidences { get; set; }
+        public required List<Evidence> Evidences { get; set; }
 
         /// <summary>
         /// The list of missing variables when diagnosis is performed

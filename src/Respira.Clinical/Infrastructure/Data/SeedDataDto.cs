@@ -5,7 +5,7 @@ namespace Respira.Clinical.Infrastructure.Data
     public record SeedDataDto
     {
         public ICollection<ClinicalVariableDto> ClinicalVariables { get; init; } = [];
-        public ICollection<ClinicalMetricsDto> ClinicalMetrics { get; init; } = [];
+        public ICollection<ClinicalMetricDto> ClinicalMetrics { get; init; } = [];
         public ICollection<CriterionDto> Criteria { get; init; } = [];
         public ICollection<PathogenDto> Pathogens { get; init; } = [];
         public ICollection<SuspectedCauseDto> SuspectedCauses { get; init; } = [];
@@ -30,16 +30,16 @@ namespace Respira.Clinical.Infrastructure.Data
         public ICollection<string> AcceptedValues { get; init; } = [];
     }
 
-    public record ClinicalMetricsDto
+    public record ClinicalMetricDto
     {
         public string Id { get; init; } = string.Empty;
         public string Name { get; init; } = string.Empty;
         public string Code { get; init; } = string.Empty;
         public string Description { get; init; } = string.Empty;
-        public ICollection<MetricsRuleDto> Rules { get; init; } = [];
+        public ICollection<MetricRuleDto> Rules { get; init; } = [];
     }
 
-    public record MetricsRuleDto
+    public record MetricRuleDto
     {
         public string Id { get; init; } = string.Empty;
         public string CriterionId { get; init; } = string.Empty;

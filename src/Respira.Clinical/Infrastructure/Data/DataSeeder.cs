@@ -10,7 +10,7 @@ namespace Respira.Clinical.Infrastructure.Data
     {
         public required ICollection<ClinicalVariable> ClinicalVariables { get; init; }
         public required ICollection<Criterion> Criteria { get; init; }
-        public required ICollection<ClinicalMetrics> ClinicalMetrics { get; init; }
+        public required ICollection<ClinicalMetric> ClinicalMetrics { get; init; }
         public required ICollection<Pathogen> Pathogens { get; init; }
         public required ICollection<RiskFactor> RiskFactors { get; init; }
         public required ICollection<SuspectedCause> SuspectedCauses { get; init; }
@@ -125,7 +125,7 @@ namespace Respira.Clinical.Infrastructure.Data
             var clinicalMetrics = dto.ClinicalMetrics.Select(s =>
             {
                 var metricId = GenerateId(s.Id);
-                var scoringRules = s.Rules.Select<MetricsRuleDto, MetricsRule>(r =>
+                var scoringRules = s.Rules.Select<MetricRuleDto, MetricRule>(r =>
                 {
                     var ruleId = GenerateId(r.Id);
                     var criterionId = GenerateId(r.CriterionId);
@@ -138,7 +138,7 @@ namespace Respira.Clinical.Infrastructure.Data
                         return new ScoringRule
                         {
                             Id = ruleId,
-                            ClinicalMetricsId = metricId,
+                            ClinicalMetricId = metricId,
                             CriterionId = criterionId,
                             Criterion = criterion,
                             ScoreFunction = scoreFunction,
@@ -150,7 +150,7 @@ namespace Respira.Clinical.Infrastructure.Data
                         return new MajorMinorRule
                         {
                             Id = ruleId,
-                            ClinicalMetricsId = metricId,
+                            ClinicalMetricId = metricId,
                             CriterionId = criterionId,
                             Criterion = criterion,
                             IsMajor = r.IsMajor.Value,
@@ -160,7 +160,7 @@ namespace Respira.Clinical.Infrastructure.Data
                     throw new ArgumentException("Invalid rule type for metrics rule: either score function or is major be provided");
                 });
 
-                return new ClinicalMetrics(s.Name, s.Code, s.Description, [.. scoringRules])
+                return new ClinicalMetric(s.Name, s.Code, s.Description, [.. scoringRules])
                 {
                     Id = metricId,
                 };

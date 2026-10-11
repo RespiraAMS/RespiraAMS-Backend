@@ -24,6 +24,6 @@ namespace Respira.Clinical.Domain.Models
         /// </summary>
         public required List<Pathogen> WorthSuspected { get; set; }
 
-        public required List<string> Evidences { get; set; }
+        public required List<Evidence> Evidences { get; set; }
     }
 }
