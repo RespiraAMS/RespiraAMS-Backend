@@ -36,6 +36,9 @@ namespace Respira.Clinical.Infrastructure.Data
         public string Name { get; init; } = string.Empty;
         public string Code { get; init; } = string.Empty;
         public string Description { get; init; } = string.Empty;
+        public string Version { get; init; } = string.Empty;
+        public string Publisher { get; init; } = string.Empty;
+        public bool IsApplied { get; init; }
         public ICollection<MetricRuleDto> Rules { get; init; } = [];
     }
 

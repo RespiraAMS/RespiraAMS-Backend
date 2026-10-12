@@ -19,6 +19,7 @@ namespace Respira.Clinical.Application.Features.Diagnosis.EmpiricalDiagnosis.Dia
     {
         public required Severity Severity { get; set; }
         public required TreatmentSite TreatmentSite { get; set; }
+        public decimal? Crcl { get; set; }
         public required IEnumerable<PathogenResult> WorthSuspected { get; set; }
         public required IEnumerable<PathogenResult> HeavySuspected { get; set; }
         public required IEnumerable<Evidence> Evidences { get; set; }

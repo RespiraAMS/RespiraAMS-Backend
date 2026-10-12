@@ -23,11 +23,33 @@ namespace Respira.Clinical.Domain.Entities
         public string Description { get; set; }
 
         /// <summary>
+        /// Version of the metric
+        /// </summary>
+        public string Version { get; set; }
+
+        /// <summary>
+        /// Metric publisher
+        /// </summary>
+        public string Publisher { get; set; }
+
+        /// <summary>
+        /// Metric status, is applied or not
+        /// </summary>
+        public bool IsApplied { get; set; }
+
+        /// <summary>
         /// Scoring rules
         /// </summary>
         public ICollection<MetricRule> Rules { get; set; } = [];
 
-        public ClinicalMetric(string name, string code, string description, ICollection<MetricRule> rules)
+        public ClinicalMetric(
+            string name,
+            string code,
+            string description,
+            string version,
+            string publisher,
+            bool isApplied,
+            ICollection<MetricRule> rules)
         {
             if (!rules.All(r => r.GetType() == typeof(ScoringRule)) && !rules.All(r => r.GetType() == typeof(MajorMinorRule)))
             {
@@ -37,6 +59,9 @@ namespace Respira.Clinical.Domain.Entities
             Name = name;
             Code = code;
             Description = description;
+            Version = version;
+            Publisher = publisher;
+            IsApplied = isApplied;
             Rules = rules;
         }
 
@@ -49,6 +74,8 @@ namespace Respira.Clinical.Domain.Entities
             Name = string.Empty;
             Code = string.Empty;
             Description = string.Empty;
+            Version = string.Empty;
+            Publisher = string.Empty;
         }
 
         // A metric with no rules belongs to neither system: All() would vacuously be

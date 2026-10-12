@@ -125,6 +125,7 @@ namespace Respira.Clinical.Application.Features.Diagnosis.EmpiricalDiagnosis.Dia
             {
                 Severity = diagnosisResult.Data!.Severity,
                 TreatmentSite = diagnosisResult.Data.TreatmentSite,
+                Crcl = diagnosisResult.Data.Crcl,
                 WorthSuspected = [.. diagnosisResult.Data.WorthSuspected.Select(p => new PathogenResult(p.Id, p.Name))],
                 HeavySuspected = [.. diagnosisResult.Data.HeavySuspected.Select(p => new PathogenResult(p.Id, p.Name))],
                 Evidences = [.. diagnosisResult.Data.Evidences],
