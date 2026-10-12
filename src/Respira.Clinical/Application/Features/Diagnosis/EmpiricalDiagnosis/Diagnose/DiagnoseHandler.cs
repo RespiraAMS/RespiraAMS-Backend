@@ -19,32 +19,32 @@ namespace Respira.Clinical.Application.Features.Diagnosis.EmpiricalDiagnosis.Dia
             {
                 Variables = await context.ClinicalVariables
                     .AsNoTracking()
-                    .ToListAsync(),
+                    .ToListAsync(cancellationToken),
                 Pathogens = await context.Pathogens
                     .AsNoTracking()
                     .Include(x => x.RiskFactors)
                     .ThenInclude(f => f.Criterion)
-                    .ToListAsync(),
+                    .ToListAsync(cancellationToken),
                 SuspectedCauses = await context.SuspectedCauses
                     .AsNoTracking()
                     .Include(x => x.Pathogen)
                     .ThenInclude(p => p.RiskFactors)
                     .ThenInclude(f => f.Criterion)
-                    .ToListAsync(),
+                    .ToListAsync(cancellationToken),
                 Metrics = await context.ClinicalMetrics
                     .AsNoTracking()
                     .Include(x => x.Rules)
                     .ThenInclude(r => r.Criterion)
-                    .ToListAsync(),
+                    .ToListAsync(cancellationToken),
                 AntibioticGroups = await context.AntibioticGroups
                     .AsNoTracking()
                     .Include(x => x.Parent)
-                    .ToListAsync(),
+                    .ToListAsync(cancellationToken),
                 Antibiotics = await context.Antibiotics
                     .AsNoTracking()
                     .Include(x => x.AntibioticGroup)
                     .Include(x => x.Dosages)
-                    .ToListAsync(),
+                    .ToListAsync(cancellationToken),
             };
 
             logger.LogDebug("Clinical context loaded: {detail}", new
@@ -59,7 +59,7 @@ namespace Respira.Clinical.Application.Features.Diagnosis.EmpiricalDiagnosis.Dia
             var observations = new List<ClinicalObservation>();
             foreach (var observation in query.Observations)
             {
-                if (!clinicalContext.Variables.Any(x => x.Id == observation.VariableId))
+                if (clinicalContext.Variables.All(x => x.Id != observation.VariableId))
                 {
                     logger.LogDebug("Variable {variableId} not found in clinical context", observation.VariableId);
                     return Result<DiagnoseResult>.Failure(new Error(ApplicationStatus.BadRequest, "Variable not found"));

@@ -2380,6 +2380,9 @@
             "name": "Severity metrics CURB-65",
             "code": "CURB-65",
             "description": "CURB-65 metrics to assess severity of a patient",
+            "version": "2002-2003",
+            "publisher": "Hiệp hội Lồng ngực Anh (BTS)",
+            "isApplied": true,
             "rules": [
                 {
                     "id": "00000000-0000-0000-0000-300000000001",
@@ -2428,6 +2431,9 @@
             "name": "Pneumonia Severity Index (PSI)",
             "code": "PSI",
             "description": "PSI metrics to assess severity of a patient with more detail than CURB-65",
+            "version": "1997",
+            "publisher": "Đội ngũ Nghiên cứu Kết quả Điều trị Viêm phổi (PORT - Pneumonia Outcomes Research Team)",
+            "isApplied": true,
             "rules": [
                 {
                     "id": "00000000-0000-0000-0000-300000000006",
@@ -2608,6 +2614,9 @@
             "name": "ICU hospitalization criteria by IDSA/ATS",
             "code": "IDSA/ATS",
             "description": "IDSA/ATS metrics to assess whether a severe patient need ICU or not",
+            "version": "2026",
+            "publisher": "Hiệp hội Bệnh nhiễm trùng Mỹ (IDSA) và Hiệp hội Lồng ngực Mỹ (ATS)",
+            "isApplied": true,
             "rules": [
                 {
                     "id": "00000000-0000-0000-0000-300000000025",

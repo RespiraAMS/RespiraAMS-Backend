@@ -9,12 +9,39 @@ namespace Respira.Clinical.API.Dtos
 {
     public record GetPagedClinicalVariableRequestDto
     {
+        /// <summary>
+        /// Pagination parameter: page index (1-based)
+        /// </summary>
         public int Page { get; set; } = 1;
+
+        /// <summary>
+        /// Pagination parameter: page size
+        /// </summary>
         public int Size { get; set; } = 10;
+
+        /// <summary>
+        /// Clinical variable name
+        /// </summary>
         public string? Name { get; set; }
+
+        /// <summary>
+        /// Clinical variable code
+        /// </summary>
         public string? Code { get; set; }
+
+        /// <summary>
+        /// Clinical variable is required flag
+        /// </summary>
         public bool? IsRequired { get; set; }
+
+        /// <summary>
+        /// Clinical variable value type
+        /// </summary>
         public ClinicalValueType? ValueType { get; set; }
+
+        /// <summary>
+        /// Clinical variable category
+        /// </summary>
         public ClinicalVariableCategory? Category { get; set; }
 
         public GetPagedClinicalVariableQuery ToQuery()

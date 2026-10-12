@@ -160,7 +160,7 @@ namespace Respira.Clinical.Infrastructure.Data
                     throw new ArgumentException("Invalid rule type for metrics rule: either score function or is major be provided");
                 });
 
-                return new ClinicalMetric(s.Name, s.Code, s.Description, [.. scoringRules])
+                return new ClinicalMetric(s.Name, s.Code, s.Description, s.Version, s.Publisher, s.IsApplied, [.. scoringRules])
                 {
                     Id = metricId,
                 };
