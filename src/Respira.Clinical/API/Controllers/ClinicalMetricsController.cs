@@ -1,10 +1,10 @@
 using Asp.Versioning;
 using Microsoft.AspNetCore.Mvc;
 using Respira.Clinical.API.Dtos;
-using Respira.Clinical.Application.Features.ClinicalMetrics.AddRule;
+using Respira.Clinical.Application.Features.ClinicalMetrics.AddMetricRule;
 using Respira.Clinical.Application.Features.ClinicalMetrics.CreateClinicalMetric;
 using Respira.Clinical.Application.Features.ClinicalMetrics.DeleteClinicalMetric;
-using Respira.Clinical.Application.Features.ClinicalMetrics.DeleteRule;
+using Respira.Clinical.Application.Features.ClinicalMetrics.DeleteMetricRule;
 using Respira.Clinical.Application.Features.ClinicalMetrics.GetClinicalMetricById;
 using Respira.Clinical.Application.Features.ClinicalMetrics.GetMetricRuleById;
 using Respira.Clinical.Application.Features.ClinicalMetrics.GetPagedClinicalMetric;
@@ -85,7 +85,7 @@ namespace Respira.Clinical.API.Controllers
 
         [HttpPost]
         [Route("{id:guid}/rules")]
-        public async Task<IActionResult> AddRule(Guid id, [FromBody] AddRuleRequestDto req)
+        public async Task<IActionResult> AddRule(Guid id, [FromBody] AddMetricRuleRequestDto req)
         {
             var result = await bus.InvokeAsync<Result<AddRuleResult>>(req.ToCommand(id));
             return result.ToApiResponse();
@@ -103,7 +103,7 @@ namespace Respira.Clinical.API.Controllers
 
         [HttpPut]
         [Route("{metricId:guid}/rules/{ruleId:guid}")]
-        public async Task<IActionResult> UpdateMetricRule(Guid metricId, Guid ruleId, [FromBody] UpdateRuleRequestDto req)
+        public async Task<IActionResult> UpdateMetricRule(Guid metricId, Guid ruleId, [FromBody] UpdateMetricRuleRequestDto req)
         {
             var result = await bus.InvokeAsync<Result>(req.ToCommand(ruleId, metricId));
             return result.ToApiResponse();
@@ -115,7 +115,7 @@ namespace Respira.Clinical.API.Controllers
 #pragma warning restore ASP0018 // Unused route parameter
         public async Task<IActionResult> DeleteMetricRule(Guid ruleId)
         {
-            var result = await bus.InvokeAsync<Result>(new DeleteRuleCommand { Id = ruleId });
+            var result = await bus.InvokeAsync<Result>(new DeleteMetricRuleCommand { Id = ruleId });
             return result.ToApiResponse();
         }
     }

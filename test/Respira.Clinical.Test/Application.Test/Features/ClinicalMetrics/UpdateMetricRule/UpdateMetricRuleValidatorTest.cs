@@ -1,12 +1,12 @@
-using Respira.Clinical.Application.Features.ClinicalMetrics.UpdateRule;
+using Respira.Clinical.Application.Features.ClinicalMetrics.UpdateMetricRule;
 using Respira.Clinical.Application.Features.Shared.ManageFormula;
 using Respira.Clinical.Domain.Enums;
 
-namespace Respira.Application.Test.Features.ClinicalMetrics.UpdateRule
+namespace Respira.Application.Test.Features.ClinicalMetrics.UpdateMetricRule
 {
-    public class UpdateRuleValidatorTest
+    public class UpdateMetricRuleValidatorTest
     {
-        private readonly UpdateRuleValidator _validator = new();
+        private readonly UpdateMetricRuleValidator _validator = new();
 
         #region Valid command
 
@@ -159,7 +159,7 @@ namespace Respira.Application.Test.Features.ClinicalMetrics.UpdateRule
         public async Task UpdateRule_NeitherScoreFunctionNorIsMajor_Fail()
         {
             // Boundary: both nullable fields at their null boundary at the same time
-            var command = new UpdateRuleCommand
+            var command = new UpdateMetricRuleCommand
             {
                 Id = Guid.CreateVersion7(),
                 ClinicalMetricId = Guid.CreateVersion7(),
@@ -247,7 +247,7 @@ namespace Respira.Application.Test.Features.ClinicalMetrics.UpdateRule
         {
             // Boundary: every rule that can fail at once fails independently, so the
             // client learns about all mistakes in a single response
-            var command = new UpdateRuleCommand
+            var command = new UpdateMetricRuleCommand
             {
                 Id = Guid.Empty,
                 ClinicalMetricId = Guid.Empty,
@@ -266,7 +266,7 @@ namespace Respira.Application.Test.Features.ClinicalMetrics.UpdateRule
 
         #endregion
 
-        private static UpdateRuleCommand ScoringCommand(FormulaDto scoreFunction) => new()
+        private static UpdateMetricRuleCommand ScoringCommand(FormulaDto scoreFunction) => new()
         {
             Id = Guid.CreateVersion7(),
             ClinicalMetricId = Guid.CreateVersion7(),
@@ -274,7 +274,7 @@ namespace Respira.Application.Test.Features.ClinicalMetrics.UpdateRule
             ScoreFunction = scoreFunction,
         };
 
-        private static UpdateRuleCommand MajorMinorCommand(bool isMajor) => new()
+        private static UpdateMetricRuleCommand MajorMinorCommand(bool isMajor) => new()
         {
             Id = Guid.CreateVersion7(),
             ClinicalMetricId = Guid.CreateVersion7(),

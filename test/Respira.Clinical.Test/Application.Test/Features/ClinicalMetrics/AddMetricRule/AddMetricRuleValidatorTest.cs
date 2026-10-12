@@ -1,12 +1,12 @@
-using Respira.Clinical.Application.Features.ClinicalMetrics.AddRule;
+using Respira.Clinical.Application.Features.ClinicalMetrics.AddMetricRule;
 using Respira.Clinical.Application.Features.Shared.ManageFormula;
 using Respira.Clinical.Domain.Enums;
 
-namespace Respira.Application.Test.Features.ClinicalMetrics.AddRule
+namespace Respira.Application.Test.Features.ClinicalMetrics.AddMetricRule
 {
-    public class AddRuleValidatorTest
+    public class AddMetricRuleValidatorTest
     {
-        private readonly AddRuleValidator _validator = new();
+        private readonly AddMetricRuleValidator _validator = new();
 
         #region Valid command
 
@@ -144,7 +144,7 @@ namespace Respira.Application.Test.Features.ClinicalMetrics.AddRule
         public async Task AddRule_NeitherScoreFunctionNorIsMajor_Fail()
         {
             // Boundary: both nullable fields at their null boundary at the same time
-            var command = new AddRuleCommand
+            var command = new AddMetricRuleCommand
             {
                 ClinicalMetricId = Guid.CreateVersion7(),
                 CriterionId = Guid.CreateVersion7(),
@@ -231,7 +231,7 @@ namespace Respira.Application.Test.Features.ClinicalMetrics.AddRule
         {
             // Boundary: every rule that can fail at once fails independently, so the
             // client learns about all mistakes in a single response
-            var command = new AddRuleCommand
+            var command = new AddMetricRuleCommand
             {
                 ClinicalMetricId = Guid.Empty,
                 CriterionId = Guid.Empty,
@@ -248,14 +248,14 @@ namespace Respira.Application.Test.Features.ClinicalMetrics.AddRule
 
         #endregion
 
-        private static AddRuleCommand ScoringCommand(FormulaDto scoreFunction) => new()
+        private static AddMetricRuleCommand ScoringCommand(FormulaDto scoreFunction) => new()
         {
             ClinicalMetricId = Guid.CreateVersion7(),
             CriterionId = Guid.CreateVersion7(),
             ScoreFunction = scoreFunction,
         };
 
-        private static AddRuleCommand MajorMinorCommand(bool isMajor) => new()
+        private static AddMetricRuleCommand MajorMinorCommand(bool isMajor) => new()
         {
             ClinicalMetricId = Guid.CreateVersion7(),
             CriterionId = Guid.CreateVersion7(),

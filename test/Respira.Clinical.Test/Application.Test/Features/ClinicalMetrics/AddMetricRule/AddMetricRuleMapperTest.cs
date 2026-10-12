@@ -1,5 +1,5 @@
 using Respira.Clinical.Application.Contracts.Mappers;
-using Respira.Clinical.Application.Features.ClinicalMetrics.AddRule;
+using Respira.Clinical.Application.Features.ClinicalMetrics.AddMetricRule;
 using Respira.Clinical.Application.Features.Shared.ManageFormula;
 using Respira.Clinical.Domain.Entities;
 using Respira.Clinical.Domain.Enums;
@@ -7,12 +7,12 @@ using Respira.Clinical.Domain.Models;
 using Respira.ServiceDefaults.Contracts.Results;
 using Range = Respira.Clinical.Domain.Models.Range;
 
-namespace Respira.Application.Test.Features.ClinicalMetrics.AddRule
+namespace Respira.Application.Test.Features.ClinicalMetrics.AddMetricRule
 {
-    public class AddRuleMapperTest
+    public class AddMetricRuleMapperTest
     {
-        private readonly ICreateMapper<AddRuleCommand, MetricRule> _mapper =
-            new AddRuleMapper(new FormulaMapper());
+        private readonly ICreateMapper<AddMetricRuleCommand, MetricRule> _mapper =
+            new AddMetricRuleMapper(new FormulaMapper());
 
         #region Map command to model
 
@@ -125,7 +125,7 @@ namespace Respira.Application.Test.Features.ClinicalMetrics.AddRule
         public void ToModel_NeitherScoreFunctionNorIsMajor_ThrowsArgumentException()
         {
             // Boundary: both nullable fields at their null boundary at the same time
-            var command = new AddRuleCommand
+            var command = new AddMetricRuleCommand
             {
                 ClinicalMetricId = Guid.CreateVersion7(),
                 CriterionId = Guid.CreateVersion7(),
@@ -170,14 +170,14 @@ namespace Respira.Application.Test.Features.ClinicalMetrics.AddRule
 
         #endregion
 
-        private static AddRuleCommand ScoringCommand(FormulaDto scoreFunction) => new()
+        private static AddMetricRuleCommand ScoringCommand(FormulaDto scoreFunction) => new()
         {
             ClinicalMetricId = Guid.CreateVersion7(),
             CriterionId = Guid.CreateVersion7(),
             ScoreFunction = scoreFunction,
         };
 
-        private static AddRuleCommand MajorMinorCommand(bool isMajor) => new()
+        private static AddMetricRuleCommand MajorMinorCommand(bool isMajor) => new()
         {
             ClinicalMetricId = Guid.CreateVersion7(),
             CriterionId = Guid.CreateVersion7(),

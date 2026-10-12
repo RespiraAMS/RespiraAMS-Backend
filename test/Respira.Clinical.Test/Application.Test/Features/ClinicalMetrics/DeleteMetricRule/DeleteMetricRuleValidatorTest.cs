@@ -1,10 +1,10 @@
-using Respira.Clinical.Application.Features.ClinicalMetrics.DeleteRule;
+using Respira.Clinical.Application.Features.ClinicalMetrics.DeleteMetricRule;
 
-namespace Respira.Application.Test.Features.ClinicalMetrics.DeleteRule
+namespace Respira.Application.Test.Features.ClinicalMetrics.DeleteMetricRule
 {
-    public class DeleteRuleValidatorTest
+    public class DeleteMetricRuleValidatorTest
     {
-        private readonly DeleteRuleValidator _validator = new();
+        private readonly DeleteMetricRuleValidator _validator = new();
 
         #region Valid command
 
@@ -22,7 +22,7 @@ namespace Respira.Application.Test.Features.ClinicalMetrics.DeleteRule
         public async Task DeleteRule_ValidId_Success(Guid id)
         {
             var result = await _validator.ValidateAsync(
-                new DeleteRuleCommand { Id = id },
+                new DeleteMetricRuleCommand { Id = id },
                 TestContext.Current.CancellationToken);
 
             Assert.Empty(result.Errors);
@@ -37,7 +37,7 @@ namespace Respira.Application.Test.Features.ClinicalMetrics.DeleteRule
         {
             // Boundary: Guid.Empty is the only value rejected by NotEmpty on a Guid
             var result = await _validator.ValidateAsync(
-                new DeleteRuleCommand { Id = Guid.Empty },
+                new DeleteMetricRuleCommand { Id = Guid.Empty },
                 TestContext.Current.CancellationToken);
 
             _ = Assert.Single(result.Errors);

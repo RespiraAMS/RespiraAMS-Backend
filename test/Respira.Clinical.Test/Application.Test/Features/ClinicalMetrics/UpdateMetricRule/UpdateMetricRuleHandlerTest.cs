@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moq;
-using Respira.Clinical.Application.Features.ClinicalMetrics.UpdateRule;
+using Respira.Clinical.Application.Features.ClinicalMetrics.UpdateMetricRule;
 using Respira.Clinical.Application.Features.Shared.ManageFormula;
 using Respira.Clinical.Domain.Entities;
 using Respira.Clinical.Domain.Enums;
@@ -11,14 +11,14 @@ using Respira.ServiceDefaults.Contracts.Results;
 using FormulaDto = Respira.Clinical.Application.Features.Shared.ManageFormula.FormulaDto;
 using Range = Respira.Clinical.Domain.Models.Range;
 
-namespace Respira.Application.Test.Features.ClinicalMetrics.UpdateRule
+namespace Respira.Application.Test.Features.ClinicalMetrics.UpdateMetricRule
 {
-    public class UpdateRuleHandlerTest : IClassFixture<PostgresFixture>, IAsyncLifetime
+    public class UpdateMetricRuleHandlerTest : IClassFixture<PostgresFixture>, IAsyncLifetime
     {
         // The concrete context type is kept so the change tracker can be cleared
         // between tests (the handler still receives it as IDbContext)
         private readonly DbContextOptions<ClinicalDbContext> _options;
-        private readonly UpdateRuleHandler _handler;
+        private readonly UpdateMetricRuleHandler _handler;
         private readonly ClinicalDbContext _context;
 
         private static readonly (string Name, string Code, string Description, string Version, string Publisher) Curb65 =
@@ -38,13 +38,13 @@ namespace Respira.Application.Test.Features.ClinicalMetrics.UpdateRule
         private static readonly DateTimeOffset OriginalUpdatedAt =
             new(2024, 1, 15, 8, 30, 0, TimeSpan.Zero);
 
-        public UpdateRuleHandlerTest(PostgresFixture fixture)
+        public UpdateMetricRuleHandlerTest(PostgresFixture fixture)
         {
             // Create handler dependencies
             _options = new DbContextOptionsBuilder<ClinicalDbContext>().UseNpgsql(fixture.ConnectionString).Options;
             _context = new ClinicalDbContext(_options);
-            var mapper = new UpdateRuleMapper(new FormulaMapper());
-            var logger = new Mock<ILogger<UpdateRuleHandler>>().Object;
+            var mapper = new UpdateMetricRuleMapper(new FormulaMapper());
+            var logger = new Mock<ILogger<UpdateMetricRuleHandler>>().Object;
 
             // Initialize handler
             _handler = new(_context, mapper, logger);
@@ -675,7 +675,7 @@ namespace Respira.Application.Test.Features.ClinicalMetrics.UpdateRule
                 "Nhịp thở >= 30 lần/phút", Numeric("RR", 30, ExpressionOperator.GTE));
             var ruleId = await SeedScoringRuleAsync(metricId, ageId, new NumericConstantFormula(1));
 
-            var command = new UpdateRuleCommand
+            var command = new UpdateMetricRuleCommand
             {
                 Id = ruleId,
                 ClinicalMetricId = metricId,
@@ -916,7 +916,7 @@ namespace Respira.Application.Test.Features.ClinicalMetrics.UpdateRule
             return rule.Id;
         }
 
-        private static UpdateRuleCommand ScoringCommand(
+        private static UpdateMetricRuleCommand ScoringCommand(
             Guid ruleId, Guid metricId, Guid criterionId, FormulaDto scoreFunction) => new()
             {
                 Id = ruleId,
@@ -925,7 +925,7 @@ namespace Respira.Application.Test.Features.ClinicalMetrics.UpdateRule
                 ScoreFunction = scoreFunction,
             };
 
-        private static UpdateRuleCommand MajorMinorCommand(
+        private static UpdateMetricRuleCommand MajorMinorCommand(
             Guid ruleId, Guid metricId, Guid criterionId, bool isMajor) => new()
             {
                 Id = ruleId,

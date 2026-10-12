@@ -1,5 +1,5 @@
 using Respira.Clinical.Application.Contracts.Mappers;
-using Respira.Clinical.Application.Features.ClinicalMetrics.UpdateRule;
+using Respira.Clinical.Application.Features.ClinicalMetrics.UpdateMetricRule;
 using Respira.Clinical.Application.Features.Shared.ManageFormula;
 using Respira.Clinical.Domain.Entities;
 using Respira.Clinical.Domain.Enums;
@@ -7,12 +7,12 @@ using Respira.Clinical.Domain.Models;
 using Respira.ServiceDefaults.Contracts.Results;
 using Range = Respira.Clinical.Domain.Models.Range;
 
-namespace Respira.Application.Test.Features.ClinicalMetrics.UpdateRule
+namespace Respira.Application.Test.Features.ClinicalMetrics.UpdateMetricRule
 {
-    public class UpdateRuleMapperTest
+    public class UpdateMetricRuleMapperTest
     {
-        private readonly IUpdateMapper<MetricRule, UpdateRuleCommand> _mapper =
-            new UpdateRuleMapper(new FormulaMapper());
+        private readonly IUpdateMapper<MetricRule, UpdateMetricRuleCommand> _mapper =
+            new UpdateMetricRuleMapper(new FormulaMapper());
 
         // Fixed stamp for the rules before the update, well in the past so the
         // assertion on the new UpdatedAt cannot be flaky
@@ -31,7 +31,7 @@ namespace Respira.Application.Test.Features.ClinicalMetrics.UpdateRule
              */
             var criterionId = Guid.CreateVersion7();
             var model = CreateScoringRule(criterionId);
-            var command = new UpdateRuleCommand
+            var command = new UpdateMetricRuleCommand
             {
                 Id = model.Id,
                 ClinicalMetricId = model.ClinicalMetricId,
@@ -72,7 +72,7 @@ namespace Respira.Application.Test.Features.ClinicalMetrics.UpdateRule
             var age = CreateAgeVariable();
             var model = CreateScoringRule(Guid.CreateVersion7());
             var newCriterionId = Guid.CreateVersion7();
-            var command = new UpdateRuleCommand
+            var command = new UpdateMetricRuleCommand
             {
                 Id = model.Id,
                 ClinicalMetricId = model.ClinicalMetricId,
@@ -107,7 +107,7 @@ namespace Respira.Application.Test.Features.ClinicalMetrics.UpdateRule
             // IDSA/ATS style: the rule only carries its weight, no score function
             var model = CreateMajorMinorRule(Guid.CreateVersion7(), isMajor: !isMajor);
             var newCriterionId = Guid.CreateVersion7();
-            var command = new UpdateRuleCommand
+            var command = new UpdateMetricRuleCommand
             {
                 Id = model.Id,
                 ClinicalMetricId = model.ClinicalMetricId,
@@ -141,7 +141,7 @@ namespace Respira.Application.Test.Features.ClinicalMetrics.UpdateRule
             // exists to satisfy the mapper interface (the handler always passes the
             // clinical variables loaded from the database)
             var model = CreateScoringRule(Guid.CreateVersion7());
-            var command = new UpdateRuleCommand
+            var command = new UpdateMetricRuleCommand
             {
                 Id = model.Id,
                 ClinicalMetricId = model.ClinicalMetricId,
@@ -158,7 +158,7 @@ namespace Respira.Application.Test.Features.ClinicalMetrics.UpdateRule
             // Business rule: a rule is either a scoring rule or a major/minor rule,
             // never both - the mapper rejects the contradiction itself
             var model = CreateScoringRule(Guid.CreateVersion7());
-            var command = new UpdateRuleCommand
+            var command = new UpdateMetricRuleCommand
             {
                 Id = model.Id,
                 ClinicalMetricId = model.ClinicalMetricId,
@@ -176,7 +176,7 @@ namespace Respira.Application.Test.Features.ClinicalMetrics.UpdateRule
         {
             // Boundary: both nullable fields at their null boundary at the same time
             var model = CreateScoringRule(Guid.CreateVersion7());
-            var command = new UpdateRuleCommand
+            var command = new UpdateMetricRuleCommand
             {
                 Id = model.Id,
                 ClinicalMetricId = model.ClinicalMetricId,
@@ -194,7 +194,7 @@ namespace Respira.Application.Test.Features.ClinicalMetrics.UpdateRule
             // dependencies, so the formula mapping reports a failure that the
             // mapper forwards untouched
             var model = CreateScoringRule(Guid.CreateVersion7());
-            var command = new UpdateRuleCommand
+            var command = new UpdateMetricRuleCommand
             {
                 Id = model.Id,
                 ClinicalMetricId = model.ClinicalMetricId,
@@ -217,7 +217,7 @@ namespace Respira.Application.Test.Features.ClinicalMetrics.UpdateRule
              * supplied the clinical variables as dependencies
              */
             var model = CreateScoringRule(Guid.CreateVersion7());
-            var command = new UpdateRuleCommand
+            var command = new UpdateMetricRuleCommand
             {
                 Id = model.Id,
                 ClinicalMetricId = model.ClinicalMetricId,
@@ -242,7 +242,7 @@ namespace Respira.Application.Test.Features.ClinicalMetrics.UpdateRule
              * call makes visible as InvalidCastException
              */
             var model = CreateMajorMinorRule(Guid.CreateVersion7(), isMajor: false);
-            var command = new UpdateRuleCommand
+            var command = new UpdateMetricRuleCommand
             {
                 Id = model.Id,
                 ClinicalMetricId = model.ClinicalMetricId,
@@ -259,7 +259,7 @@ namespace Respira.Application.Test.Features.ClinicalMetrics.UpdateRule
         {
             // The other direction of the same type mismatch
             var model = CreateScoringRule(Guid.CreateVersion7());
-            var command = new UpdateRuleCommand
+            var command = new UpdateMetricRuleCommand
             {
                 Id = model.Id,
                 ClinicalMetricId = model.ClinicalMetricId,

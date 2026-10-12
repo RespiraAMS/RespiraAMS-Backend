@@ -1,9 +1,9 @@
 using Respira.Clinical.Application.Features.Shared.ManageFormula;
 using Respira.ServiceDefaults.Contracts.CQRS;
 
-namespace Respira.Clinical.Application.Features.ClinicalMetrics.AddRule
+namespace Respira.Clinical.Application.Features.ClinicalMetrics.AddMetricRule
 {
-    public record AddRuleCommand : ICommand
+    public record AddMetricRuleCommand : ICommand
     {
         public required Guid ClinicalMetricId { get; set; }
         public required Guid CriterionId { get; set; }

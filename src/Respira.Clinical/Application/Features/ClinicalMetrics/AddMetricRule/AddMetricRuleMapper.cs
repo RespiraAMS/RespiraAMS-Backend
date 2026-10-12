@@ -4,17 +4,17 @@ using Respira.Clinical.Domain.Entities;
 using Respira.Clinical.Domain.Models;
 using Respira.ServiceDefaults.Contracts.Results;
 
-namespace Respira.Clinical.Application.Features.ClinicalMetrics.AddRule
+namespace Respira.Clinical.Application.Features.ClinicalMetrics.AddMetricRule
 {
-    public class AddRuleMapper(IMapper<FormulaDto, Formula> formulaMapper)
-        : ICreateMapper<AddRuleCommand, MetricRule>
+    public class AddMetricRuleMapper(IMapper<FormulaDto, Formula> formulaMapper)
+        : ICreateMapper<AddMetricRuleCommand, MetricRule>
     {
-        public Result<MetricRule> ToModel(AddRuleCommand command)
+        public Result<MetricRule> ToModel(AddMetricRuleCommand command)
         {
             throw new NotImplementedException();
         }
 
-        public Result<MetricRule> ToModel(AddRuleCommand command, object? dependencies = null)
+        public Result<MetricRule> ToModel(AddMetricRuleCommand command, object? dependencies = null)
         {
             if (command.ScoreFunction is not null && command.IsMajor is not null)
             {

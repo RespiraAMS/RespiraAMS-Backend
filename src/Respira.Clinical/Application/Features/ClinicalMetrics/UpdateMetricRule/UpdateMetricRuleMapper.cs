@@ -4,17 +4,17 @@ using Respira.Clinical.Domain.Entities;
 using Respira.Clinical.Domain.Models;
 using Respira.ServiceDefaults.Contracts.Results;
 
-namespace Respira.Clinical.Application.Features.ClinicalMetrics.UpdateRule
+namespace Respira.Clinical.Application.Features.ClinicalMetrics.UpdateMetricRule
 {
-    public class UpdateRuleMapper(IMapper<FormulaDto, Formula> formulaMapper)
-        : IUpdateMapper<MetricRule, UpdateRuleCommand>
+    public class UpdateMetricRuleMapper(IMapper<FormulaDto, Formula> formulaMapper)
+        : IUpdateMapper<MetricRule, UpdateMetricRuleCommand>
     {
-        public Result MapModel(MetricRule model, UpdateRuleCommand command)
+        public Result MapModel(MetricRule model, UpdateMetricRuleCommand command)
         {
             throw new NotImplementedException();
         }
 
-        public Result MapModel(MetricRule model, UpdateRuleCommand command, object? dependencies = null)
+        public Result MapModel(MetricRule model, UpdateMetricRuleCommand command, object? dependencies = null)
         {
             if (command.ScoreFunction is not null && command.IsMajor is not null)
             {

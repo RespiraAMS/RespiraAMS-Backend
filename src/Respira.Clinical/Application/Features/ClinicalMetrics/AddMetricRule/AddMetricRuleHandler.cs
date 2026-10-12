@@ -6,15 +6,15 @@ using Respira.Clinical.Domain.Entities;
 using Respira.ServiceDefaults.Contracts.CQRS;
 using Respira.ServiceDefaults.Contracts.Results;
 
-namespace Respira.Clinical.Application.Features.ClinicalMetrics.AddRule
+namespace Respira.Clinical.Application.Features.ClinicalMetrics.AddMetricRule
 {
-    public class AddRuleHandler(
+    public class AddMetricRuleHandler(
         IDbContext context,
-        ICreateMapper<AddRuleCommand, MetricRule> mapper,
-        ILogger<AddRuleHandler> logger)
-        : ICommandHandler<AddRuleCommand, Result<AddRuleResult>>
+        ICreateMapper<AddMetricRuleCommand, MetricRule> mapper,
+        ILogger<AddMetricRuleHandler> logger)
+        : ICommandHandler<AddMetricRuleCommand, Result<AddRuleResult>>
     {
-        public async Task<Result<AddRuleResult>> HandleAsync(AddRuleCommand command, CancellationToken cancellationToken = default)
+        public async Task<Result<AddRuleResult>> HandleAsync(AddMetricRuleCommand command, CancellationToken cancellationToken = default)
         {
             // Check if the clinical metric exists
             var metric = await context.ClinicalMetrics

@@ -4,12 +4,12 @@ using Respira.Clinical.Application.Contracts.Data;
 using Respira.ServiceDefaults.Contracts.CQRS;
 using Respira.ServiceDefaults.Contracts.Results;
 
-namespace Respira.Clinical.Application.Features.ClinicalMetrics.DeleteRule
+namespace Respira.Clinical.Application.Features.ClinicalMetrics.DeleteMetricRule
 {
-    public class DeleteRuleHandler(IDbContext context, ILogger<DeleteRuleHandler> logger)
-        : ICommandHandler<DeleteRuleCommand, Result>
+    public class DeleteMetricRuleHandler(IDbContext context, ILogger<DeleteMetricRuleHandler> logger)
+        : ICommandHandler<DeleteMetricRuleCommand, Result>
     {
-        public async Task<Result> HandleAsync(DeleteRuleCommand command, CancellationToken cancellationToken = default)
+        public async Task<Result> HandleAsync(DeleteMetricRuleCommand command, CancellationToken cancellationToken = default)
         {
             // Get metric rule by ID
             var rule = await context.MetricRules.FirstOrDefaultAsync(x => x.Id == command.Id, cancellationToken);

@@ -1,18 +1,18 @@
-using Respira.Clinical.Application.Features.ClinicalMetrics.AddRule;
-using Respira.Clinical.Application.Features.ClinicalMetrics.UpdateRule;
+using Respira.Clinical.Application.Features.ClinicalMetrics.AddMetricRule;
+using Respira.Clinical.Application.Features.ClinicalMetrics.UpdateMetricRule;
 using Respira.Clinical.Application.Features.Shared.ManageFormula;
 
 namespace Respira.Clinical.API.Dtos
 {
-    public record AddRuleRequestDto
+    public record AddMetricRuleRequestDto
     {
         public required Guid CriterionId { get; set; }
         public FormulaDto? ScoreFunction { get; set; }
         public bool? IsMajor { get; set; }
 
-        public AddRuleCommand ToCommand(Guid clinicalMetricId)
+        public AddMetricRuleCommand ToCommand(Guid clinicalMetricId)
         {
-            return new AddRuleCommand
+            return new AddMetricRuleCommand
             {
                 ClinicalMetricId = clinicalMetricId,
                 CriterionId = CriterionId,
@@ -22,15 +22,15 @@ namespace Respira.Clinical.API.Dtos
         }
     }
 
-    public record UpdateRuleRequestDto
+    public record UpdateMetricRuleRequestDto
     {
         public required Guid CriterionId { get; set; }
         public FormulaDto? ScoreFunction { get; set; }
         public bool? IsMajor { get; set; }
 
-        public UpdateRuleCommand ToCommand(Guid metricRuleId, Guid clinicalMetricId)
+        public UpdateMetricRuleCommand ToCommand(Guid metricRuleId, Guid clinicalMetricId)
         {
-            return new UpdateRuleCommand
+            return new UpdateMetricRuleCommand
             {
                 Id = metricRuleId,
                 ClinicalMetricId = clinicalMetricId,

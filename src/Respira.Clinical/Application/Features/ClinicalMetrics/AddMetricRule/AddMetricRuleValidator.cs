@@ -1,13 +1,12 @@
 using FluentValidation;
 using Respira.Clinical.Application.Features.Shared.ManageFormula;
 
-namespace Respira.Clinical.Application.Features.ClinicalMetrics.UpdateRule
+namespace Respira.Clinical.Application.Features.ClinicalMetrics.AddMetricRule
 {
-    public class UpdateRuleValidator : AbstractValidator<UpdateRuleCommand>
+    public class AddMetricRuleValidator : AbstractValidator<AddMetricRuleCommand>
     {
-        public UpdateRuleValidator()
+        public AddMetricRuleValidator()
         {
-            RuleFor(x => x.Id).NotEmpty().WithMessage("Metric rule ID is required");
             RuleFor(x => x.ClinicalMetricId).NotEmpty().WithMessage("Clinical metric ID is required");
             RuleFor(x => x.CriterionId).NotEmpty().WithMessage("Criterion ID is required");
             RuleFor(x => x)

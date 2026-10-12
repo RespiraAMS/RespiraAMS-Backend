@@ -2,16 +2,16 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Respira.Clinical.Application.Contracts.Data;
-using Respira.Clinical.Application.Features.ClinicalMetrics.DeleteRule;
+using Respira.Clinical.Application.Features.ClinicalMetrics.DeleteMetricRule;
 using Respira.Clinical.Domain.Entities;
 using Respira.Clinical.Domain.Enums;
 using Respira.Clinical.Domain.Models;
 using Respira.Clinical.Infrastructure.Data;
 using Respira.ServiceDefaults.Contracts.Results;
 
-namespace Respira.Application.Test.Features.ClinicalMetrics.DeleteRule
+namespace Respira.Application.Test.Features.ClinicalMetrics.DeleteMetricRule
 {
-    public class DeleteRuleHandlerTest : IClassFixture<PostgresFixture>, IAsyncLifetime
+    public class DeleteMetricRuleHandlerTest : IClassFixture<PostgresFixture>, IAsyncLifetime
     {
         private static readonly (string Name, string Code, string Description, string Version, string Publisher) Curb65 =
             ("Severity metrics CURB-65", "CURB-65", "CURB-65 metrics to assess severity of a patient",
@@ -22,15 +22,15 @@ namespace Respira.Application.Test.Features.ClinicalMetrics.DeleteRule
                 "2026", "Hiệp hội Bệnh nhiễm trùng Mỹ (IDSA) và Hiệp hội Lồng ngực Mỹ (ATS)");
 
         private readonly DbContextOptions<ClinicalDbContext> _options;
-        private readonly DeleteRuleHandler _handler;
+        private readonly DeleteMetricRuleHandler _handler;
         private readonly IDbContext _context;
 
-        public DeleteRuleHandlerTest(PostgresFixture fixture)
+        public DeleteMetricRuleHandlerTest(PostgresFixture fixture)
         {
             // Create handler dependencies
             _options = new DbContextOptionsBuilder<ClinicalDbContext>().UseNpgsql(fixture.ConnectionString).Options;
             _context = new ClinicalDbContext(_options);
-            var logger = new Mock<ILogger<DeleteRuleHandler>>().Object;
+            var logger = new Mock<ILogger<DeleteMetricRuleHandler>>().Object;
 
             // Initialize handler
             _handler = new(_context, logger);
@@ -64,7 +64,7 @@ namespace Respira.Application.Test.Features.ClinicalMetrics.DeleteRule
             var ruleId = await SeedScoringRuleAsync(metricId, ageId);
 
             var result = await _handler.HandleAsync(
-                new DeleteRuleCommand { Id = ruleId }, TestContext.Current.CancellationToken);
+                new DeleteMetricRuleCommand { Id = ruleId }, TestContext.Current.CancellationToken);
 
             Assert.True(result.IsSuccess());
             Assert.Null(result.Error);
@@ -110,7 +110,7 @@ namespace Respira.Application.Test.Features.ClinicalMetrics.DeleteRule
             var ruleId = await SeedMajorMinorRuleAsync(metricId, hypotensionId, isMajor: true);
 
             var result = await _handler.HandleAsync(
-                new DeleteRuleCommand { Id = ruleId }, TestContext.Current.CancellationToken);
+                new DeleteMetricRuleCommand { Id = ruleId }, TestContext.Current.CancellationToken);
 
             Assert.True(result.IsSuccess());
             Assert.Equal(ApplicationStatus.Deleted, result.StatusCode);
@@ -147,7 +147,7 @@ namespace Respira.Application.Test.Features.ClinicalMetrics.DeleteRule
             var tachypneaRuleId = await SeedScoringRuleAsync(metricId, tachypneaId);
 
             var result = await _handler.HandleAsync(
-                new DeleteRuleCommand { Id = hypotensionRuleId }, TestContext.Current.CancellationToken);
+                new DeleteMetricRuleCommand { Id = hypotensionRuleId }, TestContext.Current.CancellationToken);
 
             Assert.True(result.IsSuccess());
             Assert.Equal(ApplicationStatus.Deleted, result.StatusCode);
@@ -178,7 +178,7 @@ namespace Respira.Application.Test.Features.ClinicalMetrics.DeleteRule
         public async Task DeleteRule_UnknownId_Fail()
         {
             var result = await _handler.HandleAsync(
-                new DeleteRuleCommand { Id = Guid.CreateVersion7() },
+                new DeleteMetricRuleCommand { Id = Guid.CreateVersion7() },
                 TestContext.Current.CancellationToken);
 
             Assert.True(result.IsFailure());
@@ -191,7 +191,7 @@ namespace Respira.Application.Test.Features.ClinicalMetrics.DeleteRule
         {
             // Boundary: no row can ever match Guid.Empty, so the lookup fails
             var result = await _handler.HandleAsync(
-                new DeleteRuleCommand { Id = Guid.Empty },
+                new DeleteMetricRuleCommand { Id = Guid.Empty },
                 TestContext.Current.CancellationToken);
 
             Assert.True(result.IsFailure());
@@ -211,7 +211,7 @@ namespace Respira.Application.Test.Features.ClinicalMetrics.DeleteRule
             var ruleId = await SeedScoringRuleAsync(metricId, ageId);
 
             var first = await _handler.HandleAsync(
-                new DeleteRuleCommand { Id = ruleId }, TestContext.Current.CancellationToken);
+                new DeleteMetricRuleCommand { Id = ruleId }, TestContext.Current.CancellationToken);
             Assert.True(first.IsSuccess());
 
             var firstRead = await FindRuleIncludingDeletedAsync(ruleId);
@@ -219,7 +219,7 @@ namespace Respira.Application.Test.Features.ClinicalMetrics.DeleteRule
             var firstDeletedAt = firstRead.DeletedAt;
 
             var second = await _handler.HandleAsync(
-                new DeleteRuleCommand { Id = ruleId }, TestContext.Current.CancellationToken);
+                new DeleteMetricRuleCommand { Id = ruleId }, TestContext.Current.CancellationToken);
 
             Assert.True(second.IsFailure());
             Assert.NotNull(second.Error);
@@ -242,7 +242,7 @@ namespace Respira.Application.Test.Features.ClinicalMetrics.DeleteRule
             var ruleId = await SeedScoringRuleAsync(metricId, ageId, isDeleted: true);
 
             var result = await _handler.HandleAsync(
-                new DeleteRuleCommand { Id = ruleId }, TestContext.Current.CancellationToken);
+                new DeleteMetricRuleCommand { Id = ruleId }, TestContext.Current.CancellationToken);
 
             Assert.True(result.IsFailure());
             Assert.NotNull(result.Error);

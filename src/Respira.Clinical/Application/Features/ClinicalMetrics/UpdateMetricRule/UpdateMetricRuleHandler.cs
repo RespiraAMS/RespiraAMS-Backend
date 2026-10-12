@@ -6,15 +6,15 @@ using Respira.Clinical.Domain.Entities;
 using Respira.ServiceDefaults.Contracts.CQRS;
 using Respira.ServiceDefaults.Contracts.Results;
 
-namespace Respira.Clinical.Application.Features.ClinicalMetrics.UpdateRule
+namespace Respira.Clinical.Application.Features.ClinicalMetrics.UpdateMetricRule
 {
-    public class UpdateRuleHandler(
+    public class UpdateMetricRuleHandler(
         IDbContext context,
-        IUpdateMapper<MetricRule, UpdateRuleCommand> mapper,
-        ILogger<UpdateRuleHandler> logger)
-        : ICommandHandler<UpdateRuleCommand, Result>
+        IUpdateMapper<MetricRule, UpdateMetricRuleCommand> mapper,
+        ILogger<UpdateMetricRuleHandler> logger)
+        : ICommandHandler<UpdateMetricRuleCommand, Result>
     {
-        public async Task<Result> HandleAsync(UpdateRuleCommand command, CancellationToken cancellationToken = default)
+        public async Task<Result> HandleAsync(UpdateMetricRuleCommand command, CancellationToken cancellationToken = default)
         {
             // Get clinical metric by ID
             var metric = await context.ClinicalMetrics

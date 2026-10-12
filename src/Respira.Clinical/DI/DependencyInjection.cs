@@ -14,10 +14,10 @@ using Respira.Clinical.Application.Features.Antibiotics.AddDosage;
 using Respira.Clinical.Application.Features.Antibiotics.CreateAntibiotic;
 using Respira.Clinical.Application.Features.Antibiotics.UpdateAntibiotic;
 using Respira.Clinical.Application.Features.Antibiotics.UpdateDosage;
-using Respira.Clinical.Application.Features.ClinicalMetrics.AddRule;
+using Respira.Clinical.Application.Features.ClinicalMetrics.AddMetricRule;
 using Respira.Clinical.Application.Features.ClinicalMetrics.CreateClinicalMetric;
 using Respira.Clinical.Application.Features.ClinicalMetrics.UpdateClinicalMetric;
-using Respira.Clinical.Application.Features.ClinicalMetrics.UpdateRule;
+using Respira.Clinical.Application.Features.ClinicalMetrics.UpdateMetricRule;
 using Respira.Clinical.Application.Features.ClinicalVariables.CreateClinicalVariable;
 using Respira.Clinical.Application.Features.ClinicalVariables.UpdateClinicalVariable;
 using Respira.Clinical.Application.Features.Criteria.CreateCriterion;
@@ -88,8 +88,8 @@ namespace Respira.Clinical.DI
             services.AddScoped<ICreateMapper<CreateClinicalMetricCommand, ClinicalMetric>, CreateClinicalMetricMapper>();
             services.AddScoped<IUpdateMapper<ClinicalMetric, UpdateClinicalMetricCommand>, UpdateClinicalMetricMapper>();
 
-            services.AddScoped<ICreateMapper<AddRuleCommand, MetricRule>, AddRuleMapper>();
-            services.AddScoped<IUpdateMapper<MetricRule, UpdateRuleCommand>, UpdateRuleMapper>();
+            services.AddScoped<ICreateMapper<AddMetricRuleCommand, MetricRule>, AddMetricRuleMapper>();
+            services.AddScoped<IUpdateMapper<MetricRule, UpdateMetricRuleCommand>, UpdateMetricRuleMapper>();
         }
 
         public static void AddFluentValidators(this IServiceCollection services)

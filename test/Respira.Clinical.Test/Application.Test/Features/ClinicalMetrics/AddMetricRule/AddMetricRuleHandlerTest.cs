@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Respira.Clinical.Application.Contracts.Data;
-using Respira.Clinical.Application.Features.ClinicalMetrics.AddRule;
+using Respira.Clinical.Application.Features.ClinicalMetrics.AddMetricRule;
 using Respira.Clinical.Application.Features.Shared.ManageFormula;
 using Respira.Clinical.Domain.Entities;
 using Respira.Clinical.Domain.Enums;
@@ -12,9 +12,9 @@ using Respira.ServiceDefaults.Contracts.Results;
 using FormulaDto = Respira.Clinical.Application.Features.Shared.ManageFormula.FormulaDto;
 using Range = Respira.Clinical.Domain.Models.Range;
 
-namespace Respira.Application.Test.Features.ClinicalMetrics.AddRule
+namespace Respira.Application.Test.Features.ClinicalMetrics.AddMetricRule
 {
-    public class AddRuleHandlerTest : IClassFixture<PostgresFixture>, IAsyncLifetime
+    public class AddMetricRuleHandlerTest : IClassFixture<PostgresFixture>, IAsyncLifetime
     {
         private static readonly (string Name, string Code, string Description, string Version, string Publisher) Curb65 =
             ("Severity metrics CURB-65", "CURB-65", "CURB-65 metrics to assess severity of a patient",
@@ -29,16 +29,16 @@ namespace Respira.Application.Test.Features.ClinicalMetrics.AddRule
                 "2026", "Hiệp hội Bệnh nhiễm trùng Mỹ (IDSA) và Hiệp hội Lồng ngực Mỹ (ATS)");
 
         private readonly DbContextOptions<ClinicalDbContext> _options;
-        private readonly AddRuleHandler _handler;
+        private readonly AddMetricRuleHandler _handler;
         private readonly IDbContext _context;
 
-        public AddRuleHandlerTest(PostgresFixture fixture)
+        public AddMetricRuleHandlerTest(PostgresFixture fixture)
         {
             // Create handler dependencies
             _options = new DbContextOptionsBuilder<ClinicalDbContext>().UseNpgsql(fixture.ConnectionString).Options;
             _context = new ClinicalDbContext(_options);
-            var mapper = new AddRuleMapper(new FormulaMapper());
-            var logger = new Mock<ILogger<AddRuleHandler>>().Object;
+            var mapper = new AddMetricRuleMapper(new FormulaMapper());
+            var logger = new Mock<ILogger<AddMetricRuleHandler>>().Object;
 
             // Initialize handler
             _handler = new(_context, mapper, logger);
@@ -519,7 +519,7 @@ namespace Respira.Application.Test.Features.ClinicalMetrics.AddRule
             var criterionId = await SeedCriterionAsync(
                 "Tuổi >= 65", Numeric("AGE", 65, ExpressionOperator.GTE));
 
-            var command = new AddRuleCommand
+            var command = new AddMetricRuleCommand
             {
                 ClinicalMetricId = metricId,
                 CriterionId = criterionId,
@@ -671,14 +671,14 @@ namespace Respira.Application.Test.Features.ClinicalMetrics.AddRule
             return rule.Id;
         }
 
-        private static AddRuleCommand ScoringAdd(Guid metricId, Guid criterionId, FormulaDto scoreFunction) => new()
+        private static AddMetricRuleCommand ScoringAdd(Guid metricId, Guid criterionId, FormulaDto scoreFunction) => new()
         {
             ClinicalMetricId = metricId,
             CriterionId = criterionId,
             ScoreFunction = scoreFunction,
         };
 
-        private static AddRuleCommand MajorMinorAdd(Guid metricId, Guid criterionId, bool isMajor) => new()
+        private static AddMetricRuleCommand MajorMinorAdd(Guid metricId, Guid criterionId, bool isMajor) => new()
         {
             ClinicalMetricId = metricId,
             CriterionId = criterionId,
