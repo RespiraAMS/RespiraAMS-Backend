@@ -2,9 +2,9 @@ using FluentValidation;
 
 namespace Respira.Clinical.Application.Features.ClinicalMetrics.GetMetricRuleById
 {
-    public class GetMetricByIdValidator : AbstractValidator<GetMetricRuleByIdQuery>
+    public class GetMetricRuleByIdValidator : AbstractValidator<GetMetricRuleByIdQuery>
     {
-        public GetMetricByIdValidator()
+        public GetMetricRuleByIdValidator()
         {
             RuleFor(x => x.Id).NotEmpty().WithMessage("Metric rule ID is required");
         }

@@ -30,10 +30,10 @@ namespace Respira.Clinical.Application.Features.ClinicalMetrics.GetClinicalMetri
                 Version = metric.Version,
                 Publisher = metric.Publisher,
                 IsApplied = metric.IsApplied,
-                Rules = metric.Rules.Select(r => new MetricRuleResult
+                Rules = metric.Rules.Select(r => new MetricRuleItem
                 {
                     Id = r.Id,
-                    Criterion = new CriterionResult(r.CriterionId, r.Criterion.Name, r.Criterion.Formula.ToString()!),
+                    Criterion = new CriterionItem(r.CriterionId, r.Criterion.Name, r.Criterion.Formula.ToString()!),
                     ScoreFunction = r is ScoringRule scoreRule ? scoreRule.ScoreFunction?.ToString() : null,
                     IsMajorRule = r is MajorMinorRule majorRule ? majorRule.IsMajor : null,
                 })

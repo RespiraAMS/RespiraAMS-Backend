@@ -85,9 +85,14 @@ namespace Respira.Clinical.API.Controllers
 
         [HttpPost]
         [Route("{id:guid}/rules")]
+        [ProducesResponseType<Result<AddMetricRuleResult>>(StatusCodes.Status201Created)]
+        [ProducesResponseType<Result>(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType<Result>(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType<Result>(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType<Result>(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> AddRule(Guid id, [FromBody] AddMetricRuleRequestDto req)
         {
-            var result = await bus.InvokeAsync<Result<AddRuleResult>>(req.ToCommand(id));
+            var result = await bus.InvokeAsync<Result<AddMetricRuleResult>>(req.ToCommand(id));
             return result.ToApiResponse();
         }
 
@@ -95,14 +100,25 @@ namespace Respira.Clinical.API.Controllers
 #pragma warning disable ASP0018 // Unused route parameter
         [Route("{metricId:guid}/rules/{ruleId:guid}")]
 #pragma warning restore ASP0018 // Unused route parameter
+        [ProducesResponseType<Result<MetricRuleItem>>(StatusCodes.Status200OK)]
+        [ProducesResponseType<Result>(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType<Result>(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType<Result>(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType<Result>(StatusCodes.Status404NotFound)]
+        [ProducesResponseType<Result>(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetMetricRuleById(Guid ruleId)
         {
-            var result = await bus.InvokeAsync<Result<Application.Features.ClinicalMetrics.GetMetricRuleById.MetricRuleResult>>(new GetMetricRuleByIdQuery { Id = ruleId });
+            var result = await bus.InvokeAsync<Result<MetricRuleItem>>(new GetMetricRuleByIdQuery { Id = ruleId });
             return result.ToApiResponse();
         }
 
         [HttpPut]
         [Route("{metricId:guid}/rules/{ruleId:guid}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType<Result>(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType<Result>(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType<Result>(StatusCodes.Status404NotFound)]
+        [ProducesResponseType<Result>(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> UpdateMetricRule(Guid metricId, Guid ruleId, [FromBody] UpdateMetricRuleRequestDto req)
         {
             var result = await bus.InvokeAsync<Result>(req.ToCommand(ruleId, metricId));

@@ -70,5 +70,9 @@ namespace Respira.Clinical.Application.Features.ClinicalVariables.CreateClinical
         public List<string> AcceptedValues { get; set; } = [];
     }
 
+    /// <summary>
+    /// Create clinical variable result
+    /// </summary>
+    /// <param name="Id">Created clinical variable ID</param>
     public record CreateClinicalVariableResult(Guid Id);
 }

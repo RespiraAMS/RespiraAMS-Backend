@@ -6,7 +6,7 @@ namespace Respira.Application.Test.Features.ClinicalMetrics.GetMetricRuleById
     {
         // The validator class in the source is named GetMetricByIdValidator
         // (file GetMetricByIdValidator.cs) while the query is GetMetricRuleByIdQuery
-        private readonly GetMetricByIdValidator _validator = new();
+        private readonly GetMetricRuleByIdValidator _validator = new();
 
         #region Valid command
 

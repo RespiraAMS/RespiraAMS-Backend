@@ -4,6 +4,9 @@ namespace Respira.Clinical.Application.Features.ClinicalMetrics.DeleteClinicalMe
 {
     public record DeleteClinicalMetricCommand : ICommand
     {
+        /// <summary>
+        /// Clinical metric ID
+        /// </summary>
         public required Guid Id { get; set; }
     }
 }

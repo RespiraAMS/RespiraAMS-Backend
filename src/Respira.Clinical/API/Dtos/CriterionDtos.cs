@@ -7,7 +7,14 @@ namespace Respira.Clinical.API.Dtos
 {
     public record GetPagedCriterionRequestDto
     {
+        /// <summary>
+        /// Pagination parameter: page index (1-based)
+        /// </summary>
         public int Page { get; set; } = 1;
+
+        /// <summary>
+        /// Pagination parameter: page size
+        /// </summary>
         public int Size { get; set; } = 10;
 
         public GetPagedCriterionQuery ToQuery()
@@ -25,7 +32,14 @@ namespace Respira.Clinical.API.Dtos
 
     public record UpdateCriterionRequestDto
     {
+        /// <summary>
+        /// Criterion name
+        /// </summary>
         public required string Name { get; set; }
+
+        /// <summary>
+        /// Criterion formula
+        /// </summary>
         public required FormulaDto Formula { get; set; }
 
         public UpdateCriterionCommand ToCommand(Guid id)
