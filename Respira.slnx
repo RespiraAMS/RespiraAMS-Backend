@@ -24,4 +24,5 @@
         </ItemGroup>
     </Target>
     <Project Path="test/Respira.Patient.Test/Application.Test/Respira.Patient.Application.Test.csproj" />
+    <Project Path="test/Respira.Patient.Test/Domain.Test/Respira.Patient.Domain.Test.csproj" />
 </Solution>
