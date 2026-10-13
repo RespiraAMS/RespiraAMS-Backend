@@ -28,6 +28,20 @@ namespace Respira.Clinical.Infrastructure.Data
             AllowTrailingCommas = true,
         };
 
+        public static SeedData Load(string filePath)
+        {
+            var path = Path.IsPathRooted(filePath)
+                ? filePath
+                : Path.Combine(AppContext.BaseDirectory, filePath);
+
+            var json = File.ReadAllText(path);
+
+            var dto = JsonSerializer.Deserialize<SeedDataDto>(json, JsonOptions)
+                ?? throw new InvalidOperationException("Failed to deserialize seed data.");
+
+            return MapToDomain(dto);
+        }
+
         public static async Task<SeedData> LoadAsync(string filePath)
         {
             var path = Path.IsPathRooted(filePath)
