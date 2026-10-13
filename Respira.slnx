@@ -6,6 +6,11 @@
     <Project Path="src/Respira.AppHost/Respira.AppHost.csproj" />
     <Project Path="src/Respira.Clinical/Infrastructure/Respira.Clinical.Infrastructure.csproj" />
     <Project Path="src/Respira.Gateway/Respira.Gateway.csproj" />
+    <Project Path="src/Respira.Patient/API/Respira.Patient.API.csproj" />
+    <Project Path="src/Respira.Patient/Application/Respira.Patient.Application.csproj" />
+    <Project Path="src/Respira.Patient/DI/Respira.Patient.DI.csproj" />
+    <Project Path="src/Respira.Patient/Domain/Respira.Patient.Domain.csproj" />
+    <Project Path="src/Respira.Patient/Infrastructure/Respira.Patient.Infrastructure.csproj" />
     <Project Path="src/Respira.ServiceDefaults/Respira.ServiceDefaults.csproj" />
     <Project Path="test/Respira.Clinical.Test/Application.Test/Respira.Application.Test.csproj" />
     <Project Path="test/Respira.Clinical.Test/Domain.Test/Respira.Clinical.Domain.Test.csproj" />
@@ -18,4 +23,5 @@
             <FileWrites Include="./.husky/_/install.stamp" />
         </ItemGroup>
     </Target>
+    <Project Path="test/Respira.Patient.Test/Application.Test/Respira.Patient.Application.Test.csproj" />
 </Solution>
