@@ -174,14 +174,14 @@ namespace Respira.Clinical.Domain.Models
 
         public Formula Operand { get; }
 
-        public UnaryFormula(Formula formula)
+        public UnaryFormula(Formula operand)
         {
-            if (formula.ResultType != ExpressionResultType.Boolean)
+            if (operand.ResultType != ExpressionResultType.Boolean)
             {
                 throw new ArgumentException("Unary formula only support boolean formula");
             }
 
-            Operand = formula;
+            Operand = operand;
         }
 
         public override Expression ToExpression(IEnumerable<ClinicalObservation> observations)
