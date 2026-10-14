@@ -3,7 +3,7 @@ using Respira.Clinical.Application.Features.AntibioticGroups.UpdateAntibioticGro
 using Respira.Clinical.Domain.Entities;
 using Respira.ServiceDefaults.Contracts.Results;
 
-namespace Respira.Application.Test.Features.AntibioticGroups.UpdateAntibioticGroup
+namespace Respira.Clinical.Application.Test.Features.AntibioticGroups.UpdateAntibioticGroup
 {
     public class UpdateAntibioticGroupMapperTest
     {

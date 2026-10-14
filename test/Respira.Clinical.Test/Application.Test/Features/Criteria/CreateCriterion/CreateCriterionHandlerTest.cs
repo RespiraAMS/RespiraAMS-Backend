@@ -13,7 +13,7 @@ using Respira.ServiceDefaults.Contracts.Results;
 using FormulaDto = Respira.Clinical.Application.Features.Shared.ManageFormula.FormulaDto;
 using Range = Respira.Clinical.Domain.Models.Range;
 
-namespace Respira.Application.Test.Features.Criteria.CreateCriterion
+namespace Respira.Clinical.Application.Test.Features.Criteria.CreateCriterion
 {
     public class CreateCriterionHandlerTest : IClassFixture<PostgresFixture>, IAsyncLifetime
     {

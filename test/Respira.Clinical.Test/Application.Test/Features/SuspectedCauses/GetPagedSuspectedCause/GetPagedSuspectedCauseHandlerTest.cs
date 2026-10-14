@@ -9,7 +9,7 @@ using Respira.Clinical.Infrastructure.Mapper;
 using Respira.ServiceDefaults.Contracts.Pagination;
 using Respira.ServiceDefaults.Contracts.Results;
 
-namespace Respira.Application.Test.Features.SuspectedCauses.GetPagedSuspectedCause
+namespace Respira.Clinical.Application.Test.Features.SuspectedCauses.GetPagedSuspectedCause
 {
     public class GetPagedSuspectedCauseHandlerTest : IClassFixture<PostgresFixture>, IAsyncLifetime
     {

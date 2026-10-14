@@ -1,6 +1,6 @@
 using Respira.Clinical.Application.Features.RiskFactors.DeleteRiskFactor;
 
-namespace Respira.Application.Test.Features.RiskFactors.DeleteRiskFactor
+namespace Respira.Clinical.Application.Test.Features.RiskFactors.DeleteRiskFactor
 {
     public class DeleteRiskFactorValidatorTest
     {

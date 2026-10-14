@@ -7,7 +7,7 @@ using Respira.Clinical.Domain.Models;
 using Respira.ServiceDefaults.Contracts.Results;
 using Range = Respira.Clinical.Domain.Models.Range;
 
-namespace Respira.Application.Test.Features.ClinicalMetrics.AddMetricRule
+namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.AddMetricRule
 {
     public class AddMetricRuleMapperTest
     {

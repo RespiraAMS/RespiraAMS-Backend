@@ -1,6 +1,6 @@
 using Respira.Clinical.Application.Features.AntibioticGroups.DeleteAntibioticGroup;
 
-namespace Respira.Application.Test.Features.AntibioticGroups.DeleteAntibioticGroup
+namespace Respira.Clinical.Application.Test.Features.AntibioticGroups.DeleteAntibioticGroup
 {
     public class DeleteAntibioticGroupValidatorTest
     {

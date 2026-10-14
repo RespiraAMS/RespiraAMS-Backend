@@ -1,6 +1,6 @@
 using Respira.Clinical.Application.Features.Pathogens.DeletePathogen;
 
-namespace Respira.Application.Test.Features.Pathogens.DeletePathogen
+namespace Respira.Clinical.Application.Test.Features.Pathogens.DeletePathogen
 {
     public class DeletePathogenValidatorTest
     {

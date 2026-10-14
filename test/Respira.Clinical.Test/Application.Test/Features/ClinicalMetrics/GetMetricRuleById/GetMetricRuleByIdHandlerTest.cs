@@ -7,7 +7,7 @@ using Respira.Clinical.Domain.Models;
 using Respira.Clinical.Infrastructure.Data;
 using Respira.ServiceDefaults.Contracts.Results;
 
-namespace Respira.Application.Test.Features.ClinicalMetrics.GetMetricRuleById
+namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.GetMetricRuleById
 {
     public class GetMetricRuleByIdHandlerTest : IClassFixture<PostgresFixture>, IAsyncLifetime
     {

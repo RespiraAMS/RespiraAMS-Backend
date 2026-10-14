@@ -1,6 +1,6 @@
 using Respira.Clinical.Application.Features.AntibioticGroups.UpdateAntibioticGroup;
 
-namespace Respira.Application.Test.Features.AntibioticGroups.UpdateAntibioticGroup
+namespace Respira.Clinical.Application.Test.Features.AntibioticGroups.UpdateAntibioticGroup
 {
     public class UpdateAntibioticGroupValidatorTest
     {

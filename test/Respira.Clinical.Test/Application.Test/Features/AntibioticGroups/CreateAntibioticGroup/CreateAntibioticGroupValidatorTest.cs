@@ -1,6 +1,6 @@
 using Respira.Clinical.Application.Features.AntibioticGroups.CreateAntibioticGroup;
 
-namespace Respira.Application.Test.Features.AntibioticGroups.CreateAntibioticGroup
+namespace Respira.Clinical.Application.Test.Features.AntibioticGroups.CreateAntibioticGroup
 {
     public class CreateAntibioticGroupValidatorTest
     {

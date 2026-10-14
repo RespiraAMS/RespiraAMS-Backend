@@ -2,7 +2,7 @@ using Respira.Clinical.Application.Features.ClinicalMetrics.UpdateMetricRule;
 using Respira.Clinical.Application.Features.Shared.ManageFormula;
 using Respira.Clinical.Domain.Enums;
 
-namespace Respira.Application.Test.Features.ClinicalMetrics.UpdateMetricRule
+namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.UpdateMetricRule
 {
     public class UpdateMetricRuleValidatorTest
     {

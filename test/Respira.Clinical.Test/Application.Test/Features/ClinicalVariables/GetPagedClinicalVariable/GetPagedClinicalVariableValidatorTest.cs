@@ -1,7 +1,7 @@
 using Respira.Clinical.Application.Features.ClinicalVariables.GetPagedClinicalVariable;
 using Respira.ServiceDefaults.Contracts.Pagination;
 
-namespace Respira.Application.Test.Features.ClinicalVariables.GetPagedClinicalVariable
+namespace Respira.Clinical.Application.Test.Features.ClinicalVariables.GetPagedClinicalVariable
 {
     public class GetPagedClinicalVariableValidatorTest
     {

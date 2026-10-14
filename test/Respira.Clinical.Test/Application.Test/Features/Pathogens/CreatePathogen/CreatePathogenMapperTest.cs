@@ -3,7 +3,7 @@ using Respira.Clinical.Application.Features.Pathogens.CreatePathogen;
 using Respira.Clinical.Domain.Entities;
 using Respira.ServiceDefaults.Contracts.Results;
 
-namespace Respira.Application.Test.Features.Pathogens.CreatePathogen
+namespace Respira.Clinical.Application.Test.Features.Pathogens.CreatePathogen
 {
     public class CreatePathogenMapperTest
     {

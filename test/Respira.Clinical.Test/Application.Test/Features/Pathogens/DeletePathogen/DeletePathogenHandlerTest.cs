@@ -9,7 +9,7 @@ using Respira.Clinical.Domain.Models;
 using Respira.Clinical.Infrastructure.Data;
 using Respira.ServiceDefaults.Contracts.Results;
 
-namespace Respira.Application.Test.Features.Pathogens.DeletePathogen
+namespace Respira.Clinical.Application.Test.Features.Pathogens.DeletePathogen
 {
     public class DeletePathogenHandlerTest : IClassFixture<PostgresFixture>, IAsyncLifetime
     {

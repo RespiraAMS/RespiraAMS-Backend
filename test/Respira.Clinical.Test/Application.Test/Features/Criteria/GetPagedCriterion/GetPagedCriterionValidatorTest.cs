@@ -1,7 +1,7 @@
 using Respira.Clinical.Application.Features.Criteria.GetPagedCriterion;
 using Respira.ServiceDefaults.Contracts.Pagination;
 
-namespace Respira.Application.Test.Features.Criteria.GetPagedCriterion
+namespace Respira.Clinical.Application.Test.Features.Criteria.GetPagedCriterion
 {
     public class GetPagedCriterionValidatorTest
     {

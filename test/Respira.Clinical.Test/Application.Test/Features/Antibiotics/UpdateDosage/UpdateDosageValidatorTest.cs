@@ -2,7 +2,7 @@ using Respira.Clinical.Application.Features.Antibiotics.UpdateDosage;
 using Respira.Clinical.Domain.Enums;
 using Range = Respira.Clinical.Domain.Models.Range;
 
-namespace Respira.Application.Test.Features.Antibiotics.UpdateDosage
+namespace Respira.Clinical.Application.Test.Features.Antibiotics.UpdateDosage
 {
     public class UpdateDosageValidatorTest
     {

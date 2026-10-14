@@ -1,6 +1,6 @@
 using Respira.Clinical.Application.Features.SuspectedCauses.DeleteSuspectedCause;
 
-namespace Respira.Application.Test.Features.SuspectedCauses.DeleteSuspectedCause
+namespace Respira.Clinical.Application.Test.Features.SuspectedCauses.DeleteSuspectedCause
 {
     public class DeleteSuspectedCauseValidatorTest
     {

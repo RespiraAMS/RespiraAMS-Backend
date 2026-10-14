@@ -1,6 +1,6 @@
 using Respira.Clinical.Application.Features.ClinicalMetrics.DeleteClinicalMetric;
 
-namespace Respira.Application.Test.Features.ClinicalMetrics.DeleteClinicalMetric
+namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.DeleteClinicalMetric
 {
     public class DeleteClinicalMetricValidatorTest
     {

@@ -6,7 +6,7 @@ using Respira.Clinical.Domain.Enums;
 using Respira.Clinical.Infrastructure.Data;
 using Respira.ServiceDefaults.Contracts.Results;
 
-namespace Respira.Application.Test.Features.Antibiotics.GetAntibiotics
+namespace Respira.Clinical.Application.Test.Features.Antibiotics.GetAntibiotics
 {
     public class GetAntibioticsHandlerTest : IClassFixture<PostgresFixture>, IAsyncLifetime
     {

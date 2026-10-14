@@ -6,7 +6,7 @@ using Respira.Clinical.Domain.Models;
 using Respira.ServiceDefaults.Contracts.Results;
 using Range = Respira.Clinical.Domain.Models.Range;
 
-namespace Respira.Application.Test.Features.Shared.ManageFormula
+namespace Respira.Clinical.Application.Test.Features.Shared.ManageFormula
 {
     public class FormulaMapperTest
     {

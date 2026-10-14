@@ -6,7 +6,7 @@ using Respira.Clinical.Application.Features.Pathogens.CreatePathogen;
 using Respira.Clinical.Infrastructure.Data;
 using Respira.ServiceDefaults.Contracts.Results;
 
-namespace Respira.Application.Test.Features.Pathogens.CreatePathogen
+namespace Respira.Clinical.Application.Test.Features.Pathogens.CreatePathogen
 {
     public class CreatePathogenHandlerTest : IClassFixture<PostgresFixture>, IAsyncLifetime
     {

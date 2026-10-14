@@ -1,7 +1,7 @@
 using Respira.Clinical.Application.Features.Antibiotics.CreateAntibiotic;
 using Respira.Clinical.Domain.Enums;
 
-namespace Respira.Application.Test.Features.Antibiotics.CreateAntibiotic
+namespace Respira.Clinical.Application.Test.Features.Antibiotics.CreateAntibiotic
 {
     public class CreateAntibioticValidatorTest
     {
