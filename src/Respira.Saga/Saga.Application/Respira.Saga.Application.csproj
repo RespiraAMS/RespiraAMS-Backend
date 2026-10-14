@@ -11,8 +11,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Respira.Authentication\Authentication.Application\Authentication.Application.csproj" />
-    <ProjectReference Include="..\..\Respira.Doctor\Doctor.Application\Respira.Doctor.Application.csproj" />
+    <ProjectReference Include="..\..\Respira.Authentication\Authentication.Domain\Authentication.Domain.csproj" />
+    <ProjectReference Include="..\..\Respira.Doctor\Doctor.Domain\Respira.Doctor.Domain.csproj" />
     <ProjectReference Include="..\Saga.Domain\Respira.Saga.Domain.csproj" />
     <ProjectReference Include="..\..\Respira.ServiceDefaults\Respira.ServiceDefaults.csproj" />
   </ItemGroup>
