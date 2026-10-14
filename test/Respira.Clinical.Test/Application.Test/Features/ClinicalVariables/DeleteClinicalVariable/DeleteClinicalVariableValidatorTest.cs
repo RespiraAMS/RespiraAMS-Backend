@@ -1,6 +1,6 @@
 using Respira.Clinical.Application.Features.ClinicalVariables.DeleteClinicalVariable;
 
-namespace Respira.Application.Test.Features.ClinicalVariables.DeleteClinicalVariable
+namespace Respira.Clinical.Application.Test.Features.ClinicalVariables.DeleteClinicalVariable
 {
     public class DeleteClinicalVariableValidatorTest
     {

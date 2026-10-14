@@ -8,7 +8,7 @@ using Respira.Clinical.Infrastructure.Mapper;
 using Respira.ServiceDefaults.Contracts.Pagination;
 using Respira.ServiceDefaults.Contracts.Results;
 
-namespace Respira.Application.Test.Features.AntibioticGroups.GetPagedAntibioticGroup
+namespace Respira.Clinical.Application.Test.Features.AntibioticGroups.GetPagedAntibioticGroup
 {
     public class GetPagedAntibioticGroupHandlerTest : IClassFixture<PostgresFixture>, IAsyncLifetime
     {

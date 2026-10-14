@@ -7,7 +7,7 @@ using Respira.Clinical.Domain.Models;
 using Respira.ServiceDefaults.Contracts.Results;
 using Range = Respira.Clinical.Domain.Models.Range;
 
-namespace Respira.Application.Test.Features.ClinicalVariables.UpdateClinicalVariable
+namespace Respira.Clinical.Application.Test.Features.ClinicalVariables.UpdateClinicalVariable
 {
     public class UpdateClinicalVariableMapperTest
     {

@@ -1,6 +1,6 @@
 using Respira.Clinical.Application.Features.Pathogens.CreatePathogen;
 
-namespace Respira.Application.Test.Features.Pathogens.CreatePathogen
+namespace Respira.Clinical.Application.Test.Features.Pathogens.CreatePathogen
 {
     public class CreatePathogenValidatorTest
     {

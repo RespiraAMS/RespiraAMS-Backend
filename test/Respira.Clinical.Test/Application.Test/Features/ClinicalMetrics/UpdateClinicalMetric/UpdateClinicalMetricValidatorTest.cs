@@ -1,6 +1,6 @@
 using Respira.Clinical.Application.Features.ClinicalMetrics.UpdateClinicalMetric;
 
-namespace Respira.Application.Test.Features.ClinicalMetrics.UpdateClinicalMetric
+namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.UpdateClinicalMetric
 {
     public class UpdateClinicalMetricValidatorTest
     {

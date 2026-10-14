@@ -1,7 +1,7 @@
 using Respira.Clinical.Application.Features.SuspectedCauses.UpdateSuspectedCause;
 using Respira.Clinical.Domain.Enums;
 
-namespace Respira.Application.Test.Features.SuspectedCauses.UpdateSuspectedCause
+namespace Respira.Clinical.Application.Test.Features.SuspectedCauses.UpdateSuspectedCause
 {
     public class UpdateSuspectedCauseValidatorTest
     {

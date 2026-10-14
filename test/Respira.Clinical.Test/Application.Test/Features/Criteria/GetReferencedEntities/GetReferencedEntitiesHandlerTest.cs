@@ -9,7 +9,7 @@ using Respira.Clinical.Domain.Models;
 using Respira.Clinical.Infrastructure.Data;
 using Respira.ServiceDefaults.Contracts.Results;
 
-namespace Respira.Application.Test.Features.Criteria.GetReferencedEntities
+namespace Respira.Clinical.Application.Test.Features.Criteria.GetReferencedEntities
 {
     public class GetReferencedEntitiesHandlerTest : IClassFixture<PostgresFixture>, IAsyncLifetime
     {

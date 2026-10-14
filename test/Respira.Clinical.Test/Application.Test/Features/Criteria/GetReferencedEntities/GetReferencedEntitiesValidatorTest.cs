@@ -1,6 +1,6 @@
 using Respira.Clinical.Application.Features.Criteria.GetReferencedEntities;
 
-namespace Respira.Application.Test.Features.Criteria.GetReferencedEntities
+namespace Respira.Clinical.Application.Test.Features.Criteria.GetReferencedEntities
 {
     public class GetReferencedEntitiesValidatorTest
     {

@@ -9,7 +9,7 @@ using Respira.Clinical.Domain.Models;
 using Respira.Clinical.Infrastructure.Data;
 using Respira.ServiceDefaults.Contracts.Results;
 
-namespace Respira.Application.Test.Features.RiskFactors.DeleteRiskFactor
+namespace Respira.Clinical.Application.Test.Features.RiskFactors.DeleteRiskFactor
 {
     public class DeleteRiskFactorHandlerTest : IClassFixture<PostgresFixture>, IAsyncLifetime
     {

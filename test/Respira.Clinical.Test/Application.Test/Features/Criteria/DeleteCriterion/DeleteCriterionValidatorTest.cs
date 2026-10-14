@@ -1,6 +1,6 @@
 using Respira.Clinical.Application.Features.Criteria.DeleteCriterion;
 
-namespace Respira.Application.Test.Features.Criteria.DeleteCriterion
+namespace Respira.Clinical.Application.Test.Features.Criteria.DeleteCriterion
 {
     public class DeleteCriterionValidatorTest
     {

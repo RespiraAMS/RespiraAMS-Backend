@@ -8,7 +8,7 @@ using Respira.Clinical.Domain.Enums;
 using Respira.Clinical.Infrastructure.Data;
 using Respira.ServiceDefaults.Contracts.Results;
 
-namespace Respira.Application.Test.Features.Antibiotics.UpdateAntibiotic
+namespace Respira.Clinical.Application.Test.Features.Antibiotics.UpdateAntibiotic
 {
     public class UpdateAntibioticHandlerTest : IClassFixture<PostgresFixture>, IAsyncLifetime
     {

@@ -95,7 +95,7 @@ namespace Respira.Clinical.Domain.Test.Entities
         {
             var criterion = AgeCriterion();
 
-            var result = criterion.IsCriterionSastisfied([Numeric(Age, observedAge)]);
+            var result = criterion.IsCriterionSatisfied([Numeric(Age, observedAge)]);
 
             Assert.Equal(expected, result);
         }
@@ -107,7 +107,7 @@ namespace Respira.Clinical.Domain.Test.Entities
         {
             var criterion = SmokerCriterion();
 
-            var result = criterion.IsCriterionSastisfied([Boolean(Smoker, observed)]);
+            var result = criterion.IsCriterionSatisfied([Boolean(Smoker, observed)]);
 
             Assert.Equal(expected, result);
         }
@@ -122,7 +122,7 @@ namespace Respira.Clinical.Domain.Test.Entities
                 new CategoricalConstantFormula("Klebsiella pneumoniae"),
                 ExpressionOperator.EQ));
 
-            var result = criterion.IsCriterionSastisfied([Categorical(PathogenCode, observed)]);
+            var result = criterion.IsCriterionSatisfied([Categorical(PathogenCode, observed)]);
 
             Assert.Equal(expected, result);
         }
@@ -133,7 +133,7 @@ namespace Respira.Clinical.Domain.Test.Entities
             // The parameterless constructor stores a constant true formula
             var criterion = new Criterion();
 
-            Assert.True(criterion.IsCriterionSastisfied([]));
+            Assert.True(criterion.IsCriterionSatisfied([]));
         }
 
         [Fact]
@@ -141,7 +141,7 @@ namespace Respira.Clinical.Domain.Test.Entities
         {
             var criterion = new Criterion("Không bao giờ đúng", new BooleanConstantFormula(false));
 
-            Assert.False(criterion.IsCriterionSastisfied([]));
+            Assert.False(criterion.IsCriterionSatisfied([]));
         }
 
         [Fact]
@@ -151,7 +151,7 @@ namespace Respira.Clinical.Domain.Test.Entities
             // missing SBP observation must not make the criterion fail
             var criterion = AgeOrHypotensionCriterion();
 
-            Assert.True(criterion.IsCriterionSastisfied([Numeric(Age, 70)]));
+            Assert.True(criterion.IsCriterionSatisfied([Numeric(Age, 70)]));
         }
 
         [Fact]
@@ -161,7 +161,7 @@ namespace Respira.Clinical.Domain.Test.Entities
             // missing SBP observation cannot save the criterion
             var criterion = AgeAndHypotensionCriterion();
 
-            Assert.False(criterion.IsCriterionSastisfied([Numeric(Age, 64)]));
+            Assert.False(criterion.IsCriterionSatisfied([Numeric(Age, 64)]));
         }
 
         #endregion
@@ -174,7 +174,7 @@ namespace Respira.Clinical.Domain.Test.Entities
             // A criterion that cannot be evaluated is simply not satisfied
             var criterion = AgeCriterion();
 
-            Assert.False(criterion.IsCriterionSastisfied([]));
+            Assert.False(criterion.IsCriterionSatisfied([]));
         }
 
         [Fact]
@@ -184,7 +184,7 @@ namespace Respira.Clinical.Domain.Test.Entities
             // criterion still cannot be evaluated as satisfied
             var criterion = AgeAndHypotensionCriterion();
 
-            Assert.False(criterion.IsCriterionSastisfied([Numeric(Age, 65)]));
+            Assert.False(criterion.IsCriterionSatisfied([Numeric(Age, 65)]));
         }
 
         [Fact]
@@ -197,7 +197,7 @@ namespace Respira.Clinical.Domain.Test.Entities
                 new NumericConstantFormula(1),
                 ExpressionOperator.GT));
 
-            Assert.False(criterion.IsCriterionSastisfied([Numeric(Age, 5)]));
+            Assert.False(criterion.IsCriterionSatisfied([Numeric(Age, 5)]));
         }
 
         [Fact]
@@ -212,7 +212,7 @@ namespace Respira.Clinical.Domain.Test.Entities
                 Formula = new NumericConstantFormula(65),
             };
 
-            Assert.Throws<Exception>(() => criterion.IsCriterionSastisfied([Numeric(Age, 70)]));
+            Assert.Throws<Exception>(() => criterion.IsCriterionSatisfied([Numeric(Age, 70)]));
         }
 
         #endregion

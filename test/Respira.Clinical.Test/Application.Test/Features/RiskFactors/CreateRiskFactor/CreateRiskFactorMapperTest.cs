@@ -3,7 +3,7 @@ using Respira.Clinical.Application.Features.RiskFactors.CreateRiskFactor;
 using Respira.Clinical.Domain.Entities;
 using Respira.ServiceDefaults.Contracts.Results;
 
-namespace Respira.Application.Test.Features.RiskFactors.CreateRiskFactor
+namespace Respira.Clinical.Application.Test.Features.RiskFactors.CreateRiskFactor
 {
     public class CreateRiskFactorMapperTest
     {

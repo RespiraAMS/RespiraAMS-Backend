@@ -2,7 +2,7 @@ using Respira.Clinical.Application.Features.Criteria.UpdateCriterion;
 using Respira.Clinical.Domain.Enums;
 using FormulaDto = Respira.Clinical.Application.Features.Shared.ManageFormula.FormulaDto;
 
-namespace Respira.Application.Test.Features.Criteria.UpdateCriterion
+namespace Respira.Clinical.Application.Test.Features.Criteria.UpdateCriterion
 {
     public class UpdateCriterionValidatorTest
     {

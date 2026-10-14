@@ -8,7 +8,7 @@ using Respira.Clinical.Infrastructure.Mapper;
 using Respira.ServiceDefaults.Contracts.Pagination;
 using Respira.ServiceDefaults.Contracts.Results;
 
-namespace Respira.Application.Test.Features.Pathogens.GetPagedPathogen
+namespace Respira.Clinical.Application.Test.Features.Pathogens.GetPagedPathogen
 {
     public class GetPagedPathogensHandlerTest : IClassFixture<PostgresFixture>, IAsyncLifetime
     {

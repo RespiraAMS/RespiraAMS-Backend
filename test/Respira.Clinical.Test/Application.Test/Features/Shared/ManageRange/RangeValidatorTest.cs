@@ -1,7 +1,7 @@
 using Respira.Clinical.Application.Features.Shared.ManageRange;
 using Range = Respira.Clinical.Domain.Models.Range;
 
-namespace Respira.Application.Test.Features.Shared.ManageRange
+namespace Respira.Clinical.Application.Test.Features.Shared.ManageRange
 {
     public class RangeValidatorTest
     {

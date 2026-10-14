@@ -7,7 +7,7 @@ using Respira.Clinical.Domain.Entities;
 using Respira.Clinical.Infrastructure.Data;
 using Respira.ServiceDefaults.Contracts.Results;
 
-namespace Respira.Application.Test.Features.Pathogens.UpdatePathogen
+namespace Respira.Clinical.Application.Test.Features.Pathogens.UpdatePathogen
 {
     public class UpdatePathogenHandlerTest : IClassFixture<PostgresFixture>, IAsyncLifetime
     {

@@ -1,7 +1,7 @@
 using Respira.Clinical.Application.Features.Shared.ManageFormula;
 using Respira.Clinical.Domain.Enums;
 
-namespace Respira.Application.Test.Features.Shared.ManageFormula
+namespace Respira.Clinical.Application.Test.Features.Shared.ManageFormula
 {
     public class FormulaValidatorTest
     {

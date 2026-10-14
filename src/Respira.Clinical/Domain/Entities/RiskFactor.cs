@@ -33,9 +33,9 @@ namespace Respira.Clinical.Domain.Entities
 
         public IEnumerable<VariableRef> Variables => Criterion.Variables.DistinctBy(x => x.Code);
 
-        public bool IsFactorSastified(IEnumerable<ClinicalObservation> observations)
+        public bool IsFactorSatisfied(IEnumerable<ClinicalObservation> observations)
         {
-            var result = Criterion.IsCriterionSastisfied(observations);
+            var result = Criterion.IsCriterionSatisfied(observations);
             if (result is bool x)
             {
                 return x;

@@ -7,7 +7,7 @@ using Respira.Clinical.Infrastructure.Data;
 using Respira.ServiceDefaults.Contracts.Results;
 using Range = Respira.Clinical.Domain.Models.Range;
 
-namespace Respira.Application.Test.Features.ClinicalVariables.GetClinicalVariables
+namespace Respira.Clinical.Application.Test.Features.ClinicalVariables.GetClinicalVariables
 {
     public class GetClinicalVariablesHandlerTest : IClassFixture<PostgresFixture>, IAsyncLifetime
     {

@@ -1,7 +1,7 @@
 using Respira.Clinical.Application.Features.Pathogens.GetPagedPathogen;
 using Respira.ServiceDefaults.Contracts.Pagination;
 
-namespace Respira.Application.Test.Features.Pathogens.GetPagedPathogen
+namespace Respira.Clinical.Application.Test.Features.Pathogens.GetPagedPathogen
 {
     public class GetPagedPathogensValidatorTest
     {

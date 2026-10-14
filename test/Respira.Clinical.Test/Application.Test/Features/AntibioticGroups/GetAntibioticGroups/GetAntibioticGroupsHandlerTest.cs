@@ -5,7 +5,7 @@ using Respira.Clinical.Domain.Entities;
 using Respira.Clinical.Infrastructure.Data;
 using Respira.ServiceDefaults.Contracts.Results;
 
-namespace Respira.Application.Test.Features.AntibioticGroups.GetAntibioticGroups
+namespace Respira.Clinical.Application.Test.Features.AntibioticGroups.GetAntibioticGroups
 {
     public class GetAntibioticGroupsHandlerTest : IClassFixture<PostgresFixture>, IAsyncLifetime
     {

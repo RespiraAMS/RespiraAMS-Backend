@@ -3,7 +3,7 @@ using Respira.Clinical.Application.Features.Shared.ManageFormula;
 using Respira.Clinical.Domain.Enums;
 using Range = Respira.Clinical.Domain.Models.Range;
 
-namespace Respira.Application.Test.Features.ClinicalVariables.CreateClinicalVariable
+namespace Respira.Clinical.Application.Test.Features.ClinicalVariables.CreateClinicalVariable
 {
     public class CreateClinicalVariableValidatorTest
     {

@@ -8,7 +8,7 @@ using Respira.Clinical.Domain.Entities;
 using Respira.Clinical.Infrastructure.Data;
 using Respira.ServiceDefaults.Contracts.Results;
 
-namespace Respira.Application.Test.Features.ClinicalMetrics.UpdateClinicalMetric
+namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.UpdateClinicalMetric
 {
     public class UpdateClinicalMetricHandlerTest : IClassFixture<PostgresFixture>, IAsyncLifetime
     {

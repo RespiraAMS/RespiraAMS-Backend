@@ -5,7 +5,7 @@ using Respira.Clinical.Domain.Enums;
 using Respira.ServiceDefaults.Contracts.Results;
 using Range = Respira.Clinical.Domain.Models.Range;
 
-namespace Respira.Application.Test.Features.Antibiotics.UpdateDosage
+namespace Respira.Clinical.Application.Test.Features.Antibiotics.UpdateDosage
 {
     public class UpdateDosageMapperTest
     {

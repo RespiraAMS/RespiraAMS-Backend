@@ -1,6 +1,6 @@
 using Respira.Clinical.Application.Features.Antibiotics.GetAntibioticById;
 
-namespace Respira.Application.Test.Features.Antibiotics.GetAntibioticById
+namespace Respira.Clinical.Application.Test.Features.Antibiotics.GetAntibioticById
 {
     public class GetAntibioticByIdValidatorTest
     {

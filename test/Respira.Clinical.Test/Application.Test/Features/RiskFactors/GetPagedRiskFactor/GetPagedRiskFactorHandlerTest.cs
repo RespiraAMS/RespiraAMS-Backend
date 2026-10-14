@@ -10,7 +10,7 @@ using Respira.Clinical.Infrastructure.Mapper;
 using Respira.ServiceDefaults.Contracts.Pagination;
 using Respira.ServiceDefaults.Contracts.Results;
 
-namespace Respira.Application.Test.Features.RiskFactors.GetPagedRiskFactor
+namespace Respira.Clinical.Application.Test.Features.RiskFactors.GetPagedRiskFactor
 {
     public class GetPagedRiskFactorHandlerTest : IClassFixture<PostgresFixture>, IAsyncLifetime
     {
