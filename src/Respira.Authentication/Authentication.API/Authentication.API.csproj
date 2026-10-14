@@ -11,6 +11,8 @@
 		<PackageReference Include="Aspire.StackExchange.Redis" />
 		<PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" />
 		<PackageReference Include="WolverineFx" />
+		<PackageReference Include="WolverineFx.PostgreSQL" />
+		<PackageReference Include="WolverineFx.RabbitMQ" />
 		<PackageReference Include="WolverineFx.RuntimeCompilation" />
 		<PackageReference Include="ZiggyCreatures.FusionCache" />
 		<PackageReference Include="ZiggyCreatures.FusionCache.Serialization.SystemTextJson" />

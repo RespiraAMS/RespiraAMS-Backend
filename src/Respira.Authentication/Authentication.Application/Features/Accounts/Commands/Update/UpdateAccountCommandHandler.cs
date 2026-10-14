@@ -22,7 +22,7 @@ namespace Authentication.Application.Features.Accounts.Commands.Update
         )
         {
             var account = await dbContext.Accounts.FindAsync(command.AccountId);
-            var oldAccount = account;
+
             if (account is null)
             {
                 logger.LogDebug("{AccountId} not found", command.AccountId);
@@ -34,30 +34,80 @@ namespace Authentication.Application.Features.Accounts.Commands.Update
                         Reason = "Account not found",
                     }
                 );
+                return;
             }
 
-            var cachePrefix = $"auth:accounts:{command.Email}";
-            await cacheService.RemoveAsync(cachePrefix);
+            // Captured before the entity is mutated: the event reports the previous values.
+            var accountId = account.Id;
+            var oldEmail = account.Email;
+            var oldHash = account.HashPassword;
+            var oldPhone = account.Phone;
+            var oldRole = account.Role;
+            var oldStatus = account.Status;
 
-            account!.Email = command.Email;
-            account.HashPassword = hashService.HashPassword(command.Password);
-            account.Phone = command.Phone;
-            account.Role = command.Role;
-            account.Status = command.Status;
-            account.UpdatedAt = DateTime.UtcNow;
-            dbContext.Accounts.Update(account);
-            await dbContext.SaveChangesAsync();
-            await cacheService.SetAsync(cachePrefix, account);
+            try
+            {
+                var cachePrefix = $"auth:accounts:{command.Email}";
+                await cacheService.RemoveAsync(cachePrefix);
+
+                // When the address changes the entry cached under the previous one must go
+                // too, otherwise lookups keep resolving to the stale account.
+                var oldCachePrefix = $"auth:accounts:{oldEmail}";
+                if (!string.Equals(oldCachePrefix, cachePrefix, StringComparison.Ordinal))
+                {
+                    await cacheService.RemoveAsync(oldCachePrefix);
+                }
+
+                account!.Email = command.Email;
+                account.Phone = command.Phone;
+
+                // Optional fields: a caller that leaves them null keeps the current value.
+                if (!string.IsNullOrEmpty(command.Password))
+                {
+                    account.HashPassword = hashService.HashPassword(command.Password);
+                }
+
+                if (command.Role.HasValue)
+                {
+                    account.Role = command.Role.Value;
+                }
+
+                if (command.Status.HasValue)
+                {
+                    account.Status = command.Status.Value;
+                }
+
+                account.UpdatedAt = DateTime.UtcNow;
+                dbContext.Accounts.Update(account);
+                await dbContext.SaveChangesAsync();
+                await cacheService.SetAsync(cachePrefix, account);
+            }
+            catch (Exception exception)
+            {
+                // The saga waits for an answer either way: report the failure instead of
+                // letting Wolverine retry a handler the saga cannot observe.
+                logger.LogError(exception, "{AccountId} failed to update", command.AccountId);
+                await messageBus.PublishAsync(
+                    new UpdateAccountFailure()
+                    {
+                        AccountId = command.AccountId,
+                        SagaId = command.SagaId,
+                        Reason = exception.Message,
+                    }
+                );
+                return;
+            }
+
             await messageBus.PublishAsync(
                 new UpdateAccountCompleted()
                 {
                     SagaId = command.SagaId,
-                    OldEmail = oldAccount!.Email,
-                    OldPassword = oldAccount.HashPassword,
-                    OldPhone = oldAccount.Phone,
-                    OldRole = oldAccount.Role,
-                    OldStatus = oldAccount.Status,
-                    AccountId = oldAccount.Id,
+                    OldEmail = oldEmail,
+                    OldPassword = oldHash,
+                    OldPhone = oldPhone,
+                    OldRole = oldRole,
+                    OldStatus = oldStatus,
+                    AccountId = accountId,
                 }
             );
         }

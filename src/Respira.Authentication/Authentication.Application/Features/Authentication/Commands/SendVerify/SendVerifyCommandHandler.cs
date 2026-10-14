@@ -4,6 +4,7 @@ using Authentication.Application.Constracts.Authentication;
 using Authentication.Application.Constracts.Cache;
 using Authentication.Application.Constracts.Data;
 using Authentication.Application.Constracts.Email;
+using Authentication.Application.Features.Authentication.Commands.SendVerify.Events;
 using Authentication.Domain.Entities;
 using Authentication.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
@@ -11,6 +12,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Respira.ServiceDefaults.Contracts.CQRS;
 using Respira.ServiceDefaults.Contracts.Results;
+using Wolverine;
 
 namespace Authentication.Application.Features.Authentication.Commands.SendVerify
 {
@@ -25,7 +27,8 @@ namespace Authentication.Application.Features.Authentication.Commands.SendVerify
         IEmailService emailService,
         ICacheService cacheService,
         IOptions<EmailVerificationOption> verificationOption,
-        ILogger<SendVerifyCommandHandler> logger
+        ILogger<SendVerifyCommandHandler> logger,
+        IMessageBus bus
     ) : ICommandHandler<SendVerifyCommand, Result<bool>>
     {
         private static readonly TimeSpan AccountCacheExpiration = TimeSpan.FromMinutes(5);
@@ -37,8 +40,8 @@ namespace Authentication.Application.Features.Authentication.Commands.SendVerify
         private const int TokenSizeInBytes = 32;
 
         /// <summary>
-        /// Replaces any outstanding verification token with a fresh one and sends the
-        /// confirmation link to the account's email address.
+        /// Runs the verification flow and, when the request came from the create saga,
+        /// reports the outcome as an event so the saga can finish its last step.
         /// </summary>
         /// <param name="command">The verification request containing the email address.</param>
         /// <param name="cancellationToken">Token used to cancel database and email operations.</param>
@@ -50,6 +53,44 @@ namespace Authentication.Application.Features.Authentication.Commands.SendVerify
         {
             ArgumentNullException.ThrowIfNull(command);
 
+            var result = await HandleCoreAsync(command, cancellationToken);
+
+            if (command.SagaId == Guid.Empty)
+            {
+                return result;
+            }
+
+            var email = command.Email?.Trim().ToLowerInvariant() ?? string.Empty;
+
+            if (result.IsSuccess())
+            {
+                await bus.PublishAsync(new SendVerifyCompleted(command.SagaId, email));
+            }
+            else
+            {
+                await bus.PublishAsync(
+                    new SendVerifyFailure(
+                        command.SagaId,
+                        result.Error?.Description ?? "The verification email could not be sent"
+                    )
+                );
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Replaces any outstanding verification token with a fresh one and sends the
+        /// confirmation link to the account's email address.
+        /// </summary>
+        /// <param name="command">The verification request containing the email address.</param>
+        /// <param name="cancellationToken">Token used to cancel database and email operations.</param>
+        /// <returns>True when the email was handed to the SMTP service, otherwise a failure result.</returns>
+        private async Task<Result<bool>> HandleCoreAsync(
+            SendVerifyCommand command,
+            CancellationToken cancellationToken = default
+        )
+        {
             if (string.IsNullOrWhiteSpace(command.Email))
             {
                 return Failure(ApplicationStatus.BadRequest, "A valid email address is required");

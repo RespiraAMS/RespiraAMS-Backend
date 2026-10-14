@@ -19,6 +19,8 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\Respira.Authentication\Authentication.API\Authentication.API.csproj" />
+	  <ProjectReference Include="..\Respira.Doctor\Doctor.API\Respira.Doctor.API.csproj" />
 	  <ProjectReference Include="..\Respira.Media\Media.API\Media.API.csproj" />
+	  <ProjectReference Include="..\Respira.Saga\Saga.API\Respira.Saga.API.csproj" />
 	</ItemGroup>
 </Project>

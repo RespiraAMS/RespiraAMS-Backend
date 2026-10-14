@@ -1,5 +1,6 @@
 using Asp.Versioning;
 using Media.Application.Features.MediaAssets.Create;
+using Media.Application.Features.MediaAssets.Delete;
 using Microsoft.AspNetCore.Mvc;
 using Respira.ServiceDefaults.Contracts.Results;
 using Wolverine;
@@ -18,8 +19,8 @@ namespace Media.API.Controllers
         /// </summary>
         [HttpPost]
         [Consumes("multipart/form-data")]
-        [ProducesResponseType(typeof(Result<bool>), StatusCodes.Status201Created)]
-        [ProducesResponseType(typeof(Result<bool>), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(Result<Guid>), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(Result<Guid>), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Create(
             [FromForm] IFormFile file,
             [FromQuery] string? folder,
@@ -29,7 +30,7 @@ namespace Media.API.Controllers
             if (file is null || file.Length == 0)
             {
                 return BadRequest(
-                    Result<bool>.Failure(
+                    Result<Guid>.Failure(
                         new Error(ApplicationStatus.BadRequest, "A file is required")
                     )
                 );
@@ -43,7 +44,25 @@ namespace Media.API.Controllers
                 Folder = folder,
             };
 
-            var result = await bus.InvokeAsync<Result<bool>>(command, cancellationToken);
+            var result = await bus.InvokeAsync<Result<Guid>>(command, cancellationToken);
+
+            return result.ToApiResponse();
+        }
+
+        /// <summary>
+        /// Deletes a media asset: the stored object first, then its record. Deleting an
+        /// asset that is already gone succeeds, so callers can safely retry.
+        /// </summary>
+        [HttpDelete("{id:guid}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(Result<Guid>), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(Result<Guid>), StatusCodes.Status503ServiceUnavailable)]
+        public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
+        {
+            var result = await bus.InvokeAsync<Result<Guid>>(
+                new DeleteMediaAssetCommand { MediaId = id },
+                cancellationToken
+            );
 
             return result.ToApiResponse();
         }

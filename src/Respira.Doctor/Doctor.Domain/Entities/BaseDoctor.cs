@@ -37,5 +37,8 @@ namespace Respira.Doctor.Domain.Entities
 
         /// <summary>Avatar media identifier (if linked)</summary>
         public Guid? MediaId { get; set; }
+
+        /// <summary>Account this profile is linked to</summary>
+        public Guid AccountId { get; set; }
     }
 }

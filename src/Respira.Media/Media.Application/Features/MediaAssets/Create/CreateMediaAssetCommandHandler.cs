@@ -14,9 +14,9 @@ namespace Media.Application.Features.MediaAssets.Create
         IStorageService storageService,
         IOptions<R2Options> r2Options,
         ILogger<CreateMediaAssetCommandHandler> logger
-    ) : ICommandHandler<CreateMediaAssetCommand, Result<bool>>
+    ) : ICommandHandler<CreateMediaAssetCommand, Result<Guid>>
     {
-        public async Task<Result<bool>> HandleAsync(
+        public async Task<Result<Guid>> HandleAsync(
             CreateMediaAssetCommand command,
             CancellationToken cancellationToken = default
         )
@@ -159,7 +159,8 @@ namespace Media.Application.Features.MediaAssets.Create
                 objectKey
             );
 
-            return Result<bool>.Success(ApplicationStatus.Created, true);
+            // The identifier is what the create saga links back to the doctor profile.
+            return Result<Guid>.Success(ApplicationStatus.Created, mediaAsset.Id);
         }
 
         private static string GenerateFileName(string contentType)
@@ -169,9 +170,9 @@ namespace Media.Application.Features.MediaAssets.Create
             return $"media_{Guid.CreateVersion7():N}{extension}";
         }
 
-        private static Result<bool> Failure(string statusCode, string description)
+        private static Result<Guid> Failure(string statusCode, string description)
         {
-            return Result<bool>.Failure(new Error(statusCode, description));
+            return Result<Guid>.Failure(new Error(statusCode, description));
         }
 
         private static string? BuildPublicUrl(string? publicUrl, string objectKey)

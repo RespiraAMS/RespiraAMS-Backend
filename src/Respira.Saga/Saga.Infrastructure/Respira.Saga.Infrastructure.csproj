@@ -6,4 +6,13 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="WolverineFx.RDBMS" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Saga.Application\Respira.Saga.Application.csproj" />
+    <ProjectReference Include="..\Saga.Domain\Respira.Saga.Domain.csproj" />
+  </ItemGroup>
+
 </Project>

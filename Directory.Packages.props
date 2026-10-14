@@ -24,6 +24,7 @@
     <PackageVersion Include="WolverineFx" Version="$(WolverineVersion)" />
     <PackageVersion Include="WolverineFx.PostgreSQL" Version="$(WolverineVersion)" />
     <PackageVersion Include="WolverineFx.RabbitMQ" Version="$(WolverineVersion)" />
+    <PackageVersion Include="WolverineFx.RDBMS" Version="$(WolverineVersion)" />
     <PackageVersion Include="WolverineFx.EntityFrameworkCore" Version="$(WolverineVersion)" />
     <PackageVersion Include="WolverineFx.RuntimeCompilation" Version="$(WolverineVersion)" />
     <PackageVersion Include="WolverineFx.FluentValidation" Version="$(WolverineVersion)" />
