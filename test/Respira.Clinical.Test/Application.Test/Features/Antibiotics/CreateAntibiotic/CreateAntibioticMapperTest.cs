@@ -4,7 +4,7 @@ using Respira.Clinical.Domain.Entities;
 using Respira.Clinical.Domain.Enums;
 using Respira.ServiceDefaults.Contracts.Results;
 
-namespace Respira.Application.Test.Features.Antibiotics.CreateAntibiotic
+namespace Respira.Clinical.Application.Test.Features.Antibiotics.CreateAntibiotic
 {
     public class CreateAntibioticMapperTest
     {

@@ -1,6 +1,6 @@
 using Respira.Clinical.Application.Features.Antibiotics.DeleteDosage;
 
-namespace Respira.Application.Test.Features.Antibiotics.DeleteDosage
+namespace Respira.Clinical.Application.Test.Features.Antibiotics.DeleteDosage
 {
     public class DeleteDosageValidatorTest
     {

@@ -1,7 +1,7 @@
 using Respira.Clinical.Application.Features.Antibiotics.GetPagedAntibiotic;
 using Respira.ServiceDefaults.Contracts.Pagination;
 
-namespace Respira.Application.Test.Features.Antibiotics.GetPagedAntibiotic
+namespace Respira.Clinical.Application.Test.Features.Antibiotics.GetPagedAntibiotic
 {
     public class GetPagedAntibioticValidatorTest
     {

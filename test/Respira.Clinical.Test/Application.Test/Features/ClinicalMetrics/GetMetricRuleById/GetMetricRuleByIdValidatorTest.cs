@@ -1,6 +1,6 @@
 using Respira.Clinical.Application.Features.ClinicalMetrics.GetMetricRuleById;
 
-namespace Respira.Application.Test.Features.ClinicalMetrics.GetMetricRuleById
+namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.GetMetricRuleById
 {
     public class GetMetricRuleByIdValidatorTest
     {

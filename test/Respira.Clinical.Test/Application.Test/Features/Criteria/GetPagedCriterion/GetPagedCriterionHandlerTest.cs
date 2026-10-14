@@ -10,7 +10,7 @@ using Respira.Clinical.Infrastructure.Mapper;
 using Respira.ServiceDefaults.Contracts.Pagination;
 using Respira.ServiceDefaults.Contracts.Results;
 
-namespace Respira.Application.Test.Features.Criteria.GetPagedCriterion
+namespace Respira.Clinical.Application.Test.Features.Criteria.GetPagedCriterion
 {
     public class GetPagedCriterionHandlerTest : IClassFixture<PostgresFixture>, IAsyncLifetime
     {

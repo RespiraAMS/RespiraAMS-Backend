@@ -7,7 +7,7 @@ using Respira.Clinical.Domain.Models;
 using Respira.Clinical.Infrastructure.Data;
 using Respira.ServiceDefaults.Contracts.Results;
 
-namespace Respira.Application.Test.Features.Criteria.GetCriteria
+namespace Respira.Clinical.Application.Test.Features.Criteria.GetCriteria
 {
     public class GetCriteriaHandlerTest : IClassFixture<PostgresFixture>, IAsyncLifetime
     {

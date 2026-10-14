@@ -170,28 +170,28 @@ namespace Respira.Clinical.Domain.Models
         public override ExpressionResultType ResultType => ExpressionResultType.Boolean;
 
         [JsonIgnore]
-        public override IEnumerable<VariableRef> Variables => Formula.Variables;
+        public override IEnumerable<VariableRef> Variables => Operand.Variables;
 
-        public Formula Formula { get; }
+        public Formula Operand { get; }
 
-        public UnaryFormula(Formula formula)
+        public UnaryFormula(Formula operand)
         {
-            if (formula.ResultType != ExpressionResultType.Boolean)
+            if (operand.ResultType != ExpressionResultType.Boolean)
             {
                 throw new ArgumentException("Unary formula only support boolean formula");
             }
 
-            Formula = formula;
+            Operand = operand;
         }
 
         public override Expression ToExpression(IEnumerable<ClinicalObservation> observations)
         {
-            return new UnaryExpression(Formula.ToExpression(observations));
+            return new UnaryExpression(Operand.ToExpression(observations));
         }
 
         public override string ToString()
         {
-            return ExpressionOperator.NOT.ToSymbol() + Parenthesize(Formula);
+            return ExpressionOperator.NOT.ToSymbol() + Parenthesize(Operand);
         }
     }
 

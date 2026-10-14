@@ -3,7 +3,7 @@ using Respira.Clinical.Application.Features.ClinicalMetrics.UpdateClinicalMetric
 using Respira.Clinical.Domain.Entities;
 using Respira.ServiceDefaults.Contracts.Results;
 
-namespace Respira.Application.Test.Features.ClinicalMetrics.UpdateClinicalMetric
+namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.UpdateClinicalMetric
 {
     public class UpdateClinicalMetricMapperTest
     {

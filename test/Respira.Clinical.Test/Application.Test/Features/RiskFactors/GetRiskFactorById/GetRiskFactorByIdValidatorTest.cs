@@ -1,6 +1,6 @@
 using Respira.Clinical.Application.Features.RiskFactors.GetRiskFactorById;
 
-namespace Respira.Application.Test.Features.RiskFactors.GetRiskFactorById
+namespace Respira.Clinical.Application.Test.Features.RiskFactors.GetRiskFactorById
 {
     public class GetRiskFactorByIdValidatorTest
     {

@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Respira.Clinical.Infrastructure.Data;
 using Testcontainers.PostgreSql;
 
-namespace Respira.Application.Test
+namespace Respira.Clinical.Application.Test
 {
     public class PostgresFixture : IAsyncLifetime
     {

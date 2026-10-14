@@ -10,7 +10,7 @@ using Respira.Clinical.Infrastructure.Data;
 using Respira.ServiceDefaults.Contracts.Results;
 using Respira.ServiceDefaults.Models;
 
-namespace Respira.Application.Test.Features.Criteria.DeleteCriterion
+namespace Respira.Clinical.Application.Test.Features.Criteria.DeleteCriterion
 {
     public class DeleteCriterionHandlerTest : IClassFixture<PostgresFixture>, IAsyncLifetime
     {

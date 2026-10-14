@@ -8,7 +8,7 @@ using Respira.Clinical.Domain.Enums;
 using Respira.Clinical.Infrastructure.Data;
 using Respira.ServiceDefaults.Contracts.Results;
 
-namespace Respira.Application.Test.Features.AntibioticGroups.DeleteAntibioticGroup
+namespace Respira.Clinical.Application.Test.Features.AntibioticGroups.DeleteAntibioticGroup
 {
     public class DeleteAntibioticGroupHandlerTest : IClassFixture<PostgresFixture>, IAsyncLifetime
     {

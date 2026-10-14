@@ -1,7 +1,7 @@
 using Respira.Clinical.Application.Features.SuspectedCauses.CreateSuspectedCause;
 using Respira.Clinical.Domain.Enums;
 
-namespace Respira.Application.Test.Features.SuspectedCauses.CreateSuspectedCause
+namespace Respira.Clinical.Application.Test.Features.SuspectedCauses.CreateSuspectedCause
 {
     public class CreateSuspectedCauseValidatorTest
     {

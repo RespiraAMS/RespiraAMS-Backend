@@ -12,7 +12,7 @@ using Respira.ServiceDefaults.Contracts.Results;
 using FormulaDto = Respira.Clinical.Application.Features.Shared.ManageFormula.FormulaDto;
 using Range = Respira.Clinical.Domain.Models.Range;
 
-namespace Respira.Application.Test.Features.ClinicalVariables.CreateClinicalVariable
+namespace Respira.Clinical.Application.Test.Features.ClinicalVariables.CreateClinicalVariable
 {
     public class CreateClinicalVariableHandlerTest : IClassFixture<PostgresFixture>, IAsyncLifetime
     {

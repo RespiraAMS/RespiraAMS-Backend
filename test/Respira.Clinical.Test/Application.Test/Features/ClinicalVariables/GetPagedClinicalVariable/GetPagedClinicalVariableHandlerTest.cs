@@ -10,7 +10,7 @@ using Respira.ServiceDefaults.Contracts.Pagination;
 using Respira.ServiceDefaults.Contracts.Results;
 using Range = Respira.Clinical.Domain.Models.Range;
 
-namespace Respira.Application.Test.Features.ClinicalVariables.GetPagedClinicalVariable
+namespace Respira.Clinical.Application.Test.Features.ClinicalVariables.GetPagedClinicalVariable
 {
     public class GetPagedClinicalVariableHandlerTest : IClassFixture<PostgresFixture>, IAsyncLifetime
     {

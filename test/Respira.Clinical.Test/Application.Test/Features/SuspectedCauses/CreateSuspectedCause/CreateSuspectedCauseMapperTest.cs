@@ -4,7 +4,7 @@ using Respira.Clinical.Domain.Entities;
 using Respira.Clinical.Domain.Enums;
 using Respira.ServiceDefaults.Contracts.Results;
 
-namespace Respira.Application.Test.Features.SuspectedCauses.CreateSuspectedCause
+namespace Respira.Clinical.Application.Test.Features.SuspectedCauses.CreateSuspectedCause
 {
     public class CreateSuspectedCauseMapperTest
     {

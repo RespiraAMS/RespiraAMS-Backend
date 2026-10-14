@@ -1,6 +1,6 @@
 using Respira.Clinical.Application.Features.ClinicalMetrics.GetClinicalMetricById;
 
-namespace Respira.Application.Test.Features.ClinicalMetrics.GetClinicalMetricById
+namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.GetClinicalMetricById
 {
     public class GetClinicalMetricByIdValidatorTest
     {

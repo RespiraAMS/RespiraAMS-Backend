@@ -7,7 +7,7 @@ using Respira.Clinical.Infrastructure.Data;
 using Respira.ServiceDefaults.Contracts.Results;
 using Range = Respira.Clinical.Domain.Models.Range;
 
-namespace Respira.Application.Test.Features.Antibiotics.GetAntibioticById
+namespace Respira.Clinical.Application.Test.Features.Antibiotics.GetAntibioticById
 {
     public class GetAntibioticByIdHandlerTest : IClassFixture<PostgresFixture>, IAsyncLifetime
     {

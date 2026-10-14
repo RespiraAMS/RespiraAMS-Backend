@@ -9,7 +9,7 @@ using Respira.Clinical.Infrastructure.Data;
 using Respira.ServiceDefaults.Contracts.Results;
 using Range = Respira.Clinical.Domain.Models.Range;
 
-namespace Respira.Application.Test.Features.Antibiotics.DeleteDosage
+namespace Respira.Clinical.Application.Test.Features.Antibiotics.DeleteDosage
 {
     public class DeleteDosageHandlerTest : IClassFixture<PostgresFixture>, IAsyncLifetime
     {

@@ -1,7 +1,7 @@
 using Respira.Clinical.Application.Features.Antibiotics.UpdateAntibiotic;
 using Respira.Clinical.Domain.Enums;
 
-namespace Respira.Application.Test.Features.Antibiotics.UpdateAntibiotic
+namespace Respira.Clinical.Application.Test.Features.Antibiotics.UpdateAntibiotic
 {
     public class UpdateAntibioticValidatorTest
     {

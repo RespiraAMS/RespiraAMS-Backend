@@ -9,7 +9,7 @@ using Respira.Clinical.Domain.Models;
 using Respira.Clinical.Infrastructure.Data;
 using Respira.ServiceDefaults.Contracts.Results;
 
-namespace Respira.Application.Test.Features.ClinicalMetrics.DeleteClinicalMetric
+namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.DeleteClinicalMetric
 {
     public class DeleteClinicalMetricHandlerTest : IClassFixture<PostgresFixture>, IAsyncLifetime
     {

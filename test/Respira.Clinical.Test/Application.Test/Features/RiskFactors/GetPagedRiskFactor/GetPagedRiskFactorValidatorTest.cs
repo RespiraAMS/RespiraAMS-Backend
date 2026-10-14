@@ -1,7 +1,7 @@
 using Respira.Clinical.Application.Features.RiskFactors.GetPagedRiskFactor;
 using Respira.ServiceDefaults.Contracts.Pagination;
 
-namespace Respira.Application.Test.Features.RiskFactors.GetPagedRiskFactor
+namespace Respira.Clinical.Application.Test.Features.RiskFactors.GetPagedRiskFactor
 {
     public class GetPagedRiskFactorValidatorTest
     {

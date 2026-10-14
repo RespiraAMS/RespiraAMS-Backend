@@ -1,6 +1,6 @@
 using Respira.Clinical.Application.Features.RiskFactors.UpdateRiskFactor;
 
-namespace Respira.Application.Test.Features.RiskFactors.UpdateRiskFactor
+namespace Respira.Clinical.Application.Test.Features.RiskFactors.UpdateRiskFactor
 {
     public class UpdateRiskFactorValidatorTest
     {
