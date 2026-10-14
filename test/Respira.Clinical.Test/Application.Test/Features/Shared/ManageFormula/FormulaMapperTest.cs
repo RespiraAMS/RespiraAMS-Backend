@@ -343,7 +343,7 @@ namespace Respira.Clinical.Application.Test.Features.Shared.ManageFormula
             Assert.NotNull(result.Data);
 
             var formula = Assert.IsType<UnaryFormula>(result.Data);
-            var operand = Assert.IsType<BooleanConstantFormula>(formula.Formula);
+            var operand = Assert.IsType<BooleanConstantFormula>(formula.Operand);
             Assert.False(operand.Constant);
             Assert.Equal(ExpressionResultType.Boolean, formula.ResultType);
         }

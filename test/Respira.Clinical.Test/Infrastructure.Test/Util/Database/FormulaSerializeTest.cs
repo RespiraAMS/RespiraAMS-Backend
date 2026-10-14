@@ -59,7 +59,7 @@ namespace Respira.Clinical.Infrastructure.Test.Util.Database
         {
             var back = (UnaryFormula)RoundTrip(new UnaryFormula(new BooleanConstantFormula(false)));
 
-            Assert.IsType<BooleanConstantFormula>(back.Formula);
+            Assert.IsType<BooleanConstantFormula>(back.Operand);
         }
 
         [Fact]

@@ -49,7 +49,7 @@ namespace Respira.Clinical.Domain.Entities
         /// </summary>
         /// <param name="observations">Clinical observation</param>
         /// <returns>True if criterion is satisfied, false otherwise</returns>
-        public bool IsCriterionSastisfied(IEnumerable<ClinicalObservation> observations)
+        public bool IsCriterionSatisfied(IEnumerable<ClinicalObservation> observations)
         {
             try
             {

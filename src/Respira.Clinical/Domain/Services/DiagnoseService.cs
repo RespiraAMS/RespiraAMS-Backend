@@ -247,7 +247,7 @@ namespace Respira.Clinical.Domain.Services
                 }
 
                 // Evaluate major criteria
-                var isSatisfied = rule.Criterion.IsCriterionSastisfied(observations);
+                var isSatisfied = rule.Criterion.IsCriterionSatisfied(observations);
                 logger.LogDebug($"Evaluate major criteria for {metric.Name}/{rule.Criterion.Name}: {isSatisfied}");
 
                 evidences.Add(new Evidence(
@@ -271,7 +271,7 @@ namespace Respira.Clinical.Domain.Services
                 }
 
                 // Evaluate minor criteria
-                var isSatisfied = rule.Criterion.IsCriterionSastisfied(observations);
+                var isSatisfied = rule.Criterion.IsCriterionSatisfied(observations);
                 logger.LogDebug($"Evaluate minor criteria for {metric.Name}/{rule.Criterion.Name}: {isSatisfied}");
 
                 evidences.Add(new Evidence(
@@ -360,7 +360,7 @@ namespace Respira.Clinical.Domain.Services
                         r.Criterion.Formula,
                         [.. r.Criterion.Variables],
                         [.. observations]));
-                    return r.IsFactorSastified(observations);
+                    return r.IsFactorSatisfied(observations);
                 });
 
                 if (matched == 0)
