@@ -7,6 +7,7 @@ namespace Respira.Patient.Application.Contracts.Data
     {
         DbSet<Domain.Entities.Patient> Patients { get; set; }
         DbSet<NextOfKin> NextOfKins { get; set; }
+        DbSet<Treatment> Treatments { get; set; }
 
         /// <summary>
         /// Save all changes to database

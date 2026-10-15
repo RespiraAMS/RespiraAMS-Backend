@@ -8,5 +8,10 @@ namespace Respira.Patient.Domain.Enums
         InTreatment,
         Recovered,
         Death,
+
+        /// <summary>
+        /// This is used if a case turn out that they don't need antibiotic treatment
+        /// </summary>
+        OutOfScope
     }
 }

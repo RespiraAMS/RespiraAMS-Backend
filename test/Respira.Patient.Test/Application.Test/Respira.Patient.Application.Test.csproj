@@ -16,5 +16,9 @@
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" />
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
     </ItemGroup>
-</Project>
 
+    <ItemGroup>
+        <ProjectReference Include="../../../src/Respira.Patient/Infrastructure/Respira.Patient.Infrastructure.csproj" />
+        <ProjectReference Include="../../../src/Respira.Patient/Application/Respira.Patient.Application.csproj" />
+    </ItemGroup>
+</Project>

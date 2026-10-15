@@ -30,9 +30,10 @@ namespace Respira.Patient.Domain.Entities
         public required string Address { get; set; }
         public required string City { get; set; }
         public required DateTimeOffset Admission { get; set; }
-        public required DateTimeOffset Discharge { get; set; }
+        public DateTimeOffset? Discharge { get; set; }
         public required TreatmentOutcome TreatmentOutcome { get; set; } = TreatmentOutcome.InTreatment;
         public ICollection<NextOfKin> NextOfKins { get; set; } = [];
+        public ICollection<Treatment> Treatments { get; set; } = [];
 
         /// <summary>
         /// Age is only calculated using year, not full date

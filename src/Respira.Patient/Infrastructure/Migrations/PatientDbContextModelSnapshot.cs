@@ -34,12 +34,12 @@ namespace Respira.Patient.Infrastructure.Migrations
                     b.Property<DateTimeOffset?>("DeletedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("Name")
+                    b.Property<string>("FullName")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
 
                     b.Property<Guid>("PatientId")
                         .HasColumnType("uuid");
@@ -88,7 +88,7 @@ namespace Respira.Patient.Infrastructure.Migrations
                     b.Property<DateTimeOffset?>("DeletedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<DateTimeOffset>("Discharge")
+                    b.Property<DateTimeOffset?>("Discharge")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("FirstName")
@@ -136,6 +136,34 @@ namespace Respira.Patient.Infrastructure.Migrations
                     b.ToTable("patients", (string)null);
                 });
 
+            modelBuilder.Entity("Respira.Patient.Domain.Entities.Treatment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<Guid>("PatientId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTimeOffset>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PatientId");
+
+                    b.ToTable("treatments", (string)null);
+                });
+
             modelBuilder.Entity("Respira.Patient.Domain.Entities.NextOfKin", b =>
                 {
                     b.HasOne("Respira.Patient.Domain.Entities.Patient", "Patient")
@@ -147,9 +175,22 @@ namespace Respira.Patient.Infrastructure.Migrations
                     b.Navigation("Patient");
                 });
 
+            modelBuilder.Entity("Respira.Patient.Domain.Entities.Treatment", b =>
+                {
+                    b.HasOne("Respira.Patient.Domain.Entities.Patient", "Patient")
+                        .WithMany("Treatments")
+                        .HasForeignKey("PatientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Patient");
+                });
+
             modelBuilder.Entity("Respira.Patient.Domain.Entities.Patient", b =>
                 {
                     b.Navigation("NextOfKins");
+
+                    b.Navigation("Treatments");
                 });
 #pragma warning restore 612, 618
         }

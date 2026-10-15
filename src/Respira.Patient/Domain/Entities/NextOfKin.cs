@@ -7,7 +7,7 @@ namespace Respira.Patient.Domain.Entities
     {
         public required Guid PatientId { get; set; }
         public Patient Patient { get; set; } = null!;
-        public required string Name
+        public required string FullName
         {
             get; set
             {

@@ -23,10 +23,21 @@ var clinicalService = builder
     .WithReference(rabbitmq)
     .WaitFor(rabbitmq);
 
+// Patient service
+var patientDb = postgres.AddDatabase("patientDb");
+var patientService = builder
+    .AddProject<Projects.Respira_Patient_API>("patient-service")
+    .WithReference(patientDb)
+    .WithReference(cache)
+    .WaitFor(cache)
+    .WithReference(rabbitmq)
+    .WaitFor(rabbitmq);
+
 // API gateway
 var gateway = builder
     .AddProject<Projects.Respira_Gateway>("gateway")
     .WithReference(clinicalService)
+    .WithReference(patientService)
     .WithEnvironment("Jwt__Secret", jwtSecret)
     .WithEnvironment("Jwt__Issuer", jwtIssuer)
     .WithEnvironment("Jwt__Audience", jwtAudience)
