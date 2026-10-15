@@ -15,7 +15,7 @@ namespace Respira.Clinical.Application.Features.RiskFactors.CreateRiskFactor
             });
         }
 
-        public Result<RiskFactor> ToModel(CreateRiskFactorCommand command, object? dependencies = null)
+        public Result<RiskFactor> ToModel(CreateRiskFactorCommand command, object dependencies)
         {
             return ToModel(command);
         }

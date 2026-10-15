@@ -5,14 +5,14 @@ namespace Respira.ServiceDefaults.Contracts.Results
     /*
      * Rule of status code in this application context:
      * 1. For resource not found (database not exists, cache miss,...), there are 2 cases:
-     * a. If you try to read that resource, it would be a RESOUCE-NOT-FOUND error
+     * a. If you try to read that resource, it would be a RESOURCE-NOT-FOUND error
      * b. If you try to do some operation on that resource, it would be a BAD-REQUEST error
-     * (trying to do something with non existing data is more suited with BAD-REQUEST than
+     * (trying to do something with non-existing data is more suited with BAD-REQUEST than
      * RESOURCE-NOT-FOUND)
      * c. If you try to read sub resources of a resource, and that parent resource is not found,
      * it would be a BAD-REQUEST error. For example, let's say that you want to read a specific
      * treatment of a specific patient, you would have to provide 2 IDs, patient and treatment:
-     * - If the patient ID exists, treatment don't, then that a RESOUCE-NOT-FOUND error
+     * - If the patient ID exists, treatment don't, then that a RESOURCE-NOT-FOUND error
      * - If the patient ID don't even exists, then that a BAD-REQUEST error.
      */
 
@@ -90,13 +90,13 @@ namespace Respira.ServiceDefaults.Contracts.Results
 
         /// <summary>
         /// An extension of failure code, specifically used to indicate that the request was not successful
-        /// becuase of a timeout
+        /// because of a timeout
         /// </summary>
         public const string Timeout = "FAILURE-TIMEOUT";
 
         /// <summary>
         /// An extension of failure code, specifically used to indicate that the request was not successful
-        /// beacuse of a third party service failure (database crash, S3 service unavailable, etc.)
+        /// because of a third party service failure (database crash, S3 service unavailable, etc.)
         /// </summary>
         public const string ThirdPartyServiceFailure = "FAILURE-THIRD-PARTY-SERVICE-FAILURE";
 
@@ -274,7 +274,7 @@ namespace Respira.ServiceDefaults.Contracts.Results
         }
 
         /// <summary>
-        /// Extension method: convert a custom status code to a HTTP status code
+        /// Extension method: convert a custom status code to an HTTP status code
         /// </summary>
         /// <param name="customStatusCode">Application custom status code</param>
         /// <returns>An integer represent the HTTP status code</returns>

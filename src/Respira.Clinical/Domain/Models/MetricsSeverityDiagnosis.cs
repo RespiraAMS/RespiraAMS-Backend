@@ -11,7 +11,7 @@ namespace Respira.Clinical.Domain.Models
         public required int Score { get; set; }
         public required Severity Severity { get; set; }
         public required TreatmentSite TreatmentSite { get; set; }
-        public required List<Evidence> Evidences { get; set; }
+        public required IEnumerable<Evidence> Evidences { get; set; }
     }
 
     /// <summary>
@@ -24,6 +24,6 @@ namespace Respira.Clinical.Domain.Models
         public required int MinorMatched { get; set; }
         public required Severity Severity { get; set; }
         public required TreatmentSite TreatmentSite { get; set; }
-        public required List<Evidence> Evidences { get; set; }
+        public required IEnumerable<Evidence> Evidences { get; set; }
     }
 }

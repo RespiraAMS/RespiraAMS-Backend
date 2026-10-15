@@ -59,13 +59,13 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.GetClinical
                 Curb65Name, Curb65Code, Curb65Description, Curb65Version, Curb65Publisher);
 
             // The five CURB-65 components of the real seed data, each worth one point
-            var age = await SeedCriterionAsync("Tuổi >= 65", Numeric("AGE", 65, ExpressionOperator.GTE));
+            var age = await SeedCriterionAsync("Tuổi >= 65", Numeric("AGE", 65, ExpressionOperator.Gte));
             var hypotension = await SeedCriterionAsync(
-                "Huyết áp tâm thu < 90 mmHg", Numeric("SBP", 90, ExpressionOperator.LT));
+                "Huyết áp tâm thu < 90 mmHg", Numeric("SBP", 90, ExpressionOperator.Lt));
             var tachypnea = await SeedCriterionAsync(
-                "Nhịp thở >= 30 lần/phút", Numeric("RR", 30, ExpressionOperator.GTE));
+                "Nhịp thở >= 30 lần/phút", Numeric("RR", 30, ExpressionOperator.Gte));
             var elevatedBun = await SeedCriterionAsync(
-                "Urea máu >= 19 mg/dL", Numeric("BUN", 19, ExpressionOperator.GTE));
+                "Urea máu >= 19 mg/dL", Numeric("BUN", 19, ExpressionOperator.Gte));
             var confusion = await SeedCriterionAsync("Thay đổi tri giác", Confusion());
 
             var onePoint = new NumericConstantFormula(1);
@@ -130,12 +130,12 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.GetClinical
                 "1997",
                 "Đội ngũ Nghiên cứu Kết quả Điều trị Viêm phổi (PORT - Pneumonia Outcomes Research Team)");
 
-            var age = await SeedCriterionAsync("Tuổi >= 65", Numeric("AGE", 65, ExpressionOperator.GTE));
+            var age = await SeedCriterionAsync("Tuổi >= 65", Numeric("AGE", 65, ExpressionOperator.Gte));
 
             await SeedScoringRuleAsync(metricId, age, new NumericConstantFormula(30));
             await SeedScoringRuleAsync(metricId, age, Variable("AGE"));
             await SeedScoringRuleAsync(metricId, age, new BinaryFormula(
-                Variable("AGE"), new NumericConstantFormula(10), ExpressionOperator.SUB));
+                Variable("AGE"), new NumericConstantFormula(10), ExpressionOperator.Sub));
 
             var result = await _handler.HandleAsync(
                 new GetClinicalMetricByIdQuery { Id = metricId }, TestContext.Current.CancellationToken);
@@ -166,11 +166,11 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.GetClinical
                 "Hiệp hội Bệnh nhiễm trùng Mỹ (IDSA) và Hiệp hội Lồng ngực Mỹ (ATS)");
 
             var hypotension = await SeedCriterionAsync(
-                "Huyết áp tâm thu < 90 mmHg", Numeric("SBP", 90, ExpressionOperator.LT));
+                "Huyết áp tâm thu < 90 mmHg", Numeric("SBP", 90, ExpressionOperator.Lt));
             var confusion = await SeedCriterionAsync("Thay đổi tri giác", Confusion());
-            var age = await SeedCriterionAsync("Tuổi >= 65", Numeric("AGE", 65, ExpressionOperator.GTE));
+            var age = await SeedCriterionAsync("Tuổi >= 65", Numeric("AGE", 65, ExpressionOperator.Gte));
             var elevatedBun = await SeedCriterionAsync(
-                "Urea máu >= 19 mg/dL", Numeric("BUN", 19, ExpressionOperator.GTE));
+                "Urea máu >= 19 mg/dL", Numeric("BUN", 19, ExpressionOperator.Gte));
 
             await SeedMajorMinorRuleAsync(metricId, hypotension, isMajor: true);
             await SeedMajorMinorRuleAsync(metricId, confusion, isMajor: true);
@@ -249,9 +249,9 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.GetClinical
             // only lists the rules still in use
             var metricId = await SeedMetricAsync(
                 Curb65Name, Curb65Code, Curb65Description, Curb65Version, Curb65Publisher);
-            var age = await SeedCriterionAsync("Tuổi >= 65", Numeric("AGE", 65, ExpressionOperator.GTE));
+            var age = await SeedCriterionAsync("Tuổi >= 65", Numeric("AGE", 65, ExpressionOperator.Gte));
             var hypotension = await SeedCriterionAsync(
-                "Huyết áp tâm thu < 90 mmHg", Numeric("SBP", 90, ExpressionOperator.LT));
+                "Huyết áp tâm thu < 90 mmHg", Numeric("SBP", 90, ExpressionOperator.Lt));
 
             var liveRuleId = await SeedScoringRuleAsync(metricId, age, new NumericConstantFormula(1));
             await SeedScoringRuleAsync(

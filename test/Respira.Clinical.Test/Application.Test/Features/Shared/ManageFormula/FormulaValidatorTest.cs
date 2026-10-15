@@ -42,9 +42,9 @@ namespace Respira.Clinical.Application.Test.Features.Shared.ManageFormula
         }
 
         [Theory]
-        [InlineData(ExpressionOperator.ADD)]
-        [InlineData(ExpressionOperator.GT)]
-        [InlineData(ExpressionOperator.TERNARY)]
+        [InlineData(ExpressionOperator.Add)]
+        [InlineData(ExpressionOperator.Gt)]
+        [InlineData(ExpressionOperator.Ternary)]
         public async Task Validate_Binary_Success(ExpressionOperator op)
         {
             var dto = new FormulaDto
@@ -92,14 +92,14 @@ namespace Respira.Clinical.Application.Test.Features.Shared.ManageFormula
         {
             var dto = new FormulaDto
             {
-                Operator = ExpressionOperator.AND,
+                Operator = ExpressionOperator.And,
                 Left = new FormulaDto
                 {
                     Operand = new FormulaDto { Variable = Guid.CreateVersion7() },
                 },
                 Right = new FormulaDto
                 {
-                    Operator = ExpressionOperator.GT,
+                    Operator = ExpressionOperator.Gt,
                     Left = new FormulaDto { Variable = Guid.CreateVersion7() },
                     Right = new FormulaDto { Constant = "20" },
                 },
@@ -139,7 +139,7 @@ namespace Respira.Clinical.Application.Test.Features.Shared.ManageFormula
             // but none forms a complete binary formula
             var dto = new FormulaDto
             {
-                Operator = includeOperator ? ExpressionOperator.ADD : null,
+                Operator = includeOperator ? ExpressionOperator.Add : null,
                 Left = includeLeft ? new FormulaDto { Constant = "1" } : null,
                 Right = includeRight ? new FormulaDto { Constant = "2" } : null,
             };
@@ -280,7 +280,7 @@ namespace Respira.Clinical.Application.Test.Features.Shared.ManageFormula
         {
             var dto = new FormulaDto
             {
-                Operator = ExpressionOperator.ADD,
+                Operator = ExpressionOperator.Add,
                 Left = new FormulaDto { Constant = "1" },
                 Right = new FormulaDto(),
             };
@@ -297,7 +297,7 @@ namespace Respira.Clinical.Application.Test.Features.Shared.ManageFormula
         {
             var dto = new FormulaDto
             {
-                Operator = ExpressionOperator.ADD,
+                Operator = ExpressionOperator.Add,
                 Left = new FormulaDto
                 {
                     Operator = (ExpressionOperator)14,
@@ -318,7 +318,7 @@ namespace Respira.Clinical.Application.Test.Features.Shared.ManageFormula
         {
             var dto = new FormulaDto
             {
-                Operator = ExpressionOperator.ADD,
+                Operator = ExpressionOperator.Add,
                 Left = new FormulaDto
                 {
                     Constant = "5",
@@ -342,10 +342,10 @@ namespace Respira.Clinical.Application.Test.Features.Shared.ManageFormula
         {
             var dto = new FormulaDto
             {
-                Operator = ExpressionOperator.ADD,
+                Operator = ExpressionOperator.Add,
                 Left = new FormulaDto
                 {
-                    Operator = ExpressionOperator.ADD,
+                    Operator = ExpressionOperator.Add,
                     Left = new FormulaDto { Constant = string.Empty },
                     Right = new FormulaDto { Constant = "1" },
                 },
@@ -363,7 +363,7 @@ namespace Respira.Clinical.Application.Test.Features.Shared.ManageFormula
         {
             var dto = new FormulaDto
             {
-                Operator = ExpressionOperator.ADD,
+                Operator = ExpressionOperator.Add,
                 Left = new FormulaDto { Constant = string.Empty },
                 Right = new FormulaDto { Variable = Guid.Empty },
             };
@@ -383,13 +383,13 @@ namespace Respira.Clinical.Application.Test.Features.Shared.ManageFormula
             {
                 "Left" => new FormulaDto
                 {
-                    Operator = ExpressionOperator.ADD,
+                    Operator = ExpressionOperator.Add,
                     Left = childDto,
                     Right = new FormulaDto { Constant = "1" },
                 },
                 "Right" => new FormulaDto
                 {
-                    Operator = ExpressionOperator.ADD,
+                    Operator = ExpressionOperator.Add,
                     Left = new FormulaDto { Constant = "1" },
                     Right = childDto,
                 },

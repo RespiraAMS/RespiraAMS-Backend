@@ -51,7 +51,7 @@ namespace Respira.Clinical.Domain.Entities
             bool isApplied,
             ICollection<MetricRule> rules)
         {
-            if (!rules.All(r => r.GetType() == typeof(ScoringRule)) && !rules.All(r => r.GetType() == typeof(MajorMinorRule)))
+            if (rules.Any(r => r.GetType() != typeof(ScoringRule)) && rules.Any(r => r.GetType() != typeof(MajorMinorRule)))
             {
                 throw new ArgumentException("All rules belong to a clinical metrics should be of the same type");
             }

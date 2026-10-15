@@ -31,10 +31,10 @@ namespace Respira.Clinical.Domain.Test.Models
         #region BinaryExpression
 
         [Theory]
-        [InlineData(ExpressionOperator.ADD, 1, 2, 3)]
-        [InlineData(ExpressionOperator.SUB, 1, 2, -1)]
-        [InlineData(ExpressionOperator.MUL, 1, 2, 2)]
-        [InlineData(ExpressionOperator.DIV, 1, 2, 0.5)]
+        [InlineData(ExpressionOperator.Add, 1, 2, 3)]
+        [InlineData(ExpressionOperator.Sub, 1, 2, -1)]
+        [InlineData(ExpressionOperator.Mul, 1, 2, 2)]
+        [InlineData(ExpressionOperator.Div, 1, 2, 0.5)]
         public void BinaryExpressionTest_SimpleArithmeticExpression_Success(ExpressionOperator op, decimal left, decimal right, decimal expected)
         {
             var leftOperand = new NumericalExpression(left);
@@ -49,26 +49,26 @@ namespace Respira.Clinical.Domain.Test.Models
         {
             var leftOperand = new NumericalExpression(1);
             var rightOperand = new NumericalExpression(0);
-            Assert.Throws<ArgumentException>(() => new BinaryExpression(leftOperand, rightOperand, ExpressionOperator.DIV));
+            Assert.Throws<ArgumentException>(() => new BinaryExpression(leftOperand, rightOperand, ExpressionOperator.Div));
         }
 
         [Theory]
-        [InlineData(ExpressionOperator.GT, 2, 1, true)]
-        [InlineData(ExpressionOperator.GT, 2, 2, false)]
-        [InlineData(ExpressionOperator.GT, 2, 3, false)]
-        [InlineData(ExpressionOperator.LT, 2, 1, false)]
-        [InlineData(ExpressionOperator.LT, 2, 2, false)]
-        [InlineData(ExpressionOperator.LT, 2, 3, true)]
-        [InlineData(ExpressionOperator.GTE, 2, 1, true)]
-        [InlineData(ExpressionOperator.GTE, 2, 2, true)]
-        [InlineData(ExpressionOperator.GTE, 2, 3, false)]
-        [InlineData(ExpressionOperator.LTE, 2, 1, false)]
-        [InlineData(ExpressionOperator.LTE, 2, 2, true)]
-        [InlineData(ExpressionOperator.LTE, 2, 3, true)]
-        [InlineData(ExpressionOperator.EQ, 2, 2, true)]
-        [InlineData(ExpressionOperator.EQ, 2, 1, false)]
-        [InlineData(ExpressionOperator.NE, 2, 2, false)]
-        [InlineData(ExpressionOperator.NE, 2, 1, true)]
+        [InlineData(ExpressionOperator.Gt, 2, 1, true)]
+        [InlineData(ExpressionOperator.Gt, 2, 2, false)]
+        [InlineData(ExpressionOperator.Gt, 2, 3, false)]
+        [InlineData(ExpressionOperator.Lt, 2, 1, false)]
+        [InlineData(ExpressionOperator.Lt, 2, 2, false)]
+        [InlineData(ExpressionOperator.Lt, 2, 3, true)]
+        [InlineData(ExpressionOperator.Gte, 2, 1, true)]
+        [InlineData(ExpressionOperator.Gte, 2, 2, true)]
+        [InlineData(ExpressionOperator.Gte, 2, 3, false)]
+        [InlineData(ExpressionOperator.Lte, 2, 1, false)]
+        [InlineData(ExpressionOperator.Lte, 2, 2, true)]
+        [InlineData(ExpressionOperator.Lte, 2, 3, true)]
+        [InlineData(ExpressionOperator.Eq, 2, 2, true)]
+        [InlineData(ExpressionOperator.Eq, 2, 1, false)]
+        [InlineData(ExpressionOperator.Ne, 2, 2, false)]
+        [InlineData(ExpressionOperator.Ne, 2, 1, true)]
         public void BinaryExpressionTest_SimpleComparisonExpression_Success(ExpressionOperator op, decimal left, decimal right, bool expected)
         {
             var leftOperand = new NumericalExpression(left);
@@ -79,14 +79,14 @@ namespace Respira.Clinical.Domain.Test.Models
         }
 
         [Theory]
-        [InlineData(ExpressionOperator.EQ, true, true, true)]
-        [InlineData(ExpressionOperator.EQ, false, false, true)]
-        [InlineData(ExpressionOperator.EQ, false, true, false)]
-        [InlineData(ExpressionOperator.EQ, true, false, false)]
-        [InlineData(ExpressionOperator.NE, true, false, true)]
-        [InlineData(ExpressionOperator.NE, false, true, true)]
-        [InlineData(ExpressionOperator.NE, true, true, false)]
-        [InlineData(ExpressionOperator.NE, false, false, false)]
+        [InlineData(ExpressionOperator.Eq, true, true, true)]
+        [InlineData(ExpressionOperator.Eq, false, false, true)]
+        [InlineData(ExpressionOperator.Eq, false, true, false)]
+        [InlineData(ExpressionOperator.Eq, true, false, false)]
+        [InlineData(ExpressionOperator.Ne, true, false, true)]
+        [InlineData(ExpressionOperator.Ne, false, true, true)]
+        [InlineData(ExpressionOperator.Ne, true, true, false)]
+        [InlineData(ExpressionOperator.Ne, false, false, false)]
         public void BinaryExpressionTest_ComparisonExpression_Success(ExpressionOperator op, bool left, bool right, bool expected)
         {
             var leftOperand = new BooleanExpression(left);
@@ -105,9 +105,9 @@ namespace Respira.Clinical.Domain.Test.Models
                 new BinaryExpression(
                     new NumericalExpression(2),
                     new NumericalExpression(3),
-                    ExpressionOperator.ADD
+                    ExpressionOperator.Add
                 ),
-                ExpressionOperator.MUL
+                ExpressionOperator.Mul
             );
 
             Assert.Equal(ExpressionResultType.Numeric, expression.ResultType);
@@ -119,7 +119,7 @@ namespace Respira.Clinical.Domain.Test.Models
         {
             var leftOperand = new NumericalExpression(1);
             var rightOperand = new BooleanExpression(true);
-            Assert.Throws<ArgumentException>(() => new BinaryExpression(leftOperand, rightOperand, ExpressionOperator.ADD));
+            Assert.Throws<ArgumentException>(() => new BinaryExpression(leftOperand, rightOperand, ExpressionOperator.Add));
         }
 
         [Fact]
@@ -127,7 +127,7 @@ namespace Respira.Clinical.Domain.Test.Models
         {
             var leftOperand = new NumericalExpression(1);
             var rightOperand = new BooleanExpression(true);
-            Assert.Throws<ArgumentException>(() => new BinaryExpression(leftOperand, rightOperand, ExpressionOperator.EQ));
+            Assert.Throws<ArgumentException>(() => new BinaryExpression(leftOperand, rightOperand, ExpressionOperator.Eq));
         }
 
         [Fact]
@@ -135,7 +135,7 @@ namespace Respira.Clinical.Domain.Test.Models
         {
             var leftOperand = new BooleanExpression(true);
             var rightOperand = new NumericalExpression(1);
-            Assert.Throws<ArgumentException>(() => new BinaryExpression(leftOperand, rightOperand, ExpressionOperator.EQ));
+            Assert.Throws<ArgumentException>(() => new BinaryExpression(leftOperand, rightOperand, ExpressionOperator.Eq));
         }
 
         #endregion

@@ -16,7 +16,7 @@ namespace Respira.Clinical.Application.Features.SuspectedCauses.CreateSuspectedC
             });
         }
 
-        public Result<SuspectedCause> ToModel(CreateSuspectedCauseCommand command, object? dependencies = null)
+        public Result<SuspectedCause> ToModel(CreateSuspectedCauseCommand command, object dependencies)
         {
             return ToModel(command);
         }

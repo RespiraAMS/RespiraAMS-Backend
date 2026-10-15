@@ -14,7 +14,7 @@ namespace Respira.Clinical.Application.Features.Treatments.UpdateTreatment
             return Result.Success(ApplicationStatus.Success);
         }
 
-        public Result MapModel(Treatment model, UpdateTreatmentCommand command, object? dependencies = null)
+        public Result MapModel(Treatment model, UpdateTreatmentCommand command, object dependencies)
         {
             return MapModel(model, command);
         }

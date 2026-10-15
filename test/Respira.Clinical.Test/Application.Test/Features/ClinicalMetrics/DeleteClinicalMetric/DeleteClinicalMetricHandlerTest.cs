@@ -147,7 +147,7 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.DeleteClini
             // The IDSA/ATS metric counts major and minor criteria instead of scoring points
             var metricId = await SeedMetricAsync(IdsaAts);
             var hypotensionId = await SeedCriterionAsync(
-                "Huyết áp tâm thu < 90 mmHg", "SBP", 90, ExpressionOperator.LT);
+                "Huyết áp tâm thu < 90 mmHg", "SBP", 90, ExpressionOperator.Lt);
             var confusionId = await SeedConfusionCriterionAsync();
             await SeedMajorMinorRuleAsync(metricId, hypotensionId, isMajor: true);
             await SeedMajorMinorRuleAsync(metricId, confusionId, isMajor: false);
@@ -181,9 +181,9 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.DeleteClini
              * survive together with the rules of the metric that stays in use
              */
             var ageCriterionId = await SeedCriterionAsync(
-                "Tuổi >= 65", "AGE", 65, ExpressionOperator.GTE);
+                "Tuổi >= 65", "AGE", 65, ExpressionOperator.Gte);
             var sbpCriterionId = await SeedCriterionAsync(
-                "Huyết áp tâm thu < 90 mmHg", "SBP", 90, ExpressionOperator.LT);
+                "Huyết áp tâm thu < 90 mmHg", "SBP", 90, ExpressionOperator.Lt);
 
             var curb65Id = await SeedMetricAsync(Curb65);
             await SeedScoringRuleAsync(curb65Id, ageCriterionId);
@@ -426,10 +426,10 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.DeleteClini
         {
             var criteria = new[]
             {
-                await SeedCriterionAsync("Tuổi >= 65", "AGE", 65, ExpressionOperator.GTE),
-                await SeedCriterionAsync("Huyết áp tâm thu < 90 mmHg", "SBP", 90, ExpressionOperator.LT),
-                await SeedCriterionAsync("Nhịp thở >= 30 lần/phút", "RR", 30, ExpressionOperator.GTE),
-                await SeedCriterionAsync("Urea máu >= 19 mg/dL", "BUN", 19, ExpressionOperator.GTE),
+                await SeedCriterionAsync("Tuổi >= 65", "AGE", 65, ExpressionOperator.Gte),
+                await SeedCriterionAsync("Huyết áp tâm thu < 90 mmHg", "SBP", 90, ExpressionOperator.Lt),
+                await SeedCriterionAsync("Nhịp thở >= 30 lần/phút", "RR", 30, ExpressionOperator.Gte),
+                await SeedCriterionAsync("Urea máu >= 19 mg/dL", "BUN", 19, ExpressionOperator.Gte),
                 await SeedConfusionCriterionAsync(),
             };
 

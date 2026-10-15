@@ -30,7 +30,7 @@ namespace Respira.Clinical.Domain.Models
     /// This is used to accept a numeric value for a constant operand in a more complex expression.
     /// </summary>
     /// <param name="value">
-    /// The numerical value. Even though the value type is object, but it self to be parsed into decimal
+    /// The numerical value. Even though the value type is object, but it safe to be parsed into decimal
     /// </param>
     public class NumericalExpression(decimal value) : Expression
     {
@@ -46,7 +46,7 @@ namespace Respira.Clinical.Domain.Models
     /// This used to accept a boolean value for a constant boolean operand.
     /// </summary>
     /// <param name="value">
-    /// The boolean value. Even though the value type is object, but it self to be parsed into boolean
+    /// The boolean value. Even though the value type is object, but it safe to be parsed into boolean
     /// </param>
     public class BooleanExpression(bool value) : Expression
     {
@@ -72,7 +72,7 @@ namespace Respira.Clinical.Domain.Models
     /// This is used to accept a clinical observation for a variable operand.
     /// </summary>
     /// <param name="observation">
-    /// Observable value. The return value is object, but it safe to be parse to either boolean or decimal
+    /// Observable value. The return value is object, but it safe to be parsed to either boolean or decimal
     /// by checking the ResultType
     /// </param>
     public class ObservationExpression(ClinicalObservation observation) : Expression
@@ -157,7 +157,7 @@ namespace Respira.Clinical.Domain.Models
                 throw new ArgumentException($"Operand type mismatch: (left) {left.ResultType} | (right) {right.ResultType}");
             }
 
-            if (left.ResultType == ExpressionResultType.Boolean && !op.IsLogicalOperator() && op != ExpressionOperator.EQ && op != ExpressionOperator.NE)
+            if (left.ResultType == ExpressionResultType.Boolean && !op.IsLogicalOperator() && op != ExpressionOperator.Eq && op != ExpressionOperator.Ne)
             {
                 throw new ArgumentException($"Invalid expression: applying non logical operator to boolean operand: result {left.ResultType} | operator {op}");
             }
@@ -167,13 +167,13 @@ namespace Respira.Clinical.Domain.Models
                 throw new ArgumentException($"Invalid expression: applying non mathematical operator to numeric operand: result {left.ResultType} | operator {op}");
             }
 
-            if (left.ResultType == ExpressionResultType.String && !(op == ExpressionOperator.EQ || op == ExpressionOperator.NE))
+            if (left.ResultType == ExpressionResultType.String && !(op == ExpressionOperator.Eq || op == ExpressionOperator.Ne))
             {
                 throw new ArgumentException($"Invalid expression: applying non string operator to string operand: result {left.ResultType} | operator {op}");
             }
 
             // Check for division by zero.
-            if (op == ExpressionOperator.DIV && right.ResultType == ExpressionResultType.Numeric && (decimal)right.Evaluate() == 0)
+            if (op == ExpressionOperator.Div && right.ResultType == ExpressionResultType.Numeric && (decimal)right.Evaluate() == 0)
             {
                 throw new ArgumentException("Division by zero");
             }
@@ -190,8 +190,8 @@ namespace Respira.Clinical.Domain.Models
             {
                 return Operator switch
                 {
-                    ExpressionOperator.EQ => (string)Left.Evaluate() == (string)Right.Evaluate(),
-                    ExpressionOperator.NE => (string)Left.Evaluate() != (string)Right.Evaluate(),
+                    ExpressionOperator.Eq => (string)Left.Evaluate() == (string)Right.Evaluate(),
+                    ExpressionOperator.Ne => (string)Left.Evaluate() != (string)Right.Evaluate(),
                     _ => throw new Exception($"Unexpected logical operator: {Operator}"),
                 };
             }
@@ -201,8 +201,8 @@ namespace Respira.Clinical.Domain.Models
             {
                 return Operator switch
                 {
-                    ExpressionOperator.AND => (bool)Left.Evaluate() && (bool)Right.Evaluate(),
-                    ExpressionOperator.OR => (bool)Left.Evaluate() || (bool)Right.Evaluate(),
+                    ExpressionOperator.And => (bool)Left.Evaluate() && (bool)Right.Evaluate(),
+                    ExpressionOperator.Or => (bool)Left.Evaluate() || (bool)Right.Evaluate(),
                     // NOT is handle by UnaryExpression
                     _ => throw new Exception($"Unexpected logical operator: {Operator}"),
                 };
@@ -214,8 +214,8 @@ namespace Respira.Clinical.Domain.Models
             {
                 return Operator switch
                 {
-                    ExpressionOperator.EQ => (bool)Left.Evaluate() == (bool)Right.Evaluate(),
-                    ExpressionOperator.NE => (bool)Left.Evaluate() != (bool)Right.Evaluate(),
+                    ExpressionOperator.Eq => (bool)Left.Evaluate() == (bool)Right.Evaluate(),
+                    ExpressionOperator.Ne => (bool)Left.Evaluate() != (bool)Right.Evaluate(),
                     _ => throw new Exception($"Unexpected logical operator: {Operator}"),
                 };
             }
@@ -226,16 +226,16 @@ namespace Respira.Clinical.Domain.Models
 
             return Operator switch
             {
-                ExpressionOperator.ADD => left + right,
-                ExpressionOperator.SUB => left - right,
-                ExpressionOperator.MUL => left * right,
-                ExpressionOperator.DIV => left / right,
-                ExpressionOperator.GT => left > right,
-                ExpressionOperator.LT => left < right,
-                ExpressionOperator.GTE => left >= right,
-                ExpressionOperator.LTE => left <= right,
-                ExpressionOperator.EQ => left == right,
-                ExpressionOperator.NE => left != right,
+                ExpressionOperator.Add => left + right,
+                ExpressionOperator.Sub => left - right,
+                ExpressionOperator.Mul => left * right,
+                ExpressionOperator.Div => left / right,
+                ExpressionOperator.Gt => left > right,
+                ExpressionOperator.Lt => left < right,
+                ExpressionOperator.Gte => left >= right,
+                ExpressionOperator.Lte => left <= right,
+                ExpressionOperator.Eq => left == right,
+                ExpressionOperator.Ne => left != right,
                 _ => throw new ArgumentException($"Unexpected mathematical operator: {nameof(Operator)}"),
             };
         }

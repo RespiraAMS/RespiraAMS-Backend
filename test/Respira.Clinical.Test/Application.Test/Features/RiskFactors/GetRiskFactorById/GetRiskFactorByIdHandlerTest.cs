@@ -98,9 +98,9 @@ namespace Respira.Clinical.Application.Test.Features.RiskFactors.GetRiskFactorBy
             return factor;
         }
 
-        private static readonly Formula AgeFormula = Numeric("AGE", 65, ExpressionOperator.GTE);
-        private static readonly Formula HypotensionFormula = Numeric("SBP", 90, ExpressionOperator.LT);
-        private static readonly Formula TachypneaFormula = Numeric("RR", 30, ExpressionOperator.GTE);
+        private static readonly Formula AgeFormula = Numeric("AGE", 65, ExpressionOperator.Gte);
+        private static readonly Formula HypotensionFormula = Numeric("SBP", 90, ExpressionOperator.Lt);
+        private static readonly Formula TachypneaFormula = Numeric("RR", 30, ExpressionOperator.Gte);
 
         private const string KlebsiellaName = "Klebsiella pneumoniae";
         private const string KlebsiellaDescription =
@@ -175,7 +175,7 @@ namespace Respira.Clinical.Application.Test.Features.RiskFactors.GetRiskFactorBy
         public async Task GetRiskFactorById_NestedFormula_RenderedWithParentheses_Success()
         {
             // CURB-65 age together with the hypotension threshold, joined by AND
-            var formula = new BinaryFormula(AgeFormula, HypotensionFormula, ExpressionOperator.AND);
+            var formula = new BinaryFormula(AgeFormula, HypotensionFormula, ExpressionOperator.And);
             var (_, _, factor) = await SeedSingleAsync(formula: formula);
 
             var result = await _handler.HandleAsync(

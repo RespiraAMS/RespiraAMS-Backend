@@ -8,20 +8,20 @@ namespace Respira.Clinical.Domain.Models
         public string Source { get; init; }
 
         /// <summary>
-        /// The string represetation of the formula used to evaludate criterion
+        /// The string representation of the formula used to evaluate criterion
         /// </summary>
         public string Formula { get; init; }
 
         /// <summary>
         /// The observation of clinical variables used to evaluate this criterion
         /// </summary>
-        public List<ClinicalObservation> RelatedObservations { get; init; }
+        public IEnumerable<ClinicalObservation> RelatedObservations { get; init; }
 
         /// <summary>
         /// The clinical variables that are missing in the observations
         /// which are  for this criterion evaluation
         /// </summary>
-        public List<VariableRef> MissingVariables { get; init; }
+        public IEnumerable<VariableRef> MissingVariables { get; init; }
 
         /// <summary>
         /// Evaluated value from the criterion formula
@@ -34,35 +34,37 @@ namespace Respira.Clinical.Domain.Models
         public decimal? Score { get; init; }
 
         /// <summary>
-        /// Boolean flag, indiciate if this is a major criteria,
+        /// Boolean flag, indicate if this is a major criteria,
         /// used in major/minor metric system
         /// </summary>
         public bool? IsMajor { get; init; }
 
-        public Evidence(string source, Formula formula, List<VariableRef> variablesUsed, List<ClinicalObservation> observations)
+        public Evidence(string source, Formula formula, IEnumerable<VariableRef> variablesUsed, IEnumerable<ClinicalObservation> observations)
         {
+            observations = observations.ToList();
+        
             Source = source;
             Formula = formula.ToString()!;
 
-            // Filter related observations from the list of all observations and used variables
-            RelatedObservations = [.. observations.Where(x => variablesUsed.Select(x => x.Code).Contains(x.Variable.Code))];
+            // Filter related observations from the IEnumerable of all observations and used variables
+            RelatedObservations = [.. observations.Where(x => variablesUsed.Select(vu => vu.Code).Contains(x.Variable.Code))];
 
-            // Filter missing variables from the list of all observations and used variables
+            // Filter missing variables from the IEnumerable of all observations and used variables
             MissingVariables = [.. variablesUsed.Where(x => !RelatedObservations.Any(ro => ro.Variable.Code.Equals(x.Code)))];
 
             // Evaluated value
-            if (MissingVariables.Count == 0)
+            if (!MissingVariables.Any())
             {
                 EvaluatedValue = formula.ToExpression(observations).Evaluate();
             }
         }
 
-        public Evidence(string source, Formula formula, List<VariableRef> variablesUsed, List<ClinicalObservation> observations, decimal score) : this(source, formula, variablesUsed, observations)
+        public Evidence(string source, Formula formula, IEnumerable<VariableRef> variablesUsed, IEnumerable<ClinicalObservation> observations, decimal score) : this(source, formula, variablesUsed, observations)
         {
             Score = score;
         }
 
-        public Evidence(string source, Formula formula, List<VariableRef> variablesUsed, List<ClinicalObservation> observations, bool isMajor) : this(source, formula, variablesUsed, observations)
+        public Evidence(string source, Formula formula, IEnumerable<VariableRef> variablesUsed, IEnumerable<ClinicalObservation> observations, bool isMajor) : this(source, formula, variablesUsed, observations)
         {
             IsMajor = isMajor;
         }

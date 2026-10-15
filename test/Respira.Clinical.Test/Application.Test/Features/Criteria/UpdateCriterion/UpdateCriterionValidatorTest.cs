@@ -63,7 +63,7 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.UpdateCriterion
                 Name = "Hypotension",
                 Formula = new FormulaDto
                 {
-                    Operator = ExpressionOperator.LT,
+                    Operator = ExpressionOperator.Lt,
                     Left = new FormulaDto { Variable = Guid.CreateVersion7() },
                     Right = new FormulaDto { Constant = "90" },
                 },
@@ -83,11 +83,11 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.UpdateCriterion
                 Name = "Female hypertensive crisis",
                 Formula = new FormulaDto
                 {
-                    Operator = ExpressionOperator.AND,
+                    Operator = ExpressionOperator.And,
                     Left = new FormulaDto { Variable = Guid.CreateVersion7() },
                     Right = new FormulaDto
                     {
-                        Operator = ExpressionOperator.GT,
+                        Operator = ExpressionOperator.Gt,
                         Left = new FormulaDto { Variable = Guid.CreateVersion7() },
                         Right = new FormulaDto { Constant = "140" },
                     },
@@ -245,7 +245,7 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.UpdateCriterion
                 Formula = new FormulaDto
                 {
                     Left = new FormulaDto { Variable = Guid.CreateVersion7() },
-                    Operator = ExpressionOperator.LT,
+                    Operator = ExpressionOperator.Lt,
                     Right = null,
                 },
             };
@@ -319,7 +319,7 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.UpdateCriterion
                 Name = "Hypotension",
                 Formula = new FormulaDto
                 {
-                    Operator = ExpressionOperator.LT,
+                    Operator = ExpressionOperator.Lt,
                     Left = new FormulaDto(),
                     Right = new FormulaDto { Constant = "90" },
                 },

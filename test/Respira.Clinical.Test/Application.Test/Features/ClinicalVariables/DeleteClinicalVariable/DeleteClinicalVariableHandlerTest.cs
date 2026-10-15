@@ -145,8 +145,8 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalVariables.DeleteCli
                     new BinaryFormula(
                         new VariableFormula(sbp),
                         new NumericConstantFormula(140),
-                        ExpressionOperator.GT),
-                    ExpressionOperator.AND));
+                        ExpressionOperator.Gt),
+                    ExpressionOperator.And));
             await SeedAsync(sbp, female, pih);
 
             var result = await _handler.HandleAsync(
@@ -193,7 +193,7 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalVariables.DeleteCli
                 new BinaryFormula(
                     new VariableFormula(sbp),
                     new NumericConstantFormula(140),
-                    ExpressionOperator.GT));
+                    ExpressionOperator.Gt));
             var hypotension = CreateBooleanVariable(
                 "HYPOTENSION",
                 "Hypotension",
@@ -202,7 +202,7 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalVariables.DeleteCli
                 new BinaryFormula(
                     new VariableFormula(sbp),
                     new NumericConstantFormula(90),
-                    ExpressionOperator.LT));
+                    ExpressionOperator.Lt));
             await SeedAsync(sbp, female, hypertension, hypotension);
 
             var result = await _handler.HandleAsync(
@@ -254,7 +254,7 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalVariables.DeleteCli
                 new BinaryFormula(
                     new VariableFormula(sbp),
                     new NumericConstantFormula(140),
-                    ExpressionOperator.GT));
+                    ExpressionOperator.Gt));
             var severeHypertension = CreateBooleanVariable(
                 "SEVERE-HYPERTENSION",
                 "Severe hypertension",

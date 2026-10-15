@@ -87,9 +87,9 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.UpdateMetri
             // A rule may be retargeted to another live criterion of the same metric
             var metricId = await SeedMetricAsync(Curb65);
             var ageId = await SeedCriterionAsync(
-                "Tuổi >= 65", Numeric("AGE", 65, ExpressionOperator.GTE));
+                "Tuổi >= 65", Numeric("AGE", 65, ExpressionOperator.Gte));
             var sbpId = await SeedCriterionAsync(
-                "Huyết áp tâm thu < 90 mmHg", Numeric("SBP", 90, ExpressionOperator.LT));
+                "Huyết áp tâm thu < 90 mmHg", Numeric("SBP", 90, ExpressionOperator.Lt));
             var ruleId = await SeedScoringRuleAsync(metricId, ageId, new NumericConstantFormula(1));
 
             var command = ScoringCommand(ruleId, metricId, sbpId, OnePoint());
@@ -135,9 +135,9 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.UpdateMetri
              */
             var metricId = await SeedMetricAsync(Psi);
             var bunId = await SeedCriterionAsync(
-                "Urea máu >= 30 mg/dL", Numeric("BUN", 30, ExpressionOperator.GTE));
+                "Urea máu >= 30 mg/dL", Numeric("BUN", 30, ExpressionOperator.Gte));
             var ageId = await SeedCriterionAsync(
-                "Tuổi >= 65", Numeric("AGE", 65, ExpressionOperator.GTE));
+                "Tuổi >= 65", Numeric("AGE", 65, ExpressionOperator.Gte));
             // PSI weight: an elevated blood urea nitrogen is worth 10 points
             var ruleId = await SeedScoringRuleAsync(metricId, bunId, new NumericConstantFormula(10));
             var ageVarId = await SeedAgeVariableAsync();
@@ -161,7 +161,7 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.UpdateMetri
 
             var ternary = Assert.IsType<TernaryFormula>(saved.ScoreFunction);
             var condition = Assert.IsType<BinaryFormula>(ternary.Condition);
-            Assert.Equal(ExpressionOperator.GTE, condition.Operator);
+            Assert.Equal(ExpressionOperator.Gte, condition.Operator);
             Assert.Equal("AGE ≥ 65", condition.ToString());
             Assert.Equal(ageVarId, Assert.IsType<VariableFormula>(condition.Left).Variable.Id);
             Assert.Equal(1m, Assert.IsType<NumericConstantFormula>(ternary.IfTrue).Constant);
@@ -177,9 +177,9 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.UpdateMetri
             // IDSA/ATS style: a criterion is reclassified between minor and major
             var metricId = await SeedMetricAsync(IdsaAts);
             var ageId = await SeedCriterionAsync(
-                "Tuổi >= 65", Numeric("AGE", 65, ExpressionOperator.GTE));
+                "Tuổi >= 65", Numeric("AGE", 65, ExpressionOperator.Gte));
             var sbpId = await SeedCriterionAsync(
-                "Huyết áp tâm thu < 90 mmHg", Numeric("SBP", 90, ExpressionOperator.LT));
+                "Huyết áp tâm thu < 90 mmHg", Numeric("SBP", 90, ExpressionOperator.Lt));
             var ruleId = await SeedMajorMinorRuleAsync(metricId, ageId, isMajor: !isMajor);
 
             var command = MajorMinorCommand(ruleId, metricId, sbpId, isMajor);
@@ -217,11 +217,11 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.UpdateMetri
             // Only the targeted rule may change, its siblings keep their payload
             var metricId = await SeedMetricAsync(Curb65);
             var ageId = await SeedCriterionAsync(
-                "Tuổi >= 65", Numeric("AGE", 65, ExpressionOperator.GTE));
+                "Tuổi >= 65", Numeric("AGE", 65, ExpressionOperator.Gte));
             var sbpId = await SeedCriterionAsync(
-                "Huyết áp tâm thu < 90 mmHg", Numeric("SBP", 90, ExpressionOperator.LT));
+                "Huyết áp tâm thu < 90 mmHg", Numeric("SBP", 90, ExpressionOperator.Lt));
             var rrId = await SeedCriterionAsync(
-                "Nhịp thở >= 30 lần/phút", Numeric("RR", 30, ExpressionOperator.GTE));
+                "Nhịp thở >= 30 lần/phút", Numeric("RR", 30, ExpressionOperator.Gte));
             var ruleId = await SeedScoringRuleAsync(metricId, ageId, new NumericConstantFormula(1));
             var siblingId = await SeedScoringRuleAsync(metricId, sbpId, new NumericConstantFormula(1));
 
@@ -258,9 +258,9 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.UpdateMetri
              */
             var metricId = await SeedMetricAsync(Curb65);
             var ageId = await SeedCriterionAsync(
-                "Tuổi >= 65", Numeric("AGE", 65, ExpressionOperator.GTE));
+                "Tuổi >= 65", Numeric("AGE", 65, ExpressionOperator.Gte));
             var sbpId = await SeedCriterionAsync(
-                "Huyết áp tâm thu < 90 mmHg", Numeric("SBP", 90, ExpressionOperator.LT));
+                "Huyết áp tâm thu < 90 mmHg", Numeric("SBP", 90, ExpressionOperator.Lt));
             var ruleId = await SeedScoringRuleAsync(metricId, ageId, new NumericConstantFormula(1));
             _ = await SeedScoringRuleAsync(metricId, sbpId, new NumericConstantFormula(1), isDeleted: true);
 
@@ -296,7 +296,7 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.UpdateMetri
              */
             var metricId = await SeedMetricAsync(Curb65);
             var ageId = await SeedCriterionAsync(
-                "Tuổi >= 65", Numeric("AGE", 65, ExpressionOperator.GTE));
+                "Tuổi >= 65", Numeric("AGE", 65, ExpressionOperator.Gte));
             var ruleId = await SeedScoringRuleAsync(metricId, ageId, new NumericConstantFormula(1));
 
             var command = ScoringCommand(ruleId, metricId, ageId, new FormulaDto { Constant = "2" });
@@ -324,7 +324,7 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.UpdateMetri
             // The same natural update for a major/minor rule: only the weight flips
             var metricId = await SeedMetricAsync(IdsaAts);
             var ageId = await SeedCriterionAsync(
-                "Tuổi >= 65", Numeric("AGE", 65, ExpressionOperator.GTE));
+                "Tuổi >= 65", Numeric("AGE", 65, ExpressionOperator.Gte));
             var ruleId = await SeedMajorMinorRuleAsync(metricId, ageId, isMajor: false);
 
             var command = MajorMinorCommand(ruleId, metricId, ageId, isMajor: true);
@@ -354,7 +354,7 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.UpdateMetri
         {
             var metricId = await SeedMetricAsync(Curb65);
             var ageId = await SeedCriterionAsync(
-                "Tuổi >= 65", Numeric("AGE", 65, ExpressionOperator.GTE));
+                "Tuổi >= 65", Numeric("AGE", 65, ExpressionOperator.Gte));
             var ruleId = await SeedScoringRuleAsync(metricId, ageId, new NumericConstantFormula(1));
 
             var command = ScoringCommand(ruleId, Guid.CreateVersion7(), ageId, OnePoint());
@@ -381,7 +381,7 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.UpdateMetri
             // reports them exactly like unknown ones
             var metricId = await SeedMetricAsync(Curb65, isDeleted: true);
             var ageId = await SeedCriterionAsync(
-                "Tuổi >= 65", Numeric("AGE", 65, ExpressionOperator.GTE));
+                "Tuổi >= 65", Numeric("AGE", 65, ExpressionOperator.Gte));
             var ruleId = await SeedScoringRuleAsync(metricId, ageId, new NumericConstantFormula(1));
 
             var command = ScoringCommand(ruleId, metricId, ageId, OnePoint());
@@ -404,7 +404,7 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.UpdateMetri
         {
             var metricId = await SeedMetricAsync(Curb65);
             var ageId = await SeedCriterionAsync(
-                "Tuổi >= 65", Numeric("AGE", 65, ExpressionOperator.GTE));
+                "Tuổi >= 65", Numeric("AGE", 65, ExpressionOperator.Gte));
             _ = await SeedScoringRuleAsync(metricId, ageId, new NumericConstantFormula(1));
 
             var command = ScoringCommand(Guid.CreateVersion7(), metricId, ageId, OnePoint());
@@ -428,7 +428,7 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.UpdateMetri
             // Boundary: Guid.Empty can never match a stored rule
             var metricId = await SeedMetricAsync(Curb65);
             var ageId = await SeedCriterionAsync(
-                "Tuổi >= 65", Numeric("AGE", 65, ExpressionOperator.GTE));
+                "Tuổi >= 65", Numeric("AGE", 65, ExpressionOperator.Gte));
             _ = await SeedScoringRuleAsync(metricId, ageId, new NumericConstantFormula(1));
 
             var command = ScoringCommand(Guid.Empty, metricId, ageId, OnePoint());
@@ -452,7 +452,7 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.UpdateMetri
             // so they report like rules that do not exist
             var metricId = await SeedMetricAsync(Curb65);
             var ageId = await SeedCriterionAsync(
-                "Tuổi >= 65", Numeric("AGE", 65, ExpressionOperator.GTE));
+                "Tuổi >= 65", Numeric("AGE", 65, ExpressionOperator.Gte));
             var ruleId = await SeedScoringRuleAsync(
                 metricId, ageId, new NumericConstantFormula(1), isDeleted: true);
 
@@ -484,11 +484,11 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.UpdateMetri
             var curbId = await SeedMetricAsync(Curb65);
             var psiId = await SeedMetricAsync(Psi);
             var ageId = await SeedCriterionAsync(
-                "Tuổi >= 65", Numeric("AGE", 65, ExpressionOperator.GTE));
+                "Tuổi >= 65", Numeric("AGE", 65, ExpressionOperator.Gte));
             var sbpId = await SeedCriterionAsync(
-                "Huyết áp tâm thu < 90 mmHg", Numeric("SBP", 90, ExpressionOperator.LT));
+                "Huyết áp tâm thu < 90 mmHg", Numeric("SBP", 90, ExpressionOperator.Lt));
             var rrId = await SeedCriterionAsync(
-                "Nhịp thở >= 30 lần/phút", Numeric("RR", 30, ExpressionOperator.GTE));
+                "Nhịp thở >= 30 lần/phút", Numeric("RR", 30, ExpressionOperator.Gte));
             _ = await SeedScoringRuleAsync(curbId, ageId, new NumericConstantFormula(1));
             var foreignRuleId = await SeedScoringRuleAsync(psiId, sbpId, new NumericConstantFormula(1));
 
@@ -514,7 +514,7 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.UpdateMetri
         {
             var metricId = await SeedMetricAsync(Curb65);
             var ageId = await SeedCriterionAsync(
-                "Tuổi >= 65", Numeric("AGE", 65, ExpressionOperator.GTE));
+                "Tuổi >= 65", Numeric("AGE", 65, ExpressionOperator.Gte));
             var ruleId = await SeedScoringRuleAsync(metricId, ageId, new NumericConstantFormula(1));
 
             var command = ScoringCommand(ruleId, metricId, Guid.CreateVersion7(), OnePoint());
@@ -538,10 +538,10 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.UpdateMetri
             // Soft deleted criteria are hidden from the existence check the same way
             var metricId = await SeedMetricAsync(Curb65);
             var ageId = await SeedCriterionAsync(
-                "Tuổi >= 65", Numeric("AGE", 65, ExpressionOperator.GTE));
+                "Tuổi >= 65", Numeric("AGE", 65, ExpressionOperator.Gte));
             var ruleId = await SeedScoringRuleAsync(metricId, ageId, new NumericConstantFormula(1));
             var deletedCriterionId = await SeedCriterionAsync(
-                "Nhịp thở >= 30 lần/phút", Numeric("RR", 30, ExpressionOperator.GTE), isDeleted: true);
+                "Nhịp thở >= 30 lần/phút", Numeric("RR", 30, ExpressionOperator.Gte), isDeleted: true);
 
             var command = ScoringCommand(ruleId, metricId, deletedCriterionId, OnePoint());
 
@@ -568,9 +568,9 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.UpdateMetri
              */
             var metricId = await SeedMetricAsync(Curb65);
             var ageId = await SeedCriterionAsync(
-                "Tuổi >= 65", Numeric("AGE", 65, ExpressionOperator.GTE));
+                "Tuổi >= 65", Numeric("AGE", 65, ExpressionOperator.Gte));
             var sbpId = await SeedCriterionAsync(
-                "Huyết áp tâm thu < 90 mmHg", Numeric("SBP", 90, ExpressionOperator.LT));
+                "Huyết áp tâm thu < 90 mmHg", Numeric("SBP", 90, ExpressionOperator.Lt));
             var ruleId = await SeedScoringRuleAsync(metricId, ageId, new NumericConstantFormula(1));
             var occupiedId = await SeedScoringRuleAsync(metricId, sbpId, new NumericConstantFormula(1));
 
@@ -608,9 +608,9 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.UpdateMetri
              */
             var metricId = await SeedMetricAsync(Curb65);
             var ageId = await SeedCriterionAsync(
-                "Tuổi >= 65", Numeric("AGE", 65, ExpressionOperator.GTE));
+                "Tuổi >= 65", Numeric("AGE", 65, ExpressionOperator.Gte));
             var rrId = await SeedCriterionAsync(
-                "Nhịp thở >= 30 lần/phút", Numeric("RR", 30, ExpressionOperator.GTE));
+                "Nhịp thở >= 30 lần/phút", Numeric("RR", 30, ExpressionOperator.Gte));
             var ruleId = await SeedScoringRuleAsync(metricId, ageId, new NumericConstantFormula(1));
 
             var command = MajorMinorCommand(ruleId, metricId, rrId, isMajor: true);
@@ -637,9 +637,9 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.UpdateMetri
             // score function
             var metricId = await SeedMetricAsync(IdsaAts);
             var ageId = await SeedCriterionAsync(
-                "Tuổi >= 65", Numeric("AGE", 65, ExpressionOperator.GTE));
+                "Tuổi >= 65", Numeric("AGE", 65, ExpressionOperator.Gte));
             var rrId = await SeedCriterionAsync(
-                "Nhịp thở >= 30 lần/phút", Numeric("RR", 30, ExpressionOperator.GTE));
+                "Nhịp thở >= 30 lần/phút", Numeric("RR", 30, ExpressionOperator.Gte));
             var ruleId = await SeedMajorMinorRuleAsync(metricId, ageId, isMajor: false);
 
             var command = ScoringCommand(ruleId, metricId, rrId, OnePoint());
@@ -670,9 +670,9 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.UpdateMetri
              */
             var metricId = await SeedMetricAsync(Curb65);
             var ageId = await SeedCriterionAsync(
-                "Tuổi >= 65", Numeric("AGE", 65, ExpressionOperator.GTE));
+                "Tuổi >= 65", Numeric("AGE", 65, ExpressionOperator.Gte));
             var rrId = await SeedCriterionAsync(
-                "Nhịp thở >= 30 lần/phút", Numeric("RR", 30, ExpressionOperator.GTE));
+                "Nhịp thở >= 30 lần/phút", Numeric("RR", 30, ExpressionOperator.Gte));
             var ruleId = await SeedScoringRuleAsync(metricId, ageId, new NumericConstantFormula(1));
 
             var command = new UpdateMetricRuleCommand
@@ -706,9 +706,9 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.UpdateMetri
              */
             var metricId = await SeedMetricAsync(Curb65);
             var ageId = await SeedCriterionAsync(
-                "Tuổi >= 65", Numeric("AGE", 65, ExpressionOperator.GTE));
+                "Tuổi >= 65", Numeric("AGE", 65, ExpressionOperator.Gte));
             var rrId = await SeedCriterionAsync(
-                "Nhịp thở >= 30 lần/phút", Numeric("RR", 30, ExpressionOperator.GTE));
+                "Nhịp thở >= 30 lần/phút", Numeric("RR", 30, ExpressionOperator.Gte));
             var ruleId = await SeedScoringRuleAsync(metricId, ageId, new NumericConstantFormula(1));
 
             var command = ScoringCommand(ruleId, metricId, rrId, new FormulaDto { Variable = Guid.CreateVersion7() });
@@ -736,9 +736,9 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.UpdateMetri
             // loads, so they cannot be referenced by an updated rule either
             var metricId = await SeedMetricAsync(Curb65);
             var ageId = await SeedCriterionAsync(
-                "Tuổi >= 65", Numeric("AGE", 65, ExpressionOperator.GTE));
+                "Tuổi >= 65", Numeric("AGE", 65, ExpressionOperator.Gte));
             var rrId = await SeedCriterionAsync(
-                "Nhịp thở >= 30 lần/phút", Numeric("RR", 30, ExpressionOperator.GTE));
+                "Nhịp thở >= 30 lần/phút", Numeric("RR", 30, ExpressionOperator.Gte));
             var ruleId = await SeedScoringRuleAsync(metricId, ageId, new NumericConstantFormula(1));
             var ageVarId = await SeedAgeVariableAsync(isDeleted: true);
 
@@ -768,14 +768,14 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.UpdateMetri
              */
             var metricId = await SeedMetricAsync(Curb65);
             var ageId = await SeedCriterionAsync(
-                "Tuổi >= 65", Numeric("AGE", 65, ExpressionOperator.GTE));
+                "Tuổi >= 65", Numeric("AGE", 65, ExpressionOperator.Gte));
             var rrId = await SeedCriterionAsync(
-                "Nhịp thở >= 30 lần/phút", Numeric("RR", 30, ExpressionOperator.GTE));
+                "Nhịp thở >= 30 lần/phút", Numeric("RR", 30, ExpressionOperator.Gte));
             var ruleId = await SeedScoringRuleAsync(metricId, ageId, new NumericConstantFormula(1));
 
             var command = ScoringCommand(ruleId, metricId, rrId, new FormulaDto
             {
-                Operator = ExpressionOperator.ADD,
+                Operator = ExpressionOperator.Add,
                 Left = new FormulaDto { Constant = "true" },
                 Right = new FormulaDto { Constant = "1" },
             });
@@ -805,9 +805,9 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.UpdateMetri
              */
             var metricId = await SeedMetricAsync(Curb65);
             var ageId = await SeedCriterionAsync(
-                "Tuổi >= 65", Numeric("AGE", 65, ExpressionOperator.GTE));
+                "Tuổi >= 65", Numeric("AGE", 65, ExpressionOperator.Gte));
             var rrId = await SeedCriterionAsync(
-                "Nhịp thở >= 30 lần/phút", Numeric("RR", 30, ExpressionOperator.GTE));
+                "Nhịp thở >= 30 lần/phút", Numeric("RR", 30, ExpressionOperator.Gte));
             var ruleId = await SeedScoringRuleAsync(metricId, ageId, new NumericConstantFormula(1));
 
             var command = ScoringCommand(ruleId, metricId, rrId, OnePoint());
@@ -941,7 +941,7 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.UpdateMetri
         {
             Condition = new FormulaDto
             {
-                Operator = ExpressionOperator.GTE,
+                Operator = ExpressionOperator.Gte,
                 Left = new FormulaDto { Variable = ageVariableId },
                 Right = new FormulaDto { Constant = "65" },
             },

@@ -91,7 +91,7 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.UpdateMetri
 
             var ternary = Assert.IsType<TernaryFormula>(model.ScoreFunction);
             var condition = Assert.IsType<BinaryFormula>(ternary.Condition);
-            Assert.Equal(ExpressionOperator.GTE, condition.Operator);
+            Assert.Equal(ExpressionOperator.Gte, condition.Operator);
             Assert.Equal("AGE ≥ 65", condition.ToString());
             Assert.Equal(age.Id, Assert.IsType<VariableFormula>(condition.Left).Variable.Id);
             Assert.Equal(1m, Assert.IsType<NumericConstantFormula>(ternary.IfTrue).Constant);
@@ -210,29 +210,6 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.UpdateMetri
         }
 
         [Fact]
-        public void MapModel_NullDependencies_Failure()
-        {
-            /*
-             * Every formula, even a plain constant, is only built when the handler
-             * supplied the clinical variables as dependencies
-             */
-            var model = CreateScoringRule(Guid.CreateVersion7());
-            var command = new UpdateMetricRuleCommand
-            {
-                Id = model.Id,
-                ClinicalMetricId = model.ClinicalMetricId,
-                CriterionId = Guid.CreateVersion7(),
-                ScoreFunction = new FormulaDto { Constant = "1" },
-            };
-
-            var result = _mapper.MapModel(model, command, null);
-
-            Assert.True(result.IsFailure());
-            Assert.NotNull(result.Error);
-            Assert.Equal(ApplicationStatus.BadRequest, result.StatusCode);
-        }
-
-        [Fact]
         public void MapModel_ScoringCommandOnMajorMinorRule_ThrowsInvalidCastException()
         {
             /*
@@ -295,7 +272,7 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.UpdateMetri
         {
             Condition = new FormulaDto
             {
-                Operator = ExpressionOperator.GTE,
+                Operator = ExpressionOperator.Gte,
                 Left = new FormulaDto { Variable = ageVariableId },
                 Right = new FormulaDto { Constant = "65" },
             },

@@ -15,7 +15,7 @@ namespace Respira.Clinical.Application.Features.Antibiotics.UpdateDosage
             return Result.Success(ApplicationStatus.Success);
         }
 
-        public Result MapModel(Dosage model, UpdateDosageCommand command, object? dependencies = null)
+        public Result MapModel(Dosage model, UpdateDosageCommand command, object dependencies)
         {
             return MapModel(model, command);
         }

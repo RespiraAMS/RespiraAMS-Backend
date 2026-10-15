@@ -19,7 +19,7 @@ namespace Respira.Clinical.Application.Features.Treatments.CreateTreatment
             });
         }
 
-        public Result<Treatment> ToModel(CreateTreatmentCommand command, object? dependencies = null)
+        public Result<Treatment> ToModel(CreateTreatmentCommand command, object dependencies)
         {
             return ToModel(command);
         }

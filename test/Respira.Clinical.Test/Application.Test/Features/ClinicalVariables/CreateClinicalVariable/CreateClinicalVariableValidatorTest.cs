@@ -124,7 +124,7 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalVariables.CreateCli
                 ClinicalVariableCategory.Paraclinical,
                 prerequisite: new FormulaDto
                 {
-                    Operator = ExpressionOperator.GT,
+                    Operator = ExpressionOperator.Gt,
                     Left = new FormulaDto { Variable = Guid.CreateVersion7() },
                     Right = new FormulaDto { Constant = "140" },
                 });
@@ -422,7 +422,7 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalVariables.CreateCli
                 ClinicalVariableCategory.Paraclinical,
                 prerequisite: new FormulaDto
                 {
-                    Operator = ExpressionOperator.GT,
+                    Operator = ExpressionOperator.Gt,
                     Left = new FormulaDto(),
                     Right = new FormulaDto { Constant = "140" },
                 });

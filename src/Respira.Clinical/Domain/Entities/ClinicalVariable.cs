@@ -6,7 +6,7 @@ using Range = Respira.Clinical.Domain.Models.Range;
 namespace Respira.Clinical.Domain.Entities
 {
     /// <summary>
-    /// This is the class represent a clinical variable, like BUN, Systoloc blood pressure,...
+    /// This is the class represent a clinical variable, like BUN, Systolic blood pressure,...
     /// </summary>
     public abstract class ClinicalVariable : Base
     {
@@ -98,11 +98,7 @@ namespace Respira.Clinical.Domain.Entities
         /// <summary>
         /// The categorical values that the value can be
         /// </summary>
-        public List<string> AcceptedValues
-        {
-            get;
-            set { field = [.. value.Select(SanitizeCategory)]; }
-        } = [];
+        public List<string> AcceptedValues { get; set => field = [.. value.Select(SanitizeCategory)]; } = [];
 
         public override ClinicalValueType ValueType => ClinicalValueType.Categorical;
 

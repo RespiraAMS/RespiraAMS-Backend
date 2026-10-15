@@ -68,7 +68,7 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.CreateCriterion
                 Name = "Hypertension crisis",
                 Formula = new FormulaDto
                 {
-                    Operator = ExpressionOperator.GT,
+                    Operator = ExpressionOperator.Gt,
                     Left = new FormulaDto { Variable = Guid.CreateVersion7() },
                     Right = new FormulaDto { Constant = "140" },
                 },
@@ -88,11 +88,11 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.CreateCriterion
                 Name = "Female hypertensive crisis",
                 Formula = new FormulaDto
                 {
-                    Operator = ExpressionOperator.AND,
+                    Operator = ExpressionOperator.And,
                     Left = new FormulaDto { Variable = Guid.CreateVersion7() },
                     Right = new FormulaDto
                     {
-                        Operator = ExpressionOperator.GT,
+                        Operator = ExpressionOperator.Gt,
                         Left = new FormulaDto { Variable = Guid.CreateVersion7() },
                         Right = new FormulaDto { Constant = "140" },
                     },
@@ -237,7 +237,7 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.CreateCriterion
                 {
                     Left = includeLeft ? new FormulaDto { Variable = Guid.CreateVersion7() } : null,
                     Right = includeRight ? new FormulaDto { Constant = "140" } : null,
-                    Operator = includeOperator ? ExpressionOperator.GT : null,
+                    Operator = includeOperator ? ExpressionOperator.Gt : null,
                 },
             };
 
@@ -326,7 +326,7 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.CreateCriterion
                 Name = "Hypertension crisis",
                 Formula = new FormulaDto
                 {
-                    Operator = ExpressionOperator.GT,
+                    Operator = ExpressionOperator.Gt,
                     Left = new FormulaDto(),
                     Right = new FormulaDto { Constant = "140" },
                 },
@@ -346,7 +346,7 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.CreateCriterion
                 Name = "Hypertension crisis",
                 Formula = new FormulaDto
                 {
-                    Operator = ExpressionOperator.GT,
+                    Operator = ExpressionOperator.Gt,
                     Left = new FormulaDto { Variable = Guid.CreateVersion7() },
                     Right = new FormulaDto(),
                 },

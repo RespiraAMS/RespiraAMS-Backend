@@ -18,7 +18,7 @@ namespace Respira.Clinical.Application.Features.Treatments.SearchTreatment
     /// <summary>
     /// Dominance filter for treatment search: hide a narrower treatment when a wider
     /// one is applicable, so that e.g. with pathogens [Pseudomonas, S. aureus] the
-    /// Pseudomonas-only treatment is hidden in favour of the Pseudomonas + S. aureus one
+    /// Pseudomonas-only treatment is hidden in favor of the Pseudomonas + S. aureus one
     /// </summary>
     public static class TreatmentDominance
     {
@@ -38,7 +38,7 @@ namespace Respira.Clinical.Application.Features.Treatments.SearchTreatment
         {
             // Dominance only makes sense when the search knows about a coinfection.
             // With 0 or 1 selected pathogens there is no "wider" treatment to prefer,
-            // so every match is kept (fallback behaviour).
+            // so every match is kept (fallback behavior).
             if (selectedPathogenIds.Count < 2)
             {
                 return [.. candidates];

@@ -53,18 +53,11 @@ namespace Respira.Clinical.Domain.Entities
         /// <returns>Score</returns>
         public decimal GetScore(IEnumerable<ClinicalObservation> observations)
         {
-            // // A rule cannot be evaluated when any of its variables has no observation.
-            // // Skip the rule (contribute 0) so the remaining criteria are still counted.
-            // if (Variables.Any(v => !observations.Any(o => o.Variable.Code.Equals(v.Code))))
-            // {
-            //     return 0;
-            // }
-
+            observations = observations.ToList();
             // Check if the result is safe to parse
-            var sastified = Criterion.IsCriterionSatisfied(observations);
-            if (sastified is bool x)
+            var satisfied = Criterion.IsCriterionSatisfied(observations);
             {
-                // Check if the obsevations provide enoughs information to evaluate the score function
+                // Check if the observations provide enough's information to evaluate the score function
                 if (ScoreFunction.Variables.Any(v => !observations.Any(o => o.Variable.Code.Equals(v.Code))))
                 {
                     var variablesNeeded = string.Join(",", ScoreFunction.Variables.Select(x => x.Code));
@@ -74,13 +67,11 @@ namespace Respira.Clinical.Domain.Entities
                 var score = ScoreFunction.ToExpression(observations).Evaluate();
                 if (score is decimal y)
                 {
-                    return x ? y : 0;
+                    return satisfied ? y : 0;
                 }
 
                 throw new Exception($"Score function result type should be numeric, but get {score.GetType()}");
             }
-
-            throw new Exception($"Criterion result type should be boolean, but get {sastified.GetType()}");
         }
     }
 

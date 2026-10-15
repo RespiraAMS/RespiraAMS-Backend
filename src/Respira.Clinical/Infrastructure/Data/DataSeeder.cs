@@ -255,8 +255,8 @@ namespace Respira.Clinical.Infrastructure.Data
             var treatments = dto.Treatments.Select(t =>
             {
                 var treatmentId = GenerateId(t.Id);
-                var pathogens = t.PathogenIds.Select(p => pathogenLookup[p]);
-                var criteria = t.CriteriaIds.Select(c => criterionLookup[c]);
+                var pathogenIds = t.PathogenIds.Select(p => pathogenLookup[p]);
+                var criterionIds = t.CriteriaIds.Select(c => criterionLookup[c]);
                 var medicines = t.MedicineIds
                     .Select(composition => new MedicineComposition
                     {
@@ -270,8 +270,8 @@ namespace Respira.Clinical.Infrastructure.Data
                     Id = treatmentId,
                     Severity = ParseEnum(t.Severity, Severity.Mild),
                     TreatmentSite = ParseEnum(t.TreatmentSite, TreatmentSite.Outpatient),
-                    Pathogens = [.. pathogens],
-                    Criteria = [.. criteria],
+                    Pathogens = [.. pathogenIds],
+                    Criteria = [.. criterionIds],
                     Medicines = [.. medicines],
                 };
             }).ToList();
@@ -318,7 +318,7 @@ namespace Respira.Clinical.Infrastructure.Data
             {
                 var left = MapFormula(dto.Left, variableLookup);
                 var right = MapFormula(dto.Right, variableLookup);
-                var op = ParseEnum(dto.Operator, ExpressionOperator.ADD);
+                var op = ParseEnum(dto.Operator, ExpressionOperator.Add);
                 return new BinaryFormula(left, right, op);
             }
 

@@ -15,7 +15,7 @@ namespace Respira.Clinical.Application.Features.Pathogens.UpdatePathogen
             return Result.Success(ApplicationStatus.Success);
         }
 
-        public Result MapModel(Pathogen model, UpdatePathogenCommand command, object? dependencies = null)
+        public Result MapModel(Pathogen model, UpdatePathogenCommand command, object dependencies)
         {
             return MapModel(model, command);
         }

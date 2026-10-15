@@ -316,7 +316,7 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalVariables.GetClinic
                 new BinaryFormula(
                     new VariableFormula(sbp),
                     new NumericConstantFormula(140),
-                    ExpressionOperator.GT)));
+                    ExpressionOperator.Gt)));
 
             var result = await _handler.HandleAsync(
                 new GetClinicalVariableByIdQuery { Id = hypertension.Id },
@@ -345,8 +345,8 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalVariables.GetClinic
                     new BinaryFormula(
                         new VariableFormula(sbp),
                         new NumericConstantFormula(140),
-                        ExpressionOperator.GT),
-                    ExpressionOperator.AND)));
+                        ExpressionOperator.Gt),
+                    ExpressionOperator.And)));
 
             var result = await _handler.HandleAsync(
                 new GetClinicalVariableByIdQuery { Id = pih.Id },

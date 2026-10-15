@@ -90,7 +90,7 @@ namespace Respira.Clinical.Application.Features.Treatments.SearchTreatment
 
             // Dominance: hide a narrower treatment when a wider one is applicable
             // (see TreatmentDominance.Filter). e.g. with pathogens [Pseudomonas, S. aureus],
-            // the Pseudomonas-only treatment is hidden in favour of the
+            // the Pseudomonas-only treatment is hidden in favor of the
             // Pseudomonas + S. aureus treatment; if no combo exists, the single stays.
             var survivors = TreatmentDominance.Filter(candidates, query.PathogenIds);
 
