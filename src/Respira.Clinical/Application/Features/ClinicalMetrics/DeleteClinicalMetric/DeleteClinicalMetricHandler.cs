@@ -22,7 +22,7 @@ namespace Respira.Clinical.Application.Features.ClinicalMetrics.DeleteClinicalMe
             }
 
             // Delete metrics and all its metric rules
-            await context.ExecuteInTransactionAsync(async () =>
+            await context.ExecuteInTransactionAsync(() =>
             {
                 // Delete clinical metric
                 metric.IsDeleted = true;

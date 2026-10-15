@@ -316,7 +316,7 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalVariables.CreateCli
                 IsRequired = false,
                 Prerequisite = new FormulaDto
                 {
-                    Operator = ExpressionOperator.GT,
+                    Operator = ExpressionOperator.Gt,
                     Left = new FormulaDto { Variable = sbp.Id },
                     Right = new FormulaDto { Constant = "140" },
                 },
@@ -337,7 +337,7 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalVariables.CreateCli
 
             // The prerequisite survives the jsonb round trip
             var formula = Assert.IsType<BinaryFormula>(saved.Prerequisite);
-            Assert.Equal(ExpressionOperator.GT, formula.Operator);
+            Assert.Equal(ExpressionOperator.Gt, formula.Operator);
             var left = Assert.IsType<VariableFormula>(formula.Left);
             Assert.Equal(sbp.Id, left.Variable.Id);
             Assert.Equal("8480-6", left.Variable.Code);
@@ -508,7 +508,7 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalVariables.CreateCli
                 IsRequired = false,
                 Prerequisite = new FormulaDto
                 {
-                    Operator = ExpressionOperator.ADD,
+                    Operator = ExpressionOperator.Add,
                     Left = new FormulaDto { Constant = "true" },
                     Right = new FormulaDto { Constant = "1" },
                 },

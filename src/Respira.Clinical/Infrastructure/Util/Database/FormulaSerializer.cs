@@ -26,7 +26,7 @@ namespace Respira.Clinical.Infrastructure.Util.Database
     {
         private const string TypeDiscriminator = "$type";
 
-        private static readonly JsonSerializerOptions s_options = new()
+        private static readonly JsonSerializerOptions Options = new()
         {
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
             Converters = { new JsonStringEnumConverter() }
@@ -36,12 +36,12 @@ namespace Respira.Clinical.Infrastructure.Util.Database
         {
             // The type argument must be Formula (not the runtime type) so the root node
             // is written through the polymorphic pipeline and gets its own $type.
-            return JsonSerializer.Serialize(formula, s_options);
+            return JsonSerializer.Serialize(formula, Options);
         }
 
         public static Formula Deserialize(string json)
         {
-            return JsonSerializer.Deserialize<Formula>(MoveDiscriminatorsFirst(json), s_options)
+            return JsonSerializer.Deserialize<Formula>(MoveDiscriminatorsFirst(json), Options)
                 ?? throw new JsonException("Formula JSON payload deserialized to null.");
         }
 

@@ -162,7 +162,7 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalVariables.CreateCli
         [Fact]
         public void ToModel_CategoricalVariable_Success()
         {
-            // Accepted values are sanitized: trimmed, upper cased and space separated
+            // Accepted values are sanitized: trimmed, uppercased and space separated
             // words are joined with an underscore
             var command = CreateCommand(
                 ClinicalValueType.Categorical,
@@ -244,7 +244,7 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalVariables.CreateCli
                 ClinicalVariableCategory.PersonalInformation,
                 prerequisite: new FormulaDto
                 {
-                    Operator = ExpressionOperator.GT,
+                    Operator = ExpressionOperator.Gt,
                     Left = new FormulaDto { Variable = sbp.Id },
                     Right = new FormulaDto { Constant = "140" },
                 });
@@ -257,7 +257,7 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalVariables.CreateCli
             Assert.NotNull(result.Data);
 
             var formula = Assert.IsType<BinaryFormula>(result.Data.Prerequisite);
-            Assert.Equal(ExpressionOperator.GT, formula.Operator);
+            Assert.Equal(ExpressionOperator.Gt, formula.Operator);
             var left = Assert.IsType<VariableFormula>(formula.Left);
             Assert.Equal(sbp.Id, left.Variable.Id);
             Assert.Equal(140m, Assert.IsType<NumericConstantFormula>(formula.Right).Constant);
@@ -289,7 +289,7 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalVariables.CreateCli
                 ClinicalVariableCategory.PersonalInformation,
                 prerequisite: new FormulaDto
                 {
-                    Operator = ExpressionOperator.ADD,
+                    Operator = ExpressionOperator.Add,
                     Left = new FormulaDto { Constant = "true" },
                     Right = new FormulaDto { Constant = "1" },
                 });
@@ -330,14 +330,6 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalVariables.CreateCli
             var command = CreateCommand(ClinicalValueType.Boolean, ClinicalVariableCategory.PersonalInformation);
 
             Assert.Throws<NotImplementedException>(() => _mapper.ToModel(command));
-        }
-
-        [Fact]
-        public void ToModel_NullDependencies_ThrowsArgumentException()
-        {
-            var command = CreateCommand(ClinicalValueType.Boolean, ClinicalVariableCategory.PersonalInformation);
-
-            Assert.Throws<ArgumentException>(() => _mapper.ToModel(command, null));
         }
 
         [Fact]

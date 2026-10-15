@@ -8,20 +8,20 @@ namespace Respira.Clinical.Domain.Enums
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum ExpressionOperator
     {
-        ADD,
-        SUB,
-        MUL,
-        DIV,
-        GT,
-        LT,
-        GTE,
-        LTE,
-        EQ,
-        NE,
-        AND,
-        OR,
-        NOT,
-        TERNARY
+        Add,
+        Sub,
+        Mul,
+        Div,
+        Gt,
+        Lt,
+        Gte,
+        Lte,
+        Eq,
+        Ne,
+        And,
+        Or,
+        Not,
+        Ternary
     }
 
     /// <summary>
@@ -38,16 +38,16 @@ namespace Respira.Clinical.Domain.Enums
         {
             return op switch
             {
-                ExpressionOperator.ADD => true,
-                ExpressionOperator.SUB => true,
-                ExpressionOperator.MUL => true,
-                ExpressionOperator.DIV => true,
-                ExpressionOperator.GT => true,
-                ExpressionOperator.LT => true,
-                ExpressionOperator.GTE => true,
-                ExpressionOperator.LTE => true,
-                ExpressionOperator.EQ => true,
-                ExpressionOperator.NE => true,
+                ExpressionOperator.Add => true,
+                ExpressionOperator.Sub => true,
+                ExpressionOperator.Mul => true,
+                ExpressionOperator.Div => true,
+                ExpressionOperator.Gt => true,
+                ExpressionOperator.Lt => true,
+                ExpressionOperator.Gte => true,
+                ExpressionOperator.Lte => true,
+                ExpressionOperator.Eq => true,
+                ExpressionOperator.Ne => true,
                 _ => false,
             };
         }
@@ -61,10 +61,10 @@ namespace Respira.Clinical.Domain.Enums
         {
             return op switch
             {
-                ExpressionOperator.AND => true,
-                ExpressionOperator.OR => true,
-                ExpressionOperator.NOT => true,
-                ExpressionOperator.TERNARY => true,
+                ExpressionOperator.And => true,
+                ExpressionOperator.Or => true,
+                ExpressionOperator.Not => true,
+                ExpressionOperator.Ternary => true,
                 _ => false,
             };
         }
@@ -78,15 +78,15 @@ namespace Respira.Clinical.Domain.Enums
         {
             return op switch
             {
-                ExpressionOperator.AND => true,
-                ExpressionOperator.OR => true,
-                ExpressionOperator.NOT => true,
-                ExpressionOperator.EQ => true,
-                ExpressionOperator.NE => true,
-                ExpressionOperator.GT => true,
-                ExpressionOperator.LT => true,
-                ExpressionOperator.GTE => true,
-                ExpressionOperator.LTE => true,
+                ExpressionOperator.And => true,
+                ExpressionOperator.Or => true,
+                ExpressionOperator.Not => true,
+                ExpressionOperator.Eq => true,
+                ExpressionOperator.Ne => true,
+                ExpressionOperator.Gt => true,
+                ExpressionOperator.Lt => true,
+                ExpressionOperator.Gte => true,
+                ExpressionOperator.Lte => true,
                 // Technically, Ternary operator can still return a boolean result,
                 // but a ternary operation already required a boolean expression as
                 // condition, so return boolean with ternary is somewhat redundant,
@@ -105,19 +105,19 @@ namespace Respira.Clinical.Domain.Enums
         {
             return op switch
             {
-                ExpressionOperator.ADD => "+",
-                ExpressionOperator.SUB => "−",
-                ExpressionOperator.MUL => "×",
-                ExpressionOperator.DIV => "÷",
-                ExpressionOperator.GT => ">",
-                ExpressionOperator.LT => "<",
-                ExpressionOperator.GTE => "≥",
-                ExpressionOperator.LTE => "≤",
-                ExpressionOperator.EQ => "=",
-                ExpressionOperator.NE => "≠",
-                ExpressionOperator.AND => "AND",
-                ExpressionOperator.OR => "OR",
-                ExpressionOperator.NOT => "NOT",
+                ExpressionOperator.Add => "+",
+                ExpressionOperator.Sub => "−",
+                ExpressionOperator.Mul => "×",
+                ExpressionOperator.Div => "÷",
+                ExpressionOperator.Gt => ">",
+                ExpressionOperator.Lt => "<",
+                ExpressionOperator.Gte => "≥",
+                ExpressionOperator.Lte => "≤",
+                ExpressionOperator.Eq => "=",
+                ExpressionOperator.Ne => "≠",
+                ExpressionOperator.And => "AND",
+                ExpressionOperator.Or => "OR",
+                ExpressionOperator.Not => "NOT",
                 _ => op.ToString(),
             };
         }

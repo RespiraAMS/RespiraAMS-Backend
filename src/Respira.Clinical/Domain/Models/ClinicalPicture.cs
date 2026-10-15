@@ -4,7 +4,7 @@ namespace Respira.Clinical.Domain.Models
 {
     public record ClinicalPicture
     {
-        public required List<ClinicalObservation> Observations { get; set; }
-        public required List<Antibiotic> Allergies { get; set; }
+        public required IEnumerable<ClinicalObservation> Observations { get; set; }
+        public required IEnumerable<Antibiotic> Allergies { get; set; }
     }
 }

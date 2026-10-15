@@ -17,7 +17,7 @@ namespace Respira.ServiceDefaults.Contracts.Results
         /// </summary>
         public object? Detail { get; set; }
 
-        public Error(string code, string description, object? detail)
+        public Error(string code, string description, object? detail = null)
         {
             // Check if status code is what our application supports
             if (!ApplicationStatus.IsSupportedStatusCode(code))
@@ -38,9 +38,6 @@ namespace Respira.ServiceDefaults.Contracts.Results
             Description = description;
             Detail = detail;
         }
-
-        public Error(string code, string description)
-            : this(code, description, null) { }
 
         public override string ToString()
         {

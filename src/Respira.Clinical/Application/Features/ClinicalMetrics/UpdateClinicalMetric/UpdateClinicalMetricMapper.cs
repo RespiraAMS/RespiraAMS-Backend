@@ -18,7 +18,7 @@ namespace Respira.Clinical.Application.Features.ClinicalMetrics.UpdateClinicalMe
             return Result.Success(ApplicationStatus.Success);
         }
 
-        public Result MapModel(ClinicalMetric model, UpdateClinicalMetricCommand command, object? dependencies = null)
+        public Result MapModel(ClinicalMetric model, UpdateClinicalMetricCommand command, object dependencies)
         {
             return MapModel(model, command);
         }

@@ -19,7 +19,7 @@ namespace Respira.Clinical.Application.Features.ClinicalMetrics.CreateClinicalMe
             ));
         }
 
-        public Result<ClinicalMetric> ToModel(CreateClinicalMetricCommand command, object? dependencies = null)
+        public Result<ClinicalMetric> ToModel(CreateClinicalMetricCommand command, object dependencies)
         {
             return ToModel(command);
         }

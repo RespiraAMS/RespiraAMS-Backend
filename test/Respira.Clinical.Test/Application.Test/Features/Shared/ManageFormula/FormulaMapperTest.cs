@@ -223,7 +223,7 @@ namespace Respira.Clinical.Application.Test.Features.Shared.ManageFormula
         {
             var dto = new FormulaDto
             {
-                Operator = ExpressionOperator.ADD,
+                Operator = ExpressionOperator.Add,
                 Left = new FormulaDto { Constant = "2" },
                 Right = new FormulaDto { Constant = "3" },
             };
@@ -235,7 +235,7 @@ namespace Respira.Clinical.Application.Test.Features.Shared.ManageFormula
             Assert.NotNull(result.Data);
 
             var formula = Assert.IsType<BinaryFormula>(result.Data);
-            Assert.Equal(ExpressionOperator.ADD, formula.Operator);
+            Assert.Equal(ExpressionOperator.Add, formula.Operator);
             Assert.Equal(2m, Assert.IsType<NumericConstantFormula>(formula.Left).Constant);
             Assert.Equal(3m, Assert.IsType<NumericConstantFormula>(formula.Right).Constant);
             Assert.Equal(ExpressionResultType.Numeric, formula.ResultType);
@@ -247,7 +247,7 @@ namespace Respira.Clinical.Application.Test.Features.Shared.ManageFormula
             var bun = CreateNumericVariable(Guid.CreateVersion7(), "BUN");
             var dto = new FormulaDto
             {
-                Operator = ExpressionOperator.GT,
+                Operator = ExpressionOperator.Gt,
                 Left = new FormulaDto { Variable = bun.Id },
                 Right = new FormulaDto { Constant = "20" },
             };
@@ -275,7 +275,7 @@ namespace Respira.Clinical.Application.Test.Features.Shared.ManageFormula
         {
             var dto = new FormulaDto
             {
-                Operator = includeOperator ? ExpressionOperator.ADD : null,
+                Operator = includeOperator ? ExpressionOperator.Add : null,
                 Left = includeLeft ? new FormulaDto { Constant = "1" } : null,
                 Right = includeRight ? new FormulaDto { Constant = "2" } : null,
             };
@@ -292,7 +292,7 @@ namespace Respira.Clinical.Application.Test.Features.Shared.ManageFormula
         {
             var dto = new FormulaDto
             {
-                Operator = ExpressionOperator.ADD,
+                Operator = ExpressionOperator.Add,
                 Left = new FormulaDto { Constant = "true" },
                 Right = new FormulaDto { Constant = "1" },
             };
@@ -305,9 +305,9 @@ namespace Respira.Clinical.Application.Test.Features.Shared.ManageFormula
         }
 
         [Theory]
-        [InlineData("true", "false", ExpressionOperator.ADD)]
-        [InlineData("1", "2", ExpressionOperator.AND)]
-        [InlineData("A", "B", ExpressionOperator.ADD)]
+        [InlineData("true", "false", ExpressionOperator.Add)]
+        [InlineData("1", "2", ExpressionOperator.And)]
+        [InlineData("A", "B", ExpressionOperator.Add)]
         public void Map_BinaryOperatorNotAllowedForOperand_Failure(string left, string right, ExpressionOperator op)
         {
             var dto = new FormulaDto
@@ -482,7 +482,7 @@ namespace Respira.Clinical.Application.Test.Features.Shared.ManageFormula
             var dto = new FormulaDto
             {
                 Variable = bun.Id,
-                Operator = ExpressionOperator.ADD,
+                Operator = ExpressionOperator.Add,
                 Left = new FormulaDto { Constant = "1" },
                 Right = new FormulaDto { Constant = "2" },
             };
@@ -501,7 +501,7 @@ namespace Respira.Clinical.Application.Test.Features.Shared.ManageFormula
         {
             var dto = new FormulaDto
             {
-                Operator = ExpressionOperator.ADD,
+                Operator = ExpressionOperator.Add,
                 Left = new FormulaDto { Constant = "1" },
                 Right = new FormulaDto { Constant = "2" },
                 Operand = new FormulaDto { Constant = "true" },

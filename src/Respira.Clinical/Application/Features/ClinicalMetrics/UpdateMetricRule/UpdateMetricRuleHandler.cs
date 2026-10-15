@@ -58,7 +58,7 @@ namespace Respira.Clinical.Application.Features.ClinicalMetrics.UpdateMetricRule
                     RuleId = command.Id,
                     DbType = rule.GetType().Name,
                     // The validator should ensure that score function and is major are mutually exclusive
-                    CommandProvidedType = command.ScoreFunction is null ? typeof(ScoringRule).Name : typeof(MajorMinorRule).Name,
+                    CommandProvidedType = command.ScoreFunction is null ? nameof(ScoringRule) : nameof(MajorMinorRule),
                 });
                 var msg = $"Cannot update rule: rule is {rule.GetType().Name}, so {(command.ScoreFunction is not null ? "ScoreFunction" : "IsMajor")} must be supplied";
                 return Result.Failure(new Error(ApplicationStatus.BadRequest, msg));

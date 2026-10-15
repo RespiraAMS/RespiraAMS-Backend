@@ -43,7 +43,7 @@ namespace Respira.Clinical.Application.Features.AntibioticGroups.GetPagedAntibio
                     ParentName = x.Parent == null ? null : x.Parent.Name,
                     Description = x.Description
                 })
-                .ToPagedListAsync(query.Param.Page, query.Param.Size);
+                .ToPagedListAsync(query.Param.Page, query.Param.Size, cancellationToken: cancellationToken);
 
             return Result<Pagination<PagedAntibioticGroupItem>>.Success(ApplicationStatus.Success, factory.Create(groups));
         }

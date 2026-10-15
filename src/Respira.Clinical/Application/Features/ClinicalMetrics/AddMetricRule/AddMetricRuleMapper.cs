@@ -11,10 +11,10 @@ namespace Respira.Clinical.Application.Features.ClinicalMetrics.AddMetricRule
     {
         public Result<MetricRule> ToModel(AddMetricRuleCommand command)
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException("This method won't be implemented since it required external dependencies to work");
         }
 
-        public Result<MetricRule> ToModel(AddMetricRuleCommand command, object? dependencies = null)
+        public Result<MetricRule> ToModel(AddMetricRuleCommand command, object dependencies)
         {
             if (command.ScoreFunction is not null && command.IsMajor is not null)
             {

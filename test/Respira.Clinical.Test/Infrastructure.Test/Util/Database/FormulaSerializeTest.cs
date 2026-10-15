@@ -66,9 +66,9 @@ namespace Respira.Clinical.Infrastructure.Test.Util.Database
         public void Binary_RoundTrips()
         {
             var back = (BinaryFormula)RoundTrip(
-                new BinaryFormula(new VariableFormula(s_bun), new NumericConstantFormula(20), ExpressionOperator.GT));
+                new BinaryFormula(new VariableFormula(s_bun), new NumericConstantFormula(20), ExpressionOperator.Gt));
 
-            Assert.Equal(ExpressionOperator.GT, back.Operator);
+            Assert.Equal(ExpressionOperator.Gt, back.Operator);
             Assert.IsType<VariableFormula>(back.Left);
             Assert.IsType<NumericConstantFormula>(back.Right);
         }
@@ -76,9 +76,9 @@ namespace Respira.Clinical.Infrastructure.Test.Util.Database
         [Fact]
         public void Ternary_RoundTrips()
         {
-            var condition = new BinaryFormula(new VariableFormula(s_bun), new NumericConstantFormula(10), ExpressionOperator.GT);
-            var ifTrue = new BinaryFormula(new VariableFormula(s_bun), new NumericConstantFormula(1), ExpressionOperator.ADD);
-            var ifFalse = new BinaryFormula(new VariableFormula(s_bun), new NumericConstantFormula(2), ExpressionOperator.ADD);
+            var condition = new BinaryFormula(new VariableFormula(s_bun), new NumericConstantFormula(10), ExpressionOperator.Gt);
+            var ifTrue = new BinaryFormula(new VariableFormula(s_bun), new NumericConstantFormula(1), ExpressionOperator.Add);
+            var ifFalse = new BinaryFormula(new VariableFormula(s_bun), new NumericConstantFormula(2), ExpressionOperator.Add);
 
             var back = (TernaryFormula)RoundTrip(new TernaryFormula(condition, ifTrue, ifFalse));
 
@@ -90,15 +90,15 @@ namespace Respira.Clinical.Infrastructure.Test.Util.Database
         [Fact]
         public void NestedTree_RoundTrips()
         {
-            var left = new BinaryFormula(new VariableFormula(s_bun), new NumericConstantFormula(20), ExpressionOperator.ADD);
+            var left = new BinaryFormula(new VariableFormula(s_bun), new NumericConstantFormula(20), ExpressionOperator.Add);
             var right = new TernaryFormula(
-                new BinaryFormula(new VariableFormula(s_bun), new NumericConstantFormula(10), ExpressionOperator.GT),
-                new BinaryFormula(new VariableFormula(s_bun), new NumericConstantFormula(1), ExpressionOperator.ADD),
-                new BinaryFormula(new VariableFormula(s_bun), new NumericConstantFormula(2), ExpressionOperator.ADD));
+                new BinaryFormula(new VariableFormula(s_bun), new NumericConstantFormula(10), ExpressionOperator.Gt),
+                new BinaryFormula(new VariableFormula(s_bun), new NumericConstantFormula(1), ExpressionOperator.Add),
+                new BinaryFormula(new VariableFormula(s_bun), new NumericConstantFormula(2), ExpressionOperator.Add));
 
-            var back = (BinaryFormula)RoundTrip(new BinaryFormula(left, right, ExpressionOperator.ADD));
+            var back = (BinaryFormula)RoundTrip(new BinaryFormula(left, right, ExpressionOperator.Add));
 
-            Assert.Equal(ExpressionOperator.ADD, back.Operator);
+            Assert.Equal(ExpressionOperator.Add, back.Operator);
 
             // Every node references the same variable; Variables dedupes by code.
             Assert.Single(back.Variables);
@@ -134,7 +134,7 @@ namespace Respira.Clinical.Infrastructure.Test.Util.Database
             var back = FormulaSerializer.Deserialize(json);
 
             var binary = Assert.IsType<BinaryFormula>(back);
-            Assert.Equal(ExpressionOperator.GT, binary.Operator);
+            Assert.Equal(ExpressionOperator.Gt, binary.Operator);
             Assert.Equal(1m, Assert.IsType<NumericConstantFormula>(binary.Left).Constant);
             Assert.Equal(2m, Assert.IsType<NumericConstantFormula>(binary.Right).Constant);
         }
@@ -153,7 +153,7 @@ namespace Respira.Clinical.Infrastructure.Test.Util.Database
 
             var ternary = Assert.IsType<TernaryFormula>(back);
             var condition = Assert.IsType<BinaryFormula>(ternary.Condition);
-            Assert.Equal(ExpressionOperator.GT, condition.Operator);
+            Assert.Equal(ExpressionOperator.Gt, condition.Operator);
             Assert.Equal("BUN", Assert.IsType<VariableFormula>(condition.Left).Variable.Code);
             Assert.Equal(1m, Assert.IsType<NumericConstantFormula>(ternary.IfTrue).Constant);
         }

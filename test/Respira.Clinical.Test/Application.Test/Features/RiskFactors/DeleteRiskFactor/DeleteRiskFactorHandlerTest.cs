@@ -112,10 +112,10 @@ namespace Respira.Clinical.Application.Test.Features.RiskFactors.DeleteRiskFacto
             isAtypical: false);
 
         private async Task<Guid> SeedAgeCriterionAsync() => await SeedCriterionAsync(
-            "Tuổi >= 65", "AGE", 65, ExpressionOperator.GTE);
+            "Tuổi >= 65", "AGE", 65, ExpressionOperator.Gte);
 
         private async Task<Guid> SeedHypotensionCriterionAsync() => await SeedCriterionAsync(
-            "Huyết áp tâm thu < 90 mmHg", "SBP", 90, ExpressionOperator.LT);
+            "Huyết áp tâm thu < 90 mmHg", "SBP", 90, ExpressionOperator.Lt);
 
         // Read through a context that ignores the query filter, so a soft deleted row
         // can still be inspected after the handler hid it

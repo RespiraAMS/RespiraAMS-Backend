@@ -62,7 +62,7 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.GetMetricRu
         public async Task GetMetricRuleById_ScoringRule_Success()
         {
             var metricId = await SeedMetricAsync(Curb65);
-            var age = await SeedCriterionAsync("Tuổi >= 65", Numeric("AGE", 65, ExpressionOperator.GTE));
+            var age = await SeedCriterionAsync("Tuổi >= 65", Numeric("AGE", 65, ExpressionOperator.Gte));
 
             // Every CURB-65 component is worth exactly one point, like in the seed data
             var ruleId = await SeedScoringRuleAsync(metricId, age, new NumericConstantFormula(1));
@@ -99,16 +99,16 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.GetMetricRu
              * functions, plus one point for the age band of the PSI weight
              */
             var metricId = await SeedMetricAsync(Psi);
-            var age = await SeedCriterionAsync("Tuổi >= 65", Numeric("AGE", 65, ExpressionOperator.GTE));
+            var age = await SeedCriterionAsync("Tuổi >= 65", Numeric("AGE", 65, ExpressionOperator.Gte));
 
             var ruleIds = new[]
             {
                 await SeedScoringRuleAsync(metricId, age, new NumericConstantFormula(30)),
                 await SeedScoringRuleAsync(metricId, age, Variable("AGE")),
                 await SeedScoringRuleAsync(metricId, age, new BinaryFormula(
-                    Variable("AGE"), new NumericConstantFormula(10), ExpressionOperator.SUB)),
+                    Variable("AGE"), new NumericConstantFormula(10), ExpressionOperator.Sub)),
                 await SeedScoringRuleAsync(metricId, age, new TernaryFormula(
-                    new BinaryFormula(Variable("AGE"), new NumericConstantFormula(65), ExpressionOperator.GTE),
+                    new BinaryFormula(Variable("AGE"), new NumericConstantFormula(65), ExpressionOperator.Gte),
                     new NumericConstantFormula(1),
                     new NumericConstantFormula(0))),
             };
@@ -199,7 +199,7 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.GetMetricRu
             // The !IsDeleted query filter hides soft deleted rows, so reading one is
             // reported exactly like an unknown id
             var metricId = await SeedMetricAsync(Curb65);
-            var age = await SeedCriterionAsync("Tuổi >= 65", Numeric("AGE", 65, ExpressionOperator.GTE));
+            var age = await SeedCriterionAsync("Tuổi >= 65", Numeric("AGE", 65, ExpressionOperator.Gte));
             var ruleId = await SeedScoringRuleAsync(
                 metricId, age, new NumericConstantFormula(1), isDeleted: true);
 

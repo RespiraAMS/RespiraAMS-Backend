@@ -15,10 +15,12 @@ namespace Respira.Clinical.Domain.Models
             {
                 result = result || value == Min;
             }
+
             if (!IsMaxExclusive)
             {
                 result = result || value == Max;
             }
+
             return result;
         }
 
@@ -60,16 +62,9 @@ namespace Respira.Clinical.Domain.Models
 
         public override string ToString()
         {
-            if (Max == decimal.MaxValue)
-            {
-                return $"{(IsMinExclusive ? ">" : "≥")} {Min}";
-            }
-            else
-            {
-                return $"{(IsMinExclusive ? ">" : "≥")} {Min} và {(IsMaxExclusive ? "<" : "≤")} {Max}";
-            }
-
-            // return $"{(IsMinExclusive ? "(" : "[")}{Min}, {(Max == decimal.MaxValue ? "∞" : Max)}{(IsMaxExclusive ? ")" : "]")}";
+            return Max == decimal.MaxValue
+                ? $"{(IsMinExclusive ? ">" : "≥")} {Min}"
+                : $"{(IsMinExclusive ? ">" : "≥")} {Min} và {(IsMaxExclusive ? "<" : "≤")} {Max}";
         }
     }
 }

@@ -136,7 +136,7 @@ namespace Respira.ServiceDefaults.Contracts.Results
         public Error? Error { get; }
 
         /// <summary>
-        /// Operation data result if success. When failure occurs, this proprty will be
+        /// Operation data result if success. When failure occurs, this property will be
         /// default value of T (so if it's not scalar value, it would be null). So when
         /// a failure is expected, this property should be checked before accessing it
         /// (or not accessed at all, since a failure wouldn't produce any result to pass)
@@ -178,7 +178,7 @@ namespace Respira.ServiceDefaults.Contracts.Results
         /// <param name="statusCode">Operation status code</param>
         /// <param name="data">Operation data result</param>
         /// <returns>A success result</returns>
-        public static Result<T> Success(string statusCode, T? data) => new(statusCode, null, data);
+        public static Result<T> Success(string statusCode, T data) => new(statusCode, null, data);
 
         /// <summary>
         /// Construct a failure result

@@ -15,7 +15,7 @@ namespace Respira.Clinical.Application.Features.AntibioticGroups.UpdateAntibioti
             return Result.Success(ApplicationStatus.Success);
         }
 
-        public Result MapModel(AntibioticGroup model, UpdateAntibioticGroupCommand command, object? dependencies = null)
+        public Result MapModel(AntibioticGroup model, UpdateAntibioticGroupCommand command, object dependencies)
         {
             return MapModel(model, command);
         }

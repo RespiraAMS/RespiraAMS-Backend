@@ -34,19 +34,19 @@ namespace Respira.Clinical.Application.Features.ClinicalVariables.CreateClinical
         /// </summary>
         public Result<ClinicalVariable> ToModel(CreateClinicalVariableCommand command)
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException("This method won't be implemented since it required external dependencies to work");
         }
 
-        public Result<ClinicalVariable> ToModel(CreateClinicalVariableCommand command, object? dependencies = null)
+        public Result<ClinicalVariable> ToModel(CreateClinicalVariableCommand command, object dependencies)
         {
             // Map prerequisite first
             var variables = dependencies as List<ClinicalVariable> ?? throw new ArgumentException("Dependencies must be a list of clinical variables");
-            var mapPreresiqiteResult = MapPrerequisite(command.Prerequisite, variables);
-            if (mapPreresiqiteResult.IsFailure())
+            var mapPrerequisiteResult = MapPrerequisite(command.Prerequisite, variables);
+            if (mapPrerequisiteResult.IsFailure())
             {
-                return Result<ClinicalVariable>.Failure(mapPreresiqiteResult.Error!);
+                return Result<ClinicalVariable>.Failure(mapPrerequisiteResult.Error!);
             }
-            var prerequisite = mapPreresiqiteResult.Data!;
+            var prerequisite = mapPrerequisiteResult.Data!;
 
             // Create clinical variable based on variable type
             return command.ValueType switch

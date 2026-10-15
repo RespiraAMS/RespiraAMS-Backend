@@ -12,10 +12,10 @@ namespace Respira.Clinical.Application.Features.Criteria.CreateCriterion
     {
         public Result<Criterion> ToModel(CreateCriterionCommand command)
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException("This method won't be implemented since it required external dependencies to work");
         }
 
-        public Result<Criterion> ToModel(CreateCriterionCommand command, object? dependencies = null)
+        public Result<Criterion> ToModel(CreateCriterionCommand command, object dependencies)
         {
             var variables = dependencies as List<ClinicalVariable>;
             var formulaMapResult = formulaMapper.Map(command.Formula, variables);
@@ -25,7 +25,7 @@ namespace Respira.Clinical.Application.Features.Criteria.CreateCriterion
             }
 
             // Since the Criterion enforce the rule that, a criterion formula must evaluate to a boolean value,
-            // which we cannot check in the handler, so we will handler this case in the mapper
+            // which we cannot check in the handler, so we will handle this case in the mapper
             if (formulaMapResult.Data!.ResultType != ExpressionResultType.Boolean)
             {
                 return Result<Criterion>.Failure(new Error(ApplicationStatus.BadRequest, "Formula result type should be boolean"));

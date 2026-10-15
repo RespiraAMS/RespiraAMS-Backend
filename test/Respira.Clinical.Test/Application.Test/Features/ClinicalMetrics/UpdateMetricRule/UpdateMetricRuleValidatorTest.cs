@@ -195,7 +195,7 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.UpdateMetri
             // not complete, caught by the delegated FormulaValidator
             var command = ScoringCommand(new FormulaDto
             {
-                Operator = ExpressionOperator.GTE,
+                Operator = ExpressionOperator.Gte,
                 Left = new FormulaDto { Variable = Guid.CreateVersion7() },
             });
 
@@ -288,7 +288,7 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.UpdateMetri
         {
             Condition = new FormulaDto
             {
-                Operator = ExpressionOperator.GTE,
+                Operator = ExpressionOperator.Gte,
                 Left = new FormulaDto { Variable = ageVariableId },
                 Right = new FormulaDto { Constant = "65" },
             },

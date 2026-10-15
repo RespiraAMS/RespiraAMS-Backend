@@ -65,7 +65,7 @@ namespace Respira.Clinical.Domain.Test.Entities
             new("Tuổi >= 65", new BinaryFormula(
                 new VariableFormula(Age),
                 new NumericConstantFormula(65),
-                ExpressionOperator.GTE));
+                ExpressionOperator.Gte));
 
         // Hút thuốc (smoker), a plain boolean criterion
         private static Criterion SmokerCriterion() =>
@@ -74,16 +74,16 @@ namespace Respira.Clinical.Domain.Test.Entities
         // AGE >= 65 AND SBP < 90, a criterion that needs two observations
         private static Criterion AgeAndHypotensionCriterion() =>
             new("Tuổi cao và huyết áp thấp", new BinaryFormula(
-                new BinaryFormula(new VariableFormula(Age), new NumericConstantFormula(65), ExpressionOperator.GTE),
-                new BinaryFormula(new VariableFormula(Sbp), new NumericConstantFormula(90), ExpressionOperator.LT),
-                ExpressionOperator.AND));
+                new BinaryFormula(new VariableFormula(Age), new NumericConstantFormula(65), ExpressionOperator.Gte),
+                new BinaryFormula(new VariableFormula(Sbp), new NumericConstantFormula(90), ExpressionOperator.Lt),
+                ExpressionOperator.And));
 
         // AGE >= 65 OR SBP < 90, a criterion that only needs one of two observations
         private static Criterion AgeOrHypotensionCriterion() =>
             new("Tuổi cao hoặc huyết áp thấp", new BinaryFormula(
-                new BinaryFormula(new VariableFormula(Age), new NumericConstantFormula(65), ExpressionOperator.GTE),
-                new BinaryFormula(new VariableFormula(Sbp), new NumericConstantFormula(90), ExpressionOperator.LT),
-                ExpressionOperator.OR));
+                new BinaryFormula(new VariableFormula(Age), new NumericConstantFormula(65), ExpressionOperator.Gte),
+                new BinaryFormula(new VariableFormula(Sbp), new NumericConstantFormula(90), ExpressionOperator.Lt),
+                ExpressionOperator.Or));
 
         #region Satisfied
 
@@ -91,7 +91,7 @@ namespace Respira.Clinical.Domain.Test.Entities
         [InlineData(65, true)] // boundary: exactly at the threshold
         [InlineData(66, true)] // just above the threshold
         [InlineData(64.99, false)] // just below the threshold
-        public void IsCriterionSastisfied_NumericComparison_Evaluates(decimal observedAge, bool expected)
+        public void IsCriterionSatisfied_NumericComparison_Evaluates(decimal observedAge, bool expected)
         {
             var criterion = AgeCriterion();
 
@@ -103,7 +103,7 @@ namespace Respira.Clinical.Domain.Test.Entities
         [Theory]
         [InlineData(true, true)]
         [InlineData(false, false)]
-        public void IsCriterionSastisfied_BooleanVariable_Evaluates(bool observed, bool expected)
+        public void IsCriterionSatisfied_BooleanVariable_Evaluates(bool observed, bool expected)
         {
             var criterion = SmokerCriterion();
 
@@ -115,12 +115,12 @@ namespace Respira.Clinical.Domain.Test.Entities
         [Theory]
         [InlineData("Klebsiella pneumoniae", true)]
         [InlineData("Streptococcus pneumoniae", false)]
-        public void IsCriterionSastisfied_CategoricalComparison_Evaluates(string observed, bool expected)
+        public void IsCriterionSatisfied_CategoricalComparison_Evaluates(string observed, bool expected)
         {
             var criterion = new Criterion("Tác nhân là Klebsiella", new BinaryFormula(
                 new VariableFormula(PathogenCode),
                 new CategoricalConstantFormula("Klebsiella pneumoniae"),
-                ExpressionOperator.EQ));
+                ExpressionOperator.Eq));
 
             var result = criterion.IsCriterionSatisfied([Categorical(PathogenCode, observed)]);
 
@@ -128,7 +128,7 @@ namespace Respira.Clinical.Domain.Test.Entities
         }
 
         [Fact]
-        public void IsCriterionSastisfied_DefaultCriterion_ReturnsTrue()
+        public void IsCriterionSatisfied_DefaultCriterion_ReturnsTrue()
         {
             // The parameterless constructor stores a constant true formula
             var criterion = new Criterion();
@@ -137,7 +137,7 @@ namespace Respira.Clinical.Domain.Test.Entities
         }
 
         [Fact]
-        public void IsCriterionSastisfied_ConstantFalseCriterion_ReturnsFalse()
+        public void IsCriterionSatisfied_ConstantFalseCriterion_ReturnsFalse()
         {
             var criterion = new Criterion("Không bao giờ đúng", new BooleanConstantFormula(false));
 
@@ -145,9 +145,9 @@ namespace Respira.Clinical.Domain.Test.Entities
         }
 
         [Fact]
-        public void IsCriterionSastisfied_OrShortCircuitsWithoutFullObservations_ReturnsTrue()
+        public void IsCriterionSatisfied_OrShortCircuitsWithoutFullObservations_ReturnsTrue()
         {
-            // Only AGE is supplied and it already satisfies the left half, so the
+            // Only AGE is supplied, and it already satisfies the left half, so the
             // missing SBP observation must not make the criterion fail
             var criterion = AgeOrHypotensionCriterion();
 
@@ -155,9 +155,9 @@ namespace Respira.Clinical.Domain.Test.Entities
         }
 
         [Fact]
-        public void IsCriterionSastisfied_AndShortCircuitsWithoutFullObservations_ReturnsFalse()
+        public void IsCriterionSatisfied_AndShortCircuitsWithoutFullObservations_ReturnsFalse()
         {
-            // Only AGE is supplied and it already fails the left half, so the
+            // Only AGE is supplied, and it already fails the left half, so the
             // missing SBP observation cannot save the criterion
             var criterion = AgeAndHypotensionCriterion();
 
@@ -169,7 +169,7 @@ namespace Respira.Clinical.Domain.Test.Entities
         #region Not satisfied
 
         [Fact]
-        public void IsCriterionSastisfied_MissingObservation_ReturnsFalse()
+        public void IsCriterionSatisfied_MissingObservation_ReturnsFalse()
         {
             // A criterion that cannot be evaluated is simply not satisfied
             var criterion = AgeCriterion();
@@ -178,7 +178,7 @@ namespace Respira.Clinical.Domain.Test.Entities
         }
 
         [Fact]
-        public void IsCriterionSastisfied_AndNeedsBothObservations_ReturnsFalse()
+        public void IsCriterionSatisfied_AndNeedsBothObservations_ReturnsFalse()
         {
             // AGE is supplied and meets the threshold, but SBP is missing, so the
             // criterion still cannot be evaluated as satisfied
@@ -188,20 +188,20 @@ namespace Respira.Clinical.Domain.Test.Entities
         }
 
         [Fact]
-        public void IsCriterionSastisfied_MalformedFormula_ReturnsFalse()
+        public void IsCriterionSatisfied_MalformedFormula_ReturnsFalse()
         {
             // A stored formula that divides by zero throws while the expression is
             // being built; the evaluation must swallow it instead of crashing
             var criterion = new Criterion("Chia cho 0", new BinaryFormula(
-                new BinaryFormula(new VariableFormula(Age), new NumericConstantFormula(0), ExpressionOperator.DIV),
+                new BinaryFormula(new VariableFormula(Age), new NumericConstantFormula(0), ExpressionOperator.Div),
                 new NumericConstantFormula(1),
-                ExpressionOperator.GT));
+                ExpressionOperator.Gt));
 
             Assert.False(criterion.IsCriterionSatisfied([Numeric(Age, 5)]));
         }
 
         [Fact]
-        public void IsCriterionSastisfied_NonBooleanFormula_Throws()
+        public void IsCriterionSatisfied_NonBooleanFormula_Throws()
         {
             // The Criterion constructor rejects a non-boolean formula, so the only way
             // to end up with one is assigning the property directly (for instance a

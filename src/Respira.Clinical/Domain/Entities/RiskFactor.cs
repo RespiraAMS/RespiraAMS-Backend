@@ -5,7 +5,7 @@ using Respira.ServiceDefaults.Models;
 namespace Respira.Clinical.Domain.Entities
 {
     /// <summary>
-    /// Risk factors are used to evaluate if patient is at risk of infection with a specefic pathogen.
+    /// Risk factors are used to evaluate if patient is at risk of infection with a specific pathogen.
     /// A risk factor is more credible than <see cref="SuspectedCause"/> if it is evaluated as true.
     /// </summary>
     public class RiskFactor : Base
@@ -35,13 +35,7 @@ namespace Respira.Clinical.Domain.Entities
 
         public bool IsFactorSatisfied(IEnumerable<ClinicalObservation> observations)
         {
-            var result = Criterion.IsCriterionSatisfied(observations);
-            if (result is bool x)
-            {
-                return x;
-            }
-
-            throw new Exception($"Criterion result type should be boolean, but get {result.GetType()}");
+            return Criterion.IsCriterionSatisfied(observations);
         }
     }
 }

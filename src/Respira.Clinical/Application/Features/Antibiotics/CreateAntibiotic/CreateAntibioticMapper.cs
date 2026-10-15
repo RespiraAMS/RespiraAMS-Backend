@@ -30,7 +30,7 @@ namespace Respira.Clinical.Application.Features.Antibiotics.CreateAntibiotic
             return Result<Antibiotic>.Success(ApplicationStatus.Success, antibiotic);
         }
 
-        public Result<Antibiotic> ToModel(CreateAntibioticCommand command, object? dependencies = null)
+        public Result<Antibiotic> ToModel(CreateAntibioticCommand command, object dependencies)
         {
             return ToModel(command);
         }

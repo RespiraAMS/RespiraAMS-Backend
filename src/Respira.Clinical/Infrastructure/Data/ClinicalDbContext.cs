@@ -124,7 +124,7 @@ namespace Respira.Clinical.Infrastructure.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            // Apply query filter to soft delete items
+            // Apply query filter to soft-delete items
             modelBuilder.Entity<ClinicalVariable>().HasQueryFilter(x => !x.IsDeleted);
             modelBuilder.Entity<Criterion>().HasQueryFilter(x => !x.IsDeleted);
             modelBuilder.Entity<Pathogen>().HasQueryFilter(x => !x.IsDeleted);

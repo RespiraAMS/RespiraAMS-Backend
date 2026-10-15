@@ -54,23 +54,18 @@ namespace Respira.Clinical.Application.Test.Features.RiskFactors.CreateRiskFacto
             };
 
             var withoutDependencies = _mapper.ToModel(command);
-            var withNullDependencies = _mapper.ToModel(command, null);
             var withObjectDependencies = _mapper.ToModel(command, new object());
 
             Assert.True(withoutDependencies.IsSuccess());
-            Assert.True(withNullDependencies.IsSuccess());
             Assert.True(withObjectDependencies.IsSuccess());
             Assert.NotNull(withoutDependencies.Data);
-            Assert.NotNull(withNullDependencies.Data);
             Assert.NotNull(withObjectDependencies.Data);
 
-            Assert.Equal(withoutDependencies.Data.PathogenId, withNullDependencies.Data.PathogenId);
-            Assert.Equal(withoutDependencies.Data.CriterionId, withNullDependencies.Data.CriterionId);
             Assert.Equal(withoutDependencies.Data.PathogenId, withObjectDependencies.Data.PathogenId);
             Assert.Equal(withoutDependencies.Data.CriterionId, withObjectDependencies.Data.CriterionId);
 
             // Every call mints its own entity, so one command never shares a row
-            Assert.NotEqual(withoutDependencies.Data.Id, withNullDependencies.Data.Id);
+            Assert.NotEqual(withoutDependencies.Data.Id, withObjectDependencies.Data.Id);
         }
 
         [Fact]

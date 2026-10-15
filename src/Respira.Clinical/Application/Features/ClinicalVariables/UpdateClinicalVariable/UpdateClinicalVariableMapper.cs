@@ -29,19 +29,19 @@ namespace Respira.Clinical.Application.Features.ClinicalVariables.UpdateClinical
 
         public Result MapModel(ClinicalVariable model, UpdateClinicalVariableCommand command)
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException("This method won't be implemented since it required external dependencies to work");
         }
 
-        public Result MapModel(ClinicalVariable model, UpdateClinicalVariableCommand command, object? dependencies = null)
+        public Result MapModel(ClinicalVariable model, UpdateClinicalVariableCommand command, object dependencies)
         {
             // Map prerequisite first
             var variables = dependencies as List<ClinicalVariable> ?? throw new ArgumentException("Dependencies must be a list of clinical variables");
-            var mapPreresiqiteResult = MapPrerequisite(command.Prerequisite, variables);
-            if (mapPreresiqiteResult.IsFailure())
+            var mapPrerequisiteResult = MapPrerequisite(command.Prerequisite, variables);
+            if (mapPrerequisiteResult.IsFailure())
             {
-                return Result.Failure(mapPreresiqiteResult.Error!);
+                return Result.Failure(mapPrerequisiteResult.Error!);
             }
-            var prerequisite = mapPreresiqiteResult.Data!;
+            var prerequisite = mapPrerequisiteResult.Data!;
 
             // Create clinical variable based on variable type
             switch (model.ValueType) // Check on model instead of command
