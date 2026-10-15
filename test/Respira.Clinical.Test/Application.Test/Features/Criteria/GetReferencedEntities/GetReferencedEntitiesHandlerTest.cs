@@ -62,13 +62,13 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.GetReferencedEntit
             new("Tuổi >= 65", new BinaryFormula(
                 new VariableFormula(new VariableRef(Guid.CreateVersion7(), "AGE", ClinicalValueType.Numeric)),
                 new NumericConstantFormula(65),
-                ExpressionOperator.GTE));
+                ExpressionOperator.Gte));
 
         private static Criterion CreateHypotensionCriterion() =>
             new("Huyết áp tâm thu < 90 mmHg", new BinaryFormula(
                 new VariableFormula(new VariableRef(Guid.CreateVersion7(), "SBP", ClinicalValueType.Numeric)),
                 new NumericConstantFormula(90),
-                ExpressionOperator.LT));
+                ExpressionOperator.Lt));
 
         private async Task<Criterion> SeedCriterionAsync(Criterion criterion)
         {

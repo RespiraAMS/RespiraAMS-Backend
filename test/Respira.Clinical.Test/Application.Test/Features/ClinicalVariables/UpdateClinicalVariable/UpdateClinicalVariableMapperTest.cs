@@ -213,7 +213,7 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalVariables.UpdateCli
         public void MapModel_CategoricalAcceptedValues_AreSanitized_Success()
         {
             // Business rule: CategoricalClinicalVariable keeps its accepted values in
-            // the sanitized form (trimmed, upper cased, words joined by an underscore)
+            // the sanitized form (trimmed, uppercased, words joined by an underscore)
             // because IsValidValue() sanitizes the incoming value before comparing it.
             // CreateClinicalVariableMapper guarantees this through the entity constructor;
             // the update mapper has to guarantee it as well, otherwise the row it hands
@@ -306,7 +306,7 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalVariables.UpdateCli
                 ClinicalVariableCategory.PersonalInformation,
                 prerequisite: new FormulaDto
                 {
-                    Operator = ExpressionOperator.GT,
+                    Operator = ExpressionOperator.Gt,
                     Left = new FormulaDto { Variable = sbp.Id },
                     Right = new FormulaDto { Constant = "140" },
                 });
@@ -317,7 +317,7 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalVariables.UpdateCli
             Assert.Equal(ApplicationStatus.Success, result.StatusCode);
 
             var formula = Assert.IsType<BinaryFormula>(model.Prerequisite);
-            Assert.Equal(ExpressionOperator.GT, formula.Operator);
+            Assert.Equal(ExpressionOperator.Gt, formula.Operator);
             var left = Assert.IsType<VariableFormula>(formula.Left);
             Assert.Equal(sbp.Id, left.Variable.Id);
             Assert.Equal(140m, Assert.IsType<NumericConstantFormula>(formula.Right).Constant);
@@ -350,7 +350,7 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalVariables.UpdateCli
                 ClinicalVariableCategory.PersonalInformation,
                 prerequisite: new FormulaDto
                 {
-                    Operator = ExpressionOperator.ADD,
+                    Operator = ExpressionOperator.Add,
                     Left = new FormulaDto { Constant = "true" },
                     Right = new FormulaDto { Constant = "1" },
                 });
@@ -391,15 +391,6 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalVariables.UpdateCli
             var command = CreateCommand(ClinicalValueType.Boolean, ClinicalVariableCategory.PersonalInformation);
 
             Assert.Throws<NotImplementedException>(() => _mapper.MapModel(model, command));
-        }
-
-        [Fact]
-        public void MapModel_NullDependencies_ThrowsArgumentException()
-        {
-            var model = CreateBooleanVariable();
-            var command = CreateCommand(ClinicalValueType.Boolean, ClinicalVariableCategory.PersonalInformation);
-
-            Assert.Throws<ArgumentException>(() => _mapper.MapModel(model, command, null));
         }
 
         [Fact]

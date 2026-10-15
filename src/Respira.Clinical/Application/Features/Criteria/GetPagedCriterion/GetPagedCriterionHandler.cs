@@ -17,7 +17,7 @@ namespace Respira.Clinical.Application.Features.Criteria.GetPagedCriterion
                 .AsNoTracking()
                 .OrderByDescending(x => x.CreatedAt)
                 .Select(x => new PagedCriterionItem(x.Id, x.Name, x.Formula.ToString()!))
-                .ToPagedListAsync(query.Param.Page, query.Param.Size);
+                .ToPagedListAsync(query.Param.Page, query.Param.Size, cancellationToken: cancellationToken);
 
             return Result<Pagination<PagedCriterionItem>>.Success(ApplicationStatus.Success, factory.Create(criteria));
         }

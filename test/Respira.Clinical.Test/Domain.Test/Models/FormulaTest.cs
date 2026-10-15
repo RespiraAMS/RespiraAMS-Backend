@@ -64,14 +64,14 @@ namespace Respira.Clinical.Domain.Test.Models
         #region BinaryFormula.ToExpression
 
         [Theory]
-        [InlineData(ExpressionOperator.GTE, 65, true)] // at the threshold: AGE >= 65 holds
-        [InlineData(ExpressionOperator.GTE, 64.99, false)] // just below the threshold
-        [InlineData(ExpressionOperator.GT, 66, true)] // just above the threshold
-        [InlineData(ExpressionOperator.GT, 65, false)] // strictly greater than fails at the threshold
-        [InlineData(ExpressionOperator.LT, 64.99, true)]
-        [InlineData(ExpressionOperator.LTE, 65, true)] // at the threshold still holds
-        [InlineData(ExpressionOperator.EQ, 65, true)]
-        [InlineData(ExpressionOperator.NE, 65, false)]
+        [InlineData(ExpressionOperator.Gte, 65, true)] // at the threshold: AGE >= 65 holds
+        [InlineData(ExpressionOperator.Gte, 64.99, false)] // just below the threshold
+        [InlineData(ExpressionOperator.Gt, 66, true)] // just above the threshold
+        [InlineData(ExpressionOperator.Gt, 65, false)] // strictly greater than fails at the threshold
+        [InlineData(ExpressionOperator.Lt, 64.99, true)]
+        [InlineData(ExpressionOperator.Lte, 65, true)] // at the threshold still holds
+        [InlineData(ExpressionOperator.Eq, 65, true)]
+        [InlineData(ExpressionOperator.Ne, 65, false)]
         public void BinaryFormula_ToExpression_NumericComparison_Evaluates(
             ExpressionOperator op, decimal observedAge, bool expected)
         {
@@ -96,7 +96,7 @@ namespace Respira.Clinical.Domain.Test.Models
             var formula = new BinaryFormula(
                 new VariableFormula(Age),
                 new NumericConstantFormula(5),
-                ExpressionOperator.ADD);
+                ExpressionOperator.Add);
 
             var expression = formula.ToExpression([Numeric(Age, observedAge)]);
 
@@ -105,12 +105,12 @@ namespace Respira.Clinical.Domain.Test.Models
         }
 
         [Theory]
-        [InlineData(ExpressionOperator.GT, 65, 90, false)]
-        [InlineData(ExpressionOperator.GTE, 90, 90, true)] // both boundaries equal
-        [InlineData(ExpressionOperator.LT, 65, 90, true)]
-        [InlineData(ExpressionOperator.LTE, 90, 90, true)] // both boundaries equal
-        [InlineData(ExpressionOperator.EQ, 90, 90, true)]
-        [InlineData(ExpressionOperator.NE, 65, 90, true)]
+        [InlineData(ExpressionOperator.Gt, 65, 90, false)]
+        [InlineData(ExpressionOperator.Gte, 90, 90, true)] // both boundaries equal
+        [InlineData(ExpressionOperator.Lt, 65, 90, true)]
+        [InlineData(ExpressionOperator.Lte, 90, 90, true)] // both boundaries equal
+        [InlineData(ExpressionOperator.Eq, 90, 90, true)]
+        [InlineData(ExpressionOperator.Ne, 65, 90, true)]
         public void BinaryFormula_ToExpression_ConstantOperands_EvaluatesWithoutObservations(
             ExpressionOperator op, decimal left, decimal right, bool expected)
         {
@@ -127,9 +127,9 @@ namespace Respira.Clinical.Domain.Test.Models
         }
 
         [Theory]
-        [InlineData("Klebsiella pneumoniae", "Klebsiella pneumoniae", ExpressionOperator.EQ, true)]
-        [InlineData("Klebsiella pneumoniae", "Streptococcus pneumoniae", ExpressionOperator.EQ, false)]
-        [InlineData("Klebsiella pneumoniae", "Streptococcus pneumoniae", ExpressionOperator.NE, true)]
+        [InlineData("Klebsiella pneumoniae", "Klebsiella pneumoniae", ExpressionOperator.Eq, true)]
+        [InlineData("Klebsiella pneumoniae", "Streptococcus pneumoniae", ExpressionOperator.Eq, false)]
+        [InlineData("Klebsiella pneumoniae", "Streptococcus pneumoniae", ExpressionOperator.Ne, true)]
         public void BinaryFormula_ToExpression_CategoricalComparison_Evaluates(
             string observed, string constant, ExpressionOperator op, bool expected)
         {
@@ -159,9 +159,9 @@ namespace Respira.Clinical.Domain.Test.Models
                 new BinaryFormula(
                     new VariableFormula(Age),
                     new NumericConstantFormula(5),
-                    ExpressionOperator.ADD),
+                    ExpressionOperator.Add),
                 new NumericConstantFormula(65),
-                ExpressionOperator.GTE);
+                ExpressionOperator.Gte);
 
             var expression = formula.ToExpression([Numeric(Age, observedAge)]);
 
@@ -179,9 +179,9 @@ namespace Respira.Clinical.Domain.Test.Models
         {
             // AGE >= 65 AND SBP < 90
             var formula = new BinaryFormula(
-                new BinaryFormula(new VariableFormula(Age), new NumericConstantFormula(65), ExpressionOperator.GTE),
-                new BinaryFormula(new VariableFormula(Sbp), new NumericConstantFormula(90), ExpressionOperator.LT),
-                ExpressionOperator.AND);
+                new BinaryFormula(new VariableFormula(Age), new NumericConstantFormula(65), ExpressionOperator.Gte),
+                new BinaryFormula(new VariableFormula(Sbp), new NumericConstantFormula(90), ExpressionOperator.Lt),
+                ExpressionOperator.And);
 
             var expression = formula.ToExpression(
                 [Numeric(Age, observedAge), Numeric(Sbp, observedSbp)]);
@@ -200,7 +200,7 @@ namespace Respira.Clinical.Domain.Test.Models
             var formula = new BinaryFormula(
                 new VariableFormula(Smoker),
                 new VariableFormula(Pregnant),
-                ExpressionOperator.AND);
+                ExpressionOperator.And);
 
             var expression = formula.ToExpression(
                 [Boolean(Smoker, left), Boolean(Pregnant, right)]);
@@ -219,7 +219,7 @@ namespace Respira.Clinical.Domain.Test.Models
             var formula = new BinaryFormula(
                 new VariableFormula(Smoker),
                 new VariableFormula(Pregnant),
-                ExpressionOperator.OR);
+                ExpressionOperator.Or);
 
             var expression = formula.ToExpression(
                 [Boolean(Smoker, left), Boolean(Pregnant, right)]);
@@ -236,7 +236,7 @@ namespace Respira.Clinical.Domain.Test.Models
             var formula = new BinaryFormula(
                 new BooleanConstantFormula(false),
                 new VariableFormula(Pregnant),
-                ExpressionOperator.AND);
+                ExpressionOperator.And);
 
             var expression = formula.ToExpression([]);
 
@@ -251,7 +251,7 @@ namespace Respira.Clinical.Domain.Test.Models
             var formula = new BinaryFormula(
                 new VariableFormula(Smoker),
                 new VariableFormula(Pregnant),
-                ExpressionOperator.AND);
+                ExpressionOperator.And);
 
             var expression = formula.ToExpression([Boolean(Smoker, false)]);
 
@@ -266,7 +266,7 @@ namespace Respira.Clinical.Domain.Test.Models
             var formula = new BinaryFormula(
                 new VariableFormula(Smoker),
                 new VariableFormula(Pregnant),
-                ExpressionOperator.OR);
+                ExpressionOperator.Or);
 
             var expression = formula.ToExpression([Boolean(Smoker, true)]);
 
@@ -281,7 +281,7 @@ namespace Respira.Clinical.Domain.Test.Models
             var formula = new BinaryFormula(
                 new VariableFormula(Smoker),
                 new VariableFormula(Pregnant),
-                ExpressionOperator.AND);
+                ExpressionOperator.And);
 
             Assert.Throws<ArgumentException>(() =>
                 formula.ToExpression([Boolean(Smoker, true)]));
@@ -294,7 +294,7 @@ namespace Respira.Clinical.Domain.Test.Models
             var formula = new BinaryFormula(
                 new VariableFormula(Smoker),
                 new VariableFormula(Pregnant),
-                ExpressionOperator.OR);
+                ExpressionOperator.Or);
 
             Assert.Throws<ArgumentException>(() =>
                 formula.ToExpression([Boolean(Smoker, false)]));
@@ -306,7 +306,7 @@ namespace Respira.Clinical.Domain.Test.Models
             var formula = new BinaryFormula(
                 new VariableFormula(Smoker),
                 new VariableFormula(Pregnant),
-                ExpressionOperator.AND);
+                ExpressionOperator.And);
 
             Assert.Throws<ArgumentException>(() => formula.ToExpression([]));
         }
@@ -319,7 +319,7 @@ namespace Respira.Clinical.Domain.Test.Models
             var formula = new BinaryFormula(
                 new VariableFormula(Age),
                 new NumericConstantFormula(65),
-                ExpressionOperator.GTE);
+                ExpressionOperator.Gte);
 
             Assert.Throws<ArgumentException>(() => formula.ToExpression([]));
         }
@@ -354,7 +354,7 @@ namespace Respira.Clinical.Domain.Test.Models
         {
             // If AGE >= 65 then 1 else 0, the shape used by the CURB-65 scoring rules
             var formula = new TernaryFormula(
-                new BinaryFormula(new VariableFormula(Age), new NumericConstantFormula(65), ExpressionOperator.GTE),
+                new BinaryFormula(new VariableFormula(Age), new NumericConstantFormula(65), ExpressionOperator.Gte),
                 new NumericConstantFormula(1),
                 new NumericConstantFormula(0));
 
@@ -371,8 +371,8 @@ namespace Respira.Clinical.Domain.Test.Models
             // missing SBP observation must not stop the expression from being built
             var formula = new TernaryFormula(
                 new BooleanConstantFormula(true),
-                new BinaryFormula(new VariableFormula(Age), new NumericConstantFormula(0), ExpressionOperator.ADD),
-                new BinaryFormula(new VariableFormula(Sbp), new NumericConstantFormula(0), ExpressionOperator.ADD));
+                new BinaryFormula(new VariableFormula(Age), new NumericConstantFormula(0), ExpressionOperator.Add),
+                new BinaryFormula(new VariableFormula(Sbp), new NumericConstantFormula(0), ExpressionOperator.Add));
 
             var expression = formula.ToExpression([Numeric(Age, 70)]);
 
@@ -387,8 +387,8 @@ namespace Respira.Clinical.Domain.Test.Models
             // and its missing AGE observation must not stop the expression from being built
             var formula = new TernaryFormula(
                 new BooleanConstantFormula(false),
-                new BinaryFormula(new VariableFormula(Age), new NumericConstantFormula(0), ExpressionOperator.ADD),
-                new BinaryFormula(new VariableFormula(Sbp), new NumericConstantFormula(0), ExpressionOperator.ADD));
+                new BinaryFormula(new VariableFormula(Age), new NumericConstantFormula(0), ExpressionOperator.Add),
+                new BinaryFormula(new VariableFormula(Sbp), new NumericConstantFormula(0), ExpressionOperator.Add));
 
             var expression = formula.ToExpression([Numeric(Sbp, 89)]);
 
@@ -400,7 +400,7 @@ namespace Respira.Clinical.Domain.Test.Models
         public void TernaryFormula_ToExpression_MissingConditionObservation_Fail()
         {
             var formula = new TernaryFormula(
-                new BinaryFormula(new VariableFormula(Age), new NumericConstantFormula(65), ExpressionOperator.GTE),
+                new BinaryFormula(new VariableFormula(Age), new NumericConstantFormula(65), ExpressionOperator.Gte),
                 new NumericConstantFormula(1),
                 new NumericConstantFormula(0));
 
@@ -414,7 +414,7 @@ namespace Respira.Clinical.Domain.Test.Models
             // that was not supplied, so the expression cannot be built
             var formula = new TernaryFormula(
                 new BooleanConstantFormula(true),
-                new BinaryFormula(new VariableFormula(Age), new NumericConstantFormula(0), ExpressionOperator.ADD),
+                new BinaryFormula(new VariableFormula(Age), new NumericConstantFormula(0), ExpressionOperator.Add),
                 new NumericConstantFormula(0));
 
             Assert.Throws<ArgumentException>(() => formula.ToExpression([]));

@@ -12,10 +12,10 @@ namespace Respira.Clinical.Application.Features.Criteria.UpdateCriterion
     {
         public Result MapModel(Criterion model, UpdateCriterionCommand command)
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException("This method won't be implemented since it required external dependencies to work");
         }
 
-        public Result MapModel(Criterion model, UpdateCriterionCommand command, object? dependencies = null)
+        public Result MapModel(Criterion model, UpdateCriterionCommand command, object dependencies)
         {
             var variables = dependencies as List<ClinicalVariable>;
             var formulaMapResult = formulaMapper.Map(command.Formula, variables);

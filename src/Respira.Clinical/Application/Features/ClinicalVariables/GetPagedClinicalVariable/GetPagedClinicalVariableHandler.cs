@@ -47,7 +47,7 @@ namespace Respira.Clinical.Application.Features.ClinicalVariables.GetPagedClinic
                         // If the value type is not defined, then the filter shouldn't return
                         // anything (since this value type does not exist -> no data)
                         // The category simply use a direct comparison, so it doesn't need
-                        // a work around like ValueType
+                        // a workaround like ValueType
                         _ => queryable.Where(_ => false),
                     };
                 }
@@ -71,7 +71,7 @@ namespace Respira.Clinical.Application.Features.ClinicalVariables.GetPagedClinic
                     ValueType = x.ValueType,
                     Category = x.Category
                 })
-                .ToPagedListAsync(query.Param.Page, query.Param.Size);
+                .ToPagedListAsync(query.Param.Page, query.Param.Size, cancellationToken: cancellationToken);
 
             return Result<Pagination<PagedClinicalVariableItem>>.Success(ApplicationStatus.Success, factory.Create(variables));
         }

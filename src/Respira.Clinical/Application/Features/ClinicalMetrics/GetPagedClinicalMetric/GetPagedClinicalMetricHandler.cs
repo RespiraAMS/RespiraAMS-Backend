@@ -41,7 +41,7 @@ namespace Respira.Clinical.Application.Features.ClinicalMetrics.GetPagedClinical
                     Publisher = x.Publisher,
                     IsApplied = x.IsApplied,
                 })
-                .ToPagedListAsync(query.Param.Page, query.Param.Size);
+                .ToPagedListAsync(query.Param.Page, query.Param.Size, cancellationToken: cancellationToken);
 
             return Result<Pagination<PagedClinicalMetricItem>>.Success(ApplicationStatus.Success, factory.Create(metrics));
         }

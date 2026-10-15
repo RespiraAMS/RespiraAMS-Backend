@@ -34,7 +34,7 @@ namespace Respira.Clinical.Application.Features.Pathogens.GetPagedPathogen
                     Description = x.Description,
                     IsAtypical = x.IsAtypical
                 })
-                .ToPagedListAsync(query.Param.Page, query.Param.Size);
+                .ToPagedListAsync(query.Param.Page, query.Param.Size, cancellationToken: cancellationToken);
             return Result<Pagination<PagedPathogenItem>>.Success(ApplicationStatus.Success, factory.Create(pathogens));
         }
     }

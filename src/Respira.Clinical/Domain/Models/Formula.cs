@@ -5,7 +5,7 @@ using Respira.Clinical.Domain.Enums;
 namespace Respira.Clinical.Domain.Models
 {
     /// <summary>
-    /// This is the class represent a clinical formula, like BUN, Systoloc blood pressure,...
+    /// This is the class represent a clinical formula, like BUN, Systolic blood pressure,...
     /// The structure of formula would be identical to <see cref="Expression"/>.
     /// This class will be stored in database as a complex value (e.g. JSONB), so this is
     /// not an entity
@@ -123,7 +123,7 @@ namespace Respira.Clinical.Domain.Models
 
         public override string ToString()
         {
-            return $"\"{Constant}\"";
+            return $"{Constant}";
         }
     }
 
@@ -191,7 +191,7 @@ namespace Respira.Clinical.Domain.Models
 
         public override string ToString()
         {
-            return ExpressionOperator.NOT.ToSymbol() + Parenthesize(Operand);
+            return ExpressionOperator.Not.ToSymbol() + Parenthesize(Operand);
         }
     }
 
@@ -232,7 +232,7 @@ namespace Respira.Clinical.Domain.Models
                 throw new ArgumentException($"Operand type mismatch: (left) {left.ResultType} | (right) {right.ResultType}");
             }
 
-            if (left.ResultType == ExpressionResultType.Boolean && !@operator.IsLogicalOperator() && @operator != ExpressionOperator.EQ && @operator != ExpressionOperator.NE)
+            if (left.ResultType == ExpressionResultType.Boolean && !@operator.IsLogicalOperator() && @operator != ExpressionOperator.Eq && @operator != ExpressionOperator.Ne)
             {
                 throw new ArgumentException("Invalid expression: applying non-logical operator to boolean operands.");
             }
@@ -242,7 +242,7 @@ namespace Respira.Clinical.Domain.Models
                 throw new ArgumentException("Invalid expression: applying invalid operator to numeric operands.");
             }
 
-            if (left.ResultType == ExpressionResultType.String && !(@operator == ExpressionOperator.EQ || @operator == ExpressionOperator.NE))
+            if (left.ResultType == ExpressionResultType.String && !(@operator == ExpressionOperator.Eq || @operator == ExpressionOperator.Ne))
             {
                 throw new ArgumentException("Invalid expression: applying non-string operator to string operands.");
             }
@@ -254,13 +254,15 @@ namespace Respira.Clinical.Domain.Models
 
         public override Expression ToExpression(IEnumerable<ClinicalObservation> observations)
         {
+            observations = observations.ToList();
+            
             // Handle the case for AND, OR operators
             // For AND, if one operand is false, the result is false
             // For OR, if one operand is true, the result is true
             // So, in some rare cases, even if the observations are not supplied enough,
             // the expression can still be evaluated
 
-            if (Operator == ExpressionOperator.AND)
+            if (Operator == ExpressionOperator.And)
             {
                 // Check on left
                 try
@@ -287,7 +289,7 @@ namespace Respira.Clinical.Domain.Models
                 // throw if not enough observations are supplied
             }
 
-            if (Operator == ExpressionOperator.OR)
+            if (Operator == ExpressionOperator.Or)
             {
                 // Check on left
                 try
@@ -370,7 +372,9 @@ namespace Respira.Clinical.Domain.Models
         }
         public override Expression ToExpression(IEnumerable<ClinicalObservation> observations)
         {
-            // Same cases with binary expression AND or OR, ternary expression can also got a special
+            observations = observations.ToList();
+        
+            // Same cases with binary expression AND or OR, ternary expression can also get a special
             // case: if condition true, only if true branch is required and vice versa.
             // So, we will just build a dump expression on the unreachable branch so that
             // the expression builder won't crash, while preserve the result since it's unreachable

@@ -83,7 +83,7 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.CreateCriterion
                 Name = "Hypertension crisis",
                 Formula = new FormulaDto
                 {
-                    Operator = ExpressionOperator.GT,
+                    Operator = ExpressionOperator.Gt,
                     Left = new FormulaDto { Variable = sbp.Id },
                     Right = new FormulaDto { Constant = "140" },
                 },
@@ -99,7 +99,7 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.CreateCriterion
 
             // A comparison evaluates to a boolean, which is what a criterion must produce
             var formula = Assert.IsType<BinaryFormula>(result.Data.Formula);
-            Assert.Equal(ExpressionOperator.GT, formula.Operator);
+            Assert.Equal(ExpressionOperator.Gt, formula.Operator);
             Assert.Equal(ExpressionResultType.Boolean, formula.ResultType);
             Assert.Equal(140m, Assert.IsType<NumericConstantFormula>(formula.Right).Constant);
             Assert.Equal("8480-6 > 140", formula.ToString());
@@ -119,11 +119,11 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.CreateCriterion
                 Name = "Female hypertensive crisis",
                 Formula = new FormulaDto
                 {
-                    Operator = ExpressionOperator.AND,
+                    Operator = ExpressionOperator.And,
                     Left = new FormulaDto { Variable = female.Id },
                     Right = new FormulaDto
                     {
-                        Operator = ExpressionOperator.GT,
+                        Operator = ExpressionOperator.Gt,
                         Left = new FormulaDto { Variable = sbp.Id },
                         Right = new FormulaDto { Constant = "140" },
                     },
@@ -139,7 +139,7 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.CreateCriterion
             Assert.NotNull(result.Data);
 
             var formula = Assert.IsType<BinaryFormula>(result.Data.Formula);
-            Assert.Equal(ExpressionOperator.AND, formula.Operator);
+            Assert.Equal(ExpressionOperator.And, formula.Operator);
             Assert.Equal(ExpressionResultType.Boolean, formula.ResultType);
             // Only the non-leaf operand is parenthesized
             Assert.Equal("46098-0 AND (8480-6 > 140)", formula.ToString());
@@ -199,7 +199,7 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.CreateCriterion
                 Name = "Hypertension crisis",
                 Formula = new FormulaDto
                 {
-                    Operator = ExpressionOperator.ADD,
+                    Operator = ExpressionOperator.Add,
                     Left = new FormulaDto { Constant = "true" },
                     Right = new FormulaDto { Constant = "140" },
                 },
@@ -229,25 +229,6 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.CreateCriterion
             };
 
             Assert.Throws<NotImplementedException>(() => _mapper.ToModel(command));
-        }
-
-        [Fact]
-        public void ToModel_NullDependencies_Failure()
-        {
-            // The dependency list is how variable ids get resolved, so without it no
-            // formula can be built
-            var command = new CreateCriterionCommand
-            {
-                Name = "Universal triage screening",
-                Formula = new FormulaDto { Constant = "true" },
-            };
-
-            var result = _mapper.ToModel(command, null);
-
-            Assert.True(result.IsFailure());
-            Assert.NotNull(result.Error);
-            Assert.Equal(ApplicationStatus.BadRequest, result.StatusCode);
-            Assert.Null(result.Data);
         }
 
         [Fact]

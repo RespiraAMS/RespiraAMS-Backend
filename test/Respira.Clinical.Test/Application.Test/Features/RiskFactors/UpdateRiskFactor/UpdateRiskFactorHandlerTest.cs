@@ -117,10 +117,10 @@ namespace Respira.Clinical.Application.Test.Features.RiskFactors.UpdateRiskFacto
             isAtypical: false);
 
         private async Task<Guid> SeedAgeCriterionAsync() => await SeedCriterionAsync(
-            "Tuổi >= 65", "AGE", 65, ExpressionOperator.GTE);
+            "Tuổi >= 65", "AGE", 65, ExpressionOperator.Gte);
 
         private async Task<Guid> SeedHypotensionCriterionAsync() => await SeedCriterionAsync(
-            "Huyết áp tâm thu < 90 mmHg", "SBP", 90, ExpressionOperator.LT);
+            "Huyết áp tâm thu < 90 mmHg", "SBP", 90, ExpressionOperator.Lt);
 
         private async Task<RiskFactor?> FindIncludingDeletedAsync(Guid id)
         {
@@ -412,7 +412,7 @@ namespace Respira.Clinical.Application.Test.Features.RiskFactors.UpdateRiskFacto
             // must be rejected just like an unknown criterion
             var pathogen = await SeedKlebsiellaAsync();
             var deletedCriterion = await SeedCriterionAsync(
-                "Huyết áp tâm thu < 90 mmHg", "SBP", 90, ExpressionOperator.LT, isDeleted: true);
+                "Huyết áp tâm thu < 90 mmHg", "SBP", 90, ExpressionOperator.Lt, isDeleted: true);
             var criterion = await SeedAgeCriterionAsync();
             var target = await SeedRiskFactorAsync(pathogen, criterion);
 

@@ -63,11 +63,11 @@ namespace Respira.Clinical.Application.Test.Features.RiskFactors.GetPagedRiskFac
         // tachypnea, severe sepsis tachycardia and the fever cut off
         private static readonly (string Name, string Code, decimal Threshold, ExpressionOperator Op)[] CriteriaSeed =
         [
-            ("Tuổi >= 65", "AGE", 65, ExpressionOperator.GTE),
-            ("Huyết áp tâm thu < 90 mmHg", "SBP", 90, ExpressionOperator.LT),
-            ("Số lần thở >= 30 lần/phút", "RR", 30, ExpressionOperator.GTE),
-            ("Nhịp tim >= 125 lần/phút", "HR", 125, ExpressionOperator.GTE),
-            ("Thân nhiệt > 38 °C", "TEMP", 38, ExpressionOperator.GT),
+            ("Tuổi >= 65", "AGE", 65, ExpressionOperator.Gte),
+            ("Huyết áp tâm thu < 90 mmHg", "SBP", 90, ExpressionOperator.Lt),
+            ("Số lần thở >= 30 lần/phút", "RR", 30, ExpressionOperator.Gte),
+            ("Nhịp tim >= 125 lần/phút", "HR", 125, ExpressionOperator.Gte),
+            ("Thân nhiệt > 38 °C", "TEMP", 38, ExpressionOperator.Gt),
         ];
 
         // Newest first, which is deliberately not the alphabetical order of the names

@@ -48,7 +48,7 @@ namespace Respira.Clinical.Application.Features.Antibiotics.GetPagedAntibiotic
                     },
                     Classification = x.Classification
                 })
-                .ToPagedListAsync(query.Param.Page, query.Param.Size);
+                .ToPagedListAsync(query.Param.Page, query.Param.Size, cancellationToken: cancellationToken);
             return Result<Pagination<PagedAntibioticItem>>.Success(ApplicationStatus.Success, factory.Create(antibiotics));
         }
     }

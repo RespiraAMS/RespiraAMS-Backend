@@ -23,10 +23,10 @@ namespace Respira.Clinical.Domain.Entities
             // 1. There must be at least 1 dosage regardless of route of administration
             // 2. For each route of administration (if exists), there must be 1 and only 1
             // standard dose (CrCl == null)
-            // 3. For each route, CrCl must not overlapped with any other CrCl
+            // 3. For each route, CrCl must not overlap with any other CrCl
 
             // Check rule 1
-            if (!dosages.Any())
+            if (dosages.Count == 0)
             {
                 return Result<bool>.Failure(new Error(ApplicationStatus.BusinessRuleViolation, "Dosage list is empty"));
             }
@@ -47,7 +47,7 @@ namespace Respira.Clinical.Domain.Entities
                 // Check rule 3
                 for (var i = 0; i < dosagePerRoute.Count - 1; i++)
                 {
-                    // Because we have ensure that each route can only have 1 dosage with CrCl is null,
+                    // Because we have ensured that each route can only have 1 dosage with CrCl is null,
                     // we can simply ignore null case in this check
                     if (dosagePerRoute[i].Crcl is null) continue;
                     for (var j = i + 1; j < dosagePerRoute.Count; j++)

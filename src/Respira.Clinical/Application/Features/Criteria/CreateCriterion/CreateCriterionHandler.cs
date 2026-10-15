@@ -30,7 +30,7 @@ namespace Respira.Clinical.Application.Features.Criteria.CreateCriterion
 
             // We don't need to check for unique on criterion, because we can create
             // the same criterion that can be reference in multiple places. It's kind of
-            // incorrect in term of database theory, but it make the system less vulnerable
+            // incorrect in terms of database theory, but it makes the system less vulnerable
             // when user update carelessly. For example, if 3 metrics all reference the same
             // criterion, and only 1 metrics need updated, the normal flow would be to cut off
             // the criterion from the updated metrics, then create a new criterion to avoid

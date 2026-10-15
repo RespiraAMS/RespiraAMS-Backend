@@ -48,7 +48,7 @@ namespace Respira.Clinical.Application.Features.SuspectedCauses.GetPagedSuspecte
                     Severity = x.Severity,
                     TreatmentSite = x.TreatmentSite,
                 })
-                .ToPagedListAsync(query.Param.Page, query.Param.Size);
+                .ToPagedListAsync(query.Param.Page, query.Param.Size, cancellationToken: cancellationToken);
 
             return Result<Pagination<PagedSuspectedCauseItem>>.Success(ApplicationStatus.Success, factory.Create(causes));
         }

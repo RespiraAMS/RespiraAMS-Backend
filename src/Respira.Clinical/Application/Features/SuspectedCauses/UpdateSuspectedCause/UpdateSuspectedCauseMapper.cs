@@ -15,7 +15,7 @@ namespace Respira.Clinical.Application.Features.SuspectedCauses.UpdateSuspectedC
             return Result.Success(ApplicationStatus.Success);
         }
 
-        public Result MapModel(SuspectedCause model, UpdateSuspectedCauseCommand command, object? dependencies = null)
+        public Result MapModel(SuspectedCause model, UpdateSuspectedCauseCommand command, object dependencies)
         {
             return MapModel(model, command);
         }

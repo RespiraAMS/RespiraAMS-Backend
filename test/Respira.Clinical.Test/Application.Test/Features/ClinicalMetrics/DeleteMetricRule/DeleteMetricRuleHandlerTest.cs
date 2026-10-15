@@ -60,7 +60,7 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.DeleteMetri
         public async Task DeleteRule_Success()
         {
             var metricId = await SeedMetricAsync(Curb65);
-            var ageId = await SeedCriterionAsync("Tuổi >= 65", "AGE", 65, ExpressionOperator.GTE);
+            var ageId = await SeedCriterionAsync("Tuổi >= 65", "AGE", 65, ExpressionOperator.Gte);
             var ruleId = await SeedScoringRuleAsync(metricId, ageId);
 
             var result = await _handler.HandleAsync(
@@ -106,7 +106,7 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.DeleteMetri
             // The IDSA/ATS metric counts major and minor criteria instead of scoring points
             var metricId = await SeedMetricAsync(IdsaAts);
             var hypotensionId = await SeedCriterionAsync(
-                "Huyết áp tâm thu < 90 mmHg", "SBP", 90, ExpressionOperator.LT);
+                "Huyết áp tâm thu < 90 mmHg", "SBP", 90, ExpressionOperator.Lt);
             var ruleId = await SeedMajorMinorRuleAsync(metricId, hypotensionId, isMajor: true);
 
             var result = await _handler.HandleAsync(
@@ -136,11 +136,11 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.DeleteMetri
              * removed and the two others must stay live
              */
             var metricId = await SeedMetricAsync(Curb65);
-            var ageId = await SeedCriterionAsync("Tuổi >= 65", "AGE", 65, ExpressionOperator.GTE);
+            var ageId = await SeedCriterionAsync("Tuổi >= 65", "AGE", 65, ExpressionOperator.Gte);
             var hypotensionId = await SeedCriterionAsync(
-                "Huyết áp tâm thu < 90 mmHg", "SBP", 90, ExpressionOperator.LT);
+                "Huyết áp tâm thu < 90 mmHg", "SBP", 90, ExpressionOperator.Lt);
             var tachypneaId = await SeedCriterionAsync(
-                "Nhịp thở >= 30 lần/phút", "RR", 30, ExpressionOperator.GTE);
+                "Nhịp thở >= 30 lần/phút", "RR", 30, ExpressionOperator.Gte);
 
             var ageRuleId = await SeedScoringRuleAsync(metricId, ageId);
             var hypotensionRuleId = await SeedScoringRuleAsync(metricId, hypotensionId);
@@ -207,7 +207,7 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.DeleteMetri
              * cannot find it and is rejected instead of overwriting DeletedAt
              */
             var metricId = await SeedMetricAsync(Curb65);
-            var ageId = await SeedCriterionAsync("Tuổi >= 65", "AGE", 65, ExpressionOperator.GTE);
+            var ageId = await SeedCriterionAsync("Tuổi >= 65", "AGE", 65, ExpressionOperator.Gte);
             var ruleId = await SeedScoringRuleAsync(metricId, ageId);
 
             var first = await _handler.HandleAsync(
@@ -238,7 +238,7 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.DeleteMetri
             // A rule deleted beforehand is reported as missing, and its payload,
             // including the deletion timestamp, must stay exactly as it was
             var metricId = await SeedMetricAsync(Curb65);
-            var ageId = await SeedCriterionAsync("Tuổi >= 65", "AGE", 65, ExpressionOperator.GTE);
+            var ageId = await SeedCriterionAsync("Tuổi >= 65", "AGE", 65, ExpressionOperator.Gte);
             var ruleId = await SeedScoringRuleAsync(metricId, ageId, isDeleted: true);
 
             var result = await _handler.HandleAsync(

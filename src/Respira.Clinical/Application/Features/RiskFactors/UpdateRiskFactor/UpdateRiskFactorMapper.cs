@@ -14,7 +14,7 @@ namespace Respira.Clinical.Application.Features.RiskFactors.UpdateRiskFactor
             return Result.Success(ApplicationStatus.Success);
         }
 
-        public Result MapModel(RiskFactor model, UpdateRiskFactorCommand command, object? dependencies = null)
+        public Result MapModel(RiskFactor model, UpdateRiskFactorCommand command, object dependencies)
         {
             return MapModel(model, command);
         }

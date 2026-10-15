@@ -45,7 +45,7 @@ namespace Respira.Clinical.Domain.Entities
         }
 
         /// <summary>
-        /// Evaludate if the criterion is sastisfied by the given observations
+        /// Evaluate if the criterion is satisfied by the given observations
         /// </summary>
         /// <param name="observations">Clinical observation</param>
         /// <returns>True if criterion is satisfied, false otherwise</returns>
@@ -65,7 +65,7 @@ namespace Respira.Clinical.Domain.Entities
             }
             catch (ArgumentException)
             {
-                // If the formula failed to construct/evaluate, then this criterion is not sastisfied
+                // If the formula failed to construct/evaluate, then this criterion is not satisfied
                 return false;
             }
         }

@@ -93,7 +93,7 @@ namespace Respira.Clinical.Application.Test.Features.RiskFactors.CreateRiskFacto
             isAtypical: true);
 
         private async Task<Guid> SeedAgeCriterionAsync() => await SeedCriterionAsync(
-            "Tuổi >= 65", "AGE", 65, ExpressionOperator.GTE);
+            "Tuổi >= 65", "AGE", 65, ExpressionOperator.Gte);
 
         #region Happy path
 
@@ -138,7 +138,7 @@ namespace Respira.Clinical.Application.Test.Features.RiskFactors.CreateRiskFacto
             var pathogenId = await SeedPathogenAsync();
             var ageCriterionId = await SeedAgeCriterionAsync();
             var hypotensionCriterionId = await SeedCriterionAsync(
-                "Huyết áp tâm thu < 90 mmHg", "SBP", 90, ExpressionOperator.LT);
+                "Huyết áp tâm thu < 90 mmHg", "SBP", 90, ExpressionOperator.Lt);
 
             var result = await _handler.HandleAsync(new CreateRiskFactorCommand
             {
@@ -341,7 +341,7 @@ namespace Respira.Clinical.Application.Test.Features.RiskFactors.CreateRiskFacto
             // must be rejected just like an unknown criterion
             var pathogenId = await SeedPathogenAsync();
             var criterionId = await SeedCriterionAsync(
-                "Huyết áp tâm thu < 90 mmHg", "SBP", 90, ExpressionOperator.LT, isDeleted: true);
+                "Huyết áp tâm thu < 90 mmHg", "SBP", 90, ExpressionOperator.Lt, isDeleted: true);
 
             var result = await _handler.HandleAsync(new CreateRiskFactorCommand
             {

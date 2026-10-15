@@ -168,7 +168,7 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.CreateCriterion
             var command = new CreateCriterionCommand
             {
                 Name = "Hypertension crisis",
-                Formula = Binary(Variable(sbp.Id), ExpressionOperator.GT, Constant(threshold)),
+                Formula = Binary(Variable(sbp.Id), ExpressionOperator.Gt, Constant(threshold)),
             };
 
             var result = await _handler.HandleAsync(command, TestContext.Current.CancellationToken);
@@ -184,7 +184,7 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.CreateCriterion
 
             // The threshold must survive the jsonb round trip exactly as supplied
             var formula = Assert.IsType<BinaryFormula>(saved.Formula);
-            Assert.Equal(ExpressionOperator.GT, formula.Operator);
+            Assert.Equal(ExpressionOperator.Gt, formula.Operator);
             Assert.Equal(
                 decimal.Parse(threshold, CultureInfo.InvariantCulture),
                 Assert.IsType<NumericConstantFormula>(formula.Right).Constant);
@@ -205,7 +205,7 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.CreateCriterion
             var command = new CreateCriterionCommand
             {
                 Name = "Significant systemic inflammation",
-                Formula = Binary(Variable(crp.Id), ExpressionOperator.GT, Constant("10")),
+                Formula = Binary(Variable(crp.Id), ExpressionOperator.Gt, Constant("10")),
             };
 
             var result = await _handler.HandleAsync(command, TestContext.Current.CancellationToken);
@@ -234,8 +234,8 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.CreateCriterion
                 Name = "Female hypertensive crisis",
                 Formula = Binary(
                     Variable(female.Id),
-                    ExpressionOperator.AND,
-                    Binary(Variable(sbp.Id), ExpressionOperator.GT, Constant("140"))),
+                    ExpressionOperator.And,
+                    Binary(Variable(sbp.Id), ExpressionOperator.Gt, Constant("140"))),
             };
 
             var result = await _handler.HandleAsync(command, TestContext.Current.CancellationToken);
@@ -250,7 +250,7 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.CreateCriterion
                 .SingleAsync(x => x.Id == result.Data.Id, TestContext.Current.CancellationToken);
 
             var formula = Assert.IsType<BinaryFormula>(saved.Formula);
-            Assert.Equal(ExpressionOperator.AND, formula.Operator);
+            Assert.Equal(ExpressionOperator.And, formula.Operator);
             Assert.Equal(ExpressionResultType.Boolean, formula.ResultType);
             Assert.Equal("46098-0 AND (8480-6 > 140)", formula.ToString());
 
@@ -269,7 +269,7 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.CreateCriterion
              * places so that updating one reference does not disturb the others
              */
             var (sbp, _, _) = await SeedVariablesAsync();
-            FormulaDto formula = Binary(Variable(sbp.Id), ExpressionOperator.GT, Constant("140"));
+            FormulaDto formula = Binary(Variable(sbp.Id), ExpressionOperator.Gt, Constant("140"));
 
             var first = await _handler.HandleAsync(
                 new CreateCriterionCommand { Name = "Hypertension crisis", Formula = formula },
@@ -370,7 +370,7 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.CreateCriterion
             var command = new CreateCriterionCommand
             {
                 Name = "Hypertension crisis",
-                Formula = Binary(Constant("true"), ExpressionOperator.ADD, Constant("140")),
+                Formula = Binary(Constant("true"), ExpressionOperator.Add, Constant("140")),
             };
 
             var result = await _handler.HandleAsync(command, TestContext.Current.CancellationToken);
@@ -394,7 +394,7 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.CreateCriterion
             var command = new CreateCriterionCommand
             {
                 Name = "Systolic blood pressure reading",
-                Formula = Binary(Variable(sbp.Id), ExpressionOperator.ADD, Constant("140")),
+                Formula = Binary(Variable(sbp.Id), ExpressionOperator.Add, Constant("140")),
             };
 
             var result = await _handler.HandleAsync(command, TestContext.Current.CancellationToken);

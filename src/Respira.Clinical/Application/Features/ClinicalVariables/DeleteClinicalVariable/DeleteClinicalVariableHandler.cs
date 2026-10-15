@@ -23,7 +23,7 @@ namespace Respira.Clinical.Application.Features.ClinicalVariables.DeleteClinical
             // and set it to null. 
             // NOTE:, we won't cascade delete, because the referenced variables can still exist
             // independently (for example, the FEMALE variable deleted shouldn't make the
-            // PREGNANT-OR-LACTATING variable meaningless. Prerequisite formulas are only used
+            // PREGNANT-OR-LACTATING variable meaningless). Prerequisite formulas are only used
             // to ensure that patient symptoms are consistent/make sense, not their existing 
             // criteria
             var variables = await context.ClinicalVariables.ToListAsync(cancellationToken);
@@ -32,7 +32,7 @@ namespace Respira.Clinical.Application.Features.ClinicalVariables.DeleteClinical
                 .ToList();
 
             // Delete variables in a whole transaction 
-            await context.ExecuteInTransactionAsync(async () =>
+            await context.ExecuteInTransactionAsync(() =>
             {
                 // Delete the variable itself
                 variable.IsDeleted = true;

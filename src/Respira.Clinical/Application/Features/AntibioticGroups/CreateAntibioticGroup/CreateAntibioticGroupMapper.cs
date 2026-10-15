@@ -16,7 +16,7 @@ namespace Respira.Clinical.Application.Features.AntibioticGroups.CreateAntibioti
             });
         }
 
-        public Result<AntibioticGroup> ToModel(CreateAntibioticGroupCommand command, object? dependencies = null)
+        public Result<AntibioticGroup> ToModel(CreateAntibioticGroupCommand command, object dependencies)
         {
             return ToModel(command);
         }

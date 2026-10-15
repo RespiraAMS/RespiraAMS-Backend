@@ -34,7 +34,7 @@ namespace Respira.Clinical.Application.Features.ClinicalMetrics.GetClinicalMetri
                 {
                     Id = r.Id,
                     Criterion = new CriterionItem(r.CriterionId, r.Criterion.Name, r.Criterion.Formula.ToString()!),
-                    ScoreFunction = r is ScoringRule scoreRule ? scoreRule.ScoreFunction?.ToString() : null,
+                    ScoreFunction = r is ScoringRule scoreRule ? scoreRule.ScoreFunction.ToString() : null,
                     IsMajorRule = r is MajorMinorRule majorRule ? majorRule.IsMajor : null,
                 })
             });

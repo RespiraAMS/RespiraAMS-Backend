@@ -70,7 +70,7 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.UpdateCriterion
                 "Hypotension",
                 new FormulaDto
                 {
-                    Operator = ExpressionOperator.LT,
+                    Operator = ExpressionOperator.Lt,
                     Left = new FormulaDto { Variable = sbp.Id },
                     Right = new FormulaDto { Constant = "90" },
                 });
@@ -82,7 +82,7 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.UpdateCriterion
             Assert.Equal(ApplicationStatus.Success, result.StatusCode);
 
             var formula = Assert.IsType<BinaryFormula>(model.Formula);
-            Assert.Equal(ExpressionOperator.LT, formula.Operator);
+            Assert.Equal(ExpressionOperator.Lt, formula.Operator);
             Assert.Equal(ExpressionResultType.Boolean, formula.ResultType);
             Assert.Equal(90m, Assert.IsType<NumericConstantFormula>(formula.Right).Constant);
             Assert.Equal("SBP < 90", formula.ToString());
@@ -98,11 +98,11 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.UpdateCriterion
                 "Female hypertensive crisis",
                 new FormulaDto
                 {
-                    Operator = ExpressionOperator.AND,
+                    Operator = ExpressionOperator.And,
                     Left = new FormulaDto { Variable = female.Id },
                     Right = new FormulaDto
                     {
-                        Operator = ExpressionOperator.GT,
+                        Operator = ExpressionOperator.Gt,
                         Left = new FormulaDto { Variable = sbp.Id },
                         Right = new FormulaDto { Constant = "140" },
                     },
@@ -116,7 +116,7 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.UpdateCriterion
             Assert.Equal(ApplicationStatus.Success, result.StatusCode);
 
             var formula = Assert.IsType<BinaryFormula>(model.Formula);
-            Assert.Equal(ExpressionOperator.AND, formula.Operator);
+            Assert.Equal(ExpressionOperator.And, formula.Operator);
             // Only the non-leaf operand is parenthesized
             Assert.Equal("FEMALE AND (SBP > 140)", formula.ToString());
 
@@ -129,7 +129,7 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.UpdateCriterion
         [Fact]
         public void MapModel_KeepsIdentityAndState_Success()
         {
-            // Update rewrites name and formula only: the soft delete state, the create
+            // Update rewrites name and formula only: the soft delete state, the created
             // timestamp and the association rows keyed on the id must stay intact
             var model = CreateAgeCriterion();
             var originalId = model.Id;
@@ -184,7 +184,7 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.UpdateCriterion
                 "Age in years",
                 new FormulaDto
                 {
-                    Operator = ExpressionOperator.ADD,
+                    Operator = ExpressionOperator.Add,
                     Left = new FormulaDto { Variable = age.Id },
                     Right = new FormulaDto { Constant = "65" },
                 });
@@ -244,7 +244,7 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.UpdateCriterion
                 "Age in years",
                 new FormulaDto
                 {
-                    Operator = ExpressionOperator.ADD,
+                    Operator = ExpressionOperator.Add,
                     Left = new FormulaDto { Constant = "true" },
                     Right = new FormulaDto { Constant = "65" },
                 });
@@ -273,23 +273,6 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.UpdateCriterion
         }
 
         [Fact]
-        public void MapModel_NullDependencies_Failure()
-        {
-            // The dependency list is how variable ids get resolved, so without it no
-            // formula can be built
-            var model = CreateAgeCriterion();
-            var originalName = model.Name;
-            var command = CreateCommand("Tuổi > 65", new FormulaDto { Constant = "true" });
-
-            var result = _mapper.MapModel(model, command, null);
-
-            Assert.True(result.IsFailure());
-            Assert.NotNull(result.Error);
-            Assert.Equal(ApplicationStatus.BadRequest, result.StatusCode);
-            Assert.Equal(originalName, model.Name);
-        }
-
-        [Fact]
         public void MapModel_NonVariableListDependencies_Failure()
         {
             var model = CreateAgeCriterion();
@@ -313,7 +296,7 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.UpdateCriterion
             new("Tuổi >= 65", new BinaryFormula(
                 new VariableFormula(new VariableRef(Guid.CreateVersion7(), "AGE", ClinicalValueType.Numeric)),
                 new NumericConstantFormula(65),
-                ExpressionOperator.GTE));
+                ExpressionOperator.Gte));
 
         private static BooleanClinicalVariable CreateBooleanVariable(Guid id, string code)
         {

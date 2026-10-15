@@ -63,7 +63,7 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.AddMetricRu
 
             var ternary = Assert.IsType<TernaryFormula>(rule.ScoreFunction);
             var condition = Assert.IsType<BinaryFormula>(ternary.Condition);
-            Assert.Equal(ExpressionOperator.GTE, condition.Operator);
+            Assert.Equal(ExpressionOperator.Gte, condition.Operator);
             Assert.Equal("AGE ≥ 65", condition.ToString());
             Assert.Equal(age.Id, Assert.IsType<VariableFormula>(condition.Left).Variable.Id);
             Assert.Equal(1m, Assert.IsType<NumericConstantFormula>(ternary.IfTrue).Constant);
@@ -151,23 +151,6 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.AddMetricRu
             Assert.Null(result.Data);
         }
 
-        [Fact]
-        public void ToModel_NullDependencies_Failure()
-        {
-            /*
-             * Every formula, even a plain constant, is only built when the handler
-             * supplied the clinical variables as dependencies
-             */
-            var command = ScoringCommand(new FormulaDto { Constant = "1" });
-
-            var result = _mapper.ToModel(command, null);
-
-            Assert.True(result.IsFailure());
-            Assert.NotNull(result.Error);
-            Assert.Equal(ApplicationStatus.BadRequest, result.StatusCode);
-            Assert.Null(result.Data);
-        }
-
         #endregion
 
         private static AddMetricRuleCommand ScoringCommand(FormulaDto scoreFunction) => new()
@@ -189,7 +172,7 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.AddMetricRu
         {
             Condition = new FormulaDto
             {
-                Operator = ExpressionOperator.GTE,
+                Operator = ExpressionOperator.Gte,
                 Left = new FormulaDto { Variable = ageVariableId },
                 Right = new FormulaDto { Constant = "65" },
             },

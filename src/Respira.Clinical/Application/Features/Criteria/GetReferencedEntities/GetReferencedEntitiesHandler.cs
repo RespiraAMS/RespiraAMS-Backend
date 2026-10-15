@@ -31,7 +31,7 @@ namespace Respira.Clinical.Application.Features.Criteria.GetReferencedEntities
                 .Select(x => x.Id)
                 .ToListAsync(cancellationToken);
             var treatments = await context.Treatments
-                .Where(x => x.Criteria.Select(x => x.Id).Contains(query.Id))
+                .Where(x => x.Criteria.Select(c => c.Id).Contains(query.Id))
                 .Select(x => x.Id)
                 .ToListAsync(cancellationToken);
 

@@ -123,11 +123,11 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.UpdateCriterion
             var target = new Criterion(
                 "Tuổi >= 65",
                 new BinaryFormula(
-                    new VariableFormula(age), new NumericConstantFormula(65), ExpressionOperator.GTE));
+                    new VariableFormula(age), new NumericConstantFormula(65), ExpressionOperator.Gte));
             var control = new Criterion(
                 "Huyết áp tâm thu < 90 mmHg",
                 new BinaryFormula(
-                    new VariableFormula(sbp), new NumericConstantFormula(90), ExpressionOperator.LT));
+                    new VariableFormula(sbp), new NumericConstantFormula(90), ExpressionOperator.Lt));
             await _context.Criteria.AddRangeAsync(
                 [target, control], TestContext.Current.CancellationToken);
             await _context.SaveChangesAsync(TestContext.Current.CancellationToken);
@@ -246,7 +246,7 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.UpdateCriterion
             {
                 Id = data.Target.Id,
                 Name = "Tuổi > 65",
-                Formula = Binary(Variable(data.Age.Id), ExpressionOperator.GT, Constant("65")),
+                Formula = Binary(Variable(data.Age.Id), ExpressionOperator.Gt, Constant("65")),
             };
 
             var result = await _handler.HandleAsync(command, TestContext.Current.CancellationToken);
@@ -260,7 +260,7 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.UpdateCriterion
             Assert.False(saved.IsDeleted);
 
             var formula = Assert.IsType<BinaryFormula>(saved.Formula);
-            Assert.Equal(ExpressionOperator.GT, formula.Operator);
+            Assert.Equal(ExpressionOperator.Gt, formula.Operator);
             Assert.Equal(65m, Assert.IsType<NumericConstantFormula>(formula.Right).Constant);
             Assert.Equal("AGE > 65", formula.ToString());
             Assert.Equal(ExpressionResultType.Boolean, formula.ResultType);
@@ -318,7 +318,7 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.UpdateCriterion
             {
                 Id = data.Target.Id,
                 Name = "Hypotension threshold",
-                Formula = Binary(Variable(data.Sbp.Id), ExpressionOperator.LT, Constant(threshold)),
+                Formula = Binary(Variable(data.Sbp.Id), ExpressionOperator.Lt, Constant(threshold)),
             };
 
             var result = await _handler.HandleAsync(command, TestContext.Current.CancellationToken);
@@ -329,7 +329,7 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.UpdateCriterion
 
             var saved = await ReadCriterionAsync(data.Target.Id);
             var formula = Assert.IsType<BinaryFormula>(saved.Formula);
-            Assert.Equal(ExpressionOperator.LT, formula.Operator);
+            Assert.Equal(ExpressionOperator.Lt, formula.Operator);
             Assert.Equal(
                 decimal.Parse(threshold, CultureInfo.InvariantCulture),
                 Assert.IsType<NumericConstantFormula>(formula.Right).Constant);
@@ -350,8 +350,8 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.UpdateCriterion
                 Name = "Female hypertensive crisis",
                 Formula = Binary(
                     Variable(data.Female.Id),
-                    ExpressionOperator.AND,
-                    Binary(Variable(data.Sbp.Id), ExpressionOperator.GT, Constant("140"))),
+                    ExpressionOperator.And,
+                    Binary(Variable(data.Sbp.Id), ExpressionOperator.Gt, Constant("140"))),
             };
 
             var result = await _handler.HandleAsync(command, TestContext.Current.CancellationToken);
@@ -362,7 +362,7 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.UpdateCriterion
 
             var saved = await ReadCriterionAsync(data.Target.Id);
             var formula = Assert.IsType<BinaryFormula>(saved.Formula);
-            Assert.Equal(ExpressionOperator.AND, formula.Operator);
+            Assert.Equal(ExpressionOperator.And, formula.Operator);
             Assert.Equal("FEMALE AND (SBP > 140)", formula.ToString());
 
             Assert.Equal(2, saved.Variables.Count());
@@ -383,7 +383,7 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.UpdateCriterion
             {
                 Id = data.Target.Id,
                 Name = "Tuổi > 65",
-                Formula = Binary(Variable(data.Age.Id), ExpressionOperator.GT, Constant("65")),
+                Formula = Binary(Variable(data.Age.Id), ExpressionOperator.Gt, Constant("65")),
             };
 
             var result = await _handler.HandleAsync(command, TestContext.Current.CancellationToken);
@@ -524,7 +524,7 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.UpdateCriterion
                     Id = data.Target.Id,
                     Name = "Age in years",
                     Formula = Binary(
-                        Variable(data.Age.Id), ExpressionOperator.ADD, Constant("65")),
+                        Variable(data.Age.Id), ExpressionOperator.Add, Constant("65")),
                 }, TestContext.Current.CancellationToken);
 
             Assert.True(result.IsFailure());
@@ -579,7 +579,7 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.UpdateCriterion
                 {
                     Id = data.Target.Id,
                     Name = "Tuổi > 65",
-                    Formula = Binary(Variable(data.Age.Id), ExpressionOperator.GT, Constant("65")),
+                    Formula = Binary(Variable(data.Age.Id), ExpressionOperator.Gt, Constant("65")),
                 }, TestContext.Current.CancellationToken);
 
             Assert.True(result.IsFailure());
@@ -630,7 +630,7 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.UpdateCriterion
                 {
                     Id = data.Target.Id,
                     Name = "Age in years",
-                    Formula = Binary(Constant("true"), ExpressionOperator.ADD, Constant("65")),
+                    Formula = Binary(Constant("true"), ExpressionOperator.Add, Constant("65")),
                 }, TestContext.Current.CancellationToken);
 
             Assert.True(result.IsFailure());

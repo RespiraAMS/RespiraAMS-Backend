@@ -14,7 +14,7 @@ namespace Respira.Clinical.Application.Features.ClinicalMetrics.UpdateMetricRule
             throw new NotImplementedException();
         }
 
-        public Result MapModel(MetricRule model, UpdateMetricRuleCommand command, object? dependencies = null)
+        public Result MapModel(MetricRule model, UpdateMetricRuleCommand command, object dependencies)
         {
             if (command.ScoreFunction is not null && command.IsMajor is not null)
             {

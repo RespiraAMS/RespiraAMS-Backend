@@ -16,7 +16,7 @@ namespace Respira.Clinical.Application.Features.Pathogens.CreatePathogen
             });
         }
 
-        public Result<Pathogen> ToModel(CreatePathogenCommand command, object? dependencies = null)
+        public Result<Pathogen> ToModel(CreatePathogenCommand command, object dependencies)
         {
             return ToModel(command);
         }

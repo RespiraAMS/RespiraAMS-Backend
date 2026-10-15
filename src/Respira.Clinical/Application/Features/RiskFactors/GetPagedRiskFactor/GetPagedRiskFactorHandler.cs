@@ -29,7 +29,7 @@ namespace Respira.Clinical.Application.Features.RiskFactors.GetPagedRiskFactor
                     Pathogen = new PathogenResult(x.PathogenId, x.Pathogen.Name),
                     Criterion = new CriterionResult(x.CriterionId, x.Criterion.Name, x.Criterion.Formula.ToString()!)
                 })
-                .ToPagedListAsync(query.Param.Page, query.Param.Size);
+                .ToPagedListAsync(query.Param.Page, query.Param.Size, cancellationToken: cancellationToken);
             return Result<Pagination<PagedRiskFactorItem>>.Success(ApplicationStatus.Success, factory.Create(factors));
         }
     }

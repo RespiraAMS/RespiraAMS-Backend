@@ -105,23 +105,23 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.GetCriteria
 
         // CURB-65: age >= 65 years
         private static Formula BacteremiaFormula() =>
-            Numeric("AGE", ClinicalValueType.Numeric, 65, ExpressionOperator.GTE);
+            Numeric("AGE", ClinicalValueType.Numeric, 65, ExpressionOperator.Gte);
 
         // Fever: body temperature > 38 °C
         private static Formula FeverFormula() =>
-            Numeric("TEMP", ClinicalValueType.Numeric, 38, ExpressionOperator.GT);
+            Numeric("TEMP", ClinicalValueType.Numeric, 38, ExpressionOperator.Gt);
 
         // Hypotension: systolic blood pressure < 90 mmHg
         private static Formula HypotensionFormula() =>
-            Numeric("SBP", ClinicalValueType.Numeric, 90, ExpressionOperator.LT);
+            Numeric("SBP", ClinicalValueType.Numeric, 90, ExpressionOperator.Lt);
 
         // Tachypnea: respiratory rate >= 30 breaths/min
         private static Formula SepsisFormula() =>
-            Numeric("RR", ClinicalValueType.Numeric, 30, ExpressionOperator.GTE);
+            Numeric("RR", ClinicalValueType.Numeric, 30, ExpressionOperator.Gte);
 
         // Tachycardia: heart rate >= 125 bpm (severe sepsis threshold)
         private static Formula TachycardiaFormula() =>
-            Numeric("HR", ClinicalValueType.Numeric, 125, ExpressionOperator.GTE);
+            Numeric("HR", ClinicalValueType.Numeric, 125, ExpressionOperator.Gte);
 
         #region Happy path
 

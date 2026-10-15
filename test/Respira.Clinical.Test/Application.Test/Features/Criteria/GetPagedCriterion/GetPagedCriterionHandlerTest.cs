@@ -65,11 +65,11 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.GetPagedCriterion
             var baseTime = DateTimeOffset.UtcNow;
             var criteria = new List<Criterion>
             {
-                Create("Tachycardia", Numeric("HR", 125, ExpressionOperator.GTE), baseTime),
-                Create("Hypotension", Numeric("SBP", 90, ExpressionOperator.LT), baseTime.AddMinutes(-1)),
-                Create("Sepsis suspicion", Numeric("RR", 30, ExpressionOperator.GTE), baseTime.AddMinutes(-2)),
-                Create("Bacteremia risk", Numeric("AGE", 65, ExpressionOperator.GTE), baseTime.AddMinutes(-3)),
-                Create("Fever over 38", Numeric("TEMP", 38, ExpressionOperator.GT), baseTime.AddMinutes(-4)),
+                Create("Tachycardia", Numeric("HR", 125, ExpressionOperator.Gte), baseTime),
+                Create("Hypotension", Numeric("SBP", 90, ExpressionOperator.Lt), baseTime.AddMinutes(-1)),
+                Create("Sepsis suspicion", Numeric("RR", 30, ExpressionOperator.Gte), baseTime.AddMinutes(-2)),
+                Create("Bacteremia risk", Numeric("AGE", 65, ExpressionOperator.Gte), baseTime.AddMinutes(-3)),
+                Create("Fever over 38", Numeric("TEMP", 38, ExpressionOperator.Gt), baseTime.AddMinutes(-4)),
                 // Soft deleted: hidden by the query filter but still in the table
                 Create(
                     "Archived screening",
@@ -285,8 +285,8 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.GetPagedCriterion
             var createdAt = DateTimeOffset.UtcNow;
             await _context.Criteria.AddRangeAsync(
             [
-                Create("Hypotension", Numeric("SBP", 90, ExpressionOperator.LT), createdAt),
-                Create("Hypotension", Numeric("SBP", 90, ExpressionOperator.LT), createdAt.AddMinutes(-1)),
+                Create("Hypotension", Numeric("SBP", 90, ExpressionOperator.Lt), createdAt),
+                Create("Hypotension", Numeric("SBP", 90, ExpressionOperator.Lt), createdAt.AddMinutes(-1)),
             ], TestContext.Current.CancellationToken);
             await _context.SaveChangesAsync(TestContext.Current.CancellationToken);
 

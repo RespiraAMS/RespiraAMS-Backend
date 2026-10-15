@@ -57,25 +57,22 @@ namespace Respira.Clinical.Domain.Test.Services
         #region Test CalculateMetricsScore
 
         public static readonly TheoryData<string, List<ClinicalObservation>, decimal> ScoresCase = [
-            ("CURB-65", new List<ClinicalObservation>
-            {
+            ("CURB-65", [
                 Obs("AGE", 65),
                 Obs("UREA", 0),
-                Obs("SBP", 120),
-            }, 1),
-            ("CURB-65", new List<ClinicalObservation>
-            {
+                Obs("SBP", 120)
+            ], 1),
+            ("CURB-65", [
                 Obs("AGE", 64),
                 Obs("UREA", 7),
                 Obs("SBP", 90),
-                Obs("GENDER", "MALE"), // Unrelated variable should not affect the score
-            }, 0),
-            ("PSI", new List<ClinicalObservation>
-            {
+                Obs("GENDER", "MALE") // Unrelated variable should not affect the score
+            ], 0),
+            ("PSI", [
                 Obs("AGE", 65),
                 Obs("GENDER", "FEMALE"),
-                Obs("RENAL-DISEASE"),
-            }, 65)
+                Obs("RENAL-DISEASE")
+            ], 65)
         ];
 
         [Theory]
@@ -175,7 +172,6 @@ namespace Respira.Clinical.Domain.Test.Services
         [InlineData(100000, Severity.Severe, TreatmentSite.IntensiveCareUnit)]
         public void Psi_Success(int score, Severity severity, TreatmentSite treatmentSite)
         {
-            var metric = _context.Metrics.FirstOrDefault(x => x.Code.Equals("PSI")) ?? throw new Exception("PSI metric not found");
             var result = _service.Psi(score, []);
             Assert.Equal(severity, result.Severity);
             Assert.Equal(treatmentSite, result.TreatmentSite);

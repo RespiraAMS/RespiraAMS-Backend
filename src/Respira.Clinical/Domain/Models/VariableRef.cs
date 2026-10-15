@@ -20,7 +20,7 @@ namespace Respira.Clinical.Domain.Models
         /// </summary>
         public static implicit operator VariableRef(ClinicalVariable variable)
         {
-            return new(variable.Id, variable.Code, variable.ValueType);
+            return new VariableRef(variable.Id, variable.Code, variable.ValueType);
         }
     }
 }
