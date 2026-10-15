@@ -81,7 +81,6 @@ namespace Respira.Patient.Infrastructure.Data
             modelBuilder.Entity<Domain.Entities.Patient>().ToTable("patients");
             modelBuilder.Entity<Domain.Entities.Patient>().Property(x => x.Gender).HasConversion<string>();
             modelBuilder.Entity<Domain.Entities.Patient>().Property(x => x.TreatmentOutcome).HasConversion<string>();
-            modelBuilder.Entity<Domain.Entities.Patient>().Ignore(x => x.Age);
             modelBuilder.Entity<Domain.Entities.Patient>().Ignore(x => x.FullName);
 
             // Config on next of kin

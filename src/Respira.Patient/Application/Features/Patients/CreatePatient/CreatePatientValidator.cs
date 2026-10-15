@@ -1,4 +1,5 @@
 using FluentValidation;
+using Respira.Patient.Domain.Utils;
 
 namespace Respira.Patient.Application.Features.Patients.CreatePatient
 {
@@ -32,8 +33,7 @@ namespace Respira.Patient.Application.Features.Patients.CreatePatient
                 .WithMessage("Patient medical record code is required");
             // New health insurance card number is 10 characters, while old one is 15
             RuleFor(x => x.HealthInsuranceCard)
-                .NotEmpty()
-                .Matches("^[0-9]{10}$")
+                .Must(HealthInsuranceCardValidator.IsValid)
                 .WithMessage("Patient health insurance card number is required, and must be a 10 numeric characters string");
             RuleFor(x => x.Address)
                 .NotEmpty()

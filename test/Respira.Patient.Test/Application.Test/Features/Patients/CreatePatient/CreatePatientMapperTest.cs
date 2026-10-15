@@ -55,7 +55,7 @@ namespace Respira.Patient.Application.Test.Features.Patients.CreatePatient
             Assert.Equal(TreatmentOutcome.InTreatment, model.TreatmentOutcome);
 
             // Documented entity rules: year-only age and Vietnamese style full name
-            Assert.Equal(DateTimeOffset.Now.Year - command.DateOfBirth.Year, model.Age);
+            Assert.Equal(DateTimeOffset.Now.Year - command.DateOfBirth.Year, model.Age());
             Assert.Equal("Nguyễn Thị Mỹ Linh", model.FullName);
         }
 

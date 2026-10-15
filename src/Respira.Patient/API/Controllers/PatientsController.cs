@@ -1,5 +1,6 @@
 using Asp.Versioning;
 using Microsoft.AspNetCore.Mvc;
+using Respira.Patient.API.Dtos;
 using Respira.Patient.Application.Features.Patients.CreatePatient;
 using Respira.ServiceDefaults.Contracts.Results;
 using Wolverine;
@@ -15,6 +16,14 @@ namespace Respira.Patient.API.Controllers
         public async Task<IActionResult> CreatePatient([FromBody] CreatePatientCommand req)
         {
             var result = await bus.InvokeAsync<Result<CreatePatientResult>>(req);
+            return result.ToApiResponse();
+        }
+
+        [HttpPut]
+        [Route("{id:guid}")]
+        public async Task<IActionResult> UpdatePatient(Guid id, [FromBody] UpdatePatientRequestDto req)
+        {
+            var result = await bus.InvokeAsync<Result>(req.ToCommand(id));
             return result.ToApiResponse();
         }
     }

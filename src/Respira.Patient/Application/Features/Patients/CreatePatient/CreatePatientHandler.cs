@@ -33,7 +33,7 @@ namespace Respira.Patient.Application.Features.Patients.CreatePatient
 
             // Business rule: only accept patient above 15 years old. CAP in children have different
             // treatment rules, and is not covered by this system
-            if (patient.Age <= 15)
+            if (!patient.IsValidAge())
             {
                 logger.LogDebug("Patient is under 15 years old, cannot be created");
                 return Result<CreatePatientResult>.Failure(new Error(ApplicationStatus.BusinessRuleViolation, "Patient is under 15 years old, cannot be created"));

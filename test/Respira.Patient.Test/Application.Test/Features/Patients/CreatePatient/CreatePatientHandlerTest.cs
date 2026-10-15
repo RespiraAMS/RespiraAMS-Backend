@@ -87,7 +87,7 @@ namespace Respira.Patient.Application.Test.Features.Patients.CreatePatient
 
             // Documented entity rules: age only counts years, full name is
             // "LastName FirstName" (Vietnamese style)
-            Assert.Equal(DateTimeOffset.Now.Year - command.DateOfBirth.Year, saved.Age);
+            Assert.Equal(DateTimeOffset.Now.Year - command.DateOfBirth.Year, saved.Age());
             Assert.Equal("Nguyễn Thị Mỹ Linh", saved.FullName);
 
             // Exactly one row was created
