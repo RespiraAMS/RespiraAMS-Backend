@@ -1,7 +1,9 @@
 using Asp.Versioning;
 using Microsoft.AspNetCore.Mvc;
 using Respira.Patient.API.Dtos;
+using Respira.Patient.Application.Features.Patients.AddNextOfKin;
 using Respira.Patient.Application.Features.Patients.CreatePatient;
+using Respira.Patient.Application.Features.Patients.DeleteNextOfKin;
 using Respira.Patient.Application.Features.Patients.DeletePatient;
 using Respira.Patient.Application.Features.Patients.DischargePatient;
 using Respira.Patient.Application.Features.Patients.GetPagedPatient;
@@ -48,6 +50,38 @@ namespace Respira.Patient.API.Controllers
             return result.ToApiResponse();
         }
 
+        [HttpPut]
+        [Route("{id:guid}/discharge")]
+        public async Task<IActionResult> DischargePatient(Guid id, [FromQuery] TreatmentOutcome outcome)
+        {
+            var result = await bus.InvokeAsync<Result>(new DischargePatientCommand { Id = id, Outcome = outcome });
+            return result.ToApiResponse();
+        }
+
+        [HttpPost]
+        [Route("{id:guid}/next-of-kin")]
+        public async Task<IActionResult> AddNextOfKin(Guid id, [FromBody] AddNextOfKinRequestDto req)
+        {
+            var result = await bus.InvokeAsync<Result<AddNextOfKinResult>>(req.ToCommand(id));
+            return result.ToApiResponse();
+        }
+
+        [HttpPut]
+        [Route("{id:guid}/next-of-kin/{nextOfKinId:guid}")]
+        public async Task<IActionResult> UpdateNextOfKin(Guid nextOfKinId, [FromBody] UpdateNextOfKinRequestDto req)
+        {
+            var result = await bus.InvokeAsync<Result>(req.ToCommand(nextOfKinId));
+            return result.ToApiResponse();
+        }
+
+        [HttpDelete]
+        [Route("{id:guid}/next-of-kin/{nextOfKinId:guid}")]
+        public async Task<IActionResult> DeleteNextOfKin(Guid nextOfKinId)
+        {
+            var result = await bus.InvokeAsync<Result>(new DeleteNextOfKinCommand { Id = nextOfKinId });
+            return result.ToApiResponse();
+        }
+
         [HttpDelete]
         [Route("{id:guid}")]
         public async Task<IActionResult> DeletePatient(Guid id)
@@ -56,12 +90,5 @@ namespace Respira.Patient.API.Controllers
             return result.ToApiResponse();
         }
 
-        [HttpPut]
-        [Route("{id:guid}/discharge")]
-        public async Task<IActionResult> DischargePatient(Guid id, [FromQuery] TreatmentOutcome outcome)
-        {
-            var result = await bus.InvokeAsync<Result>(new DischargePatientCommand { Id = id, Outcome = outcome });
-            return result.ToApiResponse();
-        }
     }
 }
