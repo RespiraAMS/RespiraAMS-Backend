@@ -1,8 +1,41 @@
+using Respira.Patient.Application.Features.Patients.GetPagedPatient;
 using Respira.Patient.Application.Features.Patients.UpdatePatient;
 using Respira.Patient.Domain.Enums;
+using Respira.ServiceDefaults.Contracts.Pagination;
 
 namespace Respira.Patient.API.Dtos
 {
+    public record GetPagedPatientRequestDto
+    {
+        public int Page { get; set; } = 1;
+        public int Size { get; set; } = 10;
+        public string? Name { get; set; }
+        public string? MedicalRecordCode { get; set; }
+        public Gender? Gender { get; set; }
+        public int? MinAge { get; set; }
+        public int? MaxAge { get; set; }
+
+        public GetPagedPatientQuery ToQuery()
+        {
+            return new GetPagedPatientQuery
+            {
+                Param = new PaginationParam
+                {
+                    Page = Page,
+                    Size = Size,
+                },
+                Filter = new PatientFilter
+                {
+                    Name = Name,
+                    MedicalRecordCode = MedicalRecordCode,
+                    Gender = Gender,
+                    MinAge = MinAge,
+                    MaxAge = MaxAge,
+                }
+            };
+        }
+    }
+
     public record UpdatePatientRequestDto
     {
         public required string FirstName { get; set; }

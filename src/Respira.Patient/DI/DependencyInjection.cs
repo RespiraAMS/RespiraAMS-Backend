@@ -10,6 +10,7 @@ using Respira.Patient.Application.Features.Patients.CreatePatient;
 using Respira.Patient.Application.Features.Patients.UpdateNextOfKin;
 using Respira.Patient.Domain.Entities;
 using Respira.Patient.Infrastructure.Data;
+using Respira.Patient.Infrastructure.Mappers;
 
 namespace Respira.Patient.DI
 {
@@ -29,6 +30,7 @@ namespace Respira.Patient.DI
             services.AddScoped<ICreateMapper<CreatePatientCommand, Domain.Entities.Patient>, CreatePatientMapper>();
             services.AddScoped<ICreateMapper<AddNextOfKinCommand, NextOfKin>, AddNextOfKinMapper>();
             services.AddScoped<IUpdateMapper<NextOfKin, UpdateNextOfKinCommand>, UpdateNextOfKinMapper>();
+            services.AddScoped<IPaginationFactory, PaginationFactory>();
         }
 
         public static void AddFluentValidators(this IServiceCollection services)
