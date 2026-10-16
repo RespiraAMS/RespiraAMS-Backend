@@ -9,28 +9,18 @@ namespace Respira.Patient.Domain.Entities
         /// <summary>
         /// Patient first name
         /// </summary>
-        public required string FirstName
-        {
-            get; set
-            {
-                field = NameNormalizer.NameNormalize(value);
-            }
-        }
+        public required string FirstName { get; set => field = NameNormalizer.NameNormalize(value); }
 
         /// <summary>
         /// Patient last name
         /// </summary>
-        public required string LastName
-        {
-            get; set
-            {
-                field = NameNormalizer.NameNormalize(value);
-            }
-        }
+        public required string LastName { get; set => field = NameNormalizer.NameNormalize(value); }
 
         /// <summary>
-        /// Patient's phone number. Should be Vietnamese format (either 0xxxxxxxxx or
-        /// +84xxxxxxxxx). See more at <see cref="PhoneNumberValidator"/>
+        /// Patient's phone number. Should conform to Vietnamese format:<br/>
+        /// 1. 03/05/07/08/09xxxxxxxx (accordding to the 2018 migrations from 11 digits to 10)<br/>
+        /// 2. The internation format (84[3/5/7/8/9]xxxxxxxx or +84[3/5/7/8/9]xxxxxxxx)<br/>
+        /// Note: the 3/5/7/8/9 are mobile network prefixes in Vietnam.
         /// </summary>
         public required string PhoneNumber { get; set; }
 
@@ -108,16 +98,26 @@ namespace Respira.Patient.Domain.Entities
         /// </summary>
         public int Age() => DateTimeOffset.Now.Year - DateOfBirth.Year;
 
+        /// <summary>
+        /// Calculate a patient age based on their date of birth. Age is
+        /// only calculate using year
+        /// </summary>
+        /// <param name="dob">Date of birth</param>
+        /// <returns>Patient age</returns>
         public static int Age(DateOnly dob) => DateTimeOffset.Now.Year - dob.Year;
 
         /// <summary>
-        /// Check if patient is above 16 years old (this system only accept 16 years old or older
+        /// Check if patient is above 15 years old (this system only accept 16 years old or older
         /// patients, children will not be covered by this system)
-        ///
         /// </summary>
         /// <returns>True if patient age is valid</returns>
         public bool IsValidAge() => Age() >= 16;
 
+        /// <summary>
+        /// Check if a patient age is above 15 old
+        /// </summary>
+        /// <param name="dob">Date of birth</param>
+        /// <returns>True if patient age is valid</returns>
         public static bool IsValidAge(DateOnly dob) => Age(dob) >= 16;
 
         /// <summary>

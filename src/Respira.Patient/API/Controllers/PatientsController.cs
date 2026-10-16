@@ -21,6 +21,12 @@ namespace Respira.Patient.API.Controllers
     public class PatientsController(IMessageBus bus) : ControllerBase
     {
         [HttpPost]
+        [ProducesResponseType<Result<CreatePatientResult>>(StatusCodes.Status201Created)]
+        [ProducesResponseType<Result>(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType<Result>(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType<Result>(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType<Result>(StatusCodes.Status404NotFound)]
+        [ProducesResponseType<Result>(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> CreatePatient([FromBody] CreatePatientCommand req)
         {
             var result = await bus.InvokeAsync<Result<CreatePatientResult>>(req);
@@ -28,6 +34,11 @@ namespace Respira.Patient.API.Controllers
         }
 
         [HttpGet]
+        [ProducesResponseType<Result<Pagination<PagedPatientItem>>>(StatusCodes.Status200OK)]
+        [ProducesResponseType<Result>(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType<Result>(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType<Result>(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType<Result>(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetPagedPatient([FromQuery] GetPagedPatientRequestDto req)
         {
             var result = await bus.InvokeAsync<Result<Pagination<PagedPatientItem>>>(req.ToQuery());
@@ -36,6 +47,11 @@ namespace Respira.Patient.API.Controllers
 
         [HttpGet]
         [Route("{id:guid}")]
+        [ProducesResponseType<Result<PatientResult>>(StatusCodes.Status200OK)]
+        [ProducesResponseType<Result>(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType<Result>(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType<Result>(StatusCodes.Status404NotFound)]
+        [ProducesResponseType<Result>(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetPatientById(Guid id)
         {
             var result = await bus.InvokeAsync<Result<PatientResult>>(new GetPatientByIdQuery { Id = id });
@@ -44,6 +60,11 @@ namespace Respira.Patient.API.Controllers
 
         [HttpPut]
         [Route("{id:guid}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType<Result>(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType<Result>(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType<Result>(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType<Result>(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> UpdatePatient(Guid id, [FromBody] UpdatePatientRequestDto req)
         {
             var result = await bus.InvokeAsync<Result>(req.ToCommand(id));
@@ -52,6 +73,11 @@ namespace Respira.Patient.API.Controllers
 
         [HttpPut]
         [Route("{id:guid}/discharge")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType<Result>(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType<Result>(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType<Result>(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType<Result>(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> DischargePatient(Guid id, [FromQuery] TreatmentOutcome outcome)
         {
             var result = await bus.InvokeAsync<Result>(new DischargePatientCommand { Id = id, Outcome = outcome });
@@ -60,6 +86,12 @@ namespace Respira.Patient.API.Controllers
 
         [HttpPost]
         [Route("{id:guid}/next-of-kin")]
+        [ProducesResponseType<Result<AddNextOfKinResult>>(StatusCodes.Status201Created)]
+        [ProducesResponseType<Result>(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType<Result>(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType<Result>(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType<Result>(StatusCodes.Status404NotFound)]
+        [ProducesResponseType<Result>(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> AddNextOfKin(Guid id, [FromBody] AddNextOfKinRequestDto req)
         {
             var result = await bus.InvokeAsync<Result<AddNextOfKinResult>>(req.ToCommand(id));
@@ -68,6 +100,12 @@ namespace Respira.Patient.API.Controllers
 
         [HttpPut]
         [Route("{id:guid}/next-of-kin/{nextOfKinId:guid}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType<Result>(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType<Result>(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType<Result>(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType<Result>(StatusCodes.Status404NotFound)]
+        [ProducesResponseType<Result>(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> UpdateNextOfKin(Guid nextOfKinId, [FromBody] UpdateNextOfKinRequestDto req)
         {
             var result = await bus.InvokeAsync<Result>(req.ToCommand(nextOfKinId));
@@ -76,6 +114,11 @@ namespace Respira.Patient.API.Controllers
 
         [HttpDelete]
         [Route("{id:guid}/next-of-kin/{nextOfKinId:guid}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType<Result>(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType<Result>(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType<Result>(StatusCodes.Status404NotFound)]
+        [ProducesResponseType<Result>(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> DeleteNextOfKin(Guid nextOfKinId)
         {
             var result = await bus.InvokeAsync<Result>(new DeleteNextOfKinCommand { Id = nextOfKinId });
@@ -84,6 +127,11 @@ namespace Respira.Patient.API.Controllers
 
         [HttpDelete]
         [Route("{id:guid}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType<Result>(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType<Result>(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType<Result>(StatusCodes.Status404NotFound)]
+        [ProducesResponseType<Result>(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> DeletePatient(Guid id)
         {
             var result = await bus.InvokeAsync<Result>(new DeletePatientCommand { Id = id });
