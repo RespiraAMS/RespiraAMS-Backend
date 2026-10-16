@@ -6,11 +6,6 @@ namespace Respira.Clinical.Application.Features.AntibioticGroups.GetPagedAntibio
     public record AntibioticGroupFilter
     {
         /// <summary>
-        /// Antibiotic group name
-        /// </summary>
-        public string? Name { get; set; }
-
-        /// <summary>
         /// Antibiotic group parent ID
         /// </summary>
         public Guid? ParentId { get; set; }

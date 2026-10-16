@@ -6,11 +6,6 @@ namespace Respira.Clinical.Application.Features.ClinicalMetrics.GetPagedClinical
     public record ClinicalMetricFilter
     {
         /// <summary>
-        /// Clinical metric code
-        /// </summary>
-        public string? Code { get; set; }
-
-        /// <summary>
         /// Is clinical metric applied
         /// </summary>
         public bool? IsApplied { get; set; }

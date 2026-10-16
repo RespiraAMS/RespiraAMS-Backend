@@ -17,11 +17,6 @@ namespace Respira.Clinical.API.Dtos
         public int Size { get; set; } = 10;
 
         /// <summary>
-        /// Clinical metric code
-        /// </summary>
-        public string? Code { get; set; }
-
-        /// <summary>
         /// Is clinical metric applied
         /// </summary>
         public bool? IsApplied { get; set; }
@@ -37,7 +32,6 @@ namespace Respira.Clinical.API.Dtos
                 },
                 Filter = new ClinicalMetricFilter
                 {
-                    Code = Code,
                     IsApplied = IsApplied
                 }
             };

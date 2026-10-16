@@ -17,9 +17,9 @@ namespace Respira.Clinical.API.Dtos
         public int Size { get; set; } = 10;
 
         /// <summary>
-        /// Pathogen name
+        /// Is pathogen atypical
         /// </summary>
-        public string? Name { get; set; }
+        public bool? IsAtypical { get; set; }
 
         public GetPagedPathogenQuery ToQuery()
         {
@@ -32,7 +32,7 @@ namespace Respira.Clinical.API.Dtos
                 },
                 Filter = new PathogenFilter()
                 {
-                    Name = Name,
+                    IsAtypical = IsAtypical
                 }
             };
         }

@@ -243,83 +243,6 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalVariables.GetPagedC
         /*=== filters ===*/
 
         [Fact]
-        public async Task GetPagedClinicalVariable_NameFilter_CaseInsensitivePartialMatch_Success()
-        {
-            await SeedAsync();
-
-            // Uppercase pattern against the stored "Blood glucose" proves ILike
-            // case-insensitivity, and only the fragment has to match
-            var result = await _handler.HandleAsync(new GetPagedClinicalVariableQuery
-            {
-                Param = new PaginationParam { Page = 1, Size = 10 },
-                Filter = new ClinicalVariableFilter { Name = "GLUCOSE" },
-            }, TestContext.Current.CancellationToken);
-
-            Assert.True(result.IsSuccess());
-            Assert.NotNull(result.Data);
-
-            var item = Assert.Single(result.Data.Items);
-            Assert.Equal("Blood glucose", item.Name);
-            Assert.Equal(1, result.Data.Metadata.TotalItemCount);
-        }
-
-        [Fact]
-        public async Task GetPagedClinicalVariable_NameFilter_PartialFragment_Success()
-        {
-            await SeedAsync();
-
-            var result = await _handler.HandleAsync(new GetPagedClinicalVariableQuery
-            {
-                Param = new PaginationParam { Page = 1, Size = 10 },
-                Filter = new ClinicalVariableFilter { Name = "react" },
-            }, TestContext.Current.CancellationToken);
-
-            Assert.True(result.IsSuccess());
-            Assert.NotNull(result.Data);
-
-            var item = Assert.Single(result.Data.Items);
-            Assert.Equal("C reactive protein", item.Name);
-        }
-
-        [Fact]
-        public async Task GetPagedClinicalVariable_CodeFilter_ExactMatch_Success()
-        {
-            await SeedAsync();
-
-            var result = await _handler.HandleAsync(new GetPagedClinicalVariableQuery
-            {
-                Param = new PaginationParam { Page = 1, Size = 10 },
-                Filter = new ClinicalVariableFilter { Code = "8480-6" },
-            }, TestContext.Current.CancellationToken);
-
-            Assert.True(result.IsSuccess());
-            Assert.NotNull(result.Data);
-
-            var item = Assert.Single(result.Data.Items);
-            Assert.Equal("Systolic blood pressure", item.Name);
-            Assert.Equal(1, result.Data.Metadata.TotalItemCount);
-        }
-
-        [Fact]
-        public async Task GetPagedClinicalVariable_CodeFilter_PartialCodeDoesNotMatch_Success()
-        {
-            await SeedAsync();
-
-            // Business rule: the code filter is an equality match, not a prefix match
-            var result = await _handler.HandleAsync(new GetPagedClinicalVariableQuery
-            {
-                Param = new PaginationParam { Page = 1, Size = 10 },
-                Filter = new ClinicalVariableFilter { Code = "8480" },
-            }, TestContext.Current.CancellationToken);
-
-            Assert.True(result.IsSuccess());
-            Assert.NotNull(result.Data);
-
-            Assert.Empty(result.Data.Items);
-            Assert.Equal(0, result.Data.Metadata.TotalItemCount);
-        }
-
-        [Fact]
         public async Task GetPagedClinicalVariable_IsRequiredFilter_Success()
         {
             await SeedAsync();
@@ -463,7 +386,7 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalVariables.GetPagedC
             var result = await _handler.HandleAsync(new GetPagedClinicalVariableQuery
             {
                 Param = new PaginationParam { Page = 1, Size = 10 },
-                Filter = new ClinicalVariableFilter { Name = "Vancomycin" },
+                Filter = new ClinicalVariableFilter { ValueType = (ClinicalValueType)999 },
             }, TestContext.Current.CancellationToken);
 
             Assert.True(result.IsSuccess());

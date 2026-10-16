@@ -17,22 +17,6 @@ namespace Respira.Patient.Application.Features.Patients.GetPagedPatient
             var queryable = context.Patients.AsQueryable();
             if (query.Filter is not null)
             {
-                // Search name in both first and last name
-                if (query.Filter.Name is not null)
-                {
-                    // Because Patient.FullName is ignore by EF Core,
-                    // we need to workaround like this, or switch to client evaluation
-                    // which is less performant
-                    queryable = queryable.Where(x =>
-                        EF.Functions.ILike(x.FirstName, "%" + query.Filter.Name + "%") ||
-                        EF.Functions.ILike(x.LastName, "%" + query.Filter.Name + "%"));
-                }
-
-                if (query.Filter.MedicalRecordCode is not null)
-                {
-                    queryable = queryable.Where(x => x.MedicalRecordCode == query.Filter.MedicalRecordCode);
-                }
-
                 if (query.Filter.Gender is not null)
                 {
                     queryable = queryable.Where(x => x.Gender == query.Filter.Gender);

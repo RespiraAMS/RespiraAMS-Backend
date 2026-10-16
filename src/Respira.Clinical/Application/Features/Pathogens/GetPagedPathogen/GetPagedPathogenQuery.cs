@@ -6,9 +6,9 @@ namespace Respira.Clinical.Application.Features.Pathogens.GetPagedPathogen
     public record PathogenFilter
     {
         /// <summary>
-        /// Pathogen name
+        /// Is pathogen atypical
         /// </summary>
-        public string? Name { get; set; }
+        public bool? IsAtypical { get; set; }
     }
 
     public record GetPagedPathogenQuery : IQuery

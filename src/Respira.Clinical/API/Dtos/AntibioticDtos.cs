@@ -18,11 +18,6 @@ namespace Respira.Clinical.API.Dtos
         public int Size { get; set; } = 10;
 
         /// <summary>
-        /// Antibiotic name
-        /// </summary>
-        public string? Name { get; set; }
-
-        /// <summary>
         /// Antibiotic group ID
         /// </summary>
         public Guid? AntibioticGroupId { get; set; }
@@ -43,7 +38,6 @@ namespace Respira.Clinical.API.Dtos
                 },
                 Filter = new AntibioticFilter
                 {
-                    Name = Name,
                     AntibioticGroupId = AntibioticGroupId,
                     Classification = Classification
                 }

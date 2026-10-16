@@ -146,25 +146,6 @@ namespace Respira.Clinical.Application.Test.Features.AntibioticGroups.GetPagedAn
         /*=== filter ===*/
 
         [Fact]
-        public async Task GetPagedAntibioticGroup_NameFilter_CaseInsensitivePartialMatch_Success()
-        {
-            await SeedHierarchyAsync();
-
-            var result = await _handler.HandleAsync(new GetPagedAntibioticGroupQuery
-            {
-                Param = new PaginationParam { Page = 1, Size = 10 },
-                Filter = new AntibioticGroupFilter { Name = "LACTAM" },
-            }, TestContext.Current.CancellationToken);
-            Assert.True(result.IsSuccess());
-            Assert.Null(result.Error);
-            Assert.Equal(ApplicationStatus.Success, result.StatusCode);
-            Assert.NotNull(result.Data);
-
-            Assert.Equal(["Beta-lactams"], [.. result.Data.Items.Select(x => x.Name)]);
-            Assert.Equal(1, result.Data.Metadata.TotalItemCount);
-        }
-
-        [Fact]
         public async Task GetPagedAntibioticGroup_ParentIdFilter_ReturnsDirectChildrenOnly_Success()
         {
             var root = await SeedHierarchyAsync();
@@ -189,25 +170,6 @@ namespace Respira.Clinical.Application.Test.Features.AntibioticGroups.GetPagedAn
         }
 
         [Fact]
-        public async Task GetPagedAntibioticGroup_CombinedFilters_AppliedTogether_Success()
-        {
-            var root = await SeedHierarchyAsync();
-
-            var result = await _handler.HandleAsync(new GetPagedAntibioticGroupQuery
-            {
-                Param = new PaginationParam { Page = 1, Size = 10 },
-                Filter = new AntibioticGroupFilter { Name = "penic", ParentId = root.Id },
-            }, TestContext.Current.CancellationToken);
-            Assert.True(result.IsSuccess());
-            Assert.Null(result.Error);
-            Assert.Equal(ApplicationStatus.Success, result.StatusCode);
-            Assert.NotNull(result.Data);
-
-            var item = Assert.Single(result.Data.Items);
-            Assert.Equal("Penicillins", item.Name);
-        }
-
-        [Fact]
         public async Task GetPagedAntibioticGroup_FilterMatchesNothing_ReturnsEmpty()
         {
             await SeedHierarchyAsync();
@@ -215,7 +177,7 @@ namespace Respira.Clinical.Application.Test.Features.AntibioticGroups.GetPagedAn
             var result = await _handler.HandleAsync(new GetPagedAntibioticGroupQuery
             {
                 Param = new PaginationParam { Page = 1, Size = 10 },
-                Filter = new AntibioticGroupFilter { Name = "Tetracyclines" },
+                Filter = new AntibioticGroupFilter { ParentId = Guid.CreateVersion7() },
             }, TestContext.Current.CancellationToken);
             Assert.True(result.IsSuccess());
             Assert.Null(result.Error);

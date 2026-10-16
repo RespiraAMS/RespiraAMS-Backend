@@ -20,16 +20,6 @@ namespace Respira.Clinical.API.Dtos
         public int Size { get; set; } = 10;
 
         /// <summary>
-        /// Clinical variable name
-        /// </summary>
-        public string? Name { get; set; }
-
-        /// <summary>
-        /// Clinical variable code
-        /// </summary>
-        public string? Code { get; set; }
-
-        /// <summary>
         /// Clinical variable is required flag
         /// </summary>
         public bool? IsRequired { get; set; }
@@ -55,8 +45,6 @@ namespace Respira.Clinical.API.Dtos
                 },
                 Filter = new ClinicalVariableFilter
                 {
-                    Name = Name,
-                    Code = Code,
                     IsRequired = IsRequired,
                     ValueType = ValueType,
                     Category = Category

@@ -17,11 +17,6 @@ namespace Respira.Clinical.Application.Features.ClinicalMetrics.GetPagedClinical
             var queryable = context.ClinicalMetrics.AsQueryable();
             if (query.Filter is not null)
             {
-                if (query.Filter.Code is not null)
-                {
-                    queryable = queryable.Where(x => x.Code.Equals(query.Filter.Code));
-                }
-
                 if (query.Filter.IsApplied is not null)
                 {
                     queryable = queryable.Where(x => x.IsApplied == query.Filter.IsApplied);

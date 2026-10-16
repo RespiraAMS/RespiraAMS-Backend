@@ -8,16 +8,6 @@ namespace Respira.Patient.Application.Features.Patients.GetPagedPatient
     public record PatientFilter
     {
         /// <summary>
-        /// Patient's name (the search will search for fullname)
-        /// </summary>
-        public string? Name { get; set; }
-
-        /// <summary>
-        /// Patient's medical record code
-        /// </summary>
-        public string? MedicalRecordCode { get; set; }
-
-        /// <summary>
         /// Patient's gender
         /// </summary>
         public Gender? Gender { get; set; }

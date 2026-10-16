@@ -158,28 +158,6 @@ namespace Respira.Clinical.Application.Test.Features.Antibiotics.GetPagedAntibio
         /*=== filter ===*/
 
         [Fact]
-        public async Task GetPagedAntibiotic_NameFilter_CaseInsensitivePartialMatch_Success()
-        {
-            await SeedAsync();
-
-            var result = await _handler.HandleAsync(new GetPagedAntibioticQuery
-            {
-                Param = new PaginationParam { Page = 1, Size = 10 },
-                Filter = new AntibioticFilter { Name = "MYCIN" },
-            }, TestContext.Current.CancellationToken);
-            Assert.True(result.IsSuccess());
-            Assert.Null(result.Error);
-            Assert.NotNull(result.Data);
-            Assert.Equal(ApplicationStatus.Success, result.StatusCode);
-
-            // Uppercase pattern against stored lowercase "mycin" proves ILike
-            // case-insensitivity; Amoxicillin does not contain the fragment
-            var item = Assert.Single(result.Data.Items);
-            Assert.Equal("Azithromycin", item.Name);
-            Assert.Equal(1, result.Data.Metadata.TotalItemCount);
-        }
-
-        [Fact]
         public async Task GetPagedAntibiotic_GroupFilter_ReturnsOnlyThatGroup_Success()
         {
             var (_, macrolides) = await SeedAsync();
@@ -252,7 +230,7 @@ namespace Respira.Clinical.Application.Test.Features.Antibiotics.GetPagedAntibio
             var result = await _handler.HandleAsync(new GetPagedAntibioticQuery
             {
                 Param = new PaginationParam { Page = 1, Size = 10 },
-                Filter = new AntibioticFilter { Name = "Vancomycin" },
+                Filter = new AntibioticFilter { AntibioticGroupId = Guid.CreateVersion7() },
             }, TestContext.Current.CancellationToken);
             Assert.True(result.IsSuccess());
             Assert.Null(result.Error);

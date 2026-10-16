@@ -43,7 +43,7 @@ namespace Respira.Clinical.Application.Test.Features.Pathogens.GetPagedPathogen
          * CreatedAt-descending order of the handler is deterministic. Higher suffix
          * means newer: Pathogen-5 is the most recent one
          */
-        private async Task<List<Pathogen>> SeedNumberedPathogensAsync(int count)
+        private async Task<List<Pathogen>> SeedNumberedPathogensAsync(int count, bool isAtypical = true)
         {
             var baseTime = DateTimeOffset.UtcNow;
             var seeded = Enumerable.Range(1, count)
@@ -51,7 +51,7 @@ namespace Respira.Clinical.Application.Test.Features.Pathogens.GetPagedPathogen
                 {
                     Name = $"Pathogen-{i}",
                     Description = $"Description of pathogen {i}",
-                    IsAtypical = true,
+                    IsAtypical = isAtypical,
                     CreatedAt = baseTime.AddMinutes(-count + i),
                 })
                 .ToList();
@@ -132,44 +132,43 @@ namespace Respira.Clinical.Application.Test.Features.Pathogens.GetPagedPathogen
 
         /*=== filter ===*/
 
-        [Fact]
-        public async Task GetPagedPathogens_NameFilter_CaseInsensitivePartialMatch_Success()
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task GetPagedPathogens_FilterIsAtypical_ReturnOnlyThatPathogen_Success(bool isAtypical)
         {
-            var seeded = new List<Pathogen>
-            {
-                new() { Name = "Klebsiella pneumoniae", Description = "Gram-negative bacillus", IsAtypical = true },
-                new() { Name = "Pseudomonas aeruginosa", Description = "Gram-negative rod", IsAtypical = false },
-                new() { Name = "Staphylococcus aureus", Description = "Gram-positive coccus", IsAtypical = false },
-            };
-            await _context.Pathogens.AddRangeAsync(seeded, TestContext.Current.CancellationToken);
-            await _context.SaveChangesAsync(TestContext.Current.CancellationToken);
+            await SeedNumberedPathogensAsync(5, true);
+            await SeedNumberedPathogensAsync(3, false);
 
             var result = await _handler.HandleAsync(new GetPagedPathogenQuery
             {
                 Param = new PaginationParam { Page = 1, Size = 10 },
-                Filter = new PathogenFilter { Name = "PNEU" },
+                Filter = new PathogenFilter { IsAtypical = isAtypical },
             }, TestContext.Current.CancellationToken);
+
             Assert.True(result.IsSuccess());
             Assert.Null(result.Error);
             Assert.Equal(ApplicationStatus.Success, result.StatusCode);
             Assert.NotNull(result.Data);
 
-            var item = Assert.Single(result.Data.Items);
-            Assert.Equal("Klebsiella pneumoniae", item.Name);
-            Assert.Equal("Gram-negative bacillus", item.Description);
-            Assert.Equal(seeded[0].IsAtypical, item.IsAtypical);
-            Assert.Equal(1, result.Data.Metadata.TotalItemCount);
+            Assert.All(result.Data.Items, x => Assert.Equal(isAtypical, x.IsAtypical));
+            Assert.Equal(isAtypical switch
+            {
+                true => 5,
+                false => 3,
+            }, result.Data.Metadata.TotalItemCount);
         }
 
         [Fact]
         public async Task GetPagedPathogens_FilterMatchesNothing_ReturnsEmpty()
         {
+            // The seed create 
             await SeedNumberedPathogensAsync(3);
 
             var result = await _handler.HandleAsync(new GetPagedPathogenQuery
             {
                 Param = new PaginationParam { Page = 1, Size = 10 },
-                Filter = new PathogenFilter { Name = "Salmonella" },
+                Filter = new PathogenFilter { IsAtypical = false },
             }, TestContext.Current.CancellationToken);
             Assert.True(result.IsSuccess());
             Assert.Null(result.Error);

@@ -17,11 +17,6 @@ namespace Respira.Clinical.Application.Features.Antibiotics.GetPagedAntibiotic
             var queryable = context.Antibiotics.AsQueryable();
             if (query.Filter is not null)
             {
-                if (query.Filter.Name is not null)
-                {
-                    queryable = queryable.Where(x => EF.Functions.ILike(x.Name, $"%{query.Filter.Name}%"));
-                }
-
                 if (query.Filter.AntibioticGroupId is not null)
                 {
                     queryable = queryable.Where(x => x.AntibioticGroupId == query.Filter.AntibioticGroupId);

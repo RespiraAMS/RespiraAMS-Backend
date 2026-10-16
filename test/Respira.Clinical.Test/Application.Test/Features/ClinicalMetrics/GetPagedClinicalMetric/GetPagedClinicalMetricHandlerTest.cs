@@ -293,42 +293,6 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.GetPagedCli
         }
 
         [Fact]
-        public async Task GetPagedClinicalMetric_CodeFilter_ReturnsOnlyThatMetric_Success()
-        {
-            var seeded = await SeedAsync();
-
-            // The soft deleted copy also carries the PSI code, only the live one counts
-            var result = await _handler.HandleAsync(
-                Query(page: 1, size: 10, new ClinicalMetricFilter { Code = "PSI" }),
-                TestContext.Current.CancellationToken);
-
-            Assert.True(result.IsSuccess());
-            Assert.NotNull(result.Data);
-
-            Assert.Equal(1, result.Data.Metadata.TotalItemCount);
-            var item = Assert.Single(result.Data.Items);
-            Assert.Equal(seeded.IdByCode["PSI"], item.Id);
-            Assert.NotEqual(seeded.ArchivedId, item.Id);
-        }
-
-        [Fact]
-        public async Task GetPagedClinicalMetric_CodeFilter_NoMatch_ReturnsEmpty()
-        {
-            await SeedAsync();
-
-            // A metric code that exists nowhere cannot be listed
-            var result = await _handler.HandleAsync(
-                Query(page: 1, size: 10, new ClinicalMetricFilter { Code = "SMART-COP" }),
-                TestContext.Current.CancellationToken);
-
-            Assert.True(result.IsSuccess());
-            Assert.NotNull(result.Data);
-
-            Assert.Empty(result.Data.Items);
-            Assert.Equal(0, result.Data.Metadata.TotalItemCount);
-        }
-
-        [Fact]
         public async Task GetPagedClinicalMetric_IsAppliedFilter_ReturnsOnlyInUseMetrics_Success()
         {
             await SeedAsync();
@@ -370,28 +334,6 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.GetPagedCli
                 "Severity metrics CRB-65",
             ], [.. result.Data.Items.Select(x => x.Name)]);
             Assert.All(result.Data.Items, x => Assert.False(x.IsApplied));
-        }
-
-        [Fact]
-        public async Task GetPagedClinicalMetric_CodeAndIsAppliedFilters_AreCombinedWithAnd_Success()
-        {
-            await SeedAsync();
-
-            // CURB-65 is in use, so only the matching combination returns the metric
-            var matching = await _handler.HandleAsync(
-                Query(page: 1, size: 10, new ClinicalMetricFilter { Code = "CURB-65", IsApplied = true }),
-                TestContext.Current.CancellationToken);
-            Assert.True(matching.IsSuccess());
-            Assert.NotNull(matching.Data);
-            Assert.Equal("CURB-65", Assert.Single(matching.Data.Items).Code);
-
-            var contradicting = await _handler.HandleAsync(
-                Query(page: 1, size: 10, new ClinicalMetricFilter { Code = "CURB-65", IsApplied = false }),
-                TestContext.Current.CancellationToken);
-            Assert.True(contradicting.IsSuccess());
-            Assert.NotNull(contradicting.Data);
-            Assert.Empty(contradicting.Data.Items);
-            Assert.Equal(0, contradicting.Data.Metadata.TotalItemCount);
         }
 
         [Fact]

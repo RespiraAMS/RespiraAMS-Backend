@@ -7,16 +7,6 @@ namespace Respira.Clinical.Application.Features.ClinicalVariables.GetPagedClinic
     public record ClinicalVariableFilter
     {
         /// <summary>
-        /// Clinical variable name
-        /// </summary>
-        public string? Name { get; set; }
-
-        /// <summary>
-        /// Clinical variable code
-        /// </summary>
-        public string? Code { get; set; }
-
-        /// <summary>
         /// Clinical variable is required flag
         /// </summary>
         public bool? IsRequired { get; set; }

@@ -233,53 +233,6 @@ namespace Respira.Patient.Application.Test.Features.Patients.GetPagedPatient
         }
 
         [Fact]
-        public async Task GetPagedPatient_NameFilter_CaseInsensitivePartialMatch_Success()
-        {
-            /*
-             * Business rule (handler doc): "Search name in both first and last name"
-             * - the pattern matches anywhere inside the full name, ignoring case.
-             * "khu" comes from the first name of one patient only, and the lowercase
-             * pattern against the stored "Khu" proves case-insensitivity
-             */
-            var (kieu, _, _) = await SeedAsync();
-
-            var result = await _handler.HandleAsync(new GetPagedPatientQuery
-            {
-                Param = new PaginationParam { Page = 1, Size = 10 },
-                Filter = new PatientFilter { Name = "khu" },
-            }, TestContext.Current.CancellationToken);
-            Assert.True(result.IsSuccess());
-            Assert.Null(result.Error);
-            Assert.NotNull(result.Data);
-            Assert.Equal(ApplicationStatus.Success, result.StatusCode);
-
-            var item = Assert.Single(result.Data.Items);
-            Assert.Equal(kieu.Id, item.Id);
-            Assert.Equal(1, result.Data.Metadata.TotalItemCount);
-        }
-
-        [Fact]
-        public async Task GetPagedPatient_MedicalRecordCodeFilter_ReturnsExactMatch_Success()
-        {
-            var (_, tung, _) = await SeedAsync();
-
-            var result = await _handler.HandleAsync(new GetPagedPatientQuery
-            {
-                Param = new PaginationParam { Page = 1, Size = 10 },
-                Filter = new PatientFilter { MedicalRecordCode = "BN-2026-005291" },
-            }, TestContext.Current.CancellationToken);
-            Assert.True(result.IsSuccess());
-            Assert.Null(result.Error);
-            Assert.NotNull(result.Data);
-            Assert.Equal(ApplicationStatus.Success, result.StatusCode);
-
-            var item = Assert.Single(result.Data.Items);
-            Assert.Equal(tung.Id, item.Id);
-            Assert.Equal("Nguyễn Văn Tùng", item.FullName);
-            Assert.Equal(1, result.Data.Metadata.TotalItemCount);
-        }
-
-        [Fact]
         public async Task GetPagedPatient_GenderFilter_ReturnsOnlyThatGender_Success()
         {
             var (kieu, _, _) = await SeedAsync();
@@ -379,8 +332,8 @@ namespace Respira.Patient.Application.Test.Features.Patients.GetPagedPatient
         [Fact]
         public async Task GetPagedPatient_CombinedFilters_AppliedTogether_Success()
         {
-            // Two independent criteria must both hold: gender AND exact record code
-            var (_, tung, _) = await SeedAsync();
+            // Two independent criteria must both hold: gender AND min age 
+            var (_, _, quan) = await SeedAsync();
 
             var result = await _handler.HandleAsync(new GetPagedPatientQuery
             {
@@ -388,7 +341,7 @@ namespace Respira.Patient.Application.Test.Features.Patients.GetPagedPatient
                 Filter = new PatientFilter
                 {
                     Gender = Gender.Male,
-                    MedicalRecordCode = "BN-2026-005291",
+                    MinAge = 50,
                 },
             }, TestContext.Current.CancellationToken);
             Assert.True(result.IsSuccess());
@@ -397,8 +350,9 @@ namespace Respira.Patient.Application.Test.Features.Patients.GetPagedPatient
             Assert.Equal(ApplicationStatus.Success, result.StatusCode);
 
             var item = Assert.Single(result.Data.Items);
-            Assert.Equal(tung.Id, item.Id);
+            Assert.Equal(quan.Id, item.Id);
             Assert.Equal(Gender.Male, item.Gender);
+            Assert.True(item.Age >= 50);
         }
 
         [Fact]
@@ -409,7 +363,7 @@ namespace Respira.Patient.Application.Test.Features.Patients.GetPagedPatient
             var result = await _handler.HandleAsync(new GetPagedPatientQuery
             {
                 Param = new PaginationParam { Page = 1, Size = 10 },
-                Filter = new PatientFilter { MedicalRecordCode = "BN-2026-901102" },
+                Filter = new PatientFilter { MaxAge = 10 },
             }, TestContext.Current.CancellationToken);
             Assert.True(result.IsSuccess());
             Assert.Null(result.Error);

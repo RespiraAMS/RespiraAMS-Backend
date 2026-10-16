@@ -37,7 +37,7 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.GetPagedCli
             var result = await _validator.ValidateAsync(new GetPagedClinicalMetricQuery
             {
                 Param = new PaginationParam { Page = 1, Size = 10 },
-                Filter = new ClinicalMetricFilter { Code = "CURB-65", IsApplied = true },
+                Filter = new ClinicalMetricFilter { IsApplied = true },
             }, TestContext.Current.CancellationToken);
 
             Assert.Empty(result.Errors);

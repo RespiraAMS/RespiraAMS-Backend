@@ -20,16 +20,6 @@ namespace Respira.Clinical.Application.Features.ClinicalVariables.GetPagedClinic
             var queryable = context.ClinicalVariables.AsQueryable();
             if (query.Filter is not null)
             {
-                if (query.Filter.Name is not null)
-                {
-                    queryable = queryable.Where(x => EF.Functions.ILike(x.Name, $"%{query.Filter.Name}%"));
-                }
-
-                if (query.Filter.Code is not null)
-                {
-                    queryable = queryable.Where(x => x.Code.Equals(query.Filter.Code));
-                }
-
                 if (query.Filter.IsRequired is not null)
                 {
                     queryable = queryable.Where(x => x.IsRequired == query.Filter.IsRequired);

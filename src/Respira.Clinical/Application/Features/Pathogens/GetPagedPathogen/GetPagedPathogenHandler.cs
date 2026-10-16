@@ -17,9 +17,9 @@ namespace Respira.Clinical.Application.Features.Pathogens.GetPagedPathogen
             var queryable = context.Pathogens.AsQueryable();
             if (query.Filter is not null)
             {
-                if (query.Filter.Name is not null)
+                if (query.Filter.IsAtypical is not null)
                 {
-                    queryable = queryable.Where(x => EF.Functions.ILike(x.Name, $"%{query.Filter.Name}%"));
+                    queryable = queryable.Where(x => x.IsAtypical == query.Filter.IsAtypical);
                 }
             }
 

@@ -18,16 +18,6 @@ namespace Respira.Patient.API.Dtos
         public int Size { get; set; } = 10;
 
         /// <summary>
-        /// Patient name. Search will search for fullname
-        /// </summary>
-        public string? Name { get; set; }
-
-        /// <summary>
-        /// Patient medical record code
-        /// </summary>
-        public string? MedicalRecordCode { get; set; }
-
-        /// <summary>
         /// Patient gender
         /// </summary>
         public Gender? Gender { get; set; }
@@ -53,8 +43,6 @@ namespace Respira.Patient.API.Dtos
                 },
                 Filter = new PatientFilter
                 {
-                    Name = Name,
-                    MedicalRecordCode = MedicalRecordCode,
                     Gender = Gender,
                     MinAge = MinAge,
                     MaxAge = MaxAge,
