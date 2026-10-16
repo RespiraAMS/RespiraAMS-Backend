@@ -20,5 +20,6 @@
     <ItemGroup>
         <ProjectReference Include="../Respira.Clinical/API/Respira.Clinical.API.csproj" />
         <ProjectReference Include="../Respira.Gateway/Respira.Gateway.csproj" />
+        <ProjectReference Include="../Respira.Patient/API/Respira.Patient.API.csproj" />
     </ItemGroup>
 </Project>
