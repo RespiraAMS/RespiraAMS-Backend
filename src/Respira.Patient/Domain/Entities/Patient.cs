@@ -29,7 +29,8 @@ namespace Respira.Patient.Domain.Entities
         }
 
         /// <summary>
-        /// Patient's phone number
+        /// Patient's phone number. Should be Vietnamese format (either 0xxxxxxxxx or
+        /// +84xxxxxxxxx). See more at <see cref="PhoneNumberValidator"/>
         /// </summary>
         public required string PhoneNumber { get; set; }
 

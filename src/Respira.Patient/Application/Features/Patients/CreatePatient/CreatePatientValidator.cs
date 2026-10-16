@@ -14,8 +14,8 @@ namespace Respira.Patient.Application.Features.Patients.CreatePatient
                 .NotEmpty()
                 .WithMessage("Patient last name is required");
             RuleFor(x => x.PhoneNumber)
-                .NotEmpty()
-                .WithMessage("Patient phone number is required");
+                .Must(PhoneNumberValidator.IsValid)
+                .WithMessage("Patient phone number is required, and must match Vietnamese phone number format");
             RuleFor(x => x.Gender)
                 .IsInEnum()
                 .WithMessage("Patient gender is required");
