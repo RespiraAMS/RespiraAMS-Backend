@@ -8,6 +8,7 @@ using Respira.Patient.Application.Features.Patients.DeletePatient;
 using Respira.Patient.Application.Features.Patients.DischargePatient;
 using Respira.Patient.Application.Features.Patients.GetPagedPatient;
 using Respira.Patient.Application.Features.Patients.GetPatientById;
+using Respira.Patient.Application.Features.Patients.SearchPatient;
 using Respira.Patient.Domain.Enums;
 using Respira.ServiceDefaults.Contracts.Pagination;
 using Respira.ServiceDefaults.Contracts.Results;
@@ -55,6 +56,14 @@ namespace Respira.Patient.API.Controllers
         public async Task<IActionResult> GetPatientById(Guid id)
         {
             var result = await bus.InvokeAsync<Result<PatientResult>>(new GetPatientByIdQuery { Id = id });
+            return result.ToApiResponse();
+        }
+
+        [HttpGet]
+        [Route("search")]
+        public async Task<IActionResult> SearchPatient([FromQuery] SearchPatientRequestDto req)
+        {
+            var result = await bus.InvokeAsync<Result<Pagination<SearchPatientItem>>>(req.ToQuery());
             return result.ToApiResponse();
         }
 

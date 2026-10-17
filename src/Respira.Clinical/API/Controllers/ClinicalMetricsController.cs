@@ -8,6 +8,7 @@ using Respira.Clinical.Application.Features.ClinicalMetrics.DeleteMetricRule;
 using Respira.Clinical.Application.Features.ClinicalMetrics.GetClinicalMetricById;
 using Respira.Clinical.Application.Features.ClinicalMetrics.GetMetricRuleById;
 using Respira.Clinical.Application.Features.ClinicalMetrics.GetPagedClinicalMetric;
+using Respira.Clinical.Application.Features.ClinicalMetrics.SearchClinicalMetric;
 using Respira.ServiceDefaults.Contracts.Pagination;
 using Respira.ServiceDefaults.Contracts.Results;
 using Wolverine;
@@ -40,6 +41,14 @@ namespace Respira.Clinical.API.Controllers
         public async Task<IActionResult> GetPagedClinicalMetric([FromQuery] GetPagedClinicalMetricRequestDto req)
         {
             var result = await bus.InvokeAsync<Result<Pagination<PagedClinicalMetricItem>>>(req.ToQuery());
+            return result.ToApiResponse();
+        }
+
+        [HttpGet]
+        [Route("search")]
+        public async Task<IActionResult> SearchClinicalMetric([FromQuery] SearchClinicalMetricRequestDto req)
+        {
+            var result = await bus.InvokeAsync<Result<Pagination<SearchClinicalMetricItem>>>(req.ToQuery());
             return result.ToApiResponse();
         }
 

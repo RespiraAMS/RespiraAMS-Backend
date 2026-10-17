@@ -4,7 +4,7 @@ using Respira.ServiceDefaults.Models;
 
 namespace Respira.Patient.Domain.Entities
 {
-    public class Patient : Base
+    public class Patient : FullTextSearch
     {
         /// <summary>
         /// Patient first name

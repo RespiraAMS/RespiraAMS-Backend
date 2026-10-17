@@ -58,7 +58,7 @@ namespace Respira.Clinical.Application.Features.ClinicalVariables.GetPagedClinic
         public required bool IsRequired { get; set; }
 
         /// <summary>
-        /// Clinical variable description
+        /// Clinical variable canonical unit
         /// </summary>
         public string? CanonicalUnit { get; set; }
 

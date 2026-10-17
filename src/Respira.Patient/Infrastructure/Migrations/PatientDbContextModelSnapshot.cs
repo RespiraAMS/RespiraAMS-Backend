@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
+using NpgsqlTypes;
 using Respira.Patient.Infrastructure.Data;
 
 #nullable disable
@@ -20,6 +21,7 @@ namespace Respira.Patient.Infrastructure.Migrations
                 .HasAnnotation("ProductVersion", "10.0.12")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
+            NpgsqlModelBuilderExtensions.HasPostgresExtension(modelBuilder, "unaccent");
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.Entity("Respira.Patient.Domain.Entities.NextOfKin", b =>
@@ -121,6 +123,13 @@ namespace Respira.Patient.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<NpgsqlTsVector>("SearchVector")
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("tsvector")
+                        .HasAnnotation("Npgsql:TsVectorConfig", "respira_vi")
+                        .HasAnnotation("Npgsql:TsVectorProperties", new[] { "FirstName", "LastName", "MedicalRecordCode" });
+
                     b.Property<string>("TreatmentOutcome")
                         .IsRequired()
                         .HasColumnType("text");
@@ -132,6 +141,10 @@ namespace Respira.Patient.Infrastructure.Migrations
                         .HasColumnType("numeric");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("SearchVector");
+
+                    NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("SearchVector"), "GIN");
 
                     b.ToTable("patients", (string)null);
                 });

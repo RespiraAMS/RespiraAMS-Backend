@@ -1,4 +1,5 @@
 using Respira.Patient.Application.Features.Patients.GetPagedPatient;
+using Respira.Patient.Application.Features.Patients.SearchPatient;
 using Respira.Patient.Application.Features.Patients.UpdatePatient;
 using Respira.Patient.Domain.Enums;
 using Respira.ServiceDefaults.Contracts.Pagination;
@@ -47,6 +48,26 @@ namespace Respira.Patient.API.Dtos
                     MinAge = MinAge,
                     MaxAge = MaxAge,
                 }
+            };
+        }
+    }
+
+    public record SearchPatientRequestDto
+    {
+        public int Page { get; set; } = 1;
+        public int Size { get; set; } = 10;
+        public string SearchTerm { get; set; } = string.Empty;
+
+        public SearchPatientQuery ToQuery()
+        {
+            return new SearchPatientQuery
+            {
+                Param = new PaginationParam
+                {
+                    Page = Page,
+                    Size = Size,
+                },
+                SearchTerm = SearchTerm,
             };
         }
     }

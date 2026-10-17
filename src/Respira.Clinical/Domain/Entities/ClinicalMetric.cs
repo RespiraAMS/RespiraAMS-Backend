@@ -5,7 +5,7 @@ namespace Respira.Clinical.Domain.Entities
     /// <summary>
     /// This is the class represent a scoring metric, like CURB-65 or PSI
     /// </summary>
-    public class ClinicalMetric : Base
+    public class ClinicalMetric : FullTextSearch
     {
         /// <summary>
         /// Scoring metric name

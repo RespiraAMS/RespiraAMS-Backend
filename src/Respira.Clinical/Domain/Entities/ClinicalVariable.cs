@@ -8,7 +8,7 @@ namespace Respira.Clinical.Domain.Entities
     /// <summary>
     /// This is the class represent a clinical variable, like BUN, Systolic blood pressure,...
     /// </summary>
-    public abstract class ClinicalVariable : Base
+    public abstract class ClinicalVariable : FullTextSearch
     {
         /// <summary>
         /// Clinical variable code. Preferably follow LOINC code

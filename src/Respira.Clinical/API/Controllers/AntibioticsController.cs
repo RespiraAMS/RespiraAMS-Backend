@@ -8,6 +8,7 @@ using Respira.Clinical.Application.Features.Antibiotics.DeleteDosage;
 using Respira.Clinical.Application.Features.Antibiotics.GetAntibioticById;
 using Respira.Clinical.Application.Features.Antibiotics.GetAntibiotics;
 using Respira.Clinical.Application.Features.Antibiotics.GetPagedAntibiotic;
+using Respira.Clinical.Application.Features.Antibiotics.SearchAntibiotic;
 using Respira.ServiceDefaults.Contracts.Pagination;
 using Respira.ServiceDefaults.Contracts.Results;
 using Wolverine;
@@ -53,6 +54,14 @@ namespace Respira.Clinical.API.Controllers
         public async Task<IActionResult> GetAntibiotics()
         {
             var result = await bus.InvokeAsync<Result<GetAntibioticsResult>>(new GetAntibioticsQuery());
+            return result.ToApiResponse();
+        }
+
+        [HttpGet]
+        [Route("search")]
+        public async Task<IActionResult> SearchAntibiotics([FromQuery] SearchAntibioticRequestDto req)
+        {
+            var result = await bus.InvokeAsync<Result<Pagination<SearchAntibioticItem>>>(req.ToQuery());
             return result.ToApiResponse();
         }
 

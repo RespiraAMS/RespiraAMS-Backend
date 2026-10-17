@@ -5,6 +5,7 @@ using Respira.Clinical.Application.Features.Pathogens.CreatePathogen;
 using Respira.Clinical.Application.Features.Pathogens.DeletePathogen;
 using Respira.Clinical.Application.Features.Pathogens.GetPagedPathogen;
 using Respira.Clinical.Application.Features.Pathogens.GetPathogens;
+using Respira.Clinical.Application.Features.Pathogens.SearchPathogen;
 using Respira.ServiceDefaults.Contracts.Pagination;
 using Respira.ServiceDefaults.Contracts.Results;
 using Wolverine;
@@ -50,6 +51,14 @@ namespace Respira.Clinical.API.Controllers
         public async Task<IActionResult> GetPathogens()
         {
             var result = await bus.InvokeAsync<Result<GetPathogensResult>>(new GetPathogensQuery());
+            return result.ToApiResponse();
+        }
+
+        [HttpGet]
+        [Route("search")]
+        public async Task<IActionResult> SearchPathogen([FromQuery] SearchPathogenRequestDto req)
+        {
+            var result = await bus.InvokeAsync<Result<Pagination<SearchPathogenItem>>>(req.ToQuery());
             return result.ToApiResponse();
         }
 

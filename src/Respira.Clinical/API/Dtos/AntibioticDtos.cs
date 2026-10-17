@@ -1,4 +1,5 @@
 using Respira.Clinical.Application.Features.Antibiotics.GetPagedAntibiotic;
+using Respira.Clinical.Application.Features.Antibiotics.SearchAntibiotic;
 using Respira.Clinical.Application.Features.Antibiotics.UpdateAntibiotic;
 using Respira.Clinical.Domain.Enums;
 using Respira.ServiceDefaults.Contracts.Pagination;
@@ -41,6 +42,26 @@ namespace Respira.Clinical.API.Dtos
                     AntibioticGroupId = AntibioticGroupId,
                     Classification = Classification
                 }
+            };
+        }
+    }
+
+    public record SearchAntibioticRequestDto
+    {
+        public int Page { get; set; } = 1;
+        public int Size { get; set; } = 10;
+        public string SearchTerm { get; set; } = string.Empty;
+
+        public SearchAntibioticQuery ToQuery()
+        {
+            return new SearchAntibioticQuery
+            {
+                Param = new PaginationParam
+                {
+                    Page = Page,
+                    Size = Size
+                },
+                SearchTerm = SearchTerm
             };
         }
     }

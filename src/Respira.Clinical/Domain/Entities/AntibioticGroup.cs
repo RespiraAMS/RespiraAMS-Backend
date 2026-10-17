@@ -2,7 +2,7 @@ using Respira.ServiceDefaults.Models;
 
 namespace Respira.Clinical.Domain.Entities
 {
-    public class AntibioticGroup : Base
+    public class AntibioticGroup : FullTextSearch
     {
         public required string Name { get; set; }
         public required string Description { get; set; }

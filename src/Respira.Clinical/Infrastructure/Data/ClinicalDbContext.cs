@@ -4,6 +4,7 @@ using Respira.Clinical.Application.Contracts.Data;
 using Respira.Clinical.Domain.Entities;
 using Respira.Clinical.Infrastructure.Util.Database;
 using Respira.ServiceDefaults.Models;
+using Respira.ServiceDefaults.Utils.FullTextSearch;
 
 namespace Respira.Clinical.Infrastructure.Data
 {
@@ -138,6 +139,8 @@ namespace Respira.Clinical.Infrastructure.Data
             modelBuilder.Entity<AntibioticGroup>().HasQueryFilter(x => !x.IsDeleted);
             modelBuilder.Entity<Dosage>().HasQueryFilter(x => !x.IsDeleted);
 
+            // Activate unaccent extension for full text search on Vietnamese dataset
+            modelBuilder.HasPostgresExtension("unaccent");
 
             // Config on clinical variable
             modelBuilder.Entity<ClinicalVariable>()
@@ -158,6 +161,13 @@ namespace Respira.Clinical.Infrastructure.Data
                 .OwnsOne(x => x.AcceptedRange, builder => builder.ToJson());
             modelBuilder.Entity<NumericClinicalVariable>()
                 .OwnsOne(x => x.NormalRange, builder => builder.ToJson());
+            modelBuilder.Entity<ClinicalVariable>()
+                .HasGeneratedTsVectorColumn(
+                    x => x.SearchVector,
+                    FullTextSearchUtil.ConfigurationName,
+                    x => new { x.Name, x.Code, x.Description })
+                .HasIndex(x => x.SearchVector)
+                .HasMethod("GIN");
 
             modelBuilder.Entity<Criterion>().ToTable("criteria");
             modelBuilder.Entity<Criterion>().Ignore(x => x.Variables);
@@ -167,6 +177,13 @@ namespace Respira.Clinical.Infrastructure.Data
 
             // Config on pathogen
             modelBuilder.Entity<Pathogen>().ToTable("pathogens");
+            modelBuilder.Entity<Pathogen>()
+                .HasGeneratedTsVectorColumn(
+                    x => x.SearchVector,
+                    FullTextSearchUtil.ConfigurationName,
+                    x => new { x.Name, x.Description })
+                .HasIndex(x => x.SearchVector)
+                .HasMethod("GIN");
 
             // Config on risk factor
             modelBuilder.Entity<RiskFactor>().ToTable("risk_factors");
@@ -182,6 +199,13 @@ namespace Respira.Clinical.Infrastructure.Data
 
             // Config on clinical metrics
             modelBuilder.Entity<ClinicalMetric>().ToTable("clinical_metrics");
+            modelBuilder.Entity<ClinicalMetric>()
+                .HasGeneratedTsVectorColumn(
+                    x => x.SearchVector,
+                    FullTextSearchUtil.ConfigurationName,
+                    x => new { x.Name, x.Code, x.Description })
+                .HasIndex(x => x.SearchVector)
+                .HasMethod("GIN");
 
             // Config on suspected cause
             modelBuilder.Entity<SuspectedCause>().ToTable("suspected_causes");
@@ -218,7 +242,12 @@ namespace Respira.Clinical.Infrastructure.Data
                 .WithMany()
                 .HasForeignKey(x => x.ParentId);
             modelBuilder.Entity<AntibioticGroup>()
-                .HasIndex(x => x.Name);
+                .HasGeneratedTsVectorColumn(
+                    x => x.SearchVector,
+                    FullTextSearchUtil.ConfigurationName,
+                    x => new { x.Name, x.Description })
+                .HasIndex(x => x.SearchVector)
+                .HasMethod("GIN");
 
             // Config on dosage
             modelBuilder.Entity<Dosage>().ToTable("dosages");
@@ -239,10 +268,15 @@ namespace Respira.Clinical.Infrastructure.Data
                 .WithMany()
                 .HasForeignKey(x => x.AntibioticGroupId);
             modelBuilder.Entity<Antibiotic>()
-                .HasIndex(x => new { x.Name, x.Classification });
-            modelBuilder.Entity<Antibiotic>()
                 .Property(x => x.Classification)
                 .HasConversion<string>();
+            modelBuilder.Entity<Antibiotic>()
+                .HasGeneratedTsVectorColumn(
+                    x => x.SearchVector,
+                    FullTextSearchUtil.ConfigurationName,
+                    x => new { x.Name })
+                .HasIndex(x => x.SearchVector)
+                .HasMethod("GIN");
 
             // Config on medicine composition
             modelBuilder.Entity<MedicineComposition>().ToTable("treatment_medicine_compositions");

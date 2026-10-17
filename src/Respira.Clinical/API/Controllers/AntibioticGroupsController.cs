@@ -5,6 +5,7 @@ using Respira.Clinical.Application.Features.AntibioticGroups.CreateAntibioticGro
 using Respira.Clinical.Application.Features.AntibioticGroups.DeleteAntibioticGroup;
 using Respira.Clinical.Application.Features.AntibioticGroups.GetAntibioticGroups;
 using Respira.Clinical.Application.Features.AntibioticGroups.GetPagedAntibioticGroup;
+using Respira.Clinical.Application.Features.AntibioticGroups.SearchAntibioticGroup;
 using Respira.ServiceDefaults.Contracts.Pagination;
 using Respira.ServiceDefaults.Contracts.Results;
 using Wolverine;
@@ -49,6 +50,14 @@ namespace Respira.Clinical.API.Controllers
         public async Task<IActionResult> GetAntibioticGroups()
         {
             var result = await bus.InvokeAsync<Result<GetAntibioticGroupsResult>>(new GetAntibioticGroupsQuery());
+            return result.ToApiResponse();
+        }
+
+        [HttpGet]
+        [Route("search")]
+        public async Task<IActionResult> SearchAntibioticGroup([FromQuery] SearchAntibioticGroupRequestDto req)
+        {
+            var result = await bus.InvokeAsync<Result<Pagination<SearchAntibioticGroupItem>>>(req.ToQuery());
             return result.ToApiResponse();
         }
 

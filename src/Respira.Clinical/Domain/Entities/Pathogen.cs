@@ -5,7 +5,7 @@ namespace Respira.Clinical.Domain.Entities
     /// <summary>
     /// Pathogen: cause of the disease, which can either be a virus, bacteria or fungi
     /// </summary>
-    public class Pathogen : Base
+    public class Pathogen : FullTextSearch
     {
         /// <summary>
         /// Pathogen name

@@ -2,6 +2,7 @@ using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Respira.Patient.Application;
 using Respira.Patient.Application.Contracts.Data;
 using Respira.Patient.Application.Contracts.Mappers;
@@ -52,12 +53,14 @@ namespace Respira.Patient.DI
         {
             using var scope = host.Services.CreateScope();
             var context = scope.ServiceProvider.GetRequiredService<PatientDbContext>();
+            var logger = scope.ServiceProvider.GetRequiredService<ILogger<PatientDbContext>>();
             try
             {
                 context.Database.Migrate();
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                logger.LogCritical("Failed to apply migrations: {e}", e);
                 if (isDevEnv)
                 {
                     context.Database.EnsureDeleted();

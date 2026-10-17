@@ -6,6 +6,7 @@ using Respira.Clinical.Application.Features.ClinicalVariables.DeleteClinicalVari
 using Respira.Clinical.Application.Features.ClinicalVariables.GetClinicalVariableById;
 using Respira.Clinical.Application.Features.ClinicalVariables.GetClinicalVariables;
 using Respira.Clinical.Application.Features.ClinicalVariables.GetPagedClinicalVariable;
+using Respira.Clinical.Application.Features.ClinicalVariables.SearchClinicalVariable;
 using Respira.ServiceDefaults.Contracts.Pagination;
 using Respira.ServiceDefaults.Contracts.Results;
 using Wolverine;
@@ -52,6 +53,14 @@ namespace Respira.Clinical.API.Controllers
         public async Task<IActionResult> GetClinicalVariables()
         {
             var result = await bus.InvokeAsync<Result<GetClinicalVariablesResult>>(new GetClinicalVariablesQuery());
+            return result.ToApiResponse();
+        }
+
+        [HttpGet]
+        [Route("search")]
+        public async Task<IActionResult> SearchClinicalVariables([FromQuery] SearchClinicalVariableRequestDto req)
+        {
+            var result = await bus.InvokeAsync<Result<Pagination<SearchClinicalVariableItem>>>(req.ToQuery());
             return result.ToApiResponse();
         }
 

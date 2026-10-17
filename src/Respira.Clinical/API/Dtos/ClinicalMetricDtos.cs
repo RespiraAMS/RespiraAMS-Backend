@@ -1,4 +1,5 @@
 using Respira.Clinical.Application.Features.ClinicalMetrics.GetPagedClinicalMetric;
+using Respira.Clinical.Application.Features.ClinicalMetrics.SearchClinicalMetric;
 using Respira.Clinical.Application.Features.ClinicalMetrics.UpdateClinicalMetric;
 using Respira.ServiceDefaults.Contracts.Pagination;
 
@@ -34,6 +35,26 @@ namespace Respira.Clinical.API.Dtos
                 {
                     IsApplied = IsApplied
                 }
+            };
+        }
+    }
+
+    public record SearchClinicalMetricRequestDto
+    {
+        public int Page { get; set; } = 1;
+        public int Size { get; set; } = 10;
+        public string SearchTerm { get; set; } = string.Empty;
+
+        public SearchClinicalMetricQuery ToQuery()
+        {
+            return new SearchClinicalMetricQuery
+            {
+                Param = new PaginationParam
+                {
+                    Page = Page,
+                    Size = Size
+                },
+                SearchTerm = SearchTerm
             };
         }
     }

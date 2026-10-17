@@ -1,4 +1,5 @@
 using Respira.Clinical.Application.Features.ClinicalVariables.GetPagedClinicalVariable;
+using Respira.Clinical.Application.Features.ClinicalVariables.SearchClinicalVariable;
 using Respira.Clinical.Application.Features.ClinicalVariables.UpdateClinicalVariable;
 using Respira.Clinical.Application.Features.Shared.ManageFormula;
 using Respira.Clinical.Domain.Enums;
@@ -49,6 +50,26 @@ namespace Respira.Clinical.API.Dtos
                     ValueType = ValueType,
                     Category = Category
                 }
+            };
+        }
+    }
+
+    public record SearchClinicalVariableRequestDto
+    {
+        public int Page { get; set; } = 1;
+        public int Size { get; set; } = 10;
+        public string SearchTerm { get; set; } = string.Empty;
+
+        public SearchClinicalVariableQuery ToQuery()
+        {
+            return new SearchClinicalVariableQuery
+            {
+                Param = new PaginationParam
+                {
+                    Page = Page,
+                    Size = Size
+                },
+                SearchTerm = SearchTerm
             };
         }
     }

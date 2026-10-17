@@ -25,5 +25,14 @@ namespace Respira.ServiceDefaults.Utils.Validators
                 .Must(p => p.Size is > 0 and <= 100)
                 .WithMessage("Pagination size must be a positive integer and less than or equal to 100");
         }
+
+        public static IRuleBuilderOptions<T, string> IsValidSearchTerm<T>(this IRuleBuilder<T, string> ruleBuilder)
+        {
+            return ruleBuilder
+                .Must(x => x.Trim().Length >= 2)
+                .WithMessage("Search term must at least have 2 characters to avoid result noise")
+                .Must(x => x.All(c => char.IsLetterOrDigit(c) || c == '-' || char.IsWhiteSpace(c)))
+                .WithMessage("Search term only accept alphanumeric character, and hyphen");
+        }
     }
 }

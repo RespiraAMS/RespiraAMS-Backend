@@ -1,4 +1,5 @@
 using Respira.Clinical.Application.Features.Pathogens.GetPagedPathogen;
+using Respira.Clinical.Application.Features.Pathogens.SearchPathogen;
 using Respira.Clinical.Application.Features.Pathogens.UpdatePathogen;
 using Respira.ServiceDefaults.Contracts.Pagination;
 
@@ -34,6 +35,26 @@ namespace Respira.Clinical.API.Dtos
                 {
                     IsAtypical = IsAtypical
                 }
+            };
+        }
+    }
+
+    public record SearchPathogenRequestDto
+    {
+        public int Page { get; set; } = 1;
+        public int Size { get; set; } = 10;
+        public string SearchTerm { get; set; } = string.Empty;
+
+        public SearchPathogenQuery ToQuery()
+        {
+            return new SearchPathogenQuery
+            {
+                Param = new PaginationParam
+                {
+                    Page = Page,
+                    Size = Size
+                },
+                SearchTerm = SearchTerm
             };
         }
     }
