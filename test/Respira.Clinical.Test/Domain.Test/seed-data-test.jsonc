@@ -961,7 +961,7 @@
                 "operator": "GTE"
             }
         },
-        // Yếu tố nguy cơ nhiễm khuẩn Streptococcus pneumoniae
+        // Yếu tố nguy cơ nhiễm khuẩn Streptococcus pneumoniae và yếu tố giới tính - tuổi của PSI
         {
             "id": "00000000-0000-0000-0000-400000000004",
             "name": "Giới tính nam",
@@ -980,42 +980,23 @@
                 "operator": "EQ"
             }
         },
-        // Tiêu chí nhịp thở của CURB-65 (nghiệp vụ đặc biệt từ stakeholder:
-        // CURB-65 cũng đồng thời sử dụng chỉ số SpO2, khác với chuẩn quốc tế chỉ tính nhịp thở)
+        // Tiêu chí nhịp thở của CURB-65
         {
             "id": "00000000-0000-0000-0000-400000000005",
-            "name": "Nhịp thở >= 30 hoặc SpO2 < 90%",
+            "name": "Nhịp thở >= 30",
             "formula": {
                 "resultType": "Boolean",
                 "left": {
-                    "resultType": "Boolean",
-                    "left": {
-                        "resultType": "Numeric",
-                        "variable": {
-                            "id": "00000000-0000-0000-0000-100000000005"
-                        }
-                    },
-                    "right": {
-                        "resultType": "Numeric",
-                        "constant": 30
-                    },
-                    "operator": "GTE"
+                    "resultType": "Numeric",
+                    "variable": {
+                        "id": "00000000-0000-0000-0000-100000000005"
+                    }
                 },
                 "right": {
-                    "resultType": "Boolean",
-                    "left": {
-                        "resultType": "Numeric",
-                        "variable": {
-                            "id": "00000000-0000-0000-0000-100000000014"
-                        }
-                    },
-                    "right": {
-                        "resultType": "Numeric",
-                        "constant": 90
-                    },
-                    "operator": "LT"
+                    "resultType": "Numeric",
+                    "constant": 30
                 },
-                "operator": "OR"
+                "operator": "GTE"
             }
         },
         // Tiêu chí nhịp thở của PSI
@@ -2354,21 +2335,21 @@
                 "operator": "EQ"
             }
         },
-        // Tiêu chí đặc biệt của PSI: yếu tố giới tính - tuổi.
-        // Do yếu tố này áp dụng cho cả nam lẫn nữ (khác công thức điểm),
-        // nên tiêu chí này là một tiêu chí đặc biệt: nó sẽ luôn đúng
+        // Tiêu chí giới tính tuổi của PSI
         {
             "id": "00000000-0000-0000-0000-400000000065",
-            "name": "Yếu tố giới tính - tuổi",
+            "name": "Giới tính nữ",
             "formula": {
                 "resultType": "Boolean",
                 "left": {
-                    "resultType": "Boolean",
-                    "constant": true
+                    "resultType": "String",
+                    "variable": {
+                        "id": "00000000-0000-0000-0000-100000000002"
+                    }
                 },
                 "right": {
-                    "resultType": "Boolean",
-                    "constant": true
+                    "resultType": "String",
+                    "constant": "FEMALE"
                 },
                 "operator": "EQ"
             }
@@ -2380,6 +2361,9 @@
             "name": "Severity metrics CURB-65",
             "code": "CURB-65",
             "description": "CURB-65 metrics to assess severity of a patient",
+            "version": "2002-2003",
+            "publisher": "Hiệp hội Lồng ngực Anh (BTS)",
+            "isApplied": true,
             "rules": [
                 {
                     "id": "00000000-0000-0000-0000-300000000001",
@@ -2428,45 +2412,35 @@
             "name": "Pneumonia Severity Index (PSI)",
             "code": "PSI",
             "description": "PSI metrics to assess severity of a patient with more detail than CURB-65",
+            "version": "1997",
+            "publisher": "Đội ngũ Nghiên cứu Kết quả Điều trị Viêm phổi (PORT - Pneumonia Outcomes Research Team)",
+            "isApplied": true,
             "rules": [
                 {
                     "id": "00000000-0000-0000-0000-300000000006",
                     "criterionId": "00000000-0000-0000-0000-400000000065",
                     "scoreFunction": {
                         "resultType": "Numeric",
-                        "condition": {
-                            "resultType": "Boolean",
-                            "left": {
-                                "resultType": "String",
-                                "variable": {
-                                    "id": "00000000-0000-0000-0000-100000000002"
-                                }
-                            },
-                            "right": {
-                                "resultType": "String",
-                                "constant": "FEMALE"
-                            },
-                            "operator": "EQ"
-                        },
-                        "ifTrue": {
-                            "resultType": "Numeric",
-                            "left": {
-                                "resultType": "Numeric",
-                                "variable": {
-                                    "id": "00000000-0000-0000-0000-100000000001"
-                                }
-                            },
-                            "right": {
-                                "resultType": "Numeric",
-                                "constant": 10
-                            },
-                            "operator": "SUB"
-                        },
-                        "ifFalse": {
+                        "left": {
                             "resultType": "Numeric",
                             "variable": {
                                 "id": "00000000-0000-0000-0000-100000000001"
                             }
+                        },
+                        "right": {
+                            "resultType": "Numeric",
+                            "constant": 10
+                        },
+                        "operator": "SUB"
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-300000000036",
+                    "criterionId": "00000000-0000-0000-0000-400000000004",
+                    "scoreFunction": {
+                        "resultType": "Numeric",
+                        "variable": {
+                            "id": "00000000-0000-0000-0000-100000000001"
                         }
                     }
                 },
@@ -2621,6 +2595,9 @@
             "name": "ICU hospitalization criteria by IDSA/ATS",
             "code": "IDSA/ATS",
             "description": "IDSA/ATS metrics to assess whether a severe patient need ICU or not",
+            "version": "2026",
+            "publisher": "Hiệp hội Bệnh nhiễm trùng Mỹ (IDSA) và Hiệp hội Lồng ngực Mỹ (ATS)",
+            "isApplied": true,
             "rules": [
                 {
                     "id": "00000000-0000-0000-0000-300000000025",
