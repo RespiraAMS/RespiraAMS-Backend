@@ -70,7 +70,6 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-app.UseCors("test");
 app.UseCustomErrorHandling();
 app.UseClaimsPropagation();
 app.MapControllers();
@@ -80,6 +79,7 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
     app.MapScalarApiReference(opts => opts.Theme = ScalarTheme.Kepler);
+    app.UseCors("test");
 }
 
 if (!app.Environment.IsDevelopment())
@@ -90,4 +90,4 @@ if (!app.Environment.IsDevelopment())
 app.ApplyMigrations(app.Environment.IsDevelopment());
 await app.SeedData();
 
-app.Run();
+await app.RunAsync();

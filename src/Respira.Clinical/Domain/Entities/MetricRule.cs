@@ -53,7 +53,8 @@ namespace Respira.Clinical.Domain.Entities
         /// <returns>Score</returns>
         public decimal GetScore(IEnumerable<ClinicalObservation> observations)
         {
-            observations = observations.ToList();
+            observations = [.. observations];
+
             // Check if the result is safe to parse
             var satisfied = Criterion.IsCriterionSatisfied(observations);
             {

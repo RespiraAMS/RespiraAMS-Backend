@@ -254,8 +254,8 @@ namespace Respira.Clinical.Domain.Models
 
         public override Expression ToExpression(IEnumerable<ClinicalObservation> observations)
         {
-            observations = observations.ToList();
-            
+            observations = [.. observations];
+
             // Handle the case for AND, OR operators
             // For AND, if one operand is false, the result is false
             // For OR, if one operand is true, the result is true
@@ -372,8 +372,8 @@ namespace Respira.Clinical.Domain.Models
         }
         public override Expression ToExpression(IEnumerable<ClinicalObservation> observations)
         {
-            observations = observations.ToList();
-        
+            observations = [.. observations];
+
             // Same cases with binary expression AND or OR, ternary expression can also get a special
             // case: if condition true, only if true branch is required and vice versa.
             // So, we will just build a dump expression on the unreachable branch so that

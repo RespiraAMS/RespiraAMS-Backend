@@ -47,3 +47,44 @@ aspire run
 # prompt you to fill in the missing configurations. You can ignore it of the
 # feature you want to use does not require any configuration.
 ```
+
+## Development setup
+
+### SonarQube setup
+
+```bash
+# Install SonarQube scanner tool
+dotnet tool install --global dotnet-sonarscanner
+
+# Run the local SonarQube server
+docker run \
+    -d --name sonarqube -e SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true \
+    -p 9000:9000 sonarqube:latest
+
+# Clean project to get rid of all stale data
+dotnet clean
+
+# Start the SonarQube scanner. The coverage reports are written by each test
+# project into bin/<Configuration>/<tfm>/TestResults/*.cobertura.xml, so we
+# point the scanner at them with a wildcard.
+dotnet sonarscanner begin \
+    /k:"RespiraAMS" /d:sonar.host.url="http://localhost:9000" \
+    /d:sonar.token="<YOUR_SONAR_TOKEN>" \
+    /d:sonar.cs.cobertura.reportsPaths="test/**/TestResults/*.cobertura.xml"
+
+# Build the solution
+dotnet build
+
+# Run the tests and collect the code coverage report
+dotnet test --coverage --coverage-output-format cobertura
+
+# Finish the SonarQube analysis and import the results
+dotnet sonarscanner end /d:sonar.token="<YOUR_SONAR_TOKEN>"
+
+# Go to http://localhost:9000 to see the results
+```
+
+> **NOTE:** `sonar.cs.cobertura.reportsPaths` requires SonarQube **2026.3** or
+> newer. On an older version, replace `--coverage-output-format cobertura` with
+> `--coverage-output-format xml` and the scanner option with
+> `/d:sonar.cs.vscoveragexml.reportsPaths=test/**/TestResults/*.xml`.

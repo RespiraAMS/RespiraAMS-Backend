@@ -21,7 +21,7 @@ namespace Respira.Clinical.Domain.Services
         public (decimal, List<Evidence>) CalculateMetricsScore(ClinicalMetric metric,
             IEnumerable<ClinicalObservation> observations)
         {
-            observations = observations.ToList();
+            observations = [.. observations];
             if (metric.IsMajorMinorMetric)
             {
                 throw new ArgumentException("Cannot calculate score for a Major/Minor metrics system");
@@ -86,42 +86,42 @@ namespace Respira.Clinical.Domain.Services
             if (isUreaMissing)
             {
                 return score switch
+                {
+                    < 0 => throw new ArgumentOutOfRangeException(nameof(score), "Score cannot be negative"),
+                    0 => new ScoreMetricsSeverityDiagnosis
                     {
-                        < 0 => throw new ArgumentOutOfRangeException(nameof(score), "Score cannot be negative"),
-                        0 => new ScoreMetricsSeverityDiagnosis
-                        {
-                            Code = code,
-                            Score = score,
-                            Severity = Severity.Mild,
-                            TreatmentSite = TreatmentSite.Outpatient,
-                            Evidences = evidences,
-                        },
-                        1 or 2 => new ScoreMetricsSeverityDiagnosis
-                        {
-                            Code = code,
-                            Score = score,
-                            Severity = Severity.Moderate,
-                            TreatmentSite = TreatmentSite.Inpatient,
-                            Evidences = evidences,
-                        },
-                        3 => new ScoreMetricsSeverityDiagnosis
-                        {
-                            Code = code,
-                            Score = score,
-                            Severity = Severity.Severe,
-                            TreatmentSite = TreatmentSite.Inpatient,
-                            Evidences = evidences,
-                        },
-                        4 => new ScoreMetricsSeverityDiagnosis
-                        {
-                            Code = code,
-                            Score = score,
-                            Severity = Severity.Severe,
-                            TreatmentSite = TreatmentSite.IntensiveCareUnit,
-                            Evidences = evidences,
-                        },
-                        _ => throw new InvalidOperationException($"Unexpected CRB-65 score: {score}"),
-                    }
+                        Code = code,
+                        Score = score,
+                        Severity = Severity.Mild,
+                        TreatmentSite = TreatmentSite.Outpatient,
+                        Evidences = evidences,
+                    },
+                    1 or 2 => new ScoreMetricsSeverityDiagnosis
+                    {
+                        Code = code,
+                        Score = score,
+                        Severity = Severity.Moderate,
+                        TreatmentSite = TreatmentSite.Inpatient,
+                        Evidences = evidences,
+                    },
+                    3 => new ScoreMetricsSeverityDiagnosis
+                    {
+                        Code = code,
+                        Score = score,
+                        Severity = Severity.Severe,
+                        TreatmentSite = TreatmentSite.Inpatient,
+                        Evidences = evidences,
+                    },
+                    4 => new ScoreMetricsSeverityDiagnosis
+                    {
+                        Code = code,
+                        Score = score,
+                        Severity = Severity.Severe,
+                        TreatmentSite = TreatmentSite.IntensiveCareUnit,
+                        Evidences = evidences,
+                    },
+                    _ => throw new InvalidOperationException($"Unexpected CRB-65 score: {score}"),
+                }
                     ;
             }
 
@@ -327,7 +327,7 @@ namespace Respira.Clinical.Domain.Services
         public InfectionAssessment AssessInfection(ClinicalContext context,
             IEnumerable<ClinicalObservation> observations, Severity severity, TreatmentSite treatmentSite)
         {
-            observations = observations.ToList();
+            observations = [.. observations];
             /*
              * To assess infection, we will proceed with these steps:
              * 1. Check for suspected pathogens. This list is the easiest to check, but
@@ -418,7 +418,7 @@ namespace Respira.Clinical.Domain.Services
 
         private Result ValidateObservations(ClinicalContext context, IEnumerable<ClinicalObservation> observations)
         {
-            observations = observations.ToList();
+            observations = [.. observations];
 
             // Store all the errors for returning to client
             var errors = new Dictionary<Guid, string>();

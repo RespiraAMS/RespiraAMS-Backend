@@ -44,4 +44,4 @@ var gateway = builder
     .WithExternalHttpEndpoints();
 clinicalService.WithReference(gateway).WaitFor(gateway);
 
-builder.Build().Run();
+await builder.Build().RunAsync();

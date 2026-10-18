@@ -16,7 +16,7 @@ namespace Respira.Patient.Application.Features.Patients.CreatePatient
         public async Task<Result<CreatePatientResult>> HandleAsync(CreatePatientCommand command, CancellationToken cancellationToken = default)
         {
             // Business rule: medical record code must be unique
-            if (await context.Patients.AnyAsync(x => x.MedicalRecordCode == command.MedicalRecordCode))
+            if (await context.Patients.AnyAsync(x => x.MedicalRecordCode == command.MedicalRecordCode, cancellationToken))
             {
                 logger.LogDebug("Medical record code {code} is already existed", command.MedicalRecordCode);
                 return Result<CreatePatientResult>.Failure(new Error(ApplicationStatus.BadRequest, "Medical record code is already existed"));

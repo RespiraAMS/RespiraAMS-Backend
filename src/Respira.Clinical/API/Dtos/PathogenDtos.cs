@@ -74,7 +74,7 @@ namespace Respira.Clinical.API.Dtos
         /// <summary>
         /// Boolean flag to indicate if the pathogen is atypical.
         /// </summary>
-        public bool IsAtypical { get; set; }
+        public required bool IsAtypical { get; set; }
 
         public UpdatePathogenCommand ToCommand(Guid id)
         {

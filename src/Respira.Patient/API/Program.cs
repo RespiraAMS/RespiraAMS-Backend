@@ -76,4 +76,4 @@ if (!app.Environment.IsDevelopment())
 }
 app.ApplyMigrations(app.Environment.IsDevelopment());
 
-app.Run();
+await app.RunAsync();

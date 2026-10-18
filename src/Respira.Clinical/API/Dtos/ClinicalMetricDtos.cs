@@ -89,7 +89,7 @@ namespace Respira.Clinical.API.Dtos
         /// <summary>
         /// Is clinical metric applied
         /// </summary>
-        public bool IsApplied { get; set; }
+        public required bool IsApplied { get; set; }
 
         public UpdateClinicalMetricCommand ToCommand(Guid id)
         {

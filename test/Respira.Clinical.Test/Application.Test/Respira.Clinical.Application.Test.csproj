@@ -11,10 +11,10 @@
         <PackageReference Include="xunit.v3" />
         <PackageReference Include="xunit.runner.visualstudio" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" />
-        <PackageReference Include="coverlet.collector" />
         <PackageReference Include="Testcontainers.PostgreSql" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" />
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
+        <PackageReference Include="Microsoft.Testing.Extensions.CodeCoverage" />
     </ItemGroup>
 
     <ItemGroup>
