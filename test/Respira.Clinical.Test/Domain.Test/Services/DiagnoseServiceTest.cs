@@ -380,7 +380,7 @@ namespace Respira.Clinical.Domain.Test.Services
 
             // Score must receive a boost: 1 factor matched against total 5 factors,
             // plus a boost of 0.5, so the final score must be 0.7
-            Assert.Equal(0.7m, pathogen.Score);
+            Assert.Equal((1m / 5) + DiagnoseService.InfectionBoostScore, pathogen.Score);
         }
 
         #endregion

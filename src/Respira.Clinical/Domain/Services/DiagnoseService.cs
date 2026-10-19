@@ -12,6 +12,8 @@ namespace Respira.Clinical.Domain.Services
     /// <param name="logger">Logger</param>
     public class DiagnoseService(ILogger<DiagnoseService> logger) : IDiagnoseService
     {
+        public static decimal InfectionBoostScore = 0.5m;
+
         /// <summary>
         /// Calculate metrics score
         /// </summary>
@@ -392,7 +394,7 @@ namespace Respira.Clinical.Domain.Services
                     // which add a moderate boost but still have a chance of not 
                     // being able to outrank another one if its risk factors score
                     // are too low and the opponent is too high
-                    score += 0.5m;
+                    score += InfectionBoostScore;
                 }
 
                 heavySuspected.Add(new ScoredPathogen(score, pathogen));
