@@ -109,7 +109,7 @@ namespace Respira.Clinical.API.Controllers
 #pragma warning disable ASP0018 // Unused route parameter
         [Route("{metricId:guid}/rules/{ruleId:guid}")]
 #pragma warning restore ASP0018 // Unused route parameter
-        [ProducesResponseType<Result<MetricRuleItem>>(StatusCodes.Status200OK)]
+        [ProducesResponseType<Result<MetricRuleResult>>(StatusCodes.Status200OK)]
         [ProducesResponseType<Result>(StatusCodes.Status400BadRequest)]
         [ProducesResponseType<Result>(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType<Result>(StatusCodes.Status403Forbidden)]
@@ -117,7 +117,7 @@ namespace Respira.Clinical.API.Controllers
         [ProducesResponseType<Result>(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetMetricRuleById(Guid ruleId)
         {
-            var result = await bus.InvokeAsync<Result<MetricRuleItem>>(new GetMetricRuleByIdQuery { Id = ruleId });
+            var result = await bus.InvokeAsync<Result<MetricRuleResult>>(new GetMetricRuleByIdQuery { Id = ruleId });
             return result.ToApiResponse();
         }
 
