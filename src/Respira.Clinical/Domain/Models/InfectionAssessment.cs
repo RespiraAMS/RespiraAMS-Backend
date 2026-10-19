@@ -3,6 +3,13 @@ using Respira.Clinical.Domain.Entities;
 namespace Respira.Clinical.Domain.Models
 {
     /// <summary>
+    /// Scored pathogen, pathogen with score when assessing infection
+    /// </summary>
+    /// <param name="Score">Score</param>
+    /// <param name="Pathogen">Pathogen</param>
+    public record ScoredPathogen(decimal Score, Pathogen Pathogen);
+
+    /// <summary>
     /// Infection assessment result
     /// </summary>
     public class InfectionAssessment
@@ -13,7 +20,7 @@ namespace Respira.Clinical.Domain.Models
         /// If this list is not empty, then both engine and doctor should focus more
         /// on this list than the <see cref="WorthSuspected"/> list
         /// </summary>
-        public required IEnumerable<Pathogen> HeavySuspected { get; set; } = [];
+        public required IEnumerable<ScoredPathogen> HeavySuspected { get; set; }
 
         /// <summary>
         /// This list contains pathogens that are worth considering, based on diagnosis

@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Logging;
 using Moq;
+using Respira.Clinical.Domain.Entities;
 using Respira.Clinical.Domain.Enums;
 using Respira.Clinical.Domain.Models;
 using Respira.Clinical.Domain.Services;
@@ -52,6 +53,11 @@ namespace Respira.Clinical.Domain.Test.Services
         {
             var variable = _context.Variables.FirstOrDefault(x => x.Code.Equals(code)) ?? throw new ArgumentException($"Variable {code} not found");
             return new ClinicalObservation(variable, value);
+        }
+
+        private static Pathogen Pathogen(string Name)
+        {
+            return _context.Pathogens.FirstOrDefault(x => x.Name.Equals(Name)) ?? throw new ArgumentException($"Pathogen {Name} not found");
         }
 
         #region Test CalculateMetricsScore
@@ -184,6 +190,197 @@ namespace Respira.Clinical.Domain.Test.Services
         public void Psi_InvalidScore_Negative_Throw(int score)
         {
             Assert.Throws<ArgumentOutOfRangeException>(() => _service.Psi(score, []));
+        }
+
+        #endregion
+
+        #region IDSA/ATS test
+
+        public static readonly TheoryData<List<ClinicalObservation>, int, int> IdsaAts_NeedIcu_Case = [
+            // Boundary value: 1 major criterion
+            new([Obs("REQUIRES-MECHANICAL-VENTILATION")], 1, 0),
+            // Boundary value: 3 minor criterion
+            new(
+                [
+                    Obs("RR", 32),
+                    Obs("CONFUSION"),
+                    Obs("HYPOTENSION")
+                ], 0, 3
+            ),
+            // Boundary value: 1 major and 3 minor criterion
+            new(
+                [
+                    // PaO2/FiO2 ~ 214
+                    Obs("PAO2", 45),
+                    Obs("FIO2", 0.21m),
+                    Obs("WBC", 3999),
+                    Obs("PLATELET", 99_999),
+                    Obs("SEPTIC-SHOCK")
+                ], 1, 3
+            ),
+            // Boundary value: 2 major and 2 minor criterion
+            new(
+                [
+                    // PaO2/FiO2 ~ 214
+                    Obs("PAO2", 45),
+                    Obs("FIO2", 0.21m),
+                    Obs("WBC", 4999),
+                    Obs("PLATELET", 99_999),
+                    Obs("SEPTIC-SHOCK"),
+                    Obs("REQUIRES-MECHANICAL-VENTILATION")
+                ], 2, 2
+            ),
+        ];
+
+        [Theory]
+        [MemberData(nameof(IdsaAts_NeedIcu_Case))]
+        public void IdsaAts_NeedIcu_Success(List<ClinicalObservation> observations, int majorMatched, int minorMatched)
+        {
+            var metric = _context.Metrics.FirstOrDefault(x => x.Code.Equals("IDSA/ATS")) ?? throw new Exception("IDSA/ATS metric not found");
+            var diagnosis = _service.IdsaAts(metric, observations);
+            Assert.NotNull(diagnosis);
+            Assert.Equal(majorMatched, diagnosis.MajorMatched);
+            Assert.Equal(minorMatched, diagnosis.MinorMatched);
+            Assert.Equal(Severity.Severe, diagnosis.Severity);
+            Assert.Equal(TreatmentSite.IntensiveCareUnit, diagnosis.TreatmentSite);
+            Assert.NotEmpty(diagnosis.Evidences);
+            Assert.Equal("IDSA/ATS", diagnosis.Code);
+        }
+
+        [Fact]
+        public void IdsaAts_NoCriterionMatch_DoNotNeedIcu_Success()
+        {
+            var metric = _context.Metrics.FirstOrDefault(x => x.Code.Equals("IDSA/ATS")) ?? throw new Exception("IDSA/ATS metric not found");
+            var diagnosis = _service.IdsaAts(metric, []);
+            Assert.Null(diagnosis);
+        }
+
+        [Fact]
+        public void IdsaAts_NotMajorMinorMetric_Throw()
+        {
+            var metric = _context.Metrics.FirstOrDefault(x => x.Code.Equals("PSI")) ?? throw new Exception("PSI metric not found");
+            Assert.Throws<ArgumentException>(() => _service.IdsaAts(metric, []));
+        }
+
+        #endregion
+
+        #region Test AssessInfection
+
+        [Theory]
+        [InlineData(Severity.Mild, TreatmentSite.Outpatient)]
+        [InlineData(Severity.Moderate, TreatmentSite.Inpatient)]
+        [InlineData(Severity.Severe, TreatmentSite.Inpatient)]
+        [InlineData(Severity.Severe, TreatmentSite.IntensiveCareUnit)]
+        public void AssessInfection_NoRiskFactor_Success(Severity severity, TreatmentSite treatmentSite)
+        {
+            var assessment = _service.AssessInfection(_context, [], severity, treatmentSite);
+            Assert.Empty(assessment.HeavySuspected);
+            Assert.NotEmpty(assessment.WorthSuspected);
+
+            // Get the list of suspected pathogens based on the assessment
+            var suspected = _context.SuspectedCauses
+                .Where(sc => sc.Severity == severity && sc.TreatmentSite == treatmentSite)
+                .Select(sc => sc.PathogenId)
+                .ToHashSet();
+
+            Assert.Equal(suspected.Count, assessment.WorthSuspected.Count());
+            Assert.True(assessment.WorthSuspected.All(ws => suspected.Contains(ws.Id)));
+        }
+
+        public static readonly TheoryData<List<ClinicalObservation>, Severity, TreatmentSite, List<ScoredPathogen>> AssessInfectionCase_RiskFactor_NotInSuspected = [
+            new(
+                [
+                    Obs("PRIOR-PSEUDOMONAS"),
+                ],
+                Severity.Mild,
+                TreatmentSite.Outpatient,
+                [
+                    new(0.2m, Pathogen("Pseudomonas aeruginosa"))
+                ]),
+            new(
+                [
+                    Obs("PRIOR-SKIN-INFECTION"),
+                    Obs("PRIOR-PSEUDOMONAS"),
+                    Obs("CENTRAL-VENOUS-CATHETER-PLACEMENT")
+                ],
+                Severity.Moderate,
+                TreatmentSite.Inpatient,
+                [
+                    new(0.2m, Pathogen("Staphylococcus aureus")),
+                    new(0.2m, Pathogen("Pseudomonas aeruginosa"))
+                ]),
+            new(
+                [
+                    Obs("PRIOR-SKIN-INFECTION"),
+                    Obs("PRIOR-PSEUDOMONAS"),
+                ],
+                Severity.Severe,
+                TreatmentSite.Inpatient,
+                [
+                    new(0.1m, Pathogen("Staphylococcus aureus")),
+                    new(0.2m, Pathogen("Pseudomonas aeruginosa"))
+                ]),
+            new(
+                [
+                    Obs("AGE", 61)
+                ],
+                Severity.Severe,
+                TreatmentSite.IntensiveCareUnit,
+                [
+                    new(1m/3, Pathogen("Acinetobacter baumannii"))
+                ]),
+        ];
+
+        [Theory]
+        [MemberData(nameof(AssessInfectionCase_RiskFactor_NotInSuspected))]
+        public void AssessInfection_WithRiskFactor_NotInSuspected_Success(
+            List<ClinicalObservation> observations,
+            Severity severity,
+            TreatmentSite treatmentSite,
+            List<ScoredPathogen> expected)
+        {
+            var assessment = _service.AssessInfection(_context, observations, severity, treatmentSite);
+            Assert.NotEmpty(assessment.HeavySuspected);
+            Assert.NotEmpty(assessment.WorthSuspected);
+
+            // Get the list of suspected pathogens based on the assessment
+            var suspected = _context.SuspectedCauses
+                .Where(sc => sc.Severity == severity && sc.TreatmentSite == treatmentSite)
+                .Select(sc => sc.PathogenId)
+                .ToHashSet();
+
+            Assert.Equal(suspected.Count, assessment.WorthSuspected.Count());
+            Assert.True(assessment.WorthSuspected.All(ws => suspected.Contains(ws.Id)));
+
+            // Check for heavy suspected
+            Assert.Equal(expected.Count, assessment.HeavySuspected.Count());
+            expected = [.. expected.OrderByDescending(x => x.Score)];
+
+            var heavySuspected = assessment.HeavySuspected.ToList();
+            for (var i = 0; i < expected.Count; i++)
+            {
+                // In case of fraction like 1/3, we will allow for some precision,
+                // though the test should use the fraction expression directly
+                Assert.Equal(expected[i].Score, heavySuspected[i].Score, precision: 5);
+            }
+        }
+
+        [Fact]
+        public void AssessInfection_WithRiskFactor_InSuspected_ReceiveBoost_Success()
+        {
+            // In case of moderate/inpatient, Anaerobic bacteria is in the suspected list,
+            // it also has a risk factor, so we choose it for test data of this case
+            var assessment = _service.AssessInfection(_context, [Obs("OROPHARYNGEAL-ANAEROBIC")], Severity.Moderate, TreatmentSite.Inpatient);
+            Assert.NotEmpty(assessment.WorthSuspected);
+            Assert.NotEmpty(assessment.HeavySuspected);
+
+            // Anaerobic bacteria should be in the heavy suspected list, and NOT in worth suspected list
+            Assert.DoesNotContain(assessment.WorthSuspected, x => x.Id.Equals("Vi khuẩn kỵ khí"));
+            var pathogen = Assert.Single(assessment.HeavySuspected, x => x.Pathogen.Name.Equals("Vi khuẩn kỵ khí"));
+
+            // Score must receive a boost: 1 factor matched against total 5 factors,
+            // plus a boost of 0.5, so the final score must be 0.7
+            Assert.Equal(0.7m, pathogen.Score);
         }
 
         #endregion
