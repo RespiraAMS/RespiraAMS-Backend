@@ -12,14 +12,15 @@ namespace Respira.Clinical.Domain.Services
     /// <param name="logger">Logger</param>
     public class DiagnoseService(ILogger<DiagnoseService> logger) : IDiagnoseService
     {
+        public static decimal InfectionBoostScore = 0.5m;
+
         /// <summary>
         /// Calculate metrics score
         /// </summary>
         /// <param name="metric">Metrics</param>
         /// <param name="observations">Clinical observations</param>
         /// <returns>Score result</returns>
-        public (decimal, List<Evidence>) CalculateMetricsScore(ClinicalMetric metric,
-            IEnumerable<ClinicalObservation> observations)
+        public (decimal, List<Evidence>) CalculateMetricsScore(ClinicalMetric metric, IEnumerable<ClinicalObservation> observations)
         {
             observations = [.. observations];
             if (metric.IsMajorMinorMetric)
@@ -35,9 +36,7 @@ namespace Respira.Clinical.Domain.Services
 
                 // Calculate score
                 var score = rule.GetScore(observations);
-                logger.LogDebug(
-                    "Calculated score for {MetricName}/{CriterionName}: {Score}", metric.Name, rule.Criterion.Name,
-                    score);
+                logger.LogDebug("Calculated score for {MetricName}/{CriterionName}: {Score}", metric.Name, rule.Criterion.Name, score);
 
                 // Add evidence
                 evidences.Add(new Evidence(
@@ -255,9 +254,7 @@ namespace Respira.Clinical.Domain.Services
 
                 // Evaluate major criteria
                 var isSatisfied = rule.Criterion.IsCriterionSatisfied(observations);
-                logger.LogDebug(
-                    "Evaluate major criteria for {MetricName}/{CriterionName}: {IsSatisfied}", metric.Name, rule
-                        .Criterion.Name, isSatisfied);
+                logger.LogDebug("Evaluate major criteria for {MetricName}/{CriterionName}: {IsSatisfied}", metric.Name, rule.Criterion.Name, isSatisfied);
 
                 evidences.Add(new Evidence(
                     $"{metric.Name} - {rule.Criterion.Name}",
@@ -281,9 +278,7 @@ namespace Respira.Clinical.Domain.Services
 
                 // Evaluate minor criteria
                 var isSatisfied = rule.Criterion.IsCriterionSatisfied(observations);
-                logger.LogDebug(
-                    "Evaluate minor criteria for {MetricName}/{CriterionName}: {IsSatisfied}", metric.Name, rule
-                        .Criterion.Name, isSatisfied);
+                logger.LogDebug("Evaluate minor criteria for {MetricName}/{CriterionName}: {IsSatisfied}", metric.Name, rule.Criterion.Name, isSatisfied);
 
                 evidences.Add(new Evidence(
                     $"{metric.Name} - {rule.Criterion.Name}",
@@ -324,8 +319,7 @@ namespace Respira.Clinical.Domain.Services
         /// <param name="severity">Severity diagnosis</param>
         /// <param name="treatmentSite">Treatment site diagnosis</param>
         /// <returns>Infection assessment</returns>
-        public InfectionAssessment AssessInfection(ClinicalContext context,
-            IEnumerable<ClinicalObservation> observations, Severity severity, TreatmentSite treatmentSite)
+        public InfectionAssessment AssessInfection(ClinicalContext context, IEnumerable<ClinicalObservation> observations, Severity severity, TreatmentSite treatmentSite)
         {
             observations = [.. observations];
             /*
@@ -346,7 +340,7 @@ namespace Respira.Clinical.Domain.Services
              * 3.3. If not, then the pathogen is worth considering
              */
 
-            var heavySuspected = new List<(decimal score, Pathogen pathogen)>();
+            var heavySuspected = new List<ScoredPathogen>();
             var evidences = new List<Evidence>();
 
             // Step 1: Check for suspected pathogens
@@ -394,23 +388,24 @@ namespace Respira.Clinical.Domain.Services
                 // Check if this pathogen also exists in the suspected list
                 if (suspected.Any(s => s.Id == pathogen.Id))
                 {
-                    // If yes, add a boost. The score counts satisfied risk factors,
-                    // so +1 ranks a suspected pathogen above one with the same
-                    // number of satisfied risk factors
                     logger.LogDebug("Pathogen {pathogen} is also in the suspected list, adding boost", pathogen.Name);
-                    score++;
+
+                    // If yes, add a boost. We choose 0.5 here as a balance point,
+                    // which add a moderate boost but still have a chance of not 
+                    // being able to outrank another one if its risk factors score
+                    // are too low and the opponent is too high
+                    score += InfectionBoostScore;
                 }
 
-                heavySuspected.Add((score, pathogen));
+                heavySuspected.Add(new ScoredPathogen(score, pathogen));
             }
 
             // Step 3: Assessment
-            List<Pathogen> worthSuspected =
-                [.. suspected.Where(s => !heavySuspected.Select(hs => hs.pathogen).Contains(s))];
+            List<Pathogen> worthSuspected = [.. suspected.Where(s => !heavySuspected.Select(hs => hs.Pathogen).Contains(s))];
 
             return new InfectionAssessment
             {
-                HeavySuspected = [.. heavySuspected.OrderByDescending(hs => hs.score).Select(hs => hs.pathogen)],
+                HeavySuspected = [.. heavySuspected.OrderByDescending(hs => hs.Score)],
                 WorthSuspected = worthSuspected,
                 Evidences = evidences,
             };
@@ -439,11 +434,9 @@ namespace Respira.Clinical.Domain.Services
             // Next, check internal validation rule of each observation
             foreach (var observation in observations)
             {
-                if (observation.Variable.ValueType == ClinicalValueType.Numeric &&
-                    !observation.Variable.IsValidValue(observation.NumericValue))
+                if (observation.Variable.ValueType == ClinicalValueType.Numeric && !observation.Variable.IsValidValue(observation.NumericValue))
                 {
-                    logger.LogDebug("Invalid observation value for variable {code}: {value}", observation.Variable.Code,
-                        observation.NumericValue);
+                    logger.LogDebug("Invalid observation value for variable {code}: {value}", observation.Variable.Code, observation.NumericValue);
 
                     // Add the error to the list
                     var variable = (NumericClinicalVariable)observation.Variable;
@@ -451,11 +444,9 @@ namespace Respira.Clinical.Domain.Services
                     continue;
                 }
 
-                if (observation.Variable.ValueType == ClinicalValueType.Boolean &&
-                    !observation.Variable.IsValidValue(observation.BooleanValue))
+                if (observation.Variable.ValueType == ClinicalValueType.Boolean && !observation.Variable.IsValidValue(observation.BooleanValue))
                 {
-                    logger.LogInformation("Invalid observation value for variable {code}: {value}",
-                        observation.Variable.Code, observation.BooleanValue);
+                    logger.LogInformation("Invalid observation value for variable {code}: {value}", observation.Variable.Code, observation.BooleanValue);
 
                     // Add the error to the list (though this case is unlikely to happen because of C# type checking)
                     var variable = (BooleanClinicalVariable)observation.Variable;
@@ -463,17 +454,14 @@ namespace Respira.Clinical.Domain.Services
                     continue;
                 }
 
-                if (observation.Variable.ValueType == ClinicalValueType.Categorical &&
-                    !observation.Variable.IsValidValue(observation.CategoricalValue))
+                if (observation.Variable.ValueType == ClinicalValueType.Categorical && !observation.Variable.IsValidValue(observation.CategoricalValue))
                 {
-                    logger.LogInformation("Invalid observation value for variable {code}: {value}",
-                        observation.Variable.Code, observation.CategoricalValue);
+                    logger.LogInformation("Invalid observation value for variable {code}: {value}", observation.Variable.Code, observation.CategoricalValue);
 
                     // Add the error to the list (this is also more of a client dev team problem that user problem),
                     // so it's rare to happen
                     var variable = (CategoricalClinicalVariable)observation.Variable;
-                    errors.Add(variable.Id,
-                        $"{variable.Name} should be in this value range {string.Join(", ", variable.AcceptedValues)}");
+                    errors.Add(variable.Id, $"{variable.Name} should be in this value range {string.Join(", ", variable.AcceptedValues)}");
                 }
             }
 
@@ -483,8 +471,7 @@ namespace Respira.Clinical.Domain.Services
                 if (!(bool)variable.Prerequisite!.ToExpression(observations).Evaluate())
                 {
                     logger.LogDebug("Prerequisite formula for variable {code} is not satisfied", variable.Code);
-                    errors.Add(variable.Id,
-                        $"Prerequisite ({variable.Prerequisite}) of variable {variable.Code} is not satisfied");
+                    errors.Add(variable.Id, $"Prerequisite ({variable.Prerequisite}) of variable {variable.Code} is not satisfied");
                 }
             }
 
@@ -565,8 +552,7 @@ namespace Respira.Clinical.Domain.Services
                     break;
                 default:
                     logger.LogWarning("No severity diagnosis found");
-                    return Result<Diagnosis>.Failure(new Error(ApplicationStatus.ServerError,
-                        "Failed to perform severity diagnosis"));
+                    return Result<Diagnosis>.Failure(new Error(ApplicationStatus.ServerError, "Failed to perform severity diagnosis"));
             }
 
             // Assess infection
@@ -583,12 +569,12 @@ namespace Respira.Clinical.Domain.Services
                 Severity = finalSeverity,
                 TreatmentSite = finalTreatmentSite,
                 Evidences = totalEvidences,
-                HeavySuspected = infectionAssessment.HeavySuspected,
+                HeavySuspected = infectionAssessment.HeavySuspected.Select(x => x.Pathogen),
                 WorthSuspected = infectionAssessment.WorthSuspected,
                 MissingVariables = missing,
                 Allergies = clinicalPicture.Allergies,
-                IsPatientPregnantOrInLactationPhase = observations.Any(x =>
-                    x.Variable.Code.Equals("PREGNANT-OR-LACTATING") && x.BooleanValue == true),
+                IsPatientPregnantOrInLactationPhase = observations
+                    .Any(x => x.Variable.Code.Equals("PREGNANT-OR-LACTATING") && x.BooleanValue == true),
             });
         }
     }
