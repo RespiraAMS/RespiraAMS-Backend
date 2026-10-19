@@ -1,4 +1,6 @@
 using Authentication.API.Extensions;
+using Asp.Versioning;
+using Asp.Versioning.ApiExplorer;
 using Authentication.Application.Constracts.Authentication;
 using Authentication.Application.Constracts.Data;
 using Authentication.Application.Constracts.Email;
@@ -18,7 +20,21 @@ using ZiggyCreatures.Caching.Fusion;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddOpenApi();
+builder.Services.AddControllers();
+builder.Services
+    .AddApiVersioning(options =>
+    {
+        options.DefaultApiVersion = new ApiVersion(1.0);
+        options.ReportApiVersions = true;
+        options.ApiVersionReader = new UrlSegmentApiVersionReader();
+    })
+    .AddMvc()
+    .AddApiExplorer(options =>
+    {
+        options.GroupNameFormat = "'v'VVV";
+        options.SubstituteApiVersionInUrl = true;
+    })
+    .AddOpenApi();
 builder.Services
     .AddOptions<JwtOption>()
     .BindConfiguration("Jwt")
@@ -108,9 +124,10 @@ await app.ApplyMigrationsAsync();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
+    app.MapOpenApi().WithDocumentPerVersion();
 }
 
 app.UseHttpsRedirection();
+app.MapControllers();
 
 app.Run();
