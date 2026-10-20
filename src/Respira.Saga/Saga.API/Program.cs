@@ -56,10 +56,7 @@ builder.Host.UseWolverine(options =>
             ?? throw new InvalidOperationException("Connection string 'sagadb' is not configured")
     );
 
-    options.UseRabbitMq(
-        builder.Configuration.GetConnectionString("rabbitmq")
-            ?? throw new InvalidOperationException("Connection string 'rabbitmq' is not configured")
-    );
+    options.UseRabbitMqUsingNamedConnection("rabbitmq").AutoProvision();
 
     // Inbound: completion and failure events raised by Authentication and Doctor.
     options.ListenToRabbitQueue(RabbitQueues.SagaEvents);

@@ -38,10 +38,8 @@ builder.Host.UseWolverine(options =>
 {
     options.UseRuntimeCompilation();
     options.Discovery.IncludeAssembly(typeof(CreateDoctorProfileCommand).Assembly);
-    options.UseRabbitMq(
-        builder.Configuration.GetConnectionString("rabbitmq")
-            ?? throw new InvalidOperationException("Connection string 'rabbitmq' is not configured")
-    );
+
+    options.UseRabbitMqUsingNamedConnection("rabbitmq").AutoProvision();
     options.PersistMessagesWithPostgresql(
         builder.Configuration.GetConnectionString("doctordb")
             ?? throw new InvalidOperationException("Connection string 'doctordb' is not configured")

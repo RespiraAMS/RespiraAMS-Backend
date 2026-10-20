@@ -86,12 +86,7 @@ builder.Host.UseWolverine(options =>
             )
     );
 
-    options.UseRabbitMq(
-        builder.Configuration.GetConnectionString("rabbitmq")
-            ?? throw new InvalidOperationException(
-                "Connection string 'rabbitmq' is not configured"
-            )
-    );
+    options.UseRabbitMqUsingNamedConnection("rabbitmq").AutoProvision();
 
     // Inbound: commands dispatched by the create saga.
     options.ListenToRabbitQueue(RabbitQueues.AuthCommands);
