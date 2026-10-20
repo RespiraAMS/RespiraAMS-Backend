@@ -1,6 +1,5 @@
 using Authentication.API.Extensions;
 using Asp.Versioning;
-using Asp.Versioning.ApiExplorer;
 using Authentication.Application.Constracts.Authentication;
 using Authentication.Application.Constracts.Data;
 using Authentication.Application.Constracts.Email;
@@ -9,7 +8,6 @@ using Authentication.Application.Features.Accounts.Commands.Create.Events;
 using Authentication.Application.Features.Accounts.Commands.SoftDelete.Events;
 using Authentication.Application.Features.Accounts.Commands.Update.Events;
 using Authentication.Application.Features.Authentication.Commands.Login;
-using Authentication.Application.Features.Authentication.Commands.SendVerify;
 using Authentication.Application.Features.Authentication.Commands.SendVerify.Events;
 using Authentication.Infrastructure.Extensions;
 using Authentication.Infrastructure.Persistence;
@@ -125,4 +123,4 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.MapControllers();
 
-app.Run();
+await app.RunAsync();

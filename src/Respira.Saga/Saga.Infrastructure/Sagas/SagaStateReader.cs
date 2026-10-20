@@ -9,7 +9,6 @@ namespace Respira.Saga.Infrastructure.Sagas
 {
     /// <summary>
     /// Reads in-flight saga state from Wolverine's lightweight saga tables on PostgreSQL.
-    ///
     /// Wolverine's own diagnostics reader (<c>DatabaseSagaStoreDiagnostics</c>, still broken
     /// in 6.46) binds the saga identity with <c>identity.ToString()</c>, a text parameter,
     /// while the <c>id</c> column is <c>uuid</c>, so every read fails with

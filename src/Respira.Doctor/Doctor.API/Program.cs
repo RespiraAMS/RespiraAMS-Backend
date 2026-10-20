@@ -1,5 +1,4 @@
 using Asp.Versioning;
-using Asp.Versioning.ApiExplorer;
 using Respira.Doctor.API.Extensions;
 using Respira.Doctor.Application.Constracts.Messaging;
 using Respira.Doctor.Application.Features.Doctors.Commands.Create;
@@ -71,4 +70,4 @@ app.UseHttpsRedirection();
 
 app.MapControllers();
 
-app.Run();
+await app.RunAsync();

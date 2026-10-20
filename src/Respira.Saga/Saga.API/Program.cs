@@ -1,5 +1,4 @@
 using Asp.Versioning;
-using Asp.Versioning.ApiExplorer;
 using Authentication.Application.Features.Accounts.Commands.Create;
 using Authentication.Application.Features.Accounts.Commands.SoftDelete;
 using Authentication.Application.Features.Accounts.Commands.Update;
@@ -90,4 +89,4 @@ app.UseHttpsRedirection();
 
 app.MapControllers();
 
-app.Run();
+await app.RunAsync();

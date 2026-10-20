@@ -1,5 +1,4 @@
 using Asp.Versioning;
-using Asp.Versioning.ApiExplorer;
 using Media.API.Extensions;
 using Media.Application.Constracts.Storage;
 using Media.Application.Features.MediaAssets.Create;
@@ -55,4 +54,4 @@ app.UseHttpsRedirection();
 
 app.MapControllers();
 
-app.Run();
+await app.RunAsync();

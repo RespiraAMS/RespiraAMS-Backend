@@ -31,9 +31,8 @@ namespace Authentication.Application.Features.Authentication.Commands.Login
 
             if (account is null)
             {
-                account = await dbContext.Accounts.FirstOrDefaultAsync(a =>
-                    a.Email == command.Email && a.Status == StatusType.Active && !a.IsDeleted
-                );
+                account = await dbContext.Accounts
+                    .FirstOrDefaultAsync(a => a.Email == command.Email && a.Status == StatusType.Active && !a.IsDeleted, cancellationToken);
 
                 if (account is not null)
                 {

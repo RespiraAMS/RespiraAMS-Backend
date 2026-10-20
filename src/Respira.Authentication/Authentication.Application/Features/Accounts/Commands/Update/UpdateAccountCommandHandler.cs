@@ -48,17 +48,17 @@ namespace Authentication.Application.Features.Accounts.Commands.Update
             try
             {
                 var cachePrefix = $"auth:accounts:{command.Email}";
-                await cacheService.RemoveAsync(cachePrefix);
+                await cacheService.RemoveAsync(cachePrefix, cancellationToken);
 
                 // When the address changes the entry cached under the previous one must go
                 // too, otherwise lookups keep resolving to the stale account.
                 var oldCachePrefix = $"auth:accounts:{oldEmail}";
                 if (!string.Equals(oldCachePrefix, cachePrefix, StringComparison.Ordinal))
                 {
-                    await cacheService.RemoveAsync(oldCachePrefix);
+                    await cacheService.RemoveAsync(oldCachePrefix, cancellationToken);
                 }
 
-                account!.Email = command.Email;
+                account.Email = command.Email;
                 account.Phone = command.Phone;
 
                 // Optional fields: a caller that leaves them null keeps the current value.
@@ -79,8 +79,8 @@ namespace Authentication.Application.Features.Accounts.Commands.Update
 
                 account.UpdatedAt = DateTime.UtcNow;
                 dbContext.Accounts.Update(account);
-                await dbContext.SaveChangesAsync();
-                await cacheService.SetAsync(cachePrefix, account);
+                await dbContext.SaveChangesAsync(cancellationToken);
+                await cacheService.SetAsync(cachePrefix, account, cancellationToken: cancellationToken);
             }
             catch (Exception exception)
             {

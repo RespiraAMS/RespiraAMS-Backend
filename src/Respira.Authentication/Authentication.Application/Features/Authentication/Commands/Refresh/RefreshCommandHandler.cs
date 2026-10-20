@@ -99,7 +99,8 @@ namespace Authentication.Application.Features.Authentication.Commands.Refresh
                     HashToken = refreshToken.HashToken,
                     Reason = "Refresh token rotation",
                     ExpirationDate = refreshToken.ExpirationDate,
-                }
+                },
+                cancellationToken
             );
 
             await dbContext.SaveChangesAsync(cancellationToken);

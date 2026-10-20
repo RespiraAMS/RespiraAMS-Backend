@@ -43,7 +43,8 @@ namespace Authentication.Application.Features.Authentication.Queries.GetList
 
             var pagedAccounts = await accountsQuery.ToPagedListAsync(
                 paginationParam.Page,
-                paginationParam.Size
+                paginationParam.Size,
+                cancellationToken: cancellationToken
             );
 
             var result = new Pagination<Account>(
