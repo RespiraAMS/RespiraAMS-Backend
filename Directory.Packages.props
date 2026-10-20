@@ -24,6 +24,7 @@
         <PackageVersion Include="WolverineFx" Version="$(WolverineVersion)" />
         <PackageVersion Include="WolverineFx.PostgreSQL" Version="$(WolverineVersion)" />
         <PackageVersion Include="WolverineFx.RabbitMQ" Version="$(WolverineVersion)" />
+        <PackageVersion Include="WolverineFx.RDBMS" Version="$(WolverineVersion)" />
         <PackageVersion Include="WolverineFx.EntityFrameworkCore" Version="$(WolverineVersion)" />
         <PackageVersion Include="WolverineFx.RuntimeCompilation" Version="$(WolverineVersion)" />
         <PackageVersion Include="WolverineFx.FluentValidation" Version="$(WolverineVersion)" />
@@ -88,10 +89,13 @@
     <ItemGroup>
         <PackageVersion Include="Microsoft.Extensions.Options" Version="$(MicrosoftExtensionsVersion)" />
         <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="$(MicrosoftExtensionsVersion)" />
+        <PackageVersion Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="$(MicrosoftExtensionsVersion)" />
         <!-- ASP.NET -->
         <PackageVersion Include="Scalar.AspNetCore" Version="2.17.3" />
         <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="$(MicrosoftExtensionsVersion)" />
         <PackageVersion Include="Asp.Versioning.Mvc" Version="10.2.1" />
+        <PackageVersion Include="Asp.Versioning.Mvc.ApiExplorer" Version="10.2.1" />
+        <PackageVersion Include="Asp.Versioning.OpenApi" Version="10.2.1" />
         <!-- Pagination -->
         <PackageVersion Include="X.PagedList.EF" Version="10.6.0" />
         <PackageVersion Include="X.PagedList" Version="10.6.0" />
