@@ -5,6 +5,7 @@ using Respira.Clinical.Domain.Enums;
 using Respira.Clinical.Domain.Models;
 using Respira.Clinical.Domain.Services;
 using Respira.Clinical.Infrastructure.Data;
+using Respira.ServiceDefaults.Contracts.Results;
 using Xunit;
 
 namespace Respira.Clinical.Domain.Test.Services
@@ -58,6 +59,11 @@ namespace Respira.Clinical.Domain.Test.Services
         private static Pathogen Pathogen(string Name)
         {
             return _context.Pathogens.FirstOrDefault(x => x.Name.Equals(Name)) ?? throw new ArgumentException($"Pathogen {Name} not found");
+        }
+
+        private static AntibioticGroup AntibioticGroup(string Name)
+        {
+            return _context.AntibioticGroups.FirstOrDefault(x => x.Name.Equals(Name)) ?? throw new ArgumentException($"Antibiotic group {Name} not found");
         }
 
         #region Test CalculateMetricsScore
@@ -381,6 +387,28 @@ namespace Respira.Clinical.Domain.Test.Services
             // Score must receive a boost: 1 factor matched against total 5 factors,
             // plus a boost of 0.5, so the final score must be 0.7
             Assert.Equal((1m / 5) + DiagnoseService.InfectionBoostScore, pathogen.Score);
+        }
+
+        #endregion
+
+        #region Test IsAntibioticGroupHasCommonAncestor
+
+        public static readonly TheoryData<AntibioticGroup, AntibioticGroup, bool> IsAncestorCase = [
+            new(AntibioticGroup("Penicilin"), AntibioticGroup("Beta-lactam"), true),
+            new(AntibioticGroup("Các beta-lactam khác"), AntibioticGroup("Carbapenem"), true),
+            new(AntibioticGroup("Monobactam"), AntibioticGroup("Cephalosporin"), true),
+            new(AntibioticGroup("Aminoglycosid"), AntibioticGroup("Peptid"), false),
+        ];
+
+        [Theory]
+        [MemberData(nameof(IsAncestorCase))]
+        public void IsAntibioticGroupHasCommonAncestor_Success(AntibioticGroup group1, AntibioticGroup group2, bool expected)
+        {
+            var result = _service.IsAntibioticGroupHasCommonAncestor(_context, group1, group2);
+            Assert.True(result.IsSuccess());
+            Assert.Null(result.Error);
+            Assert.Equal(ApplicationStatus.Success, result.StatusCode);
+            Assert.Equal(expected, result.Data);
         }
 
         #endregion
