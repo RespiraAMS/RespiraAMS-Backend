@@ -32,7 +32,7 @@ namespace Authentication.Application.Features.Authentication.Commands.Logout
             {
                 logger.LogInformation("Invalid token");
                 return Result<bool>.Failure(
-                    new Error(ApplicationStatus.Unauthorized, "Invalid token")
+                    new ApplicationError(ApplicationStatus.Unauthorized, "Invalid token")
                 );
             }
 

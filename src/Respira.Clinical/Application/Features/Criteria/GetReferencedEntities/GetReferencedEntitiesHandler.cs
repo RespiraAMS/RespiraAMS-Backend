@@ -18,7 +18,7 @@ namespace Respira.Clinical.Application.Features.Criteria.GetReferencedEntities
             if (await context.Criteria.FirstOrDefaultAsync(x => x.Id == query.Id, cancellationToken) is null)
             {
                 logger.LogDebug("Criterion not found: {Id}", query.Id);
-                return Result<ReferencedEntitiesResult>.Failure(new Error(ApplicationStatus.BadRequest, "Criterion not found"));
+                return Result<ReferencedEntitiesResult>.Failure(new ApplicationError(ApplicationStatus.BadRequest, "Criterion not found"));
             }
 
             // Get the list of all referenced entities

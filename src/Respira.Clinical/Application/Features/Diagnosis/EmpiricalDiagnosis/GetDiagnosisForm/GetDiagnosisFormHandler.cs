@@ -39,7 +39,7 @@ namespace Respira.Clinical.Application.Features.Diagnosis.EmpiricalDiagnosis.Get
             {
                 const string msg = "No clinical variable found";
                 logger.LogWarning(msg);
-                return Result<GetDiagnosisFormResult>.Failure(new Error(ApplicationStatus.BusinessRuleViolation, msg));
+                return Result<GetDiagnosisFormResult>.Failure(new ApplicationError(ApplicationStatus.BusinessRuleViolation, msg));
             }
 
             return Result<GetDiagnosisFormResult>.Success(ApplicationStatus.Success, new GetDiagnosisFormResult

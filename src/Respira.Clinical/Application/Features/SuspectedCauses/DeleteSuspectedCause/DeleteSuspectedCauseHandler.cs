@@ -16,7 +16,7 @@ namespace Respira.Clinical.Application.Features.SuspectedCauses.DeleteSuspectedC
             if (cause is null)
             {
                 logger.LogDebug("Disease cause with this ID not found: {Id}", command.Id);
-                return Result.Failure(new Error(ApplicationStatus.BadRequest, "Disease cause with this ID not found"));
+                return Result.Failure(new ApplicationError(ApplicationStatus.BadRequest, "Disease cause with this ID not found"));
             }
 
             // Delete cause

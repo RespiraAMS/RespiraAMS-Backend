@@ -91,7 +91,7 @@ namespace Media.Application.Features.MediaAssets.Delete
 
         private static Result<Guid> Failure(string statusCode, string description)
         {
-            return Result<Guid>.Failure(new Error(statusCode, description));
+            return Result<Guid>.Failure(new ApplicationError(statusCode, description));
         }
     }
 }

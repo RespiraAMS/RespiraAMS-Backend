@@ -19,7 +19,7 @@ namespace Respira.Patient.Application.Features.Patients.CreatePatient
             if (await context.Patients.AnyAsync(x => x.MedicalRecordCode == command.MedicalRecordCode, cancellationToken))
             {
                 logger.LogDebug("Medical record code {code} is already existed", command.MedicalRecordCode);
-                return Result<CreatePatientResult>.Failure(new Error(ApplicationStatus.BadRequest, "Medical record code is already existed"));
+                return Result<CreatePatientResult>.Failure(new ApplicationError(ApplicationStatus.BadRequest, "Medical record code is already existed"));
             }
 
             // Map from command to model
@@ -36,7 +36,7 @@ namespace Respira.Patient.Application.Features.Patients.CreatePatient
             if (!patient.IsValidAge())
             {
                 logger.LogDebug("Patient is under 15 years old, cannot be created");
-                return Result<CreatePatientResult>.Failure(new Error(ApplicationStatus.BusinessRuleViolation, "Patient is under 15 years old, cannot be created"));
+                return Result<CreatePatientResult>.Failure(new ApplicationError(ApplicationStatus.BusinessRuleViolation, "Patient is under 15 years old, cannot be created"));
             }
 
             // Save changes to database

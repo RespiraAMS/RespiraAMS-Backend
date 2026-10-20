@@ -171,7 +171,7 @@ namespace Respira.Saga.Application.Features.Create.Commands
                 if (string.IsNullOrWhiteSpace(TempAvatarPath) || !File.Exists(TempAvatarPath))
                 {
                     upload = Result<Guid>.Failure(
-                        new Error(ApplicationStatus.BadRequest, "The avatar file is missing")
+                        new ApplicationError(ApplicationStatus.BadRequest, "The avatar file is missing")
                     );
                 }
                 else
@@ -190,7 +190,7 @@ namespace Respira.Saga.Application.Features.Create.Commands
                 // Never throw out of a saga handler: a blind retry would upload the file twice.
                 logger.LogError(exception, "{SagaId} Uploading the avatar failed", SagaId);
                 upload = Result<Guid>.Failure(
-                    new Error(ApplicationStatus.ThirdPartyServiceFailure, exception.Message)
+                    new ApplicationError(ApplicationStatus.ThirdPartyServiceFailure, exception.Message)
                 );
             }
             finally

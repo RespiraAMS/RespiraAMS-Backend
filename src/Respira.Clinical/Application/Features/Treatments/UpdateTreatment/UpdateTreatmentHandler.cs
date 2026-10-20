@@ -25,7 +25,7 @@ namespace Respira.Clinical.Application.Features.Treatments.UpdateTreatment
             if (treatment is null)
             {
                 logger.LogDebug("Treatment with ID {id} does not exist in database", command.Id);
-                return Result.Failure(new Error(ApplicationStatus.BadRequest, "Treatment not found"));
+                return Result.Failure(new ApplicationError(ApplicationStatus.BadRequest, "Treatment not found"));
             }
 
             // Check if antibiotics, pathogens and criteria exist in database
@@ -38,7 +38,7 @@ namespace Respira.Clinical.Application.Features.Treatments.UpdateTreatment
                     TotalIdsGiven = antibioticIds.Count,
                     TotalFoundInDb = antibioticDbCount,
                 });
-                return Result.Failure(new Error(ApplicationStatus.BadRequest, "Not all antibiotic IDs given exist"));
+                return Result.Failure(new ApplicationError(ApplicationStatus.BadRequest, "Not all antibiotic IDs given exist"));
             }
 
             var pathogenIds = command.Pathogens.Distinct().ToList();
@@ -50,7 +50,7 @@ namespace Respira.Clinical.Application.Features.Treatments.UpdateTreatment
                     TotalIdsGiven = command.Pathogens.Count,
                     TotalFoundInDb = pathogenDbCount,
                 });
-                return Result.Failure(new Error(ApplicationStatus.BadRequest, "Not all pathogen IDs given exist"));
+                return Result.Failure(new ApplicationError(ApplicationStatus.BadRequest, "Not all pathogen IDs given exist"));
             }
 
             var criteriaIds = command.Criteria.Distinct().ToList();
@@ -62,14 +62,14 @@ namespace Respira.Clinical.Application.Features.Treatments.UpdateTreatment
                     TotalIdsGiven = command.Criteria.Count,
                     TotalFoundInDb = criteriaDbCount,
                 });
-                return Result.Failure(new Error(ApplicationStatus.BadRequest, "Not all criteria IDs given exist"));
+                return Result.Failure(new ApplicationError(ApplicationStatus.BadRequest, "Not all criteria IDs given exist"));
             }
 
             // Map from command to entities
             var mapResult = mapper.MapModel(treatment, command);
             if (mapResult.IsFailure())
             {
-                logger.LogDebug("Failed to map command to model: {Error}", mapResult.Error);
+                logger.LogDebug("Failed to map command to model: {ApplicationError}", mapResult.Error);
                 return Result.Failure(mapResult.Error!);
             }
 

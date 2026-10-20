@@ -26,7 +26,7 @@ namespace Respira.Clinical.Application.Features.Treatments.CreateTreatment
                     TotalIdsGiven = antibioticIds.Count,
                     TotalFoundInDb = antibioticDbCount,
                 });
-                return Result<CreateTreatmentResult>.Failure(new Error(ApplicationStatus.BadRequest, "Not all antibiotic IDs given exist"));
+                return Result<CreateTreatmentResult>.Failure(new ApplicationError(ApplicationStatus.BadRequest, "Not all antibiotic IDs given exist"));
             }
 
             var pathogenIds = command.Pathogens.Distinct().ToList();
@@ -38,7 +38,7 @@ namespace Respira.Clinical.Application.Features.Treatments.CreateTreatment
                     TotalIdsGiven = command.Pathogens.Count,
                     TotalFoundInDb = pathogenDbCount,
                 });
-                return Result<CreateTreatmentResult>.Failure(new Error(ApplicationStatus.BadRequest, "Not all pathogen IDs given exist"));
+                return Result<CreateTreatmentResult>.Failure(new ApplicationError(ApplicationStatus.BadRequest, "Not all pathogen IDs given exist"));
             }
 
             var criteriaIds = command.Criteria.Distinct().ToList();
@@ -50,14 +50,14 @@ namespace Respira.Clinical.Application.Features.Treatments.CreateTreatment
                     TotalIdsGiven = command.Criteria.Count,
                     TotalFoundInDb = criteriaDbCount,
                 });
-                return Result<CreateTreatmentResult>.Failure(new Error(ApplicationStatus.BadRequest, "Not all criteria IDs given exist"));
+                return Result<CreateTreatmentResult>.Failure(new ApplicationError(ApplicationStatus.BadRequest, "Not all criteria IDs given exist"));
             }
 
             // Map from command to entities
             var mapResult = mapper.ToModel(command);
             if (mapResult.IsFailure())
             {
-                logger.LogDebug("Failed to map command to model: {Error}", mapResult.Error);
+                logger.LogDebug("Failed to map command to model: {ApplicationError}", mapResult.Error);
                 return Result<CreateTreatmentResult>.Failure(mapResult.Error!);
             }
             var treatment = mapResult.Data!;

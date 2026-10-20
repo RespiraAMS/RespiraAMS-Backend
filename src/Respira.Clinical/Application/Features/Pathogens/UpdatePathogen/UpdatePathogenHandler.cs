@@ -21,14 +21,14 @@ namespace Respira.Clinical.Application.Features.Pathogens.UpdatePathogen
             if (pathogen is null)
             {
                 logger.LogWarning("Pathogen ID not found");
-                return Result.Failure(new Error(ApplicationStatus.BadRequest, "Pathogen ID not found"));
+                return Result.Failure(new ApplicationError(ApplicationStatus.BadRequest, "Pathogen ID not found"));
             }
 
             // Map command to model
             var mapResult = mapper.MapModel(pathogen, command);
             if (mapResult.IsFailure())
             {
-                logger.LogDebug("Failed to map command to model: {Error}", mapResult.Error);
+                logger.LogDebug("Failed to map command to model: {ApplicationError}", mapResult.Error);
                 return Result.Failure(mapResult.Error!);
             }
 

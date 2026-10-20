@@ -22,7 +22,7 @@ namespace Respira.Clinical.Application.Features.ClinicalMetrics.CreateClinicalMe
             if (existingMetric)
             {
                 logger.LogDebug("Clinical metric with code {Code} already exists and in used", command.Code);
-                return Result<CreateClinicalMetricResult>.Failure(new Error(ApplicationStatus.BadRequest, "Clinical metric already exists and in used"));
+                return Result<CreateClinicalMetricResult>.Failure(new ApplicationError(ApplicationStatus.BadRequest, "Clinical metric already exists and in used"));
             }
 
             // Creating a new metric is always applied

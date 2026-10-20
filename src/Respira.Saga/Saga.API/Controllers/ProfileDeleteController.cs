@@ -41,21 +41,21 @@ namespace Respira.Saga.API.Controllers
             if (payload is null)
             {
                 return Result<Guid>
-                    .Failure(new Error(ApplicationStatus.BadRequest, "A request body is required"))
+                    .Failure(new ApplicationError(ApplicationStatus.BadRequest, "A request body is required"))
                     .ToApiResponse();
             }
 
             if (payload.AccountId == Guid.Empty)
             {
                 return Result<Guid>
-                    .Failure(new Error(ApplicationStatus.BadRequest, "Account id is required"))
+                    .Failure(new ApplicationError(ApplicationStatus.BadRequest, "Account id is required"))
                     .ToApiResponse();
             }
 
             if (payload.DoctorId == Guid.Empty)
             {
                 return Result<Guid>
-                    .Failure(new Error(ApplicationStatus.BadRequest, "Profile id is required"))
+                    .Failure(new ApplicationError(ApplicationStatus.BadRequest, "Profile id is required"))
                     .ToApiResponse();
             }
 

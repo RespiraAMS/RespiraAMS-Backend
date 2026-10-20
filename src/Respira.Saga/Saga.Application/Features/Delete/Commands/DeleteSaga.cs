@@ -114,7 +114,7 @@ namespace Respira.Saga.Application.Features.Delete.Commands
                         MediaId
                     );
                     deletion = Result<Guid>.Failure(
-                        new Error(ApplicationStatus.ThirdPartyServiceFailure, exception.Message)
+                        new ApplicationError(ApplicationStatus.ThirdPartyServiceFailure, exception.Message)
                     );
                 }
 

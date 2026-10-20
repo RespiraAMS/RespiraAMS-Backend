@@ -18,7 +18,7 @@ namespace Respira.Patient.Application.Features.Patients.DeletePatient
             if (patient is null)
             {
                 logger.LogDebug("Patient not found: {Id}", command.Id);
-                return Result.Failure(new Error(ApplicationStatus.BadRequest, "Patient not found"));
+                return Result.Failure(new ApplicationError(ApplicationStatus.BadRequest, "Patient not found"));
             }
 
             // Only delete patient if they have receive no treatment
@@ -26,7 +26,7 @@ namespace Respira.Patient.Application.Features.Patients.DeletePatient
             if (patient.Treatments.Count > 0)
             {
                 logger.LogDebug("Patient already received treatments, cannot delete: {Id}", command.Id);
-                return Result.Failure(new Error(ApplicationStatus.BadRequest, "Patient already received treatments, cannot delete"));
+                return Result.Failure(new ApplicationError(ApplicationStatus.BadRequest, "Patient already received treatments, cannot delete"));
             }
 
             // Delete patient (and cascade its next of kin if any)

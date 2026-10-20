@@ -16,7 +16,7 @@ namespace Respira.Clinical.Application.Features.ClinicalVariables.DeleteClinical
             if (variable is null)
             {
                 logger.LogDebug("Clinical variable not found: {Id}", command.Id);
-                return Result.Failure(new Error(ApplicationStatus.BadRequest, "Clinical variable not found"));
+                return Result.Failure(new ApplicationError(ApplicationStatus.BadRequest, "Clinical variable not found"));
             }
 
             // Find all variables that have their prerequisite formula referencing the current variable,

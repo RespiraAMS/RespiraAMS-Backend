@@ -51,7 +51,7 @@ namespace Authentication.Application.Features.Authentication.Commands.Login
                 hashService.HashPassword(command.Password);
                 logger.LogInformation("Email: {Email} login failed", command.Email);
                 return Result<LoginResult?>.Failure(
-                    new Error(ApplicationStatus.LoginFailure, "Email or password is incorrect")
+                    new ApplicationError(ApplicationStatus.LoginFailure, "Email or password is incorrect")
                 );
             }
 
@@ -59,7 +59,7 @@ namespace Authentication.Application.Features.Authentication.Commands.Login
             {
                 logger.LogInformation("Email: {Email} login failed", command.Email);
                 return Result<LoginResult?>.Failure(
-                    new Error(ApplicationStatus.LoginFailure, "Email or password is incorrect")
+                    new ApplicationError(ApplicationStatus.LoginFailure, "Email or password is incorrect")
                 );
             }
 

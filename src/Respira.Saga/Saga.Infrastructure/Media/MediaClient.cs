@@ -13,7 +13,7 @@ namespace Respira.Saga.Infrastructure.Media
     /// <remarks>
     /// Response bodies are parsed with <see cref="JsonDocument"/> instead of
     /// deserializing <c>Result&lt;Guid&gt;</c> directly: <c>Result&lt;T&gt;</c> has a
-    /// private constructor and its <c>Error</c> has several public ones, which
+    /// private constructor and its <c>ApplicationError</c> has several public ones, which
     /// System.Text.Json refuses to bind. Reading the few fields the saga needs keeps the
     /// client free of that coupling.
     /// </remarks>
@@ -33,7 +33,7 @@ namespace Respira.Saga.Infrastructure.Media
             if (string.IsNullOrWhiteSpace(fileName))
             {
                 return Result<Guid>.Failure(
-                    new Error(ApplicationStatus.BadRequest, "A file name is required")
+                    new ApplicationError(ApplicationStatus.BadRequest, "A file name is required")
                 );
             }
 
@@ -65,7 +65,7 @@ namespace Respira.Saga.Infrastructure.Media
                 );
 
                 return Result<Guid>.Failure(
-                    new Error(
+                    new ApplicationError(
                         ApplicationStatus.ThirdPartyServiceFailure,
                         $"The media service could not be reached: {exception.Message}"
                     )
@@ -79,7 +79,7 @@ namespace Respira.Saga.Infrastructure.Media
                 if (string.IsNullOrWhiteSpace(body))
                 {
                     return Result<Guid>.Failure(
-                        new Error(
+                        new ApplicationError(
                             ApplicationStatus.ThirdPartyServiceFailure,
                             $"The media service responded with {(int)response.StatusCode} and an empty body"
                         )
@@ -107,7 +107,7 @@ namespace Respira.Saga.Infrastructure.Media
             if (mediaId == Guid.Empty)
             {
                 return Result<Guid>.Failure(
-                    new Error(ApplicationStatus.BadRequest, "A media id is required")
+                    new ApplicationError(ApplicationStatus.BadRequest, "A media id is required")
                 );
             }
 
@@ -133,7 +133,7 @@ namespace Respira.Saga.Infrastructure.Media
                 );
 
                 return Result<Guid>.Failure(
-                    new Error(
+                    new ApplicationError(
                         ApplicationStatus.ThirdPartyServiceFailure,
                         $"The media service could not be reached: {exception.Message}"
                     )
@@ -151,7 +151,7 @@ namespace Respira.Saga.Infrastructure.Media
                     return response.IsSuccessStatusCode
                         ? Result<Guid>.Success(ApplicationStatus.Deleted, mediaId)
                         : Result<Guid>.Failure(
-                            new Error(
+                            new ApplicationError(
                                 ApplicationStatus.ThirdPartyServiceFailure,
                                 $"The media service responded with {(int)response.StatusCode} and an empty body"
                             )
@@ -222,7 +222,7 @@ namespace Respira.Saga.Infrastructure.Media
                 );
 
                 return Result<Guid>.Failure(
-                    new Error(
+                    new ApplicationError(
                         ApplicationStatus.ThirdPartyServiceFailure,
                         $"{failureMessage}: {description}"
                     )
@@ -237,7 +237,7 @@ namespace Respira.Saga.Infrastructure.Media
                 );
 
                 return Result<Guid>.Failure(
-                    new Error(
+                    new ApplicationError(
                         ApplicationStatus.ThirdPartyServiceFailure,
                         "The media service returned an unexpected response"
                     )

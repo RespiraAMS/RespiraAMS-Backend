@@ -31,7 +31,7 @@ namespace Media.API.Controllers
             {
                 return BadRequest(
                     Result<Guid>.Failure(
-                        new Error(ApplicationStatus.BadRequest, "A file is required")
+                        new ApplicationError(ApplicationStatus.BadRequest, "A file is required")
                     )
                 );
             }

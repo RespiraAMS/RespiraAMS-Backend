@@ -16,7 +16,7 @@ namespace Respira.Clinical.Application.Features.Criteria.DeleteCriterion
             if (criterion is null)
             {
                 logger.LogDebug("Criterion with this ID not found: {Id}", command.Id);
-                return Result.Failure(new Error(ApplicationStatus.BadRequest, "Criterion not found"));
+                return Result.Failure(new ApplicationError(ApplicationStatus.BadRequest, "Criterion not found"));
             }
 
             // Delete criterion and all entities that associated with it

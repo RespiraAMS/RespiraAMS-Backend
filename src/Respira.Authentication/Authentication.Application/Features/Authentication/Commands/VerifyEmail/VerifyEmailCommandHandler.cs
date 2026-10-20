@@ -121,7 +121,7 @@ namespace Authentication.Application.Features.Authentication.Commands.VerifyEmai
 
         private static Result<bool> Failure(string statusCode, string description)
         {
-            return Result<bool>.Failure(new Error(statusCode, description));
+            return Result<bool>.Failure(new ApplicationError(statusCode, description));
         }
     }
 }

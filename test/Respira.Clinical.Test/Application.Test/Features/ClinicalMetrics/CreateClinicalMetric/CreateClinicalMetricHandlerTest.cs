@@ -226,7 +226,7 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.CreateClini
             var mapper = new Mock<ICreateMapper<CreateClinicalMetricCommand, ClinicalMetric>>();
             mapper.Setup(x => x.ToModel(It.IsAny<CreateClinicalMetricCommand>()))
                 .Returns(Result<ClinicalMetric>.Failure(
-                    new Error(ApplicationStatus.BadRequest, "Unable to map the clinical metric")));
+                    new ApplicationError(ApplicationStatus.BadRequest, "Unable to map the clinical metric")));
             var handler = new CreateClinicalMetricHandler(
                 _context,
                 mapper.Object,

@@ -62,7 +62,7 @@ namespace Respira.Clinical.Application.Features.Diagnosis.EmpiricalDiagnosis.Dia
                 if (clinicalContext.Variables.All(x => x.Id != observation.VariableId))
                 {
                     logger.LogDebug("Variable {variableId} not found in clinical context", observation.VariableId);
-                    return Result<DiagnoseResult>.Failure(new Error(ApplicationStatus.BadRequest, "Variable not found"));
+                    return Result<DiagnoseResult>.Failure(new ApplicationError(ApplicationStatus.BadRequest, "Variable not found"));
                 }
 
                 var variable = clinicalContext.Variables.First(x => x.Id == observation.VariableId);
@@ -72,7 +72,7 @@ namespace Respira.Clinical.Application.Features.Diagnosis.EmpiricalDiagnosis.Dia
                         if (!bool.TryParse(observation.Value, out var value))
                         {
                             logger.LogDebug("Receive boolean variable, but value observed is not boolean: {observation}", observation);
-                            return Result<DiagnoseResult>.Failure(new Error(ApplicationStatus.BadRequest, "Invalid observation value"));
+                            return Result<DiagnoseResult>.Failure(new ApplicationError(ApplicationStatus.BadRequest, "Invalid observation value"));
                         }
 
                         observations.Add(new ClinicalObservation(variable, value));
@@ -81,7 +81,7 @@ namespace Respira.Clinical.Application.Features.Diagnosis.EmpiricalDiagnosis.Dia
                         if (!decimal.TryParse(observation.Value, out var numericValue))
                         {
                             logger.LogDebug("Receive numeric variable, but value observed is not numeric: {observation}", observation);
-                            return Result<DiagnoseResult>.Failure(new Error(ApplicationStatus.BadRequest, "Invalid observation value"));
+                            return Result<DiagnoseResult>.Failure(new ApplicationError(ApplicationStatus.BadRequest, "Invalid observation value"));
                         }
 
                         observations.Add(new ClinicalObservation(variable, numericValue));
@@ -90,7 +90,7 @@ namespace Respira.Clinical.Application.Features.Diagnosis.EmpiricalDiagnosis.Dia
                         if (string.IsNullOrWhiteSpace(observation.Value))
                         {
                             logger.LogDebug("Receive categorical variable, but value observed is empty: {observation}", observation);
-                            return Result<DiagnoseResult>.Failure(new Error(ApplicationStatus.BadRequest, "Invalid observation value"));
+                            return Result<DiagnoseResult>.Failure(new ApplicationError(ApplicationStatus.BadRequest, "Invalid observation value"));
                         }
 
                         observations.Add(new ClinicalObservation(variable, observation.Value));
@@ -102,7 +102,7 @@ namespace Respira.Clinical.Application.Features.Diagnosis.EmpiricalDiagnosis.Dia
             if (!query.Allergies.All(a => clinicalContext.Antibiotics.Select(x => x.Id).Contains(a)))
             {
                 logger.LogDebug("Allergies list contains invalid antibiotic IDs");
-                return Result<DiagnoseResult>.Failure(new Error(ApplicationStatus.BadRequest, "Invalid allergies list, all IDs must be valid antibiotic IDs"));
+                return Result<DiagnoseResult>.Failure(new ApplicationError(ApplicationStatus.BadRequest, "Invalid allergies list, all IDs must be valid antibiotic IDs"));
             }
 
             // Construct clinical picture

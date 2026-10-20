@@ -27,7 +27,7 @@ namespace Respira.Clinical.Application.Features.Criteria.UpdateCriterion
             var formula = formulaMapResult.Data!;
             if (formula.ResultType != ExpressionResultType.Boolean)
             {
-                return Result.Failure(new Error(ApplicationStatus.BadRequest, "Formula result type should be boolean"));
+                return Result.Failure(new ApplicationError(ApplicationStatus.BadRequest, "Formula result type should be boolean"));
             }
 
             model.Name = command.Name;

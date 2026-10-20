@@ -28,7 +28,7 @@ namespace Respira.Saga.Application.Features.Update.Queries
             if (saga is null)
             {
                 return Result<UpdateStatusResult>.Failure(
-                    new Error(
+                    new ApplicationError(
                         ApplicationStatus.ResourceNotFound,
                         "No profile update with this id is currently in progress; it has either finished or never started"
                     )

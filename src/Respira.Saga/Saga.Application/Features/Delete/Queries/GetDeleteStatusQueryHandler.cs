@@ -28,7 +28,7 @@ namespace Respira.Saga.Application.Features.Delete.Queries
             if (saga is null)
             {
                 return Result<DeleteStatusResult>.Failure(
-                    new Error(
+                    new ApplicationError(
                         ApplicationStatus.ResourceNotFound,
                         "No profile deletion with this id is currently in progress; it has either finished or never started"
                     )

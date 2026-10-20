@@ -19,7 +19,7 @@ namespace Respira.Clinical.Application.Features.Antibiotics.DeleteDosage
             if (antibiotic is null)
             {
                 logger.LogDebug("Dosage with this antibiotic not found: {AntibioticId}", command.AntibioticId);
-                return Result.Failure(new Error(ApplicationStatus.BadRequest, "Antibiotic not found"));
+                return Result.Failure(new ApplicationError(ApplicationStatus.BadRequest, "Antibiotic not found"));
             }
 
             // Get the dosage for update from the fetched antibiotic
@@ -34,7 +34,7 @@ namespace Respira.Clinical.Application.Features.Antibiotics.DeleteDosage
             if (dosages.FirstOrDefault(d => d.Id == command.Id) is null)
             {
                 logger.LogDebug("Dosage with this ID ({DosageId}) not found in this antibiotic ({AntibioticId})", command.Id, command.AntibioticId);
-                return Result.Failure(new Error(ApplicationStatus.BadRequest, $"No dosage with this ID found in antibiotic {command.AntibioticId}"));
+                return Result.Failure(new ApplicationError(ApplicationStatus.BadRequest, $"No dosage with this ID found in antibiotic {command.AntibioticId}"));
             }
 
             // Try to remove the dosage from cloned object

@@ -428,7 +428,7 @@ namespace Respira.Clinical.Domain.Services
             if (!present)
             {
                 logger.LogDebug("Missing required variables, cannot proceed with diagnosis");
-                return Result.Failure(new Error(ApplicationStatus.BadRequest, "Missing required variables"));
+                return Result.Failure(new ApplicationError(ApplicationStatus.BadRequest, "Missing required variables"));
             }
 
             // Next, check internal validation rule of each observation
@@ -476,7 +476,7 @@ namespace Respira.Clinical.Domain.Services
             }
 
             return errors.Count > 0
-                ? Result.Failure(new Error(ApplicationStatus.BadRequest, "Invalid observation value", errors))
+                ? Result.Failure(new ApplicationError(ApplicationStatus.BadRequest, "Invalid observation value", errors))
                 : Result.Success(ApplicationStatus.Success);
         }
 
@@ -552,7 +552,7 @@ namespace Respira.Clinical.Domain.Services
                     break;
                 default:
                     logger.LogWarning("No severity diagnosis found");
-                    return Result<Diagnosis>.Failure(new Error(ApplicationStatus.ServerError, "Failed to perform severity diagnosis"));
+                    return Result<Diagnosis>.Failure(new ApplicationError(ApplicationStatus.ServerError, "Failed to perform severity diagnosis"));
             }
 
             // Assess infection

@@ -30,7 +30,7 @@ namespace Respira.Clinical.Application.Features.Treatments.SearchTreatment
                     }
                 );
                 return Result<SearchTreatmentResult>.Failure(
-                    new Error(ApplicationStatus.BadRequest, "Not all pathogen IDs given exist")
+                    new ApplicationError(ApplicationStatus.BadRequest, "Not all pathogen IDs given exist")
                 );
             }
 
@@ -49,7 +49,7 @@ namespace Respira.Clinical.Application.Features.Treatments.SearchTreatment
                     }
                 );
                 return Result<SearchTreatmentResult>.Failure(
-                    new Error(ApplicationStatus.BadRequest, "Not all criteria IDs given exist")
+                    new ApplicationError(ApplicationStatus.BadRequest, "Not all criteria IDs given exist")
                 );
             }
 

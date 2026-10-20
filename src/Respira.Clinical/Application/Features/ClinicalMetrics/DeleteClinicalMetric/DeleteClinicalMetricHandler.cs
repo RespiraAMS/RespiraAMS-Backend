@@ -18,7 +18,7 @@ namespace Respira.Clinical.Application.Features.ClinicalMetrics.DeleteClinicalMe
             if (metric is null)
             {
                 logger.LogDebug("Clinical metric with id {Id} not found", command.Id);
-                return Result.Failure(new Error(ApplicationStatus.BadRequest, "Clinical metric not found"));
+                return Result.Failure(new ApplicationError(ApplicationStatus.BadRequest, "Clinical metric not found"));
             }
 
             // Delete metrics and all its metric rules

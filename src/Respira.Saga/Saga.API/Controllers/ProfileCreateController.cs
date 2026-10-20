@@ -57,7 +57,7 @@ namespace Respira.Saga.API.Controllers
             if (string.IsNullOrWhiteSpace(request))
             {
                 return Result<Guid>
-                    .Failure(new Error(ApplicationStatus.BadRequest, "A 'request' part is required"))
+                    .Failure(new ApplicationError(ApplicationStatus.BadRequest, "A 'request' part is required"))
                     .ToApiResponse();
             }
 
@@ -74,7 +74,7 @@ namespace Respira.Saga.API.Controllers
             {
                 return Result<Guid>
                     .Failure(
-                        new Error(
+                        new ApplicationError(
                             ApplicationStatus.BadRequest,
                             $"The 'request' part is not valid JSON: {exception.Message}"
                         )
@@ -86,7 +86,7 @@ namespace Respira.Saga.API.Controllers
             {
                 return Result<Guid>
                     .Failure(
-                        new Error(ApplicationStatus.BadRequest, "The 'request' part is empty")
+                        new ApplicationError(ApplicationStatus.BadRequest, "The 'request' part is empty")
                     )
                     .ToApiResponse();
             }
@@ -96,14 +96,14 @@ namespace Respira.Saga.API.Controllers
             if (invalidField is not null)
             {
                 return Result<Guid>
-                    .Failure(new Error(ApplicationStatus.BadRequest, invalidField))
+                    .Failure(new ApplicationError(ApplicationStatus.BadRequest, invalidField))
                     .ToApiResponse();
             }
 
             if (avatar is null || avatar.Length == 0)
             {
                 return Result<Guid>
-                    .Failure(new Error(ApplicationStatus.BadRequest, "An 'avatar' file is required"))
+                    .Failure(new ApplicationError(ApplicationStatus.BadRequest, "An 'avatar' file is required"))
                     .ToApiResponse();
             }
 
@@ -113,7 +113,7 @@ namespace Respira.Saga.API.Controllers
             {
                 return Result<Guid>
                     .Failure(
-                        new Error(
+                        new ApplicationError(
                             ApplicationStatus.BadRequest,
                             $"The avatar must be one of: {string.Join(", ", AllowedAvatarExtensions)}"
                         )

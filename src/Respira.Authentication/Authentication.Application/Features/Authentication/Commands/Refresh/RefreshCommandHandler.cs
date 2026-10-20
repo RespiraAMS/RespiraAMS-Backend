@@ -50,7 +50,7 @@ namespace Authentication.Application.Features.Authentication.Commands.Refresh
             {
                 logger.LogWarning("Refresh attempt used an invalid or expired refresh token");
                 return Result<RefreshResult>.Failure(
-                    new Error(ApplicationStatus.Unauthorized, "Invalid or expired refresh token")
+                    new ApplicationError(ApplicationStatus.Unauthorized, "Invalid or expired refresh token")
                 );
             }
 
@@ -85,7 +85,7 @@ namespace Authentication.Application.Features.Authentication.Commands.Refresh
                     refreshToken.AccountId
                 );
                 return Result<RefreshResult>.Failure(
-                    new Error(ApplicationStatus.Unauthorized, "Invalid or expired refresh token")
+                    new ApplicationError(ApplicationStatus.Unauthorized, "Invalid or expired refresh token")
                 );
             }
 
