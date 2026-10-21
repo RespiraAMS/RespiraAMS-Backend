@@ -1,3 +1,4 @@
+using Respira.Clinical.Application.Features.Shared.ManageFormula;
 using Respira.Clinical.Domain.Entities;
 using Respira.ServiceDefaults.Contracts.CQRS;
 
@@ -45,6 +46,8 @@ namespace Respira.Clinical.Application.Features.ClinicalMetrics.GetMetricRuleByI
         /// Metric rule's score function (if <see cref="ScoringRule"/>)
         /// </summary>
         public string? ScoreFunction { get; set; }
+
+        public FormulaDto? ScoreFunctionFormula { get; set; }
 
         /// <summary>
         /// Is this a major rule or a minor rule (if <see cref="MajorMinorRule"/>)

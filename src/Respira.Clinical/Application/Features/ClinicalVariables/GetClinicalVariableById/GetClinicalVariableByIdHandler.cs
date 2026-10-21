@@ -1,12 +1,19 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Respira.Clinical.Application.Contracts.Data;
+using Respira.Clinical.Application.Contracts.Mappers;
+using Respira.Clinical.Application.Features.Shared.ManageFormula;
 using Respira.Clinical.Domain.Entities;
+using Respira.Clinical.Domain.Models;
 using Respira.ServiceDefaults.Contracts.CQRS;
 using Respira.ServiceDefaults.Contracts.Results;
 
 namespace Respira.Clinical.Application.Features.ClinicalVariables.GetClinicalVariableById
 {
-    public class GetClinicalVariableByIdHandler(IDbContext context)
+    public class GetClinicalVariableByIdHandler(
+        IDbContext context,
+        IMapper<Formula, FormulaDto> mapper,
+        ILogger<GetClinicalVariableByIdHandler> logger)
         : IQueryHandler<GetClinicalVariableByIdQuery, Result<ClinicalVariableResult>>
     {
         public async Task<Result<ClinicalVariableResult>> HandleAsync(GetClinicalVariableByIdQuery query, CancellationToken cancellationToken = default)
@@ -33,6 +40,19 @@ namespace Respira.Clinical.Application.Features.ClinicalVariables.GetClinicalVar
                 Category = variable.Category,
                 Prerequisite = variable.Prerequisite?.ToString(),
             };
+
+            if (variable.Prerequisite is not null)
+            {
+                var mapResult = mapper.Map(variable.Prerequisite!);
+                if (mapResult.IsFailure())
+                {
+                    logger.LogDebug("Unable to map prerequisite formula to DTO: {Error}", mapResult.Error);
+                    return Result<ClinicalVariableResult>.Failure(mapResult.Error!);
+                }
+
+                result.PrerequisiteFormula = mapResult.Data!;
+            }
+
 
             if (variable is NumericClinicalVariable numericVariable)
             {

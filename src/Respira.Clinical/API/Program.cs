@@ -9,6 +9,7 @@ using Wolverine.RabbitMQ;
 using Scalar.AspNetCore;
 using Respira.Clinical.Application;
 using Respira.Clinical.DI;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,7 +17,11 @@ var builder = WebApplication.CreateBuilder(args);
 var conn = builder.Configuration.GetConnectionString("clinicalDb") ?? throw new InvalidOperationException("No connection string found");
 
 // Add API controllers
-builder.Services.AddControllers().AddJsonOptions(options => options.JsonSerializerOptions.PropertyNameCaseInsensitive = true);
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+    options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+});
 
 // Add API versioning
 builder.Services.AddApiVersioning(options =>

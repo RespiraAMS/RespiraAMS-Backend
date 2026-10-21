@@ -8,9 +8,9 @@ using Range = Respira.Clinical.Domain.Models.Range;
 
 namespace Respira.Clinical.Application.Test.Features.Shared.ManageFormula
 {
-    public class FormulaMapperTest
+    public class FormulaDtoMapperTest
     {
-        private readonly FormulaMapper _mapper = new();
+        private readonly FormulaDtoMapper _mapper = new();
 
         #region Constant mapping
 

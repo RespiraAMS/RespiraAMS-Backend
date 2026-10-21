@@ -27,7 +27,7 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.UpdateCriterion
             // Create handler dependencies
             _options = new DbContextOptionsBuilder<ClinicalDbContext>().UseNpgsql(fixture.ConnectionString).Options;
             _context = new ClinicalDbContext(_options);
-            var mapper = new UpdateCriterionMapper(new FormulaMapper());
+            var mapper = new UpdateCriterionMapper(new FormulaDtoMapper());
             var logger = new Mock<ILogger<UpdateCriterionHandler>>().Object;
 
             // Initialize handler

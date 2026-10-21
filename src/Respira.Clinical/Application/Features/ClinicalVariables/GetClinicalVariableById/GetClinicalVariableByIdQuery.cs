@@ -1,3 +1,4 @@
+using Respira.Clinical.Application.Features.Shared.ManageFormula;
 using Respira.Clinical.Domain.Enums;
 using Respira.ServiceDefaults.Contracts.CQRS;
 using Range = Respira.Clinical.Domain.Models.Range;
@@ -58,6 +59,8 @@ namespace Respira.Clinical.Application.Features.ClinicalVariables.GetClinicalVar
         /// Clinical variable prerequisite
         /// </summary>
         public string? Prerequisite { get; set; } // Store as string representation of Formula
+
+        public FormulaDto? PrerequisiteFormula { get; set; }
 
         /// <summary>
         /// Clinical variable accepted range. Only exists if <see cref="ValueType"/> is <see cref="ClinicalValueType.Numeric"/>

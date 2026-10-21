@@ -43,7 +43,7 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.UpdateMetri
             // Create handler dependencies
             _options = new DbContextOptionsBuilder<ClinicalDbContext>().UseNpgsql(fixture.ConnectionString).Options;
             _context = new ClinicalDbContext(_options);
-            var mapper = new UpdateMetricRuleMapper(new FormulaMapper());
+            var mapper = new UpdateMetricRuleMapper(new FormulaDtoMapper());
             var logger = new Mock<ILogger<UpdateMetricRuleHandler>>().Object;
 
             // Initialize handler

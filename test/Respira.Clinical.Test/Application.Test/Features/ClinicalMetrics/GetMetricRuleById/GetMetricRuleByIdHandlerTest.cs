@@ -1,6 +1,10 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using Moq;
 using Respira.Clinical.Application.Contracts.Data;
+using Respira.Clinical.Application.Contracts.Mappers;
 using Respira.Clinical.Application.Features.ClinicalMetrics.GetMetricRuleById;
+using Respira.Clinical.Application.Features.Shared.ManageFormula;
 using Respira.Clinical.Domain.Entities;
 using Respira.Clinical.Domain.Enums;
 using Respira.Clinical.Domain.Models;
@@ -35,7 +39,9 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.GetMetricRu
             _context = new ClinicalDbContext(_options);
 
             // Initialize handler
-            _handler = new(_context);
+            IMapper<Formula, Application.Features.Shared.ManageFormula.FormulaDto> mapper = new FormulaModelMapper();
+            var logger = new Mock<ILogger<GetMetricRuleByIdHandler>>().Object;
+            _handler = new(_context, mapper, logger);
         }
 
         public async ValueTask DisposeAsync()
@@ -87,6 +93,7 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.GetMetricRu
             // Business rule: a scoring rule renders its score function and carries no
             // major/minor flag
             Assert.Equal("1", result.Data.ScoreFunction);
+            Assert.NotNull(result.Data.ScoreFunctionFormula);
             Assert.Null(result.Data.IsMajor);
         }
 
@@ -125,6 +132,7 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.GetMetricRu
                 Assert.NotNull(result.Data);
                 Assert.Equal(ruleIds[i], result.Data.Id);
                 Assert.Equal(expectedScoreFunctions[i], result.Data.ScoreFunction);
+                Assert.NotNull(result.Data.ScoreFunctionFormula);
                 Assert.Null(result.Data.IsMajor);
             }
         }
@@ -160,6 +168,7 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.GetMetricRu
             // Business rule: a major/minor rule carries no score function, only its weight
             Assert.Equal(isMajor, result.Data.IsMajor);
             Assert.Null(result.Data.ScoreFunction);
+            Assert.Null(result.Data.ScoreFunctionFormula);
         }
 
         #endregion

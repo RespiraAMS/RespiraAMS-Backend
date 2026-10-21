@@ -13,7 +13,7 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.UpdateCriterion
     public class UpdateCriterionMapperTest
     {
         private readonly IUpdateMapper<Criterion, UpdateCriterionCommand> _mapper =
-            new UpdateCriterionMapper(new FormulaMapper());
+            new UpdateCriterionMapper(new FormulaDtoMapper());
 
         #region Name and formula mapping
 
