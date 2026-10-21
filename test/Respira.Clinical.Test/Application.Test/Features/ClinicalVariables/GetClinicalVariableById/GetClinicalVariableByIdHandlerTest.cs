@@ -1,6 +1,10 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using Moq;
 using Respira.Clinical.Application.Contracts.Data;
+using Respira.Clinical.Application.Contracts.Mappers;
 using Respira.Clinical.Application.Features.ClinicalVariables.GetClinicalVariableById;
+using Respira.Clinical.Application.Features.Shared.ManageFormula;
 using Respira.Clinical.Domain.Entities;
 using Respira.Clinical.Domain.Enums;
 using Respira.Clinical.Domain.Models;
@@ -24,7 +28,9 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalVariables.GetClinic
             _context = new ClinicalDbContext(_options);
 
             // Initialize handler
-            _handler = new(_context);
+            IMapper<Formula, Application.Features.Shared.ManageFormula.FormulaDto> mapper = new FormulaModelMapper();
+            var logger = new Mock<ILogger<GetClinicalVariableByIdHandler>>().Object;
+            _handler = new(_context, mapper, logger);
         }
 
         public async ValueTask DisposeAsync()
@@ -121,6 +127,7 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalVariables.GetClinic
             Assert.True(result.Data.IsRequired);
             Assert.Equal("mmHg", result.Data.CanonicalUnit);
             Assert.Null(result.Data.Prerequisite);
+            Assert.Null(result.Data.PrerequisiteFormula);
 
             // Numeric branch: both ranges are projected, the categorical payload is not
             Assert.NotNull(result.Data.AcceptedRange);
@@ -276,6 +283,7 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalVariables.GetClinic
 
             // Boolean branch: neither of the type specific payloads is projected
             Assert.Null(result.Data.Prerequisite);
+            Assert.Null(result.Data.PrerequisiteFormula);
             Assert.Null(result.Data.AcceptedRange);
             Assert.Null(result.Data.NormalRange);
             Assert.Null(result.Data.AcceptedValues);
@@ -303,6 +311,7 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalVariables.GetClinic
 
             // Business rule: the prerequisite is exposed as its string representation
             Assert.Equal(pregnant.Prerequisite!.ToString(), result.Data.Prerequisite);
+            Assert.NotNull(result.Data.PrerequisiteFormula);
         }
 
         [Fact]
@@ -326,6 +335,7 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalVariables.GetClinic
             Assert.NotNull(result.Data);
 
             Assert.Equal(hypertension.Prerequisite!.ToString(), result.Data.Prerequisite);
+            Assert.NotNull(result.Data.PrerequisiteFormula);
         }
 
         [Fact]
@@ -358,6 +368,7 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalVariables.GetClinic
             // Business rule: only non-leaf operands are parenthesized so the rendering
             // of the recursive formula tree stays unambiguous
             Assert.Equal(pih.Prerequisite!.ToString(), result.Data.Prerequisite);
+            Assert.NotNull(result.Data.PrerequisiteFormula);
         }
 
         #endregion

@@ -4,6 +4,7 @@ using Respira.Clinical.API.Dtos;
 using Respira.Clinical.Application.Features.Criteria.CreateCriterion;
 using Respira.Clinical.Application.Features.Criteria.DeleteCriterion;
 using Respira.Clinical.Application.Features.Criteria.GetCriteria;
+using Respira.Clinical.Application.Features.Criteria.GetCriterionById;
 using Respira.Clinical.Application.Features.Criteria.GetPagedCriterion;
 using Respira.Clinical.Application.Features.Criteria.GetReferencedEntities;
 using Respira.ServiceDefaults.Contracts.Pagination;
@@ -48,6 +49,14 @@ namespace Respira.Clinical.API.Controllers
         {
             var criteria = await bus.InvokeAsync<Result<GetCriteriaResult>>(new GetCriteriaQuery());
             return criteria.ToApiResponse();
+        }
+
+        [HttpGet]
+        [Route("{id:guid}")]
+        public async Task<IActionResult> GetCriterionById(Guid id)
+        {
+            var result = await bus.InvokeAsync<Result<CriterionResult>>(new GetCriterionByIdQuery { Id = id });
+            return result.ToApiResponse();
         }
 
         [HttpPut]

@@ -231,15 +231,29 @@ namespace Respira.Clinical.Infrastructure.Data
                 ParentId = ParseNullableId(g.ParentId),
             }).ToList();
 
+            var antibioticGroupLookup = antibioticGroups.ToDictionary(v => v.Id);
+
+            // Antibiotic group also have self reference is parent, so we need to map them on a second time
+            foreach (var (antibioticGroupDto, antibioticGroup) in dto.AntibioticGroups.Zip(antibioticGroups))
+            {
+                if (antibioticGroupDto.ParentId is not null)
+                {
+                    var parentId = GenerateId(antibioticGroupDto.ParentId);
+                    antibioticGroup.ParentId = parentId;
+                    antibioticGroup.Parent = antibioticGroupLookup[parentId];
+                }
+            }
 
             var antibiotics = dto.Antibiotics.Select(a =>
             {
                 var antibioticId = GenerateId(a.Id);
+                var antibioticGroupId = ParseRequiredId(a.AntibioticGroupId, "antibiotic.antibioticGroupId");
                 return new Antibiotic
                 {
                     Id = antibioticId,
                     Name = a.Name,
-                    AntibioticGroupId = ParseRequiredId(a.AntibioticGroupId, "antibiotic.antibioticGroupId"),
+                    AntibioticGroupId = antibioticGroupId,
+                    AntibioticGroup = antibioticGroupLookup[antibioticGroupId],
                     Classification = ParseEnum(a.Classification, AwareClassification.Unclassified),
                     Dosages = [.. a.Dosages.Select(d => new Dosage
                     {

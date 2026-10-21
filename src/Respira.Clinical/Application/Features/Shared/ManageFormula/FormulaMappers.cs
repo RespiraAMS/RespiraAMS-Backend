@@ -1,12 +1,16 @@
 using System.Globalization;
 using Respira.Clinical.Application.Contracts.Mappers;
 using Respira.Clinical.Domain.Entities;
+using Respira.Clinical.Domain.Enums;
 using Respira.Clinical.Domain.Models;
 using Respira.ServiceDefaults.Contracts.Results;
 
 namespace Respira.Clinical.Application.Features.Shared.ManageFormula
 {
-    public class FormulaMapper : IMapper<FormulaDto, Formula>
+    /// <summary>
+    /// Map from <see cref= "FormulaDto" /> to <see cref= "Formula" />.
+    /// </summary>
+    public class FormulaDtoMapper : IMapper<FormulaDto, Formula>
     {
         public Result<Formula> Map(FormulaDto source, object? dependencies)
         {
@@ -117,6 +121,114 @@ namespace Respira.Clinical.Application.Features.Shared.ManageFormula
             {
                 return Result<Formula>.Failure(new ApplicationError(ApplicationStatus.BadRequest, e.Message));
             }
+        }
+    }
+
+    /// <summary>
+    /// Map from <see cref= "Formula" /> to <see cref= "FormulaDto" />.
+    /// </summary>
+    public class FormulaModelMapper : IMapper<Formula, FormulaDto>
+    {
+        public Result<FormulaDto> Map(Formula source, object? dependencies = null)
+        {
+            if (source is BooleanConstantFormula booleanFormula)
+            {
+                return Result<FormulaDto>.Success(ApplicationStatus.Success, new FormulaDto
+                {
+                    Constant = booleanFormula.Constant.ToString()
+                });
+            }
+
+            if (source is NumericConstantFormula numericFormula)
+            {
+                return Result<FormulaDto>.Success(ApplicationStatus.Success, new FormulaDto
+                {
+                    Constant = numericFormula.Constant.ToString(CultureInfo.InvariantCulture)
+                });
+            }
+
+            if (source is CategoricalConstantFormula categoricalFormula)
+            {
+                return Result<FormulaDto>.Success(ApplicationStatus.Success, new FormulaDto
+                {
+                    Constant = categoricalFormula.Constant
+                });
+            }
+
+            if (source is VariableFormula variableFormula)
+            {
+                return Result<FormulaDto>.Success(ApplicationStatus.Success, new FormulaDto
+                {
+                    Variable = variableFormula.Variable.Id
+                });
+            }
+
+            if (source is BinaryFormula binaryFormula)
+            {
+                var mapLeftResult = Map(binaryFormula.Left);
+                if (mapLeftResult.IsFailure())
+                {
+                    return Result<FormulaDto>.Failure(mapLeftResult.Error!);
+                }
+
+                var mapRightResult = Map(binaryFormula.Right);
+                if (mapRightResult.IsFailure())
+                {
+                    return Result<FormulaDto>.Failure(mapRightResult.Error!);
+                }
+
+                return Result<FormulaDto>.Success(ApplicationStatus.Success, new FormulaDto
+                {
+                    Operator = binaryFormula.Operator,
+                    Left = mapLeftResult.Data!,
+                    Right = mapRightResult.Data!
+                });
+            }
+
+            if (source is UnaryFormula unaryFormula)
+            {
+                var mapOperandResult = Map(unaryFormula.Operand);
+                if (mapOperandResult.IsFailure())
+                {
+                    return Result<FormulaDto>.Failure(mapOperandResult.Error!);
+                }
+
+                return Result<FormulaDto>.Success(ApplicationStatus.Success, new FormulaDto
+                {
+                    Operand = mapOperandResult.Data!
+                });
+            }
+
+            if (source is TernaryFormula ternaryFormula)
+            {
+                var mapConditionResult = Map(ternaryFormula.Condition);
+                if (mapConditionResult.IsFailure())
+                {
+                    return Result<FormulaDto>.Failure(mapConditionResult.Error!);
+                }
+
+                var mapIfTrueResult = Map(ternaryFormula.IfTrue);
+                if (mapIfTrueResult.IsFailure())
+                {
+                    return Result<FormulaDto>.Failure(mapIfTrueResult.Error!);
+                }
+
+                var mapIfFalseResult = Map(ternaryFormula.IfFalse);
+                if (mapIfFalseResult.IsFailure())
+                {
+                    return Result<FormulaDto>.Failure(mapIfFalseResult.Error!);
+                }
+
+                return Result<FormulaDto>.Success(ApplicationStatus.Success, new FormulaDto
+                {
+                    Operator = ExpressionOperator.Ternary,
+                    Condition = mapConditionResult.Data!,
+                    IfTrue = mapIfTrueResult.Data!,
+                    IfFalse = mapIfFalseResult.Data!
+                });
+            }
+
+            throw new ArgumentException("Unable to map formula to DTO: unknown formula type");
         }
     }
 }

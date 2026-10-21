@@ -74,7 +74,8 @@ namespace Respira.Clinical.DI
             services.AddScoped<ICreateMapper<CreateSuspectedCauseCommand, SuspectedCause>, CreateSuspectedCauseMapper>();
             services.AddScoped<IUpdateMapper<SuspectedCause, UpdateSuspectedCauseCommand>, UpdateSuspectedCauseMapper>();
 
-            services.AddScoped<IMapper<Application.Features.Shared.ManageFormula.FormulaDto, Formula>, FormulaMapper>();
+            services.AddScoped<IMapper<Application.Features.Shared.ManageFormula.FormulaDto, Formula>, FormulaDtoMapper>();
+            services.AddScoped<IMapper<Formula, Application.Features.Shared.ManageFormula.FormulaDto>, FormulaModelMapper>();
 
             services.AddScoped<ICreateMapper<CreateClinicalVariableCommand, ClinicalVariable>, CreateClinicalVariableMapper>();
             services.AddScoped<IUpdateMapper<ClinicalVariable, UpdateClinicalVariableCommand>, UpdateClinicalVariableMapper>();

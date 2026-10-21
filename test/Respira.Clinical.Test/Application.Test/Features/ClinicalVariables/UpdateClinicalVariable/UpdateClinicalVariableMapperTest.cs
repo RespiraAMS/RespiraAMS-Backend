@@ -12,7 +12,7 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalVariables.UpdateCli
     public class UpdateClinicalVariableMapperTest
     {
         private readonly IUpdateMapper<ClinicalVariable, UpdateClinicalVariableCommand> _mapper =
-            new UpdateClinicalVariableMapper(new FormulaMapper());
+            new UpdateClinicalVariableMapper(new FormulaDtoMapper());
 
         #region Boolean mapping
 

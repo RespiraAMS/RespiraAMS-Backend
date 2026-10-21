@@ -12,7 +12,7 @@ namespace Respira.Clinical.Domain.Services
     /// <param name="logger">Logger</param>
     public class DiagnoseService(ILogger<DiagnoseService> logger) : IDiagnoseService
     {
-        public static decimal InfectionBoostScore = 0.5m;
+        public const decimal InfectionBoostScore = 0.5m;
 
         /// <summary>
         /// Calculate metrics score
@@ -409,6 +409,53 @@ namespace Respira.Clinical.Domain.Services
                 WorthSuspected = worthSuspected,
                 Evidences = evidences,
             };
+        }
+
+        /// <summary>
+        /// Check if antibiotic groups has common ancestor. For example, monobactam and cephalosporin
+        /// has beta-lactam as common ancestor.</br>
+        /// Business rule: each treatment medicines should belong to the same antibiotic group linage.
+        /// For example, for a treatment medicines:</br>
+        /// 1. Carbapenem + Cephalosporin -> invalid (both belong to beta-lactam linage)</br>
+        /// 2. Cephalosporin + Macrolid -> valid (Macrolid does not belong to beta-lactam linage)</br>
+        /// </summary>
+        /// <param name="context">Clinical context</param>
+        /// <param name="group1">Antibiotic group 1</param>
+        /// <param name="group2">Antibiotic group 2</param>
+        /// <returns>Result, true if  groups has same command ancestor</returns>
+        public Result<bool> IsAntibioticGroupHasCommonAncestor(ClinicalContext context, AntibioticGroup group1, AntibioticGroup group2)
+        {
+            // Check if group 1 and group 2 is in context
+            if (!context.AntibioticGroups.Any(g => g.Id.Equals(group1.Id)))
+            {
+                return Result<bool>.Failure(new ApplicationError(ApplicationStatus.BadRequest, "Antibiotic group 1 not found"));
+            }
+
+            if (!context.AntibioticGroups.Any(g => g.Id.Equals(group2.Id)))
+            {
+                return Result<bool>.Failure(new ApplicationError(ApplicationStatus.BadRequest, "Antibiotic group 2 not found"));
+            }
+
+            // Build the linage list of group 1 and group 2
+            var linage1 = new List<AntibioticGroup>();
+            AntibioticGroup? temp = group1;
+            do
+            {
+                linage1.Add(temp);
+                temp = temp.Parent;
+            } while (temp is not null);
+
+            var linage2 = new List<AntibioticGroup>();
+            temp = group2;
+            do
+            {
+                linage2.Add(temp);
+                temp = temp.Parent;
+            } while (temp is not null);
+
+            // Check if any of the linage 1 is in linage 2 or vice versa
+            var isSame = linage1.Any(linage2.Contains);
+            return Result<bool>.Success(ApplicationStatus.Success, isSame);
         }
 
         private Result ValidateObservations(ClinicalContext context, IEnumerable<ClinicalObservation> observations)

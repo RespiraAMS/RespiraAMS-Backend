@@ -191,7 +191,7 @@ namespace Respira.Clinical.Domain.Models
 
         public override string ToString()
         {
-            return ExpressionOperator.Not.ToSymbol() + Parenthesize(Operand);
+            return ExpressionOperator.Not.ToSymbol() + " " + Parenthesize(Operand);
         }
     }
 
