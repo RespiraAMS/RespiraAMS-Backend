@@ -36,7 +36,7 @@ namespace Respira.Clinical.Application.Features.Antibiotics.GetAntibioticById
                 .FirstOrDefaultAsync(x => x.Id == query.Id, cancellationToken);
 
             return antibiotic is null
-                ? Result<AntibioticResult>.Failure(new Error(ApplicationStatus.ResourceNotFound, "Antibiotic not found"))
+                ? Result<AntibioticResult>.Failure(new ApplicationError(ApplicationStatus.ResourceNotFound, "Antibiotic not found"))
                 : Result<AntibioticResult>.Success(ApplicationStatus.Success, antibiotic);
         }
     }

@@ -100,6 +100,11 @@ namespace Respira.ServiceDefaults.Contracts.Results
         /// </summary>
         public const string ThirdPartyServiceFailure = "FAILURE-THIRD-PARTY-SERVICE-FAILURE";
 
+        /// <summary>
+        /// An extension of failure code, specifically used to indicate that the login failed
+        /// </summary>
+        public const string LoginFailure = "FAILURE-LOGIN";
+
         #endregion
 
         #endregion
@@ -212,6 +217,7 @@ namespace Respira.ServiceDefaults.Contracts.Results
                 ServerError => true,
                 Timeout => true,
                 ThirdPartyServiceFailure => true,
+                LoginFailure => true,
 
                 SagaSuccess => true,
                 SagaCreated => true,
@@ -227,7 +233,7 @@ namespace Respira.ServiceDefaults.Contracts.Results
                 SagaTimeout => true,
                 SagaThirdPartyServiceFailure => true,
 
-                _ => false
+                _ => false,
             };
         }
 
@@ -254,6 +260,7 @@ namespace Respira.ServiceDefaults.Contracts.Results
                 ServerError => false,
                 Timeout => false,
                 ThirdPartyServiceFailure => false,
+                LoginFailure => false,
 
                 SagaSuccess => true,
                 SagaCreated => true,
@@ -269,7 +276,7 @@ namespace Respira.ServiceDefaults.Contracts.Results
                 SagaTimeout => false,
                 SagaThirdPartyServiceFailure => false,
 
-                _ => throw new ArgumentException("Invalid status code", nameof(customStatusCode))
+                _ => throw new ArgumentException("Invalid status code", nameof(customStatusCode)),
             };
         }
 
@@ -296,6 +303,7 @@ namespace Respira.ServiceDefaults.Contracts.Results
                 ServerError => StatusCodes.Status500InternalServerError,
                 Timeout => StatusCodes.Status504GatewayTimeout,
                 ThirdPartyServiceFailure => StatusCodes.Status503ServiceUnavailable,
+                LoginFailure => StatusCodes.Status401Unauthorized,
 
                 SagaSuccess => StatusCodes.Status202Accepted,
                 SagaCreated => StatusCodes.Status202Accepted,
@@ -311,7 +319,7 @@ namespace Respira.ServiceDefaults.Contracts.Results
                 SagaTimeout => StatusCodes.Status504GatewayTimeout,
                 SagaThirdPartyServiceFailure => StatusCodes.Status503ServiceUnavailable,
 
-                _ => throw new ArgumentException("Invalid status code", nameof(customStatusCode))
+                _ => throw new ArgumentException("Invalid status code", nameof(customStatusCode)),
             };
         }
     }

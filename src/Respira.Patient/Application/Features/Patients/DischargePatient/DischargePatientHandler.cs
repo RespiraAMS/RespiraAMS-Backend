@@ -18,14 +18,14 @@ namespace Respira.Patient.Application.Features.Patients.DischargePatient
             if (patient is null)
             {
                 logger.LogDebug("Patient not found: {Id}", command.Id);
-                return Result.Failure(new Error(ApplicationStatus.BadRequest, "Patient not found"));
+                return Result.Failure(new ApplicationError(ApplicationStatus.BadRequest, "Patient not found"));
             }
 
             // Only discharge patient if they have receive at least one treatment
             if (patient.Treatments.Count == 0)
             {
                 logger.LogDebug("Patient does not have any treatment, cannot discharge");
-                return Result.Failure(new Error(ApplicationStatus.BadRequest, "Patient does not have any treatment, cannot discharge"));
+                return Result.Failure(new ApplicationError(ApplicationStatus.BadRequest, "Patient does not have any treatment, cannot discharge"));
             }
 
             // Discharge patient.

@@ -26,7 +26,7 @@ namespace Respira.Clinical.Application.Features.ClinicalMetrics.GetMetricRuleByI
 
             if (rule is null)
             {
-                return Result<MetricRuleResult>.Failure(new Error(ApplicationStatus.ResourceNotFound, "Metric rule does not exist"));
+                return Result<MetricRuleResult>.Failure(new ApplicationError(ApplicationStatus.ResourceNotFound, "Metric rule does not exist"));
             }
 
             FormulaDto? scoreFunctionFormula = null;

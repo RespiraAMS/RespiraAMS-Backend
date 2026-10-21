@@ -386,7 +386,7 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.UpdateClini
 
             var mapper = new Mock<IUpdateMapper<ClinicalMetric, UpdateClinicalMetricCommand>>();
             mapper.Setup(x => x.MapModel(It.IsAny<ClinicalMetric>(), It.IsAny<UpdateClinicalMetricCommand>()))
-                .Returns(Result.Failure(new Error(ApplicationStatus.BadRequest, "Unable to map the clinical metric")));
+                .Returns(Result.Failure(new ApplicationError(ApplicationStatus.BadRequest, "Unable to map the clinical metric")));
             var handler = new UpdateClinicalMetricHandler(
                 _context,
                 mapper.Object,

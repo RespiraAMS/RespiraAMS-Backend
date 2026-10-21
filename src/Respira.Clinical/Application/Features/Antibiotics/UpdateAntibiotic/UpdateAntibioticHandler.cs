@@ -21,7 +21,7 @@ namespace Respira.Clinical.Application.Features.Antibiotics.UpdateAntibiotic
             if (group is null)
             {
                 logger.LogDebug("Antibiotic group ID not found for antibiotic group: {Id}", command.AntibioticGroupId);
-                return Result.Failure(new Error(ApplicationStatus.BadRequest, "Antibiotic group ID not exists"));
+                return Result.Failure(new ApplicationError(ApplicationStatus.BadRequest, "Antibiotic group ID not exists"));
             }
 
             // Get entity by ID
@@ -30,14 +30,14 @@ namespace Respira.Clinical.Application.Features.Antibiotics.UpdateAntibiotic
             if (antibiotic is null)
             {
                 logger.LogDebug("Antibiotic not found: {Id}", command.Id);
-                return Result.Failure(new Error(ApplicationStatus.BadRequest, "Antibiotic not found"));
+                return Result.Failure(new ApplicationError(ApplicationStatus.BadRequest, "Antibiotic not found"));
             }
 
             // Map command to model
             var mapResult = mapper.MapModel(antibiotic, command);
             if (mapResult.IsFailure())
             {
-                logger.LogDebug("Failed to map command to model: {Error}", mapResult.Error);
+                logger.LogDebug("Failed to map command to model: {ApplicationError}", mapResult.Error);
                 return Result.Failure(mapResult.Error!);
             }
 

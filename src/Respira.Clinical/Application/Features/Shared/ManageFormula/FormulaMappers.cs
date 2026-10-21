@@ -40,7 +40,7 @@ namespace Respira.Clinical.Application.Features.Shared.ManageFormula
                         var variable = variables.FirstOrDefault(v => v.Id == source.Variable);
 
                         return variable is null
-                            ? Result<Formula>.Failure(new Error(
+                            ? Result<Formula>.Failure(new ApplicationError(
                                 ApplicationStatus.BadRequest,
                                 "Clinical variable with this ID not found",
                                 new { source.Variable }))
@@ -108,10 +108,10 @@ namespace Respira.Clinical.Application.Features.Shared.ManageFormula
 
                     }
 
-                    return Result<Formula>.Failure(new Error(ApplicationStatus.BadRequest, "Invalid formula DTO: unable to determine formula type", new { source }));
+                    return Result<Formula>.Failure(new ApplicationError(ApplicationStatus.BadRequest, "Invalid formula DTO: unable to determine formula type", new { source }));
                 }
 
-                return Result<Formula>.Failure(new Error(ApplicationStatus.BadRequest, "Unable to construct formula: dependencies must be convertable to List<ClinicalVariable>", new { dependencies }));
+                return Result<Formula>.Failure(new ApplicationError(ApplicationStatus.BadRequest, "Unable to construct formula: dependencies must be convertable to List<ClinicalVariable>", new { dependencies }));
 
             }
             // Because the domain model throw ArgumentException if the formula properties are invalid
@@ -119,7 +119,7 @@ namespace Respira.Clinical.Application.Features.Shared.ManageFormula
             // of throwing an exception.
             catch (ArgumentException e)
             {
-                return Result<Formula>.Failure(new Error(ApplicationStatus.BadRequest, e.Message));
+                return Result<Formula>.Failure(new ApplicationError(ApplicationStatus.BadRequest, e.Message));
             }
         }
     }

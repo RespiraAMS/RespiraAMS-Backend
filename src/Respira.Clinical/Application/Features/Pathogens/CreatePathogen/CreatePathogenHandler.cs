@@ -19,7 +19,7 @@ namespace Respira.Clinical.Application.Features.Pathogens.CreatePathogen
             var mapResult = mapper.ToModel(command);
             if (mapResult.IsFailure())
             {
-                logger.LogDebug("Failed to map command to model: {Error}", mapResult.Error);
+                logger.LogDebug("Failed to map command to model: {ApplicationError}", mapResult.Error);
                 return Result<CreatePathogenResult>.Failure(mapResult.Error!);
             }
             var pathogen = mapResult.Data!;

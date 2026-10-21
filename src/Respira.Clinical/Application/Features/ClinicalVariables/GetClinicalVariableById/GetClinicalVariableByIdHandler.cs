@@ -24,7 +24,7 @@ namespace Respira.Clinical.Application.Features.ClinicalVariables.GetClinicalVar
 
             if (variable is null)
             {
-                return Result<ClinicalVariableResult>.Failure(new Error(ApplicationStatus.ResourceNotFound, "Clinical variable not found"));
+                return Result<ClinicalVariableResult>.Failure(new ApplicationError(ApplicationStatus.ResourceNotFound, "Clinical variable not found"));
             }
 
             // Map entity to result object

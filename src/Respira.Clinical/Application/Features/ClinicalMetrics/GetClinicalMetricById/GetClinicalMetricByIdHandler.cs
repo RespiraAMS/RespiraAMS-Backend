@@ -18,7 +18,7 @@ namespace Respira.Clinical.Application.Features.ClinicalMetrics.GetClinicalMetri
                 .FirstOrDefaultAsync(x => x.Id == query.Id, cancellationToken);
             if (metric is null)
             {
-                return Result<ClinicalMetricResult>.Failure(new Error(ApplicationStatus.ResourceNotFound, "Clinical metric not found"));
+                return Result<ClinicalMetricResult>.Failure(new ApplicationError(ApplicationStatus.ResourceNotFound, "Clinical metric not found"));
             }
 
             return Result<ClinicalMetricResult>.Success(ApplicationStatus.Success, new ClinicalMetricResult

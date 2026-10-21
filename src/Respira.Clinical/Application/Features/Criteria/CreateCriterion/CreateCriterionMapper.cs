@@ -28,7 +28,7 @@ namespace Respira.Clinical.Application.Features.Criteria.CreateCriterion
             // which we cannot check in the handler, so we will handle this case in the mapper
             if (formulaMapResult.Data!.ResultType != ExpressionResultType.Boolean)
             {
-                return Result<Criterion>.Failure(new Error(ApplicationStatus.BadRequest, "Formula result type should be boolean"));
+                return Result<Criterion>.Failure(new ApplicationError(ApplicationStatus.BadRequest, "Formula result type should be boolean"));
             }
 
             return Result<Criterion>.Success(ApplicationStatus.Success, new Criterion(command.Name, formulaMapResult.Data!));

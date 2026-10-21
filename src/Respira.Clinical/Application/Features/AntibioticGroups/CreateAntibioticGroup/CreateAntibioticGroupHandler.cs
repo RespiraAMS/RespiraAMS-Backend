@@ -24,7 +24,7 @@ namespace Respira.Clinical.Application.Features.AntibioticGroups.CreateAntibioti
                 if (parent is null)
                 {
                     logger.LogDebug("Parent ID not found for antibiotic group: {Id}", command.ParentId);
-                    return Result<CreateAntibioticGroupResult>.Failure(new Error(ApplicationStatus.BadRequest, "Antibiotic group parent ID not found"));
+                    return Result<CreateAntibioticGroupResult>.Failure(new ApplicationError(ApplicationStatus.BadRequest, "Antibiotic group parent ID not found"));
                 }
             }
 
@@ -32,7 +32,7 @@ namespace Respira.Clinical.Application.Features.AntibioticGroups.CreateAntibioti
             var mapResult = mapper.ToModel(command);
             if (mapResult.IsFailure())
             {
-                logger.LogDebug("Failed to map command to model: {Error}", mapResult.Error);
+                logger.LogDebug("Failed to map command to model: {ApplicationError}", mapResult.Error);
                 return Result<CreateAntibioticGroupResult>.Failure(mapResult.Error!);
             }
             var group = mapResult.Data!;

@@ -17,7 +17,7 @@ namespace Respira.Clinical.Application.Features.AntibioticGroups.DeleteAntibioti
             if (group is null)
             {
                 logger.LogDebug("Antibiotic group not found: {Id}", command.Id);
-                return Result.Failure(new Error(ApplicationStatus.BadRequest, "Antibiotic group not found"));
+                return Result.Failure(new ApplicationError(ApplicationStatus.BadRequest, "Antibiotic group not found"));
             }
 
             // Delete antibiotic group - cascade delete all associating antibiotic

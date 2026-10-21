@@ -1,6 +1,6 @@
 namespace Respira.ServiceDefaults.Contracts.Results
 {
-    public sealed record Error
+    public sealed record ApplicationError
     {
         /// <summary>
         /// Operation status code
@@ -8,16 +8,16 @@ namespace Respira.ServiceDefaults.Contracts.Results
         public string StatusCode { get; set; }
 
         /// <summary>
-        /// Error short description
+        /// ApplicationError short description
         /// </summary>
         public string Description { get; set; }
 
         /// <summary>
-        /// Error detail
+        /// ApplicationError detail
         /// </summary>
         public object? Detail { get; set; }
 
-        public Error(string code, string description, object? detail = null)
+        public ApplicationError(string code, string description, object? detail = null)
         {
             // Check if status code is what our application supports
             if (!ApplicationStatus.IsSupportedStatusCode(code))
@@ -41,7 +41,7 @@ namespace Respira.ServiceDefaults.Contracts.Results
 
         public override string ToString()
         {
-            return @$"Error:
+            return @$"ApplicationError:
             ApplicationStatus: {StatusCode}
             Description: {Description}
             Detail: {Detail}";

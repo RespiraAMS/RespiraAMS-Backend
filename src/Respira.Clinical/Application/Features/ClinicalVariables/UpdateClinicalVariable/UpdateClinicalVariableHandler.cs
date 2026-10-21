@@ -25,7 +25,7 @@ namespace Respira.Clinical.Application.Features.ClinicalVariables.UpdateClinical
             if (variable is null)
             {
                 logger.LogDebug("Clinical variable not found: {Id}", command.Id);
-                return Result.Failure(new Error(ApplicationStatus.BadRequest, "Clinical variable not found"));
+                return Result.Failure(new ApplicationError(ApplicationStatus.BadRequest, "Clinical variable not found"));
             }
 
             // Since the ClinicalVariable table used TPH, the value type cannot be changed
@@ -37,7 +37,7 @@ namespace Respira.Clinical.Application.Features.ClinicalVariables.UpdateClinical
                     CommandValueType = command.ValueType,
                     VariableValueType = variable.ValueType,
                 });
-                return Result.Failure(new Error(
+                return Result.Failure(new ApplicationError(
                     ApplicationStatus.BusinessRuleViolation,
                     "Command value type is different than the value type"));
             }
@@ -54,7 +54,7 @@ namespace Respira.Clinical.Application.Features.ClinicalVariables.UpdateClinical
             var mapResult = mapper.MapModel(variable, command, variables);
             if (mapResult.IsFailure())
             {
-                logger.LogDebug("Failed to map command to model: {Error}", mapResult.Error);
+                logger.LogDebug("Failed to map command to model: {ApplicationError}", mapResult.Error);
                 return Result.Failure(mapResult.Error!);
             }
 
@@ -71,7 +71,7 @@ namespace Respira.Clinical.Application.Features.ClinicalVariables.UpdateClinical
                         numericVar.NormalRange,
                         numericVar.AcceptedRange,
                     });
-                    return Result.Failure(new Error(ApplicationStatus.BadRequest, "Normal range is not within the accepted range"));
+                    return Result.Failure(new ApplicationError(ApplicationStatus.BadRequest, "Normal range is not within the accepted range"));
                 }
             }
 

@@ -18,7 +18,7 @@ namespace Respira.Patient.Application.Features.Patients.UpdatePatient
             if (patient is null)
             {
                 logger.LogDebug("Patient not found: {Id}", command.Id);
-                return Result.Failure(new Error(ApplicationStatus.BadRequest, "Patient not found"));
+                return Result.Failure(new ApplicationError(ApplicationStatus.BadRequest, "Patient not found"));
             }
 
             // Check if the new medical record code is unique
@@ -27,7 +27,7 @@ namespace Respira.Patient.Application.Features.Patients.UpdatePatient
             if (sameMrc)
             {
                 logger.LogDebug("Medical record code {code} is already existed", command.MedicalRecordCode);
-                return Result.Failure(new Error(ApplicationStatus.BadRequest, "Medical record code is already existed"));
+                return Result.Failure(new ApplicationError(ApplicationStatus.BadRequest, "Medical record code is already existed"));
             }
 
             // Check if patient new age is valid
@@ -38,7 +38,7 @@ namespace Respira.Patient.Application.Features.Patients.UpdatePatient
                     Dob = command.DateOfBirth,
                     Age = Domain.Entities.Patient.Age(command.DateOfBirth)
                 });
-                return Result.Failure(new Error(ApplicationStatus.BusinessRuleViolation, "Patient new date of birth violated the age constraint rule, cannot update"));
+                return Result.Failure(new ApplicationError(ApplicationStatus.BusinessRuleViolation, "Patient new date of birth violated the age constraint rule, cannot update"));
             }
 
             /*

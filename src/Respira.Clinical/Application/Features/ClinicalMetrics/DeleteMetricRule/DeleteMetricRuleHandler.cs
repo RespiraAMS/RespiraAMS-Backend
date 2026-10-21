@@ -16,7 +16,7 @@ namespace Respira.Clinical.Application.Features.ClinicalMetrics.DeleteMetricRule
             if (rule is null)
             {
                 logger.LogDebug("Metric rule does not exist: {Id}", command.Id);
-                return Result.Failure(new Error(ApplicationStatus.BadRequest, "Metric rule does not exist"));
+                return Result.Failure(new ApplicationError(ApplicationStatus.BadRequest, "Metric rule does not exist"));
             }
 
             // Delete the rule
