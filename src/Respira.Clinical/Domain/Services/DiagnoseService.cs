@@ -428,12 +428,12 @@ namespace Respira.Clinical.Domain.Services
             // Check if group 1 and group 2 is in context
             if (!context.AntibioticGroups.Any(g => g.Id.Equals(group1.Id)))
             {
-                return Result<bool>.Failure(new Error(ApplicationStatus.BadRequest, "Antibiotic group 1 not found"));
+                return Result<bool>.Failure(new ApplicationError(ApplicationStatus.BadRequest, "Antibiotic group 1 not found"));
             }
 
             if (!context.AntibioticGroups.Any(g => g.Id.Equals(group2.Id)))
             {
-                return Result<bool>.Failure(new Error(ApplicationStatus.BadRequest, "Antibiotic group 2 not found"));
+                return Result<bool>.Failure(new ApplicationError(ApplicationStatus.BadRequest, "Antibiotic group 2 not found"));
             }
 
             // Build the linage list of group 1 and group 2

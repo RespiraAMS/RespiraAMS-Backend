@@ -317,7 +317,7 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.GetCriterionById
             public Result<FormulaDto> Map(Formula source, object? dependencies = null)
             {
                 return Result<FormulaDto>.Failure(
-                    new Error(ApplicationStatus.BadRequest, "Formula cannot be mapped"));
+                    new ApplicationError(ApplicationStatus.BadRequest, "Formula cannot be mapped"));
             }
         }
     }

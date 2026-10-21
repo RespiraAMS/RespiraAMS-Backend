@@ -23,7 +23,7 @@ namespace Respira.Clinical.Application.Features.Criteria.GetCriterionById
             if (criterion is null)
             {
                 logger.LogDebug("Criterion with ID {id} does not exist", query.Id);
-                return Result<CriterionResult>.Failure(new Error(ApplicationStatus.ResourceNotFound, "Criterion does not exist"));
+                return Result<CriterionResult>.Failure(new ApplicationError(ApplicationStatus.ResourceNotFound, "Criterion does not exist"));
             }
 
             var mapResult = mapper.Map(criterion.Formula);
