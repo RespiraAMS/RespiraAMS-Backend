@@ -125,6 +125,16 @@ namespace Respira.Clinical.Application.Features.Diagnosis.EmpiricalDiagnosis.Dia
             {
                 Severity = diagnosisResult.Data!.Severity,
                 TreatmentSite = diagnosisResult.Data.TreatmentSite,
+                MetricsSeverityDiagnosis = [.. diagnosisResult.Data.MetricsSeverityDiagnosis.Select(x =>
+                {
+                    if (x is MajorMinorMetricsSeverityDiagnosis mmsd)
+                    {
+                        return new MetricsSeverityDiagnosisResult(x.Code, x.Severity, x.TreatmentSite, mmsd.MajorMatched, mmsd.MinorMatched);
+                    }
+
+                    var smsd = x as ScoreMetricsSeverityDiagnosis;
+                    return new MetricsSeverityDiagnosisResult(x.Code, x.Severity, x.TreatmentSite, smsd.Score);
+                })],
                 WorthSuspected = [.. diagnosisResult.Data.WorthSuspected.Select(p => new PathogenResult(p.Id, p.Name))],
                 HeavySuspected = [.. diagnosisResult.Data.HeavySuspected.Select(p => new PathogenResult(p.Id, p.Name))],
                 Evidences = [.. diagnosisResult.Data.Evidences],

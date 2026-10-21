@@ -15,6 +15,8 @@ namespace Respira.Clinical.Domain.Models
         /// </summary>
         public required TreatmentSite TreatmentSite { get; set; }
 
+        public required IEnumerable<MetricsSeverityDiagnosis> MetricsSeverityDiagnosis { get; set; }
+
         /// <summary>
         /// This is the list of heavily suspected pathogens, based on risk factors.
         /// This list may be empty if no risk factors are met.

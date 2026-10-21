@@ -8,8 +8,9 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <None Update="seed-data-test.jsonc">
+        <None Update="Data/**/*.*">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
         </None>
     </ItemGroup>
 

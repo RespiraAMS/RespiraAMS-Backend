@@ -543,6 +543,7 @@ namespace Respira.Clinical.Domain.Services
             // Start evaluated metrics
             var observations = clinicalPicture.Observations.ToList();
             var totalEvidences = new List<Evidence>();
+            var metricsSeverityDiagnosis = new List<MetricsSeverityDiagnosis>();
             foreach (var metric in context.Metrics)
             {
                 if (metric.Code.Equals("CURB-65"))
@@ -553,6 +554,7 @@ namespace Respira.Clinical.Domain.Services
                     // Perform diagnosis
                     var (score, evidences) = CalculateMetricsScore(metric, observations);
                     var diagnosis = Curb65((int)score, evidences, isBunMissing);
+                    metricsSeverityDiagnosis.Add(diagnosis);
                     severityDiagnosis.Add((diagnosis.Severity, diagnosis.TreatmentSite));
                     totalEvidences.AddRange(evidences);
 
@@ -562,6 +564,7 @@ namespace Respira.Clinical.Domain.Services
                 {
                     var (score, evidences) = CalculateMetricsScore(metric, observations);
                     var diagnosis = Psi((int)score, evidences);
+                    metricsSeverityDiagnosis.Add(diagnosis);
                     severityDiagnosis.Add((diagnosis.Severity, diagnosis.TreatmentSite));
                     totalEvidences.AddRange(evidences);
                     logger.LogInformation("PSI diagnosis: {diagnosis}", diagnosis);
@@ -571,6 +574,7 @@ namespace Respira.Clinical.Domain.Services
                     var diagnosis = IdsaAts(metric, observations);
                     if (diagnosis is not null)
                     {
+                        metricsSeverityDiagnosis.Add(diagnosis);
                         severityDiagnosis.Add((diagnosis.Severity, diagnosis.TreatmentSite));
                         totalEvidences.AddRange(diagnosis.Evidences);
                     }
@@ -615,6 +619,7 @@ namespace Respira.Clinical.Domain.Services
             {
                 Severity = finalSeverity,
                 TreatmentSite = finalTreatmentSite,
+                MetricsSeverityDiagnosis = metricsSeverityDiagnosis,
                 Evidences = totalEvidences,
                 HeavySuspected = infectionAssessment.HeavySuspected.Select(x => x.Pathogen),
                 WorthSuspected = infectionAssessment.WorthSuspected,

@@ -754,6 +754,42 @@
 				margin-bottom: 0.6rem;
 			}
 			
+			/* Collapsible "Worth Suspected" header */
+			.worth-suspected-box .worth-header { margin-bottom: 0; }
+			
+			.collapse-toggle {
+				display: flex;
+				align-items: center;
+				gap: 0.5rem;
+				width: 100%;
+				padding: 0;
+				border: none;
+				background: none;
+				color: inherit;
+				font: inherit;
+				text-align: left;
+				cursor: pointer;
+			}
+			
+			.collapse-toggle:focus-visible {
+				outline: 2px solid var(--primary);
+				outline-offset: 3px;
+				border-radius: 6px;
+			}
+			
+			.collapse-chevron {
+				width: 16px;
+				height: 16px;
+				flex-shrink: 0;
+				transition: transform 0.15s ease;
+			}
+			
+			.collapse-toggle[aria-expanded="true"] .collapse-chevron { transform: rotate(90deg); }
+			
+			.collapse-toggle .category-count { margin-left: auto; }
+			
+			.worth-body { margin-top: 0.75rem; }
+			
 			.pathogen-item {
 				display: flex;
 				align-items: center;
@@ -818,6 +854,77 @@
 			.metric-score {
 				font-size: 0.8rem;
 				font-weight: 700;
+				color: var(--text-muted);
+			}
+			
+			/* Per-metric severity diagnosis inside the result card */
+			.metrics-diagnosis-block {
+				margin-top: 1.25rem;
+				padding-top: 1rem;
+				border-top: 1px dashed var(--border);
+			}
+			
+			.metrics-diagnosis-block h3 {
+				font-size: 0.82rem;
+				font-weight: 800;
+				text-transform: uppercase;
+				letter-spacing: 0.03em;
+				color: var(--text-muted);
+				margin-bottom: 0.6rem;
+			}
+			
+			.metric-diagnosis-item {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				gap: 0.6rem;
+				flex-wrap: wrap;
+				padding: 0.7rem 0.9rem;
+				margin-bottom: 0.55rem;
+				background: #fbfcfe;
+				border: 1px solid var(--border);
+				border-radius: 10px;
+			}
+			
+			.metric-diagnosis-item:last-child { margin-bottom: 0; }
+			
+			.metric-diagnosis-identity {
+				display: flex;
+				align-items: center;
+				gap: 0.55rem;
+				flex-wrap: wrap;
+			}
+			
+			.metric-diagnosis-code {
+				font-weight: 800;
+				font-size: 0.92rem;
+			}
+			
+			.metric-diagnosis-item .severity-badge {
+				padding: 0.15rem 0.6rem;
+				font-size: 0.7rem;
+			}
+			
+			.metric-diagnosis-meta {
+				display: flex;
+				align-items: center;
+				gap: 0.4rem;
+				flex-wrap: wrap;
+			}
+			
+			.metric-chip {
+				display: inline-block;
+				padding: 0.15rem 0.6rem;
+				border-radius: 999px;
+				font-size: 0.72rem;
+				font-weight: 800;
+				background: var(--primary-light);
+				color: var(--primary-hover);
+				white-space: nowrap;
+			}
+			
+			.metric-chip.is-neutral {
+				background: #f1f5f9;
 				color: var(--text-muted);
 			}
 			
@@ -1116,6 +1223,10 @@
 						<span class="result-label">Allergies</span>
 						<span id="allergiesValue" class="result-value"></span>
 					</div>
+					<div class="metrics-diagnosis-block">
+						<h3>Metrics Severity Diagnosis</h3>
+						<div id="metricsDiagnosisList"></div>
+					</div>
 					<button type="button" class="btn btn-secondary evidence-toggle" id="evidenceToggle" aria-expanded="false" aria-controls="evidencePanel">
 						View Evidences
 					</button>
@@ -1142,8 +1253,18 @@
 					</div>
 
 					<div id="worthSection" class="worth-suspected-box">
-						<h3>Worth Suspected</h3>
-						<div id="worthList"></div>
+						<h3 class="worth-header">
+							<button type="button" class="collapse-toggle" id="worthToggle" aria-expanded="false" aria-controls="worthBody">
+								<svg class="collapse-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+									<polyline points="9 6 15 12 9 18"></polyline>
+								</svg>
+								<span>Worth Suspected</span>
+								<span class="category-count" id="worthCount">0</span>
+							</button>
+						</h3>
+						<div id="worthBody" class="worth-body" hidden>
+							<div id="worthList"></div>
+						</div>
 					</div>
 				</div>
 
@@ -1775,6 +1896,54 @@ showResults(body.data);
 		</li>`;
 	}
 
+	/* ---------------- Metrics severity diagnosis ---------------- */
+
+	function formatTreatmentSite(site) {
+		if (!site) return 'Unknown';
+		return site === 'IntensiveCareUnit' ? 'ICU' : String(site);
+	}
+
+	// Shows only the per-metric verdict: code, severity, treatment site and the
+	// score (score-based metrics) or major/minor criteria counts (IDSA/ATS).
+	// The metric's individual evidences are already part of the main list.
+	function renderMetricsSeverityDiagnosis(metrics) {
+		const container = document.getElementById('metricsDiagnosisList');
+		if (metrics.length === 0) {
+			container.innerHTML = '<div class="empty-state">No metric severity diagnosis available</div>';
+			return;
+		}
+
+		container.innerHTML = metrics.map(m => {
+			const code = m.code ?? m.Code ?? 'Metric';
+			const severity = m.severity ?? m.Severity ?? '';
+			const site = m.treatmentSite ?? m.TreatmentSite ?? '';
+			const score = m.score ?? m.Score;
+			const major = m.majorMatched ?? m.MajorMatched;
+			const minor = m.minorMatched ?? m.MinorMatched;
+
+			const chips = [`<span class="metric-chip is-neutral">Site: ${esc(formatTreatmentSite(site))}</span>`];
+			if (score !== undefined && score !== null) {
+				chips.push(`<span class="metric-chip">Score: ${esc(score)}</span>`);
+			} else if (major !== undefined && major !== null && minor !== undefined && minor !== null) {
+				chips.push(`<span class="metric-chip">Major: ${esc(major)}</span>`);
+				chips.push(`<span class="metric-chip is-neutral">Minor: ${esc(minor)}</span>`);
+			}
+
+			const severityHtml = severity
+			? `<span class="severity-badge severity-${esc(String(severity).toLowerCase())}">${esc(severity)}</span>`
+			: '';
+
+			return `
+			<div class="metric-diagnosis-item">
+				<div class="metric-diagnosis-identity">
+					<span class="metric-diagnosis-code">${esc(code)}</span>
+					${severityHtml}
+				</div>
+				<div class="metric-diagnosis-meta">${chips.join('')}</div>
+			</div>`;
+		}).join('');
+	}
+
 	function showResults(data) {
 	document.getElementById('diagnoseForm').style.display = 'none';
 	document.getElementById('resultsSection').style.display = 'block';
@@ -1798,6 +1967,10 @@ showResults(body.data);
 	document.getElementById('allergiesValue').textContent = allergies.length > 0
 	? allergies.map(a => a.name || a.Name || '').filter(Boolean).join(', ')
 	: 'None';
+
+	// Per-metric severity diagnosis (severity, site, code, score or major/minor)
+	const metricsDiagnosis = data.metricsSeverityDiagnosis ?? data.MetricsSeverityDiagnosis ?? [];
+	renderMetricsSeverityDiagnosis(Array.isArray(metricsDiagnosis) ? metricsDiagnosis : []);
 
 	// Evidences: structured objects ({ source, formula, relatedObservations,
 	// missingVariables, evaluatedValue, score, isMajor }); plain strings are
@@ -1850,6 +2023,11 @@ showResults(body.data);
 				</div>
 				`).join('')
 				: '<div class="empty-state">No worth suspected pathogens</div>';
+
+				// Collapsible by default; count is always visible in the header
+				document.getElementById('worthCount').textContent = String(worthSuspected.length);
+				document.getElementById('worthToggle').setAttribute('aria-expanded', 'false');
+				document.getElementById('worthBody').hidden = true;
 
 				window.scrollTo({ top: 0, behavior: 'smooth' });
 			}
@@ -2054,6 +2232,14 @@ document.getElementById('evidenceToggle').addEventListener('click', () => {
 	panel.hidden = !show;
 	toggle.setAttribute('aria-expanded', String(show));
 	toggle.textContent = `${show ? 'Hide' : 'View'} Evidences (${toggle.dataset.count || 0})`;
+});
+
+document.getElementById('worthToggle').addEventListener('click', () => {
+	const toggle = document.getElementById('worthToggle');
+	const body = document.getElementById('worthBody');
+	const show = body.hidden;
+	body.hidden = !show;
+	toggle.setAttribute('aria-expanded', String(show));
 });
 
 init();
