@@ -1,7 +1,7 @@
 using Authentication.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
-namespace Authentication.API.Extensions;
+namespace Respira.Authentication.API.Extensions;
 
 public static class WebApplicationExtensions
 {

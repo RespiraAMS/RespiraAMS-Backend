@@ -1,9 +1,9 @@
-using Asp.Versioning;
 using Media.API.Extensions;
 using Media.Application.Constracts.Storage;
 using Media.Application.Features.MediaAssets.Create;
 using Media.Infrastructure.Extensions;
 using Media.Infrastructure.Persistence;
+using Respira.ServiceDefaults.Extensions;
 using Wolverine;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,20 +15,7 @@ builder.Services
     .ValidateOnStart();
 
 builder.Services.AddControllers();
-builder.Services
-    .AddApiVersioning(options =>
-    {
-        options.DefaultApiVersion = new ApiVersion(1.0);
-        options.ReportApiVersions = true;
-        options.ApiVersionReader = new UrlSegmentApiVersionReader();
-    })
-    .AddMvc()
-    .AddApiExplorer(options =>
-    {
-        options.GroupNameFormat = "'v'VVV";
-        options.SubstituteApiVersionInUrl = true;
-    })
-    .AddOpenApi();
+builder.Services.AddApiVersion();
 
 builder.AddNpgsqlDbContext<MediaDbContext>("mediadb");
 builder.Services.AddMediaInfrastructure();
@@ -47,7 +34,7 @@ await app.ApplyMigrationsAsync();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi().WithDocumentPerVersion();
+    app.UseApiDocumentation();
 }
 
 app.UseHttpsRedirection();

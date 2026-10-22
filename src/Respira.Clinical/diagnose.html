@@ -1156,11 +1156,11 @@
 		</div>
 
 		<script>
-			const API_BASE = 'https://clinical-service-respira.dev.localhost:7145';
+			const API_BASE = 'https://gateway-respira.dev.localhost:7283';
 			const ENDPOINTS = {
-				form: `${API_BASE}/api/1.0/diagnose/empirical`,
-				diagnose: `${API_BASE}/api/1.0/diagnose/empirical`,
-				antibiotics: `${API_BASE}/api/1.0/antibiotics/list`
+				form: `${API_BASE}/api/v1/diagnose/empirical`,
+				diagnose: `${API_BASE}/api/v1/diagnose/empirical`,
+				antibiotics: `${API_BASE}/api/v1/antibiotics/list`
 			};
 
 			let formVariables = [];
@@ -1674,371 +1674,371 @@ showResults(body.data);
 }
 });
 
-	/* ---------------- Evidence rendering ---------------- */
+/* ---------------- Evidence rendering ---------------- */
 
-	function evPick(raw, lower, upper) {
-		if (!raw || typeof raw !== 'object') return undefined;
-		return raw[lower] !== undefined ? raw[lower] : raw[upper];
+function evPick(raw, lower, upper) {
+	if (!raw || typeof raw !== 'object') return undefined;
+	return raw[lower] !== undefined ? raw[lower] : raw[upper];
+}
+
+function evFormatValue(value) {
+	if (value === null || value === undefined || value === '') return null;
+	if (typeof value === 'boolean') return value ? 'true' : 'false';
+	if (typeof value === 'object') {
+		try { return JSON.stringify(value); } catch { return String(value); }
+	}
+	return String(value);
+}
+
+function evObservationValue(obs) {
+	const variable = evPick(obs, 'variable', 'Variable') || {};
+	const vt = evPick(variable, 'valueType', 'ValueType');
+	let value;
+	if (vt === 'Boolean') value = evPick(obs, 'booleanValue', 'BooleanValue');
+	else if (vt === 'Categorical') value = evPick(obs, 'categoricalValue', 'CategoricalValue');
+	else value = evPick(obs, 'numericValue', 'NumericValue');
+	if (value === undefined || value === null) {
+		value = evPick(obs, 'numericValue', 'NumericValue')
+		?? evPick(obs, 'booleanValue', 'BooleanValue')
+		?? evPick(obs, 'categoricalValue', 'CategoricalValue');
+	}
+	return evFormatValue(value) ?? '(no value)';
+}
+
+function renderEvidence(e) {
+	// Legacy fallback: evidence already rendered as a string
+	if (e === null || e === undefined) return '';
+	if (typeof e === 'string' || typeof e === 'number' || typeof e === 'boolean') {
+		return `<li class="evidence-item evidence-legacy">${esc(e)}</li>`;
 	}
 
-	function evFormatValue(value) {
-		if (value === null || value === undefined || value === '') return null;
-		if (typeof value === 'boolean') return value ? 'true' : 'false';
-		if (typeof value === 'object') {
-			try { return JSON.stringify(value); } catch { return String(value); }
-		}
-		return String(value);
-	}
+	const source = evPick(e, 'source', 'Source');
+	const formula = evPick(e, 'formula', 'Formula');
+	const related = evPick(e, 'relatedObservations', 'RelatedObservations') || [];
+	const missing = evPick(e, 'missingVariables', 'MissingVariables') || [];
+	const score = evPick(e, 'score', 'Score');
+	const isMajor = evPick(e, 'isMajor', 'IsMajor');
 
-	function evObservationValue(obs) {
+	const observations = (Array.isArray(related) ? related : []).map(obs => {
 		const variable = evPick(obs, 'variable', 'Variable') || {};
-		const vt = evPick(variable, 'valueType', 'ValueType');
-		let value;
-		if (vt === 'Boolean') value = evPick(obs, 'booleanValue', 'BooleanValue');
-		else if (vt === 'Categorical') value = evPick(obs, 'categoricalValue', 'CategoricalValue');
-		else value = evPick(obs, 'numericValue', 'NumericValue');
-		if (value === undefined || value === null) {
-			value = evPick(obs, 'numericValue', 'NumericValue')
-				?? evPick(obs, 'booleanValue', 'BooleanValue')
-				?? evPick(obs, 'categoricalValue', 'CategoricalValue');
-		}
-		return evFormatValue(value) ?? '(no value)';
-	}
-
-	function renderEvidence(e) {
-		// Legacy fallback: evidence already rendered as a string
-		if (e === null || e === undefined) return '';
-		if (typeof e === 'string' || typeof e === 'number' || typeof e === 'boolean') {
-			return `<li class="evidence-item evidence-legacy">${esc(e)}</li>`;
-		}
-
-		const source = evPick(e, 'source', 'Source');
-		const formula = evPick(e, 'formula', 'Formula');
-		const related = evPick(e, 'relatedObservations', 'RelatedObservations') || [];
-		const missing = evPick(e, 'missingVariables', 'MissingVariables') || [];
-		const score = evPick(e, 'score', 'Score');
-		const isMajor = evPick(e, 'isMajor', 'IsMajor');
-
-		const observations = (Array.isArray(related) ? related : []).map(obs => {
-			const variable = evPick(obs, 'variable', 'Variable') || {};
-			const code = evPick(variable, 'code', 'Code') || '';
-			const name = evPick(variable, 'name', 'Name') || '';
-			const label = name && code ? `${code} - ${name}` : (code || name || 'Unknown');
-			return `
-			<div class="evidence-var">
-				<span class="evidence-var-name">${esc(label)}</span>
-				<span class="evidence-var-value">${esc(evObservationValue(obs))}</span>
-			</div>`;
-		}).join('');
-
-		const missingCodes = (Array.isArray(missing) ? missing : [])
-			.map(v => evPick(v, 'code', 'Code'))
-			.filter(Boolean);
-
-		let valueHtml;
-		if (missingCodes.length > 0) {
-			valueHtml = `<span class="evidence-value is-missing">not evaluated (missing ${esc(missingCodes.join(', '))})</span>`;
-		} else {
-			const rawValue = evPick(e, 'evaluatedValue', 'EvaluatedValue');
-			const formatted = evFormatValue(rawValue);
-			valueHtml = `<span class="evidence-value">${esc(formatted ?? 'not evaluated')}</span>`;
-		}
-
-		const badges = [];
-		if (score !== undefined && score !== null && score !== '') {
-			badges.push(`<span class="evidence-badge">Score: ${esc(score)}</span>`);
-		}
-		if (isMajor !== undefined && isMajor !== null) {
-			badges.push(isMajor
-				? '<span class="evidence-badge badge-major">Major criteria</span>'
-				: '<span class="evidence-badge badge-minor">Minor criteria</span>');
-		}
-
+		const code = evPick(variable, 'code', 'Code') || '';
+		const name = evPick(variable, 'name', 'Name') || '';
+		const label = name && code ? `${code} - ${name}` : (code || name || 'Unknown');
 		return `
-		<li class="evidence-item">
-			<div class="evidence-source">${esc(source ?? 'Evidence')}</div>
-			${formula ? `
-			<div class="evidence-row">
-				<span class="evidence-key">Formula</span>
-				<code class="evidence-formula">${esc(formula)}</code>
-			</div>` : ''}
-			${observations || missingCodes.length > 0 ? `
-			<div class="evidence-variables">
-				<div class="evidence-variables-title">Variables</div>
-				${observations || '<div class="evidence-var"><span class="evidence-var-name">(none)</span></div>'}
-			</div>` : ''}
-			<div class="evidence-row">
-				<span class="evidence-key">Value</span>
-				${valueHtml}
-			</div>
-			${badges.length > 0 ? `<div class="evidence-badges">${badges.join('')}</div>` : ''}
+		<div class="evidence-var">
+		<span class="evidence-var-name">${esc(label)}</span>
+		<span class="evidence-var-value">${esc(evObservationValue(obs))}</span>
+		</div>`;
+	}).join('');
+
+const missingCodes = (Array.isArray(missing) ? missing : [])
+.map(v => evPick(v, 'code', 'Code'))
+.filter(Boolean);
+
+let valueHtml;
+if (missingCodes.length > 0) {
+	valueHtml = `<span class="evidence-value is-missing">not evaluated (missing ${esc(missingCodes.join(', '))})</span>`;
+} else {
+	const rawValue = evPick(e, 'evaluatedValue', 'EvaluatedValue');
+	const formatted = evFormatValue(rawValue);
+	valueHtml = `<span class="evidence-value">${esc(formatted ?? 'not evaluated')}</span>`;
+}
+
+const badges = [];
+if (score !== undefined && score !== null && score !== '') {
+	badges.push(`<span class="evidence-badge">Score: ${esc(score)}</span>`);
+}
+if (isMajor !== undefined && isMajor !== null) {
+	badges.push(isMajor
+		? '<span class="evidence-badge badge-major">Major criteria</span>'
+		: '<span class="evidence-badge badge-minor">Minor criteria</span>');
+}
+
+return `
+<li class="evidence-item">
+<div class="evidence-source">${esc(source ?? 'Evidence')}</div>
+${formula ? `
+	<div class="evidence-row">
+	<span class="evidence-key">Formula</span>
+	<code class="evidence-formula">${esc(formula)}</code>
+	</div>` : ''}
+	${observations || missingCodes.length > 0 ? `
+		<div class="evidence-variables">
+		<div class="evidence-variables-title">Variables</div>
+		${observations || '<div class="evidence-var"><span class="evidence-var-name">(none)</span></div>'}
+		</div>` : ''}
+		<div class="evidence-row">
+		<span class="evidence-key">Value</span>
+		${valueHtml}
+		</div>
+		${badges.length > 0 ? `<div class="evidence-badges">${badges.join('')}</div>` : ''}
 		</li>`;
 	}
 
 	function showResults(data) {
-	document.getElementById('diagnoseForm').style.display = 'none';
-	document.getElementById('resultsSection').style.display = 'block';
+		document.getElementById('diagnoseForm').style.display = 'none';
+		document.getElementById('resultsSection').style.display = 'block';
 
-	// Severity + treatment site
-	const sev = data.severity ?? data.Severity ?? '';
-	const badge = document.getElementById('severityBadge');
-	badge.textContent = sev;
-	badge.className = 'severity-badge severity-' + String(sev).toLowerCase();
+		// Severity + treatment site
+		const sev = data.severity ?? data.Severity ?? '';
+		const badge = document.getElementById('severityBadge');
+		badge.textContent = sev;
+		badge.className = 'severity-badge severity-' + String(sev).toLowerCase();
 
-	const site = data.treatmentSite ?? data.TreatmentSite ?? '';
-	const siteBadge = document.getElementById('treatmentBadge');
-	siteBadge.textContent = site === 'IntensiveCareUnit' ? 'ICU' : site;
+		const site = data.treatmentSite ?? data.TreatmentSite ?? '';
+		const siteBadge = document.getElementById('treatmentBadge');
+		siteBadge.textContent = site === 'IntensiveCareUnit' ? 'ICU' : site;
 
-	// Pregnancy / lactation flag
-	const pregnant = !!(data.isPatientPregnantOrInLactationPhase ?? data.IsPatientPregnantOrInLactationPhase);
-	document.getElementById('pregnantValue').textContent = pregnant ? 'Yes' : 'No';
+		// Pregnancy / lactation flag
+		const pregnant = !!(data.isPatientPregnantOrInLactationPhase ?? data.IsPatientPregnantOrInLactationPhase);
+		document.getElementById('pregnantValue').textContent = pregnant ? 'Yes' : 'No';
 
-	// Allergies (antibiotics the patient is allergic to)
-	const allergies = data.allergies ?? data.Allergies ?? [];
-	document.getElementById('allergiesValue').textContent = allergies.length > 0
-	? allergies.map(a => a.name || a.Name || '').filter(Boolean).join(', ')
-	: 'None';
+		// Allergies (antibiotics the patient is allergic to)
+		const allergies = data.allergies ?? data.Allergies ?? [];
+		document.getElementById('allergiesValue').textContent = allergies.length > 0
+		? allergies.map(a => a.name || a.Name || '').filter(Boolean).join(', ')
+		: 'None';
 
-	// Evidences: structured objects ({ source, formula, relatedObservations,
-	// missingVariables, evaluatedValue, score, isMajor }); plain strings are
-	// still accepted as a legacy fallback.
-	let evidences = data.evidences ?? data.Evidences ?? [];
-	if (!Array.isArray(evidences)) evidences = [];
-	const evidenceToggle = document.getElementById('evidenceToggle');
-	const evidencePanel = document.getElementById('evidencePanel');
-	const evidenceList = document.getElementById('evidenceList');
-	evidenceList.innerHTML = evidences.length > 0
-	? evidences.map(renderEvidence).join('')
-	: '<li class="empty-state">No evidences available</li>';
-	evidenceToggle.hidden = evidences.length === 0;
-	evidenceToggle.dataset.count = String(evidences.length);
-	evidenceToggle.textContent = `View Evidences (${evidences.length})`;
-	evidencePanel.hidden = true;
-	evidenceToggle.setAttribute('aria-expanded', 'false');
+		// Evidences: structured objects ({ source, formula, relatedObservations,
+		// missingVariables, evaluatedValue, score, isMajor }); plain strings are
+		// still accepted as a legacy fallback.
+		let evidences = data.evidences ?? data.Evidences ?? [];
+		if (!Array.isArray(evidences)) evidences = [];
+		const evidenceToggle = document.getElementById('evidenceToggle');
+		const evidencePanel = document.getElementById('evidencePanel');
+		const evidenceList = document.getElementById('evidenceList');
+		evidenceList.innerHTML = evidences.length > 0
+		? evidences.map(renderEvidence).join('')
+		: '<li class="empty-state">No evidences available</li>';
+		evidenceToggle.hidden = evidences.length === 0;
+		evidenceToggle.dataset.count = String(evidences.length);
+		evidenceToggle.textContent = `View Evidences (${evidences.length})`;
+		evidencePanel.hidden = true;
+		evidenceToggle.setAttribute('aria-expanded', 'false');
 
-	// Variables the observation set did not cover
-	const missingVariables = data.missingVariables ?? data.MissingVariables ?? [];
-	const missingList = document.getElementById('missingList');
-	missingList.innerHTML = missingVariables.length > 0
-	? missingVariables.map(v => `
-		<div class="metric-item">
-		<span class="metric-code">${esc(v.code || v.Code)}</span>
-		<span class="metric-score">${esc(v.name || v.Name)}</span>
-		</div>
-		`).join('')
-		: '<div class="empty-state">All variables were provided</div>';
-
-		// Infection assessment - heavy suspected (already ordered by score server-side,
-		// so the position in the list is the suspicion rank)
-		const heavySuspected = data.heavySuspected ?? data.HeavySuspected ?? [];
-		const heavyList = document.getElementById('heavyList');
-		heavyList.innerHTML = heavySuspected.length > 0
-		? heavySuspected.map((p, index) => `
-			<div class="pathogen-item">
-			<span class="pathogen-rank">#${index + 1}</span>
-			<span class="pathogen-name">${esc(p.name || p.Name)}</span>
+		// Variables the observation set did not cover
+		const missingVariables = data.missingVariables ?? data.MissingVariables ?? [];
+		const missingList = document.getElementById('missingList');
+		missingList.innerHTML = missingVariables.length > 0
+		? missingVariables.map(v => `
+			<div class="metric-item">
+			<span class="metric-code">${esc(v.code || v.Code)}</span>
+			<span class="metric-score">${esc(v.name || v.Name)}</span>
 			</div>
 			`).join('')
-			: '<div class="empty-state">No heavy suspected pathogens</div>';
+			: '<div class="empty-state">All variables were provided</div>';
 
-			const worthSuspected = data.worthSuspected ?? data.WorthSuspected ?? [];
-			const worthList = document.getElementById('worthList');
-			worthList.innerHTML = worthSuspected.length > 0
-			? worthSuspected.map(p => `
+			// Infection assessment - heavy suspected (already ordered by score server-side,
+			// so the position in the list is the suspicion rank)
+			const heavySuspected = data.heavySuspected ?? data.HeavySuspected ?? [];
+			const heavyList = document.getElementById('heavyList');
+			heavyList.innerHTML = heavySuspected.length > 0
+			? heavySuspected.map((p, index) => `
 				<div class="pathogen-item">
+				<span class="pathogen-rank">#${index + 1}</span>
 				<span class="pathogen-name">${esc(p.name || p.Name)}</span>
 				</div>
 				`).join('')
-				: '<div class="empty-state">No worth suspected pathogens</div>';
+				: '<div class="empty-state">No heavy suspected pathogens</div>';
 
-				window.scrollTo({ top: 0, behavior: 'smooth' });
-			}
+				const worthSuspected = data.worthSuspected ?? data.WorthSuspected ?? [];
+				const worthList = document.getElementById('worthList');
+				worthList.innerHTML = worthSuspected.length > 0
+				? worthSuspected.map(p => `
+					<div class="pathogen-item">
+					<span class="pathogen-name">${esc(p.name || p.Name)}</span>
+					</div>
+					`).join('')
+					: '<div class="empty-state">No worth suspected pathogens</div>';
 
-			function resetForm() {
-				document.getElementById('resultsSection').style.display = 'none';
-				document.getElementById('diagnoseForm').style.display = '';
-				showStep(1);
-				hideError();
-				clearFieldErrors();
-				window.scrollTo({ top: 0, behavior: 'smooth' });
-			}
-
-			function findFieldInput(variableId) {
-				const direct = document.getElementById(`var-${variableId}`);
-				if (direct) return direct;
-				const key = String(variableId ?? '').toLowerCase();
-				return Array.from(document.querySelectorAll('[data-variable-id]'))
-				.find(el => (el.getAttribute('data-variable-id') || '').toLowerCase() === key) || null;
-			}
-
-			function clearFieldErrors() {
-				document.querySelectorAll('.form-group.has-error, .form-group.has-warning').forEach(clearGroupError);
-			}
-
-			function clearGroupError(group) {
-				if (!group) return;
-				group.classList.remove('has-error', 'has-warning');
-				group.querySelectorAll('.field-error-msg, .field-warn-msg').forEach(msg => msg.remove());
-				group.querySelectorAll('[aria-invalid]').forEach(el => el.removeAttribute('aria-invalid'));
-			}
-
-			function showGroupError(group, message) {
-				if (!group) return;
-				group.classList.remove('has-warning');
-				group.querySelectorAll('.field-warn-msg').forEach(msg => msg.remove());
-				group.classList.add('has-error');
-				const input = group.querySelector('[data-variable-id]');
-				if (input) input.setAttribute('aria-invalid', 'true');
-
-				let msg = group.querySelector('.field-error-msg');
-				if (!msg) {
-					msg = document.createElement('div');
-					msg.className = 'field-error-msg';
-					msg.setAttribute('role', 'alert');
-					group.appendChild(msg);
+					window.scrollTo({ top: 0, behavior: 'smooth' });
 				}
-				msg.textContent = message;
-			}
 
-			function showGroupWarning(group, message) {
-				if (!group) return;
-				group.classList.remove('has-error');
-				group.querySelectorAll('.field-error-msg').forEach(msg => msg.remove());
-				group.querySelectorAll('[aria-invalid]').forEach(el => el.removeAttribute('aria-invalid'));
-				group.classList.add('has-warning');
-
-				let msg = group.querySelector('.field-warn-msg');
-				if (!msg) {
-					msg = document.createElement('div');
-					msg.className = 'field-warn-msg';
-					msg.setAttribute('role', 'status');
-					group.appendChild(msg);
+				function resetForm() {
+					document.getElementById('resultsSection').style.display = 'none';
+					document.getElementById('diagnoseForm').style.display = '';
+					showStep(1);
+					hideError();
+					clearFieldErrors();
+					window.scrollTo({ top: 0, behavior: 'smooth' });
 				}
-				msg.textContent = message;
-			}
 
-			/*
-			* Validates a single rendered field against its metadata.
-			*  - empty required field          -> blocking error
-			*  - numeric outside acceptedRange -> blocking error
-			*  - numeric outside normalRange   -> non-blocking warning
-			* Returns { hasError, hasWarning }.
-			*/
-			function validateField(input) {
-				const group = input ? input.closest('.form-group') : null;
-				const meta = input ? variableMeta[String(input.dataset.variableId || '')] : null;
-				if (!meta) return { hasError: false, hasWarning: false };
+				function findFieldInput(variableId) {
+					const direct = document.getElementById(`var-${variableId}`);
+					if (direct) return direct;
+					const key = String(variableId ?? '').toLowerCase();
+					return Array.from(document.querySelectorAll('[data-variable-id]'))
+					.find(el => (el.getAttribute('data-variable-id') || '').toLowerCase() === key) || null;
+				}
 
-				clearGroupError(group);
-				const value = String(input.value ?? '').trim();
+				function clearFieldErrors() {
+					document.querySelectorAll('.form-group.has-error, .form-group.has-warning').forEach(clearGroupError);
+				}
 
-				if (value === '') {
-					if (meta.isRequired) {
-						showGroupError(group, `${meta.name} is required.`);
+				function clearGroupError(group) {
+					if (!group) return;
+					group.classList.remove('has-error', 'has-warning');
+					group.querySelectorAll('.field-error-msg, .field-warn-msg').forEach(msg => msg.remove());
+					group.querySelectorAll('[aria-invalid]').forEach(el => el.removeAttribute('aria-invalid'));
+				}
+
+				function showGroupError(group, message) {
+					if (!group) return;
+					group.classList.remove('has-warning');
+					group.querySelectorAll('.field-warn-msg').forEach(msg => msg.remove());
+					group.classList.add('has-error');
+					const input = group.querySelector('[data-variable-id]');
+					if (input) input.setAttribute('aria-invalid', 'true');
+
+					let msg = group.querySelector('.field-error-msg');
+					if (!msg) {
+						msg = document.createElement('div');
+						msg.className = 'field-error-msg';
+						msg.setAttribute('role', 'alert');
+						group.appendChild(msg);
+					}
+					msg.textContent = message;
+				}
+
+				function showGroupWarning(group, message) {
+					if (!group) return;
+					group.classList.remove('has-error');
+					group.querySelectorAll('.field-error-msg').forEach(msg => msg.remove());
+					group.querySelectorAll('[aria-invalid]').forEach(el => el.removeAttribute('aria-invalid'));
+					group.classList.add('has-warning');
+
+					let msg = group.querySelector('.field-warn-msg');
+					if (!msg) {
+						msg = document.createElement('div');
+						msg.className = 'field-warn-msg';
+						msg.setAttribute('role', 'status');
+						group.appendChild(msg);
+					}
+					msg.textContent = message;
+				}
+
+				/*
+				* Validates a single rendered field against its metadata.
+				*  - empty required field          -> blocking error
+				*  - numeric outside acceptedRange -> blocking error
+				*  - numeric outside normalRange   -> non-blocking warning
+				* Returns { hasError, hasWarning }.
+				*/
+				function validateField(input) {
+					const group = input ? input.closest('.form-group') : null;
+					const meta = input ? variableMeta[String(input.dataset.variableId || '')] : null;
+					if (!meta) return { hasError: false, hasWarning: false };
+
+					clearGroupError(group);
+					const value = String(input.value ?? '').trim();
+
+					if (value === '') {
+						if (meta.isRequired) {
+							showGroupError(group, `${meta.name} is required.`);
+							return { hasError: true, hasWarning: false };
+						}
+						return { hasError: false, hasWarning: false };
+					}
+
+					if (meta.valueType !== 'Numeric') {
+						return { hasError: false, hasWarning: false };
+					}
+
+					const num = Number(value);
+					if (!Number.isFinite(num)) {
+						showGroupError(group, `${meta.name} must be a valid number.`);
 						return { hasError: true, hasWarning: false };
 					}
+
+					if (meta.acceptedRange && !inRange(num, meta.acceptedRange)) {
+						showGroupError(group,
+							`Value must be within the accepted range (${describeRange(meta.acceptedRange, meta.unit)}).`);
+						return { hasError: true, hasWarning: false };
+					}
+
+					if (meta.normalRange && !inRange(num, meta.normalRange)) {
+						showGroupWarning(group,
+							`Outside the normal range (${describeRange(meta.normalRange, meta.unit)}). This value is accepted and can still be submitted.`);
+						return { hasError: false, hasWarning: true };
+					}
+
 					return { hasError: false, hasWarning: false };
 				}
 
-				if (meta.valueType !== 'Numeric') {
-					return { hasError: false, hasWarning: false };
-				}
-
-				const num = Number(value);
-				if (!Number.isFinite(num)) {
-					showGroupError(group, `${meta.name} must be a valid number.`);
-					return { hasError: true, hasWarning: false };
-				}
-
-				if (meta.acceptedRange && !inRange(num, meta.acceptedRange)) {
-					showGroupError(group,
-						`Value must be within the accepted range (${describeRange(meta.acceptedRange, meta.unit)}).`);
-					return { hasError: true, hasWarning: false };
-				}
-
-				if (meta.normalRange && !inRange(num, meta.normalRange)) {
-					showGroupWarning(group,
-						`Outside the normal range (${describeRange(meta.normalRange, meta.unit)}). This value is accepted and can still be submitted.`);
-					return { hasError: false, hasWarning: true };
-				}
-
-				return { hasError: false, hasWarning: false };
+				/*
+				* Validates every rendered field. Returns how many fields have a blocking error.
+				*/
+				function validateAllFields() {
+					let invalidCount = 0;
+					formVariables.forEach(v => {
+						const input = document.getElementById(`var-${v.id || v.Id}`);
+						if (!input) return;
+						if (validateField(input).hasError) invalidCount++;
+					});
+				return invalidCount;
 			}
 
 			/*
-			* Validates every rendered field. Returns how many fields have a blocking error.
+			* Maps error.detail (variableId -> message) returned by the server onto the
+			* rendered form: highlights the field and shows the message under it.
+			* Returns how many field errors could be attached to a rendered input.
 			*/
-			function validateAllFields() {
-				let invalidCount = 0;
-				formVariables.forEach(v => {
-					const input = document.getElementById(`var-${v.id || v.Id}`);
-					if (!input) return;
-					if (validateField(input).hasError) invalidCount++;
-				});
-			return invalidCount;
-		}
+			function applyFieldErrors(detail) {
+				if (!detail || typeof detail !== 'object') return 0;
 
-		/*
-		* Maps error.detail (variableId -> message) returned by the server onto the
-		* rendered form: highlights the field and shows the message under it.
-		* Returns how many field errors could be attached to a rendered input.
-		*/
-		function applyFieldErrors(detail) {
-			if (!detail || typeof detail !== 'object') return 0;
+				let applied = 0;
+				for (const [variableId, message] of Object.entries(detail)) {
+					if (!message) continue;
+					const input = findFieldInput(variableId);
+					if (!input) continue;
 
-			let applied = 0;
-			for (const [variableId, message] of Object.entries(detail)) {
-				if (!message) continue;
-				const input = findFieldInput(variableId);
-				if (!input) continue;
+					const group = input.closest('.form-group');
+					if (!group) continue;
 
-				const group = input.closest('.form-group');
-				if (!group) continue;
-
-				clearGroupError(group);
-				showGroupError(group, message);
-				applied++;
+					clearGroupError(group);
+					showGroupError(group, message);
+					applied++;
+				}
+				return applied;
 			}
-			return applied;
-		}
 
-		function scrollToFirstError() {
-			const first = document.querySelector('.form-group.has-error');
-			if (first) first.scrollIntoView({ behavior: 'smooth', block: 'center' });
-		}
+			function scrollToFirstError() {
+				const first = document.querySelector('.form-group.has-error');
+				if (first) first.scrollIntoView({ behavior: 'smooth', block: 'center' });
+			}
 
-		function showError(msg, detail) {
-			document.getElementById('errorModalMsg').textContent = msg;
+			function showError(msg, detail) {
+				document.getElementById('errorModalMsg').textContent = msg;
 
-			const list = document.getElementById('errorModalDetail');
-			const messages = detail && typeof detail === 'object'
-			? Object.values(detail).filter(Boolean)
-			: [];
-			list.innerHTML = messages.map(m => `<li>${esc(m)}</li>`).join('');
-			list.style.display = messages.length > 0 ? 'block' : 'none';
+				const list = document.getElementById('errorModalDetail');
+				const messages = detail && typeof detail === 'object'
+				? Object.values(detail).filter(Boolean)
+				: [];
+				list.innerHTML = messages.map(m => `<li>${esc(m)}</li>`).join('');
+				list.style.display = messages.length > 0 ? 'block' : 'none';
 
-			document.getElementById('errorModal').classList.add('open');
-		}
+				document.getElementById('errorModal').classList.add('open');
+			}
 
-		function hideError() {
-			document.getElementById('errorModal').classList.remove('open');
-		}
+			function hideError() {
+				document.getElementById('errorModal').classList.remove('open');
+			}
 
-		document.getElementById('errorModalClose').addEventListener('click', hideError);
-		document.getElementById('errorModal').addEventListener('click', (e) => {
-			if (e.target.id === 'errorModal') hideError();
+			document.getElementById('errorModalClose').addEventListener('click', hideError);
+			document.getElementById('errorModal').addEventListener('click', (e) => {
+				if (e.target.id === 'errorModal') hideError();
+			});
+		document.addEventListener('keydown', (e) => {
+			if (e.key === 'Escape') hideError();
 		});
-	document.addEventListener('keydown', (e) => {
-		if (e.key === 'Escape') hideError();
-	});
 
-// Re-validate a field as soon as the user edits it: this drops any stale
-// server-side error and immediately applies the accepted/normal range rules.
-document.getElementById('diagnoseForm').addEventListener('input', (e) => {
-	const input = e.target.closest('[data-variable-id]');
-	if (!input) return;
-	validateField(input);
-});
+	// Re-validate a field as soon as the user edits it: this drops any stale
+	// server-side error and immediately applies the accepted/normal range rules.
+	document.getElementById('diagnoseForm').addEventListener('input', (e) => {
+		const input = e.target.closest('[data-variable-id]');
+		if (!input) return;
+		validateField(input);
+	});
 document.getElementById('diagnoseForm').addEventListener('click', (e) => {
 	const btn = e.target.closest('.segment-btn');
 	if (!btn) return;

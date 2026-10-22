@@ -16,8 +16,6 @@
         <PackageReference Include="WolverineFx.RabbitMQ" />
         <PackageReference Include="WolverineFx.FluentValidation" />
         <PackageReference Include="WolverineFx" />
-        <PackageReference Include="Scalar.AspNetCore" />
-        <PackageReference Include="Asp.Versioning.Mvc" />
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
         <PackageReference Include="Aspire.Npgsql" />
         <PackageReference Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" />

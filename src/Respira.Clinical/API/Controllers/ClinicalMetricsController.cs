@@ -16,7 +16,7 @@ using Wolverine;
 namespace Respira.Clinical.API.Controllers
 {
     [ApiController]
-    [Route("api/{version:apiVersion}/clinical-metrics")]
+    [Route("api/v{version:apiVersion}/clinical-metrics")]
     [ApiVersion("1.0")]
     public class ClinicalMetricsController(IMessageBus bus) : ControllerBase
     {

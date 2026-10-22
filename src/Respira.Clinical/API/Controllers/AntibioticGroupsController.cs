@@ -13,7 +13,7 @@ using Wolverine;
 namespace Respira.Clinical.API.Controllers
 {
     [ApiController]
-    [Route("api/{version:apiVersion}/antibiotic-groups")]
+    [Route("api/v{version:apiVersion}/antibiotic-groups")]
     [ApiVersion("1.0")]
     public class AntibioticGroupsController(IMessageBus bus) : ControllerBase
     {

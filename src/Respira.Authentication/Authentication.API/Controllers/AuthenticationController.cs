@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Respira.ServiceDefaults.Contracts.Results;
 using Wolverine;
 
-namespace Authentication.API.Controllers;
+namespace Respira.Authentication.API.Controllers;
 
 [ApiController]
 [ApiVersion("1.0")]

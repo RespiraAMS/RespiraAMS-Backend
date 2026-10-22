@@ -8,7 +8,7 @@ using Wolverine;
 namespace Respira.Clinical.API.Controllers
 {
     [ApiController]
-    [Route("api/{version:apiVersion}/diagnose")]
+    [Route("api/v{version:apiVersion}/diagnose")]
     [ApiVersion("1.0")]
     public class DiagnoseController(IMessageBus bus) : ControllerBase
     {
