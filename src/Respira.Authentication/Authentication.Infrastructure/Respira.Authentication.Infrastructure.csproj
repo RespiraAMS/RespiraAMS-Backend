@@ -1,8 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-    <ItemGroup>
-        <ProjectReference Include="..\Authentication.Application\Authentication.Application.csproj" />
-        <ProjectReference Include="..\Authentication.Domain\Authentication.Domain.csproj" />
-    </ItemGroup>
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
     <ItemGroup>
         <PackageReference Include="BCrypt.Net-Next" />
         <PackageReference Include="System.IdentityModel.Tokens.Jwt" />
@@ -19,9 +21,8 @@
         <PackageReference Include="MailKit" />
     </ItemGroup>
 
-    <PropertyGroup>
-        <TargetFramework>net10.0</TargetFramework>
-        <ImplicitUsings>enable</ImplicitUsings>
-        <Nullable>enable</Nullable>
-    </PropertyGroup>
+    <ItemGroup>
+        <ProjectReference Include="../Authentication.Domain/Respira.Authentication.Domain.csproj" />
+        <ProjectReference Include="../Authentication.Application/Respira.Authentication.Application.csproj" />
+    </ItemGroup>
 </Project>

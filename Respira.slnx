@@ -1,16 +1,16 @@
 <Solution>
     <Folder Name="/src/" />
     <Folder Name="/src/Respira.Authentication/">
-        <Project Path="src/Respira.Authentication/Authentication.API/Authentication.API.csproj" />
-        <Project Path="src/Respira.Authentication/Authentication.Application/Authentication.Application.csproj" />
-        <Project Path="src/Respira.Authentication/Authentication.Domain/Authentication.Domain.csproj" />
-        <Project Path="src/Respira.Authentication/Authentication.Infrastructure/Authentication.Infrastructure.csproj" />
+        <Project Path="src/Respira.Authentication/Authentication.API/Respira.Authentication.API.csproj" />
+        <Project Path="src/Respira.Authentication/Authentication.Application/Respira.Authentication.Application.csproj" />
+        <Project Path="src/Respira.Authentication/Authentication.Domain/Respira.Authentication.Domain.csproj" />
+        <Project Path="src/Respira.Authentication/Authentication.Infrastructure/Respira.Authentication.Infrastructure.csproj" />
     </Folder>
     <Folder Name="/src/Respira.Media/">
-        <Project Path="src/Respira.Media/Media.API/Media.API.csproj" />
-        <Project Path="src/Respira.Media/Media.Application/Media.Application.csproj" />
-        <Project Path="src/Respira.Media/Media.Domain/Media.Domain.csproj" />
-        <Project Path="src/Respira.Media/Media.Infrastructure/Media.Infrastructure.csproj" />
+        <Project Path="src/Respira.Media/Media.API/Respira.Media.API.csproj" />
+        <Project Path="src/Respira.Media/Media.Application/Respira.Media.Application.csproj" />
+        <Project Path="src/Respira.Media/Media.Domain/Respira.Media.Domain.csproj" />
+        <Project Path="src/Respira.Media/Media.Infrastructure/Respira.Media.Infrastructure.csproj" />
     </Folder>
     <Folder Name="/src/Respira.Patient/">
         <Project Path="src/Respira.Patient/API/Respira.Patient.API.csproj" />

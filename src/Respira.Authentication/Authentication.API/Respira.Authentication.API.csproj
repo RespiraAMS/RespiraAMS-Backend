@@ -22,7 +22,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Authentication.Application\Authentication.Application.csproj" />
-        <ProjectReference Include="..\Authentication.Infrastructure\Authentication.Infrastructure.csproj" />
+        <ProjectReference Include="../Authentication.Application/Respira.Authentication.Application.csproj" />
+        <ProjectReference Include="../Authentication.Infrastructure/Respira.Authentication.Infrastructure.csproj" />
     </ItemGroup>
 </Project>
