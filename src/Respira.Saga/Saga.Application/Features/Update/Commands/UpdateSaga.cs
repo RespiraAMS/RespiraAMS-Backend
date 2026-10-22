@@ -47,7 +47,7 @@ namespace Respira.Saga.Application.Features.Update.Commands
 
         public List<DegreeType> Degrees { get; set; } = [];
 
-        public AcademicTitleEnum AcademicTitle { get; set; }
+        public AcademicTitle AcademicTitle { get; set; }
 
         public PositionType Position { get; set; }
 
