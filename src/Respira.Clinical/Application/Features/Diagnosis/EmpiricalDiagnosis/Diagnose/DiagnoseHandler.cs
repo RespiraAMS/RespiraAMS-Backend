@@ -35,6 +35,7 @@ namespace Respira.Clinical.Application.Features.Diagnosis.EmpiricalDiagnosis.Dia
                     .AsNoTracking()
                     .Include(x => x.Rules)
                     .ThenInclude(r => r.Criterion)
+                    .Where(x => x.IsApplied)
                     .ToListAsync(cancellationToken),
                 AntibioticGroups = await context.AntibioticGroups
                     .AsNoTracking()

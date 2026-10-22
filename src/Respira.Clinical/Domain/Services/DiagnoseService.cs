@@ -327,17 +327,15 @@ namespace Respira.Clinical.Domain.Services
              * 1. Check for suspected pathogens. This list is the easiest to check, but
              * since the only factors used is severity and treatment site, this may not
              * be a strong evidence for infection.
-             * 2. Check for risk factors. Each satisfied risk factor counts 1 point,
-             * and a pathogen that is also in the suspected list gets an extra point.
-             * The final score of a pathogen simply is the number of satisfied risk
-             * factors (plus the suspected boost).
+             * 2. Check for risk factors. The score is simply the total matched divide
+             * by the total risk factors of each pathogen.
              * 3. Assessment.
              * 3.1. Any pathogen with risk factors would be included in the
              * heavy suspected list.
              * 3.2. Any pathogen that is both in the suspected list and risk factors
-             * would receive a high boost, which make them appear first in the heavy
+             * would receive a boost, which may help them rise at higher rank in the heavy
              * suspected list.
-             * 3.3. If not, then the pathogen is worth considering
+             * 3.3. If pathogen doesn't have risk factor score, then the pathogen is worth considering
              */
 
             var heavySuspected = new List<ScoredPathogen>();

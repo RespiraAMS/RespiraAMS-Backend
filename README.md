@@ -2,6 +2,13 @@
 
 This is the back-end project of RespiraAMS
 
+## About the project
+
+RespiraAMS is a clinical decision support system (CDSS) that helps in diagnosing
+Community-acquired Pneumonia (CAP) patients. It also implement the Antimicrobial
+Stewardship program (AMS), which aims to reduce the misuse of antibiotics in hospital
+environment.
+
 ## Structure
 
 The project is a micro-services architecture, where the source code is located in
