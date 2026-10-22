@@ -1,12 +1,12 @@
-using Authentication.Application.Constracts.Authentication;
-using Authentication.Application.Constracts.Cache;
-using Authentication.Application.Constracts.Data;
-using Authentication.Application.Features.Accounts.Commands.Update.Events;
 using Microsoft.Extensions.Logging;
+using Respira.Authentication.Application.Constracts.Authentication;
+using Respira.Authentication.Application.Constracts.Cache;
+using Respira.Authentication.Application.Constracts.Data;
+using Respira.Authentication.Application.Features.Accounts.Commands.Update.Events;
 using Respira.ServiceDefaults.Contracts.CQRS;
 using Wolverine;
 
-namespace Authentication.Application.Features.Accounts.Commands.Update
+namespace Respira.Authentication.Application.Features.Accounts.Commands.Update
 {
     public class UpdateAccountCommandHandler(
         IAuthDbContext dbContext,

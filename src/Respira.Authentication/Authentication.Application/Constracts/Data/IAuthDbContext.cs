@@ -1,7 +1,7 @@
-using Authentication.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using Respira.Authentication.Domain.Entities;
 
-namespace Authentication.Application.Constracts.Data
+namespace Respira.Authentication.Application.Constracts.Data
 {
     public interface IAuthDbContext
     {

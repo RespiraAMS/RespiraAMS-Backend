@@ -1,6 +1,6 @@
 using Respira.ServiceDefaults.Contracts.CQRS;
 
-namespace Authentication.Application.Features.Accounts.Commands.SoftDelete
+namespace Respira.Authentication.Application.Features.Accounts.Commands.SoftDelete
 {
     /// <summary>
     /// Soft-deletes an account. Used by the create saga as the compensation for

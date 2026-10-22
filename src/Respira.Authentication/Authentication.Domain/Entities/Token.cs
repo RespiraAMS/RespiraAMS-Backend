@@ -1,7 +1,7 @@
-using Authentication.Domain.Enums;
+using Respira.Authentication.Domain.Enums;
 using Respira.ServiceDefaults.Models;
 
-namespace Authentication.Domain.Entities
+namespace Respira.Authentication.Domain.Entities
 {
     /// <summary>
     /// A persisted token (refresh, email verification, password reset) issued to a user.

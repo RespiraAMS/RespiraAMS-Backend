@@ -1,5 +1,5 @@
-using Authentication.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
+using Respira.Authentication.Infrastructure.Persistence;
 
 namespace Respira.Authentication.API.Extensions;
 

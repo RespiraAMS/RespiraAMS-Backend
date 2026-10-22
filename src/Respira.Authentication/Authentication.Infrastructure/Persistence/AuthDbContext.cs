@@ -1,9 +1,9 @@
-using Authentication.Application.Constracts.Data;
-using Authentication.Domain.Entities;
-using Authentication.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
+using Respira.Authentication.Application.Constracts.Data;
+using Respira.Authentication.Domain.Entities;
+using Respira.Authentication.Domain.Enums;
 
-namespace Authentication.Infrastructure.Persistence
+namespace Respira.Authentication.Infrastructure.Persistence
 {
     public sealed class AuthDbContext(DbContextOptions<AuthDbContext> options)
         : DbContext(options),

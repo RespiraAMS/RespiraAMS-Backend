@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace Authentication.Domain.Enums
+namespace Respira.Authentication.Domain.Enums
 {
     /// <summary>
     /// User roles in the system. Determines access level and permissions.

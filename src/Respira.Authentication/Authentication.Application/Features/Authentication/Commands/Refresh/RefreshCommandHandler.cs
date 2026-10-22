@@ -1,15 +1,15 @@
-using Authentication.Application.Constracts.Authentication;
-using Authentication.Application.Constracts.Cache;
-using Authentication.Application.Constracts.Data;
-using Authentication.Application.Features.Authentication.Commands.Refresh.Result;
-using Authentication.Domain.Entities;
-using Authentication.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Respira.Authentication.Application.Constracts.Authentication;
+using Respira.Authentication.Application.Constracts.Cache;
+using Respira.Authentication.Application.Constracts.Data;
+using Respira.Authentication.Application.Features.Authentication.Commands.Refresh.Result;
+using Respira.Authentication.Domain.Entities;
+using Respira.Authentication.Domain.Enums;
 using Respira.ServiceDefaults.Contracts.CQRS;
 using Respira.ServiceDefaults.Contracts.Results;
 
-namespace Authentication.Application.Features.Authentication.Commands.Refresh
+namespace Respira.Authentication.Application.Features.Authentication.Commands.Refresh
 {
     /// <summary>
     /// Rotates a valid refresh token and issues a replacement token pair for its active account.

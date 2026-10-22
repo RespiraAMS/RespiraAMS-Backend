@@ -1,14 +1,14 @@
-using Authentication.Application.Constracts.Authentication;
-using Authentication.Application.Constracts.Cache;
-using Authentication.Application.Constracts.Data;
-using Authentication.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Respira.Authentication.Application.Constracts.Authentication;
+using Respira.Authentication.Application.Constracts.Cache;
+using Respira.Authentication.Application.Constracts.Data;
+using Respira.Authentication.Domain.Entities;
 using Respira.ServiceDefaults.Contracts.CQRS;
 using Respira.ServiceDefaults.Contracts.Results;
 
-namespace Authentication.Application.Features.Authentication.Commands.Logout
+namespace Respira.Authentication.Application.Features.Authentication.Commands.Logout
 {
     public class LogoutCommandHandler(
         IAuthDbContext dbContext,

@@ -1,10 +1,10 @@
-using Authentication.Application.Features.Accounts.Commands.Update;
-using Authentication.Application.Features.Accounts.Commands.Update.Events;
 using Microsoft.Extensions.Logging;
-using Respira.Doctor.Application.Features.Doctors.Commands.Update;
-using Respira.Doctor.Application.Features.Doctors.Commands.Update.Events;
 using Respira.Doctor.Domain.Enums;
 using Respira.Saga.Application.Constracts.Media;
+using Respira.Saga.Application.Constracts.Messages.Authentication.Update;
+using Respira.Saga.Application.Constracts.Messages.Authentication.Update.Events;
+using Respira.Saga.Application.Constracts.Messages.Doctor.Update;
+using Respira.Saga.Application.Constracts.Messages.Doctor.Update.Events;
 using Respira.Saga.Domain.Enums;
 using Respira.ServiceDefaults.Contracts.Results;
 using Wolverine;

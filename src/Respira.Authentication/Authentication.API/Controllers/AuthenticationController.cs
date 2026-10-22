@@ -1,12 +1,12 @@
 using Asp.Versioning;
-using Authentication.Application.Features.Authentication.Commands.Login;
-using Authentication.Application.Features.Authentication.Commands.Login.Result;
-using Authentication.Application.Features.Authentication.Commands.Logout;
-using Authentication.Application.Features.Authentication.Commands.Refresh;
-using Authentication.Application.Features.Authentication.Commands.Refresh.Result;
-using Authentication.Application.Features.Authentication.Commands.SendVerify;
-using Authentication.Application.Features.Authentication.Commands.VerifyEmail;
 using Microsoft.AspNetCore.Mvc;
+using Respira.Authentication.Application.Features.Authentication.Commands.Login;
+using Respira.Authentication.Application.Features.Authentication.Commands.Login.Result;
+using Respira.Authentication.Application.Features.Authentication.Commands.Logout;
+using Respira.Authentication.Application.Features.Authentication.Commands.Refresh;
+using Respira.Authentication.Application.Features.Authentication.Commands.Refresh.Result;
+using Respira.Authentication.Application.Features.Authentication.Commands.SendVerify;
+using Respira.Authentication.Application.Features.Authentication.Commands.VerifyEmail;
 using Respira.ServiceDefaults.Contracts.Results;
 using Wolverine;
 

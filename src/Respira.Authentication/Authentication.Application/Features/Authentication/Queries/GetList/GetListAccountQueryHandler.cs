@@ -1,14 +1,14 @@
-using Authentication.Application.Constracts.Cache;
-using Authentication.Application.Constracts.Data;
-using Authentication.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Respira.Authentication.Application.Constracts.Cache;
+using Respira.Authentication.Application.Constracts.Data;
+using Respira.Authentication.Domain.Entities;
 using Respira.ServiceDefaults.Contracts.CQRS;
 using Respira.ServiceDefaults.Contracts.Pagination;
 using Respira.ServiceDefaults.Contracts.Results;
 using X.PagedList.EF;
 
-namespace Authentication.Application.Features.Authentication.Queries.GetList
+namespace Respira.Authentication.Application.Features.Authentication.Queries.GetList
 {
     public class GetListAccountQueryHandler(
         IAuthDbContext dbContext,

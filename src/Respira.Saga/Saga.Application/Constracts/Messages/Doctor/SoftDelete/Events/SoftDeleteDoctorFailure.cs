@@ -1,4 +1,4 @@
-namespace Respira.Doctor.Application.Features.Doctors.Commands.SoftDelete.Events
+namespace Respira.Saga.Application.Constracts.Messages.Doctor.SoftDelete.Events
 {
     public record SoftDeleteDoctorFailure
     {

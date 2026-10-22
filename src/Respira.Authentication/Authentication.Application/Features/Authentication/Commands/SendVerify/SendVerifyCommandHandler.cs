@@ -1,20 +1,20 @@
 using System.Net;
 using System.Security.Cryptography;
-using Authentication.Application.Constracts.Authentication;
-using Authentication.Application.Constracts.Cache;
-using Authentication.Application.Constracts.Data;
-using Authentication.Application.Constracts.Email;
-using Authentication.Application.Features.Authentication.Commands.SendVerify.Events;
-using Authentication.Domain.Entities;
-using Authentication.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Respira.Authentication.Application.Constracts.Authentication;
+using Respira.Authentication.Application.Constracts.Cache;
+using Respira.Authentication.Application.Constracts.Data;
+using Respira.Authentication.Application.Constracts.Email;
+using Respira.Authentication.Application.Features.Authentication.Commands.SendVerify.Events;
+using Respira.Authentication.Domain.Entities;
+using Respira.Authentication.Domain.Enums;
 using Respira.ServiceDefaults.Contracts.CQRS;
 using Respira.ServiceDefaults.Contracts.Results;
 using Wolverine;
 
-namespace Authentication.Application.Features.Authentication.Commands.SendVerify
+namespace Respira.Authentication.Application.Features.Authentication.Commands.SendVerify
 {
     /// <summary>
     /// Issues a single-use email verification token for an account and emails a

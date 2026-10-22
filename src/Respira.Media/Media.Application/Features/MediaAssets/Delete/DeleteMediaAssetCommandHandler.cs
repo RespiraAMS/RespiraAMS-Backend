@@ -1,11 +1,11 @@
-using Media.Application.Constracts.Data;
-using Media.Application.Constracts.Storage;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Respira.Media.Application.Constracts.Data;
+using Respira.Media.Application.Constracts.Storage;
 using Respira.ServiceDefaults.Contracts.CQRS;
 using Respira.ServiceDefaults.Contracts.Results;
 
-namespace Media.Application.Features.MediaAssets.Delete
+namespace Respira.Media.Application.Features.MediaAssets.Delete
 {
     public class DeleteMediaAssetCommandHandler(
         IMediaDbContext dbContext,

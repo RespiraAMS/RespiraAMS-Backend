@@ -1,8 +1,8 @@
-using Media.API.Extensions;
-using Media.Application.Constracts.Storage;
-using Media.Application.Features.MediaAssets.Create;
-using Media.Infrastructure.Extensions;
-using Media.Infrastructure.Persistence;
+using Respira.Media.API.Extensions;
+using Respira.Media.Application.Constracts.Storage;
+using Respira.Media.Application.Features.MediaAssets.Create;
+using Respira.Media.Infrastructure.Extensions;
+using Respira.Media.Infrastructure.Persistence;
 using Respira.ServiceDefaults.Extensions;
 using Wolverine;
 

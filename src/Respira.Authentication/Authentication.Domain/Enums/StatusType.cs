@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace Authentication.Domain.Enums
+namespace Respira.Authentication.Domain.Enums
 {
     /// <summary>
     /// Account status. Inactive accounts cannot authenticate.

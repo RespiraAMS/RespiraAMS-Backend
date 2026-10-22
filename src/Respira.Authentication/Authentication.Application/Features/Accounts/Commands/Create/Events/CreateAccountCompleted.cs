@@ -1,4 +1,4 @@
-namespace Authentication.Application.Features.Accounts.Commands.Create.Events
+namespace Respira.Authentication.Application.Features.Accounts.Commands.Create.Events
 {
     /// <summary>
     /// Published when an account has been persisted, carrying the identifiers the

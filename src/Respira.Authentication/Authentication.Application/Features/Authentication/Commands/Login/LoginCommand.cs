@@ -1,6 +1,6 @@
 using Respira.ServiceDefaults.Contracts.CQRS;
 
-namespace Authentication.Application.Features.Authentication.Commands.Login
+namespace Respira.Authentication.Application.Features.Authentication.Commands.Login
 {
     public record LoginCommand : ICommand
     {

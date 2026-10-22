@@ -1,20 +1,20 @@
-using Authentication.Application.Constracts.Authentication;
-using Authentication.Application.Constracts.Data;
-using Authentication.Application.Constracts.Email;
-using Authentication.Application.Constracts.Messaging;
-using Authentication.Application.Features.Accounts.Commands.Create.Events;
-using Authentication.Application.Features.Accounts.Commands.SoftDelete.Events;
-using Authentication.Application.Features.Accounts.Commands.Update.Events;
-using Authentication.Application.Features.Authentication.Commands.Login;
-using Authentication.Application.Features.Authentication.Commands.SendVerify.Events;
-using Authentication.Infrastructure.Extensions;
-using Authentication.Infrastructure.Persistence;
 using Wolverine;
 using Wolverine.Postgresql;
 using Wolverine.RabbitMQ;
 using ZiggyCreatures.Caching.Fusion;
 using Respira.ServiceDefaults.Extensions;
 using Respira.Authentication.API.Extensions;
+using Respira.Authentication.Application.Constracts.Authentication;
+using Respira.Authentication.Application.Constracts.Data;
+using Respira.Authentication.Application.Constracts.Email;
+using Respira.Authentication.Application.Constracts.Messaging;
+using Respira.Authentication.Application.Features.Accounts.Commands.Create.Events;
+using Respira.Authentication.Application.Features.Accounts.Commands.SoftDelete.Events;
+using Respira.Authentication.Application.Features.Accounts.Commands.Update.Events;
+using Respira.Authentication.Application.Features.Authentication.Commands.Login;
+using Respira.Authentication.Application.Features.Authentication.Commands.SendVerify.Events;
+using Respira.Authentication.Infrastructure.Extensions;
+using Respira.Authentication.Infrastructure.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
 

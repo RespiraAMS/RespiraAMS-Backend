@@ -1,4 +1,4 @@
-namespace Authentication.Application.Constracts.Cache
+namespace Respira.Authentication.Application.Constracts.Cache
 {
     public interface ICacheService
     {

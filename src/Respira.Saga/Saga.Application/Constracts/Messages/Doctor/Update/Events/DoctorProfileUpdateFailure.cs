@@ -1,4 +1,4 @@
-namespace Respira.Doctor.Application.Features.Doctors.Commands.Update.Events
+namespace Respira.Saga.Application.Constracts.Messages.Doctor.Update.Events
 {
     public record DoctorProfileUpdateFailure
     {
