@@ -1,0 +1,62 @@
+// Chỉ có thông tin cá nhân và chỉ số sinh tồn:
+// 1. Thiếu urea -> CRB-65: 1 điểm (AGE >= 65) -> Moderate, Inpatient
+// 2. PSI: 65 điểm -> Mild, Outpatient
+// --> Ưu tiên mức độ cao hơn
+// 3. Risk factor: Giới tính nam (Streptococcus pneumoniae), Người già (Acinetobacter baumannii).
+// Do Streptococcus pneumoniae cũng nằm trong worth suspected -> boost -> 
+// Streptococcus pneumoniae > Acinetobacter baumannii
+// 
+{
+    "clinicalPicture": {
+        "observations": [
+            {
+                "code": "AGE",
+                "value": "65"
+            },
+            {
+                "code": "GENDER",
+                "value": "MALE"
+            },
+            {
+                "code": "HEIGHT",
+                "value": "160"
+            },
+            {
+                "code": "WEIGHT",
+                "value": "80"
+            },
+            {
+                "code": "SPO2",
+                "value": "95"
+            },
+            {
+                "code": "RR",
+                "value": "12"
+            },
+            {
+                "code": "SBP",
+                "value": "120"
+            },
+            {
+                "code": "DBP",
+                "value": "90"
+            },
+            {
+                "code": "TEMPERATURE",
+                "value": "36"
+            },
+            {
+                "code": "PREGNANT-OR-LACTATING",
+                "value": "false"
+            }
+        ]
+    },
+    "expectedDiagnosis": {
+        "severity": "Moderate",
+        "treatmentSite": "Inpatient",
+        "heavySuspected": [
+            "Streptococcus pneumoniae",
+            "Acinetobacter baumannii"
+        ]
+    }
+}

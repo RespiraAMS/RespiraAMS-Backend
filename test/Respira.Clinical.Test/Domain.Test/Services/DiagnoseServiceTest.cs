@@ -10,7 +10,10 @@ using Xunit;
 
 namespace Respira.Clinical.Domain.Test.Services
 {
-    public class DiagnoseServiceTest
+    /// <summary>
+    /// This class tests individual methods of the <see cref="DiagnoseService"/> class.
+    /// </summary>
+    public partial class DiagnoseServiceTest
     {
         private readonly DiagnoseService _service;
         private static readonly ClinicalContext _context = CreateContext();
@@ -26,7 +29,7 @@ namespace Respira.Clinical.Domain.Test.Services
         // to seed the clinical context
         private static ClinicalContext CreateContext()
         {
-            var seedData = DataSeeder.Load("seed-data-test.jsonc");
+            var seedData = DataSeeder.Load("Data/context.jsonc");
             return new ClinicalContext
             {
                 Antibiotics = seedData.Antibiotics,
@@ -409,6 +412,47 @@ namespace Respira.Clinical.Domain.Test.Services
             Assert.Null(result.Error);
             Assert.Equal(ApplicationStatus.Success, result.StatusCode);
             Assert.Equal(expected, result.Data);
+        }
+
+        public static readonly TheoryData<AntibioticGroup, AntibioticGroup> IsAncestorCase_NotInContext = [
+            new(
+                new AntibioticGroup
+                {
+                    Name = "Group 1",
+                    Description = "Group 1 description",
+                    ParentId = null
+                },
+                AntibioticGroup("Beta-lactam")),
+            new(
+                AntibioticGroup("Các beta-lactam khác"),
+                new AntibioticGroup
+                {
+                    Name = "Group 2",
+                    Description = "Group 2 description",
+                    ParentId = null
+                }),
+            new(
+                new AntibioticGroup
+                {
+                    Name = "Group 3",
+                    Description = "Group 3 description",
+                    ParentId = null
+                }, new AntibioticGroup
+                {
+                    Name = "Group 4",
+                    Description = "Group 4 description",
+                    ParentId = null
+                }),
+        ];
+
+        [Theory]
+        [MemberData(nameof(IsAncestorCase_NotInContext))]
+        public void IsAntibioticGroupHasCommonAncestor_GroupNotInContext_Failure(AntibioticGroup group1, AntibioticGroup group2)
+        {
+            var result = _service.IsAntibioticGroupHasCommonAncestor(_context, group1, group2);
+            Assert.True(result.IsFailure());
+            Assert.NotNull(result.Error);
+            Assert.Equal(ApplicationStatus.BadRequest, result.Error.StatusCode);
         }
 
         #endregion
