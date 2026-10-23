@@ -17,7 +17,7 @@ using Wolverine;
 namespace Respira.Patient.API.Controllers
 {
     [ApiController]
-    [Route("api/{version:apiVersion}/patients")]
+    [Route("api/v{version:apiVersion}/patients")]
     [ApiVersion("1.0")]
     public class PatientsController(IMessageBus bus) : ControllerBase
     {
@@ -108,7 +108,7 @@ namespace Respira.Patient.API.Controllers
         }
 
         [HttpPut]
-        [Route("{id:guid}/next-of-kin/{nextOfKinId:guid}")]
+        [Route("/next-of-kin/{nextOfKinId:guid}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType<Result>(StatusCodes.Status400BadRequest)]
         [ProducesResponseType<Result>(StatusCodes.Status401Unauthorized)]
@@ -122,7 +122,7 @@ namespace Respira.Patient.API.Controllers
         }
 
         [HttpDelete]
-        [Route("{id:guid}/next-of-kin/{nextOfKinId:guid}")]
+        [Route("/next-of-kin/{nextOfKinId:guid}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType<Result>(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType<Result>(StatusCodes.Status403Forbidden)]

@@ -1,14 +1,15 @@
 using Asp.Versioning;
-using Authentication.Application.Features.Accounts.Commands.Create;
-using Authentication.Application.Features.Accounts.Commands.SoftDelete;
-using Authentication.Application.Features.Accounts.Commands.Update;
-using Authentication.Application.Features.Authentication.Commands.SendVerify;
-using Respira.Doctor.Application.Features.Doctors.Commands.Create;
-using Respira.Doctor.Application.Features.Doctors.Commands.SoftDelete;
-using Respira.Doctor.Application.Features.Doctors.Commands.Update;
+using Respira.Saga.Application.Constracts.Messages.Authentication;
+using Respira.Saga.Application.Constracts.Messages.Authentication.Create;
+using Respira.Saga.Application.Constracts.Messages.Authentication.SoftDelete;
+using Respira.Saga.Application.Constracts.Messages.Authentication.Update;
+using Respira.Saga.Application.Constracts.Messages.Doctor.Create;
+using Respira.Saga.Application.Constracts.Messages.Doctor.SoftDelete;
+using Respira.Saga.Application.Constracts.Messages.Doctor.Update;
 using Respira.Saga.Application.Constracts.Messaging;
 using Respira.Saga.Application.Features.Create.Commands;
 using Respira.Saga.Infrastructure.Extensions;
+using Respira.ServiceDefaults.Extensions;
 using Wolverine;
 using Wolverine.Postgresql;
 using Wolverine.RabbitMQ;
@@ -16,20 +17,7 @@ using Wolverine.RabbitMQ;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
-builder.Services
-    .AddApiVersioning(options =>
-    {
-        options.DefaultApiVersion = new ApiVersion(1.0);
-        options.ReportApiVersions = true;
-        options.ApiVersionReader = new UrlSegmentApiVersionReader();
-    })
-    .AddMvc()
-    .AddApiExplorer(options =>
-    {
-        options.GroupNameFormat = "'v'VVV";
-        options.SubstituteApiVersionInUrl = true;
-    })
-    .AddOpenApi();
+builder.Services.AddApiVersion();
 
 // The avatar is uploaded to the Media service over HTTP, every other step travels
 // over RabbitMQ.
@@ -82,7 +70,7 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi().WithDocumentPerVersion();
+    app.UseApiDocumentation();
 }
 
 app.UseHttpsRedirection();

@@ -1,7 +1,7 @@
-using Authentication.Domain.Enums;
+using Respira.Authentication.Domain.Enums;
 using Respira.ServiceDefaults.Models;
 
-namespace Authentication.Domain.Entities
+namespace Respira.Authentication.Domain.Entities
 {
     /// <summary>
     /// A registered doctor (or staff) account that can authenticate with the system.

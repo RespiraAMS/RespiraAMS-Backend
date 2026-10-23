@@ -1,15 +1,15 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Authentication.Application.Constracts.Authentication;
-using Authentication.Application.Constracts.Data;
-using Authentication.Domain.Entities;
-using Authentication.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Respira.Authentication.Application.Constracts.Authentication;
+using Respira.Authentication.Application.Constracts.Data;
+using Respira.Authentication.Domain.Entities;
+using Respira.Authentication.Domain.Enums;
 
-namespace Authentication.Infrastructure.Authentication
+namespace Respira.Authentication.Infrastructure.Authentication
 {
     public class JwtService(
         IOptions<JwtOption> jwtOption,

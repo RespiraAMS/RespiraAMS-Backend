@@ -1,9 +1,9 @@
-using Authentication.Application.Features.Accounts.Commands.SoftDelete;
-using Authentication.Application.Features.Accounts.Commands.SoftDelete.Events;
 using Microsoft.Extensions.Logging;
-using Respira.Doctor.Application.Features.Doctors.Commands.SoftDelete;
-using Respira.Doctor.Application.Features.Doctors.Commands.SoftDelete.Events;
 using Respira.Saga.Application.Constracts.Media;
+using Respira.Saga.Application.Constracts.Messages.Authentication.SoftDelete;
+using Respira.Saga.Application.Constracts.Messages.Authentication.SoftDelete.Events;
+using Respira.Saga.Application.Constracts.Messages.Doctor.SoftDelete;
+using Respira.Saga.Application.Constracts.Messages.Doctor.SoftDelete.Events;
 using Respira.Saga.Domain.Enums;
 using Respira.ServiceDefaults.Contracts.Results;
 using Wolverine;

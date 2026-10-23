@@ -1,6 +1,6 @@
 using Respira.ServiceDefaults.Contracts.CQRS;
 
-namespace Authentication.Application.Features.Authentication.Commands.SendVerify
+namespace Respira.Saga.Application.Constracts.Messages.Authentication
 {
     public record SendVerifyCommand : ICommand
     {

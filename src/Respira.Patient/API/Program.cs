@@ -19,18 +19,7 @@ var conn = builder.Configuration.GetConnectionString("patientDb") ?? throw new I
 builder.Services.AddControllers().AddJsonOptions(options => options.JsonSerializerOptions.PropertyNameCaseInsensitive = true);
 
 // Add API versioning
-builder.Services.AddApiVersioning(options =>
-{
-    options.ReportApiVersions = true;
-    options.ApiVersionReader = new UrlSegmentApiVersionReader();
-}).AddMvc();
-
-// Add OpenAPI support
-builder.Services.AddOpenApi(options =>
-{
-    options.AddDocumentTransformer<CustomDocumentTransformer>();
-    options.AddSchemaTransformer<CustomSchemaTransformer>();
-});
+builder.Services.AddApiVersion();
 
 // Add error handling
 builder.Services.AddCustomErrorHandling();
@@ -66,8 +55,7 @@ app.MapControllers();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
-    app.MapScalarApiReference(opts => opts.Theme = ScalarTheme.Kepler);
+    app.UseApiDocumentation();
 }
 
 if (!app.Environment.IsDevelopment())

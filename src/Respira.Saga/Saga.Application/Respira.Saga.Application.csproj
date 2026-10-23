@@ -1,20 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
 
-  <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="WolverineFx" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="WolverineFx" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\..\Respira.Authentication\Authentication.Domain\Authentication.Domain.csproj" />
-    <ProjectReference Include="..\..\Respira.Doctor\Doctor.Domain\Respira.Doctor.Domain.csproj" />
-    <ProjectReference Include="..\Saga.Domain\Respira.Saga.Domain.csproj" />
-    <ProjectReference Include="..\..\Respira.ServiceDefaults\Respira.ServiceDefaults.csproj" />
-  </ItemGroup>
-
+    <ItemGroup>
+        <ProjectReference Include="../../Respira.Authentication/Authentication.Domain/Respira.Authentication.Domain.csproj" />
+        <ProjectReference Include="..\..\Respira.Doctor\Doctor.Domain\Respira.Doctor.Domain.csproj" />
+        <ProjectReference Include="..\Saga.Domain\Respira.Saga.Domain.csproj" />
+        <ProjectReference Include="..\..\Respira.ServiceDefaults\Respira.ServiceDefaults.csproj" />
+    </ItemGroup>
 </Project>

@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 namespace Respira.Doctor.Domain.Enums
 {
     [JsonConverter(typeof(JsonStringEnumConverter))]
-    public enum AcademicTitleEnum
+    public enum AcademicTitle
     {
         /// <summary>No academic title</summary>
         None = 0,

@@ -1,6 +1,6 @@
 using Respira.ServiceDefaults.Contracts.CQRS;
 
-namespace Respira.Doctor.Application.Features.Doctors.Commands.Update
+namespace Respira.Saga.Application.Constracts.Messages.Doctor.Update
 {
     public record UpdateDoctorMediaIdCommand : ICommand
     {

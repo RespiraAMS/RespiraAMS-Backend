@@ -1,38 +1,25 @@
-using Authentication.API.Extensions;
-using Asp.Versioning;
-using Authentication.Application.Constracts.Authentication;
-using Authentication.Application.Constracts.Data;
-using Authentication.Application.Constracts.Email;
-using Authentication.Application.Constracts.Messaging;
-using Authentication.Application.Features.Accounts.Commands.Create.Events;
-using Authentication.Application.Features.Accounts.Commands.SoftDelete.Events;
-using Authentication.Application.Features.Accounts.Commands.Update.Events;
-using Authentication.Application.Features.Authentication.Commands.Login;
-using Authentication.Application.Features.Authentication.Commands.SendVerify.Events;
-using Authentication.Infrastructure.Extensions;
-using Authentication.Infrastructure.Persistence;
 using Wolverine;
 using Wolverine.Postgresql;
 using Wolverine.RabbitMQ;
 using ZiggyCreatures.Caching.Fusion;
+using Respira.ServiceDefaults.Extensions;
+using Respira.Authentication.API.Extensions;
+using Respira.Authentication.Application.Constracts.Authentication;
+using Respira.Authentication.Application.Constracts.Data;
+using Respira.Authentication.Application.Constracts.Email;
+using Respira.Authentication.Application.Constracts.Messaging;
+using Respira.Authentication.Application.Features.Accounts.Commands.Create.Events;
+using Respira.Authentication.Application.Features.Accounts.Commands.SoftDelete.Events;
+using Respira.Authentication.Application.Features.Accounts.Commands.Update.Events;
+using Respira.Authentication.Application.Features.Authentication.Commands.Login;
+using Respira.Authentication.Application.Features.Authentication.Commands.SendVerify.Events;
+using Respira.Authentication.Infrastructure.Extensions;
+using Respira.Authentication.Infrastructure.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
-builder.Services
-    .AddApiVersioning(options =>
-    {
-        options.DefaultApiVersion = new ApiVersion(1.0);
-        options.ReportApiVersions = true;
-        options.ApiVersionReader = new UrlSegmentApiVersionReader();
-    })
-    .AddMvc()
-    .AddApiExplorer(options =>
-    {
-        options.GroupNameFormat = "'v'VVV";
-        options.SubstituteApiVersionInUrl = true;
-    })
-    .AddOpenApi();
+builder.Services.AddApiVersion();
 builder.Services
     .AddOptions<JwtOption>()
     .BindConfiguration("Jwt")
@@ -77,12 +64,9 @@ builder.Host.UseWolverine(options =>
 
     // Durable inbox/outbox on PostgreSQL: incoming saga commands survive a restart and
     // are retried instead of being lost with the process.
-    options.PersistMessagesWithPostgresql(
-        builder.Configuration.GetConnectionString("authdb")
-            ?? throw new InvalidOperationException(
-                "Connection string 'authdb' is not configured"
-            )
-    );
+    var conn = builder.Configuration.GetConnectionString("authdb")
+        ?? throw new InvalidOperationException("Connection string 'authdb' is not configured");
+    options.PersistMessagesWithPostgresql(conn);
 
     options.UseRabbitMqUsingNamedConnection("rabbitmq").AutoProvision();
 
@@ -117,7 +101,7 @@ await app.ApplyMigrationsAsync();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi().WithDocumentPerVersion();
+    app.UseApiDocumentation();
 }
 
 app.UseHttpsRedirection();

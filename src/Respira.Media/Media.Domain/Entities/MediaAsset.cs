@@ -1,6 +1,6 @@
 using Respira.ServiceDefaults.Models;
 
-namespace Media.Domain.Entities
+namespace Respira.Media.Domain.Entities
 {
     public sealed class MediaAsset : Base
     {

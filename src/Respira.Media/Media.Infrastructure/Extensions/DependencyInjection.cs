@@ -1,11 +1,11 @@
 using Amazon.S3;
-using Media.Application.Constracts.Data;
-using Media.Application.Constracts.Storage;
-using Media.Infrastructure.Persistence;
-using Media.Infrastructure.Storage;
 using Microsoft.Extensions.DependencyInjection;
+using Respira.Media.Application.Constracts.Data;
+using Respira.Media.Application.Constracts.Storage;
+using Respira.Media.Infrastructure.Persistence;
+using Respira.Media.Infrastructure.Storage;
 
-namespace Media.Infrastructure.Extensions
+namespace Respira.Media.Infrastructure.Extensions
 {
     public static class DependencyInjection
     {

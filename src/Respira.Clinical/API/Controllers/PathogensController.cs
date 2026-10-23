@@ -13,7 +13,7 @@ using Wolverine;
 namespace Respira.Clinical.API.Controllers
 {
     [ApiController]
-    [Route("api/{version:apiVersion}/pathogens")]
+    [Route("api/v{version:apiVersion}/pathogens")]
     [ApiVersion("1.0")]
     public class PathogensController(IMessageBus bus) : ControllerBase
     {

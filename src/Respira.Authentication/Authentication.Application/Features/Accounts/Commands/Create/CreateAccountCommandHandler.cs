@@ -1,14 +1,14 @@
-using Authentication.Application.Constracts.Authentication;
-using Authentication.Application.Constracts.Cache;
-using Authentication.Application.Constracts.Data;
-using Authentication.Application.Features.Accounts.Commands.Create.Events;
-using Authentication.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Respira.Authentication.Application.Constracts.Authentication;
+using Respira.Authentication.Application.Constracts.Cache;
+using Respira.Authentication.Application.Constracts.Data;
+using Respira.Authentication.Application.Features.Accounts.Commands.Create.Events;
+using Respira.Authentication.Domain.Entities;
 using Respira.ServiceDefaults.Contracts.CQRS;
 using Wolverine;
 
-namespace Authentication.Application.Features.Accounts.Commands.Create
+namespace Respira.Authentication.Application.Features.Accounts.Commands.Create
 {
     /// <summary>
     /// Creates the account for the create saga. The handler is idempotent from the

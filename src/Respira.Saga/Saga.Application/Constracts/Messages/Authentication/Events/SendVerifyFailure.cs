@@ -1,4 +1,4 @@
-namespace Authentication.Application.Features.Authentication.Commands.SendVerify.Events
+namespace Respira.Saga.Application.Constracts.Messages.Authentication.Events
 {
     /// <summary>
     /// Published when the verification email could not be issued or delivered.

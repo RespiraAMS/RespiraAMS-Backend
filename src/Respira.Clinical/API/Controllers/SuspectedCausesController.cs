@@ -11,7 +11,7 @@ using Wolverine;
 namespace Respira.Clinical.API.Controllers
 {
     [ApiController]
-    [Route("api/{version:apiVersion}/suspected-causes")]
+    [Route("api/v{version:apiVersion}/suspected-causes")]
     [ApiVersion("1.0")]
     public class SuspectedCausesController(IMessageBus bus) : ControllerBase
     {

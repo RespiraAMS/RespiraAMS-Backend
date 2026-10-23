@@ -1,4 +1,4 @@
-namespace Authentication.Application.Constracts.Authentication
+namespace Respira.Authentication.Application.Constracts.Authentication
 {
     public class JwtOption
     {

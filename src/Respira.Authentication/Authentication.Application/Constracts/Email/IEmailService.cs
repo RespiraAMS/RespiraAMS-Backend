@@ -1,4 +1,4 @@
-namespace Authentication.Application.Constracts.Email;
+namespace Respira.Authentication.Application.Constracts.Email;
 
 public interface IEmailService
 {

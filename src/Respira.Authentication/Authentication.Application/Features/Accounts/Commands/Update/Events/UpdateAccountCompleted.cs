@@ -1,6 +1,6 @@
-using Authentication.Domain.Enums;
+using Respira.Authentication.Domain.Enums;
 
-namespace Authentication.Application.Features.Accounts.Commands.Update.Events
+namespace Respira.Authentication.Application.Features.Accounts.Commands.Update.Events
 {
     public class UpdateAccountCompleted
     {

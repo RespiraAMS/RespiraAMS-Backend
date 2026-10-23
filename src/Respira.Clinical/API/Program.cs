@@ -1,12 +1,9 @@
-using Asp.Versioning;
 using Respira.ServiceDefaults.Extensions;
-using Respira.ServiceDefaults.Utils.OpenApiTransformers;
 using Wolverine;
 using Wolverine.Postgresql;
 using Wolverine.EntityFrameworkCore;
 using Wolverine.FluentValidation;
 using Wolverine.RabbitMQ;
-using Scalar.AspNetCore;
 using Respira.Clinical.Application;
 using Respira.Clinical.DI;
 using System.Text.Json.Serialization;
@@ -24,18 +21,7 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 });
 
 // Add API versioning
-builder.Services.AddApiVersioning(options =>
-{
-    options.ReportApiVersions = true;
-    options.ApiVersionReader = new UrlSegmentApiVersionReader();
-}).AddMvc();
-
-// Add OpenAPI support
-builder.Services.AddOpenApi(options =>
-{
-    options.AddDocumentTransformer<CustomDocumentTransformer>();
-    options.AddSchemaTransformer<CustomSchemaTransformer>();
-});
+builder.Services.AddApiVersion();
 
 // Add error handling
 builder.Services.AddCustomErrorHandling();
@@ -63,16 +49,6 @@ builder.Host.UseWolverine(opts =>
     opts.Durability.Mode = DurabilityMode.Balanced;
 });
 
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("test", policy =>
-    {
-        policy.AllowAnyOrigin()
-            .AllowAnyMethod()
-            .AllowAnyHeader();
-    });
-});
-
 var app = builder.Build();
 
 app.UseCustomErrorHandling();
@@ -82,9 +58,7 @@ app.MapControllers();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
-    app.MapScalarApiReference(opts => opts.Theme = ScalarTheme.Kepler);
-    app.UseCors("test");
+    app.UseApiDocumentation();
 }
 
 if (!app.Environment.IsDevelopment())

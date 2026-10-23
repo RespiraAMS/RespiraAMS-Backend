@@ -1,8 +1,8 @@
-using Media.Application.Constracts.Data;
-using Media.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using Respira.Media.Application.Constracts.Data;
+using Respira.Media.Domain.Entities;
 
-namespace Media.Infrastructure.Persistence
+namespace Respira.Media.Infrastructure.Persistence
 {
     public sealed class MediaDbContext(DbContextOptions<MediaDbContext> options)
         : DbContext(options),

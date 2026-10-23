@@ -1,11 +1,11 @@
 using Asp.Versioning;
-using Media.Application.Features.MediaAssets.Create;
-using Media.Application.Features.MediaAssets.Delete;
 using Microsoft.AspNetCore.Mvc;
+using Respira.Media.Application.Features.MediaAssets.Create;
+using Respira.Media.Application.Features.MediaAssets.Delete;
 using Respira.ServiceDefaults.Contracts.Results;
 using Wolverine;
 
-namespace Media.API.Controllers
+namespace Respira.Media.API.Controllers
 {
     [ApiController]
     [ApiVersion("1.0")]

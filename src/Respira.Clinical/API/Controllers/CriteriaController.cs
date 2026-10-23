@@ -14,7 +14,7 @@ using Wolverine;
 namespace Respira.Clinical.API.Controllers
 {
     [ApiController]
-    [Route("api/{version:apiVersion}/criteria")]
+    [Route("api/v{version:apiVersion}/criteria")]
     [ApiVersion("1.0")]
     public class CriteriaController(IMessageBus bus) : ControllerBase
     {

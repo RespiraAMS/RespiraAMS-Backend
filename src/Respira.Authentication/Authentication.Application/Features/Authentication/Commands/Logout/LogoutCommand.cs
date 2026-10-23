@@ -1,6 +1,6 @@
 using Respira.ServiceDefaults.Contracts.CQRS;
 
-namespace Authentication.Application.Features.Authentication.Commands.Logout
+namespace Respira.Authentication.Application.Features.Authentication.Commands.Logout
 {
     public record LogoutCommand : ICommand
     {

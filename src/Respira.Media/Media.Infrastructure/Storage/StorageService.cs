@@ -1,10 +1,10 @@
 using Amazon.S3;
 using Amazon.S3.Model;
-using Media.Application.Constracts.Storage;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Respira.Media.Application.Constracts.Storage;
 
-namespace Media.Infrastructure.Storage
+namespace Respira.Media.Infrastructure.Storage
 {
     public sealed class StorageService : IStorageService
     {

@@ -1,6 +1,6 @@
 using Respira.ServiceDefaults.Contracts.CQRS;
 
-namespace Media.Application.Features.MediaAssets.Create
+namespace Respira.Media.Application.Features.MediaAssets.Create
 {
     public record CreateMediaAssetCommand : ICommand
     {

@@ -1,4 +1,4 @@
-namespace Authentication.Application.Features.Accounts.Commands.Update.Events
+namespace Respira.Authentication.Application.Features.Accounts.Commands.Update.Events
 {
     public class UpdateAccountFailure
     {

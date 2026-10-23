@@ -9,7 +9,7 @@ namespace Respira.Clinical.Domain.Models
     public class ClinicalContext
     {
         public required IEnumerable<ClinicalVariable> Variables { get; set; }
-        public required IEnumerable<ClinicalMetric> Metrics { get; set; }
+        public required IEnumerable<ClinicalMetric> Metrics { get; set => field = value.Where(x => x.IsApplied); }
         public required IEnumerable<Pathogen> Pathogens { get; set; }
         public required IEnumerable<SuspectedCause> SuspectedCauses { get; set; }
         public required IEnumerable<AntibioticGroup> AntibioticGroups { get; set; }

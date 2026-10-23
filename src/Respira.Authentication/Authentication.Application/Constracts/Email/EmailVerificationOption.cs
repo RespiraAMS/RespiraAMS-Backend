@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Authentication.Application.Constracts.Email;
+namespace Respira.Authentication.Application.Constracts.Email;
 
 /// <summary>
 /// Configuration for the confirmation link carried by the email verification message.

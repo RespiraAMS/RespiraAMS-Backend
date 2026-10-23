@@ -18,33 +18,33 @@
 				--danger: #d92d20;
 				--success: #0e9384;
 			}
-
+			
 			* { margin: 0; padding: 0; box-sizing: border-box; }
-
+			
 			body {
 				font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 				background: var(--bg);
 				color: var(--text);
 				line-height: 1.6;
 			}
-
+			
 			.top-bar {
 				background: linear-gradient(90deg, var(--primary), #0b4f78);
 				height: 6px;
 				width: 100%;
 			}
-
+			
 			.container {
 				max-width: 900px;
 				margin: 0 auto;
 				padding: 0 1rem 3rem;
 			}
-
+			
 			header {
 				text-align: center;
 				padding: 2rem 1rem 1.5rem;
 			}
-
+			
 			.header-icon {
 				width: 52px;
 				height: 52px;
@@ -56,21 +56,21 @@
 				justify-content: center;
 				box-shadow: 0 6px 16px rgba(15,109,188,0.25);
 			}
-
+			
 			.header-icon svg { width: 28px; height: 28px; stroke: white; }
-
+			
 			header h1 {
 				font-size: 1.6rem;
 				font-weight: 800;
 				letter-spacing: -0.01em;
 			}
-
+			
 			header p {
 				color: var(--text-muted);
 				margin-top: 0.35rem;
 				font-size: 0.9rem;
 			}
-
+			
 			.tabs {
 				display: flex;
 				border: 1px solid var(--border);
@@ -80,7 +80,7 @@
 				background: var(--card);
 				box-shadow: 0 2px 8px rgba(15,23,42,0.06);
 			}
-
+			
 			.tab-btn {
 				flex: 1;
 				padding: 0.85rem 1rem;
@@ -92,19 +92,19 @@
 				cursor: pointer;
 				transition: background 0.15s, color 0.15s;
 			}
-
+			
 			.tab-btn + .tab-btn { border-left: 1px solid var(--border); }
-
+			
 			.tab-btn:hover:not(.active) { background: #eef2f6; }
-
+			
 			.tab-btn.active {
 				background: var(--primary);
 				color: white;
 			}
-
+			
 			.tab-panel { display: none; }
 			.tab-panel.active { display: block; }
-
+			
 			.card {
 				background: var(--card);
 				border: 1px solid var(--border);
@@ -113,7 +113,7 @@
 				margin-bottom: 1.25rem;
 				box-shadow: 0 2px 8px rgba(15,23,42,0.06);
 			}
-
+			
 			.card h2 {
 				display: flex;
 				align-items: center;
@@ -125,7 +125,7 @@
 				border-bottom: 1px solid var(--border);
 				color: var(--text);
 			}
-
+			
 			.card h2 .step-num {
 				display: inline-flex;
 				align-items: center;
@@ -140,7 +140,7 @@
 				font-weight: 800;
 				flex-shrink: 0;
 			}
-
+			
 			.form-group {
 				margin-bottom: 1.1rem;
 				padding: 0.9rem 1rem;
@@ -149,14 +149,14 @@
 				border-radius: 10px;
 				transition: border-color 0.15s, background 0.15s;
 			}
-
+			
 			.form-group:focus-within {
 				border-color: var(--primary);
 				background: var(--primary-light);
 			}
-
+			
 			.form-group:last-child { margin-bottom: 0; }
-
+			
 			.form-label {
 				display: block;
 				font-weight: 700;
@@ -164,13 +164,13 @@
 				margin-bottom: 0.3rem;
 				color: var(--text);
 			}
-
+			
 			.form-desc {
 				font-size: 0.8rem;
 				color: var(--text-muted);
 				margin-bottom: 0.6rem;
 			}
-
+			
 			.form-input {
 				width: 100%;
 				padding: 0.65rem 0.85rem;
@@ -182,22 +182,22 @@
 				background: var(--card);
 				color: var(--text);
 			}
-
+			
 			.form-input:focus {
 				outline: none;
 				border-color: var(--primary);
 				box-shadow: 0 0 0 3px rgba(15,109,188,0.15);
 			}
-
+			
 			.form-input::placeholder { color: #b7c0cc; font-weight: 400; }
-
+			
 			.segmented-toggle {
 				display: flex;
 				border: 1px solid var(--border);
 				border-radius: 8px;
 				overflow: hidden;
 			}
-
+			
 			.segment-btn {
 				flex: 1;
 				padding: 0.7rem 1rem;
@@ -210,16 +210,16 @@
 				transition: background 0.15s, color 0.15s;
 				white-space: nowrap;
 			}
-
+			
 			.segment-btn + .segment-btn { border-left: 1px solid var(--border); }
-
+			
 			.segment-btn:hover:not(.active) { background: #eef2f6; }
-
+			
 			.segment-btn.active {
 				background: var(--accent);
 				color: white;
 			}
-
+			
 			.chip-box {
 				display: flex;
 				flex-wrap: wrap;
@@ -231,7 +231,7 @@
 				border: 1px solid var(--border);
 				border-radius: 8px;
 			}
-
+			
 			.chip {
 				display: inline-flex;
 				align-items: center;
@@ -246,15 +246,15 @@
 				transition: background 0.15s, border-color 0.15s, color 0.15s;
 				text-align: left;
 			}
-
+			
 			.chip:hover { border-color: var(--primary); }
-
+			
 			.chip.active {
 				background: var(--primary-light);
 				border-color: var(--primary);
 				color: var(--primary-hover);
 			}
-
+			
 			.chip-count {
 				font-size: 0.78rem;
 				font-weight: 700;
@@ -264,7 +264,7 @@
 				border-radius: 12px;
 				margin-left: 0.35rem;
 			}
-
+			
 			.filter-input {
 				width: 100%;
 				padding: 0.5rem 0.75rem;
@@ -276,13 +276,13 @@
 				background: var(--card);
 				color: var(--text);
 			}
-
+			
 			.filter-input:focus {
 				outline: none;
 				border-color: var(--primary);
 				box-shadow: 0 0 0 3px rgba(15,109,188,0.15);
 			}
-
+			
 			.composition-card {
 				background: var(--card);
 				border: 1px solid var(--border);
@@ -290,14 +290,14 @@
 				padding: 0.85rem 1rem;
 				margin-bottom: 0.75rem;
 			}
-
+			
 			.composition-header {
 				display: flex;
 				align-items: center;
 				justify-content: space-between;
 				margin-bottom: 0.55rem;
 			}
-
+			
 			.composition-title {
 				font-size: 0.85rem;
 				font-weight: 800;
@@ -305,7 +305,7 @@
 				text-transform: uppercase;
 				letter-spacing: 0.03em;
 			}
-
+			
 			.btn-remove {
 				border: none;
 				background: #fef2f2;
@@ -317,9 +317,9 @@
 				cursor: pointer;
 				transition: background 0.15s;
 			}
-
+			
 			.btn-remove:hover { background: #fee2e2; }
-
+			
 			.btn-add {
 				display: inline-flex;
 				align-items: center;
@@ -334,9 +334,9 @@
 				cursor: pointer;
 				transition: background 0.15s;
 			}
-
+			
 			.btn-add:hover { background: #d7e8f8; }
-
+			
 			.btn {
 				display: inline-flex;
 				align-items: center;
@@ -352,13 +352,13 @@
 				width: 100%;
 				box-shadow: 0 4px 12px rgba(15,109,188,0.25);
 			}
-
+			
 			.btn:active:not(:disabled) { transform: translateY(1px); }
-
+			
 			.btn-primary { background: var(--primary); color: white; }
 			.btn-primary:hover:not(:disabled) { background: var(--primary-hover); }
 			.btn:disabled { opacity: 0.5; cursor: not-allowed; box-shadow: none; }
-
+			
 			.spinner {
 				display: inline-block;
 				width: 18px;
@@ -369,14 +369,14 @@
 				animation: spin 0.6s linear infinite;
 				margin-right: 0.5rem;
 			}
-
+			
 			.spinner.dark {
 				border-color: var(--border);
 				border-top-color: var(--primary);
 			}
-
+			
 			@keyframes spin { to { transform: rotate(360deg); } }
-
+			
 			.error-banner {
 				background: #fef2f2;
 				border: 1px solid #fecaca;
@@ -389,7 +389,7 @@
 				word-break: break-word;
 				font-weight: 500;
 			}
-
+			
 			.success-banner {
 				background: #ecfdf5;
 				border: 1px solid #a7f3d0;
@@ -402,7 +402,7 @@
 				word-break: break-word;
 				font-weight: 500;
 			}
-
+			
 			.success-banner code {
 				background: #d1fae5;
 				padding: 0.1rem 0.4rem;
@@ -410,9 +410,9 @@
 				font-size: 0.82rem;
 				user-select: all;
 			}
-
+			
 			.results-section { display: none; }
-
+			
 			.result-item {
 				background: #fbfcfe;
 				border: 1px solid var(--border);
@@ -420,9 +420,9 @@
 				padding: 0.9rem 1rem;
 				margin-bottom: 0.85rem;
 			}
-
+			
 			.result-item:last-child { margin-bottom: 0; }
-
+			
 			.result-item-header {
 				display: flex;
 				align-items: center;
@@ -431,20 +431,20 @@
 				flex-wrap: wrap;
 				margin-bottom: 0.65rem;
 			}
-
+			
 			.result-item-title {
 				font-size: 0.9rem;
 				font-weight: 800;
 				color: var(--text);
 			}
-
+			
 			.result-item-subtitle {
 				font-size: 0.78rem;
 				font-weight: 600;
 				color: var(--text-muted);
 				margin-top: 0.1rem;
 			}
-
+			
 			.composition-box {
 				display: flex;
 				flex-direction: column;
@@ -455,16 +455,16 @@
 				border-radius: 10px;
 				margin-bottom: 0.5rem;
 			}
-
+			
 			.composition-box:last-child { margin-bottom: 0; }
-
+			
 			.composition-box-header {
 				display: flex;
 				align-items: center;
 				justify-content: space-between;
 				gap: 0.75rem;
 			}
-
+			
 			.composition-label {
 				font-size: 0.72rem;
 				font-weight: 800;
@@ -472,13 +472,13 @@
 				text-transform: uppercase;
 				letter-spacing: 0.04em;
 			}
-
+			
 			.composition-meds {
 				display: flex;
 				flex-wrap: wrap;
 				gap: 0.4rem;
 			}
-
+			
 			.composition-med {
 				display: flex;
 				flex-direction: column;
@@ -491,14 +491,14 @@
 				border-radius: 8px;
 				min-width: 140px;
 			}
-
+			
 			.composition-med .medicine-name {
 				font-weight: 700;
 				font-size: 0.88rem;
 				color: var(--text);
 				line-height: 1.3;
 			}
-
+			
 			.group-badge {
 				display: inline-block;
 				padding: 0.1rem 0.5rem;
@@ -510,20 +510,20 @@
 				color: var(--primary-hover);
 				white-space: nowrap;
 			}
-
+			
 			.empty-state {
 				color: var(--text-muted);
 				font-size: 0.85rem;
 				font-style: italic;
 				padding: 0.5rem 0;
 			}
-
+			
 			.loading-state {
 				text-align: center;
 				padding: 3rem 1rem;
 				color: var(--text-muted);
 			}
-
+			
 			.loading-state .spinner {
 				border-color: var(--border);
 				border-top-color: var(--primary);
@@ -532,7 +532,7 @@
 				margin: 0 auto 1rem;
 				display: block;
 			}
-
+			
 			.disclaimer {
 				text-align: center;
 				font-size: 0.75rem;
@@ -540,13 +540,13 @@
 				margin-top: 1.5rem;
 				padding: 0 1rem;
 			}
-
+			
 			.hint {
 				font-size: 0.78rem;
 				color: var(--text-muted);
 				margin-top: 0.4rem;
 			}
-
+			
 			@media (max-width: 640px) {
 				.container { padding: 0 0.75rem 3rem; }
 				.card { padding: 1.1rem; }
@@ -587,7 +587,8 @@
 				<section id="panel-search" class="tab-panel active">
 					<form id="searchForm">
 						<div class="card">
-							<h2><span class="step-num">1</span> Filter Criteria</h2>
+							<h2><span class="step-num">1</span>
+							Filter Criteria</h2>
 
 							<div class="form-group">
 								<label class="form-label">Severity <span class="chip-count">required</span></label>
@@ -627,7 +628,8 @@
 
 					<div id="searchResults" class="results-section">
 						<div class="card">
-							<h2><span class="step-num">&#10003;</span> Results <span class="chip-count" id="searchResultCount"></span></h2>
+							<h2><span class="step-num">&#10003;</span>
+							Results <span class="chip-count" id="searchResultCount"></span></h2>
 							<div id="searchResultsList"></div>
 						</div>
 					</div>
@@ -637,7 +639,8 @@
 				<section id="panel-create" class="tab-panel">
 					<form id="createForm">
 						<div class="card">
-							<h2><span class="step-num">1</span> Classification</h2>
+							<h2><span class="step-num">1</span>
+							Classification</h2>
 
 							<div class="form-group">
 								<label class="form-label">Severity</label>
@@ -659,21 +662,24 @@
 						</div>
 
 						<div class="card">
-							<h2><span class="step-num">2</span> Medicine Compositions</h2>
+							<h2><span class="step-num">2</span>
+							Medicine Compositions</h2>
 							<div class="form-desc">Each composition is one regimen (a single antibiotic or a combination). Add multiple compositions to offer alternatives.</div>
 							<div id="create-compositions"></div>
 							<button type="button" class="btn-add" id="createAddComposition">+ Add Composition</button>
 						</div>
 
 						<div class="card">
-							<h2><span class="step-num">3</span> Pathogens</h2>
+							<h2><span class="step-num">3</span>
+							Pathogens</h2>
 							<div class="form-desc">Select the pathogens this treatment covers.</div>
 							<input type="text" class="filter-input" placeholder="Filter pathogens..." data-filter="create-pathogens">
 							<div class="chip-box" id="create-pathogens"></div>
 						</div>
 
 						<div class="card">
-							<h2><span class="step-num">4</span> Criteria</h2>
+							<h2><span class="step-num">4</span>
+							Criteria</h2>
 							<div class="form-desc">Select the criteria required for this treatment.</div>
 							<input type="text" class="filter-input" placeholder="Filter criteria..." data-filter="create-criteria">
 							<div class="chip-box" id="create-criteria"></div>
@@ -687,19 +693,18 @@
 				<section id="panel-update" class="tab-panel">
 					<form id="updateForm">
 						<div class="card">
-							<h2><span class="step-num">1</span> Treatment</h2>
+							<h2><span class="step-num">1</span>
+							Treatment</h2>
 							<div class="form-group">
 								<label class="form-label" for="updateId">Treatment ID</label>
 								<div class="form-desc">The GUID of the treatment to update (as returned when it was created).</div>
-								<input type="text" class="form-input" id="updateId" required
-									placeholder="00000000-0000-0000-0000-000000000000"
-									pattern="[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}"
-									title="Please enter a valid GUID">
+								<input type="text" class="form-input" id="updateId" required placeholder="00000000-0000-0000-0000-000000000000" pattern="[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}" title="Please enter a valid GUID">
 							</div>
 						</div>
 
 						<div class="card">
-							<h2><span class="step-num">2</span> Classification</h2>
+							<h2><span class="step-num">2</span>
+							Classification</h2>
 
 							<div class="form-group">
 								<label class="form-label">Severity</label>
@@ -721,21 +726,24 @@
 						</div>
 
 						<div class="card">
-							<h2><span class="step-num">3</span> Medicine Compositions</h2>
+							<h2><span class="step-num">3</span>
+							Medicine Compositions</h2>
 							<div class="form-desc">The full new set of compositions. Existing compositions are replaced on update.</div>
 							<div id="update-compositions"></div>
 							<button type="button" class="btn-add" id="updateAddComposition">+ Add Composition</button>
 						</div>
 
 						<div class="card">
-							<h2><span class="step-num">4</span> Pathogens</h2>
+							<h2><span class="step-num">4</span>
+							Pathogens</h2>
 							<div class="form-desc">The full new set of pathogens. Existing pathogens are replaced on update.</div>
 							<input type="text" class="filter-input" placeholder="Filter pathogens..." data-filter="update-pathogens">
 							<div class="chip-box" id="update-pathogens"></div>
 						</div>
 
 						<div class="card">
-							<h2><span class="step-num">5</span> Criteria</h2>
+							<h2><span class="step-num">5</span>
+							Criteria</h2>
 							<div class="form-desc">The full new set of criteria. Existing criteria are replaced on update.</div>
 							<input type="text" class="filter-input" placeholder="Filter criteria..." data-filter="update-criteria">
 							<div class="chip-box" id="update-criteria"></div>
@@ -750,11 +758,11 @@
 		</div>
 
 		<script>
-			const API_BASE = 'https://clinical-service-respira.dev.localhost:7145';
+			const API_BASE = 'https://gateway-respira.dev.localhost:7283/';
 			const ENDPOINTS = {
-				treatments: `${API_BASE}/api/1.0/treatments`,
-				antibiotics: `${API_BASE}/api/1.0/antibiotics/list`,
-				criteria: `${API_BASE}/api/1.0/criteria/list`
+				treatments: `${API_BASE}/api/v1/treatments`,
+				antibiotics: `${API_BASE}/api/v1/antibiotics/list`,
+				criteria: `${API_BASE}/api/v1/criteria/list`
 			};
 
 			// There is no pathogens list endpoint yet, so the seeded pathogens are listed here.
@@ -828,352 +836,352 @@
 					hideError();
 					hideSuccess();
 				});
+		});
+
+	// ---------- Segmented toggles ----------
+	document.querySelectorAll('.segmented-toggle').forEach(toggle => {
+		toggle.querySelectorAll('.segment-btn').forEach(btn => {
+			btn.addEventListener('click', () => {
+				toggle.querySelectorAll('.segment-btn').forEach(b => b.classList.remove('active'));
+				btn.classList.add('active');
 			});
+	});
+});
 
-			// ---------- Segmented toggles ----------
-			document.querySelectorAll('.segmented-toggle').forEach(toggle => {
-				toggle.querySelectorAll('.segment-btn').forEach(btn => {
-					btn.addEventListener('click', () => {
-						toggle.querySelectorAll('.segment-btn').forEach(b => b.classList.remove('active'));
-						btn.classList.add('active');
-					});
-				});
+function getSegmentValue(name) {
+	const active = document.querySelector(`.segmented-toggle[data-toggle="${name}"] .segment-btn.active`);
+	return active ? active.dataset.value : null;
+}
+
+// ---------- Chips ----------
+function renderChips(boxId, items, selectedSet, countId) {
+	const box = document.getElementById(boxId);
+	const prefix = boxId;
+	box.innerHTML = '';
+	if (!items.length) {
+		box.innerHTML = '<div class="empty-state">No items available</div>';
+		return;
+	}
+	items.forEach(item => {
+		const chip = document.createElement('button');
+		chip.type = 'button';
+		chip.className = 'chip' + (selectedSet.has(item.id) ? ' active' : '');
+		chip.textContent = item.name;
+		chip.dataset.id = item.id;
+		chip.dataset.name = item.name.toLowerCase();
+		chip.addEventListener('click', () => {
+			if (selectedSet.has(item.id)) selectedSet.delete(item.id);
+			else selectedSet.add(item.id);
+			chip.classList.toggle('active');
+			updateCount(countId, selectedSet.size);
+		});
+	box.appendChild(chip);
+});
+updateCount(countId, selectedSet.size);
+}
+
+function updateCount(countId, size) {
+	if (countId) document.getElementById(countId).textContent = size + ' selected';
+}
+
+document.querySelectorAll('[data-filter]').forEach(input => {
+	input.addEventListener('input', () => {
+		const boxId = input.dataset.filter;
+		const q = input.value.trim().toLowerCase();
+		document.querySelectorAll(`#${boxId} .chip`).forEach(chip => {
+			chip.style.display = chip.dataset.name.includes(q) ? '' : 'none';
+		});
+});
+});
+
+// ---------- Medicine compositions ----------
+function addComposition(prefix) {
+	compositions[prefix].push(new Set());
+	renderCompositions(prefix);
+}
+
+function removeComposition(prefix, index) {
+	compositions[prefix].splice(index, 1);
+	renderCompositions(prefix);
+}
+
+function renderCompositions(prefix) {
+	const container = document.getElementById(prefix + '-compositions');
+	container.innerHTML = '';
+	if (!compositions[prefix].length) {
+		container.innerHTML = '<div class="empty-state">No compositions yet. Add one below.</div>';
+		return;
+	}
+	compositions[prefix].forEach((comp, idx) => {
+		const card = document.createElement('div');
+		card.className = 'composition-card';
+
+		const header = document.createElement('div');
+		header.className = 'composition-header';
+		header.innerHTML = `<span class="composition-title">Composition ${idx + 1}</span>`;
+		if (compositions[prefix].length > 0) {
+			const removeBtn = document.createElement('button');
+			removeBtn.type = 'button';
+			removeBtn.className = 'btn-remove';
+			removeBtn.textContent = 'Remove';
+			removeBtn.addEventListener('click', () => removeComposition(prefix, idx));
+			header.appendChild(removeBtn);
+		}
+		card.appendChild(header);
+
+		const filter = document.createElement('input');
+		filter.type = 'text';
+		filter.className = 'filter-input';
+		filter.placeholder = 'Filter antibiotics...';
+		card.appendChild(filter);
+
+		const box = document.createElement('div');
+		box.className = 'chip-box';
+		antibiotics.forEach(ab => {
+			const chip = document.createElement('button');
+			chip.type = 'button';
+			chip.className = 'chip' + (comp.has(ab.id) ? ' active' : '');
+			chip.textContent = ab.name;
+			chip.dataset.name = ab.name.toLowerCase();
+			chip.addEventListener('click', () => {
+				if (comp.has(ab.id)) comp.delete(ab.id);
+				else comp.add(ab.id);
+				chip.classList.toggle('active');
 			});
+		box.appendChild(chip);
+	});
+filter.addEventListener('input', () => {
+	const q = filter.value.trim().toLowerCase();
+	box.querySelectorAll('.chip').forEach(chip => {
+		chip.style.display = chip.dataset.name.includes(q) ? '' : 'none';
+	});
+});
+card.appendChild(box);
+container.appendChild(card);
+});
+}
 
-			function getSegmentValue(name) {
-				const active = document.querySelector(`.segmented-toggle[data-toggle="${name}"] .segment-btn.active`);
-				return active ? active.dataset.value : null;
-			}
+document.getElementById('createAddComposition').addEventListener('click', () => addComposition('create'));
+document.getElementById('updateAddComposition').addEventListener('click', () => addComposition('update'));
 
-			// ---------- Chips ----------
-			function renderChips(boxId, items, selectedSet, countId) {
-				const box = document.getElementById(boxId);
-				const prefix = boxId;
-				box.innerHTML = '';
-				if (!items.length) {
-					box.innerHTML = '<div class="empty-state">No items available</div>';
-					return;
-				}
-				items.forEach(item => {
-					const chip = document.createElement('button');
-					chip.type = 'button';
-					chip.className = 'chip' + (selectedSet.has(item.id) ? ' active' : '');
-					chip.textContent = item.name;
-					chip.dataset.id = item.id;
-					chip.dataset.name = item.name.toLowerCase();
-					chip.addEventListener('click', () => {
-						if (selectedSet.has(item.id)) selectedSet.delete(item.id);
-						else selectedSet.add(item.id);
-						chip.classList.toggle('active');
-						updateCount(countId, selectedSet.size);
-					});
-					box.appendChild(chip);
-				});
-				updateCount(countId, selectedSet.size);
-			}
+function collectPayload(prefix) {
+	return {
+		severity: getSegmentValue(prefix + '-severity'),
+		treatmentSite: getSegmentValue(prefix + '-site'),
+		medicines: compositions[prefix]
+		.map(comp => [...comp])
+		.filter(comp => comp.length > 0),
+		pathogens: [...selection[prefix].pathogens],
+		criteria: [...selection[prefix].criteria]
+	};
+}
 
-			function updateCount(countId, size) {
-				if (countId) document.getElementById(countId).textContent = size + ' selected';
-			}
+// ---------- Search ----------
+document.getElementById('searchForm').addEventListener('submit', async (e) => {
+	e.preventDefault();
+	hideError();
+	hideSuccess();
 
-			document.querySelectorAll('[data-filter]').forEach(input => {
-				input.addEventListener('input', () => {
-					const boxId = input.dataset.filter;
-					const q = input.value.trim().toLowerCase();
-					document.querySelectorAll(`#${boxId} .chip`).forEach(chip => {
-						chip.style.display = chip.dataset.name.includes(q) ? '' : 'none';
-					});
-				});
+	const params = new URLSearchParams();
+	params.set('Severity', getSegmentValue('search-severity'));
+	params.set('TreatmentSite', getSegmentValue('search-site'));
+	selection.search.pathogens.forEach(id => params.append('PathogenIds', id));
+	selection.search.criteria.forEach(id => params.append('CriteriaIds', id));
+
+	const btn = document.getElementById('searchBtn');
+	btn.disabled = true;
+	btn.innerHTML = '<span class="spinner"></span> Searching...';
+
+	try {
+		const url = `${ENDPOINTS.treatments}?${params.toString()}`;
+		const body = await apiFetch(url);
+		renderSearchResults(body.data?.solutions || body.data?.Solutions || []);
+	} catch (err) {
+		console.error('Search error:', err);
+		showError('Search failed: ' + err.message);
+		document.getElementById('searchResults').style.display = 'none';
+	} finally {
+		btn.disabled = false;
+		btn.innerHTML = 'Search Treatments';
+	}
+});
+
+function renderSearchResults(solutions) {
+	const section = document.getElementById('searchResults');
+	const list = document.getElementById('searchResultsList');
+	section.style.display = 'block';
+	document.getElementById('searchResultCount').textContent =
+	solutions.length + (solutions.length === 1 ? ' solution' : ' solutions');
+
+	if (!solutions.length) {
+		list.innerHTML = '<div class="empty-state">No solutions matched the given filters.</div>';
+		window.scrollTo({ top: section.offsetTop - 20, behavior: 'smooth' });
+		return;
+	}
+
+	list.innerHTML = '';
+	solutions.forEach((s, si) => {
+		const meds = s.medicines || s.Medicines || [];
+		const item = document.createElement('div');
+		item.className = 'result-item';
+
+		const header = document.createElement('div');
+		header.className = 'result-item-header';
+
+		const titleWrap = document.createElement('div');
+		const title = document.createElement('div');
+		title.className = 'result-item-title';
+		title.textContent = 'Solution ' + (si + 1);
+		titleWrap.appendChild(title);
+		header.appendChild(titleWrap);
+
+		const medCount = document.createElement('span');
+		medCount.className = 'chip-count';
+		medCount.textContent = meds.length + (meds.length === 1 ? ' medicine' : ' medicines');
+		header.appendChild(medCount);
+		item.appendChild(header);
+
+		const medWrap = document.createElement('div');
+		medWrap.className = 'composition-meds';
+		if (!meds.length) {
+			const empty = document.createElement('div');
+			empty.className = 'empty-state';
+			empty.textContent = 'No medicines';
+			medWrap.appendChild(empty);
+		} else {
+			meds.forEach(m => {
+				const med = document.createElement('div');
+				med.className = 'composition-med';
+				const name = document.createElement('span');
+				name.className = 'medicine-name';
+				name.textContent = m.name || m.Name;
+				const badge = document.createElement('span');
+				badge.className = 'group-badge';
+				badge.textContent = m.antibioticGroupName || m.AntibioticGroupName || '—';
+				med.appendChild(name);
+				med.appendChild(badge);
+				medWrap.appendChild(med);
 			});
+	}
+	item.appendChild(medWrap);
+	list.appendChild(item);
+});
 
-			// ---------- Medicine compositions ----------
-			function addComposition(prefix) {
-				compositions[prefix].push(new Set());
-				renderCompositions(prefix);
-			}
+window.scrollTo({ top: section.offsetTop - 20, behavior: 'smooth' });
+}
 
-			function removeComposition(prefix, index) {
-				compositions[prefix].splice(index, 1);
-				renderCompositions(prefix);
-			}
+// ---------- Create ----------
+document.getElementById('createForm').addEventListener('submit', async (e) => {
+	e.preventDefault();
+	hideError();
+	hideSuccess();
 
-			function renderCompositions(prefix) {
-				const container = document.getElementById(prefix + '-compositions');
-				container.innerHTML = '';
-				if (!compositions[prefix].length) {
-					container.innerHTML = '<div class="empty-state">No compositions yet. Add one below.</div>';
-					return;
-				}
-				compositions[prefix].forEach((comp, idx) => {
-					const card = document.createElement('div');
-					card.className = 'composition-card';
+	const payload = collectPayload('create');
+	const btn = document.getElementById('createBtn');
+	btn.disabled = true;
+	btn.innerHTML = '<span class="spinner"></span> Creating...';
 
-					const header = document.createElement('div');
-					header.className = 'composition-header';
-					header.innerHTML = `<span class="composition-title">Composition ${idx + 1}</span>`;
-					if (compositions[prefix].length > 0) {
-						const removeBtn = document.createElement('button');
-						removeBtn.type = 'button';
-						removeBtn.className = 'btn-remove';
-						removeBtn.textContent = 'Remove';
-						removeBtn.addEventListener('click', () => removeComposition(prefix, idx));
-						header.appendChild(removeBtn);
-					}
-					card.appendChild(header);
+	try {
+		const body = await apiFetch(ENDPOINTS.treatments, {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify(payload)
+		});
+	const id = body.data?.id || body.data?.Id;
+	showSuccess(`Treatment created successfully. ID: <code>${id}</code>`);
+} catch (err) {
+	console.error('Create error:', err);
+	showError('Create failed: ' + err.message);
+} finally {
+	btn.disabled = false;
+	btn.innerHTML = 'Create Treatment';
+}
+});
 
-					const filter = document.createElement('input');
-					filter.type = 'text';
-					filter.className = 'filter-input';
-					filter.placeholder = 'Filter antibiotics...';
-					card.appendChild(filter);
+// ---------- Update ----------
+document.getElementById('updateForm').addEventListener('submit', async (e) => {
+	e.preventDefault();
+	hideError();
+	hideSuccess();
 
-					const box = document.createElement('div');
-					box.className = 'chip-box';
-					antibiotics.forEach(ab => {
-						const chip = document.createElement('button');
-						chip.type = 'button';
-						chip.className = 'chip' + (comp.has(ab.id) ? ' active' : '');
-						chip.textContent = ab.name;
-						chip.dataset.name = ab.name.toLowerCase();
-						chip.addEventListener('click', () => {
-							if (comp.has(ab.id)) comp.delete(ab.id);
-							else comp.add(ab.id);
-							chip.classList.toggle('active');
-						});
-						box.appendChild(chip);
-					});
-					filter.addEventListener('input', () => {
-						const q = filter.value.trim().toLowerCase();
-						box.querySelectorAll('.chip').forEach(chip => {
-							chip.style.display = chip.dataset.name.includes(q) ? '' : 'none';
-						});
-					});
-					card.appendChild(box);
-					container.appendChild(card);
-				});
-			}
+	const id = document.getElementById('updateId').value.trim();
+	const payload = collectPayload('update');
+	const btn = document.getElementById('updateBtn');
+	btn.disabled = true;
+	btn.innerHTML = '<span class="spinner"></span> Updating...';
 
-			document.getElementById('createAddComposition').addEventListener('click', () => addComposition('create'));
-			document.getElementById('updateAddComposition').addEventListener('click', () => addComposition('update'));
+	try {
+		await apiFetch(`${ENDPOINTS.treatments}/${id}`, {
+			method: 'PUT',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify(payload)
+		});
+	showSuccess(`Treatment <code>${id}</code> updated successfully.`);
+} catch (err) {
+	console.error('Update error:', err);
+	showError('Update failed: ' + err.message);
+} finally {
+	btn.disabled = false;
+	btn.innerHTML = 'Update Treatment';
+}
+});
 
-			function collectPayload(prefix) {
-				return {
-					severity: getSegmentValue(prefix + '-severity'),
-					treatmentSite: getSegmentValue(prefix + '-site'),
-					medicines: compositions[prefix]
-						.map(comp => [...comp])
-						.filter(comp => comp.length > 0),
-					pathogens: [...selection[prefix].pathogens],
-					criteria: [...selection[prefix].criteria]
-				};
-			}
+// ---------- Banners ----------
+function showError(msg) {
+	const banner = document.getElementById('errorBanner');
+	banner.textContent = msg;
+	banner.style.display = 'block';
+	hideSuccess();
+	window.scrollTo({ top: 0, behavior: 'smooth' });
+}
 
-			// ---------- Search ----------
-			document.getElementById('searchForm').addEventListener('submit', async (e) => {
-				e.preventDefault();
-				hideError();
-				hideSuccess();
+function hideError() {
+	document.getElementById('errorBanner').style.display = 'none';
+}
 
-				const params = new URLSearchParams();
-				params.set('Severity', getSegmentValue('search-severity'));
-				params.set('TreatmentSite', getSegmentValue('search-site'));
-				selection.search.pathogens.forEach(id => params.append('PathogenIds', id));
-				selection.search.criteria.forEach(id => params.append('CriteriaIds', id));
+function showSuccess(html) {
+	const banner = document.getElementById('successBanner');
+	banner.innerHTML = html;
+	banner.style.display = 'block';
+	hideError();
+	window.scrollTo({ top: 0, behavior: 'smooth' });
+}
 
-				const btn = document.getElementById('searchBtn');
-				btn.disabled = true;
-				btn.innerHTML = '<span class="spinner"></span> Searching...';
+function hideSuccess() {
+	document.getElementById('successBanner').style.display = 'none';
+}
 
-				try {
-					const url = `${ENDPOINTS.treatments}?${params.toString()}`;
-					const body = await apiFetch(url);
-					renderSearchResults(body.data?.solutions || body.data?.Solutions || []);
-				} catch (err) {
-					console.error('Search error:', err);
-					showError('Search failed: ' + err.message);
-					document.getElementById('searchResults').style.display = 'none';
-				} finally {
-					btn.disabled = false;
-					btn.innerHTML = 'Search Treatments';
-				}
-			});
+// ---------- Init ----------
+async function init() {
+	try {
+		const [abBody, crBody] = await Promise.all([
+			apiFetch(ENDPOINTS.antibiotics),
+			apiFetch(ENDPOINTS.criteria)
+		]);
+	antibiotics = abBody.data?.antibiotics || abBody.data?.Antibiotics || [];
+	criteria = crBody.data?.criteria || crBody.data?.Criteria || [];
 
-			function renderSearchResults(solutions) {
-				const section = document.getElementById('searchResults');
-				const list = document.getElementById('searchResultsList');
-				section.style.display = 'block';
-				document.getElementById('searchResultCount').textContent =
-					solutions.length + (solutions.length === 1 ? ' solution' : ' solutions');
+	renderChips('search-pathogens', PATHOGENS, selection.search.pathogens, 'searchPathogenCount');
+	renderChips('search-criteria', criteria, selection.search.criteria, 'searchCriteriaCount');
+	renderChips('create-pathogens', PATHOGENS, selection.create.pathogens, null);
+	renderChips('create-criteria', criteria, selection.create.criteria, null);
+	renderChips('update-pathogens', PATHOGENS, selection.update.pathogens, null);
+	renderChips('update-criteria', criteria, selection.update.criteria, null);
 
-				if (!solutions.length) {
-					list.innerHTML = '<div class="empty-state">No solutions matched the given filters.</div>';
-					window.scrollTo({ top: section.offsetTop - 20, behavior: 'smooth' });
-					return;
-				}
+	addComposition('create');
+	addComposition('update');
 
-				list.innerHTML = '';
-				solutions.forEach((s, si) => {
-					const meds = s.medicines || s.Medicines || [];
-					const item = document.createElement('div');
-					item.className = 'result-item';
+	document.getElementById('loadingState').style.display = 'none';
+	document.getElementById('appContent').style.display = '';
+} catch (err) {
+	console.error('Init error:', err);
+	showError('Failed to load reference data: ' + err.message);
+	document.getElementById('loadingState').innerHTML =
+	'<p style="color:var(--danger);">Failed to load reference data. Check console for details.</p>';
+}
+}
 
-					const header = document.createElement('div');
-					header.className = 'result-item-header';
-
-					const titleWrap = document.createElement('div');
-					const title = document.createElement('div');
-					title.className = 'result-item-title';
-					title.textContent = 'Solution ' + (si + 1);
-					titleWrap.appendChild(title);
-					header.appendChild(titleWrap);
-
-					const medCount = document.createElement('span');
-					medCount.className = 'chip-count';
-					medCount.textContent = meds.length + (meds.length === 1 ? ' medicine' : ' medicines');
-					header.appendChild(medCount);
-					item.appendChild(header);
-
-					const medWrap = document.createElement('div');
-					medWrap.className = 'composition-meds';
-					if (!meds.length) {
-						const empty = document.createElement('div');
-						empty.className = 'empty-state';
-						empty.textContent = 'No medicines';
-						medWrap.appendChild(empty);
-					} else {
-						meds.forEach(m => {
-							const med = document.createElement('div');
-							med.className = 'composition-med';
-							const name = document.createElement('span');
-							name.className = 'medicine-name';
-							name.textContent = m.name || m.Name;
-							const badge = document.createElement('span');
-							badge.className = 'group-badge';
-							badge.textContent = m.antibioticGroupName || m.AntibioticGroupName || '—';
-							med.appendChild(name);
-							med.appendChild(badge);
-							medWrap.appendChild(med);
-						});
-					}
-					item.appendChild(medWrap);
-					list.appendChild(item);
-				});
-
-				window.scrollTo({ top: section.offsetTop - 20, behavior: 'smooth' });
-			}
-
-			// ---------- Create ----------
-			document.getElementById('createForm').addEventListener('submit', async (e) => {
-				e.preventDefault();
-				hideError();
-				hideSuccess();
-
-				const payload = collectPayload('create');
-				const btn = document.getElementById('createBtn');
-				btn.disabled = true;
-				btn.innerHTML = '<span class="spinner"></span> Creating...';
-
-				try {
-					const body = await apiFetch(ENDPOINTS.treatments, {
-						method: 'POST',
-						headers: { 'Content-Type': 'application/json' },
-						body: JSON.stringify(payload)
-					});
-					const id = body.data?.id || body.data?.Id;
-					showSuccess(`Treatment created successfully. ID: <code>${id}</code>`);
-				} catch (err) {
-					console.error('Create error:', err);
-					showError('Create failed: ' + err.message);
-				} finally {
-					btn.disabled = false;
-					btn.innerHTML = 'Create Treatment';
-				}
-			});
-
-			// ---------- Update ----------
-			document.getElementById('updateForm').addEventListener('submit', async (e) => {
-				e.preventDefault();
-				hideError();
-				hideSuccess();
-
-				const id = document.getElementById('updateId').value.trim();
-				const payload = collectPayload('update');
-				const btn = document.getElementById('updateBtn');
-				btn.disabled = true;
-				btn.innerHTML = '<span class="spinner"></span> Updating...';
-
-				try {
-					await apiFetch(`${ENDPOINTS.treatments}/${id}`, {
-						method: 'PUT',
-						headers: { 'Content-Type': 'application/json' },
-						body: JSON.stringify(payload)
-					});
-					showSuccess(`Treatment <code>${id}</code> updated successfully.`);
-				} catch (err) {
-					console.error('Update error:', err);
-					showError('Update failed: ' + err.message);
-				} finally {
-					btn.disabled = false;
-					btn.innerHTML = 'Update Treatment';
-				}
-			});
-
-			// ---------- Banners ----------
-			function showError(msg) {
-				const banner = document.getElementById('errorBanner');
-				banner.textContent = msg;
-				banner.style.display = 'block';
-				hideSuccess();
-				window.scrollTo({ top: 0, behavior: 'smooth' });
-			}
-
-			function hideError() {
-				document.getElementById('errorBanner').style.display = 'none';
-			}
-
-			function showSuccess(html) {
-				const banner = document.getElementById('successBanner');
-				banner.innerHTML = html;
-				banner.style.display = 'block';
-				hideError();
-				window.scrollTo({ top: 0, behavior: 'smooth' });
-			}
-
-			function hideSuccess() {
-				document.getElementById('successBanner').style.display = 'none';
-			}
-
-			// ---------- Init ----------
-			async function init() {
-				try {
-					const [abBody, crBody] = await Promise.all([
-						apiFetch(ENDPOINTS.antibiotics),
-						apiFetch(ENDPOINTS.criteria)
-					]);
-					antibiotics = abBody.data?.antibiotics || abBody.data?.Antibiotics || [];
-					criteria = crBody.data?.criteria || crBody.data?.Criteria || [];
-
-					renderChips('search-pathogens', PATHOGENS, selection.search.pathogens, 'searchPathogenCount');
-					renderChips('search-criteria', criteria, selection.search.criteria, 'searchCriteriaCount');
-					renderChips('create-pathogens', PATHOGENS, selection.create.pathogens, null);
-					renderChips('create-criteria', criteria, selection.create.criteria, null);
-					renderChips('update-pathogens', PATHOGENS, selection.update.pathogens, null);
-					renderChips('update-criteria', criteria, selection.update.criteria, null);
-
-					addComposition('create');
-					addComposition('update');
-
-					document.getElementById('loadingState').style.display = 'none';
-					document.getElementById('appContent').style.display = '';
-				} catch (err) {
-					console.error('Init error:', err);
-					showError('Failed to load reference data: ' + err.message);
-					document.getElementById('loadingState').innerHTML =
-						'<p style="color:var(--danger);">Failed to load reference data. Check console for details.</p>';
-				}
-			}
-
-			init();
+init();
 		</script>
 	</body>
 </html>

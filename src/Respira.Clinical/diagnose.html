@@ -1277,11 +1277,11 @@
 		</div>
 
 		<script>
-			const API_BASE = 'https://clinical-service-respira.dev.localhost:7145';
+			const API_BASE = 'https://gateway-respira.dev.localhost:7283';
 			const ENDPOINTS = {
-				form: `${API_BASE}/api/1.0/diagnose/empirical`,
-				diagnose: `${API_BASE}/api/1.0/diagnose/empirical`,
-				antibiotics: `${API_BASE}/api/1.0/antibiotics/list`
+				form: `${API_BASE}/api/v1/diagnose/empirical`,
+				diagnose: `${API_BASE}/api/v1/diagnose/empirical`,
+				antibiotics: `${API_BASE}/api/v1/antibiotics/list`
 			};
 
 			let formVariables = [];
@@ -1795,104 +1795,104 @@ showResults(body.data);
 }
 });
 
-	/* ---------------- Evidence rendering ---------------- */
+/* ---------------- Evidence rendering ---------------- */
 
-	function evPick(raw, lower, upper) {
-		if (!raw || typeof raw !== 'object') return undefined;
-		return raw[lower] !== undefined ? raw[lower] : raw[upper];
+function evPick(raw, lower, upper) {
+	if (!raw || typeof raw !== 'object') return undefined;
+	return raw[lower] !== undefined ? raw[lower] : raw[upper];
+}
+
+function evFormatValue(value) {
+	if (value === null || value === undefined || value === '') return null;
+	if (typeof value === 'boolean') return value ? 'true' : 'false';
+	if (typeof value === 'object') {
+		try { return JSON.stringify(value); } catch { return String(value); }
+	}
+	return String(value);
+}
+
+function evObservationValue(obs) {
+	const variable = evPick(obs, 'variable', 'Variable') || {};
+	const vt = evPick(variable, 'valueType', 'ValueType');
+	let value;
+	if (vt === 'Boolean') value = evPick(obs, 'booleanValue', 'BooleanValue');
+	else if (vt === 'Categorical') value = evPick(obs, 'categoricalValue', 'CategoricalValue');
+	else value = evPick(obs, 'numericValue', 'NumericValue');
+	if (value === undefined || value === null) {
+		value = evPick(obs, 'numericValue', 'NumericValue')
+		?? evPick(obs, 'booleanValue', 'BooleanValue')
+		?? evPick(obs, 'categoricalValue', 'CategoricalValue');
+	}
+	return evFormatValue(value) ?? '(no value)';
+}
+
+function renderEvidence(e) {
+	// Legacy fallback: evidence already rendered as a string
+	if (e === null || e === undefined) return '';
+	if (typeof e === 'string' || typeof e === 'number' || typeof e === 'boolean') {
+		return `<li class="evidence-item evidence-legacy">${esc(e)}</li>`;
 	}
 
-	function evFormatValue(value) {
-		if (value === null || value === undefined || value === '') return null;
-		if (typeof value === 'boolean') return value ? 'true' : 'false';
-		if (typeof value === 'object') {
-			try { return JSON.stringify(value); } catch { return String(value); }
-		}
-		return String(value);
-	}
+	const source = evPick(e, 'source', 'Source');
+	const formula = evPick(e, 'formula', 'Formula');
+	const related = evPick(e, 'relatedObservations', 'RelatedObservations') || [];
+	const missing = evPick(e, 'missingVariables', 'MissingVariables') || [];
+	const score = evPick(e, 'score', 'Score');
+	const isMajor = evPick(e, 'isMajor', 'IsMajor');
 
-	function evObservationValue(obs) {
+	const observations = (Array.isArray(related) ? related : []).map(obs => {
 		const variable = evPick(obs, 'variable', 'Variable') || {};
-		const vt = evPick(variable, 'valueType', 'ValueType');
-		let value;
-		if (vt === 'Boolean') value = evPick(obs, 'booleanValue', 'BooleanValue');
-		else if (vt === 'Categorical') value = evPick(obs, 'categoricalValue', 'CategoricalValue');
-		else value = evPick(obs, 'numericValue', 'NumericValue');
-		if (value === undefined || value === null) {
-			value = evPick(obs, 'numericValue', 'NumericValue')
-				?? evPick(obs, 'booleanValue', 'BooleanValue')
-				?? evPick(obs, 'categoricalValue', 'CategoricalValue');
-		}
-		return evFormatValue(value) ?? '(no value)';
-	}
-
-	function renderEvidence(e) {
-		// Legacy fallback: evidence already rendered as a string
-		if (e === null || e === undefined) return '';
-		if (typeof e === 'string' || typeof e === 'number' || typeof e === 'boolean') {
-			return `<li class="evidence-item evidence-legacy">${esc(e)}</li>`;
-		}
-
-		const source = evPick(e, 'source', 'Source');
-		const formula = evPick(e, 'formula', 'Formula');
-		const related = evPick(e, 'relatedObservations', 'RelatedObservations') || [];
-		const missing = evPick(e, 'missingVariables', 'MissingVariables') || [];
-		const score = evPick(e, 'score', 'Score');
-		const isMajor = evPick(e, 'isMajor', 'IsMajor');
-
-		const observations = (Array.isArray(related) ? related : []).map(obs => {
-			const variable = evPick(obs, 'variable', 'Variable') || {};
-			const code = evPick(variable, 'code', 'Code') || '';
-			const name = evPick(variable, 'name', 'Name') || '';
-			const label = name && code ? `${code} - ${name}` : (code || name || 'Unknown');
-			return `
-			<div class="evidence-var">
-				<span class="evidence-var-name">${esc(label)}</span>
-				<span class="evidence-var-value">${esc(evObservationValue(obs))}</span>
-			</div>`;
-		}).join('');
-
-		const missingCodes = (Array.isArray(missing) ? missing : [])
-			.map(v => evPick(v, 'code', 'Code'))
-			.filter(Boolean);
-
-		let valueHtml;
-		if (missingCodes.length > 0) {
-			valueHtml = `<span class="evidence-value is-missing">not evaluated (missing ${esc(missingCodes.join(', '))})</span>`;
-		} else {
-			const rawValue = evPick(e, 'evaluatedValue', 'EvaluatedValue');
-			const formatted = evFormatValue(rawValue);
-			valueHtml = `<span class="evidence-value">${esc(formatted ?? 'not evaluated')}</span>`;
-		}
-
-		const badges = [];
-		if (score !== undefined && score !== null && score !== '') {
-			badges.push(`<span class="evidence-badge">Score: ${esc(score)}</span>`);
-		}
-		if (isMajor !== undefined && isMajor !== null) {
-			badges.push(isMajor
-				? '<span class="evidence-badge badge-major">Major criteria</span>'
-				: '<span class="evidence-badge badge-minor">Minor criteria</span>');
-		}
-
+		const code = evPick(variable, 'code', 'Code') || '';
+		const name = evPick(variable, 'name', 'Name') || '';
+		const label = name && code ? `${code} - ${name}` : (code || name || 'Unknown');
 		return `
-		<li class="evidence-item">
-			<div class="evidence-source">${esc(source ?? 'Evidence')}</div>
-			${formula ? `
-			<div class="evidence-row">
-				<span class="evidence-key">Formula</span>
-				<code class="evidence-formula">${esc(formula)}</code>
-			</div>` : ''}
-			${observations || missingCodes.length > 0 ? `
-			<div class="evidence-variables">
-				<div class="evidence-variables-title">Variables</div>
-				${observations || '<div class="evidence-var"><span class="evidence-var-name">(none)</span></div>'}
-			</div>` : ''}
-			<div class="evidence-row">
-				<span class="evidence-key">Value</span>
-				${valueHtml}
-			</div>
-			${badges.length > 0 ? `<div class="evidence-badges">${badges.join('')}</div>` : ''}
+		<div class="evidence-var">
+		<span class="evidence-var-name">${esc(label)}</span>
+		<span class="evidence-var-value">${esc(evObservationValue(obs))}</span>
+		</div>`;
+	}).join('');
+
+const missingCodes = (Array.isArray(missing) ? missing : [])
+.map(v => evPick(v, 'code', 'Code'))
+.filter(Boolean);
+
+let valueHtml;
+if (missingCodes.length > 0) {
+	valueHtml = `<span class="evidence-value is-missing">not evaluated (missing ${esc(missingCodes.join(', '))})</span>`;
+} else {
+	const rawValue = evPick(e, 'evaluatedValue', 'EvaluatedValue');
+	const formatted = evFormatValue(rawValue);
+	valueHtml = `<span class="evidence-value">${esc(formatted ?? 'not evaluated')}</span>`;
+}
+
+const badges = [];
+if (score !== undefined && score !== null && score !== '') {
+	badges.push(`<span class="evidence-badge">Score: ${esc(score)}</span>`);
+}
+if (isMajor !== undefined && isMajor !== null) {
+	badges.push(isMajor
+		? '<span class="evidence-badge badge-major">Major criteria</span>'
+		: '<span class="evidence-badge badge-minor">Minor criteria</span>');
+}
+
+return `
+<li class="evidence-item">
+<div class="evidence-source">${esc(source ?? 'Evidence')}</div>
+${formula ? `
+	<div class="evidence-row">
+	<span class="evidence-key">Formula</span>
+	<code class="evidence-formula">${esc(formula)}</code>
+	</div>` : ''}
+	${observations || missingCodes.length > 0 ? `
+		<div class="evidence-variables">
+		<div class="evidence-variables-title">Variables</div>
+		${observations || '<div class="evidence-var"><span class="evidence-var-name">(none)</span></div>'}
+		</div>` : ''}
+		<div class="evidence-row">
+		<span class="evidence-key">Value</span>
+		${valueHtml}
+		</div>
+		${badges.length > 0 ? `<div class="evidence-badges">${badges.join('')}</div>` : ''}
 		</li>`;
 	}
 
@@ -1935,16 +1935,16 @@ showResults(body.data);
 
 			return `
 			<div class="metric-diagnosis-item">
-				<div class="metric-diagnosis-identity">
-					<span class="metric-diagnosis-code">${esc(code)}</span>
-					${severityHtml}
-				</div>
-				<div class="metric-diagnosis-meta">${chips.join('')}</div>
+			<div class="metric-diagnosis-identity">
+			<span class="metric-diagnosis-code">${esc(code)}</span>
+			${severityHtml}
+			</div>
+			<div class="metric-diagnosis-meta">${chips.join('')}</div>
 			</div>`;
 		}).join('');
-	}
+}
 
-	function showResults(data) {
+function showResults(data) {
 	document.getElementById('diagnoseForm').style.display = 'none';
 	document.getElementById('resultsSection').style.display = 'block';
 
@@ -2014,6 +2014,7 @@ showResults(body.data);
 			`).join('')
 			: '<div class="empty-state">No heavy suspected pathogens</div>';
 
+			// Worth suspected - collapsible by default; count is always visible in the header
 			const worthSuspected = data.worthSuspected ?? data.WorthSuspected ?? [];
 			const worthList = document.getElementById('worthList');
 			worthList.innerHTML = worthSuspected.length > 0
@@ -2024,7 +2025,6 @@ showResults(body.data);
 				`).join('')
 				: '<div class="empty-state">No worth suspected pathogens</div>';
 
-				// Collapsible by default; count is always visible in the header
 				document.getElementById('worthCount').textContent = String(worthSuspected.length);
 				document.getElementById('worthToggle').setAttribute('aria-expanded', 'false');
 				document.getElementById('worthBody').hidden = true;

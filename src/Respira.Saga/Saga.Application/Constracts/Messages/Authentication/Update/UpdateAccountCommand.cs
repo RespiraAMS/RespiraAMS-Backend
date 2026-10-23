@@ -1,7 +1,7 @@
-using Authentication.Domain.Enums;
+using Respira.Authentication.Domain.Enums;
 using Respira.ServiceDefaults.Contracts.CQRS;
 
-namespace Authentication.Application.Features.Accounts.Commands.Update
+namespace Respira.Saga.Application.Constracts.Messages.Authentication.Update
 {
     /// <summary>
     /// Updates the mutable fields of an account. Everything but the identifiers and the

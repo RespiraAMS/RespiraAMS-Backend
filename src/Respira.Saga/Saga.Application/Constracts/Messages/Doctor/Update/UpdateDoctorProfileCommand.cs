@@ -1,7 +1,7 @@
 using Respira.Doctor.Domain.Enums;
 using Respira.ServiceDefaults.Contracts.CQRS;
 
-namespace Respira.Doctor.Application.Features.Doctors.Commands.Update
+namespace Respira.Saga.Application.Constracts.Messages.Doctor.Update
 {
     /// <summary>
     /// Updates the profile fields of a doctor/manager and points it at the freshly
@@ -15,7 +15,7 @@ namespace Respira.Doctor.Application.Features.Doctors.Commands.Update
         public required string FirstName { get; set; }
         public required string LastName { get; set; }
         public required List<DegreeType> Degrees { get; set; }
-        public AcademicTitleEnum AcademicTitle { get; set; }
+        public AcademicTitle AcademicTitle { get; set; }
         public PositionType Position { get; set; }
         public GenderType Gender { get; set; }
         public required string CitizenIdentificationNumber { get; set; }

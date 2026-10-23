@@ -1,6 +1,6 @@
-using Authentication.Domain.Enums;
+using Respira.Authentication.Domain.Enums;
 
-namespace Authentication.Application.Features.Authentication.Queries.Search.Result
+namespace Respira.Authentication.Application.Features.Authentication.Queries.Search.Result
 {
     public record AccountResult
     {

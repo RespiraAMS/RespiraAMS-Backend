@@ -1,6 +1,6 @@
 using Respira.ServiceDefaults.Contracts.CQRS;
 
-namespace Media.Application.Features.MediaAssets.Delete
+namespace Respira.Media.Application.Features.MediaAssets.Delete
 {
     /// <summary>
     /// Removes a media asset: the object in R2 first, then its database record. Used by
