@@ -64,7 +64,6 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalVariables.UpdateCli
             var command = new UpdateClinicalVariableCommand
             {
                 Id = female.Id,
-                Code = "FEMALE",
                 Name = "Female sex (reviewed)",
                 Description = "Whether the patient was assigned female at birth",
                 ValueType = ClinicalValueType.Boolean,
@@ -115,7 +114,6 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalVariables.UpdateCli
             var command = new UpdateClinicalVariableCommand
             {
                 Id = sbp.Id,
-                Code = "8480-6",
                 Name = "Systolic blood pressure",
                 Description = "Systolic blood pressure measured at the arm, seated",
                 ValueType = ClinicalValueType.Numeric,
@@ -175,7 +173,6 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalVariables.UpdateCli
             var command = new UpdateClinicalVariableCommand
             {
                 Id = sbp.Id,
-                Code = "8480-6",
                 Name = "Systolic blood pressure",
                 Description = "Systolic blood pressure measured at the arm",
                 ValueType = ClinicalValueType.Numeric,
@@ -223,7 +220,6 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalVariables.UpdateCli
             var command = new UpdateClinicalVariableCommand
             {
                 Id = crp.Id,
-                Code = "1988-5",
                 Name = "C reactive protein",
                 Description = "C reactive protein mass per volume in serum or plasma",
                 ValueType = ClinicalValueType.Numeric,
@@ -316,7 +312,6 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalVariables.UpdateCli
             var command = new UpdateClinicalVariableCommand
             {
                 Id = sarsCov2.Id,
-                Code = "94500-6",
                 Name = "SARS-CoV-2 RNA (PCR)",
                 Description = "SARS-CoV-2 RNA detected in nasopharyngeal swab by PCR",
                 ValueType = ClinicalValueType.Categorical,
@@ -372,7 +367,6 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalVariables.UpdateCli
             var command = new UpdateClinicalVariableCommand
             {
                 Id = pregnant.Id,
-                Code = "PREGNANT",
                 Name = "Pregnant",
                 Description = "Whether the patient is currently pregnant",
                 ValueType = ClinicalValueType.Boolean,
@@ -419,7 +413,6 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalVariables.UpdateCli
             var command = new UpdateClinicalVariableCommand
             {
                 Id = hypertension.Id,
-                Code = "HYPERTENSION-STAGE-2",
                 Name = "Hypertension stage 2",
                 Description = "Whether the systolic blood pressure is at stage 2 hypertension level",
                 ValueType = ClinicalValueType.Boolean,
@@ -479,7 +472,6 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalVariables.UpdateCli
             var command = new UpdateClinicalVariableCommand
             {
                 Id = pregnant.Id,
-                Code = "PREGNANT",
                 Name = "Pregnant",
                 Description = "Whether the patient is currently pregnant",
                 ValueType = ClinicalValueType.Boolean,
@@ -528,7 +520,6 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalVariables.UpdateCli
             var command = new UpdateClinicalVariableCommand
             {
                 Id = unknownId,
-                Code = "FEMALE",
                 Name = "Female sex",
                 Description = "Whether the patient is female",
                 ValueType = ClinicalValueType.Boolean,
@@ -568,7 +559,6 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalVariables.UpdateCli
             var command = new UpdateClinicalVariableCommand
             {
                 Id = Guid.Empty,
-                Code = "FEMALE",
                 Name = "Female sex",
                 Description = "Whether the patient is female",
                 ValueType = ClinicalValueType.Boolean,
@@ -608,7 +598,6 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalVariables.UpdateCli
             var command = new UpdateClinicalVariableCommand
             {
                 Id = female.Id,
-                Code = "FEMALE",
                 Name = "Female sex renamed",
                 Description = "Whether the patient is female",
                 ValueType = ClinicalValueType.Boolean,
@@ -640,7 +629,6 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalVariables.UpdateCli
             var command = new UpdateClinicalVariableCommand
             {
                 Id = sbp.Id,
-                Code = "8480-6",
                 Name = "Systolic blood pressure",
                 Description = "Systolic blood pressure measured at the arm",
                 ValueType = ClinicalValueType.Boolean,
@@ -682,7 +670,6 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalVariables.UpdateCli
             var command = new UpdateClinicalVariableCommand
             {
                 Id = female.Id,
-                Code = "FEMALE",
                 Name = "Female sex renamed",
                 Description = "Whether the patient is female",
                 ValueType = (ClinicalValueType)999,
@@ -763,7 +750,6 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalVariables.UpdateCli
             var command = new UpdateClinicalVariableCommand
             {
                 Id = female.Id,
-                Code = "FEMALE",
                 Name = "Female sex renamed",
                 Description = "Whether the patient is female",
                 ValueType = ClinicalValueType.Boolean,
@@ -813,7 +799,6 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalVariables.UpdateCli
             var command = new UpdateClinicalVariableCommand
             {
                 Id = pregnant.Id,
-                Code = "PREGNANT",
                 Name = "Pregnant",
                 Description = "Whether the patient is currently pregnant",
                 ValueType = ClinicalValueType.Boolean,
@@ -853,7 +838,6 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalVariables.UpdateCli
             var command = new UpdateClinicalVariableCommand
             {
                 Id = female.Id,
-                Code = "FEMALE",
                 Name = "Female sex renamed",
                 Description = "Whether the patient is female",
                 ValueType = ClinicalValueType.Boolean,
@@ -896,7 +880,6 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalVariables.UpdateCli
             var command = new UpdateClinicalVariableCommand
             {
                 Id = female.Id,
-                Code = "FEMALE",
                 Name = "Female sex renamed",
                 Description = "Whether the patient is female",
                 ValueType = ClinicalValueType.Boolean,
@@ -928,7 +911,6 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalVariables.UpdateCli
             var command = new UpdateClinicalVariableCommand
             {
                 Id = sbp.Id,
-                Code = "8480-6",
                 Name = "Systolic blood pressure",
                 Description = "Systolic blood pressure measured at the arm",
                 ValueType = ClinicalValueType.Numeric,
@@ -969,7 +951,6 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalVariables.UpdateCli
             return new UpdateClinicalVariableCommand
             {
                 Id = id,
-                Code = "8480-6",
                 Name = "Systolic blood pressure",
                 Description = "Systolic blood pressure measured at the arm",
                 ValueType = ClinicalValueType.Numeric,

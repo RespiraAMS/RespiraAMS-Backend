@@ -13,7 +13,6 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.UpdateClini
     public class UpdateClinicalMetricHandlerTest : IClassFixture<PostgresFixture>, IAsyncLifetime
     {
         private const string Curb65Code = "CURB-65";
-        private const string Crb65Code = "CRB-65";
         private const string PsiCode = "PSI";
         private const string IdsaAtsCode = "IDSA/ATS";
 
@@ -21,10 +20,6 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.UpdateClini
         // variant without the blood urea nitrogen component used by the diagnose service
         private static readonly (string Name, string Code, string Description, string Version, string Publisher) Curb65 =
             ("Severity metrics CURB-65", Curb65Code, "CURB-65 metrics to assess severity of a patient",
-                "2002-2003", "Hiệp hội Lồng ngực Anh (BTS)");
-
-        private static readonly (string Name, string Code, string Description, string Version, string Publisher) Crb65 =
-            ("Severity metrics CRB-65", Crb65Code, "CRB-65 metrics to assess severity of a patient without the blood urea nitrogen component",
                 "2002-2003", "Hiệp hội Lồng ngực Anh (BTS)");
 
         private static readonly (string Name, string Code, string Description, string Version, string Publisher) Psi =
@@ -121,87 +116,6 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.UpdateClini
             Assert.Equal(PsiCode, untouched.Code);
             Assert.True(untouched.IsApplied);
             Assert.Equal(2, await freshContext.ClinicalMetrics
-                .CountAsync(TestContext.Current.CancellationToken));
-        }
-
-        [Fact]
-        public async Task UpdateClinicalMetric_ChangeCode_Success()
-        {
-            // A metric may take a new code as long as no other metric in use holds it
-            var metricId = await SeedMetricAsync(Curb65);
-            await SeedMetricAsync(Psi);
-
-            var command = CreateCommand(Crb65) with { Id = metricId };
-
-            var result = await _handler.HandleAsync(command, TestContext.Current.CancellationToken);
-
-            Assert.True(result.IsSuccess());
-            Assert.Null(result.Error);
-            Assert.Equal(ApplicationStatus.Updated, result.StatusCode);
-
-            await using var freshContext = new ClinicalDbContext(_options);
-            var saved = await freshContext.ClinicalMetrics.SingleAsync(
-                x => x.Id == metricId, TestContext.Current.CancellationToken);
-
-            Assert.Equal(Crb65Code, saved.Code);
-            Assert.Equal(Crb65.Name, saved.Name);
-            Assert.Equal(Crb65.Description, saved.Description);
-            Assert.True(saved.IsApplied);
-        }
-
-        [Fact]
-        public async Task UpdateClinicalMetric_ReuseCodeOfNotInUseMetric_Success()
-        {
-            /*
-             * Business rule: only metrics in use reserve their code, so a metric that
-             * has been switched off (isApplied = false) does not block the code anymore
-             */
-            var retiredId = await SeedMetricAsync(Psi, isApplied: false);
-            var metricId = await SeedMetricAsync(Curb65);
-
-            var command = CreateCommand(Psi) with { Id = metricId };
-
-            var result = await _handler.HandleAsync(command, TestContext.Current.CancellationToken);
-
-            Assert.True(result.IsSuccess());
-            Assert.Null(result.Error);
-            Assert.Equal(ApplicationStatus.Updated, result.StatusCode);
-
-            await using var freshContext = new ClinicalDbContext(_options);
-            var psiMetrics = await freshContext.ClinicalMetrics
-                .Where(x => x.Code == PsiCode)
-                .ToListAsync(TestContext.Current.CancellationToken);
-
-            Assert.Equal(2, psiMetrics.Count);
-            Assert.True(psiMetrics.Single(x => x.Id == metricId).IsApplied);
-            Assert.False(psiMetrics.Single(x => x.Id == retiredId).IsApplied);
-        }
-
-        [Fact]
-        public async Task UpdateClinicalMetric_ReuseCodeOfSoftDeletedMetric_Success()
-        {
-            // A soft deleted metric is hidden by the query filter, so its code is free
-            var metricId = await SeedMetricAsync(Curb65);
-            await SeedMetricAsync(Psi, isDeleted: true);
-
-            var command = CreateCommand(Psi) with { Id = metricId };
-
-            var result = await _handler.HandleAsync(command, TestContext.Current.CancellationToken);
-
-            Assert.True(result.IsSuccess());
-            Assert.Null(result.Error);
-            Assert.Equal(ApplicationStatus.Updated, result.StatusCode);
-
-            await using var freshContext = new ClinicalDbContext(_options);
-            var saved = await freshContext.ClinicalMetrics.SingleAsync(
-                x => x.Id == metricId, TestContext.Current.CancellationToken);
-            Assert.Equal(PsiCode, saved.Code);
-
-            // Only the updated metric counts as live, the soft deleted one still
-            // occupies the table
-            Assert.Equal(1, await freshContext.ClinicalMetrics
-                .CountAsync(TestContext.Current.CancellationToken));
-            Assert.Equal(2, await freshContext.ClinicalMetrics.IgnoreQueryFilters()
                 .CountAsync(TestContext.Current.CancellationToken));
         }
 
@@ -337,43 +251,6 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.UpdateClini
             Assert.True(saved.IsDeleted);
         }
 
-        [Theory]
-        [InlineData(Curb65Code)]
-        [InlineData(PsiCode)]
-        [InlineData(IdsaAtsCode)]
-        public async Task UpdateClinicalMetric_DuplicateInUseCode_Fail(string code)
-        {
-            /*
-             * Business rule: the new code must be free of every metric in use other than
-             * the one being updated. Boundary: exactly one live, in-use metric already
-             * holds the code
-             */
-            var occupiedId = await SeedMetricAsync(MetricFor(code));
-            var metricId = await SeedMetricAsync(Crb65);
-
-            var command = CreateCommand(Crb65) with { Id = metricId, Code = code };
-
-            var result = await _handler.HandleAsync(command, TestContext.Current.CancellationToken);
-
-            Assert.True(result.IsFailure());
-            Assert.NotNull(result.Error);
-            Assert.Equal(ApplicationStatus.BadRequest, result.StatusCode);
-
-            // Both rows must keep their original payload
-            await using var freshContext = new ClinicalDbContext(_options);
-            var metrics = await freshContext.ClinicalMetrics.IgnoreQueryFilters()
-                .ToListAsync(TestContext.Current.CancellationToken);
-            Assert.Equal(2, metrics.Count);
-
-            var occupied = metrics.Single(x => x.Id == occupiedId);
-            Assert.Equal(code, occupied.Code);
-            Assert.True(occupied.IsApplied);
-
-            var target = metrics.Single(x => x.Id == metricId);
-            Assert.Equal(Crb65Code, target.Code);
-            Assert.Equal(Crb65.Name, target.Name);
-        }
-
         [Fact]
         public async Task UpdateClinicalMetric_MappingFailure_Fail()
         {
@@ -435,16 +312,6 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.UpdateClini
             return entity.Id;
         }
 
-        private static (string Name, string Code, string Description, string Version, string Publisher) MetricFor(
-            string code) => code switch
-            {
-                Curb65Code => Curb65,
-                Crb65Code => Crb65,
-                PsiCode => Psi,
-                IdsaAtsCode => IdsaAts,
-                _ => throw new ArgumentOutOfRangeException(nameof(code), code, "Unknown clinical metric"),
-            };
-
         private static UpdateClinicalMetricCommand CreateCommand(
             (string Name, string Code, string Description, string Version, string Publisher) metric)
         {
@@ -452,7 +319,6 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.UpdateClini
             {
                 Id = Guid.CreateVersion7(),
                 Name = metric.Name,
-                Code = metric.Code,
                 Description = metric.Description,
                 Version = metric.Version,
                 Publisher = metric.Publisher,

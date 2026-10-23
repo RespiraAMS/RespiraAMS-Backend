@@ -77,11 +77,6 @@ namespace Respira.Clinical.API.Dtos
     public record UpdateClinicalVariableRequestDto
     {
         /// <summary>
-        /// Clinical variable code. Preferably follow LOINC code
-        /// </summary>
-        public required string Code { get; set; }
-
-        /// <summary>
         /// Clinical variable name
         /// </summary>
         public required string Name { get; set; }
@@ -145,7 +140,6 @@ namespace Respira.Clinical.API.Dtos
             return new UpdateClinicalVariableCommand
             {
                 Id = id,
-                Code = Code,
                 Name = Name,
                 Description = Description,
                 ValueType = ValueType,

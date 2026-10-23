@@ -24,14 +24,7 @@ namespace Respira.Clinical.Application.Features.ClinicalMetrics.UpdateClinicalMe
                 return Result.Failure(new ApplicationError(ApplicationStatus.BadRequest, "Clinical metric not found"));
             }
 
-            // Check if code is unique
-            var existingMetric = await context.ClinicalMetrics
-                .AnyAsync(x => x.Id != metric.Id && x.Code.Equals(command.Code) && x.IsApplied, cancellationToken);
-            if (existingMetric)
-            {
-                logger.LogDebug("Clinical metric with code {Code} already exists and in used", command.Code);
-                return Result.Failure(new ApplicationError(ApplicationStatus.BadRequest, "Clinical metric already exists and in used"));
-            }
+            // Business rule: code is immutable after creation, since it's is used for diagnosis
 
             // Map from command to domain model
             var mapResult = mapper.MapModel(metric, command);
