@@ -5,7 +5,6 @@
 // 3. Risk factor: Giới tính nam (Streptococcus pneumoniae), Người già (Acinetobacter baumannii).
 // Do Streptococcus pneumoniae cũng nằm trong worth suspected -> boost -> 
 // Streptococcus pneumoniae > Acinetobacter baumannii
-// 
 {
     "clinicalPicture": {
         "observations": [

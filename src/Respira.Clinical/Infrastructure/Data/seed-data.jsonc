@@ -33,7 +33,7 @@
             "name": "Giới tính",
             "code": "GENDER",
             "description": "Giới tính bệnh nhân",
-            "valueType": "Numeric",
+            "valueType": "Categorical",
             "canonicalUnit": null,
             "isRequired": true,
             "category": "PersonalInformation",

@@ -38,7 +38,7 @@ namespace Respira.Clinical.Domain.Entities
                     .ToList();
 
                 // Check rule 2
-                if (dosagePerRoute.Count(d => d.Crcl == null) != 1)
+                if (dosagePerRoute.Count(d => d.IsStandardDose) != 1)
                 {
                     var msg = $"Route {route} has more than 1 standard dose";
                     return Result<bool>.Failure(new ApplicationError(ApplicationStatus.BusinessRuleViolation, msg));
@@ -49,6 +49,9 @@ namespace Respira.Clinical.Domain.Entities
                 {
                     // Because we have ensured that each route can only have 1 dosage with CrCl is null,
                     // we can simply ignore null case in this check
+                    // NOTE: in this case, the check should be a direct comparison of CrCl != null,
+                    // instead of using the self infer IsStandardDose for clarity, even if the 2 is
+                    // equal
                     if (dosagePerRoute[i].Crcl is null) continue;
                     for (var j = i + 1; j < dosagePerRoute.Count; j++)
                     {
