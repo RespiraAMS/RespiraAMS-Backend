@@ -52,7 +52,7 @@ namespace Respira.Clinical.Application.Test.Features.Pathogens.DeletePathogen
          */
         private async Task<Pathogen> SeedPathogenAsync(bool withRelatedData)
         {
-            var criterion = new Criterion("Some criterion", new BooleanConstantFormula(true));
+            var criterion = new Criterion { Name = "Some criterion", Formula = new BooleanConstantFormula(true) };
             var target = new Pathogen
             {
                 Name = "Klebsiella pneumoniae",

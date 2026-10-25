@@ -40,30 +40,18 @@ namespace Respira.Clinical.Domain.Entities
         /// <summary>
         /// Scoring rules
         /// </summary>
-        public ICollection<MetricRule> Rules { get; set; } = [];
-
-        public ClinicalMetric(
-            string name,
-            string code,
-            string description,
-            string version,
-            string publisher,
-            bool isApplied,
-            ICollection<MetricRule> rules)
+        public ICollection<MetricRule> Rules
         {
-            if (rules.Any(r => r.GetType() != typeof(ScoringRule)) && rules.Any(r => r.GetType() != typeof(MajorMinorRule)))
+            get;
+            set
             {
-                throw new ArgumentException("All rules belong to a clinical metrics should be of the same type");
+                if (value.Any(r => r.GetType() != typeof(ScoringRule)) && value.Any(r => r.GetType() != typeof(MajorMinorRule)))
+                {
+                    throw new ArgumentException("All rules belong to a clinical metrics should be of the same type");
+                }
+                field = value;
             }
-
-            Name = name;
-            Code = code;
-            Description = description;
-            Version = version;
-            Publisher = publisher;
-            IsApplied = isApplied;
-            Rules = rules;
-        }
+        } = [];
 
         /// <summary>
         /// This is just a parameterless constructor for EF Core stuff. For normal usage,

@@ -135,13 +135,14 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalVariables.SearchCli
                     IsRequired = true,
                     Category = ClinicalVariableCategory.PersonalInformation,
                 },
-                new CategoricalClinicalVariable(["DETECTED", "NOT_DETECTED"])
+                new CategoricalClinicalVariable
                 {
                     Code = "94500-6",
                     Name = "SARS-CoV-2 RNA",
                     Description = "SARS-CoV-2 RNA detected in respiratory specimen",
                     IsRequired = false,
                     Category = ClinicalVariableCategory.Paraclinical,
+                    AcceptedValues = ["DETECTED", "NOT_DETECTED"]
                 },
                 CreateNumeric(
                     "Cân nặng",

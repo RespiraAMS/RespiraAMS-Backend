@@ -134,7 +134,7 @@ namespace Respira.Clinical.Application.Features.Diagnosis.EmpiricalDiagnosis.Dia
                     }
 
                     var smsd = x as ScoreMetricsSeverityDiagnosis;
-                    return new MetricsSeverityDiagnosisResult(x.Code, x.Severity, x.TreatmentSite, smsd.Score);
+                    return new MetricsSeverityDiagnosisResult(x.Code, x.Severity, x.TreatmentSite, smsd!.Score);
                 })],
                 WorthSuspected = [.. diagnosisResult.Data.WorthSuspected.Select(p => new PathogenResult(p.Id, p.Name))],
                 HeavySuspected = [.. diagnosisResult.Data.HeavySuspected.Select(p => new PathogenResult(p.Id, p.Name))],

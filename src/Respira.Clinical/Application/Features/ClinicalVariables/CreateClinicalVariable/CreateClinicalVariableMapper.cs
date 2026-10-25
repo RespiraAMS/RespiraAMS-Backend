@@ -73,7 +73,7 @@ namespace Respira.Clinical.Application.Features.ClinicalVariables.CreateClinical
                     AcceptedRange = command.AcceptedRange ?? throw new ArgumentException("Numeric clinical variable must have accepted range"),
                     NormalRange = command.NormalRange,
                 }),
-                ClinicalValueType.Categorical => Result<ClinicalVariable>.Success(ApplicationStatus.Success, new CategoricalClinicalVariable(command.AcceptedValues)
+                ClinicalValueType.Categorical => Result<ClinicalVariable>.Success(ApplicationStatus.Success, new CategoricalClinicalVariable
                 {
                     Code = command.Code,
                     Name = command.Name,
@@ -82,6 +82,7 @@ namespace Respira.Clinical.Application.Features.ClinicalVariables.CreateClinical
                     IsRequired = command.IsRequired,
                     Category = command.Category,
                     Prerequisite = prerequisite,
+                    AcceptedValues = command.AcceptedValues
                 }),
                 // Since the variable type is an enum, so adding an unexpected value is an exception,
                 // not expected failure behavior, so we throw exception here instead of result failure

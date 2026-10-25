@@ -563,7 +563,7 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalVariables.UpdateCli
 
         private static CategoricalClinicalVariable CreateCategoricalVariable(List<string> acceptedValues)
         {
-            return new CategoricalClinicalVariable(acceptedValues)
+            return new CategoricalClinicalVariable
             {
                 Id = Guid.CreateVersion7(),
                 // LOINC 94500-6 - SARS-CoV-2 RNA detected
@@ -572,6 +572,7 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalVariables.UpdateCli
                 Description = "SARS-CoV-2 RNA detected in respiratory specimen",
                 IsRequired = true,
                 Category = ClinicalVariableCategory.Paraclinical,
+                AcceptedValues = acceptedValues,
             };
         }
 

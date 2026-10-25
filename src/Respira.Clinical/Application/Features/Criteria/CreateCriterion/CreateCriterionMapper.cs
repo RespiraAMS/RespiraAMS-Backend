@@ -31,7 +31,11 @@ namespace Respira.Clinical.Application.Features.Criteria.CreateCriterion
                 return Result<Criterion>.Failure(new ApplicationError(ApplicationStatus.BadRequest, "Formula result type should be boolean"));
             }
 
-            return Result<Criterion>.Success(ApplicationStatus.Success, new Criterion(command.Name, formulaMapResult.Data!));
+            return Result<Criterion>.Success(ApplicationStatus.Success, new Criterion
+            {
+                Name = command.Name,
+                Formula = formulaMapResult.Data!,
+            });
         }
     }
 }

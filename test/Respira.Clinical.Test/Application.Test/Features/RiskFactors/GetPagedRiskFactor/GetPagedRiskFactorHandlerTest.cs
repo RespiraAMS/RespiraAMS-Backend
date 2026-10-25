@@ -124,10 +124,14 @@ namespace Respira.Clinical.Application.Test.Features.RiskFactors.GetPagedRiskFac
                 [klebsiella, pneumococcus, pseudomonas], TestContext.Current.CancellationToken);
 
             var criteria = CriteriaSeed
-                .Select(x => new Criterion(x.Name, new BinaryFormula(
+                .Select(x => new Criterion
+                {
+                    Name = x.Name,
+                    Formula = new BinaryFormula(
                     new VariableFormula(new VariableRef(Guid.CreateVersion7(), x.Code, ClinicalValueType.Numeric)),
                     new NumericConstantFormula(x.Threshold),
-                    x.Op)))
+                    x.Op)
+                })
                 .ToList();
             await _context.Criteria.AddRangeAsync(criteria, TestContext.Current.CancellationToken);
             await _context.SaveChangesAsync(TestContext.Current.CancellationToken);

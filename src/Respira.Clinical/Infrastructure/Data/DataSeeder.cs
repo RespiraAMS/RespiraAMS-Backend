@@ -84,7 +84,7 @@ namespace Respira.Clinical.Infrastructure.Data
 
                 if (v.AcceptedValues.Count > 0)
                 {
-                    return new CategoricalClinicalVariable([.. v.AcceptedValues])
+                    return new CategoricalClinicalVariable
                     {
                         Id = variableId,
                         Name = v.Name,
@@ -93,6 +93,7 @@ namespace Respira.Clinical.Infrastructure.Data
                         CanonicalUnit = v.CanonicalUnit,
                         IsRequired = v.IsRequired,
                         Category = ParseEnum(v.Category, ClinicalVariableCategory.PersonalInformation),
+                        AcceptedValues = [.. v.AcceptedValues],
                     };
                 }
 
@@ -127,9 +128,11 @@ namespace Respira.Clinical.Infrastructure.Data
             {
                 var criterionId = GenerateId(c.Id);
                 var formula = MapFormula(c.Formula, variableLookup);
-                return new Criterion(c.Name, formula)
+                return new Criterion()
                 {
                     Id = criterionId,
+                    Name = c.Name,
+                    Formula = formula,
                 };
 
             }).ToList();
@@ -174,9 +177,16 @@ namespace Respira.Clinical.Infrastructure.Data
                     throw new ArgumentException("Invalid rule type for metrics rule: either score function or is major be provided");
                 });
 
-                return new ClinicalMetric(s.Name, s.Code, s.Description, s.Version, s.Publisher, s.IsApplied, [.. scoringRules])
+                return new ClinicalMetric
                 {
                     Id = metricId,
+                    Name = s.Name,
+                    Code = s.Code,
+                    Description = s.Description,
+                    Version = s.Version,
+                    Publisher = s.Publisher,
+                    IsApplied = s.IsApplied,
+                    Rules = [.. scoringRules],
                 };
             }).ToList();
 

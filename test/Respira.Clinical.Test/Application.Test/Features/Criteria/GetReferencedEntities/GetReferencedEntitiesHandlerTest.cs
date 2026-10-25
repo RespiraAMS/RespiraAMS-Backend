@@ -58,17 +58,23 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.GetReferencedEntit
          * mirror the real seed data (CURB-65 age >= 65, hypotension SBP < 90 mmHg)
          * and both evaluate to a boolean as a criterion requires
          */
-        private static Criterion CreateAgeCriterion() =>
-            new("Tuổi >= 65", new BinaryFormula(
+        private static Criterion CreateAgeCriterion() => new()
+        {
+            Name = "Tuổi >= 65",
+            Formula = new BinaryFormula(
                 new VariableFormula(new VariableRef(Guid.CreateVersion7(), "AGE", ClinicalValueType.Numeric)),
                 new NumericConstantFormula(65),
-                ExpressionOperator.Gte));
+                ExpressionOperator.Gte)
+        };
 
-        private static Criterion CreateHypotensionCriterion() =>
-            new("Huyết áp tâm thu < 90 mmHg", new BinaryFormula(
+        private static Criterion CreateHypotensionCriterion() => new()
+        {
+            Name = "Huyết áp tâm thu < 90 mmHg",
+            Formula = new BinaryFormula(
                 new VariableFormula(new VariableRef(Guid.CreateVersion7(), "SBP", ClinicalValueType.Numeric)),
                 new NumericConstantFormula(90),
-                ExpressionOperator.Lt));
+                ExpressionOperator.Lt)
+        };
 
         private async Task<Criterion> SeedCriterionAsync(Criterion criterion)
         {

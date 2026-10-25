@@ -260,6 +260,7 @@ namespace Respira.Clinical.Infrastructure.Data
                 .HasConversion<string>();
             modelBuilder.Entity<Dosage>()
                 .OwnsOne(x => x.Crcl, builder => builder.ToJson());
+            modelBuilder.Entity<Dosage>().Ignore(x => x.IsStandardDose);
 
             // Config on antibiotic
             modelBuilder.Entity<Antibiotic>().ToTable("antibiotics");

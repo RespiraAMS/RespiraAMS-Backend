@@ -73,11 +73,13 @@ namespace Respira.Clinical.Application.Test.Features.RiskFactors.DeleteRiskFacto
         private async Task<Guid> SeedCriterionAsync(
             string name, string code, decimal threshold, ExpressionOperator op, bool isDeleted = false)
         {
-            var criterion = new Criterion(name, new BinaryFormula(
-                new VariableFormula(new VariableRef(Guid.CreateVersion7(), code, ClinicalValueType.Numeric)),
-                new NumericConstantFormula(threshold),
-                op))
+            var criterion = new Criterion
             {
+                Name = name,
+                Formula = new BinaryFormula(
+                    new VariableFormula(new VariableRef(Guid.CreateVersion7(), code, ClinicalValueType.Numeric)),
+                    new NumericConstantFormula(threshold),
+                    op),
                 IsDeleted = isDeleted,
                 DeletedAt = isDeleted ? DateTimeOffset.UtcNow : null,
             };

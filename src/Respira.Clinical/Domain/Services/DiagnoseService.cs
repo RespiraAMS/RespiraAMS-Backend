@@ -22,7 +22,7 @@ namespace Respira.Clinical.Domain.Services
         /// <returns>Score result</returns>
         public (decimal, List<Evidence>) CalculateMetricsScore(ClinicalMetric metric, IEnumerable<ClinicalObservation> observations)
         {
-            observations = [.. observations];
+
             if (metric.IsMajorMinorMetric)
             {
                 throw new ArgumentException("Cannot calculate score for a Major/Minor metrics system");
@@ -321,7 +321,8 @@ namespace Respira.Clinical.Domain.Services
         /// <returns>Infection assessment</returns>
         public InfectionAssessment AssessInfection(ClinicalContext context, IEnumerable<ClinicalObservation> observations, Severity severity, TreatmentSite treatmentSite)
         {
-            observations = [.. observations];
+            observations = observations.ToList().AsReadOnly();
+
             /*
              * To assess infection, we will proceed with these steps:
              * 1. Check for suspected pathogens. This list is the easiest to check, but
@@ -456,9 +457,9 @@ namespace Respira.Clinical.Domain.Services
             return Result<bool>.Success(ApplicationStatus.Success, isSame);
         }
 
-        private Result ValidateObservations(ClinicalContext context, IEnumerable<ClinicalObservation> observations)
+        internal Result ValidateObservations(ClinicalContext context, IEnumerable<ClinicalObservation> observations)
         {
-            observations = [.. observations];
+            observations = observations.ToList().AsReadOnly();
 
             // Store all the errors for returning to client
             var errors = new Dictionary<Guid, string>();
@@ -510,9 +511,21 @@ namespace Respira.Clinical.Domain.Services
                 }
             }
 
-            // Validation on variables that has prerequisite formula
-            foreach (var variable in context.Variables.Where(x => x.Prerequisite is not null))
+            var variables = observations.Select(x => x.Variable).ToList();
+
+            // Validation on supplied variables that has prerequisite formula
+            // foreach (var variable in context.Variables.Where(x => x.Prerequisite is not null))
+            foreach (var variable in variables.Where(v => v.Prerequisite is not null))
             {
+                // Check if all the variables used for the prerequisite formula are present
+                if (!variable.Prerequisite!.Variables.All(v => variables.Select(x => x.Code).Contains(v.Code)))
+                {
+                    var msg = $"Varible {variable.Code}'s prerequisite formula required all this variables: {string.Join(", ", variable.Prerequisite!.Variables.Select(v => v.Code))}";
+                    logger.LogDebug("Prerequisite formula for variable {Code} is not satisfied: {Message}", variable.Code, msg);
+                    errors.Add(variable.Id, msg);
+                }
+
+                // Evaluate prerequisite formula
                 if (!(bool)variable.Prerequisite!.ToExpression(observations).Evaluate())
                 {
                     logger.LogDebug("Prerequisite formula for variable {code} is not satisfied", variable.Code);

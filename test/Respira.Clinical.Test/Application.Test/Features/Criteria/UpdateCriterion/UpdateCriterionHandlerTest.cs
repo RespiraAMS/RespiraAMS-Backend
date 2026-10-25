@@ -120,16 +120,17 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.UpdateCriterion
                 [age, sbp, female], TestContext.Current.CancellationToken);
             await _context.SaveChangesAsync(TestContext.Current.CancellationToken);
 
-            var target = new Criterion(
-                "Tuổi >= 65",
-                new BinaryFormula(
-                    new VariableFormula(age), new NumericConstantFormula(65), ExpressionOperator.Gte));
-            var control = new Criterion(
-                "Huyết áp tâm thu < 90 mmHg",
-                new BinaryFormula(
-                    new VariableFormula(sbp), new NumericConstantFormula(90), ExpressionOperator.Lt));
-            await _context.Criteria.AddRangeAsync(
-                [target, control], TestContext.Current.CancellationToken);
+            var target = new Criterion
+            {
+                Name = "Tuổi >= 65",
+                Formula = new BinaryFormula(new VariableFormula(age), new NumericConstantFormula(65), ExpressionOperator.Gte)
+            };
+            var control = new Criterion
+            {
+                Name = "Huyết áp tâm thu < 90 mmHg",
+                Formula = new BinaryFormula(new VariableFormula(sbp), new NumericConstantFormula(90), ExpressionOperator.Lt)
+            };
+            await _context.Criteria.AddRangeAsync([target, control], TestContext.Current.CancellationToken);
             await _context.SaveChangesAsync(TestContext.Current.CancellationToken);
 
             var pathogen = new Pathogen

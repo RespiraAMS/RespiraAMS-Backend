@@ -145,14 +145,16 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.UpdateClini
 
         private static ClinicalMetric CreateMetric(bool isApplied = true)
         {
-            return new ClinicalMetric(
-                "Severity metrics CURB-65",
-                "CURB-65",
-                "CURB-65 metrics to assess severity of a patient",
-                "2002-2003",
-                "Hiệp hội Lồng ngực Anh (BTS)",
-                isApplied,
-                []);
+            return new ClinicalMetric
+            {
+                Name = "Severity metrics CURB-65",
+                Code = "CURB-65",
+                Description = "CURB-65 metrics to assess severity of a patient",
+                Version = "2002-2003",
+                Publisher = "Hiệp hội Lồng ngực Anh (BTS)",
+                IsApplied = isApplied,
+                Rules = [],
+            };
         }
     }
 }
