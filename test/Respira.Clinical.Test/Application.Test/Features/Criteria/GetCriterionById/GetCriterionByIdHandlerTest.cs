@@ -79,8 +79,10 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.GetCriterionById
         private async Task<Criterion> SeedCriterionAsync(
             string name, Formula formula, bool isDeleted = false)
         {
-            var criterion = new Criterion(name, formula)
+            var criterion = new Criterion
             {
+                Name = name,
+                Formula = formula,
                 IsDeleted = isDeleted,
                 DeletedAt = isDeleted ? DateTimeOffset.UtcNow : null,
             };

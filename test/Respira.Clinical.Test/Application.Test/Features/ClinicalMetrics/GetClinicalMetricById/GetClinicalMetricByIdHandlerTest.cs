@@ -330,8 +330,15 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.GetClinical
             bool isApplied = true,
             bool isDeleted = false)
         {
-            var metric = new ClinicalMetric(name, code, description, version, publisher, isApplied, [])
+            var metric = new ClinicalMetric
             {
+                Name = name,
+                Code = code,
+                Description = description,
+                Version = version,
+                Publisher = publisher,
+                IsApplied = isApplied,
+                Rules = [],
                 IsDeleted = isDeleted,
                 DeletedAt = isDeleted ? DateTimeOffset.UtcNow : null,
             };
@@ -344,7 +351,7 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.GetClinical
         // boolean criterion (CURB-65 age >= 65, hypotension SBP < 90 mmHg)
         private async Task<Guid> SeedCriterionAsync(string name, Formula formula)
         {
-            var criterion = new Criterion(name, formula);
+            var criterion = new Criterion { Name = name, Formula = formula };
             await _context.Criteria.AddAsync(criterion, TestContext.Current.CancellationToken);
             await _context.SaveChangesAsync(TestContext.Current.CancellationToken);
             return criterion.Id;

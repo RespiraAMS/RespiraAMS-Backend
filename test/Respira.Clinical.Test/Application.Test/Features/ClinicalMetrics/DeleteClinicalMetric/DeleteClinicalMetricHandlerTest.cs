@@ -352,15 +352,15 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.DeleteClini
             bool isApplied = true,
             bool isDeleted = false)
         {
-            var entity = new ClinicalMetric(
-                metric.Name,
-                metric.Code,
-                metric.Description,
-                metric.Version,
-                metric.Publisher,
-                isApplied,
-                [])
+            var entity = new ClinicalMetric
             {
+                Name = metric.Name,
+                Code = metric.Code,
+                Description = metric.Description,
+                Version = metric.Version,
+                Publisher = metric.Publisher,
+                IsApplied = isApplied,
+                Rules = [],
                 IsDeleted = isDeleted,
                 DeletedAt = isDeleted ? DateTimeOffset.UtcNow : null,
             };
@@ -375,10 +375,14 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.DeleteClini
         private async Task<Guid> SeedCriterionAsync(
             string name, string code, decimal threshold, ExpressionOperator op)
         {
-            var criterion = new Criterion(name, new BinaryFormula(
-                new VariableFormula(new VariableRef(Guid.CreateVersion7(), code, ClinicalValueType.Numeric)),
-                new NumericConstantFormula(threshold),
-                op));
+            var criterion = new Criterion
+            {
+                Name = name,
+                Formula = new BinaryFormula(
+                    new VariableFormula(new VariableRef(Guid.CreateVersion7(), code, ClinicalValueType.Numeric)),
+                    new NumericConstantFormula(threshold),
+                    op)
+            };
             await _context.Criteria.AddAsync(criterion, TestContext.Current.CancellationToken);
             await _context.SaveChangesAsync(TestContext.Current.CancellationToken);
             return criterion.Id;
@@ -387,8 +391,11 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.DeleteClini
         // The new confusion of CURB-65 and IDSA/ATS is a plain boolean variable
         private async Task<Guid> SeedConfusionCriterionAsync()
         {
-            var criterion = new Criterion("Thay đổi tri giác", new VariableFormula(
-                new VariableRef(Guid.CreateVersion7(), "CONFUSION", ClinicalValueType.Boolean)));
+            var criterion = new Criterion
+            {
+                Name = "Thay đổi tri giác",
+                Formula = new VariableFormula(new VariableRef(Guid.CreateVersion7(), "CONFUSION", ClinicalValueType.Boolean))
+            };
             await _context.Criteria.AddAsync(criterion, TestContext.Current.CancellationToken);
             await _context.SaveChangesAsync(TestContext.Current.CancellationToken);
             return criterion.Id;

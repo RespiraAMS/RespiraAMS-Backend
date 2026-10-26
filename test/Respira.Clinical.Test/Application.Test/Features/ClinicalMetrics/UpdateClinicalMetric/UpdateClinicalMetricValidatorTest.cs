@@ -15,27 +15,24 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.UpdateClini
         [Theory]
         [InlineData(
             "Severity metrics CURB-65",
-            "CURB-65",
             "CURB-65 metrics to assess severity of a patient",
             "2002-2003",
             "Hiệp hội Lồng ngực Anh (BTS)")]
         [InlineData(
             "Pneumonia Severity Index (PSI)",
-            "PSI",
             "PSI metrics to assess severity of a patient with more detail than CURB-65",
             "1997",
             "Đội ngũ Nghiên cứu Kết quả Điều trị Viêm phổi (PORT - Pneumonia Outcomes Research Team)")]
         [InlineData(
             "ICU hospitalization criteria by IDSA/ATS",
-            "IDSA/ATS",
             "IDSA/ATS metrics to assess whether a severe patient need ICU or not",
             "2026",
             "Hiệp hội Bệnh nhiễm trùng Mỹ (IDSA) và Hiệp hội Lồng ngực Mỹ (ATS)")]
         public async Task UpdateClinicalMetric_SeededMetric_Success(
-            string name, string code, string description, string version, string publisher)
+            string name, string description, string version, string publisher)
         {
             var result = await _validator.ValidateAsync(
-                CreateCommand(name, code, description, version, publisher),
+                CreateCommand(name, description, version, publisher),
                 TestContext.Current.CancellationToken);
 
             Assert.Empty(result.Errors);
@@ -60,7 +57,7 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.UpdateClini
         {
             // Boundary: a single character is the shortest value NotEmpty accepts,
             // version "1" is the shortest meaningful version string
-            var command = CreateCommand("A", "C1", "d", "1", "P");
+            var command = CreateCommand("A", "d", "1", "P");
 
             var result = await _validator.ValidateAsync(command, TestContext.Current.CancellationToken);
 
@@ -72,7 +69,7 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.UpdateClini
         {
             // NotEmpty only rejects empty / whitespace-only values, a padded value is
             // still reported as valid
-            var command = CreateCommand(" Severity metrics CURB-65 ", " CURB-65 ", " assessment ", " 2002-2003 ", " BTS ");
+            var command = CreateCommand(" Severity metrics CURB-65 ", " assessment ", " 2002-2003 ", " BTS ");
 
             var result = await _validator.ValidateAsync(command, TestContext.Current.CancellationToken);
 
@@ -107,19 +104,6 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.UpdateClini
 
             _ = Assert.Single(result.Errors);
             Assert.Equal("Name", result.Errors[0].PropertyName);
-        }
-
-        [Theory]
-        [InlineData("")]
-        [InlineData("   ")]
-        public async Task UpdateClinicalMetric_EmptyCode_Fail(string code)
-        {
-            var command = CreateCommand() with { Code = code };
-
-            var result = await _validator.ValidateAsync(command, TestContext.Current.CancellationToken);
-
-            _ = Assert.Single(result.Errors);
-            Assert.Equal("Code", result.Errors[0].PropertyName);
         }
 
         [Theory]
@@ -166,14 +150,13 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.UpdateClini
         {
             // Boundary: 0 characters in every string field plus the empty GUID. Each
             // rule fires independently, so the client learns about all mistakes at once
-            var command = CreateCommand("", "", "", "", "") with { Id = Guid.Empty };
+            var command = CreateCommand("", "", "", "") with { Id = Guid.Empty };
 
             var result = await _validator.ValidateAsync(command, TestContext.Current.CancellationToken);
 
-            Assert.Equal(6, result.Errors.Count);
+            Assert.Equal(5, result.Errors.Count);
             Assert.Contains(result.Errors, x => x.PropertyName == "Id");
             Assert.Contains(result.Errors, x => x.PropertyName == "Name");
-            Assert.Contains(result.Errors, x => x.PropertyName == "Code");
             Assert.Contains(result.Errors, x => x.PropertyName == "Description");
             Assert.Contains(result.Errors, x => x.PropertyName == "Version");
             Assert.Contains(result.Errors, x => x.PropertyName == "Publisher");
@@ -183,7 +166,6 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.UpdateClini
 
         private static UpdateClinicalMetricCommand CreateCommand(
             string name = "Severity metrics CURB-65",
-            string code = "CURB-65",
             string description = "CURB-65 metrics to assess severity of a patient",
             string version = "2002-2003",
             string publisher = "Hiệp hội Lồng ngực Anh (BTS)")
@@ -192,7 +174,6 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.UpdateClini
             {
                 Id = ExistingMetricId,
                 Name = name,
-                Code = code,
                 Description = description,
                 Version = version,
                 Publisher = publisher,

@@ -91,9 +91,15 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.GetPagedCli
             for (var i = 0; i < MetricsSeed.Length; i++)
             {
                 var seed = MetricsSeed[i];
-                var metric = new ClinicalMetric(
-                    seed.Name, seed.Code, seed.Description, seed.Version, seed.Publisher, seed.IsApplied, [])
+                var metric = new ClinicalMetric
                 {
+                    Name = seed.Name,
+                    Code = seed.Code,
+                    Description = seed.Description,
+                    Version = seed.Version,
+                    Publisher = seed.Publisher,
+                    IsApplied = seed.IsApplied,
+                    Rules = [],
                     CreatedAt = baseTime.AddMinutes(-i),
                     UpdatedAt = baseTime.AddMinutes(-i),
                 };
@@ -104,15 +110,15 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.GetPagedCli
 
             // Soft deleted: hidden by the query filter but still in the table, and the
             // newest row so any leak would show up first
-            var archived = new ClinicalMetric(
-                "Pneumonia Severity Index (PSI, bản lưu trữ)",
-                "PSI",
-                "Archived copy of the PSI metric kept for the revision history",
-                "1997",
-                "Đội ngũ Nghiên cứu Kết quả Điều trị Viêm phổi (PORT - Pneumonia Outcomes Research Team)",
-                true,
-                [])
+            var archived = new ClinicalMetric
             {
+                Name = "Pneumonia Severity Index (PSI, bản lưu trữ)",
+                Code = "PSI",
+                Description = "Archived copy of the PSI metric kept for the revision history",
+                Version = "1997",
+                Publisher = "Đội ngũ Nghiên cứu Kết quả Điều trị Viêm phổi (PORT - Pneumonia Outcomes Research Team)",
+                IsApplied = true,
+                Rules = [],
                 CreatedAt = baseTime.AddMinutes(1),
                 UpdatedAt = baseTime.AddMinutes(1),
                 IsDeleted = true,

@@ -68,8 +68,10 @@ namespace Respira.Clinical.Application.Test.Features.RiskFactors.GetRiskFactorBy
         private async Task<Guid> SeedCriterionAsync(
             string name, Formula formula, bool isDeleted = false)
         {
-            var criterion = new Criterion(name, formula)
+            var criterion = new Criterion
             {
+                Name = name,
+                Formula = formula,
                 IsDeleted = isDeleted,
                 DeletedAt = isDeleted ? DateTimeOffset.UtcNow : null,
             };

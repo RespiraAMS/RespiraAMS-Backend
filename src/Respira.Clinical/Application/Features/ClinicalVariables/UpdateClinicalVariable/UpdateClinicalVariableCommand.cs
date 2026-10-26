@@ -13,11 +13,6 @@ namespace Respira.Clinical.Application.Features.ClinicalVariables.UpdateClinical
         public required Guid Id { get; set; }
 
         /// <summary>
-        /// Clinical variable code. Preferably follow LOINC code
-        /// </summary>
-        public required string Code { get; set; }
-
-        /// <summary>
         /// Clinical variable name
         /// </summary>
         public required string Name { get; set; }

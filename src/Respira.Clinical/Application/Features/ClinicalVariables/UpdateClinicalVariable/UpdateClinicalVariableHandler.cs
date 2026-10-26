@@ -48,6 +48,8 @@ namespace Respira.Clinical.Application.Features.ClinicalVariables.UpdateClinical
             command.AcceptedRange?.Unit = command.CanonicalUnit;
             command.NormalRange?.Unit = command.CanonicalUnit;
 
+            // Business rule: code is immutable after creation, since it's is used for diagnosis
+
             // Because of the recursive structure of Formula, it's hard to check the variable
             // ID as other use cases, so we simply just fetched all the currently available
             // variables, perform mapping and check if any exception is thrown

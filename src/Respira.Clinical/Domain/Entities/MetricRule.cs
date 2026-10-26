@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using Respira.Clinical.Domain.Enums;
 using Respira.Clinical.Domain.Models;
 using Respira.ServiceDefaults.Models;
 
@@ -39,7 +40,18 @@ namespace Respira.Clinical.Domain.Entities
         /// <summary>
         /// Score function (formula)
         /// </summary>
-        public required Formula ScoreFunction { get; set; }
+        public required Formula ScoreFunction
+        {
+            get;
+            set
+            {
+                if (value.ResultType != ExpressionResultType.Numeric)
+                {
+                    throw new ArgumentException("Score function result type should be numeric");
+                }
+                field = value;
+            }
+        }
 
         /// <summary>
         /// The variables used by this scoring rule. This is not database attribute,
@@ -53,7 +65,7 @@ namespace Respira.Clinical.Domain.Entities
         /// <returns>Score</returns>
         public decimal GetScore(IEnumerable<ClinicalObservation> observations)
         {
-            observations = [.. observations];
+            observations = observations.ToList().AsReadOnly();
 
             // Check if the result is safe to parse
             var satisfied = Criterion.IsCriterionSatisfied(observations);

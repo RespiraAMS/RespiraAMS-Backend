@@ -233,7 +233,7 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalVariables.GetClinic
         [Fact]
         public async Task GetClinicalVariableById_CategoricalVariable_Success()
         {
-            var sarsCov2 = await SeedAsync(new CategoricalClinicalVariable(["DETECTED", "NOT_DETECTED"])
+            var sarsCov2 = await SeedAsync(new CategoricalClinicalVariable
             {
                 // LOINC 94500-6 - SARS-CoV-2 RNA detected
                 Code = "94500-6",
@@ -241,6 +241,7 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalVariables.GetClinic
                 Description = "SARS-CoV-2 RNA detected in respiratory specimen",
                 IsRequired = true,
                 Category = ClinicalVariableCategory.Paraclinical,
+                AcceptedValues = ["DETECTED", "NOT_DETECTED"]
             });
 
             var result = await _handler.HandleAsync(

@@ -88,6 +88,7 @@ namespace Respira.Clinical.Domain.Models
     {
         // Need to store this for JSON serialization
         public bool Constant { get; } = constant;
+
         [JsonIgnore]
         public override ExpressionResultType ResultType => ExpressionResultType.Boolean;
 
@@ -254,7 +255,7 @@ namespace Respira.Clinical.Domain.Models
 
         public override Expression ToExpression(IEnumerable<ClinicalObservation> observations)
         {
-            observations = [.. observations];
+
 
             // Handle the case for AND, OR operators
             // For AND, if one operand is false, the result is false
@@ -372,7 +373,7 @@ namespace Respira.Clinical.Domain.Models
         }
         public override Expression ToExpression(IEnumerable<ClinicalObservation> observations)
         {
-            observations = [.. observations];
+            observations = observations.ToList().AsReadOnly();
 
             // Same cases with binary expression AND or OR, ternary expression can also get a special
             // case: if condition true, only if true branch is required and vice versa.

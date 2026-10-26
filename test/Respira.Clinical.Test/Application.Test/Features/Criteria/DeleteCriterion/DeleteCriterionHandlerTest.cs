@@ -60,17 +60,22 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.DeleteCriterion
          * seed data (AGE >= 65 for pneumonia severity, SBP < 90 mmHg for hypotension)
          * and both evaluate to a boolean as a criterion requires
          */
-        private static Criterion CreateAgeCriterion() =>
-            new("Tuổi >= 65", new BinaryFormula(
+        private static Criterion CreateAgeCriterion() => new()
+        {
+            Name = "Tuổi >= 65",
+            Formula = new BinaryFormula(
                 new VariableFormula(new VariableRef(Guid.CreateVersion7(), "AGE", ClinicalValueType.Numeric)),
                 new NumericConstantFormula(65),
-                ExpressionOperator.Gte));
-
-        private static Criterion CreateHypotensionCriterion() =>
-            new("Huyết áp tâm thu < 90 mmHg", new BinaryFormula(
+                ExpressionOperator.Gte)
+        };
+        private static Criterion CreateHypotensionCriterion() => new()
+        {
+            Name = "Huyết áp tâm thu < 90 mmHg",
+            Formula = new BinaryFormula(
                 new VariableFormula(new VariableRef(Guid.CreateVersion7(), "SBP", ClinicalValueType.Numeric)),
                 new NumericConstantFormula(90),
-                ExpressionOperator.Lt));
+                ExpressionOperator.Lt)
+        };
 
         private async Task<Criterion> SeedCriterionAsync(Criterion criterion)
         {

@@ -192,21 +192,6 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalVariables.UpdateCli
 
         [Theory]
         [InlineData("")]
-        // Whitespace-only value is treated as empty by NotEmpty
-        [InlineData("   ")]
-        public async Task UpdateClinicalVariable_EmptyCode_Fail(string code)
-        {
-            var command = CreateCommand(ClinicalValueType.Boolean, ClinicalVariableCategory.PersonalInformation);
-            command.Code = code;
-
-            var result = await _validator.ValidateAsync(command, TestContext.Current.CancellationToken);
-
-            _ = Assert.Single(result.Errors);
-            Assert.Equal("Code", result.Errors[0].PropertyName);
-        }
-
-        [Theory]
-        [InlineData("")]
         [InlineData("   ")]
         public async Task UpdateClinicalVariable_EmptyName_Fail(string name)
         {
@@ -515,7 +500,6 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalVariables.UpdateCli
                 {
                     // LOINC 8480-6 - systolic blood pressure
                     Id = Guid.CreateVersion7(),
-                    Code = "8480-6",
                     Name = "Systolic blood pressure",
                     Description = "Systolic blood pressure measured at the arm",
                     ValueType = ClinicalValueType.Numeric,
@@ -530,7 +514,6 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalVariables.UpdateCli
                 ClinicalValueType.Boolean => new UpdateClinicalVariableCommand
                 {
                     Id = Guid.CreateVersion7(),
-                    Code = "PREGNANT",
                     Name = "Pregnant",
                     Description = "Whether the patient is currently pregnant",
                     ValueType = ClinicalValueType.Boolean,
@@ -546,7 +529,6 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalVariables.UpdateCli
                 {
                     // LOINC 94500-6 - SARS-CoV-2 RNA detected
                     Id = Guid.CreateVersion7(),
-                    Code = "94500-6",
                     Name = "SARS-CoV-2 RNA",
                     Description = "SARS-CoV-2 RNA detected in respiratory specimen",
                     ValueType = valueType,

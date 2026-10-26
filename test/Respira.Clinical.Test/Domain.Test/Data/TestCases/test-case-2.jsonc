@@ -1,0 +1,53 @@
+// Người trẻ, trường hợp nhẹ, ngoại trú (không có dấu hiệu bất thường nào)
+// Không có yếu tố nguy cơ nào
+{
+    "clinicalPicture": {
+        "observations": [
+            {
+                "code": "AGE",
+                "value": "36"
+            },
+            {
+                "code": "GENDER",
+                "value": "FEMALE"
+            },
+            {
+                "code": "HEIGHT",
+                "value": "180"
+            },
+            {
+                "code": "WEIGHT",
+                "value": "80"
+            },
+            {
+                "code": "SPO2",
+                "value": "95"
+            },
+            {
+                "code": "RR",
+                "value": "12"
+            },
+            {
+                "code": "SBP",
+                "value": "120"
+            },
+            {
+                "code": "DBP",
+                "value": "90"
+            },
+            {
+                "code": "TEMPERATURE",
+                "value": "37"
+            },
+            {
+                "code": "PREGNANT-OR-LACTATING",
+                "value": "false"
+            }
+        ]
+    },
+    "expectedDiagnosis": {
+        "severity": "Mild",
+        "treatmentSite": "Outpatient",
+        "heavySuspected": []
+    }
+}

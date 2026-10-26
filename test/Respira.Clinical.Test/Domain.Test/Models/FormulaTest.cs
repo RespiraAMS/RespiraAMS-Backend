@@ -42,13 +42,14 @@ namespace Respira.Clinical.Domain.Test.Models
                 IsRequired = false,
                 Category = ClinicalVariableCategory.Clinical,
             },
-            _ => new CategoricalClinicalVariable([])
+            _ => new CategoricalClinicalVariable
             {
                 Code = variable.Code,
                 Name = variable.Code,
                 Description = $"Observed clinical value of {variable.Code}",
                 IsRequired = false,
                 Category = ClinicalVariableCategory.Clinical,
+                AcceptedValues = []
             },
         };
 

@@ -15,11 +15,6 @@ namespace Respira.Clinical.Application.Features.ClinicalMetrics.UpdateClinicalMe
         public required string Name { get; set; }
 
         /// <summary>
-        /// Clinical metric code
-        /// </summary>
-        public required string Code { get; set; }
-
-        /// <summary>
         /// Clinical metric description
         /// </summary>
         public required string Description { get; set; }

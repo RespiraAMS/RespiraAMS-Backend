@@ -763,7 +763,7 @@ namespace Respira.Clinical.Application.Test.Features.Shared.ManageFormula
 
         private static CategoricalClinicalVariable CreateCategoricalVariable(Guid id, string code)
         {
-            return new CategoricalClinicalVariable(["A+", "B+", "O-", "AB-"])
+            return new CategoricalClinicalVariable
             {
                 Id = id,
                 Code = code,
@@ -771,6 +771,7 @@ namespace Respira.Clinical.Application.Test.Features.Shared.ManageFormula
                 Description = $"{code} clinical variable",
                 IsRequired = false,
                 Category = ClinicalVariableCategory.PersonalInformation,
+                AcceptedValues = ["A+", "B+", "O-", "AB-"]
             };
         }
 

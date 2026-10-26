@@ -251,15 +251,15 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.CreateClini
             bool isApplied = true,
             bool isDeleted = false)
         {
-            var entity = new ClinicalMetric(
-                metric.Name,
-                metric.Code,
-                metric.Description,
-                metric.Version,
-                metric.Publisher,
-                isApplied,
-                [])
+            var entity = new ClinicalMetric
             {
+                Name = metric.Name,
+                Code = metric.Code,
+                Description = metric.Description,
+                Version = metric.Version,
+                Publisher = metric.Publisher,
+                IsApplied = isApplied,
+                Rules = [],
                 IsDeleted = isDeleted,
                 DeletedAt = isDeleted ? DateTimeOffset.UtcNow : null,
             };

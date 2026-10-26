@@ -115,6 +115,8 @@ namespace Respira.Clinical.Domain.Test.Services
 
         [Theory]
         [InlineData("Data/TestCases/test-case-1.jsonc")]
+        [InlineData("Data/TestCases/test-case-2.jsonc")]
+        [InlineData("Data/TestCases/test-case-3.jsonc")]
         public void Diagnosis_Success(string filename)
         {
             var (input, expected) = MapTestData(filename);

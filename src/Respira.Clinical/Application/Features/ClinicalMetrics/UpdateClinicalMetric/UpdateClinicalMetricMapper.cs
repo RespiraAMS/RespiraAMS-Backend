@@ -9,7 +9,6 @@ namespace Respira.Clinical.Application.Features.ClinicalMetrics.UpdateClinicalMe
         public Result MapModel(ClinicalMetric model, UpdateClinicalMetricCommand command)
         {
             model.Name = command.Name;
-            model.Code = command.Code;
             model.Description = command.Description;
             model.Version = command.Version;
             model.Publisher = command.Publisher;

@@ -29,7 +29,6 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalVariables.UpdateCli
             Assert.Null(result.Error);
             Assert.Equal(ApplicationStatus.Success, result.StatusCode);
 
-            Assert.Equal(command.Code, model.Code);
             Assert.Equal(command.Name, model.Name);
             Assert.Equal(command.Description, model.Description);
             Assert.Equal(command.CanonicalUnit, model.CanonicalUnit);
@@ -77,7 +76,6 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalVariables.UpdateCli
             Assert.Null(result.Error);
             Assert.Equal(ApplicationStatus.Success, result.StatusCode);
 
-            Assert.Equal(command.Code, model.Code);
             Assert.Equal(command.Name, model.Name);
             Assert.Equal(command.Description, model.Description);
             Assert.Equal(command.CanonicalUnit, model.CanonicalUnit);
@@ -196,7 +194,6 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalVariables.UpdateCli
             Assert.Null(result.Error);
             Assert.Equal(ApplicationStatus.Success, result.StatusCode);
 
-            Assert.Equal(command.Code, model.Code);
             Assert.Equal(command.Name, model.Name);
             Assert.Equal(command.Description, model.Description);
             Assert.Equal(command.CanonicalUnit, model.CanonicalUnit);
@@ -434,6 +431,31 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalVariables.UpdateCli
                 () => _mapper.MapModel(model, command, new List<ClinicalVariable>()));
         }
 
+        [Fact]
+        public void MapModel_CodeImmutableAfterUpdate_Success()
+        {
+            var model = CreateBooleanVariable();
+            var code = model.Code;
+
+            var command = CreateCommand(ClinicalValueType.Boolean, ClinicalVariableCategory.PersonalInformation);
+
+            var result = _mapper.MapModel(model, command, new List<ClinicalVariable>());
+
+            Assert.True(result.IsSuccess());
+            Assert.Equal(ApplicationStatus.Success, result.StatusCode);
+
+            Assert.Equal(command.Name, model.Name);
+            Assert.Equal(command.Description, model.Description);
+            Assert.Equal(command.CanonicalUnit, model.CanonicalUnit);
+            Assert.Equal(command.IsRequired, model.IsRequired);
+            Assert.Equal(command.Category, model.Category);
+            Assert.Equal(ClinicalValueType.Boolean, model.ValueType);
+            Assert.Null(model.Prerequisite);
+
+            // The code is immutable after creation, so it should remain the same
+            Assert.Equal(code, model.Code);
+        }
+
         #endregion
 
         private static UpdateClinicalVariableCommand CreateCommand(
@@ -450,7 +472,6 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalVariables.UpdateCli
                 {
                     // LOINC 8480-6 - systolic blood pressure
                     Id = Guid.CreateVersion7(),
-                    Code = "8480-6",
                     Name = "Systolic blood pressure",
                     Description = "Systolic blood pressure measured at the arm",
                     ValueType = ClinicalValueType.Numeric,
@@ -465,7 +486,6 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalVariables.UpdateCli
                 ClinicalValueType.Boolean => new UpdateClinicalVariableCommand
                 {
                     Id = Guid.CreateVersion7(),
-                    Code = "PREGNANT-OR-LACTATING",
                     Name = "Pregnant or lactating",
                     Description = "Whether the patient is currently pregnant or lactating",
                     ValueType = ClinicalValueType.Boolean,
@@ -481,7 +501,6 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalVariables.UpdateCli
                 {
                     // LOINC 94500-6 - SARS-CoV-2 RNA detected
                     Id = Guid.CreateVersion7(),
-                    Code = "94500-6",
                     Name = "SARS-CoV-2 RNA",
                     Description = "SARS-CoV-2 RNA detected in respiratory specimen",
                     ValueType = valueType,
@@ -544,7 +563,7 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalVariables.UpdateCli
 
         private static CategoricalClinicalVariable CreateCategoricalVariable(List<string> acceptedValues)
         {
-            return new CategoricalClinicalVariable(acceptedValues)
+            return new CategoricalClinicalVariable
             {
                 Id = Guid.CreateVersion7(),
                 // LOINC 94500-6 - SARS-CoV-2 RNA detected
@@ -553,6 +572,7 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalVariables.UpdateCli
                 Description = "SARS-CoV-2 RNA detected in respiratory specimen",
                 IsRequired = true,
                 Category = ClinicalVariableCategory.Paraclinical,
+                AcceptedValues = acceptedValues,
             };
         }
 
