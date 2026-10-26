@@ -110,6 +110,7 @@ namespace Respira.Clinical.Application.Test.Features.RiskFactors.CreateRiskFacto
             {
                 PathogenId = pathogenId,
                 CriterionId = criterionId,
+                IsCriticalFactor = true
             }, TestContext.Current.CancellationToken);
 
             Assert.True(result.IsSuccess());
@@ -125,6 +126,7 @@ namespace Respira.Clinical.Application.Test.Features.RiskFactors.CreateRiskFacto
 
             Assert.Equal(pathogenId, saved.PathogenId);
             Assert.Equal(criterionId, saved.CriterionId);
+            Assert.True(saved.IsCriticalFactor);
             Assert.False(saved.IsDeleted);
             Assert.Null(saved.DeletedAt);
         }
@@ -146,11 +148,13 @@ namespace Respira.Clinical.Application.Test.Features.RiskFactors.CreateRiskFacto
             {
                 PathogenId = pathogenId,
                 CriterionId = ageCriterionId,
+                IsCriticalFactor = false
             }, TestContext.Current.CancellationToken);
             var second = await _handler.HandleAsync(new CreateRiskFactorCommand
             {
                 PathogenId = pathogenId,
                 CriterionId = hypotensionCriterionId,
+                IsCriticalFactor = true
             }, TestContext.Current.CancellationToken);
 
             Assert.True(result.IsSuccess());
@@ -180,11 +184,13 @@ namespace Respira.Clinical.Application.Test.Features.RiskFactors.CreateRiskFacto
             {
                 PathogenId = pathogenOne,
                 CriterionId = criterionId,
+                IsCriticalFactor = true
             }, TestContext.Current.CancellationToken);
             var second = await _handler.HandleAsync(new CreateRiskFactorCommand
             {
                 PathogenId = pathogenTwo,
                 CriterionId = criterionId,
+                IsCriticalFactor = true
             }, TestContext.Current.CancellationToken);
 
             Assert.True(first.IsSuccess());
@@ -212,6 +218,7 @@ namespace Respira.Clinical.Application.Test.Features.RiskFactors.CreateRiskFacto
             {
                 PathogenId = pathogenId,
                 CriterionId = criterionId,
+                IsCriticalFactor = true,
                 IsDeleted = true,
                 DeletedAt = DateTimeOffset.UtcNow,
             }, TestContext.Current.CancellationToken);
@@ -221,6 +228,7 @@ namespace Respira.Clinical.Application.Test.Features.RiskFactors.CreateRiskFacto
             {
                 PathogenId = pathogenId,
                 CriterionId = criterionId,
+                IsCriticalFactor = true,
             }, TestContext.Current.CancellationToken);
 
             Assert.True(result.IsSuccess());
@@ -251,6 +259,7 @@ namespace Respira.Clinical.Application.Test.Features.RiskFactors.CreateRiskFacto
             {
                 PathogenId = pathogenId,
                 CriterionId = criterionId,
+                IsCriticalFactor = true,
             }, TestContext.Current.CancellationToken);
             await _context.SaveChangesAsync(TestContext.Current.CancellationToken);
 
@@ -258,6 +267,7 @@ namespace Respira.Clinical.Application.Test.Features.RiskFactors.CreateRiskFacto
             {
                 PathogenId = pathogenId,
                 CriterionId = criterionId,
+                IsCriticalFactor = true,
             }, TestContext.Current.CancellationToken);
 
             Assert.True(result.IsFailure());
@@ -278,6 +288,7 @@ namespace Respira.Clinical.Application.Test.Features.RiskFactors.CreateRiskFacto
             {
                 PathogenId = Guid.CreateVersion7(),
                 CriterionId = criterionId,
+                IsCriticalFactor = true,
             }, TestContext.Current.CancellationToken);
 
             Assert.True(result.IsFailure());
@@ -298,6 +309,7 @@ namespace Respira.Clinical.Application.Test.Features.RiskFactors.CreateRiskFacto
             {
                 PathogenId = pathogenId,
                 CriterionId = Guid.CreateVersion7(),
+                IsCriticalFactor = true,
             }, TestContext.Current.CancellationToken);
 
             Assert.True(result.IsFailure());
@@ -325,6 +337,7 @@ namespace Respira.Clinical.Application.Test.Features.RiskFactors.CreateRiskFacto
             {
                 PathogenId = pathogenId,
                 CriterionId = criterionId,
+                IsCriticalFactor = true,
             }, TestContext.Current.CancellationToken);
 
             Assert.True(result.IsFailure());
@@ -349,6 +362,7 @@ namespace Respira.Clinical.Application.Test.Features.RiskFactors.CreateRiskFacto
             {
                 PathogenId = pathogenId,
                 CriterionId = criterionId,
+                IsCriticalFactor = true,
             }, TestContext.Current.CancellationToken);
 
             Assert.True(result.IsFailure());

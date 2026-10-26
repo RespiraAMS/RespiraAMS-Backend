@@ -6,6 +6,7 @@ namespace Respira.Clinical.Domain.Enums
     public enum ClinicalVariableCategory
     {
         PersonalInformation,
+        MedicalHistory,
         Paraclinical,
         Clinical
     }

@@ -149,8 +149,8 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.UpdateCriterion
             await _context.ClinicalMetrics.AddAsync(metrics, TestContext.Current.CancellationToken);
             await _context.SaveChangesAsync(TestContext.Current.CancellationToken);
 
-            var targetFactor = new RiskFactor { PathogenId = pathogen.Id, CriterionId = target.Id };
-            var controlFactor = new RiskFactor { PathogenId = pathogen.Id, CriterionId = control.Id };
+            var targetFactor = new RiskFactor { PathogenId = pathogen.Id, CriterionId = target.Id, IsCriticalFactor = true };
+            var controlFactor = new RiskFactor { PathogenId = pathogen.Id, CriterionId = control.Id, IsCriticalFactor = false };
             await _context.RiskFactors.AddRangeAsync(
                 [targetFactor, controlFactor], TestContext.Current.CancellationToken);
 

@@ -203,6 +203,7 @@ namespace Respira.Clinical.Infrastructure.Data
                         PathogenId = pathogenId,
                         CriterionId = criterionId,
                         Criterion = criterion,
+                        IsCriticalFactor = rf.IsCriticalFactor,
                     };
                     allRiskFactors.Add(riskFactor);
                     return riskFactor;

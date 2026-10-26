@@ -88,6 +88,7 @@ namespace Respira.Clinical.Infrastructure.Data
     public record RiskFactorDto
     {
         public string CriterionId { get; init; } = string.Empty;
+        public bool IsCriticalFactor { get; init; }
     }
 
     public record SuspectedCauseDto

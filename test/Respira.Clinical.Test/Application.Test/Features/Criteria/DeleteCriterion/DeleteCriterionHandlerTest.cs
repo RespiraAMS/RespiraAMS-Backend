@@ -97,12 +97,13 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.DeleteCriterion
             return pathogen;
         }
 
-        private async Task<RiskFactor> SeedRiskFactorAsync(Guid pathogenId, Guid criterionId)
+        private async Task<RiskFactor> SeedRiskFactorAsync(Guid pathogenId, Guid criterionId, bool isCritical = false)
         {
             var factor = new RiskFactor
             {
                 PathogenId = pathogenId,
                 CriterionId = criterionId,
+                IsCriticalFactor = isCritical,
             };
             await _context.RiskFactors.AddAsync(factor, TestContext.Current.CancellationToken);
             await _context.SaveChangesAsync(TestContext.Current.CancellationToken);

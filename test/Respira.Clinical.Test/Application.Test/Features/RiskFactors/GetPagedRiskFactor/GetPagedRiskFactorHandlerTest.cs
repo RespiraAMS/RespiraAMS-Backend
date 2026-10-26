@@ -153,6 +153,7 @@ namespace Respira.Clinical.Application.Test.Features.RiskFactors.GetPagedRiskFac
                 {
                     PathogenId = pathogenByCriterion[i],
                     CriterionId = criteria[i].Id,
+                    IsCriticalFactor = true,
                     CreatedAt = baseTime.AddMinutes(-i),
                 });
             }
@@ -163,6 +164,7 @@ namespace Respira.Clinical.Application.Test.Features.RiskFactors.GetPagedRiskFac
             {
                 PathogenId = pneumococcus.Id,
                 CriterionId = criteria[0].Id,
+                IsCriticalFactor = false,
                 CreatedAt = baseTime.AddMinutes(1),
                 IsDeleted = true,
                 DeletedAt = DateTimeOffset.UtcNow,
@@ -304,7 +306,7 @@ namespace Respira.Clinical.Application.Test.Features.RiskFactors.GetPagedRiskFac
         }
 
         [Fact]
-        public async Task GetPagedRiskFactor_ProjectsPathogenAndCriterionAndFormula_Success()
+        public async Task GetPagedRiskFactor_ProjectsPathogenAndCriterionAndFormulaAndIsCriticalFactor_Success()
         {
             var seeded = await SeedAsync();
 
@@ -336,6 +338,7 @@ namespace Respira.Clinical.Application.Test.Features.RiskFactors.GetPagedRiskFac
             var first = result.Data.Items.First();
             Assert.Equal(seeded.Klebsiella, first.Pathogen.Id);
             Assert.Equal(seeded.ByCriterionName["Tuổi >= 65"].CriterionId, first.Criterion.Id);
+            Assert.True(first.IsCriticalFactor);
         }
 
         [Fact]

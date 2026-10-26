@@ -32,6 +32,7 @@ namespace Respira.Clinical.Application.Test.Features.RiskFactors.UpdateRiskFacto
                 Id = id,
                 PathogenId = pathogenId,
                 CriterionId = criterionId,
+                IsCriticalFactor = true,
             }, TestContext.Current.CancellationToken);
 
             Assert.Empty(result.Errors);
@@ -59,6 +60,7 @@ namespace Respira.Clinical.Application.Test.Features.RiskFactors.UpdateRiskFacto
                 Id = id,
                 PathogenId = pathogenId,
                 CriterionId = criterionId,
+                IsCriticalFactor = true,
             }, TestContext.Current.CancellationToken);
 
             _ = Assert.Single(result.Errors);
@@ -75,6 +77,7 @@ namespace Respira.Clinical.Application.Test.Features.RiskFactors.UpdateRiskFacto
                 Id = Guid.Empty,
                 PathogenId = Guid.Empty,
                 CriterionId = Guid.Empty,
+                IsCriticalFactor = true,
             }, TestContext.Current.CancellationToken);
 
             Assert.Equal(3, result.Errors.Count);

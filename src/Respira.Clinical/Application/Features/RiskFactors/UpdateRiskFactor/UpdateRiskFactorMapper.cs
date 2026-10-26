@@ -10,6 +10,7 @@ namespace Respira.Clinical.Application.Features.RiskFactors.UpdateRiskFactor
         {
             model.PathogenId = command.PathogenId;
             model.CriterionId = command.CriterionId;
+            model.IsCriticalFactor = command.IsCriticalFactor;
             model.UpdatedAt = DateTimeOffset.UtcNow;
             return Result.Success(ApplicationStatus.Success);
         }

@@ -31,6 +31,12 @@ namespace Respira.Clinical.Domain.Entities
         /// </summary>
         public Criterion Criterion { get; set; } = null!;
 
+        /// <summary>
+        /// Is this risk factor critical? A critical risk factor is more credible
+        /// than a non-critical risk factor.when assessing for risk infection
+        /// </summary>
+        public required bool IsCriticalFactor { get; set; }
+
         public IEnumerable<VariableRef> Variables => Criterion.Variables.DistinctBy(x => x.Code);
 
         public bool IsFactorSatisfied(IEnumerable<ClinicalObservation> observations)

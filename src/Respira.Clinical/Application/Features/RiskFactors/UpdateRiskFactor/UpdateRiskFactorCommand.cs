@@ -18,5 +18,11 @@ namespace Respira.Clinical.Application.Features.RiskFactors.UpdateRiskFactor
         /// Risk factor criterion ID
         /// </summary>
         public required Guid CriterionId { get; set; }
+
+        /// <summary>
+        /// Is this risk factor critical? A critical risk factor is more credible
+        /// than a non-critical risk factor.when assessing for risk infection
+        /// </summary>
+        public required bool IsCriticalFactor { get; set; }
     }
 }

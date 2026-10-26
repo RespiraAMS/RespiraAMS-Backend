@@ -110,12 +110,16 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.GetReferencedEntit
         }
 
         private async Task<RiskFactor> SeedRiskFactorAsync(
-            Guid pathogenId, Guid criterionId, bool isDeleted = false)
+            Guid pathogenId,
+            Guid criterionId,
+            bool isCritical = false,
+            bool isDeleted = false)
         {
             var factor = new RiskFactor
             {
                 PathogenId = pathogenId,
                 CriterionId = criterionId,
+                IsCriticalFactor = isCritical,
                 IsDeleted = isDeleted,
                 DeletedAt = isDeleted ? DateTimeOffset.UtcNow : null,
             };

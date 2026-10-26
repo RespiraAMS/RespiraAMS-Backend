@@ -17,7 +17,8 @@ namespace Respira.Clinical.Application.Features.RiskFactors.GetRiskFactorById
                 {
                     Id = x.Id,
                     Pathogen = new PathogenResult(x.Pathogen.Id, x.Pathogen.Name, x.Pathogen.IsAtypical),
-                    Criterion = new CriterionResult(x.Criterion.Id, x.Criterion.Name, x.Criterion.Formula.ToString()!)
+                    Criterion = new CriterionResult(x.Criterion.Id, x.Criterion.Name, x.Criterion.Formula.ToString()!),
+                    IsCriticalFactor = x.IsCriticalFactor,
                 })
                 .FirstOrDefaultAsync(x => x.Id == query.Id, cancellationToken);
             return riskFactor is null ?

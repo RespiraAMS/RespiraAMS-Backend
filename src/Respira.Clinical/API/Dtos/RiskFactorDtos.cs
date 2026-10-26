@@ -50,13 +50,20 @@ namespace Respira.Clinical.API.Dtos
         /// </summary>
         public required Guid CriterionId { get; set; }
 
+        /// <summary>
+        /// Is this risk factor critical? A critical risk factor is more credible
+        /// than a non-critical risk factor.when assessing for risk infection
+        /// </summary>
+        public required bool IsCriticalFactor { get; set; }
+
         public UpdateRiskFactorCommand ToCommand(Guid id)
         {
             return new UpdateRiskFactorCommand
             {
                 Id = id,
                 PathogenId = PathogenId,
-                CriterionId = CriterionId
+                CriterionId = CriterionId,
+                IsCriticalFactor = IsCriticalFactor,
             };
         }
     }

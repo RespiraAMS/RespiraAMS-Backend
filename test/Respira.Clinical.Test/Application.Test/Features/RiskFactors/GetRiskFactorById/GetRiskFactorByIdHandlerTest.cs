@@ -86,12 +86,17 @@ namespace Respira.Clinical.Application.Test.Features.RiskFactors.GetRiskFactorBy
                 new NumericConstantFormula(threshold),
                 op);
 
-        private async Task<RiskFactor> SeedRiskFactorAsync(Guid pathogenId, Guid criterionId, bool isDeleted = false)
+        private async Task<RiskFactor> SeedRiskFactorAsync(
+            Guid pathogenId,
+            Guid criterionId,
+            bool isCritical = false,
+            bool isDeleted = false)
         {
             var factor = new RiskFactor
             {
                 PathogenId = pathogenId,
                 CriterionId = criterionId,
+                IsCriticalFactor = isCritical,
                 IsDeleted = isDeleted,
                 DeletedAt = isDeleted ? DateTimeOffset.UtcNow : null,
             };
@@ -118,7 +123,7 @@ namespace Respira.Clinical.Application.Test.Features.RiskFactors.GetRiskFactorBy
                 ? await SeedPathogenAsync(KlebsiellaName, KlebsiellaDescription, isAtypical: true)
                 : await SeedPathogenAsync(PneumococcusName, PneumococcusDescription, isAtypical: false);
             var criterionId = await SeedCriterionAsync("Tuổi >= 65", formula ?? AgeFormula);
-            var factor = await SeedRiskFactorAsync(pathogenId, criterionId, softDeleteFactor);
+            var factor = await SeedRiskFactorAsync(pathogenId, criterionId, isDeleted: softDeleteFactor);
             return (pathogenId, criterionId, factor);
         }
 

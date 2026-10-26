@@ -486,6 +486,9 @@ namespace Respira.Clinical.Infrastructure.Migrations
                     b.Property<DateTimeOffset?>("DeletedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<bool>("IsCriticalFactor")
+                        .HasColumnType("boolean");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
 
