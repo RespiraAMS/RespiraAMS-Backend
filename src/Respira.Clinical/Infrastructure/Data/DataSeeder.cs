@@ -1,8 +1,8 @@
 using System.Text.Json;
-using ImTools;
 using Respira.Clinical.Domain.Entities;
 using Respira.Clinical.Domain.Enums;
 using Respira.Clinical.Domain.Models;
+using Range = Respira.Clinical.Domain.Models.Range;
 
 namespace Respira.Clinical.Infrastructure.Data
 {
@@ -126,14 +126,22 @@ namespace Respira.Clinical.Infrastructure.Data
 
             var criteria = dto.Criteria.Select(c =>
             {
-                var criterionId = GenerateId(c.Id);
-                var formula = MapFormula(c.Formula, variableLookup);
-                return new Criterion()
+                try
                 {
-                    Id = criterionId,
-                    Name = c.Name,
-                    Formula = formula,
-                };
+                    var criterionId = GenerateId(c.Id);
+                    var formula = MapFormula(c.Formula, variableLookup);
+                    return new Criterion()
+                    {
+                        Id = criterionId,
+                        Name = c.Name,
+                        Formula = formula,
+                    };
+                }
+                catch (ArgumentException)
+                {
+                    Console.WriteLine($"Criterion {c.Id} has invalid formula: {c.Formula}");
+                    throw;
+                }
 
             }).ToList();
 
@@ -144,37 +152,50 @@ namespace Respira.Clinical.Infrastructure.Data
                 var metricId = GenerateId(s.Id);
                 var scoringRules = s.Rules.Select<MetricRuleDto, MetricRule>(r =>
                 {
-                    var ruleId = GenerateId(r.Id);
-                    var criterionId = GenerateId(r.CriterionId);
-                    var criterion = criterionLookup[criterionId];
-
-                    // If score function provided, return ScoringRule
-                    if (r.ScoreFunction is not null)
+                    try
                     {
-                        var scoreFunction = MapFormula(r.ScoreFunction, variableLookup);
-                        return new ScoringRule
-                        {
-                            Id = ruleId,
-                            ClinicalMetricId = metricId,
-                            CriterionId = criterionId,
-                            Criterion = criterion,
-                            ScoreFunction = scoreFunction,
-                        };
-                    }
+                        var ruleId = GenerateId(r.Id);
+                        var criterionId = GenerateId(r.CriterionId);
+                        var criterion = criterionLookup[criterionId];
 
-                    if (r.IsMajor is not null)
+                        // If score function provided, return ScoringRule
+                        if (r.ScoreFunction is not null)
+                        {
+                            var scoreFunction = MapFormula(r.ScoreFunction, variableLookup);
+                            return new ScoringRule
+                            {
+                                Id = ruleId,
+                                ClinicalMetricId = metricId,
+                                CriterionId = criterionId,
+                                Criterion = criterion,
+                                ScoreFunction = scoreFunction,
+                            };
+                        }
+
+                        if (r.IsMajor is not null)
+                        {
+                            return new MajorMinorRule
+                            {
+                                Id = ruleId,
+                                ClinicalMetricId = metricId,
+                                CriterionId = criterionId,
+                                Criterion = criterion,
+                                IsMajor = r.IsMajor.Value,
+                            };
+                        }
+
+                        throw new ArgumentException("Invalid rule type for metrics rule: either score function or is major be provided");
+                    }
+                    catch (ArgumentException)
                     {
-                        return new MajorMinorRule
-                        {
-                            Id = ruleId,
-                            ClinicalMetricId = metricId,
-                            CriterionId = criterionId,
-                            Criterion = criterion,
-                            IsMajor = r.IsMajor.Value,
-                        };
+                        Console.WriteLine($"Criterion {r.CriterionId} has invalid formula: {r.ScoreFunction}");
+                        throw;
                     }
-
-                    throw new ArgumentException("Invalid rule type for metrics rule: either score function or is major be provided");
+                    catch (Exception)
+                    {
+                        Console.WriteLine($"Criterion {r.CriterionId} has invalid formula: {r.ScoreFunction}");
+                        throw;
+                    }
                 });
 
                 return new ClinicalMetric
@@ -385,14 +406,14 @@ namespace Respira.Clinical.Infrastructure.Data
             return Enum.TryParse(value, true, out T result) ? result : fallback;
         }
 
-        private static Domain.Models.Range? MapRange(RangeDto? dto)
+        private static Range? MapRange(RangeDto? dto)
         {
             if (dto is null)
             {
                 return null;
             }
 
-            return new Domain.Models.Range
+            return new Range
             {
                 Min = dto.Min,
                 IsMinExclusive = dto.IsMinExclusive,
