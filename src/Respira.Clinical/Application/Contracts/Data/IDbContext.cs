@@ -18,6 +18,7 @@ namespace Respira.Clinical.Application.Contracts.Data
         DbSet<Dosage> Dosages { get; set; }
         DbSet<MedicineComposition> MedicineCompositions { get; set; }
         DbSet<Treatment> Treatments { get; set; }
+        DbSet<Antibiogram> Antibiograms { get; set; }
 
         /// <summary>
         /// Save all changes to database

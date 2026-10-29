@@ -12,6 +12,7 @@ namespace Respira.Clinical.Infrastructure.Data
         public ICollection<AntibioticGroupDto> AntibioticGroups { get; init; } = [];
         public ICollection<AntibioticDto> Antibiotics { get; init; } = [];
         public ICollection<TreatmentDto> Treatments { get; init; } = [];
+        public ICollection<AntibiogramDto> Antibiograms { get; init; } = [];
     }
 
     public record ClinicalVariableDto
@@ -141,5 +142,12 @@ namespace Respira.Clinical.Infrastructure.Data
         public ICollection<ICollection<Guid>> MedicineIds { get; init; } = [];
         public ICollection<Guid> PathogenIds { get; init; } = [];
         public ICollection<Guid> CriteriaIds { get; init; } = [];
+    }
+
+    public record AntibiogramDto
+    {
+        public string MicCategory { get; init; } = string.Empty;
+        public string PathogenId { get; init; } = string.Empty;
+        public List<string> AntibioticIds { get; init; } = [];
     }
 }

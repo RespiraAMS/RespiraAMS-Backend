@@ -17,6 +17,7 @@ namespace Respira.Clinical.Infrastructure.Data
         public required ICollection<AntibioticGroup> AntibioticGroups { get; init; }
         public required ICollection<Antibiotic> Antibiotics { get; init; }
         public required ICollection<Treatment> Treatments { get; init; }
+        public required ICollection<Antibiogram> Antibiograms { get; init; }
     }
 
     public static class DataSeeder
@@ -322,6 +323,22 @@ namespace Respira.Clinical.Infrastructure.Data
                 };
             }).ToList();
 
+            var antibiograms = dto.Antibiograms.Select(a =>
+            {
+                var category = ParseEnum(a.MicCategory, MicCategory.Susceptible);
+                var pathogenId = ParseRequiredId(a.PathogenId, "pathogenId");
+                var pathogen = pathogenLookup[pathogenId];
+
+                return new Antibiogram
+                {
+                    MicCategory = category,
+                    PathogenId = pathogenId,
+                    Pathogen = pathogen,
+                    Antibiotics = a.AntibioticIds
+                        .ConvertAll(ai => antibiotics.First(x => x.Id == ParseRequiredId(ai, "antibioticIds"))),
+                };
+            }).ToList();
+
 
             return new SeedData
             {
@@ -334,6 +351,7 @@ namespace Respira.Clinical.Infrastructure.Data
                 AntibioticGroups = [.. antibioticGroups],
                 Antibiotics = [.. antibiotics],
                 Treatments = [.. treatments],
+                Antibiograms = [.. antibiograms],
             };
         }
 

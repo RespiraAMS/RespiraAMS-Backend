@@ -13,7 +13,7 @@ namespace Respira.Clinical.Domain.Test.Services
     /// <summary>
     /// This class tests individual methods of the <see cref="DiagnoseService"/> class.
     /// </summary>
-    public partial class DiagnoseServiceTest
+    public class DiagnoseServiceTest
     {
         private readonly DiagnoseService _service;
         private static readonly ClinicalContext _context = CreateContext();
@@ -38,6 +38,8 @@ namespace Respira.Clinical.Domain.Test.Services
                 SuspectedCauses = seedData.SuspectedCauses,
                 AntibioticGroups = seedData.AntibioticGroups,
                 Variables = seedData.ClinicalVariables,
+                TreatmentProtocols = seedData.Treatments,
+                Antibiograms = seedData.Antibiograms
             };
         }
 
@@ -69,6 +71,44 @@ namespace Respira.Clinical.Domain.Test.Services
             return _context.AntibioticGroups.FirstOrDefault(x => x.Name.Equals(Name)) ?? throw new ArgumentException($"Antibiotic group {Name} not found");
         }
 
+        #region Test eGFR
+
+        [Theory]
+        [InlineData(60, 62d, true, true, 103.2d)]
+        [InlineData(30, 115d, true, false, 48.1d)]
+        [InlineData(17, 89d, false, true, 118.4d)]
+        [InlineData(80, 200d, false, false, 28.0d)]
+        public void CalculateEgfr_Success(
+            int age,
+            double scr,
+            bool isFemale,
+            bool isBlackAmerican,
+            double expected)
+        {
+            // Allow for 1 floating point precision error 
+            Assert.Equal(expected, _service.CalculateEgfr(age, scr, isFemale, isBlackAmerican), 1);
+        }
+
+        [Theory]
+        [InlineData(0)]
+        [InlineData(-1)]
+        [InlineData(-100)]
+        public void CalculateEgfr_InvalidAge_Throws(int age)
+        {
+            Assert.Throws<ArgumentException>(() => _service.CalculateEgfr(age, 62, true, true));
+        }
+
+        [Theory]
+        [InlineData(0d)]
+        [InlineData(-1d)]
+        [InlineData(-10.5d)]
+        public void CalculateEgfr_InvalidScr_Throws(double scr)
+        {
+            Assert.Throws<ArgumentException>(() => _service.CalculateEgfr(65, scr, true, true));
+        }
+
+        #endregion
+
         #region Test CalculateMetricsScore
 
         public static readonly TheoryData<string, List<ClinicalObservation>, decimal> ScoresCase = [
@@ -86,7 +126,7 @@ namespace Respira.Clinical.Domain.Test.Services
             ("PSI", [
                 Obs("AGE", 65),
                 Obs("GENDER", "FEMALE"),
-                Obs("RENAL-DISEASE")
+                Obs("CHRONIC-RENAL")
             ], 65)
         ];
 
@@ -123,9 +163,9 @@ namespace Respira.Clinical.Domain.Test.Services
         [InlineData(3, Severity.Severe, TreatmentSite.Inpatient)]
         [InlineData(4, Severity.Severe, TreatmentSite.IntensiveCareUnit)]
         [InlineData(5, Severity.Severe, TreatmentSite.IntensiveCareUnit)]
-        public void Curb65_WithBunPresent_Success(int score, Severity severity, TreatmentSite treatmentSite)
+        public void Curb65_Success(int score, Severity severity, TreatmentSite treatmentSite)
         {
-            var result = _service.Curb65(score, [], false);
+            var result = _service.Curb65(score, []);
             Assert.Equal(severity, result.Severity);
             Assert.Equal(treatmentSite, result.TreatmentSite);
         }
@@ -136,31 +176,44 @@ namespace Respira.Clinical.Domain.Test.Services
         [InlineData(2, Severity.Moderate, TreatmentSite.Inpatient)]
         [InlineData(3, Severity.Severe, TreatmentSite.Inpatient)]
         [InlineData(4, Severity.Severe, TreatmentSite.IntensiveCareUnit)]
-        public void Curb65_WithBunMissing_Success(int score, Severity severity, TreatmentSite treatmentSite)
+        public void Crb65_Success(int score, Severity severity, TreatmentSite treatmentSite)
         {
-            var result = _service.Curb65(score, [], true);
+            var result = _service.Crb65(score, []);
             Assert.Equal(severity, result.Severity);
             Assert.Equal(treatmentSite, result.TreatmentSite);
         }
 
         [Theory]
-        [InlineData(-1, true)] // Boundary value
-        [InlineData(-10, true)]
-        [InlineData(-1, false)] // Boundary value
-        [InlineData(-10, false)]
-        public void Curb65_InvalidScore_Negative_Throw(int score, bool isBunMissing)
+        [InlineData(-1)] // Boundary value
+        [InlineData(-10)]
+        public void Curb65_InvalidScore_Negative_Throw(int score)
         {
-            Assert.Throws<ArgumentOutOfRangeException>(() => _service.Curb65(score, [], isBunMissing));
+            Assert.Throws<ArgumentOutOfRangeException>(() => _service.Curb65(score, []));
         }
 
         [Theory]
-        [InlineData(5, true)] // Boundary value
-        [InlineData(100, true)]
-        [InlineData(6, false)] // Boundary value
-        [InlineData(200, false)]
-        public void Curb65_InvalidScore_UnexpectedValue_Throw(int score, bool isBunMissing)
+        [InlineData(-1)] // Boundary value
+        [InlineData(-10)]
+        public void Crb65_InvalidScore_Negative_Throw(int score)
         {
-            Assert.Throws<InvalidOperationException>(() => _service.Curb65(score, [], isBunMissing));
+            Assert.Throws<ArgumentOutOfRangeException>(() => _service.Crb65(score, []));
+        }
+
+
+        [Theory]
+        [InlineData(6)] // Boundary value
+        [InlineData(200)]
+        public void Curb65_InvalidScore_UnexpectedValue_Throw(int score)
+        {
+            Assert.Throws<InvalidOperationException>(() => _service.Curb65(score, []));
+        }
+
+        [Theory]
+        [InlineData(5)] // Boundary value
+        [InlineData(100)]
+        public void Crb65_InvalidScore_UnexpectedValue_Throw(int score)
+        {
+            Assert.Throws<InvalidOperationException>(() => _service.Crb65(score, []));
         }
 
         #endregion
@@ -207,7 +260,7 @@ namespace Respira.Clinical.Domain.Test.Services
 
         public static readonly TheoryData<List<ClinicalObservation>, int, int> IdsaAts_NeedIcu_Case = [
             // Boundary value: 1 major criterion
-            new([Obs("REQUIRES-MECHANICAL-VENTILATION")], 1, 0),
+            new([Obs("INVASIVE-MECHANICAL-VENTILATION")], 1, 0),
             // Boundary value: 3 minor criterion
             new(
                 [
@@ -221,10 +274,10 @@ namespace Respira.Clinical.Domain.Test.Services
                 [
                     // PaO2/FiO2 ~ 214
                     Obs("PAO2", 45),
-                    Obs("FIO2", 0.21m),
+                    Obs("FIO2", 21m),
                     Obs("WBC", 3999),
                     Obs("PLATELET", 99_999),
-                    Obs("SEPTIC-SHOCK")
+                    Obs("SEPTIC-SHOCK-REQUIRE-VASOPRESSOR")
                 ], 1, 3
             ),
             // Boundary value: 2 major and 2 minor criterion
@@ -232,11 +285,11 @@ namespace Respira.Clinical.Domain.Test.Services
                 [
                     // PaO2/FiO2 ~ 214
                     Obs("PAO2", 45),
-                    Obs("FIO2", 0.21m),
+                    Obs("FIO2", 21m),
                     Obs("WBC", 4999),
                     Obs("PLATELET", 99_999),
-                    Obs("SEPTIC-SHOCK"),
-                    Obs("REQUIRES-MECHANICAL-VENTILATION")
+                    Obs("SEPTIC-SHOCK-REQUIRE-VASOPRESSOR"),
+                    Obs("INVASIVE-MECHANICAL-VENTILATION")
                 ], 2, 2
             ),
         ];
@@ -296,7 +349,7 @@ namespace Respira.Clinical.Domain.Test.Services
             Assert.True(assessment.WorthSuspected.All(ws => suspected.Contains(ws.Id)));
         }
 
-        public static readonly TheoryData<List<ClinicalObservation>, Severity, TreatmentSite, List<ScoredPathogen>> AssessInfectionCase_RiskFactor_NotInSuspected = [
+        public static readonly TheoryData<List<ClinicalObservation>, Severity, TreatmentSite, List<Pathogen>> AssessInfectionCase_RiskFactor_NotInSuspected = [
             new(
                 [
                     Obs("PRIOR-PSEUDOMONAS"),
@@ -304,39 +357,45 @@ namespace Respira.Clinical.Domain.Test.Services
                 Severity.Mild,
                 TreatmentSite.Outpatient,
                 [
-                    new(0.2m, Pathogen("Pseudomonas aeruginosa"))
+                    Pathogen("Pseudomonas aeruginosa")
                 ]),
             new(
                 [
                     Obs("PRIOR-SKIN-INFECTION"),
                     Obs("PRIOR-PSEUDOMONAS"),
-                    Obs("CENTRAL-VENOUS-CATHETER-PLACEMENT")
+                    Obs("CENTRAL-VENOUS-CATHETER-PLACEMENT"),
+                    Obs("PRIOR-MRSA-INFECTION")
                 ],
                 Severity.Moderate,
                 TreatmentSite.Inpatient,
                 [
-                    new(0.2m, Pathogen("Staphylococcus aureus")),
-                    new(0.2m, Pathogen("Pseudomonas aeruginosa"))
+                    Pathogen("Methicillin-Resistant Staphylococcus aureus (MRSA)"),
+                    Pathogen("Pseudomonas aeruginosa")
                 ]),
             new(
                 [
-                    Obs("PRIOR-SKIN-INFECTION"),
+                    Obs("PRIOR-MRSA-INFECTION"),
                     Obs("PRIOR-PSEUDOMONAS"),
                 ],
                 Severity.Severe,
                 TreatmentSite.Inpatient,
                 [
-                    new(0.1m, Pathogen("Staphylococcus aureus")),
-                    new(0.2m, Pathogen("Pseudomonas aeruginosa"))
+                    Pathogen("Methicillin-Resistant Staphylococcus aureus (MRSA)"),
+                    Pathogen("Pseudomonas aeruginosa")
                 ]),
             new(
                 [
-                    Obs("AGE", 61)
+                    Obs("AGE", 61),
+                    Obs("SMOKING"),
+                    Obs("ALCOHOL-ABUSE"),
+                    Obs("COPD"),
+                    Obs("DIABETES")
                 ],
                 Severity.Severe,
                 TreatmentSite.IntensiveCareUnit,
                 [
-                    new(1m/3, Pathogen("Acinetobacter baumannii"))
+                    Pathogen("Acinetobacter baumannii"),
+                    Pathogen("Haemophilus influenzae")
                 ]),
         ];
 
@@ -346,7 +405,7 @@ namespace Respira.Clinical.Domain.Test.Services
             List<ClinicalObservation> observations,
             Severity severity,
             TreatmentSite treatmentSite,
-            List<ScoredPathogen> expected)
+            List<Pathogen> expected)
         {
             var assessment = _service.AssessInfection(_context, observations, severity, treatmentSite);
             Assert.NotEmpty(assessment.HeavySuspected);
@@ -363,33 +422,15 @@ namespace Respira.Clinical.Domain.Test.Services
 
             // Check for heavy suspected
             Assert.Equal(expected.Count, assessment.HeavySuspected.Count());
-            expected = [.. expected.OrderByDescending(x => x.Score)];
-
-            var heavySuspected = assessment.HeavySuspected.ToList();
-            for (var i = 0; i < expected.Count; i++)
-            {
-                // In case of fraction like 1/3, we will allow for some precision,
-                // though the test should use the fraction expression directly
-                Assert.Equal(expected[i].Score, heavySuspected[i].Score, precision: 5);
-            }
+            Assert.True(expected.All(x => assessment.HeavySuspected.Select(hs => hs.Id).Contains(x.Id)));
         }
 
         [Fact]
-        public void AssessInfection_WithRiskFactor_InSuspected_ReceiveBoost_Success()
+        public void AssessInfection_WithRiskFactor_ScoreBelow50_NotReturn()
         {
-            // In case of moderate/inpatient, Anaerobic bacteria is in the suspected list,
-            // it also has a risk factor, so we choose it for test data of this case
-            var assessment = _service.AssessInfection(_context, [Obs("OROPHARYNGEAL-ANAEROBIC")], Severity.Moderate, TreatmentSite.Inpatient);
-            Assert.NotEmpty(assessment.WorthSuspected);
-            Assert.NotEmpty(assessment.HeavySuspected);
-
-            // Anaerobic bacteria should be in the heavy suspected list, and NOT in worth suspected list
-            Assert.DoesNotContain(assessment.WorthSuspected, x => x.Id.Equals("Vi khuẩn kỵ khí"));
-            var pathogen = Assert.Single(assessment.HeavySuspected, x => x.Pathogen.Name.Equals("Vi khuẩn kỵ khí"));
-
-            // Score must receive a boost: 1 factor matched against total 5 factors,
-            // plus a boost of 0.5, so the final score must be 0.7
-            Assert.Equal((1m / 5) + DiagnoseService.InfectionBoostScore, pathogen.Score);
+            List<ClinicalObservation> observations = [Obs("AGE", 61)];
+            var assessment = _service.AssessInfection(_context, observations, Severity.Mild, TreatmentSite.Outpatient);
+            Assert.Empty(assessment.HeavySuspected);
         }
 
         #endregion

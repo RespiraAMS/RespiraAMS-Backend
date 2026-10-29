@@ -25,6 +25,21 @@ namespace Respira.Clinical.Infrastructure.Migrations
             NpgsqlModelBuilderExtensions.HasPostgresExtension(modelBuilder, "unaccent");
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("AntibiogramAntibiotic", b =>
+                {
+                    b.Property<Guid>("AntibiogramId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("AntibioticsId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("AntibiogramId", "AntibioticsId");
+
+                    b.HasIndex("AntibioticsId");
+
+                    b.ToTable("antibiogram_antibiotics", (string)null);
+                });
+
             modelBuilder.Entity("AntibioticMedicineComposition", b =>
                 {
                     b.Property<Guid>("AntibioticsId")
@@ -68,6 +83,38 @@ namespace Respira.Clinical.Infrastructure.Migrations
                     b.HasIndex("TreatmentId");
 
                     b.ToTable("treatment_pathogens", (string)null);
+                });
+
+            modelBuilder.Entity("Respira.Clinical.Domain.Entities.Antibiogram", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("MicCategory")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("PathogenId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTimeOffset>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PathogenId");
+
+                    b.ToTable("antibiograms", (string)null);
                 });
 
             modelBuilder.Entity("Respira.Clinical.Domain.Entities.Antibiotic", b =>
@@ -620,6 +667,21 @@ namespace Respira.Clinical.Infrastructure.Migrations
                     b.HasDiscriminator().HasValue("scoring_rule");
                 });
 
+            modelBuilder.Entity("AntibiogramAntibiotic", b =>
+                {
+                    b.HasOne("Respira.Clinical.Domain.Entities.Antibiogram", null)
+                        .WithMany()
+                        .HasForeignKey("AntibiogramId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Respira.Clinical.Domain.Entities.Antibiotic", null)
+                        .WithMany()
+                        .HasForeignKey("AntibioticsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("AntibioticMedicineComposition", b =>
                 {
                     b.HasOne("Respira.Clinical.Domain.Entities.Antibiotic", null)
@@ -663,6 +725,17 @@ namespace Respira.Clinical.Infrastructure.Migrations
                         .HasForeignKey("TreatmentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Respira.Clinical.Domain.Entities.Antibiogram", b =>
+                {
+                    b.HasOne("Respira.Clinical.Domain.Entities.Pathogen", "Pathogen")
+                        .WithMany()
+                        .HasForeignKey("PathogenId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Pathogen");
                 });
 
             modelBuilder.Entity("Respira.Clinical.Domain.Entities.Antibiotic", b =>

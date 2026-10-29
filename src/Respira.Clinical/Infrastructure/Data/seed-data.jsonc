@@ -2452,7 +2452,7 @@
             "rules": [
                 {
                     "id": "00000000-0000-0000-0000-300000000010",
-                    "criterionId": "00000000-0000-0000-0000-400000000005",
+                    "criterionId": "00000000-0000-0000-0000-400000000006",
                     "scoreFunction": {
                         "resultType": "Numeric",
                         "left": {
@@ -2470,7 +2470,7 @@
                 },
                 {
                     "id": "00000000-0000-0000-0000-300000000011",
-                    "criterionId": "00000000-0000-0000-0000-400000000006",
+                    "criterionId": "00000000-0000-0000-0000-400000000005",
                     "scoreFunction": {
                         "resultType": "Numeric",
                         "variable": {
@@ -2694,7 +2694,7 @@
     "pathogens": [
         {
             "id": "00000000-0000-0000-0000-500000000001",
-            "name": "Streptococcus pneumoniae",
+            "name": "Streptococcus pneumoniae kháng penicillin",
             "description": "Most common bacterial cause of community-acquired pneumonia",
             "isAtypical": false,
             "riskFactors": [

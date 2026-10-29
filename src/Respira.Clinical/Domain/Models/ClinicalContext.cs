@@ -14,5 +14,7 @@ namespace Respira.Clinical.Domain.Models
         public required IEnumerable<SuspectedCause> SuspectedCauses { get; set; }
         public required IEnumerable<AntibioticGroup> AntibioticGroups { get; set; }
         public required IEnumerable<Antibiotic> Antibiotics { get; set; }
+        public required IEnumerable<Antibiogram> Antibiograms { get; set; }
+        public required IEnumerable<Treatment> TreatmentProtocols { get; set; }
     }
 }

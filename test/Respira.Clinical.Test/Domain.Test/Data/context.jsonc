@@ -44,30 +44,6 @@
         },
         {
             "id": "00000000-0000-0000-0000-100000000003",
-            "name": "Chiều cao",
-            "code": "HEIGHT",
-            "description": "Chiều cao bệnh nhân",
-            "valueType": "Numeric",
-            "canonicalUnit": "cm",
-            "isRequired": true,
-            "category": "PersonalInformation",
-            "acceptedRange": {
-                "min": 0,
-                "isMinExclusive": true,
-                "max": null,
-                "isMaxExclusive": false,
-                "unit": "cm"
-            },
-            "normalRange": {
-                "min": 100,
-                "isMinExclusive": false,
-                "max": 200,
-                "isMaxExclusive": false,
-                "unit": "cm"
-            }
-        },
-        {
-            "id": "00000000-0000-0000-0000-100000000004",
             "name": "Cân nặng",
             "code": "WEIGHT",
             "description": "Cân nặng bệnh nhân",
@@ -91,61 +67,169 @@
             }
         },
         {
-            "id": "00000000-0000-0000-0000-100000000005",
-            "name": "Nhịp thở",
-            "code": "RR",
-            "description": "Nhịp thở bệnh nhân",
+            "id": "00000000-0000-0000-0000-100000000004",
+            "name": "Chiều cao",
+            "code": "HEIGHT",
+            "description": "Chiều cao bệnh nhân",
             "valueType": "Numeric",
-            "canonicalUnit": "breaths/min",
-            "isRequired": false,
-            "category": "Clinical",
-            "acceptedRange": {
-                "min": 5,
-                "isMinExclusive": false,
-                "max": 50,
-                "isMaxExclusive": false,
-                "unit": "breaths/min"
-            },
-            "normalRange": {
-                "min": 12,
-                "isMinExclusive": false,
-                "max": 20,
-                "isMaxExclusive": false,
-                "unit": "breaths/min"
-            }
-        },
-        {
-            "id": "00000000-0000-0000-0000-100000000006",
-            "name": "Huyết áp tâm thu",
-            "code": "SBP",
-            "description": "Huyết áp tâm thu của bệnh nhân",
-            "valueType": "Numeric",
-            "canonicalUnit": "mmHg",
-            "isRequired": false,
-            "category": "Clinical",
+            "canonicalUnit": "cm",
+            "isRequired": true,
+            "category": "PersonalInformation",
             "acceptedRange": {
                 "min": 0,
                 "isMinExclusive": true,
                 "max": null,
                 "isMaxExclusive": false,
-                "unit": "mmHg"
+                "unit": "cm"
+            },
+            "normalRange": {
+                "min": 100,
+                "isMinExclusive": false,
+                "max": 200,
+                "isMaxExclusive": false,
+                "unit": "cm"
+            }
+        },
+        {
+            "id": "00000000-0000-0000-0000-100000000063",
+            "name": "Người Mỹ da đen",
+            "code": "BLACK-AMERICAN",
+            "description": "Bệnh nhân có phải người Mỹ da đen không?",
+            "valueType": "Boolean",
+            "canonicalUnit": null,
+            "isRequired": true,
+            "category": "PersonalInformation"
+        },
+        {
+            "id": "00000000-0000-0000-0000-100000000005",
+            "name": "Điều trị nhóm beta-lactam/quinolon/macrolid trong 6 tháng",
+            "code": "PRIOR-BETALACTAM-OR-QUINOLON-OR-MACROLID-TREATMENT-6-MONTHS",
+            "description": "Bệnh nhân có tiền sử điều trị bằng kháng sinh nhóm beta-lactam hoặc quinolon hoặc macrolide trong 6 tháng",
+            "valueType": "Boolean",
+            "canonicalUnit": null,
+            "isRequired": true,
+            "category": "MedicalHistory"
+        },
+        // PREGNANT-OR-LACTATING -> (GENDER = FEMALE) = Unary(PREGNANT-OR-LACTATING) OR (GENDER = FEMALE)
+        {
+            "id": "00000000-0000-0000-0000-100000000006",
+            "name": "Phụ nữ có thai hoặc đang cho con bú",
+            "code": "PREGNANT-OR-LACTATING",
+            "description": "Bệnh nhân có đang có thai hoặc đang cho con bú không?",
+            "valueType": "Boolean",
+            "canonicalUnit": null,
+            "prerequisite": {
+                "resultType": "Boolean",
+                "left": {
+                    "resultType": "Boolean",
+                    "operand": {
+                        "resultType": "Boolean",
+                        "variable": {
+                            "id": "00000000-0000-0000-0000-100000000006"
+                        }
+                    }
+                },
+                "right": {
+                    "resultType": "Boolean",
+                    "left": {
+                        "resultType": "String",
+                        "variable": {
+                            "id": "00000000-0000-0000-0000-100000000002"
+                        }
+                    },
+                    "right": {
+                        "resultType": "String",
+                        "constant": "FEMALE"
+                    },
+                    "operator": "EQ"
+                },
+                "operator": "OR"
+            },
+            "isRequired": true,
+            "category": "MedicalHistory"
+        },
+        {
+            "id": "00000000-0000-0000-0000-100000000007",
+            "name": "Tiền sử nhiễm trùng ngoài da",
+            "code": "PRIOR-SKIN-INFECTION",
+            "description": "Bệnh nhân có tiền sử nhiễm trùng ngoài da không?",
+            "valueType": "Boolean",
+            "canonicalUnit": null,
+            "isRequired": true,
+            "category": "MedicalHistory"
+        },
+        {
+            "id": "00000000-0000-0000-0000-100000000008",
+            "name": "Tiền sử nhiễm MRSA",
+            "code": "PRIOR-MRSA-INFECTION",
+            "description": "Bệnh nhân có tiền sử nhiễm MRSA không?",
+            "valueType": "Boolean",
+            "canonicalUnit": null,
+            "isRequired": true,
+            "category": "MedicalHistory"
+        },
+        {
+            "id": "00000000-0000-0000-0000-100000000009",
+            "name": "Tiền sử nhiễm Pseudomonas aeruginosa",
+            "code": "PRIOR-PSEUDOMONAS",
+            "description": "Bệnh nhân có tiền sử nhiễm Pseudomonas aeruginosa không?",
+            "valueType": "Boolean",
+            "canonicalUnit": null,
+            "isRequired": true,
+            "category": "MedicalHistory"
+        },
+        {
+            "id": "00000000-0000-0000-0000-100000000010",
+            "name": "Nằm viện và dùng kháng sinh tĩnh mạch trong vòng 90 ngày",
+            "code": "HOSPITALIZATION-90D",
+            "description": "Bệnh nhân có từng nằm viện và dùng kháng sinh tĩnh mạch trong vòng 90 ngày không?",
+            "valueType": "Boolean",
+            "canonicalUnit": null,
+            "isRequired": true,
+            "category": "MedicalHistory"
+        },
+        {
+            "id": "00000000-0000-0000-0000-100000000062",
+            "name": "Bệnh phổi cấu trúc hoặc bệnh phổi tắc nghẽn mạn tính nặng (FEV1 < 30%)",
+            "code": "STRUCTURAL-LUNG-DISEASE-OR-SEVERE-COPD",
+            "description": "Bệnh nhân có từng nằm viện và dùng kháng sinh tĩnh mạch trong vòng 90 ngày không?",
+            "valueType": "Boolean",
+            "canonicalUnit": null,
+            "isRequired": true,
+            "category": "MedicalHistory"
+        },
+        {
+            "id": "00000000-0000-0000-0000-100000000011",
+            "name": "Mạch đập",
+            "code": "PULSE",
+            "description": "Mạch đập bệnh nhân",
+            "valueType": "Numeric",
+            "canonicalUnit": "bpm",
+            "isRequired": true,
+            "category": "Clinical",
+            "acceptedRange": {
+                "min": 0,
+                "isMinExclusive": false,
+                "max": null,
+                "isMaxExclusive": false,
+                "unit": "bpm"
             },
             "normalRange": {
                 "min": 60,
                 "isMinExclusive": false,
-                "max": 120,
+                "max": 150,
                 "isMaxExclusive": false,
-                "unit": "mmHg"
+                "unit": "bpm"
             }
         },
         {
-            "id": "00000000-0000-0000-0000-100000000007",
-            "name": "Huyết áp tâm trương",
-            "code": "DBP",
-            "description": "Huyết áp tâm trương của bệnh nhân",
+            "id": "00000000-0000-0000-0000-100000000012",
+            "name": "Huyết áp tâm thu",
+            "code": "SBP",
+            "description": "Huyết áp tâm thu của bệnh nhân",
             "valueType": "Numeric",
             "canonicalUnit": "mmHg",
-            "isRequired": false,
+            "isRequired": true,
             "category": "Clinical",
             "acceptedRange": {
                 "min": 0,
@@ -156,38 +240,469 @@
             },
             "normalRange": {
                 "min": 90,
-                "isMinExclusive": true,
+                "isMinExclusive": false,
                 "max": 200,
                 "isMaxExclusive": false,
                 "unit": "mmHg"
             }
         },
         {
-            "id": "00000000-0000-0000-0000-100000000008",
+            "id": "00000000-0000-0000-0000-100000000013",
+            "name": "Huyết áp tâm trương",
+            "code": "DBP",
+            "description": "Huyết áp tâm trương của bệnh nhân",
+            "valueType": "Numeric",
+            "canonicalUnit": "mmHg",
+            "isRequired": true,
+            "category": "Clinical",
+            "acceptedRange": {
+                "min": 0,
+                "isMinExclusive": true,
+                "max": null,
+                "isMaxExclusive": false,
+                "unit": "mmHg"
+            },
+            "normalRange": {
+                "min": 60,
+                "isMinExclusive": true,
+                "max": 110,
+                "isMaxExclusive": false,
+                "unit": "mmHg"
+            }
+        },
+        {
+            "id": "00000000-0000-0000-0000-100000000014",
             "name": "Nhiệt độ cơ thể",
             "code": "TEMPERATURE",
             "description": "Nhiệt độ cơ thể của bệnh nhân",
             "valueType": "Numeric",
             "canonicalUnit": "Celcius",
-            "isRequired": false,
+            "isRequired": true,
             "category": "Clinical",
             "acceptedRange": {
-                "min": 0,
+                "min": 30,
                 "isMinExclusive": true,
-                "max": 100,
+                "max": null,
                 "isMaxExclusive": false,
                 "unit": "Celcius"
             },
             "normalRange": {
                 "min": 36,
                 "isMinExclusive": false,
-                "max": 37,
+                "max": 42,
                 "isMaxExclusive": false,
                 "unit": "Celcius"
             }
         },
         {
-            "id": "00000000-0000-0000-0000-100000000009",
+            "id": "00000000-0000-0000-0000-100000000015",
+            "name": "Nhịp thở",
+            "code": "RR",
+            "description": "Nhịp thở bệnh nhân",
+            "valueType": "Numeric",
+            "canonicalUnit": "breaths/min",
+            "isRequired": true,
+            "category": "Clinical",
+            "acceptedRange": {
+                "min": 0,
+                "isMinExclusive": true,
+                "max": null,
+                "isMaxExclusive": false,
+                "unit": "breaths/min"
+            },
+            "normalRange": {
+                "min": 10,
+                "isMinExclusive": false,
+                "max": 40,
+                "isMaxExclusive": false,
+                "unit": "breaths/min"
+            }
+        },
+        {
+            "id": "00000000-0000-0000-0000-100000000016",
+            "name": "Phân suất oxy trong khí hít vào bệnh nhân (FiO₂)",
+            "code": "FIO2",
+            "description": "Phân suất oxy trong khí hít vào",
+            "valueType": "Numeric",
+            "canonicalUnit": "%",
+            "isRequired": true,
+            "category": "Clinical",
+            "acceptedRange": {
+                "min": 21,
+                "isMinExclusive": false,
+                "max": 100,
+                "isMaxExclusive": false,
+                "unit": null
+            }
+        },
+        {
+            "id": "00000000-0000-0000-0000-100000000017",
+            "name": "Độ bão hòa oxy trong máu ngoại vi bệnh nhân (SpO₂)",
+            "code": "SPO2",
+            "description": "Độ bão hòa oxy trong máu ngoại vi",
+            "valueType": "Numeric",
+            "canonicalUnit": "%",
+            "isRequired": true,
+            "category": "Clinical",
+            "acceptedRange": {
+                "min": 0,
+                "isMinExclusive": false,
+                "max": 100,
+                "isMaxExclusive": false,
+                "unit": "%"
+            }
+        },
+        {
+            "id": "00000000-0000-0000-0000-100000000018",
+            "name": "Phân áp oxy trong máu động mạch bệnh nhân (PaO₂)",
+            "code": "PAO2",
+            "description": "Phân áp oxy trong máu động mạch",
+            "valueType": "Numeric",
+            "canonicalUnit": "mmHg",
+            "isRequired": false,
+            "category": "Clinical",
+            "acceptedRange": {
+                "min": 0,
+                "isMinExclusive": true,
+                "max": null,
+                "isMaxExclusive": false,
+                "unit": "mmHg"
+            }
+        },
+        {
+            "id": "00000000-0000-0000-0000-100000000019",
+            "name": "Dấu hiện suy giảm tri giác mới",
+            "code": "CONFUSION",
+            "description": "Bệnh nhân có dấu hiệu bị suy giảm tri giác mới không?",
+            "valueType": "Boolean",
+            "canonicalUnit": null,
+            "isRequired": true,
+            "category": "Clinical"
+        },
+        {
+            "id": "00000000-0000-0000-0000-100000000020",
+            "name": "Thở máy xâm lấn",
+            "code": "INVASIVE-MECHANICAL-VENTILATION",
+            "description": "Bệnh nhân có thở máy xâm lấn hay không?",
+            "valueType": "Boolean",
+            "canonicalUnit": null,
+            "isRequired": true,
+            "category": "Clinical"
+        },
+        {
+            "id": "00000000-0000-0000-0000-100000000021",
+            "name": "Đặt nội khí quản",
+            "code": "INTUBATION",
+            "description": "Bệnh nhân có từng đặt nội khí quản gần đây không?",
+            "valueType": "Boolean",
+            "canonicalUnit": null,
+            "isRequired": true,
+            "category": "Clinical"
+        },
+        {
+            "id": "00000000-0000-0000-0000-100000000022",
+            "name": "Mở khí quản",
+            "code": "TRACHEOSTOMY",
+            "description": "Bệnh nhân có từng mở khí quản gần đây không?",
+            "valueType": "Boolean",
+            "canonicalUnit": null,
+            "isRequired": true,
+            "category": "Clinical"
+        },
+        {
+            "id": "00000000-0000-0000-0000-100000000023",
+            "name": "Thở máy không xâm lấn",
+            "code": "NON-INVASIVE-MECHANICAL-VENTILATION",
+            "description": "Bệnh nhân có từng thở máy không xâm lấn không?",
+            "valueType": "Boolean",
+            "canonicalUnit": null,
+            "isRequired": true,
+            "category": "Clinical"
+        },
+        {
+            "id": "00000000-0000-0000-0000-100000000024",
+            "name": "Sốc nhiễm khuẩn cần phải dùng thuốc vận mạch",
+            "code": "SEPTIC-SHOCK-REQUIRE-VASOPRESSOR",
+            "description": "Bệnh nhân có bị sốc nhiễm khuẩn cần phải dùng thuốc vận mạch không?",
+            "valueType": "Boolean",
+            "canonicalUnit": null,
+            "isRequired": true,
+            "category": "Clinical"
+        },
+        {
+            "id": "00000000-0000-0000-0000-100000000025",
+            "name": "Hạ huyết áp cần phải bù dịch tích cực",
+            "code": "HYPOTENSION",
+            "description": "Bệnh nhân có bị hạ huyết áp cần phải bù dịch tích cực không?",
+            "valueType": "Boolean",
+            "canonicalUnit": null,
+            "isRequired": true,
+            "category": "Clinical"
+        },
+        {
+            "id": "00000000-0000-0000-0000-100000000026",
+            "name": "Bệnh nội khoa nặng.",
+            "code": "SEVERE-INTERNAL-DISEASE",
+            "description": "Bệnh nhân có bị mắc các bệnh nội khoa nặng không?",
+            "valueType": "Boolean",
+            "canonicalUnit": null,
+            "isRequired": true,
+            "category": "Clinical"
+        },
+        {
+            "id": "00000000-0000-0000-0000-100000000027",
+            "name": "Sống ở nhà dưỡng lão/điều dưỡng",
+            "code": "LIVE-AT-NURSING-HOME",
+            "description": "Bệnh nhân có sống ở nhà dưỡng lão/điều dưỡng không?",
+            "valueType": "Boolean",
+            "canonicalUnit": null,
+            "isRequired": true,
+            "category": "Clinical"
+        },
+        // Tương đương với bệnh ung thư (PSI), bệnh ác tính (yếu tố nguy cơ của H. influenzae)
+        {
+            "id": "00000000-0000-0000-0000-100000000028",
+            "name": "Bệnh ung thư (bệnh ác tính)",
+            "code": "NEOPLASTIC",
+            "description": "Bệnh nhân có bị ung thư ác tính không?",
+            "valueType": "Boolean",
+            "canonicalUnit": null,
+            "isRequired": true,
+            "category": "Clinical"
+        },
+        // Tương đương với bệnh gan (PSI), bệnh gan mạn (yếu tố nguy cơ của Streptococcus)
+        {
+            "id": "00000000-0000-0000-0000-100000000029",
+            "name": "Bệnh gan (Bệnh gan mạn)",
+            "code": "CHRONIC-LIVER",
+            "description": "Bệnh nhân có bị gan mạn không?",
+            "valueType": "Boolean",
+            "canonicalUnit": null,
+            "isRequired": false,
+            "category": "Clinical"
+        },
+        {
+            "id": "00000000-0000-0000-0000-100000000030",
+            "name": "Suy tim ứ huyết",
+            "code": "CHF",
+            "description": "Bệnh nhân có bị suy tim ứ huyết không?",
+            "valueType": "Boolean",
+            "canonicalUnit": null,
+            "isRequired": true,
+            "category": "Clinical"
+        },
+        {
+            "id": "00000000-0000-0000-0000-100000000031",
+            "name": "Tai biến mạch máu não",
+            "code": "CEREBROVASCULAR",
+            "description": "Bệnh nhân có bị tai biến mạch máu não không? Chú ý rằng, tai biến mạch máu não không tương đương với nguy cơ hít sặc",
+            "valueType": "Boolean",
+            "canonicalUnit": null,
+            "isRequired": true,
+            "category": "Clinical"
+        },
+        {
+            "id": "00000000-0000-0000-0000-100000000032",
+            "name": "Bệnh thận mạn (suy thận cấp)",
+            "code": "CHRONIC-RENAL",
+            "description": "Bệnh nhân có bị bệnh thận mạn (suy thận cấp) không?",
+            "valueType": "Boolean",
+            "canonicalUnit": null,
+            "isRequired": true,
+            "category": "Clinical"
+        },
+        {
+            "id": "00000000-0000-0000-0000-100000000033",
+            "name": "Bệnh phổi mạn tính",
+            "code": "CHRONIC-LUNG",
+            "description": "Bệnh nhân có bị mắc bệnh phổi mạn tính không? Chú ý rằng, bệnh phổi mạn tính bao gồm COPD, ung thư phổi, xơ nang, giãn phế quản và nhiều trường hợp khác",
+            "valueType": "Boolean",
+            "canonicalUnit": null,
+            "isRequired": true,
+            "category": "Clinical"
+        },
+        {
+            "id": "00000000-0000-0000-0000-100000000034",
+            "name": "Đái tháo đường",
+            "code": "DIABETES",
+            "description": "Bệnh nhân có bị đái tháo đường không?",
+            "valueType": "Boolean",
+            "canonicalUnit": null,
+            "isRequired": true,
+            "category": "Clinical"
+        },
+        {
+            "id": "00000000-0000-0000-0000-100000000035",
+            "name": "Tràn dịch màng phổi",
+            "code": "PLEURAL-EFFUSION",
+            "description": "Bệnh nhân có bị tràn dịch màng phổi không?",
+            "valueType": "Boolean",
+            "canonicalUnit": null,
+            "isRequired": false,
+            "category": "Clinical"
+        },
+        {
+            "id": "00000000-0000-0000-0000-100000000036",
+            "name": "Nghiện rượu",
+            "code": "ALCOHOL-ABUSE",
+            "description": "Bệnh nhân có nghiện rượu không?",
+            "valueType": "Boolean",
+            "canonicalUnit": null,
+            "isRequired": true,
+            "category": "Clinical"
+        },
+        {
+            "id": "00000000-0000-0000-0000-100000000037",
+            "name": "Điều trị thuốc ức chế miễn dịch",
+            "code": "IMMUNOSUPPRESSIVE-DRUG-THERAPY",
+            "description": "Bệnh nhân có điều trị thuốc ức chế miễn dịch không?",
+            "valueType": "Boolean",
+            "canonicalUnit": null,
+            "isRequired": true,
+            "category": "Clinical"
+        },
+        {
+            "id": "00000000-0000-0000-0000-100000000038",
+            "name": "Hút thuốc lá",
+            "code": "SMOKING",
+            "description": "Bệnh nhân có hút thuốc lá không?",
+            "valueType": "Boolean",
+            "canonicalUnit": null,
+            "isRequired": true,
+            "category": "Clinical"
+        },
+        {
+            "id": "00000000-0000-0000-0000-100000000039",
+            "name": "Mắc bệnh tâm thần",
+            "code": "MENTAL-ILLNESS",
+            "description": "Bệnh nhân có bị mắc bệnh tâm thần không?",
+            "valueType": "Boolean",
+            "canonicalUnit": null,
+            "isRequired": true,
+            "category": "Clinical"
+        },
+        {
+            "id": "00000000-0000-0000-0000-100000000040",
+            "name": "Bệnh phổi tắc nghẽn mãn tính",
+            "code": "COPD",
+            "description": "Bệnh nhân có mắc bệnh phổi tắc nghẽn mãn tính không?",
+            "valueType": "Boolean",
+            "canonicalUnit": null,
+            "isRequired": true,
+            "category": "Clinical"
+        },
+        {
+            "id": "00000000-0000-0000-0000-100000000041",
+            "name": "Ung thư phổi",
+            "code": "LUNG-CANCER",
+            "description": "Bệnh nhân có bị ung thư phổi không?",
+            "valueType": "Boolean",
+            "canonicalUnit": null,
+            "isRequired": true,
+            "category": "Clinical"
+        },
+        {
+            "id": "00000000-0000-0000-0000-100000000042",
+            "name": "Bệnh xơ nang",
+            "code": "CYSTIC-FIBROSIS",
+            "description": "Bệnh nhân có bị bệnh xơ nang không?",
+            "valueType": "Boolean",
+            "canonicalUnit": null,
+            "isRequired": true,
+            "category": "Clinical"
+        },
+        {
+            "id": "00000000-0000-0000-0000-100000000043",
+            "name": "Suy giảm miễn dịch",
+            "code": "IMMUNOCOMPROMISED",
+            "description": "Bệnh nhân có bị suy giảm miễn dịch không?",
+            "valueType": "Boolean",
+            "canonicalUnit": null,
+            "isRequired": true,
+            "category": "Clinical"
+        },
+        {
+            "id": "00000000-0000-0000-0000-100000000044",
+            "name": "Nhiễm HIV",
+            "code": "HIV",
+            "description": "Bệnh nhân có nhiễm HIV không?",
+            "valueType": "Boolean",
+            "canonicalUnit": null,
+            "isRequired": true,
+            "category": "Clinical"
+        },
+        {
+            "id": "00000000-0000-0000-0000-100000000045",
+            "name": "Nhiễm virus (influenza, sởi)",
+            "code": "VIRUS-INFECTION",
+            "description": "Bệnh nhân có nhiễm virus như influenze, sởi hay không?",
+            "valueType": "Boolean",
+            "canonicalUnit": null,
+            "isRequired": true,
+            "category": "Clinical"
+        },
+        {
+            "id": "00000000-0000-0000-0000-100000000046",
+            "name": "Ghép tạng",
+            "code": "ORGAN-TRANSPLANT",
+            "description": "Bệnh nhân có từng ghép tạng không?",
+            "valueType": "Boolean",
+            "canonicalUnit": null,
+            "isRequired": true,
+            "category": "Clinical"
+        },
+        {
+            "id": "00000000-0000-0000-0000-100000000047",
+            "name": "Tiêm chích, thuyên tắc huyết khối nhiễm trùng trong viêm nội tâm mạc nhiễm khuẩn.",
+            "code": "IV-DRUG-USE-SEPTIC-THROMBOEMBOLISM",
+            "description": "Bệnh nhân có tiền sử tiêm chích, thuyên tắc huyết khối nhiễm trùng trong viêm nội tâm mạc nhiễm khuẩn không?",
+            "valueType": "Boolean",
+            "canonicalUnit": null,
+            "isRequired": true,
+            "category": "Clinical"
+        },
+        {
+            "id": "00000000-0000-0000-0000-100000000048",
+            "name": "Có ổ nhiễm trùng da/mô dưới da",
+            "code": "SKIN-SUBCUTANEOUS--TISSUE-INFECTION",
+            "description": "Bệnh nhân có ổ nhiễm trùng da / mô dưới da không?",
+            "valueType": "Boolean",
+            "canonicalUnit": null,
+            "isRequired": true,
+            "category": "Clinical"
+        },
+        {
+            "id": "00000000-0000-0000-0000-100000000049",
+            "name": "Đặt catheter tĩnh mạch trung tâm",
+            "code": "CENTRAL-VENOUS-CATHETER-PLACEMENT",
+            "description": "Bệnh nhân có từng đặt catheter tĩnh mạch trung tâm không?",
+            "valueType": "Boolean",
+            "canonicalUnit": null,
+            "isRequired": true,
+            "category": "Clinical"
+        },
+        {
+            "id": "00000000-0000-0000-0000-100000000050",
+            "name": "Nguy cơ hít sặc dịch từ đường tiêu hóa / viêm phổi hít",
+            "code": "ASPIRATION-RISKS",
+            "description": "Bệnh nhân có nguy cơ hít sặc dịch từ đường tiêu hóa không?",
+            "valueType": "Boolean",
+            "canonicalUnit": null,
+            "isRequired": true,
+            "category": "Clinical"
+        },
+        {
+            "id": "00000000-0000-0000-0000-100000000051",
+            "name": "Nhiễm trùng khác đang hoạt động ngoài viêm phổi ",
+            "code": "OTHER-INFECTIONS",
+            "description": "Bệnh nhân có đang có nhiễm trùng khác đang hoạt động ngoài viêm phổi không?",
+            "valueType": "Boolean",
+            "canonicalUnit": null,
+            "isRequired": true,
+            "category": "Clinical"
+        },
+        {
+            "id": "00000000-0000-0000-0000-100000000052",
             "name": "Urea máu",
             "code": "UREA",
             "description": "Urea máu của bệnh nhân",
@@ -204,7 +719,24 @@
             }
         },
         {
-            "id": "00000000-0000-0000-0000-100000000010",
+            "id": "00000000-0000-0000-0000-100000000053",
+            "name": "Creatine",
+            "code": "CREATINE",
+            "description": "Critine máu của bệnh nhân",
+            "valueType": "Numeric",
+            "canonicalUnit": "umol/L",
+            "isRequired": false,
+            "category": "Paraclinical",
+            "acceptedRange": {
+                "min": 0,
+                "isMinExclusive": true,
+                "max": null,
+                "isMaxExclusive": false,
+                "unit": "mmol/L"
+            }
+        },
+        {
+            "id": "00000000-0000-0000-0000-100000000054",
             "name": "Số lượng bạch cầu",
             "code": "WBC",
             "description": "Số lượng bạch cầu bệnh nhân",
@@ -218,10 +750,17 @@
                 "max": null,
                 "isMaxExclusive": false,
                 "unit": "cells/mm3"
+            },
+            "normalRange": {
+                "min": 4000,
+                "isMinExclusive": false,
+                "max": 100000,
+                "isMaxExclusive": false,
+                "unit": "cells/mm3"
             }
         },
         {
-            "id": "00000000-0000-0000-0000-100000000011",
+            "id": "00000000-0000-0000-0000-100000000055",
             "name": "Số lượng tiểu cầu",
             "code": "PLATELET",
             "description": "Số lượng tiểu cầu bệnh nhân",
@@ -235,78 +774,17 @@
                 "max": null,
                 "isMaxExclusive": false,
                 "unit": "cells/mm3"
-            }
-        },
-        {
-            "id": "00000000-0000-0000-0000-100000000012",
-            "name": "Phân áp oxy trong máu động mạch bệnh nhân (PaO₂)",
-            "code": "PAO2",
-            "description": "Phân áp oxy trong máu động mạch",
-            "valueType": "Numeric",
-            "canonicalUnit": "mmHg",
-            "isRequired": false,
-            "category": "Paraclinical",
-            "acceptedRange": {
-                "min": 0,
-                "isMinExclusive": true,
-                "max": null,
-                "isMaxExclusive": false,
-                "unit": "mmHg"
-            }
-        },
-        {
-            "id": "00000000-0000-0000-0000-100000000013",
-            "name": "Phân suất oxy trong khí hít vào bệnh nhân (FiO₂)",
-            "code": "FIO2",
-            "description": "Phân suất oxy trong khí hít vào",
-            "valueType": "Numeric",
-            "canonicalUnit": null,
-            "isRequired": false,
-            "category": "Clinical",
-            "acceptedRange": {
-                "min": 0,
-                "isMinExclusive": true,
-                "max": 1,
-                "isMaxExclusive": false,
-                "unit": null
-            }
-        },
-        {
-            "id": "00000000-0000-0000-0000-100000000014",
-            "name": "Độ bão hòa oxy trong máu ngoại vi bệnh nhân (SpO₂)",
-            "code": "SPO2",
-            "description": "Độ bão hòa oxy trong máu ngoại vi",
-            "valueType": "Numeric",
-            "canonicalUnit": "%",
-            "isRequired": true,
-            "category": "Clinical",
-            "acceptedRange": {
-                "min": 0,
-                "isMinExclusive": true,
-                "max": 100,
-                "isMaxExclusive": false,
-                "unit": "%"
-            }
-        },
-        {
-            "id": "00000000-0000-0000-0000-100000000015",
-            "name": "Mạch đập",
-            "code": "PULSE",
-            "description": "Mạch đập bệnh nhân",
-            "valueType": "Numeric",
-            "canonicalUnit": "bpm",
-            "isRequired": false,
-            "category": "Clinical",
-            "acceptedRange": {
-                "min": 0,
+            },
+            "normalRange": {
+                "min": 20000,
                 "isMinExclusive": false,
-                "max": null,
+                "max": 800000,
                 "isMaxExclusive": false,
-                "unit": "bpm"
+                "unit": "cells/mm3"
             }
         },
         {
-            "id": "00000000-0000-0000-0000-100000000016",
+            "id": "00000000-0000-0000-0000-100000000056",
             "name": "pH",
             "code": "PH",
             "description": "pH bệnh nhân",
@@ -330,7 +808,7 @@
             }
         },
         {
-            "id": "00000000-0000-0000-0000-100000000017",
+            "id": "00000000-0000-0000-0000-100000000057",
             "name": "Hematocrit",
             "code": "HEMATOCRIT",
             "description": "Hematocrit bệnh nhân",
@@ -347,7 +825,7 @@
             }
         },
         {
-            "id": "00000000-0000-0000-0000-100000000018",
+            "id": "00000000-0000-0000-0000-100000000058",
             "name": "Na⁺ máu",
             "code": "NA+",
             "description": "Na⁺ máu bệnh nhân",
@@ -364,7 +842,7 @@
             }
         },
         {
-            "id": "00000000-0000-0000-0000-100000000019",
+            "id": "00000000-0000-0000-0000-100000000059",
             "name": "Đường máu",
             "code": "BLOOD-GLUCOSE",
             "description": "Đường máu bệnh nhân",
@@ -377,97 +855,11 @@
                 "isMinExclusive": false,
                 "max": null,
                 "isMaxExclusive": false,
-                "unit": "mg/dL"
+                "unit": "mmol/L"
             }
         },
-        // Tương đương với thay đổi tri giác (PSI) hoặc Giảm tri giác (IDSA/ATS)
         {
-            "id": "00000000-0000-0000-0000-100000000020",
-            "name": "Dấu hiện suy giảm tri giác mới",
-            "code": "CONFUSION",
-            "description": "Bệnh nhân có dấu hiệu bị suy giảm tri giác mới không?",
-            "valueType": "Boolean",
-            "canonicalUnit": null,
-            "isRequired": false,
-            "category": "Clinical"
-        },
-        {
-            "id": "00000000-0000-0000-0000-100000000021",
-            "name": "Sống ở nhà dưỡng lão/điều dưỡng",
-            "code": "LIVE-AT-NURSING-HOME",
-            "description": "Bệnh nhân có sống ở nhà dưỡng lão/điều dưỡng không?",
-            "valueType": "Boolean",
-            "canonicalUnit": null,
-            "isRequired": false,
-            "category": "Clinical"
-        },
-        // Tương đương với bệnh ung thư (PSI), bệnh ác tính (yếu tố nguy cơ của H. influenzae)
-        {
-            "id": "00000000-0000-0000-0000-100000000022",
-            "name": "Bệnh ung thư (bệnh ác tính)",
-            "code": "NEOPLASTIC",
-            "description": "Bệnh nhân có bị ung thư ác tính không?",
-            "valueType": "Boolean",
-            "canonicalUnit": null,
-            "isRequired": false,
-            "category": "Clinical"
-        },
-        // Tương đương với bệnh gan (PSI), bệnh gan mạn (yếu tố nguy cơ của Streptococcus)
-        {
-            "id": "00000000-0000-0000-0000-100000000023",
-            "name": "Bệnh gan (Bệnh gan mạn)",
-            "code": "CHRONIC-LIVER",
-            "description": "Bệnh nhân có bị gan mạn không?",
-            "valueType": "Boolean",
-            "canonicalUnit": null,
-            "isRequired": false,
-            "category": "Clinical"
-        },
-        {
-            "id": "00000000-0000-0000-0000-100000000024",
-            "name": "Suy tim ứ huyết",
-            "code": "CHF",
-            "description": "Bệnh nhân có bị suy tim ứ huyết không?",
-            "valueType": "Boolean",
-            "canonicalUnit": null,
-            "isRequired": false,
-            "category": "Clinical"
-        },
-        {
-            "id": "00000000-0000-0000-0000-100000000025",
-            "name": "Tai biến mạch máu não",
-            "code": "CEREBROVASCULAR",
-            "description": "Bệnh nhân có bị tai biến mạch máu não không? Chú ý rằng, tai biến mạch máu não không tương đương với nguy cơ hít sặc",
-            "valueType": "Boolean",
-            "canonicalUnit": null,
-            "isRequired": false,
-            "category": "Clinical"
-        },
-        // Bệnh thận != bệnh thận mạn (bệnh thận bao gồm cả thận mạn và những trường hợp khác như hội chứng
-        // thận hư, suy thận,... Do đó, có bệnh thận chưa chắc là có thận mạn, nhưng có thận mạn thì chắc 
-        // chắn có bệnh thận)
-        {
-            "id": "00000000-0000-0000-0000-100000000026",
-            "name": "Bệnh thận",
-            "code": "RENAL-DISEASE",
-            "description": "Bệnh nhân có bị bệnh thận không? Chú ý rằng, bệnh thận mạn != bệnh thận",
-            "valueType": "Boolean",
-            "canonicalUnit": null,
-            "isRequired": false,
-            "category": "Clinical"
-        },
-        {
-            "id": "00000000-0000-0000-0000-100000000027",
-            "name": "Tràn dịch màng phổi",
-            "code": "PLEURAL-EFFUSION",
-            "description": "Bệnh nhân có bị tràn dịch màng phổi không?",
-            "valueType": "Boolean",
-            "canonicalUnit": null,
-            "isRequired": false,
-            "category": "Clinical"
-        },
-        {
-            "id": "00000000-0000-0000-0000-100000000028",
+            "id": "00000000-0000-0000-0000-100000000060",
             "name": "Tổn thương nhiều thùy phổi trên phim X-quang",
             "code": "MULTILOBAR-PULMONARY-LESION",
             "description": "Bệnh nhân có bị tổn thương nhiều thùy phổi trên phim X-quang không?",
@@ -477,422 +869,14 @@
             "category": "Paraclinical"
         },
         {
-            "id": "00000000-0000-0000-0000-100000000029",
-            "name": "Hạ huyết áp cần phải bù dịch tích cực",
-            "code": "HYPOTENSION",
-            "description": "Bệnh nhân có bị hạ huyết áp cần phải bù dịch tích cực không?",
-            "valueType": "Boolean",
-            "canonicalUnit": null,
-            "isRequired": false,
-            "category": "Clinical"
-        },
-        {
-            "id": "00000000-0000-0000-0000-100000000030",
-            "name": "Suy hô hấp cần phải thông khí cơ học",
-            "code": "REQUIRES-MECHANICAL-VENTILATION",
-            "description": "Bệnh nhân có bị suy hô hấp cần phải thông khí cơ học không?",
-            "valueType": "Boolean",
-            "canonicalUnit": null,
-            "isRequired": false,
-            "category": "Clinical"
-        },
-        {
-            "id": "00000000-0000-0000-0000-100000000031",
-            "name": "Sốc nhiễm khuẩn cần phải dùng thuốc vận mạch",
-            "code": "SEPTIC-SHOCK",
-            "description": "Bệnh nhân có bị sốc nhiễm khuẩn cần phải dùng thuốc vận mạch không?",
-            "valueType": "Boolean",
-            "canonicalUnit": null,
-            "isRequired": false,
-            "category": "Clinical"
-        },
-        {
-            "id": "00000000-0000-0000-0000-100000000032",
-            "name": "Tiền sử nghiện rượu",
-            "code": "ALCOHOL-ABUSE",
-            "description": "Bệnh nhân có tiền sử nghiện rượu không?",
-            "valueType": "Boolean",
-            "canonicalUnit": null,
-            "isRequired": false,
-            "category": "Clinical"
-        },
-        {
-            "id": "00000000-0000-0000-0000-100000000033",
-            "name": "Hút thuốc lá",
-            "code": "SMOKING",
-            "description": "Bệnh nhân có hút thuốc lá không?",
-            "valueType": "Boolean",
-            "canonicalUnit": null,
-            "isRequired": false,
-            "category": "Clinical"
-        },
-        {
-            "id": "00000000-0000-0000-0000-100000000034",
-            "name": "Bệnh thận mạn",
-            "code": "CHRONIC-RENAL",
-            "description": "Bệnh nhân có bị bệnh thận mạn không?",
-            "valueType": "Boolean",
-            "canonicalUnit": null,
-            "isRequired": false,
-            "category": "Clinical"
-        },
-        {
-            "id": "00000000-0000-0000-0000-100000000035",
-            "name": "Suy dinh dưỡng",
-            "code": "MALNUTRITION",
-            "description": "Bệnh nhân có bị suy dinh dưỡng không?",
-            "valueType": "Boolean",
-            "canonicalUnit": null,
-            "isRequired": false,
-            "category": "Clinical"
-        },
-        {
-            "id": "00000000-0000-0000-0000-100000000036",
-            "name": "Mắc bệnh tâm thần",
-            "code": "MENTAL-ILLNESS",
-            "description": "Bệnh nhân có bị mắc bệnh tâm thần không?",
-            "valueType": "Boolean",
-            "canonicalUnit": null,
-            "isRequired": false,
-            "category": "Clinical"
-        },
-        {
-            "id": "00000000-0000-0000-0000-100000000037",
-            "name": "Bệnh phổi tắc nghẽn mãn tính",
-            "code": "COPD",
-            "description": "Bệnh nhân có mắc bệnh phổi tắc nghẽn mãn tính không?",
-            "valueType": "Boolean",
-            "canonicalUnit": null,
-            "isRequired": false,
-            "category": "Clinical"
-        },
-        {
-            "id": "00000000-0000-0000-0000-100000000038",
-            "name": "Suy giảm miễn dịch",
-            "code": "IMMUNOCOMPROMISED",
-            "description": "Bệnh nhân có bị suy giảm miễn dịch không?",
-            "valueType": "Boolean",
-            "canonicalUnit": null,
-            "isRequired": false,
-            "category": "Clinical"
-        },
-        {
-            "id": "00000000-0000-0000-0000-100000000039",
-            "name": "Nhiễm HIV",
-            "code": "HIV",
-            "description": "Bệnh nhân có nhiễm HIV không?",
-            "valueType": "Boolean",
-            "canonicalUnit": null,
-            "isRequired": false,
-            "category": "Clinical"
-        },
-        {
-            "id": "00000000-0000-0000-0000-100000000040",
-            "name": "Ghép tạng",
-            "code": "ORGAN-TRANSPLANT",
-            "description": "Bệnh nhân có từng ghép tạng không?",
-            "valueType": "Boolean",
-            "canonicalUnit": null,
-            "isRequired": false,
-            "category": "Clinical"
-        },
-        // Trong danh sách các biến ở đây, có: COPD, ung thư phổi, xơ nang, giãn phế đều được xem
-        // là bệnh phổi mạn tính, tuy nhiên bệnh phổi mạn tính còn những trường hơp khác như hen,
-        // cho nên biến này được sử dụng để chỉ chung các bệnh phổi, sẽ có những yếu tố nguy cơ sử
-        // dụng 1 hoặc vài bệnh riêng lẻ (ví dụ, H. influenzae chỉ sử dụng biến COPD)
-        {
-            "id": "00000000-0000-0000-0000-100000000041",
-            "name": "Bệnh phổi mạn tính",
-            "code": "CHRONIC-LUNG",
-            "description": "Bệnh nhân có bị mắc bệnh phổi mạn tính không? Chú ý rằng, bệnh phổi mạn tính bao gồm COPD, ung thư phổi, xơ nang, giãn phế quản và nhiều trường hợp khác",
-            "valueType": "Boolean",
-            "canonicalUnit": null,
-            "isRequired": false,
-            "category": "Clinical"
-        },
-        {
-            "id": "00000000-0000-0000-0000-100000000042",
-            "name": "Ung thư phổi",
-            "code": "LUNG-CANCER",
-            "description": "Bệnh nhân có bị ung thư phổi không?",
-            "valueType": "Boolean",
-            "canonicalUnit": null,
-            "isRequired": false,
-            "category": "Clinical"
-        },
-        {
-            "id": "00000000-0000-0000-0000-100000000043",
-            "name": "Bệnh xơ nang",
-            "code": "CYSTIC-FIBROSIS",
-            "description": "Bệnh nhân có bị bệnh xơ nang không?",
-            "valueType": "Boolean",
-            "canonicalUnit": null,
-            "isRequired": false,
-            "category": "Clinical"
-        },
-        {
-            "id": "00000000-0000-0000-0000-100000000044",
-            "name": "Đái tháo đường",
-            "code": "DIABETES",
-            "description": "Bệnh nhân có bị đái tháo đường không?",
-            "valueType": "Boolean",
-            "canonicalUnit": null,
-            "isRequired": false,
-            "category": "Clinical"
-        },
-        {
-            "id": "00000000-0000-0000-0000-100000000045",
-            "name": "Nhiễm virus cúm (influenza)",
-            "code": "INFLUENZA",
-            "description": "Bệnh nhân có bị nhiễm virus influenza không?",
-            "valueType": "Boolean",
-            "canonicalUnit": null,
-            "isRequired": false,
-            "category": "Clinical"
-        },
-        {
-            "id": "00000000-0000-0000-0000-100000000046",
-            "name": "Nhiễm virus sởi",
-            "code": "MEASLES",
-            "description": "Bệnh nhân có bị nhiễm virus sởi không?",
-            "valueType": "Boolean",
-            "canonicalUnit": null,
-            "isRequired": false,
-            "category": "Clinical"
-        },
-        {
-            "id": "00000000-0000-0000-0000-100000000047",
-            "name": "Tiêm chích",
-            "code": "IV-DRUG-USE",
-            "description": "Bệnh nhân có từng tiêm chích không?",
-            "valueType": "Boolean",
-            "canonicalUnit": null,
-            "isRequired": false,
-            "category": "Clinical"
-        },
-        {
-            "id": "00000000-0000-0000-0000-100000000048",
-            "name": "Thuyên tắc huyết khối nhiễm trùng trong viêm nội tâm mạc nhiễm khuẩn.",
-            "code": "SEPTIC-THROMBOEMBOLISM",
-            "description": "Bệnh nhân có bị thuyên tắc huyết khối nhiễm trùng trong viêm nội tâm mạc nhiễm khuẩn không?",
-            "valueType": "Boolean",
-            "canonicalUnit": null,
-            "isRequired": false,
-            "category": "Clinical"
-        },
-        {
-            "id": "00000000-0000-0000-0000-100000000049",
-            "name": "Tiền sử nhiễm trùng ngoài da",
-            "code": "PRIOR-SKIN-INFECTION",
-            "description": "Bệnh nhân có tiền sử nhiễm trùng ngoài da không?",
-            "valueType": "Boolean",
-            "canonicalUnit": null,
-            "isRequired": false,
-            "category": "Clinical"
-        },
-        {
-            "id": "00000000-0000-0000-0000-100000000050",
-            "name": "Đặt catheter tĩnh mạch trung tâm",
-            "code": "CENTRAL-VENOUS-CATHETER-PLACEMENT",
-            "description": "Bệnh nhân có từng đặt catheter tĩnh mạch trung tâm không?",
-            "valueType": "Boolean",
-            "canonicalUnit": null,
-            "isRequired": false,
-            "category": "Clinical"
-        },
-        {
-            "id": "00000000-0000-0000-0000-100000000051",
-            "name": "Tiền sử nhiễm MRSA",
-            "code": "PRIOR-MRSA-INFECTION",
-            "description": "Bệnh nhân có tiền sử nhiễm MRSA không?",
-            "valueType": "Boolean",
-            "canonicalUnit": null,
-            "isRequired": false,
-            "category": "Clinical"
-        },
-        {
-            "id": "00000000-0000-0000-0000-100000000052",
-            "name": "Nằm viện và dùng kháng sinh tĩnh mạch trong vòng 90 ngày",
-            "code": "HOSPITALIZATION-90D",
-            "description": "Bệnh nhân có từng nằm viện và dùng kháng sinh tĩnh mạch trong vòng 90 ngày không?",
-            "valueType": "Boolean",
-            "canonicalUnit": null,
-            "isRequired": false,
-            "category": "Clinical"
-        },
-        {
-            "id": "00000000-0000-0000-0000-100000000053",
-            "name": "Điều trị tại khoa điều trị tích cực",
-            "code": "ICU-STAY",
-            "description": "Bệnh nhân có từng nằm ICU gần đây không?",
-            "valueType": "Boolean",
-            "canonicalUnit": null,
-            "isRequired": false,
-            "category": "Clinical"
-        },
-        {
-            "id": "00000000-0000-0000-0000-100000000054",
-            "name": "Đặt nội khí quản",
-            "code": "INTUBATION",
-            "description": "Bệnh nhân có từng đặt nội khí quản gần đây không?",
-            "valueType": "Boolean",
-            "canonicalUnit": null,
-            "isRequired": false,
-            "category": "Clinical"
-        },
-        {
-            "id": "00000000-0000-0000-0000-100000000055",
-            "name": "Nguy cơ hít sặc dịch từ đường tiêu hóa / viêm phổi hít",
-            "code": "ASPIRATION-RISKS",
-            "description": "Bệnh nhân có nguy cơ hít sặc dịch từ đường tiêu hóa không?",
-            "valueType": "Boolean",
-            "canonicalUnit": null,
-            "isRequired": false,
-            "category": "Clinical"
-        },
-        {
-            "id": "00000000-0000-0000-0000-100000000056",
-            "name": "Sử dụng kháng sinh trước đó",
-            "code": "PRIOR-ANTIBIOTIC-USE",
-            "description": "Bệnh nhân có từng sử dụng kháng sinh gần đây không?",
-            "valueType": "Boolean",
-            "canonicalUnit": null,
-            "isRequired": false,
-            "category": "Clinical"
-        },
-        // Người già thì chưa chắc đã yếu, nên đây sẽ là một biến riêng thay vì tính toán từ biến AGE.
-        // Tuy nhiên, trong code sẽ có validation giữa 2 biến này (theo tiêu chuẩn WHO, AGE >= 60 sẽ
-        // được xem là người già)
-        // Trong toán tử boolean, nó sẽ được diễn tả thành phép kéo theo (implication)
-        // WEAK-ELDERLY -> (AGE >= 60): người già yếu thì chắc chắn già, nhưng già thì chưa chắc yếu 
-        // Vì trong code không hỗ trợ phép kéo theo, và phép kéo theo có thể biễu diễn dưới dạng
-        // AND, OR, NOT, nên prerequisite của biến này sẽ là
-        // WEAK-ELDERLY -> (AGE >= 60) = Unary(WEAK-ELDERLY) OR (AGE >= 60)
-        {
-            "id": "00000000-0000-0000-0000-100000000057",
-            "name": "Người già yếu",
-            "code": "WEAK-ELDERLY",
-            "description": "Bệnh nhân có phải là người già yếu không?",
-            "valueType": "Boolean",
-            "canonicalUnit": null,
-            "prerequisite": {
-                "resultType": "Boolean",
-                "left": {
-                    "resultType": "Boolean",
-                    "operand": {
-                        "resultType": "Numeric",
-                        "variable": {
-                            "id": "00000000-0000-0000-0000-100000000057"
-                        }
-                    }
-                },
-                "right": {
-                    "resultType": "Boolean",
-                    "left": {
-                        "resultType": "Numeric",
-                        "variable": {
-                            "id": "00000000-0000-0000-0000-100000000001"
-                        }
-                    },
-                    "right": {
-                        "resultType": "Numeric",
-                        "constant": 60
-                    },
-                    "operator": "GTE"
-                },
-                "operator": "OR"
-            },
-            "isRequired": false,
-            "category": "Clinical"
-        },
-        {
-            "id": "00000000-0000-0000-0000-100000000058",
-            "name": "Giãn phế quản",
-            "code": "BRONCHIECTASIS",
-            "description": "Bệnh nhân có bị giãn phế quản không?",
-            "valueType": "Boolean",
-            "canonicalUnit": null,
-            "isRequired": false,
-            "category": "Clinical"
-        },
-        {
-            "id": "00000000-0000-0000-0000-100000000059",
-            "name": "Tiền sử nhiễm Pseudomonas aeruginosa",
-            "code": "PRIOR-PSEUDOMONAS",
-            "description": "Bệnh nhân có tiền sử nhiễm Pseudomonas aeruginosa không?",
-            "valueType": "Boolean",
-            "canonicalUnit": null,
-            "isRequired": false,
-            "category": "Clinical"
-        },
-        {
-            "id": "00000000-0000-0000-0000-100000000060",
-            "name": "Bệnh nội khoa nặng.",
-            "code": "SEVERE-INTERNAL-DISEASE",
-            "description": "Bệnh nhân có bị mắc các bệnh nội khoa nặng không?",
-            "valueType": "Boolean",
-            "canonicalUnit": null,
-            "isRequired": false,
-            "category": "Clinical"
-        },
-        {
             "id": "00000000-0000-0000-0000-100000000061",
-            "name": "Nhồi máu phổi",
-            "code": "PULMONARY-INFARCTION",
-            "description": "Bệnh nhân có bị nhồi máu phổi không?",
+            "name": "Vi áp xe trên Xquang/CT ngực",
+            "code": "ABSCESS-ON-CHEST-X-RAY",
+            "description": "Bệnh nhân có vi áp xe trên Xquang/CT ngực không?",
             "valueType": "Boolean",
             "canonicalUnit": null,
             "isRequired": false,
-            "category": "Clinical"
-        },
-        {
-            "id": "00000000-0000-0000-0000-100000000062",
-            "name": "Nhiễm khuẩn kỵ khí vùng hầu họng.",
-            "code": "OROPHARYNGEAL-ANAEROBIC",
-            "description": "Bệnh nhân có bị nhiễm khuẩn kỵ khí vùng hầu họng không?",
-            "valueType": "Boolean",
-            "canonicalUnit": null,
-            "isRequired": false,
-            "category": "Clinical"
-        },
-        // Tương tự với trường hợp người già yếu:
-        // PREGNANT-OR-LACTATING -> (GENDER = FEMALE) = Unary(PREGNANT-OR-LACTATING) OR (GENDER = FEMALE)
-        {
-            "id": "00000000-0000-0000-0000-100000000063",
-            "name": "Phụ nữ có thai hoặc đang cho con bú",
-            "code": "PREGNANT-OR-LACTATING",
-            "description": "Bệnh nhân có đang có thai hoặc đang cho con bú không?",
-            "valueType": "Boolean",
-            "canonicalUnit": null,
-            "prerequisite": {
-                "resultType": "Boolean",
-                "left": {
-                    "resultType": "Boolean",
-                    "operand": {
-                        "resultType": "Boolean",
-                        "variable": {
-                            "id": "00000000-0000-0000-0000-100000000063"
-                        }
-                    }
-                },
-                "right": {
-                    "resultType": "Boolean",
-                    "left": {
-                        "resultType": "String",
-                        "variable": {
-                            "id": "00000000-0000-0000-0000-100000000002"
-                        }
-                    },
-                    "right": {
-                        "resultType": "String",
-                        "constant": "FEMALE"
-                    },
-                    "operator": "EQ"
-                },
-                "operator": "OR"
-            },
-            "isRequired": false,
-            "category": "Clinical"
+            "category": "Paraclinical"
         }
     ],
     // Đối với các tiêu chí sử dụng một biến boolean, nếu nhiều thang đo/yếu tố sử dụng chung,
@@ -903,7 +887,7 @@
     // tính điểm nếu bệnh nhân không có triệu chứng cả), thì giá trị numeric hay categorical có
     // nhiều khoảng giá trị, nên việc tách ra sẽ tránh xảy ra lỗi nếu một thang đo nào đó giá trị
     "criteria": [
-        // Tiêu chí tuổi CURB-65
+        // CURB-65
         {
             "id": "00000000-0000-0000-0000-400000000001",
             "name": "Tuổi >= 65",
@@ -941,11 +925,11 @@
                 "operator": "GT"
             }
         },
-        // Yếu tố nguy cơ nhiễm khuẩn của Acinetobacter baumannii (tuổi già).
+        // Yếu tố nguy cơ nhiễm khuẩn của Haemophilus influenzae
         // Theo định nghĩa của WHO, tuổi già khi AGE >= 60
         {
             "id": "00000000-0000-0000-0000-400000000003",
-            "name": "Tuổi >= 60",
+            "name": "Tuổi cao",
             "formula": {
                 "resultType": "Boolean",
                 "left": {
@@ -961,9 +945,29 @@
                 "operator": "GTE"
             }
         },
-        // Yếu tố nguy cơ nhiễm khuẩn Streptococcus pneumoniae và yếu tố giới tính - tuổi của PSI
+        // Yếu tố nguy cơ nhiễm khuẩn của Acinetobacter baumannii (tuổi già).
+        // Theo định nghĩa của WHO, tuổi già khi AGE >= 60
         {
             "id": "00000000-0000-0000-0000-400000000004",
+            "name": "Tuổi già",
+            "formula": {
+                "resultType": "Boolean",
+                "left": {
+                    "resultType": "Numeric",
+                    "variable": {
+                        "id": "00000000-0000-0000-0000-100000000001"
+                    }
+                },
+                "right": {
+                    "resultType": "Numeric",
+                    "constant": 60
+                },
+                "operator": "GTE"
+            }
+        },
+        // PSI: tiêu chí giới tính
+        {
+            "id": "00000000-0000-0000-0000-400000000005",
             "name": "Giới tính nam",
             "formula": {
                 "resultType": "Boolean",
@@ -980,66 +984,230 @@
                 "operator": "EQ"
             }
         },
-        // Tiêu chí nhịp thở của CURB-65
-        {
-            "id": "00000000-0000-0000-0000-400000000005",
-            "name": "Nhịp thở >= 30",
-            "formula": {
-                "resultType": "Boolean",
-                "left": {
-                    "resultType": "Numeric",
-                    "variable": {
-                        "id": "00000000-0000-0000-0000-100000000005"
-                    }
-                },
-                "right": {
-                    "resultType": "Numeric",
-                    "constant": 30
-                },
-                "operator": "GTE"
-            }
-        },
-        // Tiêu chí nhịp thở của PSI
+        // PSI: tiêu chí giới tính
         {
             "id": "00000000-0000-0000-0000-400000000006",
-            "name": "Nhịp thở >= 30",
+            "name": "Giới tính nữ",
             "formula": {
                 "resultType": "Boolean",
                 "left": {
-                    "resultType": "Numeric",
+                    "resultType": "String",
                     "variable": {
-                        "id": "00000000-0000-0000-0000-100000000005"
+                        "id": "00000000-0000-0000-0000-100000000002"
                     }
                 },
                 "right": {
-                    "resultType": "Numeric",
-                    "constant": 30
+                    "resultType": "String",
+                    "constant": "FEMALE"
                 },
-                "operator": "GTE"
+                "operator": "EQ"
             }
         },
-        // Tiêu chí nhịp thở của IDSA/ATS
+        // Yếu tố nguy cơ nhiễm khuẩn của Streptococcus pneumoniae
         {
             "id": "00000000-0000-0000-0000-400000000007",
-            "name": "Nhịp thở >= 30",
+            "name": "Giới tính nam",
+            "formula": {
+                "resultType": "Boolean",
+                "left": {
+                    "resultType": "String",
+                    "variable": {
+                        "id": "00000000-0000-0000-0000-100000000002"
+                    }
+                },
+                "right": {
+                    "resultType": "String",
+                    "constant": "MALE"
+                },
+                "operator": "EQ"
+            }
+        },
+        // Yếu tố nguy cơ nhiễm khuẩn của Streptococcus pneumoniae: suy dinh dưỡng
+        // Theo WHO, suy dinh dưỡng khi BMI < 18.5 kg/m2
+        // Since we store height in centimeter, we need to divide the height^2 to 10000
+        {
+            "id": "00000000-0000-0000-0000-400000000008",
+            "name": "Suy dinh dưỡng",
             "formula": {
                 "resultType": "Boolean",
                 "left": {
                     "resultType": "Numeric",
+                    "left": {
+                        "resultType": "Numeric",
+                        "variable": {
+                            "id": "00000000-0000-0000-0000-100000000003"
+                        }
+                    },
+                    "right": {
+                        "resultType": "Numeric",
+                        "left": {
+                            "resultType": "Numeric",
+                            "left": {
+                                "resultType": "Numeric",
+                                "variable": {
+                                    "id": "00000000-0000-0000-0000-100000000004"
+                                }
+                            },
+                            "right": {
+                                "resultType": "Numeric",
+                                "variable": {
+                                    "id": "00000000-0000-0000-0000-100000000004"
+                                }
+                            },
+                            "operator": "MUL"
+                        },
+                        "right": {
+                            "resultType": "Numeric",
+                            "constant": 10000
+                        },
+                        "operator": "DIV"
+                    },
+                    "operator": "DIV"
+                },
+                "right": {
+                    "resultType": "Numeric",
+                    "constant": 18.5
+                },
+                "operator": "LT"
+            }
+        },
+        // Yếu tố nguy cơ nhiễm khuẩn của Streptococcus pneumoniae
+        {
+            "id": "00000000-0000-0000-0000-400000000009",
+            "name": "Điều trị nhóm beta lactam/quinolon/macrolid trong 6 tháng",
+            "formula": {
+                "resultType": "Boolean",
+                "left": {
+                    "resultType": "Boolean",
                     "variable": {
                         "id": "00000000-0000-0000-0000-100000000005"
                     }
                 },
                 "right": {
+                    "resultType": "Boolean",
+                    "constant": true
+                },
+                "operator": "EQ"
+            }
+        },
+        // Yếu tố nguy cơ nhiễm khuẩn của MRSA 
+        {
+            "id": "00000000-0000-0000-0000-400000000010",
+            "name": "Tiền sử nhiễm trùng ngoài da",
+            "formula": {
+                "resultType": "Boolean",
+                "left": {
+                    "resultType": "Boolean",
+                    "variable": {
+                        "id": "00000000-0000-0000-0000-100000000007"
+                    }
+                },
+                "right": {
+                    "resultType": "Boolean",
+                    "constant": true
+                },
+                "operator": "EQ"
+            }
+        },
+        // Yếu tố nguy cơ nhiễm khuẩn của MRSA
+        {
+            "id": "00000000-0000-0000-0000-400000000011",
+            "name": "Tiền sử nhiễm MRSA",
+            "formula": {
+                "resultType": "Boolean",
+                "left": {
+                    "resultType": "Boolean",
+                    "variable": {
+                        "id": "00000000-0000-0000-0000-100000000008"
+                    }
+                },
+                "right": {
+                    "resultType": "Boolean",
+                    "constant": true
+                },
+                "operator": "EQ"
+            }
+        },
+        // Yếu tố nguy cơ nhiễm khuẩn của Pseudomonas aeruginosa
+        {
+            "id": "00000000-0000-0000-0000-400000000012",
+            "name": "Tiền sử nhiễm Pseudomonas aeruginosa",
+            "formula": {
+                "resultType": "Boolean",
+                "left": {
+                    "resultType": "Boolean",
+                    "variable": {
+                        "id": "00000000-0000-0000-0000-100000000009"
+                    }
+                },
+                "right": {
+                    "resultType": "Boolean",
+                    "constant": true
+                },
+                "operator": "EQ"
+            }
+        },
+        // Yếu tố nguy cơ nhiễm khuẩn của Streptococcus pneumoniae,
+        // MRSA, Klebsiella, Pseudomonas
+        {
+            "id": "00000000-0000-0000-0000-400000000013",
+            "name": "Nằm viện và sử dụng kháng sinh tĩnh mạch trong vòng 90 ngày",
+            "formula": {
+                "resultType": "Boolean",
+                "left": {
+                    "resultType": "Boolean",
+                    "variable": {
+                        "id": "00000000-0000-0000-0000-100000000010"
+                    }
+                },
+                "right": {
+                    "resultType": "Boolean",
+                    "constant": true
+                },
+                "operator": "EQ"
+            }
+        },
+        // Yếu tố nguy cơ nhiễm khuẩn của Pseudomonas aeruginosa
+        {
+            "id": "00000000-0000-0000-0000-400000000014",
+            "name": "Bệnh phổi cấu trúc hoặc bệnh phổi tắc nghẽn mạn tính nặng (FEV1 < 30%)",
+            "formula": {
+                "resultType": "Boolean",
+                "left": {
+                    "resultType": "Boolean",
+                    "variable": {
+                        "id": "00000000-0000-0000-0000-100000000062"
+                    }
+                },
+                "right": {
+                    "resultType": "Boolean",
+                    "constant": true
+                },
+                "operator": "EQ"
+            }
+        },
+        // PSI
+        {
+            "id": "00000000-0000-0000-0000-400000000015",
+            "name": "Mạch đập >= 125 lần/phút",
+            "formula": {
+                "resultType": "Boolean",
+                "left": {
                     "resultType": "Numeric",
-                    "constant": 30
+                    "variable": {
+                        "id": "00000000-0000-0000-0000-100000000011"
+                    }
+                },
+                "right": {
+                    "resultType": "Numeric",
+                    "constant": 125
                 },
                 "operator": "GTE"
             }
         },
         // Tiêu chí huyết áp của CURB-65
         {
-            "id": "00000000-0000-0000-0000-400000000008",
+            "id": "00000000-0000-0000-0000-400000000016",
             "name": "Huyết áp tâm thu < 90 mmHg hoặc huyết áp tâm trương <= 60 mmHg",
             "formula": {
                 "resultType": "Boolean",
@@ -1048,7 +1216,7 @@
                     "left": {
                         "resultType": "Numeric",
                         "variable": {
-                            "id": "00000000-0000-0000-0000-100000000006"
+                            "id": "00000000-0000-0000-0000-100000000012"
                         }
                     },
                     "right": {
@@ -1062,7 +1230,7 @@
                     "left": {
                         "resultType": "Numeric",
                         "variable": {
-                            "id": "00000000-0000-0000-0000-100000000007"
+                            "id": "00000000-0000-0000-0000-100000000013"
                         }
                     },
                     "right": {
@@ -1076,14 +1244,14 @@
         },
         // Tiêu chí huyết áp của PSI
         {
-            "id": "00000000-0000-0000-0000-400000000009",
+            "id": "00000000-0000-0000-0000-400000000017",
             "name": "Huyết áp tâm thu < 90 mmHg",
             "formula": {
                 "resultType": "Boolean",
                 "left": {
                     "resultType": "Numeric",
                     "variable": {
-                        "id": "00000000-0000-0000-0000-100000000006"
+                        "id": "00000000-0000-0000-0000-100000000012"
                     }
                 },
                 "right": {
@@ -1095,7 +1263,7 @@
         },
         // Tiêu chí nhiệt độ cơ thể PSI
         {
-            "id": "00000000-0000-0000-0000-400000000010",
+            "id": "00000000-0000-0000-0000-400000000018",
             "name": "Thân nhiệt < 35°C hoặc ≥ 40°C",
             "formula": {
                 "resultType": "Boolean",
@@ -1104,7 +1272,7 @@
                     "left": {
                         "resultType": "Numeric",
                         "variable": {
-                            "id": "00000000-0000-0000-0000-100000000008"
+                            "id": "00000000-0000-0000-0000-100000000014"
                         }
                     },
                     "right": {
@@ -1118,7 +1286,7 @@
                     "left": {
                         "resultType": "Numeric",
                         "variable": {
-                            "id": "00000000-0000-0000-0000-100000000008"
+                            "id": "00000000-0000-0000-0000-100000000014"
                         }
                     },
                     "right": {
@@ -1132,14 +1300,14 @@
         },
         // Tiêu chí thân nhiệt của IDSA/ATS
         {
-            "id": "00000000-0000-0000-0000-400000000011",
+            "id": "00000000-0000-0000-0000-400000000019",
             "name": "Thân nhiệt < 36°C",
             "formula": {
                 "resultType": "Boolean",
                 "left": {
                     "resultType": "Numeric",
                     "variable": {
-                        "id": "00000000-0000-0000-0000-100000000008"
+                        "id": "00000000-0000-0000-0000-100000000014"
                     }
                 },
                 "right": {
@@ -1149,45 +1317,17 @@
                 "operator": "LT"
             }
         },
-        // Tiêu chí urea của CURB-65
+        // Tiêu chí nhịp thở của CURB-65
         {
-            "id": "00000000-0000-0000-0000-400000000012",
-            "name": "Ure > 7 mmol/L",
+            "id": "00000000-0000-0000-0000-400000000020",
+            "name": "Nhịp thở >= 30",
             "formula": {
                 "resultType": "Boolean",
                 "left": {
                     "resultType": "Numeric",
                     "variable": {
-                        "id": "00000000-0000-0000-0000-100000000009"
+                        "id": "00000000-0000-0000-0000-100000000015"
                     }
-                },
-                "right": {
-                    "resultType": "Numeric",
-                    "constant": 7
-                },
-                "operator": "GT"
-            }
-        },
-        // Tiêu chí urea của PSI (công thức chuyển Ure sang BUN: BUN = Ure * 2.8)
-        // https://hscc.vn/tools.asp?id=bantin&idnhom=6&idtin=1265
-        {
-            "id": "00000000-0000-0000-0000-400000000013",
-            "name": "BUN >= 30 mg/dL",
-            "formula": {
-                "resultType": "Boolean",
-                "left": {
-                    "resultType": "Numeric",
-                    "left": {
-                        "resultType": "Numeric",
-                        "variable": {
-                            "id": "00000000-0000-0000-0000-100000000009"
-                        }
-                    },
-                    "right": {
-                        "resultType": "Numeric",
-                        "constant": 2.8
-                    },
-                    "operator": "MUL"
                 },
                 "right": {
                     "resultType": "Numeric",
@@ -1196,74 +1336,67 @@
                 "operator": "GTE"
             }
         },
-        // Tiêu chí urea của IDSA/ATS
+        // Tiêu chí nhịp thở của PSI
         {
-            "id": "00000000-0000-0000-0000-400000000014",
-            "name": "BUN >= 20 mg/dL",
+            "id": "00000000-0000-0000-0000-400000000021",
+            "name": "Nhịp thở >= 30",
             "formula": {
                 "resultType": "Boolean",
                 "left": {
                     "resultType": "Numeric",
-                    "left": {
-                        "resultType": "Numeric",
-                        "variable": {
-                            "id": "00000000-0000-0000-0000-100000000009"
-                        }
-                    },
-                    "right": {
-                        "resultType": "Numeric",
-                        "constant": 2.8
-                    },
-                    "operator": "MUL"
+                    "variable": {
+                        "id": "00000000-0000-0000-0000-100000000015"
+                    }
                 },
                 "right": {
                     "resultType": "Numeric",
-                    "constant": 20
+                    "constant": 30
                 },
                 "operator": "GTE"
             }
         },
-        // Tiêu chí giảm bạch cầu của IDSA/ATS
+        // Tiêu chí nhịp thở của IDSA/ATS
         {
-            "id": "00000000-0000-0000-0000-400000000015",
-            "name": "Bạch cầu máu < 4000/mm3",
+            "id": "00000000-0000-0000-0000-400000000022",
+            "name": "Nhịp thở >= 30 hoặc thở máy không xâm lấn",
             "formula": {
                 "resultType": "Boolean",
                 "left": {
                     "resultType": "Boolean",
-                    "variable": {
-                        "id": "00000000-0000-0000-0000-100000000010"
-                    }
+                    "left": {
+                        "resultType": "Numeric",
+                        "variable": {
+                            "id": "00000000-0000-0000-0000-100000000015"
+                        }
+                    },
+                    "right": {
+                        "resultType": "Numeric",
+                        "constant": 30
+                    },
+                    "operator": "GTE"
                 },
                 "right": {
-                    "resultType": "Numeric",
-                    "constant": 4000
-                },
-                "operator": "LT"
-            }
-        },
-        // Tiêu chí giảm tiểu cầu của IDSA/ATS
-        {
-            "id": "00000000-0000-0000-0000-400000000016",
-            "name": "Giảm tiểu cầu < 100.000/mm3",
-            "formula": {
-                "resultType": "Boolean",
-                "left": {
                     "resultType": "Boolean",
-                    "variable": {
-                        "id": "00000000-0000-0000-0000-100000000011"
-                    }
+                    "left": {
+                        "resultType": "Boolean",
+                        "variable": {
+                            "id": "00000000-0000-0000-0000-100000000023"
+                        }
+                    },
+                    "right": {
+                        "resultType": "Boolean",
+                        "constant": true
+                    },
+                    "operator": "EQ"
                 },
-                "right": {
-                    "resultType": "Numeric",
-                    "constant": 100000
-                },
-                "operator": "LT"
+                "operator": "OR"
             }
         },
         // Tiêu chí PaO2/FiO2 của IDSA/ATS
+        // Bởi vì FiO2 đang được lưu dưới dạng %, mà công thức thì
+        // lại yêu cầu dạng thập phân, ta phải nhân kết quả cuối cho 100
         {
-            "id": "00000000-0000-0000-0000-400000000017",
+            "id": "00000000-0000-0000-0000-400000000023",
             "name": "PaO2/FiO2 <= 250",
             "formula": {
                 "resultType": "Boolean",
@@ -1271,17 +1404,25 @@
                     "resultType": "Numeric",
                     "left": {
                         "resultType": "Numeric",
-                        "variable": {
-                            "id": "00000000-0000-0000-0000-100000000012"
-                        }
+                        "left": {
+                            "resultType": "Numeric",
+                            "variable": {
+                                "id": "00000000-0000-0000-0000-100000000018"
+                            }
+                        },
+                        "right": {
+                            "resultType": "Numeric",
+                            "variable": {
+                                "id": "00000000-0000-0000-0000-100000000016"
+                            }
+                        },
+                        "operator": "DIV"
                     },
                     "right": {
                         "resultType": "Numeric",
-                        "variable": {
-                            "id": "00000000-0000-0000-0000-100000000013"
-                        }
+                        "constant": 100
                     },
-                    "operator": "DIV"
+                    "operator": "MUL"
                 },
                 "right": {
                     "resultType": "Numeric",
@@ -1292,7 +1433,7 @@
         },
         // Tiêu chí PaO2 hoặc SpO2 của PSI
         {
-            "id": "00000000-0000-0000-0000-400000000018",
+            "id": "00000000-0000-0000-0000-400000000024",
             "name": "PaO2 < 60 mmHg hoặc SpO2 < 90%",
             "formula": {
                 "resultType": "Boolean",
@@ -1301,7 +1442,7 @@
                     "left": {
                         "resultType": "Numeric",
                         "variable": {
-                            "id": "00000000-0000-0000-0000-100000000012"
+                            "id": "00000000-0000-0000-0000-100000000018"
                         }
                     },
                     "right": {
@@ -1315,7 +1456,7 @@
                     "left": {
                         "resultType": "Numeric",
                         "variable": {
-                            "id": "00000000-0000-0000-0000-100000000014"
+                            "id": "00000000-0000-0000-0000-100000000017"
                         }
                     },
                     "right": {
@@ -1327,105 +1468,30 @@
                 "operator": "OR"
             }
         },
-        // Tiêu chí mạch đập của PSI
+        // Tiêu chí tri giác xài chung cho cả CURB-65, PSI và IDSA/ATS
         {
-            "id": "00000000-0000-0000-0000-400000000019",
-            "name": "Mạch đập >= 125 lần/phút",
+            "id": "00000000-0000-0000-0000-400000000025",
+            "name": "Có dấu hiệu suy giảm tri giác mới (thay đổi tri giác)",
             "formula": {
                 "resultType": "Boolean",
                 "left": {
-                    "resultType": "Numeric",
-                    "variable": {
-                        "id": "00000000-0000-0000-0000-100000000015"
-                    }
-                },
-                "right": {
-                    "resultType": "Numeric",
-                    "constant": 125
-                },
-                "operator": "GTE"
-            }
-        },
-        // Tiêu chí pH của PSI
-        {
-            "id": "00000000-0000-0000-0000-400000000020",
-            "name": "pH < 7.35",
-            "formula": {
-                "resultType": "Boolean",
-                "left": {
-                    "resultType": "Numeric",
-                    "variable": {
-                        "id": "00000000-0000-0000-0000-100000000016"
-                    }
-                },
-                "right": {
-                    "resultType": "Numeric",
-                    "constant": 7.35
-                },
-                "operator": "LT"
-            }
-        },
-        // Tiêu chí hematocrit của PSI
-        {
-            "id": "00000000-0000-0000-0000-400000000021",
-            "name": "Hematocrit < 30%",
-            "formula": {
-                "resultType": "Boolean",
-                "left": {
-                    "resultType": "Numeric",
-                    "variable": {
-                        "id": "00000000-0000-0000-0000-100000000017"
-                    }
-                },
-                "right": {
-                    "resultType": "Numeric",
-                    "constant": 30
-                },
-                "operator": "LT"
-            }
-        },
-        // Tiêu chí Na⁺ máu của PSI
-        {
-            "id": "00000000-0000-0000-0000-400000000022",
-            "name": "Na⁺ máu < 130 mmol/L",
-            "formula": {
-                "resultType": "Boolean",
-                "left": {
-                    "resultType": "Numeric",
-                    "variable": {
-                        "id": "00000000-0000-0000-0000-100000000018"
-                    }
-                },
-                "right": {
-                    "resultType": "Numeric",
-                    "constant": 130
-                },
-                "operator": "LT"
-            }
-        },
-        // Tiêu chí đường máu của PSI
-        {
-            "id": "00000000-0000-0000-0000-400000000023",
-            "name": "Đường máu >= 250 mg/dL",
-            "formula": {
-                "resultType": "Boolean",
-                "left": {
-                    "resultType": "Numeric",
+                    "resultType": "Boolean",
                     "variable": {
                         "id": "00000000-0000-0000-0000-100000000019"
                     }
                 },
                 "right": {
-                    "resultType": "Numeric",
-                    "constant": 250
+                    "resultType": "Boolean",
+                    "constant": true
                 },
-                "operator": "GTE"
+                "operator": "EQ"
             }
         },
-        // Tiêu chí tri giác xài chung cho cả CURB-65, PSI và IDSA/ATS
+        // Tiêu chí của IDSA/ATS: thở máy xâm lấn (một số tài liệu 
+        // gọi là thông khí cơ học)
         {
-            "id": "00000000-0000-0000-0000-400000000024",
-            "name": "Có dấu hiệu suy giảm tri giác mới (thay đổi tri giác)",
+            "id": "00000000-0000-0000-0000-400000000026",
+            "name": "Thở máy xâm lấn",
             "formula": {
                 "resultType": "Boolean",
                 "left": {
@@ -1441,10 +1507,10 @@
                 "operator": "EQ"
             }
         },
-        // Tiêu chí sống ở nhà dưỡng lão/điều dưỡng của PSI
+        // Yếu tố nguy cơ nhiễm khuẩn Klebsiella pneumoniae
         {
-            "id": "00000000-0000-0000-0000-400000000025",
-            "name": "Sống ở nhà dưỡng lão/điều dưỡng",
+            "id": "00000000-0000-0000-0000-400000000027",
+            "name": "Đặt nội khí quản",
             "formula": {
                 "resultType": "Boolean",
                 "left": {
@@ -1460,10 +1526,10 @@
                 "operator": "EQ"
             }
         },
-        // Tiêu chí bệnh ung thư (PSI), bệnh ác tính (yếu tố nguy cơ của H. influenzae)
+        // Yếu tố nguy cơ nhiễm khuẩn Pseudomonas aeruginosa
         {
-            "id": "00000000-0000-0000-0000-400000000026",
-            "name": "Bệnh ung thư (bệnh ác tính)",
+            "id": "00000000-0000-0000-0000-400000000028",
+            "name": "Mở khí quản",
             "formula": {
                 "resultType": "Boolean",
                 "left": {
@@ -1479,29 +1545,10 @@
                 "operator": "EQ"
             }
         },
-        // Tiêu chí bệnh gan (PSI), bệnh gan mạn (yếu tố nguy cơ của Streptococcus)
+        // Tiêu chí của IDSA/ATS
         {
-            "id": "00000000-0000-0000-0000-400000000027",
-            "name": "Bệnh gan (Bệnh gan mạn)",
-            "formula": {
-                "resultType": "Boolean",
-                "left": {
-                    "resultType": "Boolean",
-                    "variable": {
-                        "id": "00000000-0000-0000-0000-100000000023"
-                    }
-                },
-                "right": {
-                    "resultType": "Boolean",
-                    "constant": true
-                },
-                "operator": "EQ"
-            }
-        },
-        // Tiêu chí suy tim ứ huyết (PSI và yếu tố nguy cơ nhiễm khuẩn Streptococcus)
-        {
-            "id": "00000000-0000-0000-0000-400000000028",
-            "name": "Suy tim ứ huyết",
+            "id": "00000000-0000-0000-0000-400000000029",
+            "name": "Sốc nhiễm khuẩn cần phải dùng thuốc vận mạch",
             "formula": {
                 "resultType": "Boolean",
                 "left": {
@@ -1517,10 +1564,10 @@
                 "operator": "EQ"
             }
         },
-        // Tiêu chí bệnh mạch máu não (chỉ PSI)
+        // Tiêu chí của IDSA/ATS
         {
-            "id": "00000000-0000-0000-0000-400000000029",
-            "name": "Bệnh mạch máu não",
+            "id": "00000000-0000-0000-0000-400000000030",
+            "name": "Hạ huyết áp cần phải bù dịch tích cực",
             "formula": {
                 "resultType": "Boolean",
                 "left": {
@@ -1536,49 +1583,29 @@
                 "operator": "EQ"
             }
         },
-        // Tiêu chí bệnh thận (chỉ PSI) = thận mạn OR bệnh thận (nói chung)
-        {
-            "id": "00000000-0000-0000-0000-400000000030",
-            "name": "Bệnh thận",
-            "formula": {
-                "resultType": "Boolean",
-                // Bệnh thận mạn
-                "left": {
-                    "resultType": "Boolean",
-                    "left": {
-                        "resultType": "Boolean",
-                        "variable": {
-                            "id": "00000000-0000-0000-0000-100000000034"
-                        }
-                    },
-                    "right": {
-                        "resultType": "Boolean",
-                        "constant": true
-                    },
-                    "operator": "EQ"
-                },
-                // Bệnh thận
-                "right": {
-                    "resultType": "Boolean",
-                    "left": {
-                        "resultType": "Boolean",
-                        "variable": {
-                            "id": "00000000-0000-0000-0000-100000000026"
-                        }
-                    },
-                    "right": {
-                        "resultType": "Boolean",
-                        "constant": true
-                    },
-                    "operator": "EQ"
-                },
-                "operator": "OR"
-            }
-        },
-        // Tiêu chí tràn dịch màn phổi (PSI)
+        // Yếu tố nguy cơ nhiễm khuẩn: bệnh nội khoa nặng
         {
             "id": "00000000-0000-0000-0000-400000000031",
-            "name": "Tràn dịch màng phổi",
+            "name": "Bệnh nội khoa nặng",
+            "formula": {
+                "resultType": "Boolean",
+                "left": {
+                    "resultType": "Boolean",
+                    "variable": {
+                        "id": "00000000-0000-0000-0000-100000000026"
+                    }
+                },
+                "right": {
+                    "resultType": "Boolean",
+                    "constant": true
+                },
+                "operator": "EQ"
+            }
+        },
+        // Tiêu chí sống ở nhà dưỡng lão/điều dưỡng của PSI
+        {
+            "id": "00000000-0000-0000-0000-400000000032",
+            "name": "Sống ở nhà dưỡng lão/điều dưỡng",
             "formula": {
                 "resultType": "Boolean",
                 "left": {
@@ -1594,10 +1621,10 @@
                 "operator": "EQ"
             }
         },
-        // Tiêu chí tổn thương thùy phổi trên X-quang (IDSA/ATS)
+        // Tiêu chí bệnh ung thư (PSI), bệnh ác tính (yếu tố nguy cơ của H. influenzae)
         {
-            "id": "00000000-0000-0000-0000-400000000032",
-            "name": "Tổn thương nhiều thùy phổi trên phim X-quang",
+            "id": "00000000-0000-0000-0000-400000000033",
+            "name": "Bệnh ung thư (bệnh ác tính)",
             "formula": {
                 "resultType": "Boolean",
                 "left": {
@@ -1613,10 +1640,10 @@
                 "operator": "EQ"
             }
         },
-        // Tiêu chí hạ huyết áp cần bù dịch tích cực (IDSA/ATS)
+        // Tiêu chí bệnh gan (PSI), bệnh gan mạn (yếu tố nguy cơ của Streptococcus)
         {
-            "id": "00000000-0000-0000-0000-400000000033",
-            "name": "Hạ huyết áp cần phải bù dịch tích cực",
+            "id": "00000000-0000-0000-0000-400000000034",
+            "name": "Bệnh gan (Bệnh gan mạn)",
             "formula": {
                 "resultType": "Boolean",
                 "left": {
@@ -1632,10 +1659,10 @@
                 "operator": "EQ"
             }
         },
-        // Tiêu chí suy hô hấp cần thông khí cơ học (IDSA/ATS)
+        // Tiêu chí suy tim ứ huyết (PSI và yếu tố nguy cơ nhiễm khuẩn Streptococcus)
         {
-            "id": "00000000-0000-0000-0000-400000000034",
-            "name": "Suy hô hấp cần phải thông khí cơ học",
+            "id": "00000000-0000-0000-0000-400000000035",
+            "name": "Suy tim ứ huyết",
             "formula": {
                 "resultType": "Boolean",
                 "left": {
@@ -1651,10 +1678,10 @@
                 "operator": "EQ"
             }
         },
-        // Tiêu chí sốc nhiễm khuẩn cần dùng thuốc vận mạch (IDSA/ATS)
+        // Tiêu chí bệnh mạch máu não (PSI)
         {
-            "id": "00000000-0000-0000-0000-400000000035",
-            "name": "Sốc nhiễm khuẩn cần phải dùng thuốc vận mạch",
+            "id": "00000000-0000-0000-0000-400000000036",
+            "name": "Bệnh mạch máu não",
             "formula": {
                 "resultType": "Boolean",
                 "left": {
@@ -1670,10 +1697,11 @@
                 "operator": "EQ"
             }
         },
-        // Yếu tố nguy cơ nhiễm khuẩn: nghiện rượu
+        // Yếu tố nguy cơ nhiễm khuẩn: bệnh thận mạn 
+        // (= suy thận và bệnh thận của PSI)
         {
-            "id": "00000000-0000-0000-0000-400000000036",
-            "name": "Nghiện rượu",
+            "id": "00000000-0000-0000-0000-400000000037",
+            "name": "Bệnh thận mạn (suy thận cấp)",
             "formula": {
                 "resultType": "Boolean",
                 "left": {
@@ -1689,29 +1717,88 @@
                 "operator": "EQ"
             }
         },
-        // Yếu tố nguy cơ nhiễm khuẩn: hút thuốc lá 
+        // Yếu tố nguy cơ nhiễm khuẩn: bệnh phổi mạn tính
+        // = COPD OR ung thư phổi OR xơ nang OR bệnh phổi mạn tính
         {
-            "id": "00000000-0000-0000-0000-400000000037",
-            "name": "Hút thuốc lá",
+            "id": "00000000-0000-0000-0000-400000000038",
+            "name": "Bệnh phổi mạn tính",
             "formula": {
                 "resultType": "Boolean",
                 "left": {
                     "resultType": "Boolean",
-                    "variable": {
-                        "id": "00000000-0000-0000-0000-100000000033"
-                    }
+                    // COPD
+                    "left": {
+                        "resultType": "Boolean",
+                        "left": {
+                            "resultType": "Boolean",
+                            "variable": {
+                                "id": "00000000-0000-0000-0000-100000000040"
+                            }
+                        },
+                        "right": {
+                            "resultType": "Boolean",
+                            "constant": true
+                        },
+                        "operator": "EQ"
+                    },
+                    // Ung thư phổi
+                    "right": {
+                        "resultType": "Boolean",
+                        "left": {
+                            "resultType": "Boolean",
+                            "variable": {
+                                "id": "00000000-0000-0000-0000-100000000041"
+                            }
+                        },
+                        "right": {
+                            "resultType": "Boolean",
+                            "constant": true
+                        },
+                        "operator": "EQ"
+                    },
+                    "operator": "OR"
                 },
                 "right": {
                     "resultType": "Boolean",
-                    "constant": true
+                    // Xơ nang
+                    "left": {
+                        "resultType": "Boolean",
+                        "left": {
+                            "resultType": "Boolean",
+                            "variable": {
+                                "id": "00000000-0000-0000-0000-100000000042"
+                            }
+                        },
+                        "right": {
+                            "resultType": "Boolean",
+                            "constant": true
+                        },
+                        "operator": "EQ"
+                    },
+                    // Bệnh phổi mạn tính
+                    "right": {
+                        "resultType": "Boolean",
+                        "left": {
+                            "resultType": "Boolean",
+                            "variable": {
+                                "id": "00000000-0000-0000-0000-100000000033"
+                            }
+                        },
+                        "right": {
+                            "resultType": "Boolean",
+                            "constant": true
+                        },
+                        "operator": "EQ"
+                    },
+                    "operator": "OR"
                 },
-                "operator": "EQ"
+                "operator": "OR"
             }
         },
-        // Yếu tố nguy cơ nhiễm khuẩn: bệnh thận mạn 
+        // Yếu tố nguy cơ nhiễm khuẩn: đái tháo đường
         {
-            "id": "00000000-0000-0000-0000-400000000038",
-            "name": "Bệnh thận mạn",
+            "id": "00000000-0000-0000-0000-400000000039",
+            "name": "Đái tháo đường",
             "formula": {
                 "resultType": "Boolean",
                 "left": {
@@ -1727,10 +1814,10 @@
                 "operator": "EQ"
             }
         },
-        // Yếu tố nguy cơ nhiễm khuẩn: suy dinh dưỡng
+        // Tiêu chí tràn dịch màn phổi (PSI), yếu tố nguy cơ của Klebsiella
         {
-            "id": "00000000-0000-0000-0000-400000000039",
-            "name": "Suy dinh dưỡng",
+            "id": "00000000-0000-0000-0000-400000000040",
+            "name": "Tràn dịch màng phổi",
             "formula": {
                 "resultType": "Boolean",
                 "left": {
@@ -1746,10 +1833,10 @@
                 "operator": "EQ"
             }
         },
-        // Yếu tố nguy cơ nhiễm khuẩn: mắc bệnh tâm thần 
+        // Yếu tố nguy cơ nhiễm khuẩn: nghiện rượu
         {
-            "id": "00000000-0000-0000-0000-400000000040",
-            "name": "Mắc bệnh tâm thần",
+            "id": "00000000-0000-0000-0000-400000000041",
+            "name": "Nghiện rượu",
             "formula": {
                 "resultType": "Boolean",
                 "left": {
@@ -1765,10 +1852,10 @@
                 "operator": "EQ"
             }
         },
-        // Yếu tố nguy cơ nhiễm khuẩn: bệnh phổi tắc nghẽn mãn tính
+        // Yếu tố nguy cơ nhiễm khuẩn: điều trị thuốc ức chế miễn dịch
         {
-            "id": "00000000-0000-0000-0000-400000000041",
-            "name": "Bệnh phổi tắc nghẽn mãn tính (COPD)",
+            "id": "00000000-0000-0000-0000-400000000042",
+            "name": "Điều trị thuốc ức chế miễn dịch",
             "formula": {
                 "resultType": "Boolean",
                 "left": {
@@ -1784,10 +1871,10 @@
                 "operator": "EQ"
             }
         },
-        // Yếu tố nguy cơ nhiễm khuẩn: suy giảm miễn dịch
+        // Yếu tố nguy cơ nhiễm khuẩn: hút thuốc lá 
         {
-            "id": "00000000-0000-0000-0000-400000000042",
-            "name": "Suy giảm miễn dịch",
+            "id": "00000000-0000-0000-0000-400000000043",
+            "name": "Hút thuốc lá",
             "formula": {
                 "resultType": "Boolean",
                 "left": {
@@ -1803,10 +1890,10 @@
                 "operator": "EQ"
             }
         },
-        // Yếu tố nguy cơ nhiễm khuẩn: nhiễm HIV
+        // Yếu tố nguy cơ nhiễm khuẩn: mắc bệnh tâm thần 
         {
-            "id": "00000000-0000-0000-0000-400000000043",
-            "name": "Nhiễm HIV",
+            "id": "00000000-0000-0000-0000-400000000044",
+            "name": "Mắc bệnh tâm thần",
             "formula": {
                 "resultType": "Boolean",
                 "left": {
@@ -1822,10 +1909,10 @@
                 "operator": "EQ"
             }
         },
-        // Yếu tố nguy cơ nhiễm khuẩn: ghép tạng
+        // Yếu tố nguy cơ nhiễm khuẩn: bệnh phổi tắc nghẽn mãn tính
         {
-            "id": "00000000-0000-0000-0000-400000000044",
-            "name": "Ghép tạng",
+            "id": "00000000-0000-0000-0000-400000000045",
+            "name": "Bệnh phổi tắc nghẽn mãn tính (COPD)",
             "formula": {
                 "resultType": "Boolean",
                 "left": {
@@ -1841,103 +1928,6 @@
                 "operator": "EQ"
             }
         },
-        // Yếu tố nguy cơ nhiễm khuẩn: bệnh phổi mạn tính
-        // = COPD OR ung thư phổi OR xơ nang OR giãn phế quản OR bệnh phổi mạn tính
-        {
-            "id": "00000000-0000-0000-0000-400000000045",
-            "name": "Bệnh phổi mạn tính",
-            "formula": {
-                "resultType": "Boolean",
-                "left": {
-                    "resultType": "Boolean",
-                    "left": {
-                        "resultType": "Boolean",
-                        // COPD
-                        "left": {
-                            "resultType": "Boolean",
-                            "left": {
-                                "resultType": "Boolean",
-                                "variable": {
-                                    "id": "00000000-0000-0000-0000-100000000037"
-                                }
-                            },
-                            "right": {
-                                "resultType": "Boolean",
-                                "constant": true
-                            },
-                            "operator": "EQ"
-                        },
-                        // Ung thư phổi
-                        "right": {
-                            "resultType": "Boolean",
-                            "left": {
-                                "resultType": "Boolean",
-                                "variable": {
-                                    "id": "00000000-0000-0000-0000-100000000042"
-                                }
-                            },
-                            "right": {
-                                "resultType": "Boolean",
-                                "constant": true
-                            },
-                            "operator": "EQ"
-                        },
-                        "operator": "OR"
-                    },
-                    "right": {
-                        "resultType": "Boolean",
-                        // Xơ nang
-                        "left": {
-                            "resultType": "Boolean",
-                            "left": {
-                                "resultType": "Boolean",
-                                "variable": {
-                                    "id": "00000000-0000-0000-0000-100000000043"
-                                }
-                            },
-                            "right": {
-                                "resultType": "Boolean",
-                                "constant": true
-                            },
-                            "operator": "EQ"
-                        },
-                        // Giãn phế quản
-                        "right": {
-                            "resultType": "Boolean",
-                            "left": {
-                                "resultType": "Boolean",
-                                "variable": {
-                                    "id": "00000000-0000-0000-0000-100000000058"
-                                }
-                            },
-                            "right": {
-                                "resultType": "Boolean",
-                                "constant": true
-                            },
-                            "operator": "EQ"
-                        },
-                        "operator": "OR"
-                    },
-                    "operator": "OR"
-                },
-                // Bệnh phổi mạn tính
-                "right": {
-                    "resultType": "Boolean",
-                    "left": {
-                        "resultType": "Boolean",
-                        "variable": {
-                            "id": "00000000-0000-0000-0000-100000000041"
-                        }
-                    },
-                    "right": {
-                        "resultType": "Boolean",
-                        "constant": true
-                    },
-                    "operator": "EQ"
-                },
-                "operator": "OR"
-            }
-        },
         // Yếu tố nguy cơ nhiễm khuẩn: ung thư phổi
         {
             "id": "00000000-0000-0000-0000-400000000046",
@@ -1947,7 +1937,7 @@
                 "left": {
                     "resultType": "Boolean",
                     "variable": {
-                        "id": "00000000-0000-0000-0000-100000000042"
+                        "id": "00000000-0000-0000-0000-100000000041"
                     }
                 },
                 "right": {
@@ -1966,6 +1956,25 @@
                 "left": {
                     "resultType": "Boolean",
                     "variable": {
+                        "id": "00000000-0000-0000-0000-100000000042"
+                    }
+                },
+                "right": {
+                    "resultType": "Boolean",
+                    "constant": true
+                },
+                "operator": "EQ"
+            }
+        },
+        // Yếu tố nguy cơ nhiễm khuẩn: suy giảm miễn dịch
+        {
+            "id": "00000000-0000-0000-0000-400000000048",
+            "name": "Suy giảm miễn dịch",
+            "formula": {
+                "resultType": "Boolean",
+                "left": {
+                    "resultType": "Boolean",
+                    "variable": {
                         "id": "00000000-0000-0000-0000-100000000043"
                     }
                 },
@@ -1976,10 +1985,10 @@
                 "operator": "EQ"
             }
         },
-        // Yếu tố nguy cơ nhiễm khuẩn: đái tháo đường
+        // Yếu tố nguy cơ nhiễm khuẩn: nhiễm HIV
         {
-            "id": "00000000-0000-0000-0000-400000000048",
-            "name": "Đái tháo đường",
+            "id": "00000000-0000-0000-0000-400000000049",
+            "name": "Nhiễm HIV",
             "formula": {
                 "resultType": "Boolean",
                 "left": {
@@ -1995,104 +2004,10 @@
                 "operator": "EQ"
             }
         },
-        // Yếu tố nguy cơ nhiễm khuẩn: nhiễm virus sởi
-        {
-            "id": "00000000-0000-0000-0000-400000000049",
-            "name": "Nhiễm virus: sởi",
-            "formula": {
-                "resultType": "Boolean",
-                "left": {
-                    "resultType": "Boolean",
-                    "variable": {
-                        "id": "00000000-0000-0000-0000-100000000046"
-                    }
-                },
-                "right": {
-                    "resultType": "Boolean",
-                    "constant": true
-                },
-                "operator": "EQ"
-            }
-        },
-        // Yếu tố nguy cơ nhiễm khuẩn: tiêm chích hoặc truyền tĩnh mạch huyết khối
+        // Yếu tố nguy cơ nhiễm khuẩn: nhiễm virus (influenza, sởi)
         {
             "id": "00000000-0000-0000-0000-400000000050",
-            "name": "Tiêm chích, truyền tĩnh mạch huyết khối nhiễm trùng trong viêm nội tâm mạc nhiễm khuẩn",
-            "formula": {
-                "resultType": "Boolean",
-                "left": {
-                    "resultType": "Boolean",
-                    "left": {
-                        "resultType": "Boolean",
-                        "variable": {
-                            "id": "00000000-0000-0000-0000-100000000047"
-                        }
-                    },
-                    "right": {
-                        "resultType": "Boolean",
-                        "constant": true
-                    },
-                    "operator": "EQ"
-                },
-                "right": {
-                    "resultType": "Boolean",
-                    "left": {
-                        "resultType": "Boolean",
-                        "variable": {
-                            "id": "00000000-0000-0000-0000-100000000048"
-                        }
-                    },
-                    "right": {
-                        "resultType": "Boolean",
-                        "constant": true
-                    },
-                    "operator": "EQ"
-                },
-                "operator": "OR"
-            }
-        },
-        // Yếu tố nguy cơ nhiễm khuẩn: tiền sử nhiễm trùng ngoài da
-        {
-            "id": "00000000-0000-0000-0000-400000000051",
-            "name": "Tiền sử nhiễm trùng ngoài da",
-            "formula": {
-                "resultType": "Boolean",
-                "left": {
-                    "resultType": "Boolean",
-                    "variable": {
-                        "id": "00000000-0000-0000-0000-100000000049"
-                    }
-                },
-                "right": {
-                    "resultType": "Boolean",
-                    "constant": true
-                },
-                "operator": "EQ"
-            }
-        },
-        // Yếu tố nguy cơ nhiễm khuẩn: đặt catheter tĩnh mạch trung tâm
-        {
-            "id": "00000000-0000-0000-0000-400000000052",
-            "name": "Đặt catheter tĩnh mạch trung tâm",
-            "formula": {
-                "resultType": "Boolean",
-                "left": {
-                    "resultType": "Boolean",
-                    "variable": {
-                        "id": "00000000-0000-0000-0000-100000000050"
-                    }
-                },
-                "right": {
-                    "resultType": "Boolean",
-                    "constant": true
-                },
-                "operator": "EQ"
-            }
-        },
-        // Yếu tố nguy cơ nhiễm khuẩn: nhiễm virus cúm (influenza)
-        {
-            "id": "00000000-0000-0000-0000-400000000053",
-            "name": "Nhiễm virus cúm",
+            "name": "Nhiễm virus (influenza, sởi)",
             "formula": {
                 "resultType": "Boolean",
                 "left": {
@@ -2108,16 +2023,16 @@
                 "operator": "EQ"
             }
         },
-        // Yếu tố nguy cơ nhiễm khuẩn: tiền sử nhiễm MRSA
+        // Yếu tố nguy cơ nhiễm khuẩn: ghép tạng
         {
-            "id": "00000000-0000-0000-0000-400000000054",
-            "name": "Tiền sử nhiễm MRSA",
+            "id": "00000000-0000-0000-0000-400000000051",
+            "name": "Ghép tạng",
             "formula": {
                 "resultType": "Boolean",
                 "left": {
                     "resultType": "Boolean",
                     "variable": {
-                        "id": "00000000-0000-0000-0000-100000000051"
+                        "id": "00000000-0000-0000-0000-100000000046"
                     }
                 },
                 "right": {
@@ -2127,66 +2042,180 @@
                 "operator": "EQ"
             }
         },
-        // Yếu tố nguy cơ nhiễm khuẩn: nằm viện và dùng kháng sinh tĩnh mạch trong vòng 90 ngày
+        // Yếu tố nguy cơ nhiễm khuẩn: tiêm chích, truyền tĩnh mạch huyết khối
+        // nhiễm trùng trong viêm nội tâm mạc nhiễm khuẩn
         {
-            "id": "00000000-0000-0000-0000-400000000055",
-            "name": "Nằm viện và dùng kháng sinh tĩnh mạch trong vòng 90 ngày",
+            "id": "00000000-0000-0000-0000-400000000052",
+            "name": "Tiêm chích, truyền tĩnh mạch huyết khối nhiễm trùng trong viêm nội tâm mạc nhiễm khuẩn",
             "formula": {
                 "resultType": "Boolean",
                 "left": {
                     "resultType": "Boolean",
+                    "variable": {
+                        "id": "00000000-0000-0000-0000-100000000047"
+                    }
+                },
+                "right": {
+                    "resultType": "Boolean",
+                    "constant": true
+                },
+                "operator": "EQ"
+            }
+        },
+        // Yếu tố nguy cơ nhiễm khuẩn: có ổ nhiễm trùng da/mô dưới da
+        {
+            "id": "00000000-0000-0000-0000-400000000053",
+            "name": "Có ổ nhiễm trùng da/mô dưới da",
+            "formula": {
+                "resultType": "Boolean",
+                "left": {
+                    "resultType": "Boolean",
+                    "variable": {
+                        "id": "00000000-0000-0000-0000-100000000048"
+                    }
+                },
+                "right": {
+                    "resultType": "Boolean",
+                    "constant": true
+                },
+                "operator": "EQ"
+            }
+        },
+        // Yếu tố nguy cơ nhiễm khuẩn: đặt catheter tĩnh mạch trung tâm
+        {
+            "id": "00000000-0000-0000-0000-400000000054",
+            "name": "Đặt catheter tĩnh mạch trung tâm",
+            "formula": {
+                "resultType": "Boolean",
+                "left": {
+                    "resultType": "Boolean",
+                    "variable": {
+                        "id": "00000000-0000-0000-0000-100000000049"
+                    }
+                },
+                "right": {
+                    "resultType": "Boolean",
+                    "constant": true
+                },
+                "operator": "EQ"
+            }
+        },
+        // Yếu tố nguy cơ nhiễm khuẩn: nguy cơ hít sặc dịch từ đường tiêu hóa
+        {
+            "id": "00000000-0000-0000-0000-400000000055",
+            "name": "Nguy cơ hít sặc dịch từ đường tiêu hóa (viêm phổi hít)",
+            "formula": {
+                "resultType": "Boolean",
+                "left": {
+                    "resultType": "Boolean",
+                    "variable": {
+                        "id": "00000000-0000-0000-0000-100000000050"
+                    }
+                },
+                "right": {
+                    "resultType": "Boolean",
+                    "constant": true
+                },
+                "operator": "EQ"
+            }
+        },
+        // Tiêu chí urea của CURB-65
+        {
+            "id": "00000000-0000-0000-0000-400000000056",
+            "name": "Ure > 7 mmol/L",
+            "formula": {
+                "resultType": "Boolean",
+                "left": {
+                    "resultType": "Numeric",
                     "variable": {
                         "id": "00000000-0000-0000-0000-100000000052"
                     }
                 },
                 "right": {
-                    "resultType": "Boolean",
-                    "constant": true
+                    "resultType": "Numeric",
+                    "constant": 7
                 },
-                "operator": "EQ"
+                "operator": "GT"
             }
         },
-        // Yếu tố nguy cơ nhiễm khuẩn: điều trị tại khoa điều trị tích cực hoặc đặt nội khí quản
+        // Tiêu chí urea của PSI (công thức chuyển Ure sang BUN: BUN = Ure * 2.8)
+        // https://hscc.vn/tools.asp?id=bantin&idnhom=6&idtin=1265
         {
-            "id": "00000000-0000-0000-0000-400000000056",
-            "name": "Điều trị tại khoa điều trị tích cực hoặc đặt nội khí quản",
+            "id": "00000000-0000-0000-0000-400000000057",
+            "name": "BUN >= 30 mg/dL",
+            "formula": {
+                "resultType": "Boolean",
+                "left": {
+                    "resultType": "Numeric",
+                    "left": {
+                        "resultType": "Numeric",
+                        "variable": {
+                            "id": "00000000-0000-0000-0000-100000000052"
+                        }
+                    },
+                    "right": {
+                        "resultType": "Numeric",
+                        "constant": 2.8
+                    },
+                    "operator": "MUL"
+                },
+                "right": {
+                    "resultType": "Numeric",
+                    "constant": 30
+                },
+                "operator": "GTE"
+            }
+        },
+        // Tiêu chí urea của IDSA/ATS
+        {
+            "id": "00000000-0000-0000-0000-400000000058",
+            "name": "BUN >= 20 mg/dL",
+            "formula": {
+                "resultType": "Boolean",
+                "left": {
+                    "resultType": "Numeric",
+                    "left": {
+                        "resultType": "Numeric",
+                        "variable": {
+                            "id": "00000000-0000-0000-0000-100000000052"
+                        }
+                    },
+                    "right": {
+                        "resultType": "Numeric",
+                        "constant": 2.8
+                    },
+                    "operator": "MUL"
+                },
+                "right": {
+                    "resultType": "Numeric",
+                    "constant": 20
+                },
+                "operator": "GTE"
+            }
+        },
+        // Tiêu chí giảm bạch cầu của IDSA/ATS
+        {
+            "id": "00000000-0000-0000-0000-400000000059",
+            "name": "Bạch cầu máu < 4000/mm3",
             "formula": {
                 "resultType": "Boolean",
                 "left": {
                     "resultType": "Boolean",
-                    "left": {
-                        "resultType": "Boolean",
-                        "variable": {
-                            "id": "00000000-0000-0000-0000-100000000053"
-                        }
-                    },
-                    "right": {
-                        "resultType": "Boolean",
-                        "constant": true
-                    },
-                    "operator": "EQ"
+                    "variable": {
+                        "id": "00000000-0000-0000-0000-100000000054"
+                    }
                 },
                 "right": {
-                    "resultType": "Boolean",
-                    "left": {
-                        "resultType": "Boolean",
-                        "variable": {
-                            "id": "00000000-0000-0000-0000-100000000054"
-                        }
-                    },
-                    "right": {
-                        "resultType": "Boolean",
-                        "constant": true
-                    },
-                    "operator": "EQ"
+                    "resultType": "Numeric",
+                    "constant": 4000
                 },
-                "operator": "OR"
+                "operator": "LT"
             }
         },
-        // Yếu tố nguy cơ nhiễm khuẩn: nguy cơ hít sặc dịch từ đường tiêu hóa
+        // Tiêu chí giảm tiểu cầu của IDSA/ATS
         {
-            "id": "00000000-0000-0000-0000-400000000057",
-            "name": "Nguy cơ hít sặc dịch từ đường tiêu hóa (viêm phổi hít)",
+            "id": "00000000-0000-0000-0000-400000000060",
+            "name": "Giảm tiểu cầu < 100.000/mm3",
             "formula": {
                 "resultType": "Boolean",
                 "left": {
@@ -2196,92 +2225,92 @@
                     }
                 },
                 "right": {
-                    "resultType": "Boolean",
-                    "constant": true
+                    "resultType": "Numeric",
+                    "constant": 100000
                 },
-                "operator": "EQ"
+                "operator": "LT"
             }
         },
-        // Yếu tố nguy cơ nhiễm khuẩn: sử dụng kháng sinh trước đó
+        // Tiêu chí pH của PSI
         {
-            "id": "00000000-0000-0000-0000-400000000058",
-            "name": "Sử dụng kháng sinh trước đó",
+            "id": "00000000-0000-0000-0000-400000000061",
+            "name": "pH < 7.35",
             "formula": {
                 "resultType": "Boolean",
                 "left": {
-                    "resultType": "Boolean",
+                    "resultType": "Numeric",
                     "variable": {
                         "id": "00000000-0000-0000-0000-100000000056"
                     }
                 },
                 "right": {
-                    "resultType": "Boolean",
-                    "constant": true
+                    "resultType": "Numeric",
+                    "constant": 7.35
                 },
-                "operator": "EQ"
+                "operator": "LT"
             }
         },
-        // Yếu tố nguy cơ nhiễm khuẩn: người già yếu
+        // Tiêu chí hematocrit của PSI
         {
-            "id": "00000000-0000-0000-0000-400000000059",
-            "name": "Người già yếu",
+            "id": "00000000-0000-0000-0000-400000000062",
+            "name": "Hematocrit < 30%",
             "formula": {
                 "resultType": "Boolean",
                 "left": {
-                    "resultType": "Boolean",
+                    "resultType": "Numeric",
                     "variable": {
                         "id": "00000000-0000-0000-0000-100000000057"
                     }
                 },
                 "right": {
-                    "resultType": "Boolean",
-                    "constant": true
+                    "resultType": "Numeric",
+                    "constant": 30
                 },
-                "operator": "EQ"
+                "operator": "LT"
             }
         },
-        // Yếu tố nguy cơ nhiễm khuẩn: giãn phế quản
+        // Tiêu chí Na⁺ máu của PSI
         {
-            "id": "00000000-0000-0000-0000-400000000060",
-            "name": "Giãn phế quản",
+            "id": "00000000-0000-0000-0000-400000000063",
+            "name": "Na⁺ máu < 130 mmol/L",
             "formula": {
                 "resultType": "Boolean",
                 "left": {
-                    "resultType": "Boolean",
+                    "resultType": "Numeric",
                     "variable": {
                         "id": "00000000-0000-0000-0000-100000000058"
                     }
                 },
                 "right": {
-                    "resultType": "Boolean",
-                    "constant": true
+                    "resultType": "Numeric",
+                    "constant": 130
                 },
-                "operator": "EQ"
+                "operator": "LT"
             }
         },
-        // Yếu tố nguy cơ nhiễm khuẩn: tiền sử nhiễm Pseudomonas aeruginosa
+        // Tiêu chí đường máu của PSI
         {
-            "id": "00000000-0000-0000-0000-400000000061",
-            "name": "Tiền sử nhiễm Pseudomonas aeruginosa",
+            "id": "00000000-0000-0000-0000-400000000064",
+            "name": "Đường máu >= 250 mg/dL",
             "formula": {
                 "resultType": "Boolean",
                 "left": {
-                    "resultType": "Boolean",
+                    "resultType": "Numeric",
                     "variable": {
                         "id": "00000000-0000-0000-0000-100000000059"
                     }
                 },
                 "right": {
-                    "resultType": "Boolean",
-                    "constant": true
+                    "resultType": "Numeric",
+                    "constant": 250
                 },
-                "operator": "EQ"
+                "operator": "GTE"
             }
         },
-        // Yếu tố nguy cơ nhiễm khuẩn: bệnh nội khoa nặng
+        // Tiêu chí tổn thương thùy phổi trên X-quang (IDSA/ATS)
         {
-            "id": "00000000-0000-0000-0000-400000000062",
-            "name": "Bệnh nội khoa nặng",
+            "id": "00000000-0000-0000-0000-400000000065",
+            "name": "Tổn thương nhiều thùy phổi trên phim X-quang",
             "formula": {
                 "resultType": "Boolean",
                 "left": {
@@ -2297,10 +2326,10 @@
                 "operator": "EQ"
             }
         },
-        // Yếu tố nguy cơ nhiễm khuẩn: nhồi máu phổi
+        // Yếu tố nguy cơ nhiễm khuẩn: Vi áp xe trên Xquang/CT ngực
         {
-            "id": "00000000-0000-0000-0000-400000000063",
-            "name": "Nhồi máu phổi",
+            "id": "00000000-0000-0000-0000-400000000066",
+            "name": "Vi áp xe trên Xquang/CT ngực",
             "formula": {
                 "resultType": "Boolean",
                 "left": {
@@ -2312,44 +2341,6 @@
                 "right": {
                     "resultType": "Boolean",
                     "constant": true
-                },
-                "operator": "EQ"
-            }
-        },
-        // Yếu tố nguy cơ nhiễm khuẩn: nhiễm khuẩn kị khí vùng hầu họng
-        {
-            "id": "00000000-0000-0000-0000-400000000064",
-            "name": "Nhiễm khuẩn kị khí vùng hầu họng",
-            "formula": {
-                "resultType": "Boolean",
-                "left": {
-                    "resultType": "Boolean",
-                    "variable": {
-                        "id": "00000000-0000-0000-0000-100000000062"
-                    }
-                },
-                "right": {
-                    "resultType": "Boolean",
-                    "constant": true
-                },
-                "operator": "EQ"
-            }
-        },
-        // Tiêu chí giới tính tuổi của PSI
-        {
-            "id": "00000000-0000-0000-0000-400000000065",
-            "name": "Giới tính nữ",
-            "formula": {
-                "resultType": "Boolean",
-                "left": {
-                    "resultType": "String",
-                    "variable": {
-                        "id": "00000000-0000-0000-0000-100000000002"
-                    }
-                },
-                "right": {
-                    "resultType": "String",
-                    "constant": "FEMALE"
                 },
                 "operator": "EQ"
             }
@@ -2367,7 +2358,7 @@
             "rules": [
                 {
                     "id": "00000000-0000-0000-0000-300000000001",
-                    "criterionId": "00000000-0000-0000-0000-400000000024",
+                    "criterionId": "00000000-0000-0000-0000-400000000025",
                     "scoreFunction": {
                         "resultType": "Numeric",
                         "constant": 1
@@ -2375,7 +2366,7 @@
                 },
                 {
                     "id": "00000000-0000-0000-0000-300000000002",
-                    "criterionId": "00000000-0000-0000-0000-400000000012",
+                    "criterionId": "00000000-0000-0000-0000-400000000056",
                     "scoreFunction": {
                         "resultType": "Numeric",
                         "constant": 1
@@ -2383,7 +2374,7 @@
                 },
                 {
                     "id": "00000000-0000-0000-0000-300000000003",
-                    "criterionId": "00000000-0000-0000-0000-400000000005",
+                    "criterionId": "00000000-0000-0000-0000-400000000020",
                     "scoreFunction": {
                         "resultType": "Numeric",
                         "constant": 1
@@ -2391,7 +2382,7 @@
                 },
                 {
                     "id": "00000000-0000-0000-0000-300000000004",
-                    "criterionId": "00000000-0000-0000-0000-400000000008",
+                    "criterionId": "00000000-0000-0000-0000-400000000016",
                     "scoreFunction": {
                         "resultType": "Numeric",
                         "constant": 1
@@ -2409,6 +2400,49 @@
         },
         {
             "id": "00000000-0000-0000-0000-200000000002",
+            "name": "Severity metrics CRB-65",
+            "code": "CRB-65",
+            "description": "CRB-65 metrics to assess severity of a patient",
+            "version": "2002-2003",
+            "publisher": "Hiệp hội Lồng ngực Anh (BTS)",
+            "isApplied": true,
+            "rules": [
+                {
+                    "id": "00000000-0000-0000-0000-300000000006",
+                    "criterionId": "00000000-0000-0000-0000-400000000025",
+                    "scoreFunction": {
+                        "resultType": "Numeric",
+                        "constant": 1
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-300000000007",
+                    "criterionId": "00000000-0000-0000-0000-400000000020",
+                    "scoreFunction": {
+                        "resultType": "Numeric",
+                        "constant": 1
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-300000000008",
+                    "criterionId": "00000000-0000-0000-0000-400000000016",
+                    "scoreFunction": {
+                        "resultType": "Numeric",
+                        "constant": 1
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-300000000009",
+                    "criterionId": "00000000-0000-0000-0000-400000000001",
+                    "scoreFunction": {
+                        "resultType": "Numeric",
+                        "constant": 1
+                    }
+                }
+            ]
+        },
+        {
+            "id": "00000000-0000-0000-0000-200000000003",
             "name": "Pneumonia Severity Index (PSI)",
             "code": "PSI",
             "description": "PSI metrics to assess severity of a patient with more detail than CURB-65",
@@ -2417,8 +2451,8 @@
             "isApplied": true,
             "rules": [
                 {
-                    "id": "00000000-0000-0000-0000-300000000006",
-                    "criterionId": "00000000-0000-0000-0000-400000000065",
+                    "id": "00000000-0000-0000-0000-300000000010",
+                    "criterionId": "00000000-0000-0000-0000-400000000006",
                     "scoreFunction": {
                         "resultType": "Numeric",
                         "left": {
@@ -2435,8 +2469,8 @@
                     }
                 },
                 {
-                    "id": "00000000-0000-0000-0000-300000000036",
-                    "criterionId": "00000000-0000-0000-0000-400000000004",
+                    "id": "00000000-0000-0000-0000-300000000011",
+                    "criterionId": "00000000-0000-0000-0000-400000000005",
                     "scoreFunction": {
                         "resultType": "Numeric",
                         "variable": {
@@ -2445,48 +2479,8 @@
                     }
                 },
                 {
-                    "id": "00000000-0000-0000-0000-300000000007",
-                    "criterionId": "00000000-0000-0000-0000-400000000025",
-                    "scoreFunction": {
-                        "resultType": "Numeric",
-                        "constant": 10
-                    }
-                },
-                {
-                    "id": "00000000-0000-0000-0000-300000000008",
-                    "criterionId": "00000000-0000-0000-0000-400000000026",
-                    "scoreFunction": {
-                        "resultType": "Numeric",
-                        "constant": 30
-                    }
-                },
-                {
-                    "id": "00000000-0000-0000-0000-300000000009",
-                    "criterionId": "00000000-0000-0000-0000-400000000027",
-                    "scoreFunction": {
-                        "resultType": "Numeric",
-                        "constant": 20
-                    }
-                },
-                {
-                    "id": "00000000-0000-0000-0000-300000000010",
-                    "criterionId": "00000000-0000-0000-0000-400000000028",
-                    "scoreFunction": {
-                        "resultType": "Numeric",
-                        "constant": 10
-                    }
-                },
-                {
-                    "id": "00000000-0000-0000-0000-300000000011",
-                    "criterionId": "00000000-0000-0000-0000-400000000029",
-                    "scoreFunction": {
-                        "resultType": "Numeric",
-                        "constant": 10
-                    }
-                },
-                {
                     "id": "00000000-0000-0000-0000-300000000012",
-                    "criterionId": "00000000-0000-0000-0000-400000000030",
+                    "criterionId": "00000000-0000-0000-0000-400000000032",
                     "scoreFunction": {
                         "resultType": "Numeric",
                         "constant": 10
@@ -2494,15 +2488,15 @@
                 },
                 {
                     "id": "00000000-0000-0000-0000-300000000013",
-                    "criterionId": "00000000-0000-0000-0000-400000000024",
+                    "criterionId": "00000000-0000-0000-0000-400000000033",
                     "scoreFunction": {
                         "resultType": "Numeric",
-                        "constant": 20
+                        "constant": 30
                     }
                 },
                 {
                     "id": "00000000-0000-0000-0000-300000000014",
-                    "criterionId": "00000000-0000-0000-0000-400000000006",
+                    "criterionId": "00000000-0000-0000-0000-400000000034",
                     "scoreFunction": {
                         "resultType": "Numeric",
                         "constant": 20
@@ -2510,23 +2504,23 @@
                 },
                 {
                     "id": "00000000-0000-0000-0000-300000000015",
-                    "criterionId": "00000000-0000-0000-0000-400000000009",
+                    "criterionId": "00000000-0000-0000-0000-400000000035",
                     "scoreFunction": {
                         "resultType": "Numeric",
-                        "constant": 20
+                        "constant": 10
                     }
                 },
                 {
                     "id": "00000000-0000-0000-0000-300000000016",
-                    "criterionId": "00000000-0000-0000-0000-400000000010",
+                    "criterionId": "00000000-0000-0000-0000-400000000036",
                     "scoreFunction": {
                         "resultType": "Numeric",
-                        "constant": 15
+                        "constant": 10
                     }
                 },
                 {
                     "id": "00000000-0000-0000-0000-300000000017",
-                    "criterionId": "00000000-0000-0000-0000-400000000019",
+                    "criterionId": "00000000-0000-0000-0000-400000000037",
                     "scoreFunction": {
                         "resultType": "Numeric",
                         "constant": 10
@@ -2534,15 +2528,15 @@
                 },
                 {
                     "id": "00000000-0000-0000-0000-300000000018",
-                    "criterionId": "00000000-0000-0000-0000-400000000020",
+                    "criterionId": "00000000-0000-0000-0000-400000000025",
                     "scoreFunction": {
                         "resultType": "Numeric",
-                        "constant": 30
+                        "constant": 20
                     }
                 },
                 {
                     "id": "00000000-0000-0000-0000-300000000019",
-                    "criterionId": "00000000-0000-0000-0000-400000000013",
+                    "criterionId": "00000000-0000-0000-0000-400000000021",
                     "scoreFunction": {
                         "resultType": "Numeric",
                         "constant": 20
@@ -2550,23 +2544,23 @@
                 },
                 {
                     "id": "00000000-0000-0000-0000-300000000020",
-                    "criterionId": "00000000-0000-0000-0000-400000000021",
-                    "scoreFunction": {
-                        "resultType": "Numeric",
-                        "constant": 10
-                    }
-                },
-                {
-                    "id": "00000000-0000-0000-0000-300000000021",
-                    "criterionId": "00000000-0000-0000-0000-400000000022",
+                    "criterionId": "00000000-0000-0000-0000-400000000017",
                     "scoreFunction": {
                         "resultType": "Numeric",
                         "constant": 20
                     }
                 },
                 {
+                    "id": "00000000-0000-0000-0000-300000000021",
+                    "criterionId": "00000000-0000-0000-0000-400000000018",
+                    "scoreFunction": {
+                        "resultType": "Numeric",
+                        "constant": 15
+                    }
+                },
+                {
                     "id": "00000000-0000-0000-0000-300000000022",
-                    "criterionId": "00000000-0000-0000-0000-400000000023",
+                    "criterionId": "00000000-0000-0000-0000-400000000015",
                     "scoreFunction": {
                         "resultType": "Numeric",
                         "constant": 10
@@ -2574,15 +2568,55 @@
                 },
                 {
                     "id": "00000000-0000-0000-0000-300000000023",
-                    "criterionId": "00000000-0000-0000-0000-400000000018",
+                    "criterionId": "00000000-0000-0000-0000-400000000061",
+                    "scoreFunction": {
+                        "resultType": "Numeric",
+                        "constant": 30
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-300000000024",
+                    "criterionId": "00000000-0000-0000-0000-400000000057",
+                    "scoreFunction": {
+                        "resultType": "Numeric",
+                        "constant": 20
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-300000000025",
+                    "criterionId": "00000000-0000-0000-0000-400000000063",
+                    "scoreFunction": {
+                        "resultType": "Numeric",
+                        "constant": 20
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-300000000026",
+                    "criterionId": "00000000-0000-0000-0000-400000000064",
                     "scoreFunction": {
                         "resultType": "Numeric",
                         "constant": 10
                     }
                 },
                 {
-                    "id": "00000000-0000-0000-0000-300000000024",
-                    "criterionId": "00000000-0000-0000-0000-400000000031",
+                    "id": "00000000-0000-0000-0000-300000000027",
+                    "criterionId": "00000000-0000-0000-0000-400000000062",
+                    "scoreFunction": {
+                        "resultType": "Numeric",
+                        "constant": 10
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-300000000028",
+                    "criterionId": "00000000-0000-0000-0000-400000000024",
+                    "scoreFunction": {
+                        "resultType": "Numeric",
+                        "constant": 10
+                    }
+                },
+                {
+                    "id": "00000000-0000-0000-0000-300000000029",
+                    "criterionId": "00000000-0000-0000-0000-400000000040",
                     "scoreFunction": {
                         "resultType": "Numeric",
                         "constant": 10
@@ -2591,7 +2625,7 @@
             ]
         },
         {
-            "id": "00000000-0000-0000-0000-200000000003",
+            "id": "00000000-0000-0000-0000-200000000004",
             "name": "ICU hospitalization criteria by IDSA/ATS",
             "code": "IDSA/ATS",
             "description": "IDSA/ATS metrics to assess whether a severe patient need ICU or not",
@@ -2600,58 +2634,58 @@
             "isApplied": true,
             "rules": [
                 {
-                    "id": "00000000-0000-0000-0000-300000000025",
-                    "criterionId": "00000000-0000-0000-0000-400000000034",
-                    "isMajor": true
-                },
-                {
-                    "id": "00000000-0000-0000-0000-300000000026",
-                    "criterionId": "00000000-0000-0000-0000-400000000035",
-                    "isMajor": true
-                },
-                {
-                    "id": "00000000-0000-0000-0000-300000000027",
-                    "criterionId": "00000000-0000-0000-0000-400000000007",
-                    "isMajor": false
-                },
-                {
-                    "id": "00000000-0000-0000-0000-300000000028",
-                    "criterionId": "00000000-0000-0000-0000-400000000017",
-                    "isMajor": false
-                },
-                {
-                    "id": "00000000-0000-0000-0000-300000000029",
-                    "criterionId": "00000000-0000-0000-0000-400000000032",
-                    "isMajor": false
-                },
-                {
                     "id": "00000000-0000-0000-0000-300000000030",
-                    "criterionId": "00000000-0000-0000-0000-400000000024",
-                    "isMajor": false
+                    "criterionId": "00000000-0000-0000-0000-400000000029",
+                    "isMajor": true
                 },
                 {
                     "id": "00000000-0000-0000-0000-300000000031",
-                    "criterionId": "00000000-0000-0000-0000-400000000014",
-                    "isMajor": false
+                    "criterionId": "00000000-0000-0000-0000-400000000026",
+                    "isMajor": true
                 },
                 {
                     "id": "00000000-0000-0000-0000-300000000032",
-                    "criterionId": "00000000-0000-0000-0000-400000000015",
+                    "criterionId": "00000000-0000-0000-0000-400000000022",
                     "isMajor": false
                 },
                 {
                     "id": "00000000-0000-0000-0000-300000000033",
-                    "criterionId": "00000000-0000-0000-0000-400000000016",
+                    "criterionId": "00000000-0000-0000-0000-400000000023",
                     "isMajor": false
                 },
                 {
                     "id": "00000000-0000-0000-0000-300000000034",
-                    "criterionId": "00000000-0000-0000-0000-400000000011",
+                    "criterionId": "00000000-0000-0000-0000-400000000065",
                     "isMajor": false
                 },
                 {
                     "id": "00000000-0000-0000-0000-300000000035",
-                    "criterionId": "00000000-0000-0000-0000-400000000033",
+                    "criterionId": "00000000-0000-0000-0000-400000000025",
+                    "isMajor": false
+                },
+                {
+                    "id": "00000000-0000-0000-0000-300000000036",
+                    "criterionId": "00000000-0000-0000-0000-400000000058",
+                    "isMajor": false
+                },
+                {
+                    "id": "00000000-0000-0000-0000-300000000037",
+                    "criterionId": "00000000-0000-0000-0000-400000000059",
+                    "isMajor": false
+                },
+                {
+                    "id": "00000000-0000-0000-0000-300000000038",
+                    "criterionId": "00000000-0000-0000-0000-400000000060",
+                    "isMajor": false
+                },
+                {
+                    "id": "00000000-0000-0000-0000-300000000039",
+                    "criterionId": "00000000-0000-0000-0000-400000000019",
+                    "isMajor": false
+                },
+                {
+                    "id": "00000000-0000-0000-0000-300000000040",
+                    "criterionId": "00000000-0000-0000-0000-400000000030",
                     "isMajor": false
                 }
             ]
@@ -2665,31 +2699,14 @@
             "isAtypical": false,
             "riskFactors": [
                 {
+                    "criterionId": "00000000-0000-0000-0000-400000000007"
+                },
+                {
                     "criterionId": "00000000-0000-0000-0000-400000000002"
                 },
                 {
-                    "criterionId": "00000000-0000-0000-0000-400000000004"
-                },
-                {
-                    "criterionId": "00000000-0000-0000-0000-400000000036"
-                },
-                {
-                    "criterionId": "00000000-0000-0000-0000-400000000037"
-                },
-                {
-                    "criterionId": "00000000-0000-0000-0000-400000000027"
-                },
-                {
-                    "criterionId": "00000000-0000-0000-0000-400000000038"
-                },
-                {
-                    "criterionId": "00000000-0000-0000-0000-400000000028"
-                },
-                {
-                    "criterionId": "00000000-0000-0000-0000-400000000039"
-                },
-                {
-                    "criterionId": "00000000-0000-0000-0000-400000000040"
+                    "criterionId": "00000000-0000-0000-0000-400000000009",
+                    "isCriticalFactor": true
                 },
                 {
                     "criterionId": "00000000-0000-0000-0000-400000000041"
@@ -2701,7 +2718,34 @@
                     "criterionId": "00000000-0000-0000-0000-400000000043"
                 },
                 {
+                    "criterionId": "00000000-0000-0000-0000-400000000034"
+                },
+                {
+                    "criterionId": "00000000-0000-0000-0000-400000000037"
+                },
+                {
+                    "criterionId": "00000000-0000-0000-0000-400000000035"
+                },
+                {
+                    "criterionId": "00000000-0000-0000-0000-400000000008"
+                },
+                {
                     "criterionId": "00000000-0000-0000-0000-400000000044"
+                },
+                {
+                    "criterionId": "00000000-0000-0000-0000-400000000045"
+                },
+                {
+                    "criterionId": "00000000-0000-0000-0000-400000000048"
+                },
+                {
+                    "criterionId": "00000000-0000-0000-0000-400000000049"
+                },
+                {
+                    "criterionId": "00000000-0000-0000-0000-400000000051"
+                },
+                {
+                    "criterionId": "00000000-0000-0000-0000-400000000013"
                 }
             ]
         },
@@ -2712,57 +2756,25 @@
             "isAtypical": false,
             "riskFactors": [
                 {
-                    "criterionId": "00000000-0000-0000-0000-400000000045"
-                },
-                {
-                    "criterionId": "00000000-0000-0000-0000-400000000026"
-                },
-                {
-                    "criterionId": "00000000-0000-0000-0000-400000000043"
-                },
-                {
-                    "criterionId": "00000000-0000-0000-0000-400000000036"
-                },
-                {
-                    "criterionId": "00000000-0000-0000-0000-400000000037"
-                }
-            ]
-        },
-        {
-            "id": "00000000-0000-0000-0000-500000000003",
-            "name": "Staphylococcus aureus",
-            "description": "Common in structural lung disease or post-viral infection",
-            "isAtypical": false,
-            "riskFactors": [
-                {
-                    "criterionId": "00000000-0000-0000-0000-400000000041"
-                },
-                {
-                    "criterionId": "00000000-0000-0000-0000-400000000046"
-                },
-                {
-                    "criterionId": "00000000-0000-0000-0000-400000000047"
-                },
-                {
-                    "criterionId": "00000000-0000-0000-0000-400000000048"
-                },
-                {
                     "criterionId": "00000000-0000-0000-0000-400000000038"
+                },
+                {
+                    "criterionId": "00000000-0000-0000-0000-400000000033"
                 },
                 {
                     "criterionId": "00000000-0000-0000-0000-400000000049"
                 },
                 {
-                    "criterionId": "00000000-0000-0000-0000-400000000050"
+                    "criterionId": "00000000-0000-0000-0000-400000000041"
                 },
                 {
-                    "criterionId": "00000000-0000-0000-0000-400000000051"
+                    "criterionId": "00000000-0000-0000-0000-400000000043"
                 },
                 {
-                    "criterionId": "00000000-0000-0000-0000-400000000052"
+                    "criterionId": "00000000-0000-0000-0000-400000000003"
                 },
                 {
-                    "criterionId": "00000000-0000-0000-0000-400000000053"
+                    "criterionId": "00000000-0000-0000-0000-400000000039"
                 }
             ]
         },
@@ -2773,10 +2785,45 @@
             "isAtypical": false,
             "riskFactors": [
                 {
+                    "criterionId": "00000000-0000-0000-0000-400000000045"
+                },
+                {
+                    "criterionId": "00000000-0000-0000-0000-400000000046"
+                },
+                {
+                    "criterionId": "00000000-0000-0000-0000-400000000047"
+                },
+                {
+                    "criterionId": "00000000-0000-0000-0000-400000000039"
+                },
+                {
+                    "criterionId": "00000000-0000-0000-0000-400000000037"
+                },
+                {
+                    "criterionId": "00000000-0000-0000-0000-400000000050"
+                },
+                {
+                    "criterionId": "00000000-0000-0000-0000-400000000052"
+                },
+                {
+                    "criterionId": "00000000-0000-0000-0000-400000000010"
+                },
+                {
                     "criterionId": "00000000-0000-0000-0000-400000000054"
                 },
                 {
-                    "criterionId": "00000000-0000-0000-0000-400000000055"
+                    "criterionId": "00000000-0000-0000-0000-400000000066"
+                },
+                {
+                    "criterionId": "00000000-0000-0000-0000-400000000053"
+                },
+                {
+                    "criterionId": "00000000-0000-0000-0000-400000000011",
+                    "isCriticalFactor": true
+                },
+                {
+                    "criterionId": "00000000-0000-0000-0000-400000000013",
+                    "isCriticalFactor": true
                 }
             ]
         },
@@ -2787,25 +2834,28 @@
             "isAtypical": false,
             "riskFactors": [
                 {
-                    "criterionId": "00000000-0000-0000-0000-400000000056"
+                    "criterionId": "00000000-0000-0000-0000-400000000027"
                 },
                 {
-                    "criterionId": "00000000-0000-0000-0000-400000000057"
+                    "criterionId": "00000000-0000-0000-0000-400000000055"
                 },
                 {
-                    "criterionId": "00000000-0000-0000-0000-400000000036"
+                    "criterionId": "00000000-0000-0000-0000-400000000041"
                 },
                 {
-                    "criterionId": "00000000-0000-0000-0000-400000000045"
+                    "criterionId": "00000000-0000-0000-0000-400000000038"
                 },
                 {
-                    "criterionId": "00000000-0000-0000-0000-400000000048"
+                    "criterionId": "00000000-0000-0000-0000-400000000039"
                 },
                 {
-                    "criterionId": "00000000-0000-0000-0000-400000000058"
+                    "criterionId": "00000000-0000-0000-0000-400000000013"
                 },
                 {
-                    "criterionId": "00000000-0000-0000-0000-400000000059"
+                    "criterionId": "00000000-0000-0000-0000-400000000066"
+                },
+                {
+                    "criterionId": "00000000-0000-0000-0000-400000000040"
                 }
             ]
         },
@@ -2816,19 +2866,20 @@
             "isAtypical": false,
             "riskFactors": [
                 {
-                    "criterionId": "00000000-0000-0000-0000-400000000047"
+                    "criterionId": "00000000-0000-0000-0000-400000000014"
                 },
                 {
-                    "criterionId": "00000000-0000-0000-0000-400000000060"
+                    "criterionId": "00000000-0000-0000-0000-400000000012",
+                    "isCriticalFactor": true
                 },
                 {
-                    "criterionId": "00000000-0000-0000-0000-400000000041"
+                    "criterionId": "00000000-0000-0000-0000-400000000028"
                 },
                 {
-                    "criterionId": "00000000-0000-0000-0000-400000000061"
+                    "criterionId": "00000000-0000-0000-0000-400000000013"
                 },
                 {
-                    "criterionId": "00000000-0000-0000-0000-400000000055"
+                    "criterionId": "00000000-0000-0000-0000-400000000066"
                 }
             ]
         },
@@ -2839,58 +2890,39 @@
             "isAtypical": false,
             "riskFactors": [
                 {
-                    "criterionId": "00000000-0000-0000-0000-400000000036"
+                    "criterionId": "00000000-0000-0000-0000-400000000041"
                 },
                 {
-                    "criterionId": "00000000-0000-0000-0000-400000000003"
+                    "criterionId": "00000000-0000-0000-0000-400000000043"
                 },
                 {
-                    "criterionId": "00000000-0000-0000-0000-400000000062"
+                    "criterionId": "00000000-0000-0000-0000-400000000004"
+                },
+                {
+                    "criterionId": "00000000-0000-0000-0000-400000000031"
+                },
+                {
+                    "criterionId": "00000000-0000-0000-0000-400000000065"
                 }
             ]
+        },
+        {
+            "id": "00000000-0000-0000-0000-500000000003",
+            "name": "Staphylococcus aureus",
+            "description": "Common in structural lung disease or post-viral infection",
+            "isAtypical": false
         },
         {
             "id": "00000000-0000-0000-0000-500000000008",
             "name": "Vi khuẩn kỵ khí",
             "description": "Associated with aspiration pneumonia",
-            "isAtypical": false,
-            "riskFactors": [
-                {
-                    "criterionId": "00000000-0000-0000-0000-400000000046"
-                },
-                {
-                    "criterionId": "00000000-0000-0000-0000-400000000060"
-                },
-                {
-                    "criterionId": "00000000-0000-0000-0000-400000000063"
-                },
-                {
-                    "criterionId": "00000000-0000-0000-0000-400000000057"
-                },
-                {
-                    "criterionId": "00000000-0000-0000-0000-400000000064"
-                }
-            ]
+            "isAtypical": false
         },
         {
             "id": "00000000-0000-0000-0000-500000000009",
             "name": "Burkholderia pseudomallei",
             "description": "Burkholderia pseudomallei là một loại trực khuẩn Gram âm sống trong bùn đất và nước ô nhiễm, là tác nhân gây ra bệnh Whitmore (Melioidosis) nguy hiểm",
-            "isAtypical": false,
-            "riskFactors": [
-                {
-                    "criterionId": "00000000-0000-0000-0000-400000000048"
-                },
-                {
-                    "criterionId": "00000000-0000-0000-0000-400000000036"
-                },
-                {
-                    "criterionId": "00000000-0000-0000-0000-400000000038"
-                },
-                {
-                    "criterionId": "00000000-0000-0000-0000-400000000045"
-                }
-            ]
+            "isAtypical": false
         },
         {
             "id": "00000000-0000-0000-0000-500000000010",
@@ -5630,5 +5662,834 @@
             ]
         }
     ],
-    "treatments": []
+    "treatments": [
+        // Phác đồ VPCĐ (xem VPCĐ.md). Mỗi treatment là một nhóm các phác đồ thay thế
+        // cho nhau; mỗi phần tử trong medicineIds là một composition (các kháng sinh
+        // dùng phối hợp). Nhóm "Trung bình" trong bảng nguồn được bỏ qua.
+        // Các criteria trong một treatment được đánh giá theo AND, nên nhóm "Có (...)"
+        // được tách thành nhiều treatment theo từng tiêu chí. Tiêu chí "bệnh đồng mắc"
+        // bị bỏ qua; "lớn tuổi" ánh xạ tới tiêu chí "Tuổi già".
+        //
+        // Nhẹ / ngoại trú / Không YTNC.
+        // Dòng 'Không' + dị ứng beta-lactam = Không: Amoxicillin.
+        // Dòng 'Không' + dị ứng beta-lactam = Có: Levofloxacin, Moxifloxacin.
+        // Việc loại bỏ beta-lactam khi bệnh nhân dị ứng được xử lý ở tầng gợi ý
+        // thuốc (RecommendTreatment loại bỏ composition chứa kháng sinh dị ứng).
+        {
+            "id": "00000000-0000-0000-0000-900000000001",
+            "severity": "Mild",
+            "treatmentSite": "Outpatient",
+            "medicineIds": [
+                [
+                    "00000000-0000-0000-0000-000000000303"
+                ],
+                [
+                    "00000000-0000-0000-0000-00000000031e"
+                ],
+                [
+                    "00000000-0000-0000-0000-00000000031d"
+                ]
+            ],
+            "pathogenIds": [],
+            "criteriaIds": []
+        },
+        // Nhẹ / ngoại trú / Nguy cơ H. influenzae.
+        // Phác đồ: Amoxicillin/acid clavulanic.
+        {
+            "id": "00000000-0000-0000-0000-900000000002",
+            "severity": "Mild",
+            "treatmentSite": "Outpatient",
+            "medicineIds": [
+                [
+                    "00000000-0000-0000-0000-000000000304"
+                ]
+            ],
+            "pathogenIds": [
+                "00000000-0000-0000-0000-500000000002"
+            ],
+            "criteriaIds": []
+        },
+        // Nhẹ / ngoại trú / Phế cầu kháng thuốc.
+        // Phác đồ: Amoxicillin liều cao, Levofloxacin, Moxifloxacin.
+        {
+            "id": "00000000-0000-0000-0000-900000000003",
+            "severity": "Mild",
+            "treatmentSite": "Outpatient",
+            "medicineIds": [
+                [
+                    "00000000-0000-0000-0000-000000000303"
+                ],
+                [
+                    "00000000-0000-0000-0000-00000000031e"
+                ],
+                [
+                    "00000000-0000-0000-0000-00000000031d"
+                ]
+            ],
+            "pathogenIds": [
+                "00000000-0000-0000-0000-500000000001"
+            ],
+            "criteriaIds": []
+        },
+        // Nhẹ / ngoại trú / Có YTNC: lớn tuổi.
+        // Mỗi tiêu chí trong nhóm 'Có (...)' được tách thành một treatment riêng
+        // vì Treatment.Criteria được đánh giá theo AND. 'Bệnh đồng mắc' được bỏ qua.
+        // Cephalosporin đường uống được khai triển đầy đủ: cefalexin, cefuroxim,
+        // cefprozil, cefpodoxim, cefdinir, cefditoren.
+        {
+            "id": "00000000-0000-0000-0000-900000000004",
+            "severity": "Mild",
+            "treatmentSite": "Outpatient",
+            "medicineIds": [
+                [
+                    "00000000-0000-0000-0000-000000000304",
+                    "00000000-0000-0000-0000-000000000321"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000304",
+                    "00000000-0000-0000-0000-000000000320"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000308",
+                    "00000000-0000-0000-0000-000000000321"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000309",
+                    "00000000-0000-0000-0000-000000000321"
+                ],
+                [
+                    "00000000-0000-0000-0000-00000000030a",
+                    "00000000-0000-0000-0000-000000000321"
+                ],
+                [
+                    "00000000-0000-0000-0000-00000000030b",
+                    "00000000-0000-0000-0000-000000000321"
+                ],
+                [
+                    "00000000-0000-0000-0000-00000000030c",
+                    "00000000-0000-0000-0000-000000000321"
+                ],
+                [
+                    "00000000-0000-0000-0000-00000000030d",
+                    "00000000-0000-0000-0000-000000000321"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000308",
+                    "00000000-0000-0000-0000-000000000320"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000309",
+                    "00000000-0000-0000-0000-000000000320"
+                ],
+                [
+                    "00000000-0000-0000-0000-00000000030a",
+                    "00000000-0000-0000-0000-000000000320"
+                ],
+                [
+                    "00000000-0000-0000-0000-00000000030b",
+                    "00000000-0000-0000-0000-000000000320"
+                ],
+                [
+                    "00000000-0000-0000-0000-00000000030c",
+                    "00000000-0000-0000-0000-000000000320"
+                ],
+                [
+                    "00000000-0000-0000-0000-00000000030d",
+                    "00000000-0000-0000-0000-000000000320"
+                ],
+                [
+                    "00000000-0000-0000-0000-00000000031e"
+                ],
+                [
+                    "00000000-0000-0000-0000-00000000031d"
+                ]
+            ],
+            "pathogenIds": [],
+            "criteriaIds": [
+                "00000000-0000-0000-0000-400000000004",
+                "00000000-0000-0000-0000-400000000048"
+            ]
+        },
+        // Nặng / ICU / Không YTNC.
+        // Cephalosporin phổ rộng được khai triển đầy đủ: cefotaxim, ceftriaxon,
+        // cefoperazon, ceftazidim, cefepim, ceftarolin, piperacillin/tazobactam,
+        // ertapenem, meropenem, imipenem. Doripenem có trong bảng nguồn nhưng
+        // không có trong danh mục kháng sinh của seed data nên được bỏ qua.
+        {
+            "id": "00000000-0000-0000-0000-900000000006",
+            "severity": "Severe",
+            "treatmentSite": "IntensiveCareUnit",
+            "medicineIds": [
+                [
+                    "00000000-0000-0000-0000-00000000030e",
+                    "00000000-0000-0000-0000-000000000321"
+                ],
+                [
+                    "00000000-0000-0000-0000-00000000030e",
+                    "00000000-0000-0000-0000-000000000320"
+                ],
+                [
+                    "00000000-0000-0000-0000-00000000030e",
+                    "00000000-0000-0000-0000-00000000031e"
+                ],
+                [
+                    "00000000-0000-0000-0000-00000000030e",
+                    "00000000-0000-0000-0000-00000000031d"
+                ],
+                [
+                    "00000000-0000-0000-0000-00000000030f",
+                    "00000000-0000-0000-0000-000000000321"
+                ],
+                [
+                    "00000000-0000-0000-0000-00000000030f",
+                    "00000000-0000-0000-0000-000000000320"
+                ],
+                [
+                    "00000000-0000-0000-0000-00000000030f",
+                    "00000000-0000-0000-0000-00000000031e"
+                ],
+                [
+                    "00000000-0000-0000-0000-00000000030f",
+                    "00000000-0000-0000-0000-00000000031d"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000311",
+                    "00000000-0000-0000-0000-000000000321"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000311",
+                    "00000000-0000-0000-0000-000000000320"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000311",
+                    "00000000-0000-0000-0000-00000000031e"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000311",
+                    "00000000-0000-0000-0000-00000000031d"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000310",
+                    "00000000-0000-0000-0000-000000000321"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000310",
+                    "00000000-0000-0000-0000-000000000320"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000310",
+                    "00000000-0000-0000-0000-00000000031e"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000310",
+                    "00000000-0000-0000-0000-00000000031d"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000313",
+                    "00000000-0000-0000-0000-000000000321"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000313",
+                    "00000000-0000-0000-0000-000000000320"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000313",
+                    "00000000-0000-0000-0000-00000000031e"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000313",
+                    "00000000-0000-0000-0000-00000000031d"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000314",
+                    "00000000-0000-0000-0000-000000000321"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000314",
+                    "00000000-0000-0000-0000-000000000320"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000314",
+                    "00000000-0000-0000-0000-00000000031e"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000314",
+                    "00000000-0000-0000-0000-00000000031d"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000315",
+                    "00000000-0000-0000-0000-000000000321"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000315",
+                    "00000000-0000-0000-0000-000000000320"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000315",
+                    "00000000-0000-0000-0000-00000000031e"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000315",
+                    "00000000-0000-0000-0000-00000000031d"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000318",
+                    "00000000-0000-0000-0000-000000000321"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000318",
+                    "00000000-0000-0000-0000-000000000320"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000318",
+                    "00000000-0000-0000-0000-00000000031e"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000318",
+                    "00000000-0000-0000-0000-00000000031d"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000317",
+                    "00000000-0000-0000-0000-000000000321"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000317",
+                    "00000000-0000-0000-0000-000000000320"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000317",
+                    "00000000-0000-0000-0000-00000000031e"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000317",
+                    "00000000-0000-0000-0000-00000000031d"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000316",
+                    "00000000-0000-0000-0000-000000000321"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000316",
+                    "00000000-0000-0000-0000-000000000320"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000316",
+                    "00000000-0000-0000-0000-00000000031e"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000316",
+                    "00000000-0000-0000-0000-00000000031d"
+                ]
+            ],
+            "pathogenIds": [],
+            "criteriaIds": []
+        },
+        // Nặng / ICU / Pseudomonas.
+        // Cephalosporin chống Pseudomonas: cefoperazon, ceftazidim, cefepim,
+        // piperacillin/tazobactam, ertapenem, meropenem, imipenem (Doripenem bị bỏ qua
+        // vì không có trong danh mục kháng sinh).
+        // Aminoglycosid: amikacin, gentamycin, tobramycin.
+        {
+            "id": "00000000-0000-0000-0000-900000000007",
+            "severity": "Severe",
+            "treatmentSite": "IntensiveCareUnit",
+            "medicineIds": [
+                [
+                    "00000000-0000-0000-0000-000000000311",
+                    "00000000-0000-0000-0000-00000000031c"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000311",
+                    "00000000-0000-0000-0000-00000000031e"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000311",
+                    "00000000-0000-0000-0000-000000000319",
+                    "00000000-0000-0000-0000-000000000321"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000311",
+                    "00000000-0000-0000-0000-000000000319",
+                    "00000000-0000-0000-0000-000000000320"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000311",
+                    "00000000-0000-0000-0000-00000000031a",
+                    "00000000-0000-0000-0000-000000000321"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000311",
+                    "00000000-0000-0000-0000-00000000031a",
+                    "00000000-0000-0000-0000-000000000320"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000311",
+                    "00000000-0000-0000-0000-00000000031b",
+                    "00000000-0000-0000-0000-000000000321"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000311",
+                    "00000000-0000-0000-0000-00000000031b",
+                    "00000000-0000-0000-0000-000000000320"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000310",
+                    "00000000-0000-0000-0000-00000000031c"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000310",
+                    "00000000-0000-0000-0000-00000000031e"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000310",
+                    "00000000-0000-0000-0000-000000000319",
+                    "00000000-0000-0000-0000-000000000321"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000310",
+                    "00000000-0000-0000-0000-000000000319",
+                    "00000000-0000-0000-0000-000000000320"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000310",
+                    "00000000-0000-0000-0000-00000000031a",
+                    "00000000-0000-0000-0000-000000000321"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000310",
+                    "00000000-0000-0000-0000-00000000031a",
+                    "00000000-0000-0000-0000-000000000320"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000310",
+                    "00000000-0000-0000-0000-00000000031b",
+                    "00000000-0000-0000-0000-000000000321"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000310",
+                    "00000000-0000-0000-0000-00000000031b",
+                    "00000000-0000-0000-0000-000000000320"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000313",
+                    "00000000-0000-0000-0000-00000000031c"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000313",
+                    "00000000-0000-0000-0000-00000000031e"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000313",
+                    "00000000-0000-0000-0000-000000000319",
+                    "00000000-0000-0000-0000-000000000321"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000313",
+                    "00000000-0000-0000-0000-000000000319",
+                    "00000000-0000-0000-0000-000000000320"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000313",
+                    "00000000-0000-0000-0000-00000000031a",
+                    "00000000-0000-0000-0000-000000000321"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000313",
+                    "00000000-0000-0000-0000-00000000031a",
+                    "00000000-0000-0000-0000-000000000320"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000313",
+                    "00000000-0000-0000-0000-00000000031b",
+                    "00000000-0000-0000-0000-000000000321"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000313",
+                    "00000000-0000-0000-0000-00000000031b",
+                    "00000000-0000-0000-0000-000000000320"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000315",
+                    "00000000-0000-0000-0000-00000000031c"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000315",
+                    "00000000-0000-0000-0000-00000000031e"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000315",
+                    "00000000-0000-0000-0000-000000000319",
+                    "00000000-0000-0000-0000-000000000321"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000315",
+                    "00000000-0000-0000-0000-000000000319",
+                    "00000000-0000-0000-0000-000000000320"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000315",
+                    "00000000-0000-0000-0000-00000000031a",
+                    "00000000-0000-0000-0000-000000000321"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000315",
+                    "00000000-0000-0000-0000-00000000031a",
+                    "00000000-0000-0000-0000-000000000320"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000315",
+                    "00000000-0000-0000-0000-00000000031b",
+                    "00000000-0000-0000-0000-000000000321"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000315",
+                    "00000000-0000-0000-0000-00000000031b",
+                    "00000000-0000-0000-0000-000000000320"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000318",
+                    "00000000-0000-0000-0000-00000000031c"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000318",
+                    "00000000-0000-0000-0000-00000000031e"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000318",
+                    "00000000-0000-0000-0000-000000000319",
+                    "00000000-0000-0000-0000-000000000321"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000318",
+                    "00000000-0000-0000-0000-000000000319",
+                    "00000000-0000-0000-0000-000000000320"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000318",
+                    "00000000-0000-0000-0000-00000000031a",
+                    "00000000-0000-0000-0000-000000000321"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000318",
+                    "00000000-0000-0000-0000-00000000031a",
+                    "00000000-0000-0000-0000-000000000320"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000318",
+                    "00000000-0000-0000-0000-00000000031b",
+                    "00000000-0000-0000-0000-000000000321"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000318",
+                    "00000000-0000-0000-0000-00000000031b",
+                    "00000000-0000-0000-0000-000000000320"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000317",
+                    "00000000-0000-0000-0000-00000000031c"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000317",
+                    "00000000-0000-0000-0000-00000000031e"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000317",
+                    "00000000-0000-0000-0000-000000000319",
+                    "00000000-0000-0000-0000-000000000321"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000317",
+                    "00000000-0000-0000-0000-000000000319",
+                    "00000000-0000-0000-0000-000000000320"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000317",
+                    "00000000-0000-0000-0000-00000000031a",
+                    "00000000-0000-0000-0000-000000000321"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000317",
+                    "00000000-0000-0000-0000-00000000031a",
+                    "00000000-0000-0000-0000-000000000320"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000317",
+                    "00000000-0000-0000-0000-00000000031b",
+                    "00000000-0000-0000-0000-000000000321"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000317",
+                    "00000000-0000-0000-0000-00000000031b",
+                    "00000000-0000-0000-0000-000000000320"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000316",
+                    "00000000-0000-0000-0000-00000000031c"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000316",
+                    "00000000-0000-0000-0000-00000000031e"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000316",
+                    "00000000-0000-0000-0000-000000000319",
+                    "00000000-0000-0000-0000-000000000321"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000316",
+                    "00000000-0000-0000-0000-000000000319",
+                    "00000000-0000-0000-0000-000000000320"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000316",
+                    "00000000-0000-0000-0000-00000000031a",
+                    "00000000-0000-0000-0000-000000000321"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000316",
+                    "00000000-0000-0000-0000-00000000031a",
+                    "00000000-0000-0000-0000-000000000320"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000316",
+                    "00000000-0000-0000-0000-00000000031b",
+                    "00000000-0000-0000-0000-000000000321"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000316",
+                    "00000000-0000-0000-0000-00000000031b",
+                    "00000000-0000-0000-0000-000000000320"
+                ]
+            ],
+            "pathogenIds": [
+                "00000000-0000-0000-0000-500000000006"
+            ],
+            "criteriaIds": []
+        },
+        // Nặng / ICU / Pseudomonas + MRSA.
+        // Cephalosporin chống Pseudomonas + Ciprofloxacin/Levofloxacin +
+        // Vancomycin/Linezolid/Teicoplanin.
+        {
+            "id": "00000000-0000-0000-0000-900000000008",
+            "severity": "Severe",
+            "treatmentSite": "IntensiveCareUnit",
+            "medicineIds": [
+                [
+                    "00000000-0000-0000-0000-000000000311",
+                    "00000000-0000-0000-0000-00000000031c",
+                    "00000000-0000-0000-0000-000000000322"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000311",
+                    "00000000-0000-0000-0000-00000000031e",
+                    "00000000-0000-0000-0000-000000000322"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000311",
+                    "00000000-0000-0000-0000-00000000031c",
+                    "00000000-0000-0000-0000-000000000324"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000311",
+                    "00000000-0000-0000-0000-00000000031e",
+                    "00000000-0000-0000-0000-000000000324"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000311",
+                    "00000000-0000-0000-0000-00000000031c",
+                    "00000000-0000-0000-0000-000000000323"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000311",
+                    "00000000-0000-0000-0000-00000000031e",
+                    "00000000-0000-0000-0000-000000000323"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000310",
+                    "00000000-0000-0000-0000-00000000031c",
+                    "00000000-0000-0000-0000-000000000322"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000310",
+                    "00000000-0000-0000-0000-00000000031e",
+                    "00000000-0000-0000-0000-000000000322"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000310",
+                    "00000000-0000-0000-0000-00000000031c",
+                    "00000000-0000-0000-0000-000000000324"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000310",
+                    "00000000-0000-0000-0000-00000000031e",
+                    "00000000-0000-0000-0000-000000000324"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000310",
+                    "00000000-0000-0000-0000-00000000031c",
+                    "00000000-0000-0000-0000-000000000323"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000310",
+                    "00000000-0000-0000-0000-00000000031e",
+                    "00000000-0000-0000-0000-000000000323"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000313",
+                    "00000000-0000-0000-0000-00000000031c",
+                    "00000000-0000-0000-0000-000000000322"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000313",
+                    "00000000-0000-0000-0000-00000000031e",
+                    "00000000-0000-0000-0000-000000000322"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000313",
+                    "00000000-0000-0000-0000-00000000031c",
+                    "00000000-0000-0000-0000-000000000324"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000313",
+                    "00000000-0000-0000-0000-00000000031e",
+                    "00000000-0000-0000-0000-000000000324"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000313",
+                    "00000000-0000-0000-0000-00000000031c",
+                    "00000000-0000-0000-0000-000000000323"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000313",
+                    "00000000-0000-0000-0000-00000000031e",
+                    "00000000-0000-0000-0000-000000000323"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000315",
+                    "00000000-0000-0000-0000-00000000031c",
+                    "00000000-0000-0000-0000-000000000322"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000315",
+                    "00000000-0000-0000-0000-00000000031e",
+                    "00000000-0000-0000-0000-000000000322"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000315",
+                    "00000000-0000-0000-0000-00000000031c",
+                    "00000000-0000-0000-0000-000000000324"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000315",
+                    "00000000-0000-0000-0000-00000000031e",
+                    "00000000-0000-0000-0000-000000000324"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000315",
+                    "00000000-0000-0000-0000-00000000031c",
+                    "00000000-0000-0000-0000-000000000323"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000315",
+                    "00000000-0000-0000-0000-00000000031e",
+                    "00000000-0000-0000-0000-000000000323"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000318",
+                    "00000000-0000-0000-0000-00000000031c",
+                    "00000000-0000-0000-0000-000000000322"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000318",
+                    "00000000-0000-0000-0000-00000000031e",
+                    "00000000-0000-0000-0000-000000000322"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000318",
+                    "00000000-0000-0000-0000-00000000031c",
+                    "00000000-0000-0000-0000-000000000324"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000318",
+                    "00000000-0000-0000-0000-00000000031e",
+                    "00000000-0000-0000-0000-000000000324"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000318",
+                    "00000000-0000-0000-0000-00000000031c",
+                    "00000000-0000-0000-0000-000000000323"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000318",
+                    "00000000-0000-0000-0000-00000000031e",
+                    "00000000-0000-0000-0000-000000000323"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000317",
+                    "00000000-0000-0000-0000-00000000031c",
+                    "00000000-0000-0000-0000-000000000322"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000317",
+                    "00000000-0000-0000-0000-00000000031e",
+                    "00000000-0000-0000-0000-000000000322"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000317",
+                    "00000000-0000-0000-0000-00000000031c",
+                    "00000000-0000-0000-0000-000000000324"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000317",
+                    "00000000-0000-0000-0000-00000000031e",
+                    "00000000-0000-0000-0000-000000000324"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000317",
+                    "00000000-0000-0000-0000-00000000031c",
+                    "00000000-0000-0000-0000-000000000323"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000317",
+                    "00000000-0000-0000-0000-00000000031e",
+                    "00000000-0000-0000-0000-000000000323"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000316",
+                    "00000000-0000-0000-0000-00000000031c",
+                    "00000000-0000-0000-0000-000000000322"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000316",
+                    "00000000-0000-0000-0000-00000000031e",
+                    "00000000-0000-0000-0000-000000000322"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000316",
+                    "00000000-0000-0000-0000-00000000031c",
+                    "00000000-0000-0000-0000-000000000324"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000316",
+                    "00000000-0000-0000-0000-00000000031e",
+                    "00000000-0000-0000-0000-000000000324"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000316",
+                    "00000000-0000-0000-0000-00000000031c",
+                    "00000000-0000-0000-0000-000000000323"
+                ],
+                [
+                    "00000000-0000-0000-0000-000000000316",
+                    "00000000-0000-0000-0000-00000000031e",
+                    "00000000-0000-0000-0000-000000000323"
+                ]
+            ],
+            "pathogenIds": [
+                "00000000-0000-0000-0000-500000000006",
+                "00000000-0000-0000-0000-500000000004"
+            ],
+            "criteriaIds": []
+        }
+    ]
 }

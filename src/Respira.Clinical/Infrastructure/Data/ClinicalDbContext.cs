@@ -24,6 +24,7 @@ namespace Respira.Clinical.Infrastructure.Data
         public DbSet<Dosage> Dosages { get; set; }
         public DbSet<MedicineComposition> MedicineCompositions { get; set; }
         public DbSet<Treatment> Treatments { get; set; }
+        public DbSet<Antibiogram> Antibiograms { get; set; }
 
         public async Task ExecuteInTransactionAsync(Func<Task> action, CancellationToken cancellationToken = default)
         {
@@ -138,6 +139,7 @@ namespace Respira.Clinical.Infrastructure.Data
             modelBuilder.Entity<Antibiotic>().HasQueryFilter(x => !x.IsDeleted);
             modelBuilder.Entity<AntibioticGroup>().HasQueryFilter(x => !x.IsDeleted);
             modelBuilder.Entity<Dosage>().HasQueryFilter(x => !x.IsDeleted);
+            modelBuilder.Entity<Antibiogram>().HasQueryFilter(x => !x.IsDeleted);
 
             // Activate unaccent extension for full text search on Vietnamese dataset
             modelBuilder.HasPostgresExtension("unaccent");
@@ -306,6 +308,17 @@ namespace Respira.Clinical.Infrastructure.Data
             modelBuilder.Entity<Treatment>()
                 .Property(x => x.TreatmentSite)
                 .HasConversion<string>();
+
+            modelBuilder.Entity<Antibiogram>().ToTable("antibiograms");
+            modelBuilder.Entity<Antibiogram>()
+                .HasOne(x => x.Pathogen)
+                .WithMany()
+                .HasForeignKey(x => x.PathogenId);
+            modelBuilder.Entity<Antibiogram>()
+                .HasMany(x => x.Antibiotics)
+                .WithMany()
+                .UsingEntity(t => t.ToTable("antibiogram_antibiotics"));
+            modelBuilder.Entity<Antibiogram>().Property(x => x.MicCategory).HasConversion<string>();
         }
 
         public override async ValueTask DisposeAsync()
