@@ -731,7 +731,7 @@ namespace Respira.Clinical.Domain.Services
             foreach (var sample in samples)
             {
                 var antibiogram = context.Antibiograms
-                    .FirstOrDefault(x => x.PathogenId == sample.PathogenId && x.MicCategory == sample.MicCategory);
+                    .FirstOrDefault(x => x.PathogenId == sample.Pathogen.Id && x.MicCategory == sample.MicCategory);
                 if (antibiogram is null)
                 {
                     logger.LogDebug("Couldn't find any antibiogram that match this sample: {Sample}", sample);

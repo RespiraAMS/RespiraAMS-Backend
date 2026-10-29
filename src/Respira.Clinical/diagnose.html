@@ -2,7 +2,9 @@
 <html lang="en">
 	<head>
 		<meta charset="UTF-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+		<meta name="color-scheme" content="light">
+		<meta name="theme-color" content="#0f6dbc">
 		<title>Respira - Empirical Diagnosis</title>
 		<style>
 			:root {
@@ -10,23 +12,37 @@
 				--primary-hover: #0b568f;
 				--primary-light: #e8f2fb;
 				--accent: #0e9384;
+				--accent-light: #e6f6f3;
 				--bg: #eef1f5;
 				--card: #ffffff;
 				--border: #dfe4ea;
 				--text: #172436;
 				--text-muted: #64748b;
 				--danger: #d92d20;
+				--danger-bg: #fff5f5;
 				--warning: #b54708;
+				--warning-bg: #fffaeb;
+				--success: #067647;
+				--success-bg: #ecfdf3;
+				--radius: 14px;
+				--shadow: 0 2px 10px rgba(15, 23, 42, 0.06);
 			}
 			
 			* { margin: 0; padding: 0; box-sizing: border-box; }
+			
+			html { -webkit-text-size-adjust: 100%; }
 			
 			body {
 				font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 				background: var(--bg);
 				color: var(--text);
-				line-height: 1.6;
+				line-height: 1.55;
+				min-height: 100dvh;
 			}
+			
+			[hidden] { display: none !important; }
+			
+			button, input, select, textarea { font: inherit; color: inherit; }
 			
 			.top-bar {
 				background: linear-gradient(90deg, var(--primary), #0b4f78);
@@ -35,61 +51,191 @@
 			}
 			
 			.container {
-				max-width: 800px;
+				width: 100%;
+				max-width: 900px;
 				margin: 0 auto;
-				padding: 0 1rem 3rem;
+				padding: 0 0.875rem calc(2rem + env(safe-area-inset-bottom));
 			}
 			
+			/* ---------------- Header ---------------- */
+			
 			header {
-				text-align: center;
-				padding: 2rem 1rem 1.5rem;
+				display: flex;
+				align-items: center;
+				gap: 0.75rem;
+				padding: 1.1rem 0.15rem 0.9rem;
+				text-align: left;
 			}
 			
 			.header-icon {
-				width: 52px;
-				height: 52px;
-				margin: 0 auto 0.75rem;
-				border-radius: 14px;
+				width: 44px;
+				height: 44px;
+				flex-shrink: 0;
+				border-radius: 12px;
 				background: linear-gradient(135deg, var(--primary), var(--accent));
 				display: flex;
 				align-items: center;
 				justify-content: center;
-				box-shadow: 0 6px 16px rgba(15,109,188,0.25);
+				box-shadow: 0 6px 16px rgba(15, 109, 188, 0.25);
 			}
 			
-			.header-icon svg { width: 28px; height: 28px; stroke: white; }
+			.header-icon svg { width: 24px; height: 24px; stroke: #fff; }
 			
 			header h1 {
-				font-size: 1.6rem;
+				font-size: 1.12rem;
 				font-weight: 800;
 				letter-spacing: -0.01em;
+				line-height: 1.25;
 			}
 			
 			header p {
 				color: var(--text-muted);
-				margin-top: 0.35rem;
-				font-size: 0.9rem;
+				font-size: 0.8rem;
+				margin-top: 0.15rem;
 			}
+			
+			/* ---------------- Toolbar (import / export) ---------------- */
+			
+			.app-toolbar {
+				display: grid;
+				grid-template-columns: 1fr 1fr;
+				gap: 0.55rem;
+				margin-bottom: 0.9rem;
+			}
+			
+			.btn {
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				gap: 0.4rem;
+				min-height: 44px;
+				padding: 0.72rem 1rem;
+				border: none;
+				border-radius: 10px;
+				font-size: 0.9rem;
+				font-weight: 700;
+				letter-spacing: 0.01em;
+				cursor: pointer;
+				transition: background 0.15s, opacity 0.15s, transform 0.05s;
+				touch-action: manipulation;
+			}
+			
+			.btn:active:not(:disabled) { transform: translateY(1px); }
+			
+			.btn-primary {
+				background: var(--primary);
+				color: #fff;
+				box-shadow: 0 4px 12px rgba(15, 109, 188, 0.22);
+			}
+			
+			.btn-primary:hover:not(:disabled) { background: var(--primary-hover); }
+			
+			.btn-secondary {
+				background: var(--primary-light);
+				color: var(--primary-hover);
+				border: 1px solid rgba(15, 109, 188, 0.25);
+			}
+			
+			.btn-secondary:hover:not(:disabled) { background: #dcecfb; }
+			
+			.btn-ghost {
+				background: var(--card);
+				color: var(--text);
+				border: 1px solid var(--border);
+			}
+			
+			.btn-ghost:hover:not(:disabled) { background: #f8fafc; }
+			
+			.btn:disabled { opacity: 0.5; cursor: not-allowed; box-shadow: none; }
+			
+			.btn[hidden] { display: none; }
+			
+			.btn .icon {
+				width: 16px;
+				height: 16px;
+				flex-shrink: 0;
+			}
+			
+			/* ---------------- Stepper ---------------- */
+			
+			.stepper {
+				display: flex;
+				gap: 0.45rem;
+				overflow-x: auto;
+				scroll-snap-type: x proximity;
+				-webkit-overflow-scrolling: touch;
+				scrollbar-width: none;
+				padding: 0.15rem 0.1rem 0.55rem;
+				margin-bottom: 0.5rem;
+			}
+			
+			.stepper::-webkit-scrollbar { display: none; }
+			
+			.step-pill {
+				flex: 0 0 auto;
+				scroll-snap-align: start;
+				display: flex;
+				align-items: center;
+				gap: 0.45rem;
+				min-height: 42px;
+				padding: 0.5rem 0.75rem;
+				border: 1px solid var(--border);
+				border-radius: 10px;
+				background: var(--card);
+				color: var(--text-muted);
+				font-family: inherit;
+				font-size: 0.78rem;
+				font-weight: 700;
+				text-align: left;
+				cursor: pointer;
+				transition: border-color 0.15s, background 0.15s, color 0.15s;
+			}
+			
+			.step-pill:hover { border-color: var(--primary); }
+			
+			.step-pill.active {
+				border-color: var(--primary);
+				background: var(--primary-light);
+				color: var(--primary-hover);
+			}
+			
+			.step-pill .step-num {
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				width: 22px;
+				height: 22px;
+				border-radius: 50%;
+				background: var(--border);
+				color: var(--text-muted);
+				font-size: 0.7rem;
+				font-weight: 800;
+				flex-shrink: 0;
+			}
+			
+			.step-pill.active .step-num { background: var(--primary); color: #fff; }
+			
+			/* ---------------- Cards ---------------- */
 			
 			.card {
 				background: var(--card);
 				border: 1px solid var(--border);
-				border-radius: 14px;
-				padding: 1.5rem;
-				margin-bottom: 1.25rem;
-				box-shadow: 0 2px 8px rgba(15,23,42,0.06);
+				border-radius: var(--radius);
+				padding: 1rem;
+				margin-bottom: 1rem;
+				box-shadow: var(--shadow);
 			}
 			
 			.card h2 {
 				display: flex;
 				align-items: center;
-				gap: 0.6rem;
-				font-size: 1.05rem;
-				font-weight: 700;
-				margin-bottom: 1.1rem;
-				padding-bottom: 0.85rem;
+				gap: 0.55rem;
+				font-size: 1rem;
+				font-weight: 800;
+				margin-bottom: 0.9rem;
+				padding-bottom: 0.75rem;
 				border-bottom: 1px solid var(--border);
-				color: var(--text);
+				line-height: 1.3;
 			}
 			
 			.card h2 .step-num {
@@ -98,17 +244,23 @@
 				justify-content: center;
 				width: 24px;
 				height: 24px;
+				flex-shrink: 0;
 				border-radius: 50%;
 				background: var(--primary);
-				color: white;
-				font-size: 0.75rem;
+				color: #fff;
+				font-size: 0.74rem;
 				font-weight: 800;
-				flex-shrink: 0;
 			}
 			
+			.card h2 .step-num.is-done { background: var(--success); }
+			
+			.card > .form-desc { margin-top: -0.35rem; }
+			
+			/* ---------------- Form fields ---------------- */
+			
 			.form-group {
-				margin-bottom: 1.1rem;
-				padding: 0.9rem 1rem;
+				margin-bottom: 0.8rem;
+				padding: 0.8rem;
 				background: #fbfcfe;
 				border: 1px solid var(--border);
 				border-radius: 10px;
@@ -120,10 +272,12 @@
 				background: var(--primary-light);
 			}
 			
+			.form-group:last-child { margin-bottom: 0; }
+			
 			.form-group.has-error,
 			.form-group.has-error:focus-within {
 				border-color: var(--danger);
-				background: #fff5f5;
+				background: var(--danger-bg);
 			}
 			
 			.form-group.has-error .form-label { color: var(--danger); }
@@ -134,13 +288,16 @@
 			}
 			
 			.form-group.has-error .numeric-input-wrap,
-			.form-group.has-error .segmented-toggle {
+			.form-group.has-error .segmented-toggle,
+			.form-group.has-error .history-input-row {
 				border-color: var(--danger);
 				box-shadow: 0 0 0 3px rgba(217, 45, 32, 0.12);
 			}
 			
 			.field-error-msg {
 				width: 100%;
+				flex-basis: 100%;
+				grid-column: 1 / -1;
 				display: flex;
 				align-items: flex-start;
 				gap: 0.4rem;
@@ -170,7 +327,7 @@
 			.form-group.has-warning,
 			.form-group.has-warning:focus-within {
 				border-color: var(--warning);
-				background: #fffaeb;
+				background: var(--warning-bg);
 			}
 			
 			.form-group.has-warning .form-label { color: var(--warning); }
@@ -188,6 +345,8 @@
 			
 			.field-warn-msg {
 				width: 100%;
+				flex-basis: 100%;
+				grid-column: 1 / -1;
 				display: flex;
 				align-items: flex-start;
 				gap: 0.4rem;
@@ -214,24 +373,180 @@
 				font-weight: 800;
 			}
 			
-			.required-mark {
-				color: var(--danger);
-				margin-left: 0.15rem;
+			.required-mark { color: var(--danger); margin-left: 0.15rem; }
+			
+			.form-label {
+				display: block;
+				font-weight: 700;
+				font-size: 0.88rem;
+				margin-bottom: 0.3rem;
+				color: var(--text);
 			}
 			
-			.form-group:last-child { margin-bottom: 0; }
+			.form-label .unit {
+				font-weight: 500;
+				color: var(--primary);
+				font-size: 0.74rem;
+				background: var(--primary-light);
+				padding: 0.08rem 0.38rem;
+				border-radius: 5px;
+				margin-left: 0.2rem;
+				white-space: nowrap;
+			}
 			
-			.category-section { margin-bottom: 1.5rem; }
+			.form-desc {
+				font-size: 0.79rem;
+				color: var(--text-muted);
+				margin-bottom: 0.55rem;
+			}
+			
+			.form-input {
+				width: 100%;
+				min-height: 44px;
+				padding: 0.62rem 0.8rem;
+				border: 1px solid var(--border);
+				border-radius: 8px;
+				font-size: 16px;
+				font-weight: 600;
+				transition: border-color 0.15s, box-shadow 0.15s;
+				background: var(--card);
+				color: var(--text);
+				appearance: none;
+			}
+			
+			.form-input:focus {
+				outline: none;
+				border-color: var(--primary);
+				box-shadow: 0 0 0 3px rgba(15, 109, 188, 0.15);
+			}
+			
+			.form-input::placeholder { color: #b7c0cc; font-weight: 400; }
+			
+			select.form-input {
+				background-image: linear-gradient(45deg, transparent 50%, #64748b 50%), linear-gradient(135deg, #64748b 50%, transparent 50%);
+				background-position: calc(100% - 17px) calc(50% + 1px), calc(100% - 12px) calc(50% + 1px);
+				background-size: 5px 5px, 5px 5px;
+				background-repeat: no-repeat;
+				padding-right: 2rem;
+			}
+			
+			.search-wrap { margin-bottom: 0.9rem; }
+			
+			/* ---------------- Numeric / toggle layouts ---------------- */
+			
+			.form-group.numeric-group,
+			.form-group.bool-group {
+				display: flex;
+				flex-direction: column;
+				gap: 0.65rem;
+			}
+			
+			.numeric-field-info,
+			.bool-field-info { min-width: 0; }
+			
+			.numeric-field-info .form-label,
+			.bool-field-info .form-label,
+			.numeric-field-info .form-desc,
+			.bool-field-info .form-desc { margin-bottom: 0; }
+			
+			.numeric-field-info .form-desc,
+			.bool-field-info .form-desc { margin-top: 0.2rem; }
+			
+			.numeric-input-wrap {
+				display: flex;
+				align-items: stretch;
+				border: 1px solid var(--border);
+				border-radius: 8px;
+				overflow: hidden;
+				width: 100%;
+				background: var(--card);
+				transition: border-color 0.15s, box-shadow 0.15s;
+			}
+			
+			.numeric-input-wrap:focus-within {
+				border-color: var(--primary);
+				box-shadow: 0 0 0 3px rgba(15, 109, 188, 0.15);
+			}
+			
+			.numeric-input-wrap .form-input {
+				border: none;
+				border-radius: 0;
+				flex: 1;
+				min-width: 0;
+			}
+			
+			.numeric-input-wrap .form-input:focus { box-shadow: none; }
+			
+			.numeric-unit-suffix {
+				display: flex;
+				align-items: center;
+				padding: 0 0.8rem;
+				background: #f8fafc;
+				color: var(--text-muted);
+				font-weight: 700;
+				font-size: 0.82rem;
+				border-left: 1px solid var(--border);
+				white-space: nowrap;
+			}
+			
+			.segmented-toggle {
+				display: flex;
+				flex-wrap: wrap;
+				width: 100%;
+				border: 1px solid var(--border);
+				border-radius: 8px;
+				overflow: hidden;
+				background: var(--card);
+			}
+			
+			.segment-btn {
+				flex: 1 1 auto;
+				min-height: 44px;
+				padding: 0.6rem 0.7rem;
+				border: none;
+				background: #f8fafc;
+				color: var(--text);
+				font-weight: 700;
+				font-size: 0.82rem;
+				cursor: pointer;
+				transition: background 0.15s, color 0.15s;
+				white-space: normal;
+				overflow-wrap: anywhere;
+				text-align: center;
+			}
+			
+			.segment-btn + .segment-btn { border-left: 1px solid var(--border); }
+			
+			.segment-btn:hover:not(.active) { background: #eef2f6; }
+			
+			.segment-btn.active { background: var(--accent); color: #fff; }
+			
+			.field-code {
+				display: inline-block;
+				margin-left: 0.35rem;
+				padding: 0.02rem 0.36rem;
+				border-radius: 4px;
+				background: #f1f5f9;
+				color: var(--text-muted);
+				font-size: 0.66rem;
+				font-weight: 800;
+				letter-spacing: 0.03em;
+				vertical-align: 1px;
+			}
+			
+			/* ---------------- Category sections ---------------- */
+			
+			.category-section { margin-bottom: 1.25rem; }
 			.category-section:last-child { margin-bottom: 0; }
 			
 			.category-title {
 				display: flex;
 				align-items: center;
 				gap: 0.5rem;
-				margin-bottom: 0.8rem;
-				padding-bottom: 0.5rem;
+				margin-bottom: 0.65rem;
+				padding-bottom: 0.4rem;
 				border-bottom: 1px dashed var(--border);
-				font-size: 0.78rem;
+				font-size: 0.72rem;
 				font-weight: 800;
 				letter-spacing: 0.07em;
 				text-transform: uppercase;
@@ -248,363 +563,373 @@
 				border-radius: 999px;
 				background: var(--border);
 				color: var(--text-muted);
-				font-size: 0.7rem;
+				font-size: 0.68rem;
 				font-weight: 800;
 				letter-spacing: 0;
-			}
-			
-			.form-label {
-				display: block;
-				font-weight: 700;
-				font-size: 0.9rem;
-				margin-bottom: 0.3rem;
-				color: var(--text);
-			}
-			
-			.form-label .unit {
-				font-weight: 500;
-				color: var(--primary);
-				font-size: 0.78rem;
-				background: var(--primary-light);
-				padding: 0.1rem 0.4rem;
-				border-radius: 5px;
-				margin-left: 0.2rem;
-			}
-			
-			.form-desc {
-				font-size: 0.8rem;
-				color: var(--text-muted);
-				margin-bottom: 0.6rem;
-			}
-			
-			.form-input {
-				width: 100%;
-				padding: 0.65rem 0.85rem;
-				border: 1px solid var(--border);
-				border-radius: 8px;
-				font-size: 0.95rem;
-				font-weight: 600;
-				transition: border-color 0.15s, box-shadow 0.15s;
-				background: var(--card);
-				color: var(--text);
-			}
-			
-			.form-input:focus {
-				outline: none;
-				border-color: var(--primary);
-				box-shadow: 0 0 0 3px rgba(15,109,188,0.15);
-			}
-			
-			.form-input::placeholder { color: #b7c0cc; font-weight: 400; }
-			
-			.form-group.numeric-group {
-				display: flex;
-				align-items: center;
-				justify-content: space-between;
-				gap: 1.5rem;
-				flex-wrap: wrap;
-			}
-			
-			.numeric-field-info { flex: 1; min-width: 160px; }
-			.numeric-field-info .form-label,
-			.numeric-field-info .form-desc { margin-bottom: 0; }
-			.numeric-field-info .form-desc { margin-top: 0.3rem; }
-			
-			.numeric-input-wrap {
-				display: flex;
-				align-items: stretch;
-				border: 1px solid var(--border);
-				border-radius: 8px;
-				overflow: hidden;
 				flex-shrink: 0;
-				min-width: 220px;
-				background: var(--card);
-				transition: border-color 0.15s, box-shadow 0.15s;
 			}
 			
-			.numeric-input-wrap:focus-within {
-				border-color: var(--primary);
-				box-shadow: 0 0 0 3px rgba(15,109,188,0.15);
+			/* ---------------- Allergy picker ---------------- */
+			
+			.allergy-toolbar {
+				display: grid;
+				grid-template-columns: 1fr 1fr;
+				gap: 0.5rem;
+				margin: 0.55rem 0 0.75rem;
 			}
 			
-			.numeric-input-wrap .form-input {
-				border: none;
-				border-radius: 0;
-				flex: 1;
-				min-width: 0;
-			}
+			.allergy-toolbar .btn { min-height: 40px; padding: 0.5rem 0.6rem; font-size: 0.78rem; }
 			
-			.numeric-input-wrap .form-input:focus { box-shadow: none; }
-			
-			.numeric-unit-suffix {
+			.group-bar {
 				display: flex;
+				gap: 0.4rem;
+				overflow-x: auto;
+				-webkit-overflow-scrolling: touch;
+				scrollbar-width: none;
+				padding: 0.1rem 0.05rem 0.45rem;
+			}
+			
+			.group-bar::-webkit-scrollbar { display: none; }
+			
+			.group-chip {
+				display: inline-flex;
 				align-items: center;
-				padding: 0 0.9rem;
-				background: #f8fafc;
-				color: var(--text-muted);
-				font-weight: 700;
-				font-size: 0.85rem;
-				border-left: 1px solid var(--border);
-				white-space: nowrap;
-			}
-			
-			.form-group.bool-group {
-				display: flex;
-				align-items: center;
-				justify-content: space-between;
-				gap: 1.5rem;
-				flex-wrap: wrap;
-			}
-			
-			.bool-field-info { flex: 1; min-width: 160px; }
-			.bool-field-info .form-label,
-			.bool-field-info .form-desc { margin-bottom: 0; }
-			.bool-field-info .form-desc { margin-top: 0.3rem; }
-			
-			.segmented-toggle {
-				display: flex;
-				flex-wrap: wrap;
+				gap: 0.4rem;
+				flex: 0 0 auto;
+				min-height: 38px;
+				padding: 0.4rem 0.65rem;
 				border: 1px solid var(--border);
-				border-radius: 8px;
-				overflow: hidden;
-				flex-shrink: 1;
-				min-width: 220px;
-				max-width: 100%;
-			}
-			
-			.segment-btn {
-				flex: 1 1 auto;
-				padding: 0.65rem 0.9rem;
-				border: none;
-				background: #f8fafc;
+				border-radius: 999px;
+				background: var(--card);
 				color: var(--text);
+				font-size: 0.76rem;
 				font-weight: 700;
-				font-size: 0.85rem;
 				cursor: pointer;
-				transition: background 0.15s, color 0.15s;
-				white-space: normal;
-				overflow-wrap: anywhere;
-				text-align: center;
 			}
 			
-			.segment-btn + .segment-btn { border-left: 1px solid var(--border); }
+			.group-chip:hover { border-color: var(--primary); }
 			
-			.segment-btn:hover:not(.active) { background: #eef2f6; }
+			.group-chip.partial {
+				border-color: var(--accent);
+				background: var(--accent-light);
+				color: #0a6c61;
+			}
 			
-			.segment-btn.active {
+			.group-chip.active {
+				border-color: var(--accent);
 				background: var(--accent);
-				color: white;
+				color: #fff;
 			}
 			
-			@media (max-width: 640px) {
-				.form-group.bool-group,
-				.form-group.numeric-group { flex-direction: column; align-items: stretch; }
-				.segmented-toggle,
-				.numeric-input-wrap { min-width: unset; }
-			}
-			
-			.btn {
+			.group-chip-count {
 				display: inline-flex;
 				align-items: center;
 				justify-content: center;
-				padding: 0.85rem 1.5rem;
-				border: none;
-				border-radius: 10px;
-				font-size: 0.95rem;
-				font-weight: 700;
-				letter-spacing: 0.01em;
-				cursor: pointer;
-				transition: background 0.15s, opacity 0.15s, transform 0.05s;
-				width: 100%;
-				box-shadow: 0 4px 12px rgba(15,109,188,0.25);
-			}
-			
-			.btn:active:not(:disabled) { transform: translateY(1px); }
-			
-			.btn-primary { background: var(--primary); color: white; }
-			.btn-primary:hover:not(:disabled) { background: var(--primary-hover); }
-			.btn:disabled { opacity: 0.5; cursor: not-allowed; box-shadow: none; }
-			
-			.btn-secondary {
-				background: var(--primary-light);
-				color: var(--primary-hover);
-				box-shadow: none;
-				border: 1px solid rgba(15,109,188,0.25);
-			}
-			
-			.btn-secondary:hover:not(:disabled) { background: #dcecfb; }
-			
-			.btn[hidden] { display: none; }
-			
-			.evidence-toggle {
-				width: 100%;
-				margin-top: 0.75rem;
-				padding: 0.7rem 1.2rem;
-				font-size: 0.88rem;
-			}
-			
-			.evidence-panel {
-				margin-top: 0.75rem;
-				padding: 1rem 1.2rem;
-				background: #f8fafc;
-				border: 1px dashed var(--border);
-				border-radius: 10px;
-			}
-			
-			.evidence-panel h3 {
-				font-size: 0.82rem;
+				min-width: 1.45rem;
+				height: 1.3rem;
+				padding: 0 0.3rem;
+				border-radius: 999px;
+				background: rgba(15, 23, 42, 0.08);
+				font-size: 0.64rem;
 				font-weight: 800;
+			}
+			
+			.group-chip.active .group-chip-count { background: rgba(255, 255, 255, 0.25); }
+			
+			.allergy-list {
+				display: grid;
+				grid-template-columns: 1fr;
+				gap: 0.45rem;
+				max-height: 340px;
+				overflow-y: auto;
+				padding: 0.15rem;
+				margin-top: 0.55rem;
+			}
+			
+			.allergy-option {
+				display: flex;
+				align-items: center;
+				gap: 0.6rem;
+				min-height: 44px;
+				padding: 0.55rem 0.7rem;
+				border: 1px solid var(--border);
+				border-radius: 8px;
+				background: #fbfcfe;
+				font-size: 0.86rem;
+				font-weight: 600;
+				cursor: pointer;
+				transition: border-color 0.15s, background 0.15s;
+			}
+			
+			.allergy-option:hover { border-color: var(--primary); }
+			
+			.allergy-option.selected {
+				border-color: var(--accent);
+				background: var(--accent-light);
+			}
+			
+			.allergy-option input {
+				width: 18px;
+				height: 18px;
+				accent-color: var(--accent);
+				flex-shrink: 0;
+			}
+			
+			.allergy-option-text {
+				display: flex;
+				flex-direction: column;
+				min-width: 0;
+			}
+			
+			.allergy-name { overflow-wrap: anywhere; }
+			
+			.allergy-group {
+				font-size: 0.68rem;
+				font-weight: 700;
+				color: var(--text-muted);
 				text-transform: uppercase;
 				letter-spacing: 0.03em;
+			}
+			
+			.allergy-selected-title {
+				display: flex;
+				align-items: center;
+				gap: 0.5rem;
+				margin: 1rem 0 0.35rem;
+				padding-bottom: 0.45rem;
+				border-bottom: 1px dashed var(--border);
+				font-size: 0.72rem;
+				font-weight: 800;
+				letter-spacing: 0.07em;
+				text-transform: uppercase;
 				color: var(--text-muted);
+			}
+			
+			.selected-allergies,
+			.token-list {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 0.45rem;
+			}
+			
+			.allergy-chip,
+			.history-chip {
+				display: inline-flex;
+				align-items: center;
+				gap: 0.35rem;
+				max-width: 100%;
+				padding: 0.32rem 0.4rem 0.32rem 0.75rem;
+				border-radius: 999px;
+				background: var(--primary-light);
+				color: var(--primary-hover);
+				font-size: 0.79rem;
+				font-weight: 700;
+				overflow-wrap: anywhere;
+			}
+			
+			.history-chip { background: #f1f5f9; color: var(--text); }
+			
+			.chip-remove {
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				width: 20px;
+				height: 20px;
+				flex-shrink: 0;
+				border: none;
+				border-radius: 50%;
+				background: rgba(15, 109, 188, 0.15);
+				color: inherit;
+				font-size: 0.9rem;
+				line-height: 1;
+				cursor: pointer;
+			}
+			
+			.history-chip .chip-remove { background: rgba(15, 23, 42, 0.1); }
+			
+			.chip-remove:hover { background: var(--danger); color: #fff; }
+			
+			/* ---------------- History input ---------------- */
+			
+			.input-row {
+				display: flex;
+				flex-direction: column;
+				gap: 0.5rem;
+			}
+			
+			.input-row .form-input { flex: 1; }
+			
+			.input-row .btn { flex-shrink: 0; }
+			
+			/* ---------------- Other infections ---------------- */
+			
+			.check-grid {
+				display: grid;
+				grid-template-columns: 1fr;
+				gap: 0.5rem;
+			}
+			
+			.check-option {
+				display: flex;
+				align-items: center;
+				gap: 0.6rem;
+				min-height: 44px;
+				padding: 0.55rem 0.7rem;
+				border: 1px solid var(--border);
+				border-radius: 8px;
+				background: #fbfcfe;
+				font-size: 0.86rem;
+				font-weight: 600;
+				cursor: pointer;
+				transition: border-color 0.15s, background 0.15s;
+			}
+			
+			.check-option:hover { border-color: var(--primary); }
+			
+			.check-option.selected {
+				border-color: var(--accent);
+				background: var(--accent-light);
+			}
+			
+			.check-option input {
+				width: 18px;
+				height: 18px;
+				accent-color: var(--accent);
+				flex-shrink: 0;
+			}
+			
+			/* ---------------- Microbial samples ---------------- */
+			
+			.sample-list {
+				display: flex;
+				flex-direction: column;
+				gap: 0.75rem;
+				margin-bottom: 0.75rem;
+			}
+			
+			.sample-card { margin-bottom: 0; background: var(--card); }
+			
+			.sample-head {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				gap: 0.5rem;
 				margin-bottom: 0.6rem;
 			}
 			
-			.evidence-list {
-				margin: 0;
-				padding: 0;
-				list-style: none;
-				display: flex;
-				flex-direction: column;
-				gap: 0.6rem;
-			}
-			
-			.evidence-list li {
-				font-size: 0.85rem;
-				line-height: 1.5;
-				color: var(--text);
-				word-break: break-word;
-			}
-			
-			.evidence-item {
-				padding: 0.75rem 0.9rem;
-				background: var(--card);
-				border: 1px solid var(--border);
-				border-radius: 10px;
-			}
-			
-			.evidence-source {
+			.sample-title {
+				font-size: 0.82rem;
 				font-weight: 800;
-				font-size: 0.86rem;
-				color: var(--text);
-				margin-bottom: 0.35rem;
-			}
-			
-			.evidence-row {
-				display: flex;
-				align-items: baseline;
-				justify-content: space-between;
-				gap: 0.75rem;
-				padding: 0.15rem 0;
-			}
-			
-			.evidence-key {
-				flex-shrink: 0;
-				font-size: 0.7rem;
-				font-weight: 800;
-				letter-spacing: 0.04em;
-				text-transform: uppercase;
-				color: var(--text-muted);
-			}
-			
-			.evidence-formula {
-				font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-				font-size: 0.78rem;
-				background: #f1f5f9;
-				border: 1px solid var(--border);
-				border-radius: 6px;
-				padding: 0.1rem 0.45rem;
-				white-space: pre-wrap;
-				text-align: right;
-				word-break: break-word;
-			}
-			
-			.evidence-variables {
-				margin: 0.4rem 0;
-				padding: 0.45rem 0.6rem;
-				background: #f8fafc;
-				border: 1px dashed var(--border);
-				border-radius: 8px;
-			}
-			
-			.evidence-variables-title {
-				font-size: 0.7rem;
-				font-weight: 800;
-				letter-spacing: 0.04em;
-				text-transform: uppercase;
-				color: var(--text-muted);
-				margin-bottom: 0.25rem;
-			}
-			
-			.evidence-var {
-				display: flex;
-				align-items: baseline;
-				justify-content: space-between;
-				gap: 0.75rem;
-				font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-				font-size: 0.78rem;
-				padding: 0.1rem 0;
-			}
-			
-			.evidence-var-name {
-				color: var(--text);
-				word-break: break-word;
-			}
-			
-			.evidence-var-value {
-				flex-shrink: 0;
-				font-weight: 700;
 				color: var(--primary-hover);
+				text-transform: uppercase;
+				letter-spacing: 0.04em;
 			}
 			
-			.evidence-value {
-				font-weight: 700;
-				text-align: right;
-				word-break: break-word;
+			.icon-btn {
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				width: 34px;
+				height: 34px;
+				border: 1px solid var(--border);
+				border-radius: 8px;
+				background: var(--card);
+				color: var(--text-muted);
+				font-size: 1.15rem;
+				line-height: 1;
+				cursor: pointer;
 			}
 			
-			.evidence-value.is-missing { color: var(--warning); font-weight: 600; }
+			.icon-btn:hover { border-color: var(--danger); color: var(--danger); background: var(--danger-bg); }
 			
-			.evidence-badges {
-				display: flex;
-				flex-wrap: wrap;
-				gap: 0.4rem;
-				margin-top: 0.45rem;
+			.sample-grid {
+				display: grid;
+				grid-template-columns: 1fr;
+				gap: 0.55rem;
 			}
 			
-			.evidence-badge {
-				display: inline-block;
-				padding: 0.15rem 0.6rem;
-				border-radius: 999px;
+			.sample-field { display: flex; flex-direction: column; gap: 0.25rem; }
+			
+			.sample-label {
 				font-size: 0.72rem;
 				font-weight: 800;
-				background: var(--primary-light);
-				color: var(--primary-hover);
+				color: var(--text-muted);
+				text-transform: uppercase;
+				letter-spacing: 0.04em;
 			}
 			
-			.evidence-badge.badge-major { background: #fee2e2; color: #991b1b; }
-			.evidence-badge.badge-minor { background: #f1f5f9; color: var(--text-muted); }
+			/* ---------------- Step actions ---------------- */
 			
-			/* Legacy string evidence: multi-line text with \n separators and \t indents */
-			.evidence-item.evidence-legacy {
-				background: #f8fafc;
-				border: 1px dashed var(--border);
-				white-space: pre-wrap;
-				tab-size: 4;
+			.step-actions {
+				display: flex;
+				flex-direction: column;
+				gap: 0.55rem;
+				position: sticky;
+				bottom: max(0.4rem, env(safe-area-inset-bottom));
+				z-index: 15;
+				margin: 0 -0.2rem 1rem;
+				padding: 0.65rem;
+				background: rgba(238, 241, 245, 0.92);
+				-webkit-backdrop-filter: blur(8px);
+				backdrop-filter: blur(8px);
+				border-radius: 14px;
+			}
+			
+			.step-actions .btn { width: 100%; }
+			
+			/* ---------------- Loading / modal / toast ---------------- */
+			
+			.loading-state {
+				text-align: center;
+				padding: 3.5rem 1rem;
+				color: var(--text-muted);
 			}
 			
 			.spinner {
 				display: inline-block;
 				width: 18px;
 				height: 18px;
-				border: 2px solid rgba(255,255,255,0.3);
-				border-top-color: white;
+				border: 2px solid rgba(255, 255, 255, 0.3);
+				border-top-color: #fff;
 				border-radius: 50%;
 				animation: spin 0.6s linear infinite;
 				margin-right: 0.5rem;
+				vertical-align: -3px;
+			}
+			
+			.loading-state .spinner {
+				border-color: var(--border);
+				border-top-color: var(--primary);
+				width: 34px;
+				height: 34px;
+				margin: 0 0 1rem;
+				display: block;
+				margin-inline: auto;
 			}
 			
 			@keyframes spin { to { transform: rotate(360deg); } }
+			
+			.toast {
+				position: fixed;
+				left: 50%;
+				bottom: calc(1rem + env(safe-area-inset-bottom));
+				transform: translate(-50%, 1.5rem);
+				max-width: min(92vw, 420px);
+				padding: 0.7rem 1rem;
+				border-radius: 10px;
+				background: #172436;
+				color: #fff;
+				font-size: 0.82rem;
+				font-weight: 600;
+				text-align: center;
+				box-shadow: 0 12px 30px rgba(15, 23, 42, 0.3);
+				opacity: 0;
+				pointer-events: none;
+				transition: opacity 0.2s, transform 0.2s;
+				z-index: 1200;
+			}
+			
+			.toast.show { opacity: 1; transform: translate(-50%, 0); }
 			
 			.error-modal-overlay {
 				position: fixed;
@@ -624,8 +949,8 @@
 				border-radius: 14px;
 				max-width: 440px;
 				width: 100%;
-				padding: 1.5rem;
-				box-shadow: 0 20px 50px rgba(15,23,42,0.3);
+				padding: 1.35rem;
+				box-shadow: 0 20px 50px rgba(15, 23, 42, 0.3);
 				border-top: 4px solid var(--danger);
 			}
 			
@@ -650,7 +975,7 @@
 				display: none;
 				margin: -0.5rem 0 1.1rem;
 				padding: 0.7rem 0.9rem 0.7rem 2.1rem;
-				background: #fff5f5;
+				background: var(--danger-bg);
 				border: 1px solid #fecdca;
 				border-radius: 8px;
 				color: var(--danger);
@@ -661,16 +986,45 @@
 			.error-modal .error-detail-list li + li { margin-top: 0.35rem; }
 			
 			.error-modal-actions { display: flex; justify-content: flex-end; }
+			
 			.error-modal-actions .btn { width: auto; padding: 0.6rem 1.5rem; }
 			
-			.results-section { display: none; }
+			/* ---------------- Results ---------------- */
+			
+			.result-hero {
+				display: grid;
+				grid-template-columns: 1fr;
+				gap: 0.6rem;
+				margin-bottom: 1rem;
+			}
+			
+			.hero-item {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				gap: 0.75rem;
+				padding: 0.8rem 0.9rem;
+				background: #fbfcfe;
+				border: 1px solid var(--border);
+				border-radius: 10px;
+			}
+			
+			.hero-label {
+				font-size: 0.65rem;
+				font-weight: 800;
+				color: var(--text-muted);
+				text-transform: uppercase;
+				letter-spacing: 0.04em;
+			}
+			
+			.hero-value { font-size: 0.92rem; font-weight: 800; text-align: right; }
 			
 			.severity-badge {
 				display: inline-block;
-				padding: 0.35rem 1rem;
+				padding: 0.3rem 0.85rem;
 				border-radius: 20px;
 				font-weight: 800;
-				font-size: 0.85rem;
+				font-size: 0.8rem;
 				text-transform: uppercase;
 				letter-spacing: 0.04em;
 			}
@@ -681,21 +1035,75 @@
 			
 			.treatment-badge {
 				display: inline-block;
-				padding: 0.35rem 1rem;
+				padding: 0.3rem 0.85rem;
 				border-radius: 20px;
-				font-weight: 700;
-				font-size: 0.85rem;
+				font-weight: 800;
+				font-size: 0.8rem;
 				background: var(--primary-light);
 				color: var(--primary-hover);
 			}
 			
+			.flag-grid {
+				display: grid;
+				grid-template-columns: 1fr;
+				gap: 0.55rem;
+			}
+			
+			.result-flag {
+				display: flex;
+				align-items: flex-start;
+				gap: 0.6rem;
+				padding: 0.75rem 0.85rem;
+				border: 1px solid var(--border);
+				border-radius: 10px;
+				background: #fbfcfe;
+			}
+			
+			.result-flag .flag-icon {
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				width: 22px;
+				height: 22px;
+				flex-shrink: 0;
+				border-radius: 50%;
+				font-size: 0.72rem;
+				font-weight: 900;
+				color: #fff;
+				background: var(--text-muted);
+			}
+			
+			.result-flag .flag-title {
+				font-size: 0.72rem;
+				font-weight: 800;
+				text-transform: uppercase;
+				letter-spacing: 0.04em;
+				margin-bottom: 0.1rem;
+			}
+			
+			.result-flag .flag-text { font-size: 0.86rem; font-weight: 600; overflow-wrap: anywhere; }
+			
+			.result-flag.is-danger { border-color: #fca5a5; background: #fef2f2; }
+			.result-flag.is-danger .flag-icon { background: var(--danger); }
+			.result-flag.is-danger .flag-title { color: #991b1b; }
+			
+			.result-flag.is-warning { border-color: #fcd34d; background: var(--warning-bg); }
+			.result-flag.is-warning .flag-icon { background: var(--warning); }
+			.result-flag.is-warning .flag-title { color: #92400e; }
+			
+			.result-flag.is-success { border-color: #a7f3d0; background: var(--success-bg); }
+			.result-flag.is-success .flag-icon { background: var(--success); }
+			.result-flag.is-success .flag-title { color: #166534; }
+			
+			.result-flag.is-neutral .flag-icon { background: #94a3b8; }
+			
 			.result-row {
 				display: flex;
-				align-items: center;
+				align-items: flex-start;
 				justify-content: space-between;
-				gap: 1rem;
-				padding: 0.85rem 1rem;
-				margin-bottom: 0.6rem;
+				gap: 0.6rem;
+				padding: 0.7rem 0.85rem;
+				margin-bottom: 0.5rem;
 				background: #fbfcfe;
 				border: 1px solid var(--border);
 				border-radius: 10px;
@@ -704,27 +1112,103 @@
 			.result-row:last-child { margin-bottom: 0; }
 			
 			.result-label {
-				font-size: 0.82rem;
-				font-weight: 700;
+				font-size: 0.72rem;
+				font-weight: 800;
 				color: var(--text-muted);
 				text-transform: uppercase;
 				letter-spacing: 0.03em;
-				min-width: 120px;
+				flex-shrink: 0;
 			}
 			
 			.result-value {
-				font-size: 0.9rem;
+				font-size: 0.86rem;
 				font-weight: 600;
 				text-align: right;
 				word-break: break-word;
 			}
 			
+			.metric-item {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				gap: 0.6rem;
+				flex-wrap: wrap;
+				padding: 0.7rem 0.85rem;
+				margin-bottom: 0.5rem;
+				background: #fbfcfe;
+				border: 1px solid var(--border);
+				border-radius: 10px;
+			}
+			
+			.metric-item:last-child { margin-bottom: 0; }
+			
+			.metric-code { font-weight: 800; font-size: 0.88rem; }
+			
+			.metric-score {
+				font-size: 0.76rem;
+				font-weight: 700;
+				color: var(--text-muted);
+				text-align: right;
+			}
+			
+			.metrics-diagnosis-block {
+				margin-top: 1rem;
+				padding-top: 0.9rem;
+				border-top: 1px dashed var(--border);
+			}
+			
+			.metrics-diagnosis-block h3,
+			.result-block-title {
+				font-size: 0.72rem;
+				font-weight: 800;
+				text-transform: uppercase;
+				letter-spacing: 0.04em;
+				color: var(--text-muted);
+				margin-bottom: 0.55rem;
+			}
+			
+			.metric-diagnosis-item {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				gap: 0.5rem;
+				flex-wrap: wrap;
+				padding: 0.65rem 0.8rem;
+				margin-bottom: 0.5rem;
+				background: #fbfcfe;
+				border: 1px solid var(--border);
+				border-radius: 10px;
+			}
+			
+			.metric-diagnosis-item:last-child { margin-bottom: 0; }
+			
+			.metric-diagnosis-identity { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+			
+			.metric-diagnosis-code { font-weight: 800; font-size: 0.88rem; }
+			
+			.metric-diagnosis-item .severity-badge { padding: 0.12rem 0.55rem; font-size: 0.66rem; }
+			
+			.metric-diagnosis-meta { display: flex; align-items: center; gap: 0.35rem; flex-wrap: wrap; }
+			
+			.metric-chip {
+				display: inline-block;
+				padding: 0.12rem 0.55rem;
+				border-radius: 999px;
+				font-size: 0.68rem;
+				font-weight: 800;
+				background: var(--primary-light);
+				color: var(--primary-hover);
+				white-space: nowrap;
+			}
+			
+			.metric-chip.is-neutral { background: #f1f5f9; color: var(--text-muted); }
+			
 			.heavy-suspected-box {
 				background: linear-gradient(135deg, #fef2f2, #fff1f2);
 				border: 2px solid #fca5a5;
 				border-radius: 12px;
-				padding: 1.1rem 1.3rem;
-				margin-bottom: 1rem;
+				padding: 0.9rem;
+				margin-bottom: 0.8rem;
 			}
 			
 			.heavy-suspected-box h3 {
@@ -732,16 +1216,16 @@
 				align-items: center;
 				gap: 0.4rem;
 				color: #991b1b;
-				font-size: 1rem;
+				font-size: 0.9rem;
 				font-weight: 800;
-				margin-bottom: 0.6rem;
+				margin-bottom: 0.45rem;
 			}
 			
 			.worth-suspected-box {
 				background: #f8fafc;
 				border: 1px solid var(--border);
 				border-radius: 12px;
-				padding: 1.1rem 1.3rem;
+				padding: 0.9rem;
 			}
 			
 			.worth-suspected-box h3 {
@@ -749,19 +1233,19 @@
 				align-items: center;
 				gap: 0.4rem;
 				color: var(--text-muted);
-				font-size: 0.9rem;
+				font-size: 0.84rem;
 				font-weight: 700;
-				margin-bottom: 0.6rem;
+				margin-bottom: 0.5rem;
 			}
 			
-			/* Collapsible "Worth Suspected" header */
 			.worth-suspected-box .worth-header { margin-bottom: 0; }
 			
 			.collapse-toggle {
 				display: flex;
 				align-items: center;
-				gap: 0.5rem;
+				gap: 0.45rem;
 				width: 100%;
+				min-height: 40px;
 				padding: 0;
 				border: none;
 				background: none;
@@ -788,353 +1272,447 @@
 			
 			.collapse-toggle .category-count { margin-left: auto; }
 			
-			.worth-body { margin-top: 0.75rem; }
+			.worth-body { margin-top: 0.6rem; }
 			
 			.pathogen-item {
 				display: flex;
 				align-items: center;
-				justify-content: flex-start;
-				gap: 0.75rem;
-				padding: 0.55rem 0.1rem;
-				font-size: 0.9rem;
+				gap: 0.6rem;
+				padding: 0.5rem 0.05rem;
+				font-size: 0.86rem;
 			}
 			
-			.pathogen-item + .pathogen-item {
-				border-top: 1px solid rgba(0,0,0,0.06);
+			.worth-suspected-box .pathogen-item + .pathogen-item { border-top: 1px solid rgba(0, 0, 0, 0.06); }
+			
+			.pathogen-name { font-weight: 600; flex: 1; overflow-wrap: anywhere; }
+			
+			#heavyList { display: flex; flex-direction: column; gap: 0.4rem; }
+			
+			.heavy-suspected-box .pathogen-item {
+				padding: 0.55rem 0.7rem;
+				background: #fff;
+				border: 1px solid #fecaca;
+				border-radius: 8px;
+				color: var(--text);
 			}
 			
-			.pathogen-name { font-weight: 600; flex: 1; }
+			.heavy-suspected-box .pathogen-name { color: #7f1d1d; font-weight: 700; }
 			
-			.pathogen-rank {
-				display: inline-flex;
-				align-items: center;
-				justify-content: center;
-				min-width: 2rem;
-				height: 1.6rem;
-				padding: 0 0.45rem;
-				border-radius: 999px;
-				background: #fee2e2;
-				color: #991b1b;
-				font-size: 0.75rem;
-				font-weight: 800;
-				flex-shrink: 0;
+			.box-hint { font-size: 0.74rem; color: #7f1d1d; margin: 0 0 0.45rem; }
+			
+			.evidence-toggle {
+				width: 100%;
+				margin-top: 0.55rem;
 			}
 			
-			.pathogen-item:first-child .pathogen-rank {
-				background: #991b1b;
-				color: #fff;
-			}
-			
-			.box-hint {
-				font-size: 0.78rem;
-				color: #7f1d1d;
-				margin: -0.3rem 0 0.6rem;
-			}
-			
-			.metric-item {
-				display: flex;
-				align-items: center;
-				justify-content: space-between;
-				gap: 0.75rem;
-				flex-wrap: wrap;
-				padding: 0.8rem 1rem;
-				margin-bottom: 0.6rem;
-				background: #fbfcfe;
-				border: 1px solid var(--border);
+			.evidence-panel {
+				margin-top: 0.65rem;
+				padding: 0.85rem;
+				background: #f8fafc;
+				border: 1px dashed var(--border);
 				border-radius: 10px;
 			}
 			
-			.metric-item:last-child { margin-bottom: 0; }
-			
-			.metric-code {
-				font-weight: 800;
-				font-size: 0.92rem;
-			}
-			
-			.metric-score {
-				font-size: 0.8rem;
-				font-weight: 700;
-				color: var(--text-muted);
-			}
-			
-			/* Per-metric severity diagnosis inside the result card */
-			.metrics-diagnosis-block {
-				margin-top: 1.25rem;
-				padding-top: 1rem;
-				border-top: 1px dashed var(--border);
-			}
-			
-			.metrics-diagnosis-block h3 {
-				font-size: 0.82rem;
+			.evidence-panel h3 {
+				font-size: 0.72rem;
 				font-weight: 800;
 				text-transform: uppercase;
-				letter-spacing: 0.03em;
+				letter-spacing: 0.04em;
 				color: var(--text-muted);
-				margin-bottom: 0.6rem;
+				margin-bottom: 0.55rem;
 			}
 			
-			.metric-diagnosis-item {
+			.evidence-list {
+				margin: 0;
+				padding: 0;
+				list-style: none;
 				display: flex;
-				align-items: center;
-				justify-content: space-between;
-				gap: 0.6rem;
-				flex-wrap: wrap;
-				padding: 0.7rem 0.9rem;
-				margin-bottom: 0.55rem;
-				background: #fbfcfe;
+				flex-direction: column;
+				gap: 0.55rem;
+			}
+			
+			.evidence-item {
+				padding: 0.7rem 0.8rem;
+				background: var(--card);
 				border: 1px solid var(--border);
 				border-radius: 10px;
+				font-size: 0.82rem;
+				line-height: 1.5;
+				word-break: break-word;
 			}
 			
-			.metric-diagnosis-item:last-child { margin-bottom: 0; }
+			.evidence-item.evidence-legacy {
+				background: #f8fafc;
+				border: 1px dashed var(--border);
+				white-space: pre-wrap;
+				tab-size: 4;
+			}
 			
-			.metric-diagnosis-identity {
+			.evidence-source { font-weight: 800; font-size: 0.84rem; margin-bottom: 0.3rem; }
+			
+			.evidence-row {
 				display: flex;
-				align-items: center;
-				gap: 0.55rem;
-				flex-wrap: wrap;
+				align-items: baseline;
+				justify-content: space-between;
+				gap: 0.6rem;
+				padding: 0.12rem 0;
 			}
 			
-			.metric-diagnosis-code {
+			.evidence-key {
+				flex-shrink: 0;
+				font-size: 0.64rem;
 				font-weight: 800;
-				font-size: 0.92rem;
+				letter-spacing: 0.04em;
+				text-transform: uppercase;
+				color: var(--text-muted);
 			}
 			
-			.metric-diagnosis-item .severity-badge {
-				padding: 0.15rem 0.6rem;
-				font-size: 0.7rem;
-			}
-			
-			.metric-diagnosis-meta {
-				display: flex;
-				align-items: center;
-				gap: 0.4rem;
-				flex-wrap: wrap;
-			}
-			
-			.metric-chip {
-				display: inline-block;
-				padding: 0.15rem 0.6rem;
-				border-radius: 999px;
+			.evidence-formula {
+				font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 				font-size: 0.72rem;
+				background: #f1f5f9;
+				border: 1px solid var(--border);
+				border-radius: 6px;
+				padding: 0.1rem 0.4rem;
+				white-space: pre-wrap;
+				text-align: right;
+				word-break: break-word;
+			}
+			
+			.evidence-variables {
+				margin: 0.35rem 0;
+				padding: 0.4rem 0.55rem;
+				background: #f8fafc;
+				border: 1px dashed var(--border);
+				border-radius: 8px;
+			}
+			
+			.evidence-variables-title {
+				font-size: 0.64rem;
+				font-weight: 800;
+				letter-spacing: 0.04em;
+				text-transform: uppercase;
+				color: var(--text-muted);
+				margin-bottom: 0.2rem;
+			}
+			
+			.evidence-var {
+				display: flex;
+				align-items: baseline;
+				justify-content: space-between;
+				gap: 0.6rem;
+				font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+				font-size: 0.72rem;
+				padding: 0.08rem 0;
+			}
+			
+			.evidence-var-name { color: var(--text); word-break: break-word; }
+			
+			.evidence-var-value { flex-shrink: 0; font-weight: 700; color: var(--primary-hover); }
+			
+			.evidence-value { font-weight: 700; text-align: right; word-break: break-word; }
+			.evidence-value.is-missing { color: var(--warning); font-weight: 600; }
+			
+			.evidence-badges { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-top: 0.4rem; }
+			
+			.evidence-badge {
+				display: inline-block;
+				padding: 0.12rem 0.55rem;
+				border-radius: 999px;
+				font-size: 0.68rem;
 				font-weight: 800;
 				background: var(--primary-light);
 				color: var(--primary-hover);
-				white-space: nowrap;
 			}
 			
-			.metric-chip.is-neutral {
-				background: #f1f5f9;
-				color: var(--text-muted);
+			.evidence-badge.badge-major { background: #fee2e2; color: #991b1b; }
+			.evidence-badge.badge-minor { background: #f1f5f9; color: var(--text-muted); }
+			
+			.micro-list { display: flex; flex-direction: column; gap: 0.55rem; }
+			
+			.micro-item {
+				padding: 0.7rem 0.8rem;
+				background: var(--card);
+				border: 1px solid var(--border);
+				border-radius: 10px;
 			}
+			
+			.micro-head {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				gap: 0.5rem;
+				flex-wrap: wrap;
+			}
+			
+			.micro-pathogen { font-weight: 800; font-size: 0.88rem; overflow-wrap: anywhere; }
+			
+			.mic-badge {
+				display: inline-block;
+				padding: 0.12rem 0.55rem;
+				border-radius: 999px;
+				font-size: 0.68rem;
+				font-weight: 800;
+				text-transform: uppercase;
+				letter-spacing: 0.03em;
+			}
+			
+			.mic-susceptible { background: #dcfce7; color: #166534; }
+			.mic-intermediate { background: #fef3c7; color: #92400e; }
+			.mic-resistant { background: #fee2e2; color: #991b1b; }
+			
+			.micro-abs { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-top: 0.5rem; }
+			
+			.micro-ab {
+				padding: 0.15rem 0.55rem;
+				border-radius: 999px;
+				background: var(--primary-light);
+				color: var(--primary-hover);
+				font-size: 0.72rem;
+				font-weight: 700;
+			}
+			
+			/* ---------------- Treatment protocols ---------------- */
+			
+			.protocol-count { margin-left: auto; }
+			
+			.protocol-list { display: flex; flex-direction: column; gap: 0.75rem; }
+			
+			.protocol-item {
+				padding: 0.85rem;
+				background: #fbfcfe;
+				border: 1px solid var(--border);
+				border-radius: 12px;
+			}
+			
+			.protocol-heading { margin: 0; }
+			
+			.protocol-toggle { flex-wrap: wrap; row-gap: 0.35rem; }
+			
+			.protocol-toggle .protocol-name { flex: 1 1 auto; }
+			
+			.protocol-toggle .protocol-meta { margin-left: auto; }
+			
+			.protocol-name { font-size: 0.9rem; font-weight: 800; }
+			
+			.protocol-meta {
+				display: flex;
+				align-items: center;
+				justify-content: flex-end;
+				gap: 0.35rem;
+				flex-wrap: wrap;
+			}
+			
+			.protocol-meta .severity-badge {
+				padding: 0.12rem 0.55rem;
+				font-size: 0.66rem;
+			}
+			
+			.protocol-body { margin-top: 0.7rem; }
+			
+			.protocol-section { margin-top: 0.7rem; padding-top: 0.7rem; border-top: 1px dashed var(--border); }
+			
+			.protocol-body .protocol-section:first-child { margin-top: 0; padding-top: 0; border-top: none; }
+			
+			.protocol-section-title {
+				font-size: 0.64rem;
+				font-weight: 800;
+				letter-spacing: 0.04em;
+				text-transform: uppercase;
+				color: var(--text-muted);
+				margin-bottom: 0.4rem;
+			}
+			
+			.protocol-hint {
+				font-size: 0.74rem;
+				color: var(--text-muted);
+				margin-bottom: 0.5rem;
+			}
+			
+			.protocol-chips { display: flex; flex-wrap: wrap; gap: 0.3rem; }
+			
+			.protocol-chip {
+				padding: 0.15rem 0.55rem;
+				border-radius: 999px;
+				background: var(--primary-light);
+				color: var(--primary-hover);
+				font-size: 0.72rem;
+				font-weight: 700;
+				overflow-wrap: anywhere;
+			}
+			
+			.protocol-criteria { display: flex; flex-direction: column; gap: 0.3rem; }
+			
+			.protocol-criterion {
+				display: flex;
+				align-items: baseline;
+				justify-content: space-between;
+				gap: 0.5rem;
+				flex-wrap: wrap;
+				font-size: 0.78rem;
+			}
+			
+			.protocol-formula {
+				font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+				font-size: 0.7rem;
+				background: #f1f5f9;
+				border: 1px solid var(--border);
+				border-radius: 6px;
+				padding: 0.1rem 0.4rem;
+				overflow-wrap: anywhere;
+			}
+			
+			.protocol-options { display: flex; flex-direction: column; gap: 0.45rem; }
+			
+			.protocol-option {
+				padding: 0.6rem 0.7rem;
+				background: var(--card);
+				border: 1px solid rgba(15, 109, 188, 0.25);
+				border-radius: 10px;
+			}
+			
+			.protocol-option-label {
+				display: inline-block;
+				margin-bottom: 0.4rem;
+				font-size: 0.62rem;
+				font-weight: 800;
+				letter-spacing: 0.04em;
+				text-transform: uppercase;
+				color: var(--primary-hover);
+			}
+			
+			.protocol-medicines { display: flex; align-items: center; flex-wrap: wrap; gap: 0.35rem; }
+			
+			.protocol-medicine {
+				padding: 0.15rem 0.55rem;
+				border-radius: 999px;
+				background: var(--accent-light);
+				color: #0b6b60;
+				font-size: 0.74rem;
+				font-weight: 700;
+				overflow-wrap: anywhere;
+			}
+			
+			.protocol-plus { font-size: 0.8rem; font-weight: 800; color: var(--text-muted); }
+			
+			.protocol-or {
+				display: flex;
+				align-items: center;
+				gap: 0.5rem;
+				color: var(--text-muted);
+				font-size: 0.62rem;
+				font-weight: 800;
+				letter-spacing: 0.04em;
+				text-transform: uppercase;
+			}
+			
+			.protocol-or::before,
+			.protocol-or::after { content: ''; flex: 1; border-top: 1px dashed var(--border); }
+			
+			.missing-card { border-left: 4px solid var(--warning); }
+			.missing-card.is-clear { border-left-color: var(--success); }
+			.missing-item { background: var(--warning-bg); border-color: #fcd34d; }
 			
 			.empty-state {
 				color: var(--text-muted);
-				font-size: 0.85rem;
+				font-size: 0.82rem;
 				font-style: italic;
-			}
-			
-			.loading-state {
-				text-align: center;
-				padding: 3.5rem 1rem;
-				color: var(--text-muted);
-			}
-			
-			.loading-state .spinner {
-				border-color: var(--border);
-				border-top-color: var(--primary);
-				width: 34px;
-				height: 34px;
-				margin-bottom: 1rem;
+				padding: 0.15rem 0;
 			}
 			
 			.disclaimer {
 				text-align: center;
-				font-size: 0.75rem;
-				color: var(--text-muted);
-				margin-top: 1.5rem;
-				padding: 0 1rem;
-			}
-			
-			/* Multi-step form */
-			.stepper {
-				display: flex;
-				gap: 0.6rem;
-				margin-bottom: 1.25rem;
-			}
-			
-			.step-pill {
-				flex: 1;
-				display: flex;
-				align-items: center;
-				gap: 0.55rem;
-				padding: 0.7rem 0.9rem;
-				border: 1px solid var(--border);
-				border-radius: 10px;
-				background: var(--card);
-				color: var(--text-muted);
-				font-family: inherit;
-				font-size: 0.85rem;
-				font-weight: 700;
-				text-align: left;
-				cursor: pointer;
-				transition: border-color 0.15s, background 0.15s, color 0.15s;
-			}
-			
-			.step-pill:hover { border-color: var(--primary); }
-			
-			.step-pill.active {
-				border-color: var(--primary);
-				background: var(--primary-light);
-				color: var(--primary-hover);
-			}
-			
-			.step-pill .step-num {
-				display: inline-flex;
-				align-items: center;
-				justify-content: center;
-				width: 22px;
-				height: 22px;
-				border-radius: 50%;
-				background: var(--border);
-				color: var(--text-muted);
 				font-size: 0.72rem;
-				font-weight: 800;
-				flex-shrink: 0;
-			}
-			
-			.step-pill.active .step-num {
-				background: var(--primary);
-				color: #fff;
-			}
-			
-			.step-actions {
-				display: flex;
-				gap: 0.75rem;
-			}
-			
-			.step-actions .btn { flex: 1; box-shadow: none; }
-			
-			/* Allergy picker */
-			.allergy-list {
-				display: grid;
-				grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
-				gap: 0.5rem;
-				max-height: 340px;
-				overflow-y: auto;
-				padding: 0.2rem;
-				margin-top: 0.75rem;
-			}
-			
-			.allergy-option {
-				display: flex;
-				align-items: center;
-				gap: 0.6rem;
-				padding: 0.6rem 0.75rem;
-				border: 1px solid var(--border);
-				border-radius: 8px;
-				background: #fbfcfe;
-				font-size: 0.88rem;
-				font-weight: 600;
-				cursor: pointer;
-				transition: border-color 0.15s, background 0.15s;
-			}
-			
-			.allergy-option:hover { border-color: var(--primary); }
-			
-			.allergy-option.selected {
-				border-color: var(--accent);
-				background: #e9f7f4;
-			}
-			
-			.allergy-option input {
-				width: 16px;
-				height: 16px;
-				accent-color: var(--accent);
-				flex-shrink: 0;
-			}
-			
-			.allergy-selected-title {
-				display: flex;
-				align-items: center;
-				gap: 0.5rem;
-				margin: 1.25rem 0 0.35rem;
-				padding-bottom: 0.5rem;
-				border-bottom: 1px dashed var(--border);
-				font-size: 0.78rem;
-				font-weight: 800;
-				letter-spacing: 0.07em;
-				text-transform: uppercase;
 				color: var(--text-muted);
+				margin-top: 1.35rem;
+				padding: 0 0.5rem;
 			}
 			
-			.selected-allergies {
-				display: flex;
-				flex-wrap: wrap;
-				gap: 0.5rem;
+			/* ---------------- Responsive (desktop enhancements) ---------------- */
+			
+			@media (min-width: 560px) {
+				.container { padding-inline: 1.25rem; }
+				header { padding-top: 1.5rem; }
+				header h1 { font-size: 1.35rem; }
+				header p { font-size: 0.87rem; }
+				.card { padding: 1.35rem; }
+				.card h2 { font-size: 1.05rem; }
+				.allergy-list { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
+				.check-grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
+				.sample-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+				.input-row { flex-direction: row; }
+				.input-row .btn { width: auto; }
+				.result-hero { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+				.flag-grid { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+				.app-toolbar { grid-template-columns: auto auto; justify-content: start; }
+				.app-toolbar .btn { padding-inline: 1.25rem; }
 			}
 			
-			.allergy-chip {
-				display: inline-flex;
-				align-items: center;
-				gap: 0.4rem;
-				padding: 0.35rem 0.45rem 0.35rem 0.8rem;
-				border-radius: 999px;
-				background: var(--primary-light);
-				color: var(--primary-hover);
-				font-size: 0.82rem;
-				font-weight: 700;
+			@media (min-width: 760px) {
+				.stepper { flex-wrap: nowrap; }
+				.step-pill { flex: 1 1 0; min-width: 0; justify-content: center; font-size: 0.78rem; }
+				.step-actions { flex-direction: row; justify-content: flex-end; }
+				.step-actions .btn { width: auto; min-width: 150px; }
+				.form-group.numeric-group,
+				.form-group.bool-group {
+					display: grid;
+					grid-template-columns: minmax(0, 1fr) minmax(220px, 45%);
+					align-items: center;
+					column-gap: 1.25rem;
+					row-gap: 0.35rem;
+				}
+				.numeric-field-info,
+				.bool-field-info { min-width: 0; }
+				.numeric-input-wrap { width: 100%; min-width: 0; max-width: none; }
+				.segmented-toggle { width: 100%; min-width: 0; max-width: none; }
+				.form-input { font-size: 0.95rem; }
+				.allergy-toolbar { display: flex; }
+				.allergy-toolbar .btn { width: auto; }
 			}
 			
-			.allergy-chip-remove {
-				display: inline-flex;
-				align-items: center;
-				justify-content: center;
-				width: 18px;
-				height: 18px;
-				border: none;
-				border-radius: 50%;
-				background: rgba(15,109,188,0.15);
-				color: inherit;
-				font-size: 0.85rem;
-				line-height: 1;
-				cursor: pointer;
-			}
-			
-			.allergy-chip-remove:hover {
-				background: var(--danger);
-				color: #fff;
-			}
-			
-			@media (max-width: 640px) {
-				.container { padding: 0 0.75rem 3rem; }
-				.card { padding: 1.1rem; }
-				.result-row { flex-direction: column; align-items: flex-start; gap: 0.35rem; }
-				.result-label { min-width: unset; }
-				.stepper { flex-direction: column; }
-				.step-actions { flex-direction: column; }
+			@media (prefers-reduced-motion: reduce) {
+				* { scroll-behavior: auto !important; }
+				.spinner { animation-duration: 1.5s; }
+				.segment-btn, .btn, .step-pill { transition: none; }
 			}
 		</style>
 	</head>
 	<body>
-		<div class="top-bar"></div>
-		<div class="container">
+		<main class="container">
 			<header>
 				<div class="header-icon">
-					<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+					<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
 						<path d="M6 2v6a4 4 0 0 0 4 4h0a4 4 0 0 0 4-4V2"/>
 						<path d="M6 12v3a6 6 0 0 0 12 0v-3"/>
 						<circle cx="20" cy="10" r="2"/>
 					</svg>
 				</div>
-				<h1>Respira Empirical Diagnosis</h1>
-				<p>Fill in clinical observations to generate a diagnosis</p>
+				<div>
+					<h1>Respira Empirical Diagnosis</h1>
+					<p>Complete the five assessment steps, then submit.</p>
+				</div>
 			</header>
+
+			<div class="app-toolbar">
+				<button type="button" class="btn btn-ghost" id="importBtn" disabled>
+					<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+						<path d="M12 3v12"/><path d="m7 8 5-5 5 5"/><path d="M5 21h14"/>
+					</svg>
+					Import JSON
+				</button>
+				<button type="button" class="btn btn-ghost" id="exportBtn" disabled>
+					<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+						<path d="M12 15V3"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/>
+					</svg>
+					Export JSON
+				</button>
+				<input id="importFile" type="file" accept="application/json,.json" hidden>
+			</div>
 
 			<div id="errorModal" class="error-modal-overlay" role="alertdialog" aria-modal="true" aria-labelledby="errorModalTitle">
 				<div class="error-modal">
 					<h3 id="errorModalTitle">
-						<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+						<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
 							<circle cx="12" cy="12" r="10"/>
 							<line x1="12" y1="8" x2="12" y2="12"/>
 							<line x1="12" y1="16" x2="12.01" y2="16"/>
@@ -1149,106 +1727,223 @@
 				</div>
 			</div>
 
+			<div id="toast" class="toast" role="status" aria-live="polite"></div>
+
 			<div id="loadingState" class="loading-state">
 				<div class="spinner"></div>
 				<p>Loading diagnosis form...</p>
 			</div>
 
-			<form id="diagnoseForm" style="display:none;" novalidate>
-				<div class="stepper" id="stepper">
-					<button type="button" class="step-pill active" data-step="1" id="stepPill1">
-						<span class="step-num">1</span>
-						Clinical Observations
+			<form id="diagnoseForm" hidden novalidate>
+				<nav class="stepper" id="stepper" aria-label="Diagnosis steps">
+					<button type="button" class="step-pill active" data-step="1" id="stepPill1" aria-current="step">
+						<span class="step-num">1</span><span>Assessment</span>
 					</button>
 					<button type="button" class="step-pill" data-step="2" id="stepPill2">
-						<span class="step-num">2</span>
-						Antibiotic Allergies
+						<span class="step-num">2</span><span>Allergy</span>
 					</button>
-				</div>
+					<button type="button" class="step-pill" data-step="3" id="stepPill3">
+						<span class="step-num">3</span><span>History</span>
+					</button>
+					<button type="button" class="step-pill" data-step="4" id="stepPill4">
+						<span class="step-num">4</span><span>Infections</span>
+					</button>
+					<button type="button" class="step-pill" data-step="5" id="stepPill5">
+						<span class="step-num">5</span><span>Samples</span>
+					</button>
+				</nav>
 
-				<section class="step-panel" id="stepObservations">
+				<!-- Step 1: severity and infection assessment -->
+				<section class="step-panel" data-step="1" id="step1">
 					<div class="card">
 						<h2><span class="step-num">1</span>
-						Clinical Observations</h2>
+						Severity &amp; infection assessment</h2>
+						<p class="form-desc">
+							Enter the clinical variables available for this patient. Required variables are marked
+							with <span class="required-mark">*</span>. Values outside the normal range are accepted
+							with a warning; values outside the accepted range are rejected.
+						</p>
+						<div class="search-wrap">
+							<label class="form-label" for="variableSearch">Search variables</label>
+							<input class="form-input" type="search" id="variableSearch" placeholder="Filter by name, code or description..." autocomplete="off">
+						</div>
 						<div id="formFields"></div>
 					</div>
-					<button type="button" class="btn btn-primary" id="toStep2Btn">
-						Next: Antibiotic Allergies
-					</button>
+					<div class="step-actions">
+						<button type="button" class="btn btn-primary" id="next1">Next: Antibiotic allergy</button>
+					</div>
 				</section>
 
-				<section class="step-panel" id="stepAllergies" hidden>
+				<!-- Step 2: antibiotic allergy -->
+				<section class="step-panel" data-step="2" id="step2" hidden>
 					<div class="card">
 						<h2><span class="step-num">2</span>
-						Antibiotic Allergies</h2>
-						<div class="form-desc">
-							Select every antibiotic the patient is allergic to. Selected ones are added to the
-							diagnosis request and excluded from treatment suggestions. None selected is valid.
+						Antibiotic allergy</h2>
+						<p class="form-desc">
+							Record the patient's allergy status. When allergies are known, select every antibiotic
+							the patient reacts to. Use the group chips to select a whole antibiotic group quickly.
+						</p>
+
+						<div class="form-group" id="allergyTypeGroup">
+							<span class="form-label">Allergy status<span class="required-mark">*</span></span>
+							<div class="segmented-toggle" id="allergyTypeToggle" role="group" aria-label="Allergy status">
+								<button type="button" class="segment-btn active" data-allergy-type="No">No allergy</button>
+								<button type="button" class="segment-btn" data-allergy-type="Yes">Allergic</button>
+								<button type="button" class="segment-btn" data-allergy-type="NonRegisteredAntibiotic">Other antibiotic</button>
+								<button type="button" class="segment-btn" data-allergy-type="Unknown">Unknown</button>
+							</div>
 						</div>
-						<label class="form-label" for="antibioticSearch">Search antibiotics</label>
-						<input class="form-input" type="search" id="antibioticSearch" placeholder="Type to filter..." autocomplete="off">
-						<div id="antibioticList" class="allergy-list"></div>
-						<div class="allergy-selected-title">
-							Selected allergies
-							<span class="category-count" id="allergyCount">0</span>
+
+						<div class="form-group" id="otherAllergyGroup" hidden>
+							<label class="form-label" for="otherAllergyInput">
+								Describe the allergy<span class="required-mark">*</span>
+							</label>
+							<div class="form-desc">Use this for a non-registered antibiotic or when the allergy is unknown.</div>
+							<input class="form-input" type="text" id="otherAllergyInput" placeholder="e.g. amoxicillin rash, unknown beta-lactam reaction" autocomplete="off">
 						</div>
-						<div id="selectedAllergies" class="selected-allergies"></div>
+
+						<div class="form-group" id="allergyPickerGroup" hidden>
+							<label class="form-label" for="antibioticSearch">Search antibiotics</label>
+							<input class="form-input" type="search" id="antibioticSearch" placeholder="Type to filter by name or group..." autocomplete="off">
+
+							<div class="allergy-toolbar">
+								<button type="button" class="btn btn-ghost" id="selectAllAllergies">Select all shown</button>
+								<button type="button" class="btn btn-ghost" id="clearAllAllergies">Clear all</button>
+							</div>
+
+							<span class="sample-label">Quick select by group</span>
+							<div id="allergyGroups" class="group-bar" aria-label="Select antibiotic groups"></div>
+
+							<div id="antibioticList" class="allergy-list"></div>
+
+							<div class="allergy-selected-title">
+								Selected allergies
+								<span class="category-count" id="allergyCount">0</span>
+							</div>
+							<div id="selectedAllergies" class="selected-allergies"></div>
+						</div>
 					</div>
 					<div class="step-actions">
-						<button type="button" class="btn btn-secondary" id="backBtn">Back</button>
-						<button type="submit" class="btn btn-primary" id="submitBtn">
-							Submit Diagnosis
-						</button>
+						<button type="button" class="btn btn-secondary" id="back2">Back</button>
+						<button type="button" class="btn btn-primary" id="next2">Next: Special history</button>
+					</div>
+				</section>
+
+				<!-- Step 3: special medical history -->
+				<section class="step-panel" data-step="3" id="step3" hidden>
+					<div class="card">
+						<h2><span class="step-num">3</span>
+						Special medical history</h2>
+						<p class="form-desc">
+							Add any history not covered by the clinical variables. Each entry is stored as a plain
+							string and shown to the clinician as supporting context.
+						</p>
+						<div class="form-group">
+							<label class="form-label" for="historyInput">Add history</label>
+							<div class="history-input-row input-row">
+								<input class="form-input" type="text" id="historyInput" placeholder="e.g. prior pulmonary tuberculosis, recent chemotherapy" autocomplete="off">
+								<button type="button" class="btn btn-secondary" id="historyAddBtn">Add</button>
+							</div>
+							<div class="allergy-selected-title">
+								Recorded history
+								<span class="category-count" id="historyCount">0</span>
+							</div>
+							<div id="historyList" class="token-list"></div>
+						</div>
+					</div>
+					<div class="step-actions">
+						<button type="button" class="btn btn-secondary" id="back3">Back</button>
+						<button type="button" class="btn btn-primary" id="next3">Next: Other infections</button>
+					</div>
+				</section>
+
+				<!-- Step 4: other infections -->
+				<section class="step-panel" data-step="4" id="step4" hidden>
+					<div class="card">
+						<h2><span class="step-num">4</span>
+						Other active infections</h2>
+						<p class="form-desc">
+							Select other active infections besides pneumonia. Multiple selections are allowed, and
+							selecting none is valid.
+						</p>
+						<div id="infectionList" class="check-grid"></div>
+						<div id="infectionEmpty" class="empty-state" hidden>
+							No other infection types are available.
+						</div>
+					</div>
+					<div class="step-actions">
+						<button type="button" class="btn btn-secondary" id="back4">Back</button>
+						<button type="button" class="btn btn-primary" id="next4">Next: Microbial samples</button>
+					</div>
+				</section>
+
+				<!-- Step 5: microbial samples -->
+				<section class="step-panel" data-step="5" id="step5" hidden>
+					<div class="card">
+						<h2><span class="step-num">5</span>
+						Microbial samples</h2>
+						<p class="form-desc">
+							Add each microbial sample with its sample type, MIC category and pathogen. Multiple
+							samples are allowed; add none if no sample is available.
+						</p>
+						<div id="samplesList" class="sample-list"></div>
+						<button type="button" class="btn btn-secondary" id="addSampleBtn">+ Add microbial sample</button>
+					</div>
+					<div class="step-actions">
+						<button type="button" class="btn btn-secondary" id="back5">Back</button>
+						<button type="submit" class="btn btn-primary" id="submitBtn">Submit diagnosis</button>
 					</div>
 				</section>
 			</form>
 
-			<div id="resultsSection" class="results-section">
+			<div id="resultsSection" hidden>
 				<div class="card">
-					<h2><span class="step-num">1</span>
-					Diagnosis Result</h2>
-					<div class="result-row">
-						<span class="result-label">Severity</span>
-						<span id="severityBadge" class="severity-badge"></span>
+					<h2><span class="step-num is-done">&#10003;</span>
+					Diagnosis result</h2>
+					<div class="result-hero">
+						<div class="hero-item">
+							<span class="hero-label">Severity</span>
+							<span id="severityBadge" class="severity-badge"></span>
+						</div>
+						<div class="hero-item">
+							<span class="hero-label">Treatment site</span>
+							<span id="treatmentBadge" class="treatment-badge"></span>
+						</div>
+						<div class="hero-item">
+							<span class="hero-label">eGFR (mL/minute/1.73 m²)</span>
+							<span id="egfrValue" class="hero-value"></span>
+						</div>
 					</div>
-					<div class="result-row" style="margin-top:0.5rem;">
-						<span class="result-label">Treatment Site</span>
-						<span id="treatmentBadge" class="treatment-badge"></span>
-					</div>
-					<div class="result-row">
-						<span class="result-label">Pregnant / Lactating</span>
-						<span id="pregnantValue" class="result-value"></span>
-					</div>
-					<div class="result-row">
-						<span class="result-label">Allergies</span>
-						<span id="allergiesValue" class="result-value"></span>
-					</div>
+
+					<div class="result-block-title">Clinical flags</div>
+					<div id="resultFlags" class="flag-grid"></div>
+
 					<div class="metrics-diagnosis-block">
-						<h3>Metrics Severity Diagnosis</h3>
+						<h3>Metrics severity diagnosis</h3>
 						<div id="metricsDiagnosisList"></div>
-					</div>
-					<button type="button" class="btn btn-secondary evidence-toggle" id="evidenceToggle" aria-expanded="false" aria-controls="evidencePanel">
-						View Evidences
-					</button>
-					<div id="evidencePanel" class="evidence-panel" hidden>
-						<h3>Evidences</h3>
-						<ul id="evidenceList" class="evidence-list"></ul>
 					</div>
 				</div>
 
-				<div class="card">
-					<h2><span class="step-num">2</span>
-					Missing Variables</h2>
+				<div class="card missing-card" id="missingCard">
+					<h2>
+						<span class="step-num">!</span>
+						Missing variables
+						<span class="category-count" id="missingCount">0</span>
+					</h2>
+					<p class="form-desc">
+						These variables were not provided, so parts of the assessment could not be evaluated.
+						Consider adding them for a more complete diagnosis.
+					</p>
 					<div id="missingList"></div>
 				</div>
 
 				<div class="card">
-					<h2><span class="step-num">3</span>
-					Infection Assessment</h2>
+					<h2><span class="step-num">i</span>
+					Infection assessment</h2>
 
 					<div id="heavySection" class="heavy-suspected-box">
-						<h3>Heavy Suspected</h3>
-						<p class="box-hint">Ranked from most to least suspected - rank 1 is the most likely.</p>
+						<h3>Heavy suspected</h3>
+						<p class="box-hint">The list contains of pathogen that is likely to infect patient, based on risk factor</p>
 						<div id="heavyList"></div>
 					</div>
 
@@ -1258,7 +1953,7 @@
 								<svg class="collapse-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
 									<polyline points="9 6 15 12 9 18"></polyline>
 								</svg>
-								<span>Worth Suspected</span>
+								<span>Worth suspected</span>
 								<span class="category-count" id="worthCount">0</span>
 							</button>
 						</h3>
@@ -1268,56 +1963,248 @@
 					</div>
 				</div>
 
-				<button class="btn btn-primary" onclick="resetForm()" style="margin-top:0.5rem;">
-					New Diagnosis
-				</button>
+				<div class="card">
+					<h2><span class="step-num">Rx</span>
+					Recommended treatment protocols
+					<span class="category-count protocol-count" id="protocolCount">0</span></h2>
+					<p class="form-desc">
+						Each option is a complete antibiotic regimen. Use every medicine inside the same
+						option together; separate options are alternative regimens.
+					</p>
+					<div id="protocolList" class="protocol-list"></div>
+				</div>
+
+				<div class="card">
+					<h2><span class="step-num">i</span>
+					Supporting details</h2>
+
+					<button type="button" class="btn btn-secondary evidence-toggle" id="evidenceToggle" aria-expanded="false" aria-controls="evidencePanel">
+						View evidences (0)
+					</button>
+					<div id="evidencePanel" class="evidence-panel" hidden>
+						<h3>Evidences</h3>
+						<ul id="evidenceList" class="evidence-list"></ul>
+					</div>
+
+					<button type="button" class="btn btn-secondary evidence-toggle" id="microbialToggle" aria-expanded="false" aria-controls="microbialPanel">
+						View microbial tests (0)
+					</button>
+					<div id="microbialPanel" class="evidence-panel" hidden>
+						<h3>Microbial test results</h3>
+						<div id="microbialList" class="micro-list"></div>
+					</div>
+				</div>
+
+				<button type="button" class="btn btn-primary" id="newDiagnosisBtn">New diagnosis</button>
 			</div>
 
 			<p class="disclaimer">For clinical decision support use only. Always correlate with clinical judgment.</p>
-		</div>
+		</main>
 
 		<script>
 			const API_BASE = 'https://gateway-respira.dev.localhost:7283';
 			const ENDPOINTS = {
-				form: `${API_BASE}/api/v1/diagnose/empirical`,
-				diagnose: `${API_BASE}/api/v1/diagnose/empirical`,
-				antibiotics: `${API_BASE}/api/v1/antibiotics/list`
+				form: `${API_BASE}/api/v1/diagnose`,
+				diagnose: `${API_BASE}/api/v1/diagnose`
 			};
 
-			let formVariables = [];
-			let variableMeta = {};
-			let antibiotics = [];
-			// id -> name, insertion-ordered so the chips keep the picking order
-			let selectedAllergies = new Map();
-			let currentStep = 1;
-
-			// Values beyond this magnitude come from the API as decimal.MaxValue /
-			// decimal.MinValue stand-ins for "unbounded" - treat them as open ends.
+			// The API represents "unbounded" range ends with decimal.MaxValue /
+			// decimal.MinValue. Treat anything beyond this magnitude as open-ended.
 			const UNBOUNDED = 1e20;
+
+			// Mirrors of the backend enums. Keep the wire values in sync with
+			// Respira.Clinical.Domain.Enums.
+			const CATEGORY_ORDER = ['PersonalInformation', 'MedicalHistory', 'Paraclinical', 'Clinical'];
+			const CATEGORY_LABELS = {
+				PersonalInformation: 'Personal information',
+				MedicalHistory: 'Medical history',
+				Paraclinical: 'Paraclinical',
+				Clinical: 'Clinical'
+			};
+
+			const ALLERGY_TYPE_ORDER = ['Yes', 'No', 'NonRegisteredAntibiotic', 'Unknown'];
+			const ALLERGY_TYPE_LABELS = {
+				Yes: 'Allergic to registered antibiotics',
+				No: 'No antibiotic allergy',
+				NonRegisteredAntibiotic: 'Non-registered antibiotic',
+				Unknown: 'Unknown allergy'
+			};
+
+			const MIC_CATEGORIES = [
+				{ value: 'Susceptible', label: 'Susceptible' },
+				{ value: 'Intermediate', label: 'Intermediate' },
+				{ value: 'Resistant', label: 'Resistant' }
+			];
+
+			// Mirrors Respira.Clinical.Domain.Enums.MicrobialSampleType.
+			// NOTE: this enum has no JsonStringEnumConverter, so the wire value is its
+			// numeric index. Keep the order identical to the C# enum.
+			const SAMPLE_TYPES = [
+				{ value: 0, name: 'Sputum', label: 'Sputum' },
+				{ value: 1, name: 'BronchoalveolarLavageFluid', label: 'Bronchoalveolar lavage fluid' },
+				{ value: 2, name: 'PleuralFluid', label: 'Pleural fluid' },
+				{ value: 3, name: 'Urine', label: 'Urine' },
+				{ value: 4, name: 'Blood', label: 'Blood' },
+				{ value: 5, name: 'AbdominalFluid', label: 'Abdominal fluid' },
+				{ value: 6, name: 'CerebrospinalFluid', label: 'Cerebrospinal fluid' },
+				{ value: 7, name: 'WoundExudate', label: 'Wound exudate' },
+				{ value: 8, name: 'Other', label: 'Other' }
+			];
+
+			// Mirrors Respira.Clinical.Domain.Enums.InfectionType.
+			// The backend enum uses JsonStringEnumConverter, so the wire values are
+			// enum names. Keep the names identical to the C# enum.
+			const INFECTION_TYPES = [
+				// Skin, soft tissue, bone & joint
+				{ value: 1, name: 'SkinAndSoftTissueInfection', label: 'Skin and soft tissue infection' },
+				{ value: 2, name: 'SepticArthritis', label: 'Septic arthritis' },
+				{ value: 3, name: 'Osteomyelitis', label: 'Osteomyelitis' },
+				{ value: 4, name: 'BacterialMyositisOrMuscleAbscess', label: 'Bacterial myositis or muscle abscess' },
+				{ value: 5, name: 'InfectedGoutyTophus', label: 'Infected gouty tophus' },
+
+				// Renal & genitourinary
+				{ value: 6, name: 'PyelonephritisOrRenalAbscess', label: 'Pyelonephritis or renal abscess' },
+				{ value: 7, name: 'AcuteCystitis', label: 'Acute cystitis' },
+				{ value: 8, name: 'AcuteNonGonococcalUrethritis', label: 'Acute non-gonococcal urethritis' },
+				{ value: 9, name: 'BacterialVaginourethritis', label: 'Bacterial vaginourethritis' },
+				{ value: 10, name: 'BacterialEndometritis', label: 'Bacterial endometritis' },
+
+				// Central nervous system
+				{ value: 11, name: 'PurulentMeningitis', label: 'Purulent meningitis' },
+				{ value: 12, name: 'BacterialEncephalitis', label: 'Bacterial encephalitis' },
+
+				// Thoracic & cardiac
+				{ value: 13, name: 'PleuralEmpyema', label: 'Pleural empyema' },
+				{ value: 14, name: 'MediastinalAbscess', label: 'Mediastinal abscess' },
+				{ value: 15, name: 'InfectiveEndocarditis', label: 'Infective endocarditis' },
+				{ value: 16, name: 'BacterialMyocarditis', label: 'Bacterial myocarditis' },
+				{ value: 17, name: 'BacterialPericarditis', label: 'Bacterial pericarditis' },
+
+				// Tuberculosis
+				{ value: 18, name: 'PulmonaryTuberculosis', label: 'Pulmonary tuberculosis' },
+				{ value: 19, name: 'ExtrapulmonaryTuberculosis', label: 'Extrapulmonary tuberculosis' },
+
+				// Gastrointestinal, hepatobiliary & abdominal
+				{ value: 20, name: 'BiliaryTractInfection', label: 'Biliary tract infection' },
+				{ value: 21, name: 'BacterialLiverAbscess', label: 'Bacterial liver abscess' },
+				{ value: 22, name: 'InfectedAcutePancreatitis', label: 'Infected acute pancreatitis' },
+				{ value: 23, name: 'BacterialPeritonitis', label: 'Bacterial peritonitis' },
+				{ value: 24, name: 'BacterialDiarrhea', label: 'Bacterial diarrhea' },
+				{ value: 25, name: 'HelicobacterPyloriInfection', label: 'Helicobacter pylori infection' },
+
+				// Systemic
+				{ value: 26, name: 'Sepsis', label: 'Sepsis' },
+
+				// Ophthalmic
+				{ value: 27, name: 'OrbitalCellulitis', label: 'Orbital cellulitis' },
+				{ value: 28, name: 'Conjunctivitis', label: 'Conjunctivitis' },
+				{ value: 29, name: 'Keratitis', label: 'Keratitis' },
+				{ value: 30, name: 'Dacryocystitis', label: 'Dacryocystitis' },
+
+				// Head & neck
+				{ value: 31, name: 'MaxillofacialAbscess', label: 'Maxillofacial abscess' },
+
+				{ value: 99, name: 'Other', label: 'Other' }
+			];
+
+			const state = {
+				variables: [],
+				variableMeta: {},
+				antibiotics: [],
+				antibioticGroups: new Map(),
+				pathogens: [],
+				selectedAllergies: new Map(),
+				allergyType: 'No',
+				otherAllergy: '',
+				specialHistory: [],
+				otherInfections: new Set(),
+				infectionOptions: INFECTION_TYPES.map(t => t.name),
+				samples: [],
+				sampleSeq: 0,
+				currentStep: 1,
+				lastQuery: null,
+				loaded: false
+			};
+
+			/* ---------------- Small helpers ---------------- */
+
+			function $(id) { return document.getElementById(id); }
+
+			function esc(value) {
+				return String(value ?? '')
+				.replace(/&/g, '&amp;')
+				.replace(/</g, '&lt;')
+				.replace(/>/g, '&gt;')
+				.replace(/"/g, '&quot;')
+				.replace(/'/g, '&#39;');
+			}
+
+			function pick(obj, lower, upper) {
+				if (obj === null || obj === undefined || typeof obj !== 'object') return undefined;
+				if (Object.prototype.hasOwnProperty.call(obj, lower)) return obj[lower];
+				if (upper && Object.prototype.hasOwnProperty.call(obj, upper)) return obj[upper];
+				return undefined;
+			}
+
+			function resultStatus(body) {
+				return pick(body, 'statusCode', 'StatusCode');
+			}
+
+			function resultError(body) {
+				return pick(body, 'error', 'Error') || {};
+			}
+
+			function prettyEnum(value) {
+				const text = String(value ?? '')
+				.replace(/_/g, ' ')
+				.replace(/([a-z0-9])([A-Z])/g, '$1 $2')
+				.replace(/\s+/g, ' ')
+				.trim();
+				if (!text) return '';
+				return text.replace(/\b\w/g, c => c.toUpperCase());
+			}
+
+			function formatTreatmentSite(site) {
+				if (!site) return 'Unknown';
+				return site === 'IntensiveCareUnit' ? 'ICU' : prettyEnum(site);
+			}
+
+			function plainNumber(value) {
+				const text = String(value ?? '').trim();
+				if (!/[eE]/.test(text)) return text;
+				const num = Number(text);
+				if (!Number.isFinite(num)) return text;
+				return num.toLocaleString('en-US', { useGrouping: false, maximumFractionDigits: 20 });
+			}
+
+			function antibioticId(a) { return String(pick(a, 'id', 'Id') ?? ''); }
+			function antibioticName(a) { return String(pick(a, 'name', 'Name') ?? ''); }
+			function antibioticGroupName(a) {
+				return String(pick(a, 'antibioticGroupName', 'AntibioticGroupName') ?? 'Ungrouped');
+			}
+
+			/* ---------------- Range helpers (mirror backend Range) ---------------- */
 
 			function normalizeRange(raw) {
 				if (!raw) return null;
-				const pick = (a, b) => (a !== undefined && a !== null) ? a : b;
-				const min = pick(raw.min, raw.Min);
-				const max = pick(raw.max, raw.Max);
+				const pickNumber = (a, b) => (a !== undefined && a !== null) ? a : b;
+				const minRaw = pickNumber(pick(raw, 'min', 'Min'), undefined);
+				const maxRaw = pickNumber(pick(raw, 'max', 'Max'), undefined);
+
 				const range = {
-					min: (min !== undefined && min !== null && min !== '') ? Number(min) : null,
-					max: (max !== undefined && max !== null && max !== '') ? Number(max) : null,
-					isMinExclusive: !!(pick(raw.isMinExclusive, raw.IsMinExclusive)),
-					isMaxExclusive: !!(pick(raw.isMaxExclusive, raw.IsMaxExclusive)),
-					unit: pick(raw.unit, raw.Unit) || null,
+					min: (minRaw !== undefined && minRaw !== null && minRaw !== '') ? Number(minRaw) : null,
+					max: (maxRaw !== undefined && maxRaw !== null && maxRaw !== '') ? Number(maxRaw) : null,
+					isMinExclusive: !!pick(raw, 'isMinExclusive', 'IsMinExclusive'),
+					isMaxExclusive: !!pick(raw, 'isMaxExclusive', 'IsMaxExclusive'),
+					unit: pick(raw, 'unit', 'Unit') || null
 				};
-				if (range.min !== null) {
-					if (!Number.isFinite(range.min) || range.min < -UNBOUNDED) range.min = null;
-				}
-				if (range.max !== null) {
-					if (!Number.isFinite(range.max) || range.max > UNBOUNDED) range.max = null;
-				}
+
+				if (range.min !== null && (!Number.isFinite(range.min) || range.min < -UNBOUNDED)) range.min = null;
+				if (range.max !== null && (!Number.isFinite(range.max) || range.max > UNBOUNDED)) range.max = null;
 				if (range.min === null && range.max === null) return null;
 				return range;
 			}
 
-			// Same semantics as the backend Range.IsInRange
 			function inRange(value, range) {
 				if (!range) return true;
 				if (range.min !== null) {
@@ -1331,17 +2218,15 @@
 
 			function describeRange(range, unit) {
 				if (!range) return '';
-				const u = unit || range.unit;
-				const suffix = u ? ` ${u}` : '';
-				const minOp = range.isMinExclusive ? '>' : '≥';
-				const maxOp = range.isMaxExclusive ? '<' : '≤';
+				const suffix = (unit || range.unit) ? ` ${unit || range.unit}` : '';
+				const minOp = range.isMinExclusive ? '>' : '>=';
+				const maxOp = range.isMaxExclusive ? '<' : '<=';
 				if (range.min !== null && range.max !== null) return `${minOp} ${range.min} and ${maxOp} ${range.max}${suffix}`;
 				if (range.min !== null) return `${minOp} ${range.min}${suffix}`;
 				if (range.max !== null) return `${maxOp} ${range.max}${suffix}`;
 				return '';
 			}
 
-			// Placeholder for numeric inputs, following the "normal: min-max" template
 			function normalPlaceholder(meta) {
 				const range = meta && meta.normalRange;
 				if (!range) return 'Enter value';
@@ -1350,265 +2235,406 @@
 				return `normal: up to ${range.max}`;
 			}
 
+			/* ---------------- Metadata ---------------- */
+
 			function buildVariableMeta(variables) {
-				variableMeta = {};
+				state.variableMeta = {};
 				variables.forEach(v => {
-					const id = String(v.id || v.Id);
-					variableMeta[id] = {
-						id: id,
-						name: v.name || v.Name || 'Field',
-						valueType: v.valueType || v.ValueType,
-						isRequired: !!(v.isRequired !== undefined ? v.isRequired : v.IsRequired),
-						unit: v.canonicalUnit || v.CanonicalUnit || null,
-						acceptedRange: normalizeRange(v.acceptedRange !== undefined ? v.acceptedRange : v.AcceptedRange),
-						normalRange: normalizeRange(v.normalRange !== undefined ? v.normalRange : v.NormalRange),
+					const id = String(pick(v, 'id', 'Id'));
+					state.variableMeta[id] = {
+						id,
+						name: pick(v, 'name', 'Name') || 'Field',
+						code: pick(v, 'code', 'Code') || '',
+						valueType: pick(v, 'valueType', 'ValueType'),
+						isRequired: !!pick(v, 'isRequired', 'IsRequired'),
+						unit: pick(v, 'canonicalUnit', 'CanonicalUnit') || null,
+						acceptedRange: normalizeRange(pick(v, 'acceptedRange', 'AcceptedRange')),
+						normalRange: normalizeRange(pick(v, 'normalRange', 'NormalRange'))
 					};
 				});
 		}
 
-		async function init() {
-			loadAntibiotics();
-			try {
-				console.log('Fetching form from:', ENDPOINTS.form);
-				const res = await fetch(ENDPOINTS.form);
-				console.log('Form response status:', res.status);
-				if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
-				const raw = await res.text();
-				console.log('Form response body:', raw);
-				let body;
-				try { body = JSON.parse(raw); } catch { throw new Error('Invalid JSON from server: ' + raw.substring(0, 200)); }
-
-				if (body.statusCode !== 'SUCCESS') {
-					throw new Error(body.error?.description || 'Failed to load form');
-				}
-
-				const data = body.data;
-				formVariables = data.variables || data.Variables || [];
-				renderForm(formVariables);
-				renderSelectedAllergies();
-				document.getElementById('loadingState').style.display = 'none';
-				document.getElementById('diagnoseForm').style.display = '';
-			} catch (err) {
-				showError('Failed to load diagnosis form: ' + err.message);
-				document.getElementById('loadingState').innerHTML =
-				'<p style="color:var(--danger);">Failed to load form. Check console for details.</p>';
-			}
-		}
-
-		function esc(str) {
-			return String(str ?? '')
-			.replace(/&/g, '&amp;')
-			.replace(/</g, '&lt;')
-			.replace(/>/g, '&gt;')
-			.replace(/"/g, '&quot;')
-			.replace(/'/g, '&#39;');
-		}
-
-		const CATEGORY_ENUM_ORDER = ['PersonalInformation', 'Paraclinical', 'Clinical'];
-		const CATEGORY_DISPLAY_ORDER = ['PersonalInformation', 'Clinical', 'Paraclinical'];
-		const CATEGORY_LABELS = {
-			PersonalInformation: 'Personal Information',
-			Clinical: 'Clinical',
-			Paraclinical: 'Paraclinical',
-		};
-
 		function normalizeCategoryKey(raw) {
-			if (raw === undefined || raw === null || raw === '') return null;
+			if (raw === undefined || raw === null || raw === '') return 'Other';
 			const text = String(raw).trim();
-			if (/^\d+$/.test(text)) {
-				const idx = Number(text);
-				return CATEGORY_ENUM_ORDER[idx] || null;
-			}
-			const match = Object.keys(CATEGORY_LABELS)
-			.find(key => key.toLowerCase() === text.toLowerCase());
+			if (/^\d+$/.test(text)) return CATEGORY_ORDER[Number(text)] || 'Other';
+			const match = CATEGORY_ORDER.find(key => key.toLowerCase() === text.toLowerCase());
 			return match || text;
 		}
 
 		function categoryLabel(key) {
-			if (!key) return 'Other';
-			return CATEGORY_LABELS[key] || key;
+			return CATEGORY_LABELS[key] || prettyEnum(key) || 'Other';
 		}
 
 		function categoryRank(key) {
-			const idx = CATEGORY_DISPLAY_ORDER.indexOf(key);
-			return idx === -1 ? CATEGORY_DISPLAY_ORDER.length : idx;
+			const index = CATEGORY_ORDER.indexOf(key);
+			return index === -1 ? CATEGORY_ORDER.length : index;
 		}
 
-		function buildFieldGroup(v) {
-			const group = document.createElement('div');
-			group.className = 'form-group';
+		function normalizeAllergyType(raw) {
+			if (raw === undefined || raw === null || raw === '') return 'No';
+			const text = String(raw).trim();
+			if (/^\d+$/.test(text)) return ALLERGY_TYPE_ORDER[Number(text)] || 'No';
+			const match = ALLERGY_TYPE_ORDER.find(t => t.toLowerCase() === text.toLowerCase());
+			return match || 'No';
+		}
 
-			const id = v.id || v.Id;
-			const name = v.name || v.Name;
-			const desc = v.description || v.Description;
-			const vt = v.valueType || v.ValueType;
-			const meta = variableMeta[String(id)];
-			const reqMark = meta && meta.isRequired
-			? ' <span class="required-mark" title="Required field">*</span>'
-			: '';
+		function normalizeMicCategory(raw) {
+			if (raw === undefined || raw === null || raw === '') return '';
+			const text = String(raw).trim();
+			const values = MIC_CATEGORIES.map(x => x.value);
+			if (/^\d+$/.test(text)) return values[Number(text)] || '';
+			return values.find(t => t.toLowerCase() === text.toLowerCase()) || '';
+		}
 
-			if (vt === 'Numeric') {
-				const unit = v.canonicalUnit || v.CanonicalUnit;
-				group.className = 'form-group numeric-group';
-				group.innerHTML = `
-				<div class="numeric-field-info">
-				<label class="form-label" for="var-${id}">
-				${esc(name)}${reqMark}
-				</label>
-				<div class="form-desc">${esc(desc)}</div>
-				</div>
-				<div class="numeric-input-wrap">
-				<input
-				class="form-input"
-				type="number"
-				id="var-${id}"
-				step="any"
-				placeholder="${esc(normalPlaceholder(meta))}"
-				data-variable-id="${id}"
-				data-value-type="Numeric"
-				>
-				${unit ? `<span class="numeric-unit-suffix">${esc(unit)}</span>` : ''}
-				</div>
-				`;
-			} else if (vt === 'Categorical') {
-				const options = v.acceptedValues || v.AcceptedValues || [];
-				group.className = 'form-group bool-group';
-				group.innerHTML = `
-				<div class="bool-field-info">
-				<label class="form-label" for="var-${id}">
-				${esc(name)}${reqMark}
-				</label>
-				<div class="form-desc">${esc(desc)}</div>
-				</div>
-				<div class="segmented-toggle" data-toggle-for="${id}">
-				${options.length > 0
-					? options.map((o, i) => `
-						<button type="button" class="segment-btn${i === 0 ? ' active' : ''}" data-value="${esc(o)}">${esc(String(o).replace(/_/g, ' '))}</button>
-						`).join('')
-						: '<span class="empty-state" style="padding:0.7rem 1rem;">No options</span>'}
-					</div>
-					<input
-					type="hidden"
-					id="var-${id}"
-					data-variable-id="${id}"
-					data-value-type="Categorical"
-					value="${esc(options[0] ?? '')}"
-					>
-					`;
-				} else {
-					group.className = 'form-group bool-group';
-					group.innerHTML = `
-					<div class="bool-field-info">
-					<label class="form-label" for="var-${id}">
-					${esc(name)}${reqMark}
-					</label>
-					<div class="form-desc">${esc(desc)}</div>
-					</div>
-					<div class="segmented-toggle" data-toggle-for="${id}">
-					<button type="button" class="segment-btn active" data-value="false">No</button>
-					<button type="button" class="segment-btn" data-value="true">Yes</button>
-					</div>
-					<input
-					type="hidden"
-					id="var-${id}"
-					data-variable-id="${id}"
-					data-value-type="Boolean"
-					value="false"
-					>
-					`;
-				}
-				return group;
+		function normalizeSampleType(raw) {
+			if (raw === undefined || raw === null || raw === '') return '';
+			const text = String(raw).trim();
+			if (/^\d+$/.test(text)) return (SAMPLE_TYPES[Number(text)] || {}).name || '';
+			const match = SAMPLE_TYPES.find(t => t.name.toLowerCase() === text.toLowerCase());
+			return match ? match.name : '';
+		}
+
+		function sampleTypeWire(name) {
+			const match = SAMPLE_TYPES.find(t => t.name === name);
+			return match ? match.value : name;
+		}
+
+		function infectionLabel(name) {
+			const match = INFECTION_TYPES.find(t => t.name === name);
+			return match ? match.label : prettyEnum(name);
+		}
+
+		function normalizeInfection(raw) {
+			if (raw === undefined || raw === null || raw === '') return '';
+			const text = String(raw).trim();
+			if (/^\d+$/.test(text)) {
+				const match = INFECTION_TYPES.find(t => t.value === Number(text));
+				return match ? match.name : text;
+			}
+			const match = INFECTION_TYPES.find(t => t.name.toLowerCase() === text.toLowerCase());
+			return match ? match.name : text;
+		}
+
+		function normalizeStringArray(value) {
+			if (value === undefined || value === null || value === '') return [];
+			const list = Array.isArray(value) ? value : [value];
+			const result = [];
+			list.forEach(item => {
+				const text = String(item ?? '').trim();
+				if (text && !result.includes(text)) result.push(text);
+			});
+		return result;
+	}
+
+	/* ---------------- Boot ---------------- */
+
+	async function init() {
+		bindEvents();
+		try {
+			const res = await fetch(ENDPOINTS.form);
+			const body = await readJson(res);
+			const status = resultStatus(body);
+			if (!res.ok && !status) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+			if (status && status !== 'SUCCESS') {
+				throw new Error(resultError(body).description || resultError(body).Description || 'Failed to load form');
 			}
 
-			function renderForm(variables) {
-				const container = document.getElementById('formFields');
-				container.innerHTML = '';
-				buildVariableMeta(variables);
+			const data = pick(body, 'data', 'Data');
+			if (!data) throw new Error('The server returned no form data.');
 
-				const buckets = new Map();
-				variables.forEach(v => {
-					const key = normalizeCategoryKey(v.category ?? v.Category);
-					if (!buckets.has(key)) buckets.set(key, []);
-					buckets.get(key).push(v);
-				});
+			state.variables = pick(data, 'clinicalVariables', 'ClinicalVariables') || [];
+			state.antibiotics = pick(data, 'antibiotics', 'Antibiotics') || [];
+			state.pathogens = pick(data, 'pathogens', 'Pathogens') || [];
 
-			const orderedKeys = [...buckets.keys()]
-			.map((key, order) => ({ key, order }))
-			.sort((a, b) => (categoryRank(a.key) - categoryRank(b.key)) || (a.order - b.order))
-			.map(entry => entry.key);
+			if (!Array.isArray(state.variables) || state.variables.length === 0) {
+				throw new Error('No clinical variables were returned by the API.');
+			}
 
-			orderedKeys.forEach(key => {
-				const list = buckets.get(key);
-				const section = document.createElement('section');
-				section.className = 'category-section';
+			buildVariableMeta(state.variables);
+			buildAntibioticGroups();
+			renderForm(state.variables);
+			refreshAllergyUI();
+			renderHistory();
+			renderInfections();
+			renderSamples();
 
-				const title = document.createElement('h3');
-				title.className = 'category-title';
-				title.textContent = categoryLabel(key);
-				const count = document.createElement('span');
-				count.className = 'category-count';
-				count.textContent = list.length;
-				title.appendChild(count);
+			state.loaded = true;
+			$('importBtn').disabled = false;
+			$('exportBtn').disabled = false;
+			$('loadingState').hidden = true;
+			$('diagnoseForm').hidden = false;
+			showStep(1);
+		} catch (err) {
+			console.error('Form load error:', err);
+			$('loadingState').innerHTML = `
+			<p style="color:var(--danger);font-weight:800;">Failed to load the diagnosis form.</p>
+			<p style="margin-top:0.35rem;">${esc(err.message)}</p>
+			<button type="button" class="btn btn-secondary" style="margin-top:1rem;" onclick="location.reload()">Retry</button>
+			`;
+			showError('Failed to load diagnosis form: ' + err.message);
+		}
+	}
 
-				const fields = document.createElement('div');
-				fields.className = 'category-fields';
-				list.forEach(v => fields.appendChild(buildFieldGroup(v)));
+	async function readJson(res) {
+		const raw = await res.text();
+		if (!raw) return {};
+		try {
+			return JSON.parse(raw);
+		} catch {
+			throw new Error(`Invalid JSON from server (HTTP ${res.status}): ${raw.slice(0, 160)}`);
+		}
+	}
 
-				section.appendChild(title);
-				section.appendChild(fields);
-				container.appendChild(section);
-			});
+	/* ---------------- Step 1: clinical variables ---------------- */
 
+	function renderForm(variables) {
+		const container = $('formFields');
+		container.innerHTML = '';
+
+		const buckets = new Map();
 		variables.forEach(v => {
-			const id = v.id || v.Id;
-			const vt = v.valueType || v.ValueType;
-			if (vt === 'Numeric') return;
-
-			const toggle = container.querySelector(`.segmented-toggle[data-toggle-for="${id}"]`);
-			if (!toggle) return;
-
-			const input = document.getElementById(`var-${id}`);
-			const buttons = toggle.querySelectorAll('.segment-btn');
-			buttons.forEach(btn => {
-				btn.addEventListener('click', () => {
-					if (btn.classList.contains('active')) {
-						btn.classList.remove('active');
-						input.value = '';
-						return;
-					}
-					input.value = btn.getAttribute('data-value');
-					buttons.forEach(b => b.classList.toggle('active', b === btn));
-				});
+			const key = normalizeCategoryKey(pick(v, 'category', 'Category'));
+			if (!buckets.has(key)) buckets.set(key, []);
+			buckets.get(key).push(v);
 		});
+
+	const orderedKeys = [...buckets.keys()]
+	.map((key, order) => ({ key, order }))
+	.sort((a, b) => (categoryRank(a.key) - categoryRank(b.key)) || (a.order - b.order))
+	.map(entry => entry.key);
+
+	orderedKeys.forEach(key => {
+		const list = buckets.get(key);
+		const section = document.createElement('section');
+		section.className = 'category-section';
+
+		const title = document.createElement('h3');
+		title.className = 'category-title';
+		title.textContent = categoryLabel(key);
+		const count = document.createElement('span');
+		count.className = 'category-count';
+		count.textContent = list.length;
+		title.appendChild(count);
+
+		const fields = document.createElement('div');
+		fields.className = 'category-fields';
+		list.forEach(v => fields.appendChild(buildFieldGroup(v)));
+
+		section.appendChild(title);
+		section.appendChild(fields);
+		container.appendChild(section);
+	});
+
+applyVariableFilter();
+}
+
+function applyVariableFilter() {
+	const query = $('variableSearch').value.trim().toLowerCase();
+	document.querySelectorAll('#formFields .category-section').forEach(section => {
+		let visible = 0;
+		section.querySelectorAll('.form-group').forEach(group => {
+			const haystack = group.dataset.search || '';
+			const match = !query || haystack.includes(query);
+			group.hidden = !match;
+			if (match) visible++;
+		});
+	section.hidden = visible === 0;
+	const count = section.querySelector('.category-count');
+	if (count) count.textContent = visible;
 });
 }
 
-/* ---------------- Multi-step navigation ---------------- */
+function buildFieldGroup(v) {
+	const group = document.createElement('div');
+	group.className = 'form-group';
+
+	const id = pick(v, 'id', 'Id');
+	const name = pick(v, 'name', 'Name');
+	const code = pick(v, 'code', 'Code');
+	const desc = pick(v, 'description', 'Description');
+	const vt = pick(v, 'valueType', 'ValueType');
+	const meta = state.variableMeta[String(id)];
+	const requiredMark = meta && meta.isRequired
+	? ' <span class="required-mark" title="Required field">*</span>'
+	: '';
+
+	group.dataset.search = `${name || ''} ${code || ''} ${desc || ''}`.toLowerCase();
+
+	if (vt === 'Numeric') {
+		const unit = pick(v, 'canonicalUnit', 'CanonicalUnit');
+		group.className = 'form-group numeric-group';
+		group.innerHTML = `
+		<div class="numeric-field-info">
+		<label class="form-label" for="var-${esc(id)}">
+		${esc(name)}${requiredMark}${code ? `<span class="field-code">${esc(code)}</span>` : ''}
+		</label>
+		<div class="form-desc">${esc(desc)}</div>
+		</div>
+		<div class="numeric-input-wrap">
+		<input
+		class="form-input"
+		type="number"
+		id="var-${esc(id)}"
+		step="any"
+		inputmode="decimal"
+		placeholder="${esc(normalPlaceholder(meta))}"
+		data-variable-id="${esc(id)}"
+		data-value-type="Numeric"
+		>
+		${unit ? `<span class="numeric-unit-suffix">${esc(unit)}</span>` : ''}
+		</div>
+		`;
+		return group;
+	}
+
+	if (vt === 'Categorical') {
+		const options = pick(v, 'acceptedValues', 'AcceptedValues') || [];
+		group.className = 'form-group bool-group';
+		group.innerHTML = `
+		<div class="bool-field-info">
+		<label class="form-label" for="var-${esc(id)}">
+		${esc(name)}${requiredMark}${code ? `<span class="field-code">${esc(code)}</span>` : ''}
+		</label>
+		<div class="form-desc">${esc(desc)}</div>
+		</div>
+		<div class="segmented-toggle" data-toggle-for="${esc(id)}" role="group" aria-label="${esc(name)}">
+		${options.length > 0
+			? options.map(o => `
+				<button type="button" class="segment-btn" data-value="${esc(o)}">${esc(prettyEnum(o))}</button>
+				`).join('')
+				: '<span class="empty-state" style="padding:0.7rem 1rem;">No options</span>'}
+			</div>
+			<input
+			type="hidden"
+			id="var-${esc(id)}"
+			data-variable-id="${esc(id)}"
+			data-value-type="Categorical"
+			value=""
+			>
+			`;
+			return group;
+		}
+
+		group.className = 'form-group bool-group';
+		const requiredBool = !!(meta && meta.isRequired);
+		group.innerHTML = `
+		<div class="bool-field-info">
+		<label class="form-label" for="var-${esc(id)}">
+		${esc(name)}${requiredMark}${code ? `<span class="field-code">${esc(code)}</span>` : ''}
+		</label>
+		<div class="form-desc">${esc(desc)}</div>
+		</div>
+		<div class="segmented-toggle" data-toggle-for="${esc(id)}" role="group" aria-label="${esc(name)}">
+		<button type="button" class="segment-btn${requiredBool ? ' active' : ''}" data-value="false"${requiredBool ? ' aria-pressed="true"' : ''}>No</button>
+		<button type="button" class="segment-btn" data-value="true">Yes</button>
+		</div>
+		<input
+		type="hidden"
+		id="var-${esc(id)}"
+		data-variable-id="${esc(id)}"
+		data-value-type="Boolean"
+		value="${requiredBool ? 'false' : ''}"
+		>
+		`;
+		return group;
+	}
+
+	function findToggle(id) {
+		return document.querySelector(`.segmented-toggle[data-toggle-for="${String(id).replace(/"/g, '\\"')}"]`);
+		}
+
+		function setVariableValue(id, value) {
+			const input = $(`var-${id}`);
+			if (!input) return;
+
+			const text = (value === undefined || value === null) ? '' : String(value);
+			input.value = text;
+
+			if (input.dataset.valueType === 'Numeric') return;
+
+			const toggle = findToggle(id);
+			if (!toggle) return;
+
+			if (text === '') {
+				toggle.querySelectorAll('.segment-btn').forEach(btn => {
+					btn.classList.remove('active');
+					btn.setAttribute('aria-pressed', 'false');
+				});
+			return;
+		}
+
+		let match = [...toggle.querySelectorAll('.segment-btn')].find(btn => btn.dataset.value === text);
+		if (!match) {
+			match = document.createElement('button');
+			match.type = 'button';
+			match.className = 'segment-btn';
+			match.dataset.value = text;
+			match.textContent = prettyEnum(text);
+			toggle.appendChild(match);
+		}
+		toggle.querySelectorAll('.segment-btn').forEach(btn => {
+			const active = btn === match;
+			btn.classList.toggle('active', active);
+			btn.setAttribute('aria-pressed', String(active));
+		});
+}
+
+function applyRequiredBooleanDefaults() {
+	state.variables.forEach(v => {
+		const id = pick(v, 'id', 'Id');
+		const meta = state.variableMeta[String(id)];
+		if (!meta || meta.valueType !== 'Boolean' || !meta.isRequired) return;
+
+		const input = $(`var-${id}`);
+		if (input && String(input.value ?? '').trim() === '') {
+			setVariableValue(id, 'false');
+		}
+	});
+}
+
+function collectObservations() {
+	const observations = [];
+	state.variables.forEach(v => {
+		const id = String(pick(v, 'id', 'Id'));
+		const input = $(`var-${id}`);
+		if (!input) return;
+		let value = String(input.value ?? '').trim();
+		if (value === '') return;
+		if (input.dataset.valueType === 'Numeric') value = plainNumber(value);
+		observations.push({ variableId: id, value });
+	});
+return observations;
+}
+
+/* ---------------- Step navigation ---------------- */
 
 function showStep(step) {
-	currentStep = step;
-	document.getElementById('stepObservations').hidden = step !== 1;
-	document.getElementById('stepAllergies').hidden = step !== 2;
-	document.querySelectorAll('.step-pill').forEach(pill => {
-		pill.classList.toggle('active', Number(pill.dataset.step) === step);
+	state.currentStep = step;
+	document.querySelectorAll('.step-panel').forEach(panel => {
+		panel.hidden = Number(panel.dataset.step) !== step;
 	});
+document.querySelectorAll('.step-pill').forEach(pill => {
+	const active = Number(pill.dataset.step) === step;
+	pill.classList.toggle('active', active);
+	if (active) pill.setAttribute('aria-current', 'step');
+	else pill.removeAttribute('aria-current');
+});
 window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-// Jumping backwards is always allowed; moving forward requires step 1 to be
-// valid, otherwise the step stays put and the offending fields are highlighted.
 function tryGoToStep(target) {
-	if (target <= currentStep) {
-		hideError();
-		showStep(target);
-		return true;
-	}
+	if (target === state.currentStep) return true;
 
-	const invalidCount = validateAllFields();
-	if (invalidCount > 0) {
-		showError(`Please fix the highlighted ${invalidCount === 1 ? 'field' : 'fields'} before continuing to the next step.`);
-		scrollToFirstError();
-		return false;
+	if (target > state.currentStep) {
+		for (let step = state.currentStep; step < target; step++) {
+			const invalid = validateStep(step);
+			if (invalid > 0) {
+				showError(`Please fix the highlighted ${invalid === 1 ? 'problem' : 'problems'} before continuing.`);
+				scrollToFirstError();
+				return false;
+			}
+		}
 	}
 
 	hideError();
@@ -1616,190 +2642,686 @@ function tryGoToStep(target) {
 	return true;
 }
 
-/* ---------------- Antibiotic allergy picker ---------------- */
-
-function antibioticId(a) { return String(a.id ?? a.Id); }
-function antibioticName(a) { return a.name ?? a.Name ?? ''; }
-
-async function loadAntibiotics() {
-	const list = document.getElementById('antibioticList');
-	try {
-		const res = await fetch(ENDPOINTS.antibiotics);
-		if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
-		const raw = await res.text();
-		let body;
-		try { body = JSON.parse(raw); } catch { throw new Error('Invalid JSON from server'); }
-		if (body.statusCode !== 'SUCCESS') {
-			throw new Error(body.error?.description || 'Failed to load antibiotics');
-		}
-		antibiotics = body.data?.antibiotics ?? body.data?.Antibiotics ?? [];
-		renderAntibioticList();
-	} catch (err) {
-		console.error('Antibiotics load error:', err);
-		list.innerHTML = `<div class="empty-state">Failed to load antibiotics: ${esc(err.message)}</div>`;
+function validateStep(step) {
+	switch (step) {
+		case 1: return validateAllFields();
+		case 2: return validateAllergy();
+		case 5: return validateSamples();
+		default: return 0;
 	}
 }
 
-function renderAntibioticList() {
-	const list = document.getElementById('antibioticList');
-	const query = document.getElementById('antibioticSearch').value.trim().toLowerCase();
-	const visible = antibiotics.filter(a => antibioticName(a).toLowerCase().includes(query));
+function validateAllSteps() {
+	let count = 0;
+	let first = null;
+	for (let step = 1; step <= 5; step++) {
+		const invalid = validateStep(step);
+		if (invalid > 0) {
+			count += invalid;
+			if (first === null) first = step;
+		}
+	}
+	return { count, first };
+}
 
+/* ---------------- Step 2: antibiotic allergy ---------------- */
+
+function buildAntibioticGroups() {
+	state.antibioticGroups = new Map();
+	state.antibiotics.forEach(a => {
+		const group = antibioticGroupName(a) || 'Ungrouped';
+		if (!state.antibioticGroups.has(group)) state.antibioticGroups.set(group, []);
+		state.antibioticGroups.get(group).push(a);
+	});
+}
+
+function setAllergyType(type) {
+	state.allergyType = normalizeAllergyType(type);
+	const isYes = state.allergyType === 'Yes';
+	const isOther = state.allergyType === 'NonRegisteredAntibiotic' || state.allergyType === 'Unknown';
+
+	document.querySelectorAll('#allergyTypeToggle .segment-btn').forEach(btn => {
+		const active = btn.dataset.allergyType === state.allergyType;
+		btn.classList.toggle('active', active);
+		btn.setAttribute('aria-pressed', String(active));
+	});
+
+$('allergyPickerGroup').hidden = !isYes;
+$('otherAllergyGroup').hidden = !isOther;
+
+if (!isYes && state.selectedAllergies.size > 0) {
+	state.selectedAllergies.clear();
+}
+if (!isOther) {
+	state.otherAllergy = '';
+	$('otherAllergyInput').value = '';
+}
+
+clearGroupError($('allergyTypeGroup'));
+clearGroupError($('allergyPickerGroup'));
+clearGroupError($('otherAllergyGroup'));
+refreshAllergyUI();
+}
+
+function refreshAllergyUI() {
+	renderGroupBar();
+	renderAntibioticList();
+	renderSelectedAllergies();
+}
+
+function visibleAntibiotics() {
+	const query = $('antibioticSearch').value.trim().toLowerCase();
+	return state.antibiotics.filter(a => {
+		const haystack = `${antibioticName(a)} ${antibioticGroupName(a)}`.toLowerCase();
+		return !query || haystack.includes(query);
+	});
+}
+
+function renderGroupBar() {
+	const bar = $('allergyGroups');
+	if (!bar) return;
+
+	const groups = [...state.antibioticGroups.keys()].sort((a, b) => a.localeCompare(b));
+	if (groups.length === 0) {
+		bar.innerHTML = '<span class="empty-state">No antibiotic groups available</span>';
+		return;
+	}
+
+	bar.innerHTML = groups.map(group => {
+		const items = state.antibioticGroups.get(group) || [];
+		const selected = items.filter(a => state.selectedAllergies.has(antibioticId(a))).length;
+		const allSelected = items.length > 0 && selected === items.length;
+		const cls = allSelected ? ' active' : (selected > 0 ? ' partial' : '');
+		return `
+		<button type="button" class="group-chip${cls}" data-group="${esc(group)}" aria-pressed="${allSelected}">
+		<span>${esc(group)}</span>
+		<span class="group-chip-count">${selected}/${items.length}</span>
+		</button>
+		`;
+	}).join('');
+}
+
+function renderAntibioticList() {
+	const list = $('antibioticList');
+	if (!list) return;
+
+	if (state.antibiotics.length === 0) {
+		list.innerHTML = '<div class="empty-state">No antibiotics available from the API.</div>';
+		return;
+	}
+
+	const visible = visibleAntibiotics();
 	if (visible.length === 0) {
-		list.innerHTML = '<div class="empty-state">No antibiotics match your search</div>';
+		list.innerHTML = '<div class="empty-state">No antibiotics match your search.</div>';
 		return;
 	}
 
 	list.innerHTML = visible.map(a => {
 		const id = antibioticId(a);
-		const checked = selectedAllergies.has(id);
+		const checked = state.selectedAllergies.has(id);
 		return `
 		<label class="allergy-option${checked ? ' selected' : ''}">
 		<input type="checkbox" data-antibiotic-id="${esc(id)}"${checked ? ' checked' : ''}>
-		<span>${esc(antibioticName(a))}</span>
+		<span class="allergy-option-text">
+		<span class="allergy-name">${esc(antibioticName(a))}</span>
+		<span class="allergy-group">${esc(antibioticGroupName(a))}</span>
+		</span>
 		</label>
 		`;
 	}).join('');
 }
 
 function renderSelectedAllergies() {
-	const container = document.getElementById('selectedAllergies');
-	document.getElementById('allergyCount').textContent = String(selectedAllergies.size);
+	const container = $('selectedAllergies');
+	const count = $('allergyCount');
+	if (!container || !count) return;
 
-	if (selectedAllergies.size === 0) {
-		container.innerHTML = '<div class="empty-state">No allergies selected</div>';
+	count.textContent = String(state.selectedAllergies.size);
+
+	if (state.selectedAllergies.size === 0) {
+		container.innerHTML = '<div class="empty-state">No allergies selected.</div>';
 		return;
 	}
 
-	container.innerHTML = [...selectedAllergies.entries()]
-	.map(([id, name]) => `
+	container.innerHTML = [...state.selectedAllergies.entries()].map(([id, name]) => `
 		<span class="allergy-chip">
 		${esc(name)}
-		<button type="button" class="allergy-chip-remove" data-remove-id="${esc(id)}"
+		<button type="button" class="chip-remove" data-remove-allergy="${esc(id)}"
 		aria-label="Remove ${esc(name)}">&times;</button>
 		</span>
 		`).join('');
 	}
 
 	function setAllergySelected(id, selected) {
+		const key = String(id);
 		if (selected) {
-			if (!selectedAllergies.has(id)) {
-				const antibiotic = antibiotics.find(a => antibioticId(a) === id);
-				selectedAllergies.set(id, antibiotic ? antibioticName(antibiotic) : id);
-			}
+			const antibiotic = state.antibiotics.find(a => antibioticId(a) === key);
+			state.selectedAllergies.set(key, antibiotic ? antibioticName(antibiotic) : key);
 		} else {
-			selectedAllergies.delete(id);
+			state.selectedAllergies.delete(key);
 		}
-		renderSelectedAllergies();
+		refreshAllergyUI();
+		clearGroupError($('allergyPickerGroup'));
 	}
 
-	document.getElementById('antibioticSearch').addEventListener('input', renderAntibioticList);
+	/* ---------------- Step 3: special medical history ---------------- */
 
-	document.getElementById('antibioticList').addEventListener('change', (e) => {
-		const checkbox = e.target.closest('input[type="checkbox"][data-antibiotic-id]');
-		if (!checkbox) return;
-		setAllergySelected(checkbox.getAttribute('data-antibiotic-id'), checkbox.checked);
-		const option = checkbox.closest('.allergy-option');
-		if (option) option.classList.toggle('selected', checkbox.checked);
+	function addHistoryEntry() {
+		const input = $('historyInput');
+		const value = input.value.trim();
+		if (!value) {
+			input.focus();
+			return;
+		}
+		if (!state.specialHistory.includes(value)) state.specialHistory.push(value);
+		input.value = '';
+		renderHistory();
+		input.focus();
+	}
+
+	function renderHistory() {
+		const list = $('historyList');
+		const count = $('historyCount');
+		if (!list || !count) return;
+
+		count.textContent = String(state.specialHistory.length);
+
+		if (state.specialHistory.length === 0) {
+			list.innerHTML = '<div class="empty-state">No special medical history recorded.</div>';
+			return;
+		}
+
+		list.innerHTML = state.specialHistory.map((item, index) => `
+			<span class="history-chip">
+			${esc(item)}
+			<button type="button" class="chip-remove" data-remove-history="${index}"
+			aria-label="Remove ${esc(item)}">&times;</button>
+			</span>
+			`).join('');
+		}
+
+		/* ---------------- Step 4: other infections ---------------- */
+
+		function renderInfections() {
+			const list = $('infectionList');
+			const empty = $('infectionEmpty');
+			if (!list || !empty) return;
+
+			const options = state.infectionOptions;
+			if (options.length === 0) {
+				list.innerHTML = '';
+				empty.hidden = false;
+				return;
+			}
+
+			empty.hidden = true;
+			list.innerHTML = options.map(value => {
+				const checked = state.otherInfections.has(value);
+				return `
+				<label class="check-option${checked ? ' selected' : ''}">
+				<input type="checkbox" data-infection="${esc(value)}"${checked ? ' checked' : ''}>
+				<span>${esc(infectionLabel(value))}</span>
+				</label>
+				`;
+			}).join('');
+	}
+
+	/* ---------------- Step 5: microbial samples ---------------- */
+
+	function pathogenOptions(selected) {
+		const options = ['<option value="">Select pathogen</option>'];
+		state.pathogens.forEach(p => {
+			const id = String(pick(p, 'id', 'Id') ?? '');
+			const name = pick(p, 'name', 'Name') || 'Pathogen';
+			options.push(`<option value="${esc(id)}"${id === selected ? ' selected' : ''}>${esc(name)}</option>`);
+		});
+	return options.join('');
+}
+
+function sampleTypeOptions(selected) {
+	const options = ['<option value="">Select sample type</option>'];
+	SAMPLE_TYPES.forEach(t => {
+		options.push(`<option value="${esc(t.name)}"${t.name === selected ? ' selected' : ''}>${esc(t.label)}</option>`);
 	});
+return options.join('');
+}
 
-document.getElementById('selectedAllergies').addEventListener('click', (e) => {
-	const removeBtn = e.target.closest('.allergy-chip-remove');
-	if (!removeBtn) return;
-	const id = removeBtn.getAttribute('data-remove-id');
-	setAllergySelected(id, false);
-	const checkbox = document.querySelector(`#antibioticList input[data-antibiotic-id="${CSS.escape(id)}"]`);
-	if (checkbox) {
-		checkbox.checked = false;
-		const option = checkbox.closest('.allergy-option');
-		if (option) option.classList.remove('selected');
-	}
-});
+function micCategoryOptions(selected) {
+	const options = ['<option value="">Select MIC category</option>'];
+	MIC_CATEGORIES.forEach(c => {
+		options.push(`<option value="${esc(c.value)}"${c.value === selected ? ' selected' : ''}>${esc(c.label)}</option>`);
+	});
+return options.join('');
+}
 
-document.getElementById('toStep2Btn').addEventListener('click', () => tryGoToStep(2));
-document.getElementById('backBtn').addEventListener('click', () => tryGoToStep(1));
-document.querySelectorAll('.step-pill').forEach(pill => {
-	pill.addEventListener('click', () => tryGoToStep(Number(pill.dataset.step)));
-});
+function renderSamples() {
+	const list = $('samplesList');
+	if (!list) return;
 
-document.getElementById('diagnoseForm').addEventListener('submit', async (e) => {
-	e.preventDefault();
-
-	// Enter in a step 1 input can submit implicitly: forward to step 2 instead
-	// (tryGoToStep validates step 1 and blocks with an error when invalid).
-	if (currentStep !== 2) {
-		tryGoToStep(2);
+	if (state.samples.length === 0) {
+		list.innerHTML = '<div class="empty-state">No microbial samples added. This step can be left empty.</div>';
 		return;
 	}
 
+	list.innerHTML = state.samples.map((sample, index) => `
+		<div class="form-group sample-card" data-sample-id="${esc(sample.id)}">
+		<div class="sample-head">
+		<span class="sample-title">Sample ${index + 1}</span>
+		<button type="button" class="icon-btn" data-remove-sample="${esc(sample.id)}"
+		aria-label="Remove sample ${index + 1}">&times;</button>
+		</div>
+		<div class="sample-grid">
+		<label class="sample-field">
+		<span class="sample-label">Sample type</span>
+		<select class="form-input" data-sample-field="sampleType">
+		${sampleTypeOptions(sample.sampleType)}
+		</select>
+		</label>
+		<label class="sample-field">
+		<span class="sample-label">MIC category</span>
+		<select class="form-input" data-sample-field="micCategory">
+		${micCategoryOptions(sample.micCategory)}
+		</select>
+		</label>
+		<label class="sample-field">
+		<span class="sample-label">Pathogen</span>
+		<select class="form-input" data-sample-field="pathogen">
+		${pathogenOptions(sample.pathogen)}
+		</select>
+		</label>
+		</div>
+		</div>
+		`).join('');
+	}
+
+	function addSample() {
+		state.sampleSeq += 1;
+		state.samples.push({
+			id: state.sampleSeq,
+			sampleType: '',
+			micCategory: '',
+			pathogen: ''
+		});
+	renderSamples();
+}
+
+function validateSamples() {
+	let invalid = 0;
+	state.samples.forEach(sample => {
+		const card = document.querySelector(`[data-sample-id="${sample.id}"]`);
+		if (!card) return;
+		clearGroupError(card);
+
+		const empty = !sample.sampleType && !sample.micCategory && !sample.pathogen;
+		const complete = sample.sampleType && sample.micCategory && sample.pathogen;
+		if (!empty && !complete) {
+			showGroupError(card, 'Complete the sample type, MIC category and pathogen, or remove this sample.');
+			invalid++;
+		}
+	});
+return invalid;
+}
+
+/* ---------------- Query builder ---------------- */
+
+function buildQuery() {
+	const isYes = state.allergyType === 'Yes';
+	const isOther = state.allergyType === 'NonRegisteredAntibiotic' || state.allergyType === 'Unknown';
+
+	return {
+		observations: collectObservations(),
+		allergy: {
+			type: state.allergyType,
+			allergicAntibiotics: isYes ? [...state.selectedAllergies.keys()] : [],
+			otherAllergy: isOther ? (state.otherAllergy.trim() || null) : null
+		},
+		specialMedicalHistory: [...state.specialHistory],
+		otherInfections: [...state.otherInfections],
+		microbialSamples: state.samples
+		.filter(sample => sample.sampleType && sample.micCategory && sample.pathogen)
+		.map(sample => ({
+			// MicrobialSampleType has no string enum converter on the
+			// backend, so the wire value is numeric.
+			sampleType: sampleTypeWire(sample.sampleType),
+			micCategory: sample.micCategory,
+			pathogen: sample.pathogen
+		}))
+};
+}
+
+/* ---------------- Validation ---------------- */
+
+function validateField(input) {
+	const group = input ? input.closest('.form-group') : null;
+	const meta = input ? state.variableMeta[String(input.dataset.variableId || '')] : null;
+	if (!meta) return { hasError: false, hasWarning: false };
+
+	clearGroupError(group);
+	const value = String(input.value ?? '').trim();
+
+	if (value === '') {
+		if (meta.isRequired) {
+			showGroupError(group, `${meta.name} is required.`);
+			return { hasError: true, hasWarning: false };
+		}
+		return { hasError: false, hasWarning: false };
+	}
+
+	if (meta.valueType !== 'Numeric') {
+		return { hasError: false, hasWarning: false };
+	}
+
+	const num = Number(value);
+	if (!Number.isFinite(num)) {
+		showGroupError(group, `${meta.name} must be a valid number.`);
+		return { hasError: true, hasWarning: false };
+	}
+
+	if (meta.acceptedRange && !inRange(num, meta.acceptedRange)) {
+		showGroupError(group, `Value must be within the accepted range (${describeRange(meta.acceptedRange, meta.unit)}).`);
+		return { hasError: true, hasWarning: false };
+	}
+
+	if (meta.normalRange && !inRange(num, meta.normalRange)) {
+		showGroupWarning(group, `Outside the normal range (${describeRange(meta.normalRange, meta.unit)}). This value is accepted and can still be submitted.`);
+		return { hasError: false, hasWarning: true };
+	}
+
+	return { hasError: false, hasWarning: false };
+}
+
+function validateAllFields() {
+	let invalid = 0;
+	state.variables.forEach(v => {
+		const input = $(`var-${pick(v, 'id', 'Id')}`);
+		if (!input) return;
+		if (validateField(input).hasError) invalid++;
+	});
+return invalid;
+}
+
+function validateAllergy() {
+	clearGroupError($('allergyTypeGroup'));
+	clearGroupError($('allergyPickerGroup'));
+	clearGroupError($('otherAllergyGroup'));
+
+	if (state.allergyType === 'Yes' && state.selectedAllergies.size === 0) {
+		showGroupError($('allergyPickerGroup'), 'Select at least one allergic antibiotic.');
+		return 1;
+	}
+
+	if ((state.allergyType === 'NonRegisteredAntibiotic' || state.allergyType === 'Unknown')
+		&& !state.otherAllergy.trim()) {
+		showGroupError($('otherAllergyGroup'), 'Describe the allergy before continuing.');
+		return 1;
+	}
+
+	return 0;
+}
+
+function clearFieldErrors() {
+	document.querySelectorAll('.form-group.has-error, .form-group.has-warning').forEach(clearGroupError);
+}
+
+function clearGroupError(group) {
+	if (!group) return;
+	group.classList.remove('has-error', 'has-warning');
+	group.querySelectorAll('.field-error-msg, .field-warn-msg').forEach(msg => msg.remove());
+	group.querySelectorAll('[aria-invalid]').forEach(el => el.removeAttribute('aria-invalid'));
+}
+
+function showGroupError(group, message) {
+	if (!group) return;
+	group.classList.remove('has-warning');
+	group.querySelectorAll('.field-warn-msg').forEach(msg => msg.remove());
+	group.classList.add('has-error');
+	const input = group.querySelector('[data-variable-id]');
+	if (input) input.setAttribute('aria-invalid', 'true');
+
+	let msg = group.querySelector('.field-error-msg');
+	if (!msg) {
+		msg = document.createElement('div');
+		msg.className = 'field-error-msg';
+		msg.setAttribute('role', 'alert');
+		group.appendChild(msg);
+	}
+	msg.textContent = message;
+}
+
+function showGroupWarning(group, message) {
+	if (!group) return;
+	group.classList.remove('has-error');
+	group.querySelectorAll('.field-error-msg').forEach(msg => msg.remove());
+	group.querySelectorAll('[aria-invalid]').forEach(el => el.removeAttribute('aria-invalid'));
+	group.classList.add('has-warning');
+
+	let msg = group.querySelector('.field-warn-msg');
+	if (!msg) {
+		msg = document.createElement('div');
+		msg.className = 'field-warn-msg';
+		msg.setAttribute('role', 'status');
+		group.appendChild(msg);
+	}
+	msg.textContent = message;
+}
+
+function findFieldInput(variableId) {
+	const direct = $(`var-${variableId}`);
+	if (direct) return direct;
+	const key = String(variableId ?? '').toLowerCase();
+	return [...document.querySelectorAll('[data-variable-id]')]
+	.find(el => (el.getAttribute('data-variable-id') || '').toLowerCase() === key) || null;
+}
+
+function applyFieldErrors(detail) {
+	if (!detail || typeof detail !== 'object') return 0;
+
+	let applied = 0;
+	for (const [variableId, message] of Object.entries(detail)) {
+		if (!message) continue;
+		const input = findFieldInput(variableId);
+		if (!input) continue;
+		const group = input.closest('.form-group');
+		if (!group) continue;
+
+		clearGroupError(group);
+		showGroupError(group, message);
+		applied++;
+	}
+	return applied;
+}
+
+function scrollToFirstError() {
+	// A search filter can hide the offending field; reveal everything first.
+	const hiddenError = [...document.querySelectorAll('#formFields .form-group.has-error')].some(group => group.hidden);
+	if (hiddenError) {
+		$('variableSearch').value = '';
+		applyVariableFilter();
+	}
+
+	const first = [...document.querySelectorAll('.form-group.has-error')]
+	.find(group => !group.hidden && !group.closest('.step-panel[hidden]'));
+	if (first) first.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+function showError(message, detail) {
+	$('errorModalMsg').textContent = message;
+
+	const list = $('errorModalDetail');
+	const messages = detail && typeof detail === 'object'
+	? Object.values(detail).filter(Boolean)
+	: [];
+	list.innerHTML = messages.map(m => `<li>${esc(m)}</li>`).join('');
+	list.style.display = messages.length > 0 ? 'block' : 'none';
+
+	$('errorModal').classList.add('open');
+}
+
+function hideError() {
+	$('errorModal').classList.remove('open');
+}
+
+let toastTimer = null;
+function toast(message) {
+	const el = $('toast');
+	if (!el) return;
+	el.textContent = message;
+	el.classList.add('show');
+	clearTimeout(toastTimer);
+	toastTimer = setTimeout(() => el.classList.remove('show'), 2800);
+}
+
+/* ---------------- Import / export ---------------- */
+
+function downloadJson(filename, payload) {
+	const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+	const url = URL.createObjectURL(blob);
+	const link = document.createElement('a');
+	link.href = url;
+	link.download = filename;
+	document.body.appendChild(link);
+	link.click();
+	link.remove();
+	setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+function handleExport() {
+	if (!state.loaded) return;
+	const query = buildQuery();
+	const incomplete = state.samples.filter(s => !(s.sampleType && s.micCategory && s.pathogen)).length;
+	const stamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
+	downloadJson(`respira-diagnosis-${stamp}.json`, query);
+	toast(incomplete > 0
+		? `Query exported. ${incomplete} incomplete sample ${incomplete === 1 ? 'row was' : 'rows were'} skipped.`
+		: 'Query exported as JSON.');
+}
+
+async function handleImportFile(event) {
+	const file = event.target.files && event.target.files[0];
+	event.target.value = '';
+	if (!file) return;
+
+	try {
+		const text = await file.text();
+		const parsed = JSON.parse(text);
+		applyImportedQuery(parsed);
+	} catch (err) {
+		console.error('Import error:', err);
+		showError('Import failed: ' + err.message);
+	}
+}
+
+function applyImportedQuery(raw) {
+	if (!raw || typeof raw !== 'object' || Array.isArray(raw)) {
+		throw new Error('The JSON root must be a diagnosis query object.');
+	}
+
+	// Accept either the bare query object or a { statusCode, data } wrapper.
+	const query = (!pick(raw, 'observations', 'Observations') && !pick(raw, 'allergy', 'Allergy') && pick(raw, 'data', 'Data'))
+	? pick(raw, 'data', 'Data')
+	: raw;
+
+	if (!query || typeof query !== 'object') {
+		throw new Error('The JSON does not contain a diagnosis query.');
+	}
+
+	clearFieldErrors();
 	hideError();
 
-	// Blocking validation: required fields must be filled and numeric values must
-	// stay inside the accepted range. Normal-range violations only warn.
-	const invalidCount = validateAllFields();
-	if (invalidCount > 0) {
-		showError(`Please fix the highlighted ${invalidCount === 1 ? 'field' : 'fields'} before submitting.`);
-		scrollToFirstError();
-		return;
-	}
-
-	const observations = [];
-	formVariables.forEach(v => {
-		const id = v.id || v.Id;
-		const input = document.getElementById(`var-${id}`);
-		if (!input) return;
-		const value = String(input.value ?? '').trim();
-		if (value === '') return;
-		observations.push({ variableId: id, value });
+	// Observations
+	state.variables.forEach(v => setVariableValue(pick(v, 'id', 'Id'), ''));
+	const observations = pick(query, 'observations', 'Observations') || [];
+	let skipped = 0;
+	(Array.isArray(observations) ? observations : []).forEach(item => {
+		const variableId = pick(item, 'variableId', 'VariableId');
+		if (!variableId) return;
+		if (!state.variableMeta[String(variableId)]) {
+			skipped++;
+			return;
+		}
+		setVariableValue(variableId, pick(item, 'value', 'Value'));
 	});
+applyRequiredBooleanDefaults();
 
-const btn = document.getElementById('submitBtn');
-btn.disabled = true;
-btn.innerHTML = '<span class="spinner"></span> Diagnosing...';
+// Allergy (new object shape; legacy root array supported for convenience)
+const allergy = pick(query, 'allergy', 'Allergy');
+const legacyAllergies = pick(query, 'allergies', 'Allergies');
+let type = 'No';
+let ids = [];
+let other = '';
 
-try {
-	const payload = {
-		observations,
-		allergies: [...selectedAllergies.keys()]
-	};
-	console.log('Sending payload:', JSON.stringify(payload, null, 2));
-	const res = await fetch(ENDPOINTS.diagnose, {
-		method: 'POST',
-		headers: { 'Content-Type': 'application/json' },
-		body: JSON.stringify(payload)
+if (allergy && typeof allergy === 'object') {
+	type = normalizeAllergyType(pick(allergy, 'type', 'Type'));
+	ids = pick(allergy, 'allergicAntibiotics', 'AllergicAntibiotics') || [];
+	other = pick(allergy, 'otherAllergy', 'OtherAllergy') || '';
+} else if (Array.isArray(legacyAllergies)) {
+	ids = legacyAllergies
+	.map(a => (a && typeof a === 'object') ? pick(a, 'id', 'Id') : a)
+	.filter(Boolean);
+	type = ids.length > 0 ? 'Yes' : 'No';
+}
+
+setAllergyType(type);
+state.selectedAllergies.clear();
+if (type === 'Yes' && Array.isArray(ids)) {
+	ids.forEach(id => {
+		const key = String(id);
+		if (!key) return;
+		const antibiotic = state.antibiotics.find(a => antibioticId(a) === key);
+		state.selectedAllergies.set(key, antibiotic ? antibioticName(antibiotic) : key);
 	});
-console.log('Response status:', res.status);
-const raw = await res.text();
-console.log('Response body:', raw);
-let body;
-try { body = JSON.parse(raw); } catch { throw new Error('Invalid JSON from server: ' + raw.substring(0, 200)); }
+}
+state.otherAllergy = other ? String(other) : '';
+$('otherAllergyInput').value = state.otherAllergy;
+refreshAllergyUI();
 
-if (body.statusCode !== 'SUCCESS') {
-	const description = body.error?.description || 'Diagnosis failed';
-	const detail = body.error?.detail;
-	const invalidCount = applyFieldErrors(detail);
-	const err = new Error(invalidCount > 0
-		? `${description}. Please review the ${invalidCount === 1 ? 'field' : 'fields'} highlighted below.`
-		: description);
-	err.detail = detail;
-	throw err;
-}
-showResults(body.data);
-} catch (err) {
-	console.error('Diagnosis error:', err);
-	showError('Diagnosis failed: ' + err.message, err.detail);
-	scrollToFirstError();
-} finally {
-	btn.disabled = false;
-	btn.innerHTML = 'Submit Diagnosis';
-}
+// Special medical history
+state.specialHistory = normalizeStringArray(pick(query, 'specialMedicalHistory', 'SpecialMedicalHistory'));
+renderHistory();
+
+// Other infections
+state.otherInfections = new Set();
+const infections = pick(query, 'otherInfections', 'OtherInfections') || [];
+(Array.isArray(infections) ? infections : []).forEach(value => {
+	const name = normalizeInfection(value);
+	if (!name) return;
+	if (!state.infectionOptions.includes(name)) state.infectionOptions.push(name);
+	state.otherInfections.add(name);
 });
+renderInfections();
+
+// Microbial samples
+state.samples = [];
+state.sampleSeq = 0;
+const samples = pick(query, 'microbialSamples', 'MicrobialSamples') || [];
+(Array.isArray(samples) ? samples : []).forEach(item => {
+	const pathogenRaw = pick(item, 'pathogen', 'Pathogen');
+	const pathogen = pathogenRaw && typeof pathogenRaw === 'object'
+	? String(pick(pathogenRaw, 'id', 'Id') ?? '')
+	: String(pathogenRaw ?? '');
+	state.sampleSeq += 1;
+	state.samples.push({
+		id: state.sampleSeq,
+		sampleType: normalizeSampleType(pick(item, 'sampleType', 'SampleType')),
+		micCategory: normalizeMicCategory(pick(item, 'micCategory', 'MicCategory')),
+		pathogen
+	});
+});
+renderSamples();
+
+// Reset the visible workflow
+$('variableSearch').value = '';
+applyVariableFilter();
+showStep(1);
+toast(skipped > 0
+	? `Query imported. ${skipped} unknown variable ${skipped === 1 ? 'was' : 'were'} skipped.`
+	: 'Query imported successfully.');
+}
 
 /* ---------------- Evidence rendering ---------------- */
 
 function evPick(raw, lower, upper) {
-	if (!raw || typeof raw !== 'object') return undefined;
-	return raw[lower] !== undefined ? raw[lower] : raw[upper];
+	return pick(raw, lower, upper);
 }
 
 function evFormatValue(value) {
@@ -1827,7 +3349,6 @@ function evObservationValue(obs) {
 }
 
 function renderEvidence(e) {
-	// Legacy fallback: evidence already rendered as a string
 	if (e === null || e === undefined) return '';
 	if (typeof e === 'string' || typeof e === 'number' || typeof e === 'boolean') {
 		return `<li class="evidence-item evidence-legacy">${esc(e)}</li>`;
@@ -1849,7 +3370,8 @@ function renderEvidence(e) {
 		<div class="evidence-var">
 		<span class="evidence-var-name">${esc(label)}</span>
 		<span class="evidence-var-value">${esc(evObservationValue(obs))}</span>
-		</div>`;
+		</div>
+		`;
 	}).join('');
 
 const missingCodes = (Array.isArray(missing) ? missing : [])
@@ -1860,8 +3382,7 @@ let valueHtml;
 if (missingCodes.length > 0) {
 	valueHtml = `<span class="evidence-value is-missing">not evaluated (missing ${esc(missingCodes.join(', '))})</span>`;
 } else {
-	const rawValue = evPick(e, 'evaluatedValue', 'EvaluatedValue');
-	const formatted = evFormatValue(rawValue);
+	const formatted = evFormatValue(evPick(e, 'evaluatedValue', 'EvaluatedValue'));
 	valueHtml = `<span class="evidence-value">${esc(formatted ?? 'not evaluated')}</span>`;
 }
 
@@ -1893,33 +3414,24 @@ ${formula ? `
 		${valueHtml}
 		</div>
 		${badges.length > 0 ? `<div class="evidence-badges">${badges.join('')}</div>` : ''}
-		</li>`;
+		</li>
+		`;
 	}
 
-	/* ---------------- Metrics severity diagnosis ---------------- */
-
-	function formatTreatmentSite(site) {
-		if (!site) return 'Unknown';
-		return site === 'IntensiveCareUnit' ? 'ICU' : String(site);
-	}
-
-	// Shows only the per-metric verdict: code, severity, treatment site and the
-	// score (score-based metrics) or major/minor criteria counts (IDSA/ATS).
-	// The metric's individual evidences are already part of the main list.
 	function renderMetricsSeverityDiagnosis(metrics) {
-		const container = document.getElementById('metricsDiagnosisList');
-		if (metrics.length === 0) {
-			container.innerHTML = '<div class="empty-state">No metric severity diagnosis available</div>';
+		const container = $('metricsDiagnosisList');
+		if (!Array.isArray(metrics) || metrics.length === 0) {
+			container.innerHTML = '<div class="empty-state">No metric severity diagnosis available.</div>';
 			return;
 		}
 
 		container.innerHTML = metrics.map(m => {
-			const code = m.code ?? m.Code ?? 'Metric';
-			const severity = m.severity ?? m.Severity ?? '';
-			const site = m.treatmentSite ?? m.TreatmentSite ?? '';
-			const score = m.score ?? m.Score;
-			const major = m.majorMatched ?? m.MajorMatched;
-			const minor = m.minorMatched ?? m.MinorMatched;
+			const code = pick(m, 'code', 'Code') || 'Metric';
+			const severity = pick(m, 'severity', 'Severity') || '';
+			const site = pick(m, 'treatmentSite', 'TreatmentSite') || '';
+			const score = pick(m, 'score', 'Score');
+			const major = pick(m, 'majorMatched', 'MajorMatched');
+			const minor = pick(m, 'minorMatched', 'MinorMatched');
 
 			const chips = [`<span class="metric-chip is-neutral">Site: ${esc(formatTreatmentSite(site))}</span>`];
 			if (score !== undefined && score !== null) {
@@ -1940,307 +3452,589 @@ ${formula ? `
 			${severityHtml}
 			</div>
 			<div class="metric-diagnosis-meta">${chips.join('')}</div>
-			</div>`;
+			</div>
+			`;
 		}).join('');
 }
 
-function showResults(data) {
-	document.getElementById('diagnoseForm').style.display = 'none';
-	document.getElementById('resultsSection').style.display = 'block';
+/* ---------------- Results ---------------- */
 
-	// Severity + treatment site
-	const sev = data.severity ?? data.Severity ?? '';
-	const badge = document.getElementById('severityBadge');
-	badge.textContent = sev;
-	badge.className = 'severity-badge severity-' + String(sev).toLowerCase();
+function flag(kind, title, text) {
+	const icon = kind === 'success' ? '&#10003;' : (kind === 'neutral' ? 'i' : '!');
+	return `
+	<div class="result-flag is-${esc(kind)}">
+	<span class="flag-icon" aria-hidden="true">${icon}</span>
+	<div>
+	<div class="flag-title">${esc(title)}</div>
+	<div class="flag-text">${esc(text)}</div>
+	</div>
+	</div>
+	`;
+}
 
-	const site = data.treatmentSite ?? data.TreatmentSite ?? '';
-	const siteBadge = document.getElementById('treatmentBadge');
-	siteBadge.textContent = site === 'IntensiveCareUnit' ? 'ICU' : site;
+function renderResultFlags(data, query) {
+	const container = $('resultFlags');
+	const flags = [];
+	const allergy = query.allergy || { type: 'No', allergicAntibiotics: [], otherAllergy: null };
 
-	// Pregnancy / lactation flag
-	const pregnant = !!(data.isPatientPregnantOrInLactationPhase ?? data.IsPatientPregnantOrInLactationPhase);
-	document.getElementById('pregnantValue').textContent = pregnant ? 'Yes' : 'No';
+	// Pregnancy / lactation is a hard contraindication signal and is always
+	// surfaced, both when true and when explicitly false.
+	const pregnant = !!pick(data, 'isPatientPregnantOrInLactationPhase', 'IsPatientPregnantOrInLactationPhase');
+	if (pregnant) {
+		flags.push(flag('danger', 'Pregnancy / lactation', 'Patient is pregnant or in the lactation phase. Avoid contraindicated antibiotics.'));
+	} else {
+		flags.push(flag('success', 'Pregnancy / lactation', 'Not pregnant or in the lactation phase.'));
+	}
 
-	// Allergies (antibiotics the patient is allergic to)
-	const allergies = data.allergies ?? data.Allergies ?? [];
-	document.getElementById('allergiesValue').textContent = allergies.length > 0
-	? allergies.map(a => a.name || a.Name || '').filter(Boolean).join(', ')
-	: 'None';
+	// Antibiotic allergy: show the exact recorded allergy, including the
+	// non-registered / unknown text.
+	if (allergy.type === 'Yes' && Array.isArray(allergy.allergicAntibiotics) && allergy.allergicAntibiotics.length > 0) {
+		const names = allergy.allergicAntibiotics.map(id => {
+			const antibiotic = state.antibiotics.find(a => antibioticId(a) === String(id));
+			return antibiotic ? antibioticName(antibiotic) : String(id);
+		});
+	flags.push(flag('danger', 'Antibiotic allergy', names.join(', ')));
+} else if (allergy.type === 'NonRegisteredAntibiotic' || allergy.type === 'Unknown') {
+	flags.push(flag('warning', 'Antibiotic allergy', `${ALLERGY_TYPE_LABELS[allergy.type]}: ${allergy.otherAllergy || 'not specified'}`));
+} else {
+	flags.push(flag('success', 'Antibiotic allergy', 'No known antibiotic allergy.'));
+}
 
-	// Per-metric severity diagnosis (severity, site, code, score or major/minor)
-	const metricsDiagnosis = data.metricsSeverityDiagnosis ?? data.MetricsSeverityDiagnosis ?? [];
-	renderMetricsSeverityDiagnosis(Array.isArray(metricsDiagnosis) ? metricsDiagnosis : []);
+// Other infections (returned by the API and echoed from the query).
+const apiOther = pick(data, 'otherInfections', 'OtherInfections');
+const otherList = Array.isArray(apiOther) && apiOther.length > 0
+? apiOther
+: (Array.isArray(query.otherInfections) ? query.otherInfections : []);
+if (otherList.length > 0) {
+	flags.push(flag('warning', 'Other infections', otherList.map(value => infectionLabel(normalizeInfection(value))).join(', ')));
+} else {
+	flags.push(flag('neutral', 'Other infections', 'None reported.'));
+}
 
-	// Evidences: structured objects ({ source, formula, relatedObservations,
-	// missingVariables, evaluatedValue, score, isMajor }); plain strings are
-	// still accepted as a legacy fallback.
-	let evidences = data.evidences ?? data.Evidences ?? [];
-	if (!Array.isArray(evidences)) evidences = [];
-	const evidenceToggle = document.getElementById('evidenceToggle');
-	const evidencePanel = document.getElementById('evidencePanel');
-	const evidenceList = document.getElementById('evidenceList');
-	evidenceList.innerHTML = evidences.length > 0
-	? evidences.map(renderEvidence).join('')
-	: '<li class="empty-state">No evidences available</li>';
-	evidenceToggle.hidden = evidences.length === 0;
-	evidenceToggle.dataset.count = String(evidences.length);
-	evidenceToggle.textContent = `View Evidences (${evidences.length})`;
-	evidencePanel.hidden = true;
-	evidenceToggle.setAttribute('aria-expanded', 'false');
+const sampleCount = Array.isArray(query.microbialSamples) ? query.microbialSamples.length : 0;
+flags.push(flag('neutral', 'Microbial samples', sampleCount > 0
+	? `${sampleCount} sample${sampleCount === 1 ? '' : 's'} submitted.`
+	: 'No samples submitted.'));
 
-	// Variables the observation set did not cover
-	const missingVariables = data.missingVariables ?? data.MissingVariables ?? [];
-	const missingList = document.getElementById('missingList');
-	missingList.innerHTML = missingVariables.length > 0
-	? missingVariables.map(v => `
-		<div class="metric-item">
-		<span class="metric-code">${esc(v.code || v.Code)}</span>
-		<span class="metric-score">${esc(v.name || v.Name)}</span>
+container.innerHTML = flags.join('');
+}
+
+function renderMissing(missing) {
+	const list = $('missingList');
+	const card = $('missingCard');
+	const count = Array.isArray(missing) ? missing.length : 0;
+
+	$('missingCount').textContent = String(count);
+	card.classList.toggle('is-clear', count === 0);
+
+	if (count === 0) {
+		list.innerHTML = '<div class="empty-state">All variables were provided. No gaps detected.</div>';
+		return;
+	}
+
+	list.innerHTML = missing.map(v => `
+		<div class="metric-item missing-item">
+		<span class="metric-code">${esc(pick(v, 'code', 'Code'))}</span>
+		<span class="metric-score">${esc(pick(v, 'name', 'Name'))}</span>
+		</div>
+		`).join('');
+	}
+
+	function renderMicrobial(items) {
+		const list = $('microbialList');
+		if (!Array.isArray(items) || items.length === 0) {
+			list.innerHTML = '<div class="empty-state">No microbial test results available.</div>';
+			return;
+		}
+
+		list.innerHTML = items.map(item => {
+			const pathogen = pick(item, 'pathogen', 'Pathogen') || {};
+			const category = pick(item, 'category', 'Category') || '';
+			const antibiotics = pick(item, 'antibiotics', 'Antibiotics') || [];
+			const categoryClass = String(category).toLowerCase();
+
+			return `
+			<div class="micro-item">
+			<div class="micro-head">
+			<span class="micro-pathogen">${esc(pick(pathogen, 'name', 'Name') || 'Pathogen')}</span>
+			<span class="mic-badge mic-${esc(categoryClass)}">${esc(prettyEnum(category))}</span>
+			</div>
+			<div class="micro-abs">
+			${antibiotics.length > 0
+				? antibiotics.map(a => `<span class="micro-ab">${esc(pick(a, 'name', 'Name'))}</span>`).join('')
+				: '<span class="empty-state">No matching antibiotics</span>'}
+			</div>
+			</div>
+			`;
+		}).join('');
+}
+
+function renderProtocols(items) {
+	const list = $('protocolList');
+	const count = $('protocolCount');
+	if (!list || !count) return;
+
+	const protocols = Array.isArray(items) ? items.filter(Boolean) : [];
+	count.textContent = String(protocols.length);
+
+	if (protocols.length === 0) {
+		list.innerHTML = '<div class="empty-state">No treatment protocol recommendations available.</div>';
+		return;
+	}
+
+	list.innerHTML = protocols.map((protocol, index) => {
+		const severity = pick(protocol, 'severity', 'Severity') || '';
+		const site = pick(protocol, 'treatmentSite', 'TreatmentSite') || '';
+		const pathogens = pick(protocol, 'pathogens', 'Pathogens') || [];
+		const criteria = pick(protocol, 'criteria', 'Criteria') || [];
+		const medicines = pick(protocol, 'medicines', 'Medicines') || [];
+
+		const meta = [];
+		if (severity) {
+			meta.push(`<span class="severity-badge severity-${esc(String(severity).toLowerCase())}">${esc(prettyEnum(severity))}</span>`);
+		}
+		if (site) {
+			meta.push(`<span class="metric-chip is-neutral">Site: ${esc(formatTreatmentSite(site))}</span>`);
+		}
+
+		const pathogenHtml = Array.isArray(pathogens) && pathogens.length > 0
+		? `<div class="protocol-section">
+			<div class="protocol-section-title">Suspected pathogens</div>
+			<div class="protocol-chips">
+			${pathogens.map(p => `<span class="protocol-chip">${esc(pick(p, 'name', 'Name') || 'Pathogen')}</span>`).join('')}
+			</div>
+		</div>`
+		: '';
+
+		const criteriaHtml = Array.isArray(criteria) && criteria.length > 0
+		? `<div class="protocol-section">
+			<div class="protocol-section-title">Matching criteria</div>
+			<div class="protocol-criteria">
+			${criteria.map(c => {
+				const name = pick(c, 'name', 'Name') || 'Criterion';
+				const formula = pick(c, 'formula', 'Formula');
+				return `<div class="protocol-criterion">
+					<span>${esc(name)}</span>
+					${formula ? `<code class="protocol-formula">${esc(formula)}</code>` : ''}
+				</div>`;
+			}).join('')}
+			</div>
+		</div>`
+		: '';
+
+		const combinations = Array.isArray(medicines) ? medicines : [];
+		const optionHtml = combinations.map((combination, optionIndex) => {
+			const medicinesInOption = (Array.isArray(combination) ? combination : [combination])
+			.map(item => item && typeof item === 'object' ? (pick(item, 'name', 'Name') || '') : (item ?? ''))
+			.map(name => String(name).trim())
+			.filter(Boolean);
+
+			const medicineHtml = medicinesInOption.length > 0
+			? medicinesInOption.map((name, i) => `${i > 0 ? '<span class="protocol-plus" aria-hidden="true">+</span>' : ''}<span class="protocol-medicine">${esc(name)}</span>`).join('')
+			: '<span class="empty-state">No medicines specified for this option.</span>';
+
+			return `<div class="protocol-option">
+				<span class="protocol-option-label">Option ${optionIndex + 1}</span>
+				<div class="protocol-medicines">${medicineHtml}</div>
+			</div>`;
+		}).join('<div class="protocol-or">or</div>');
+
+		const medicinesHtml = combinations.length > 0
+		? `<div class="protocol-section">
+			<div class="protocol-section-title">Medicine combinations</div>
+			<p class="protocol-hint">Every medicine in one option is used together. Different options are alternatives.</p>
+			<div class="protocol-options">${optionHtml}</div>
+		</div>`
+		: `<div class="protocol-section">
+			<div class="protocol-section-title">Medicine combinations</div>
+			<div class="empty-state">No medicine combinations specified.</div>
+		</div>`;
+
+		const detailsId = `protocol-details-${index}`;
+		return `<article class="protocol-item">
+			<h3 class="protocol-heading">
+				<button type="button" class="collapse-toggle protocol-toggle" data-protocol-toggle aria-expanded="false" aria-controls="${detailsId}">
+					<svg class="collapse-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+						<polyline points="9 6 15 12 9 18"></polyline>
+					</svg>
+					<span class="protocol-name">Protocol ${index + 1}</span>
+					${meta.length > 0 ? `<span class="protocol-meta">${meta.join('')}</span>` : ''}
+				</button>
+			</h3>
+			<div id="${detailsId}" class="protocol-body" hidden>
+				${pathogenHtml}
+				${criteriaHtml}
+				${medicinesHtml}
+			</div>
+		</article>`;
+	}).join('');
+}
+
+function showResults(data, query) {
+	data = data || {};
+
+	$('diagnoseForm').hidden = true;
+	$('resultsSection').hidden = false;
+
+	// Severity and treatment site
+	const severity = pick(data, 'severity', 'Severity') || '';
+	const severityBadge = $('severityBadge');
+	severityBadge.textContent = severity || 'Unknown';
+	severityBadge.className = `severity-badge severity-${String(severity).toLowerCase()}`;
+
+	const site = pick(data, 'treatmentSite', 'TreatmentSite') || '';
+	$('treatmentBadge').textContent = formatTreatmentSite(site);
+
+	const egfr = pick(data, 'egfr', 'Egfr');
+	$('egfrValue').textContent = (egfr === null || egfr === undefined || egfr === '')
+	? 'Not available'
+	: Number(egfr).toFixed(2);
+
+	renderResultFlags(data, query || {});
+	renderMetricsSeverityDiagnosis(pick(data, 'metricsSeverityDiagnosis', 'MetricsSeverityDiagnosis') || []);
+
+	renderMissing(pick(data, 'missingVariables', 'MissingVariables') || []);
+
+	// Heavy suspected pathogens
+	const heavy = pick(data, 'heavySuspected', 'HeavySuspected') || [];
+	$('heavyList').innerHTML = heavy.length > 0
+	? heavy.map(p => `
+		<div class="pathogen-item">
+		<span class="pathogen-name">${esc(pick(p, 'name', 'Name'))}</span>
 		</div>
 		`).join('')
-		: '<div class="empty-state">All variables were provided</div>';
+		: '<div class="empty-state">No heavy suspected pathogens.</div>';
 
-		// Infection assessment - heavy suspected (already ordered by score server-side,
-		// so the position in the list is the suspicion rank)
-		const heavySuspected = data.heavySuspected ?? data.HeavySuspected ?? [];
-		const heavyList = document.getElementById('heavyList');
-		heavyList.innerHTML = heavySuspected.length > 0
-		? heavySuspected.map((p, index) => `
+		// Worth suspected is collapsed by default.
+		const worth = pick(data, 'worthSuspected', 'WorthSuspected') || [];
+		$('worthList').innerHTML = worth.length > 0
+		? worth.map(p => `
 			<div class="pathogen-item">
-			<span class="pathogen-rank">#${index + 1}</span>
-			<span class="pathogen-name">${esc(p.name || p.Name)}</span>
+			<span class="pathogen-name">${esc(pick(p, 'name', 'Name'))}</span>
 			</div>
 			`).join('')
-			: '<div class="empty-state">No heavy suspected pathogens</div>';
+			: '<div class="empty-state">No worth suspected pathogens.</div>';
+			$('worthCount').textContent = String(worth.length);
+			$('worthToggle').setAttribute('aria-expanded', 'false');
+			$('worthBody').hidden = true;
 
-			// Worth suspected - collapsible by default; count is always visible in the header
-			const worthSuspected = data.worthSuspected ?? data.WorthSuspected ?? [];
-			const worthList = document.getElementById('worthList');
-			worthList.innerHTML = worthSuspected.length > 0
-			? worthSuspected.map(p => `
-				<div class="pathogen-item">
-				<span class="pathogen-name">${esc(p.name || p.Name)}</span>
-				</div>
-				`).join('')
-				: '<div class="empty-state">No worth suspected pathogens</div>';
+			// Evidences are collapsed by default.
+			const evidences = pick(data, 'evidences', 'Evidences') || [];
+			$('evidenceList').innerHTML = evidences.length > 0
+			? evidences.map(renderEvidence).join('')
+			: '<li class="empty-state">No evidences available.</li>';
+			const evidenceToggle = $('evidenceToggle');
+			evidenceToggle.hidden = evidences.length === 0;
+			evidenceToggle.dataset.count = String(evidences.length);
+			evidenceToggle.setAttribute('aria-expanded', 'false');
+			evidenceToggle.textContent = `View evidences (${evidences.length})`;
+			$('evidencePanel').hidden = true;
 
-				document.getElementById('worthCount').textContent = String(worthSuspected.length);
-				document.getElementById('worthToggle').setAttribute('aria-expanded', 'false');
-				document.getElementById('worthBody').hidden = true;
+			// Treatment protocol recommendations.
+			renderProtocols(pick(data, 'protocols', 'Protocols') || []);
 
-				window.scrollTo({ top: 0, behavior: 'smooth' });
-			}
+			// Microbial test list is collapsed by default.
+			const microbial = pick(data, 'microbialTestResult', 'MicrobialTestResult') || [];
+			renderMicrobial(microbial);
+			const microbialToggle = $('microbialToggle');
+			microbialToggle.dataset.count = String(microbial.length);
+			microbialToggle.setAttribute('aria-expanded', 'false');
+			microbialToggle.textContent = `View microbial tests (${microbial.length})`;
+			$('microbialPanel').hidden = true;
 
-			function resetForm() {
-				document.getElementById('resultsSection').style.display = 'none';
-				document.getElementById('diagnoseForm').style.display = '';
-				showStep(1);
-				hideError();
-				clearFieldErrors();
-				window.scrollTo({ top: 0, behavior: 'smooth' });
-			}
-
-			function findFieldInput(variableId) {
-				const direct = document.getElementById(`var-${variableId}`);
-				if (direct) return direct;
-				const key = String(variableId ?? '').toLowerCase();
-				return Array.from(document.querySelectorAll('[data-variable-id]'))
-				.find(el => (el.getAttribute('data-variable-id') || '').toLowerCase() === key) || null;
-			}
-
-			function clearFieldErrors() {
-				document.querySelectorAll('.form-group.has-error, .form-group.has-warning').forEach(clearGroupError);
-			}
-
-			function clearGroupError(group) {
-				if (!group) return;
-				group.classList.remove('has-error', 'has-warning');
-				group.querySelectorAll('.field-error-msg, .field-warn-msg').forEach(msg => msg.remove());
-				group.querySelectorAll('[aria-invalid]').forEach(el => el.removeAttribute('aria-invalid'));
-			}
-
-			function showGroupError(group, message) {
-				if (!group) return;
-				group.classList.remove('has-warning');
-				group.querySelectorAll('.field-warn-msg').forEach(msg => msg.remove());
-				group.classList.add('has-error');
-				const input = group.querySelector('[data-variable-id]');
-				if (input) input.setAttribute('aria-invalid', 'true');
-
-				let msg = group.querySelector('.field-error-msg');
-				if (!msg) {
-					msg = document.createElement('div');
-					msg.className = 'field-error-msg';
-					msg.setAttribute('role', 'alert');
-					group.appendChild(msg);
-				}
-				msg.textContent = message;
-			}
-
-			function showGroupWarning(group, message) {
-				if (!group) return;
-				group.classList.remove('has-error');
-				group.querySelectorAll('.field-error-msg').forEach(msg => msg.remove());
-				group.querySelectorAll('[aria-invalid]').forEach(el => el.removeAttribute('aria-invalid'));
-				group.classList.add('has-warning');
-
-				let msg = group.querySelector('.field-warn-msg');
-				if (!msg) {
-					msg = document.createElement('div');
-					msg.className = 'field-warn-msg';
-					msg.setAttribute('role', 'status');
-					group.appendChild(msg);
-				}
-				msg.textContent = message;
-			}
-
-			/*
-			* Validates a single rendered field against its metadata.
-			*  - empty required field          -> blocking error
-			*  - numeric outside acceptedRange -> blocking error
-			*  - numeric outside normalRange   -> non-blocking warning
-			* Returns { hasError, hasWarning }.
-			*/
-			function validateField(input) {
-				const group = input ? input.closest('.form-group') : null;
-				const meta = input ? variableMeta[String(input.dataset.variableId || '')] : null;
-				if (!meta) return { hasError: false, hasWarning: false };
-
-				clearGroupError(group);
-				const value = String(input.value ?? '').trim();
-
-				if (value === '') {
-					if (meta.isRequired) {
-						showGroupError(group, `${meta.name} is required.`);
-						return { hasError: true, hasWarning: false };
-					}
-					return { hasError: false, hasWarning: false };
-				}
-
-				if (meta.valueType !== 'Numeric') {
-					return { hasError: false, hasWarning: false };
-				}
-
-				const num = Number(value);
-				if (!Number.isFinite(num)) {
-					showGroupError(group, `${meta.name} must be a valid number.`);
-					return { hasError: true, hasWarning: false };
-				}
-
-				if (meta.acceptedRange && !inRange(num, meta.acceptedRange)) {
-					showGroupError(group,
-						`Value must be within the accepted range (${describeRange(meta.acceptedRange, meta.unit)}).`);
-					return { hasError: true, hasWarning: false };
-				}
-
-				if (meta.normalRange && !inRange(num, meta.normalRange)) {
-					showGroupWarning(group,
-						`Outside the normal range (${describeRange(meta.normalRange, meta.unit)}). This value is accepted and can still be submitted.`);
-					return { hasError: false, hasWarning: true };
-				}
-
-				return { hasError: false, hasWarning: false };
-			}
-
-			/*
-			* Validates every rendered field. Returns how many fields have a blocking error.
-			*/
-			function validateAllFields() {
-				let invalidCount = 0;
-				formVariables.forEach(v => {
-					const input = document.getElementById(`var-${v.id || v.Id}`);
-					if (!input) return;
-					if (validateField(input).hasError) invalidCount++;
-				});
-			return invalidCount;
+			window.scrollTo({ top: 0, behavior: 'smooth' });
 		}
 
-		/*
-		* Maps error.detail (variableId -> message) returned by the server onto the
-		* rendered form: highlights the field and shows the message under it.
-		* Returns how many field errors could be attached to a rendered input.
-		*/
-		function applyFieldErrors(detail) {
-			if (!detail || typeof detail !== 'object') return 0;
+		function resetForm() {
+			// Keep every previously entered value so a new diagnosis can start from
+			// the same clinical picture and be adjusted before resubmitting.
+			$('resultsSection').hidden = true;
+			$('diagnoseForm').hidden = false;
 
-			let applied = 0;
-			for (const [variableId, message] of Object.entries(detail)) {
-				if (!message) continue;
-				const input = findFieldInput(variableId);
-				if (!input) continue;
+			// Only the view filters are reset; diagnosis input is preserved.
+			$('variableSearch').value = '';
+			$('antibioticSearch').value = '';
+			applyVariableFilter();
+			renderAntibioticList();
 
-				const group = input.closest('.form-group');
-				if (!group) continue;
-
-				clearGroupError(group);
-				showGroupError(group, message);
-				applied++;
-			}
-			return applied;
+			clearFieldErrors();
+			hideError();
+			showStep(1);
 		}
 
-		function scrollToFirstError() {
-			const first = document.querySelector('.form-group.has-error');
-			if (first) first.scrollIntoView({ behavior: 'smooth', block: 'center' });
-		}
+		/* ---------------- Events ---------------- */
 
-		function showError(msg, detail) {
-			document.getElementById('errorModalMsg').textContent = msg;
-
-			const list = document.getElementById('errorModalDetail');
-			const messages = detail && typeof detail === 'object'
-			? Object.values(detail).filter(Boolean)
-			: [];
-			list.innerHTML = messages.map(m => `<li>${esc(m)}</li>`).join('');
-			list.style.display = messages.length > 0 ? 'block' : 'none';
-
-			document.getElementById('errorModal').classList.add('open');
-		}
-
-		function hideError() {
-			document.getElementById('errorModal').classList.remove('open');
-		}
-
-		document.getElementById('errorModalClose').addEventListener('click', hideError);
-		document.getElementById('errorModal').addEventListener('click', (e) => {
-			if (e.target.id === 'errorModal') hideError();
+		function bindEvents() {
+			$('errorModalClose').addEventListener('click', hideError);
+			$('errorModal').addEventListener('click', e => {
+				if (e.target.id === 'errorModal') hideError();
+			});
+		document.addEventListener('keydown', e => {
+			if (e.key === 'Escape') hideError();
 		});
-	document.addEventListener('keydown', (e) => {
-		if (e.key === 'Escape') hideError();
+
+	// Step navigation
+	document.querySelectorAll('.step-pill').forEach(pill => {
+		pill.addEventListener('click', () => tryGoToStep(Number(pill.dataset.step)));
+	});
+$('next1').addEventListener('click', () => tryGoToStep(2));
+$('next2').addEventListener('click', () => tryGoToStep(3));
+$('next3').addEventListener('click', () => tryGoToStep(4));
+$('next4').addEventListener('click', () => tryGoToStep(5));
+$('back2').addEventListener('click', () => tryGoToStep(1));
+$('back3').addEventListener('click', () => tryGoToStep(2));
+$('back4').addEventListener('click', () => tryGoToStep(3));
+$('back5').addEventListener('click', () => tryGoToStep(4));
+
+// Step 1 search and segmented toggles
+$('variableSearch').addEventListener('input', applyVariableFilter);
+$('diagnoseForm').addEventListener('input', e => {
+	const input = e.target.closest('[data-variable-id]');
+	if (input && input.type !== 'hidden') validateField(input);
+});
+$('diagnoseForm').addEventListener('click', e => {
+	const segment = e.target.closest('.segment-btn');
+	if (!segment) return;
+
+	const toggle = segment.closest('.segmented-toggle');
+	if (!toggle) return;
+
+	if (toggle.id === 'allergyTypeToggle') {
+		setAllergyType(segment.dataset.allergyType);
+		return;
+	}
+
+	if (!toggle.dataset.toggleFor) return;
+	const input = $(`var-${toggle.dataset.toggleFor}`);
+	if (!input) return;
+
+	if (segment.classList.contains('active')) {
+		segment.classList.remove('active');
+		segment.setAttribute('aria-pressed', 'false');
+		input.value = '';
+	} else {
+		toggle.querySelectorAll('.segment-btn').forEach(btn => {
+			const active = btn === segment;
+			btn.classList.toggle('active', active);
+			btn.setAttribute('aria-pressed', String(active));
+		});
+	input.value = segment.dataset.value;
+}
+validateField(input);
+});
+
+// Step 2 allergy
+$('otherAllergyInput').addEventListener('input', e => {
+	state.otherAllergy = e.target.value;
+	clearGroupError($('otherAllergyGroup'));
+});
+$('antibioticSearch').addEventListener('input', renderAntibioticList);
+$('antibioticList').addEventListener('change', e => {
+	const checkbox = e.target.closest('input[data-antibiotic-id]');
+	if (!checkbox) return;
+	const id = checkbox.getAttribute('data-antibiotic-id');
+	if (checkbox.checked) {
+		const antibiotic = state.antibiotics.find(a => antibioticId(a) === id);
+		state.selectedAllergies.set(id, antibiotic ? antibioticName(antibiotic) : id);
+	} else {
+		state.selectedAllergies.delete(id);
+	}
+	const option = checkbox.closest('.allergy-option');
+	if (option) option.classList.toggle('selected', checkbox.checked);
+	renderSelectedAllergies();
+	renderGroupBar();
+	clearGroupError($('allergyPickerGroup'));
+});
+$('selectedAllergies').addEventListener('click', e => {
+	const remove = e.target.closest('[data-remove-allergy]');
+	if (!remove) return;
+	setAllergySelected(remove.getAttribute('data-remove-allergy'), false);
+	const checkbox = document.querySelector(`#antibioticList input[data-antibiotic-id="${remove.getAttribute('data-remove-allergy')}"]`);
+	if (checkbox) {
+		checkbox.checked = false;
+		const option = checkbox.closest('.allergy-option');
+		if (option) option.classList.remove('selected');
+	}
+});
+$('allergyGroups').addEventListener('click', e => {
+	const chip = e.target.closest('[data-group]');
+	if (!chip) return;
+	const group = chip.getAttribute('data-group');
+	const items = state.antibioticGroups.get(group) || [];
+	const allSelected = items.length > 0 && items.every(a => state.selectedAllergies.has(antibioticId(a)));
+
+	items.forEach(a => {
+		const id = antibioticId(a);
+		if (allSelected) state.selectedAllergies.delete(id);
+		else state.selectedAllergies.set(id, antibioticName(a));
 	});
 
-// Re-validate a field as soon as the user edits it: this drops any stale
-// server-side error and immediately applies the accepted/normal range rules.
-document.getElementById('diagnoseForm').addEventListener('input', (e) => {
-	const input = e.target.closest('[data-variable-id]');
-	if (!input) return;
-	validateField(input);
+refreshAllergyUI();
+clearGroupError($('allergyPickerGroup'));
 });
-document.getElementById('diagnoseForm').addEventListener('click', (e) => {
-	const btn = e.target.closest('.segment-btn');
-	if (!btn) return;
-	const group = btn.closest('.form-group');
-	const input = group ? group.querySelector('[data-variable-id]') : null;
-	if (input) validateField(input);
+$('selectAllAllergies').addEventListener('click', () => {
+	visibleAntibiotics().forEach(a => state.selectedAllergies.set(antibioticId(a), antibioticName(a)));
+	refreshAllergyUI();
+	clearGroupError($('allergyPickerGroup'));
+});
+$('clearAllAllergies').addEventListener('click', () => {
+	state.selectedAllergies.clear();
+	refreshAllergyUI();
+	clearGroupError($('allergyPickerGroup'));
 });
 
-document.getElementById('evidenceToggle').addEventListener('click', () => {
-	const toggle = document.getElementById('evidenceToggle');
-	const panel = document.getElementById('evidencePanel');
+// Step 3 history
+$('historyAddBtn').addEventListener('click', addHistoryEntry);
+$('historyInput').addEventListener('keydown', e => {
+	if (e.key === 'Enter') {
+		e.preventDefault();
+		addHistoryEntry();
+	}
+});
+$('historyList').addEventListener('click', e => {
+	const remove = e.target.closest('[data-remove-history]');
+	if (!remove) return;
+	const index = Number(remove.getAttribute('data-remove-history'));
+	if (Number.isInteger(index)) {
+		state.specialHistory.splice(index, 1);
+		renderHistory();
+	}
+});
+
+// Step 4 infections
+$('infectionList').addEventListener('change', e => {
+	const checkbox = e.target.closest('input[data-infection]');
+	if (!checkbox) return;
+	const value = checkbox.getAttribute('data-infection');
+	if (checkbox.checked) state.otherInfections.add(value);
+	else state.otherInfections.delete(value);
+	const option = checkbox.closest('.check-option');
+	if (option) option.classList.toggle('selected', checkbox.checked);
+});
+
+// Step 5 samples
+$('addSampleBtn').addEventListener('click', addSample);
+$('samplesList').addEventListener('change', e => {
+	const card = e.target.closest('[data-sample-id]');
+	const field = e.target.dataset.sampleField;
+	if (!card || !field) return;
+	const sample = state.samples.find(s => String(s.id) === card.dataset.sampleId);
+	if (sample) sample[field] = e.target.value;
+	clearGroupError(card);
+});
+$('samplesList').addEventListener('click', e => {
+	const remove = e.target.closest('[data-remove-sample]');
+	if (!remove) return;
+	const id = Number(remove.getAttribute('data-remove-sample'));
+	state.samples = state.samples.filter(s => s.id !== id);
+	renderSamples();
+});
+
+// Import / export
+$('importBtn').addEventListener('click', () => $('importFile').click());
+$('importFile').addEventListener('change', handleImportFile);
+$('exportBtn').addEventListener('click', handleExport);
+
+// Result toggles
+$('evidenceToggle').addEventListener('click', () => {
+	const toggle = $('evidenceToggle');
+	const panel = $('evidencePanel');
 	const show = panel.hidden;
 	panel.hidden = !show;
 	toggle.setAttribute('aria-expanded', String(show));
-	toggle.textContent = `${show ? 'Hide' : 'View'} Evidences (${toggle.dataset.count || 0})`;
+	toggle.textContent = `${show ? 'Hide' : 'View'} evidences (${toggle.dataset.count || 0})`;
 });
-
-document.getElementById('worthToggle').addEventListener('click', () => {
-	const toggle = document.getElementById('worthToggle');
-	const body = document.getElementById('worthBody');
+$('microbialToggle').addEventListener('click', () => {
+	const toggle = $('microbialToggle');
+	const panel = $('microbialPanel');
+	const show = panel.hidden;
+	panel.hidden = !show;
+	toggle.setAttribute('aria-expanded', String(show));
+	toggle.textContent = `${show ? 'Hide' : 'View'} microbial tests (${toggle.dataset.count || 0})`;
+});
+$('worthToggle').addEventListener('click', () => {
+	const toggle = $('worthToggle');
+	const body = $('worthBody');
 	const show = body.hidden;
 	body.hidden = !show;
 	toggle.setAttribute('aria-expanded', String(show));
 });
+$('protocolList').addEventListener('click', e => {
+	const toggle = e.target.closest('[data-protocol-toggle]');
+	if (!toggle) return;
+	const body = document.getElementById(toggle.getAttribute('aria-controls'));
+	if (!body) return;
+	const show = body.hidden;
+	body.hidden = !show;
+	toggle.setAttribute('aria-expanded', String(show));
+});
+$('newDiagnosisBtn').addEventListener('click', resetForm);
+
+// Submit
+$('diagnoseForm').addEventListener('submit', handleSubmit);
+}
+
+async function handleSubmit(event) {
+	event.preventDefault();
+
+	// Pressing Enter on an earlier step advances instead of submitting.
+	if (state.currentStep < 5) {
+		tryGoToStep(state.currentStep + 1);
+		return;
+	}
+
+	const check = validateAllSteps();
+	if (check.count > 0) {
+		if (check.first) showStep(check.first);
+		showError(`Please fix the highlighted ${check.count === 1 ? 'problem' : 'problems'} before submitting.`);
+		setTimeout(scrollToFirstError, 120);
+		return;
+	}
+
+	hideError();
+	const query = buildQuery();
+	state.lastQuery = query;
+
+	const button = $('submitBtn');
+	const originalLabel = button.innerHTML;
+	button.disabled = true;
+	button.innerHTML = '<span class="spinner"></span>Diagnosing...';
+
+	try {
+		const res = await fetch(ENDPOINTS.diagnose, {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify(query)
+		});
+
+	const body = await readJson(res);
+	const status = resultStatus(body);
+	const error = resultError(body);
+
+	if (status && status !== 'SUCCESS') {
+		const detail = pick(error, 'detail', 'Detail');
+		const applied = applyFieldErrors(detail);
+		if (applied > 0) showStep(1);
+		const err = new Error(pick(error, 'description', 'Description') || 'Diagnosis failed');
+		err.detail = detail;
+		throw err;
+	}
+
+	if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+
+	const data = pick(body, 'data', 'Data');
+	if (!data) throw new Error('The server returned no diagnosis result.');
+
+	showResults(data, query);
+} catch (err) {
+	console.error('Diagnosis error:', err);
+	showError('Diagnosis failed: ' + err.message, err.detail);
+	if (err.detail) setTimeout(scrollToFirstError, 120);
+} finally {
+	button.disabled = false;
+	button.innerHTML = originalLabel;
+}
+}
 
 init();
 		</script>

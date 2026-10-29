@@ -1,3 +1,4 @@
+using Respira.Clinical.Domain.Entities;
 using Respira.Clinical.Domain.Enums;
 
 namespace Respira.Clinical.Domain.Models
@@ -17,6 +18,6 @@ namespace Respira.Clinical.Domain.Models
         /// <summary>
         /// Pathogen ID
         /// </summary>
-        public required Guid PathogenId { get; set; }
+        public required Pathogen Pathogen { get; set; }
     }
 }
