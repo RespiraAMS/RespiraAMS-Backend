@@ -494,6 +494,26 @@ namespace Respira.Clinical.Domain.Services
             return Result<bool>.Success(ApplicationStatus.Success, isSame);
         }
 
+        public Result<bool> IsMedicineCombinationValid(ClinicalContext context, MedicineComposition combination)
+        {
+            var antibiotics = combination.Antibiotics.OrderBy(x => x.Id).ToList();
+
+            for (int i = 0; i < antibiotics.Count - 1; i++)
+            {
+                for (int j = 1; j < antibiotics.Count; j++)
+                {
+                    var result = IsAntibioticGroupHasCommonAncestor(
+                        context,
+                        antibiotics[i].AntibioticGroup,
+                        antibiotics[j].AntibioticGroup);
+                    if (result.IsFailure()) return Result<bool>.Failure(result.Error!);
+                    if (!result.Data) return Result<bool>.Success(ApplicationStatus.Success, false);
+                }
+            }
+
+            return Result<bool>.Success(ApplicationStatus.Success, true);
+        }
+
         /// <summary>
         /// Internal validation of each clinical observation
         /// </summary>

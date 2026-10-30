@@ -12,55 +12,197 @@ namespace Respira.Clinical.Domain.Enums
     /// </summary>
     public enum InfectionType
     {
-        // Skin, soft tissue, bone & joint
-        SkinAndSoftTissueInfection = 1,        // Nhiễm khuẩn da/mô dưới da
-        SepticArthritis = 2,                   // Viêm khớp nhiễm khuẩn
-        Osteomyelitis = 3,                     // Viêm tủy xương nhiễm khuẩn
-        BacterialMyositisOrMuscleAbscess = 4,  // Viêm cơ/áp xe cơ nhiễm khuẩn
-        InfectedGoutyTophus = 5,               // Nhiễm khuẩn hạt tophi
+        #region Skin, soft tissue, bone & joint
 
-        // Renal & genitourinary
-        PyelonephritisOrRenalAbscess = 6,      // Viêm/áp xe thận - bể thận
-        AcuteCystitis = 7,                     // Viêm bàng quang cấp
-        AcuteNonGonococcalUrethritis = 8,      // Viêm niệu đạo cấp không do lậu
-        BacterialVaginourethritis = 9,         // Viêm âm đạo niệu đạo do vi khuẩn
-        BacterialEndometritis = 10,            // Viêm tử cung do vi khuẩn
+        /// <summary>
+        /// Nhiễm khuẩn da/mô dưới da
+        /// </summary>
+        SkinAndSoftTissueInfection = 1,
 
-        // Central nervous system
-        PurulentMeningitis = 11,               // Viêm màng não mủ
-        BacterialEncephalitis = 12,            // Viêm não do vi khuẩn
+        /// <summary>
+        /// Viêm khớp nhiễm khuẩn
+        /// </summary>
+        SepticArthritis = 2,
 
-        // Thoracic & cardiac
-        PleuralEmpyema = 13,                   // Tràn mủ màng phổi
-        MediastinalAbscess = 14,               // Áp xe trung thất
-        InfectiveEndocarditis = 15,            // Viêm nội tâm mạc nhiễm khuẩn
-        BacterialMyocarditis = 16,             // Viêm cơ tim do vi khuẩn
-        BacterialPericarditis = 17,            // Viêm màng ngoài tim do vi khuẩn
+        /// <summary>
+        /// Viêm tủy xương nhiễm khuẩn
+        /// </summary>
+        Osteomyelitis = 3,
 
-        // Tuberculosis
-        PulmonaryTuberculosis = 18,            // Lao phổi
-        ExtrapulmonaryTuberculosis = 19,       // Lao ngoài phổi
+        /// <summary>
+        /// Viêm cơ/áp xe cơ nhiễm khuẩn
+        /// </summary>
+        BacterialMyositisOrMuscleAbscess = 4,
 
-        // Gastrointestinal, hepatobiliary & abdominal
-        BiliaryTractInfection = 20,            // Nhiễm trùng đường mật
-        BacterialLiverAbscess = 21,            // Áp xe gan do vi khuẩn
-        InfectedAcutePancreatitis = 22,        // Viêm tụy cấp nhiễm khuẩn
-        BacterialPeritonitis = 23,             // Viêm phúc mạc nhiễm khuẩn
-        BacterialDiarrhea = 24,                // Tiêu chảy do vi khuẩn
-        HelicobacterPyloriInfection = 25,      // Nhiễm Helicobacter pylori
+        /// <summary>
+        /// Nhiễm khuẩn hạt tophi
+        /// </summary>
+        InfectedGoutyTophus = 5,
 
-        // Systemic
-        Sepsis = 26,                           // Nhiễm trùng huyết
+        #endregion
 
-        // Ophthalmic
-        OrbitalCellulitis = 27,                // Viêm tổ chức hốc mắt
-        Conjunctivitis = 28,                   // Viêm kết mạc mắt
-        Keratitis = 29,                        // Viêm giác mạc mắt
-        Dacryocystitis = 30,                   // Viêm túi lệ mắt
+        #region Renal & genitourinary
 
-        // Head & neck
-        MaxillofacialAbscess = 31,             // Áp xe vùng hàm-mặt
+        /// <summary>
+        /// Viêm/áp xe thận - bể thận
+        /// </summary>
+        PyelonephritisOrRenalAbscess = 6,
 
-        Other = 99                             // Khác
+        /// <summary>
+        /// Viêm bàng quang cấp
+        /// </summary>
+        AcuteCystitis = 7,
+
+        /// <summary>
+        /// Viêm niệu đạo cấp không do lậu
+        /// </summary>
+        AcuteNonGonococcalUrethritis = 8,
+
+        /// <summary>
+        /// Viêm âm đạo niệu đạo do vi khuẩn
+        /// </summary>
+        BacterialVaginourethritis = 9,
+
+        /// <summary>
+        /// Viêm tử cung do vi khuẩn
+        /// </summary>
+        BacterialEndometritis = 10,
+
+        #endregion
+
+        #region Central nervous system
+
+        /// <summary>
+        /// Viêm màng não mủ
+        /// </summary>
+        PurulentMeningitis = 11,
+
+        /// <summary>
+        /// Viêm não do vi khuẩn
+        /// </summary>
+        BacterialEncephalitis = 12,
+
+        #endregion
+
+        #region Thoracic & cardiac
+
+        /// <summary>
+        /// Tràn mủ màng phổi
+        /// </summary>
+        PleuralEmpyema = 13,
+
+        /// <summary>
+        /// Áp xe trung thất
+        /// </summary>
+        MediastinalAbscess = 14,
+
+        /// <summary>
+        /// Viêm nội tâm mạc nhiễm khuẩn
+        /// </summary>
+        InfectiveEndocarditis = 15,
+
+        /// <summary>
+        /// Viêm cơ tim do vi khuẩn
+        /// </summary>
+        BacterialMyocarditis = 16,
+
+        /// <summary>
+        /// Viêm màng ngoài tim do vi khuẩn
+        /// </summary>
+        BacterialPericarditis = 17,
+
+        #endregion
+
+        #region Tuberculosis
+
+        /// <summary>
+        /// Lao phổi
+        /// </summary>
+        PulmonaryTuberculosis = 18,
+
+        /// <summary>
+        /// Lao ngoài phổi
+        /// </summary>
+        ExtrapulmonaryTuberculosis = 19,
+
+        #endregion
+
+        #region Gastrointestinal, hepatobiliary & abdominal
+
+        /// <summary>
+        /// Nhiễm trùng đường mật
+        /// </summary>
+        BiliaryTractInfection = 20,
+
+        /// <summary>
+        /// Áp xe gan do vi khuẩn
+        /// </summary>
+        BacterialLiverAbscess = 21,
+
+        /// <summary>
+        /// Viêm tụy cấp nhiễm khuẩn
+        /// </summary>
+        InfectedAcutePancreatitis = 22,
+
+        /// <summary>
+        /// Viêm phúc mạc nhiễm khuẩn
+        /// </summary>
+        BacterialPeritonitis = 23,
+
+        /// <summary>
+        /// Tiêu chảy do vi khuẩn
+        /// </summary>
+        BacterialDiarrhea = 24,
+
+        /// <summary>
+        /// Nhiễm Helicobacter pylori
+        /// </summary>
+        HelicobacterPyloriInfection = 25,
+
+        #endregion
+
+        #region Systemic
+
+        /// <summary>
+        /// Nhiễm trùng huyết
+        /// </summary>
+        Sepsis = 26,
+
+        #endregion
+
+        #region Ophthalmic
+
+        /// <summary>
+        /// Viêm tổ chức hốc mắt
+        /// </summary>
+        OrbitalCellulitis = 27,
+
+        /// <summary>
+        /// Viêm kết mạc mắt
+        /// </summary>
+        Conjunctivitis = 28,
+
+        /// <summary>
+        /// Viêm giác mạc mắt
+        /// </summary>
+        Keratitis = 29,
+
+        /// <summary>
+        /// Viêm túi lệ mắt
+        /// </summary>
+        Dacryocystitis = 30,
+
+        #endregion
+
+        #region Head & neck
+
+        /// <summary>
+        /// Áp xe vùng hàm-mặt
+        /// </summary>
+        MaxillofacialAbscess = 31,
+
+        #endregion
+
+        Other = 99
     }
 }
