@@ -88,7 +88,7 @@ namespace Respira.Clinical.Application.Features.TreatmentProtocols.UpdateTreatme
                 context.UpdateRelations(composition.Combination, m);
                 return composition;
             });
-            await context.MedicineCompositions.AddRangeAsync(compositions, cancellationToken);
+            await context.Treatments.AddRangeAsync(compositions, cancellationToken);
 
             // Save changes to database
             await context.SaveChangesAsync(cancellationToken);

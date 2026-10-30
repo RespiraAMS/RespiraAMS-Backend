@@ -22,7 +22,7 @@ namespace Respira.Clinical.Infrastructure.Data
         public DbSet<Antibiotic> Antibiotics { get; set; }
         public DbSet<AntibioticGroup> AntibioticGroups { get; set; }
         public DbSet<Dosage> Dosages { get; set; }
-        public DbSet<Treatment> MedicineCompositions { get; set; }
+        public DbSet<Treatment> Treatments { get; set; }
         public DbSet<TreatmentProtocol> TreatmentProtocols { get; set; }
         public DbSet<Antibiogram> Antibiograms { get; set; }
 
@@ -282,26 +282,26 @@ namespace Respira.Clinical.Infrastructure.Data
                 .HasMethod("GIN");
 
             // Config on medicine composition
-            modelBuilder.Entity<Treatment>().ToTable("treatment_medicine_compositions");
+            modelBuilder.Entity<Treatment>().ToTable("treatments");
             modelBuilder.Entity<Treatment>()
                 .HasMany(x => x.Combination)
                 .WithMany()
-                .UsingEntity(t => t.ToTable("medicine_composition_antibiotics"));
+                .UsingEntity(t => t.ToTable("treatment_antibiotics"));
             modelBuilder.Entity<Treatment>()
                 .HasOne(x => x.TreatmentProtocol)
                 .WithMany(x => x.Treatments)
                 .HasForeignKey(x => x.TreatmentProtocolId);
 
             // Config on treatment
-            modelBuilder.Entity<TreatmentProtocol>().ToTable("treatments");
+            modelBuilder.Entity<TreatmentProtocol>().ToTable("treatment_protocols");
             modelBuilder.Entity<TreatmentProtocol>()
                 .HasMany(x => x.Pathogens)
                 .WithMany()
-                .UsingEntity(t => t.ToTable("treatment_pathogens"));
+                .UsingEntity(t => t.ToTable("treatment_protocol_pathogens"));
             modelBuilder.Entity<TreatmentProtocol>()
                 .HasMany(x => x.Criteria)
                 .WithMany()
-                .UsingEntity(t => t.ToTable("treatment_criteria"));
+                .UsingEntity(t => t.ToTable("treatment_protocol_criteria"));
             modelBuilder.Entity<TreatmentProtocol>()
                 .Property(x => x.Severity)
                 .HasConversion<string>();

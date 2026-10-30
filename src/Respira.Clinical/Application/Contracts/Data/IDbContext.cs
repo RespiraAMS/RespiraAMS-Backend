@@ -16,7 +16,7 @@ namespace Respira.Clinical.Application.Contracts.Data
         DbSet<Antibiotic> Antibiotics { get; set; }
         DbSet<AntibioticGroup> AntibioticGroups { get; set; }
         DbSet<Dosage> Dosages { get; set; }
-        DbSet<Treatment> MedicineCompositions { get; set; }
+        DbSet<Treatment> Treatments { get; set; }
         DbSet<TreatmentProtocol> TreatmentProtocols { get; set; }
         DbSet<Antibiogram> Antibiograms { get; set; }
 

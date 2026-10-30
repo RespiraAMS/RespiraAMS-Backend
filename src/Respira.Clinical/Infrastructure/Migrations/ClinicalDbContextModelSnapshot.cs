@@ -40,49 +40,49 @@ namespace Respira.Clinical.Infrastructure.Migrations
                     b.ToTable("antibiogram_antibiotics", (string)null);
                 });
 
-            modelBuilder.Entity("AntibioticMedicineComposition", b =>
+            modelBuilder.Entity("AntibioticTreatment", b =>
                 {
-                    b.Property<Guid>("AntibioticsId")
+                    b.Property<Guid>("CombinationId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("MedicineCompositionId")
+                    b.Property<Guid>("TreatmentId")
                         .HasColumnType("uuid");
 
-                    b.HasKey("AntibioticsId", "MedicineCompositionId");
+                    b.HasKey("CombinationId", "TreatmentId");
 
-                    b.HasIndex("MedicineCompositionId");
+                    b.HasIndex("TreatmentId");
 
-                    b.ToTable("medicine_composition_antibiotics", (string)null);
+                    b.ToTable("treatment_antibiotics", (string)null);
                 });
 
-            modelBuilder.Entity("CriterionTreatment", b =>
+            modelBuilder.Entity("CriterionTreatmentProtocol", b =>
                 {
                     b.Property<Guid>("CriteriaId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("TreatmentId")
+                    b.Property<Guid>("TreatmentProtocolId")
                         .HasColumnType("uuid");
 
-                    b.HasKey("CriteriaId", "TreatmentId");
+                    b.HasKey("CriteriaId", "TreatmentProtocolId");
 
-                    b.HasIndex("TreatmentId");
+                    b.HasIndex("TreatmentProtocolId");
 
-                    b.ToTable("treatment_criteria", (string)null);
+                    b.ToTable("treatment_protocol_criteria", (string)null);
                 });
 
-            modelBuilder.Entity("PathogenTreatment", b =>
+            modelBuilder.Entity("PathogenTreatmentProtocol", b =>
                 {
                     b.Property<Guid>("PathogensId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("TreatmentId")
+                    b.Property<Guid>("TreatmentProtocolId")
                         .HasColumnType("uuid");
 
-                    b.HasKey("PathogensId", "TreatmentId");
+                    b.HasKey("PathogensId", "TreatmentProtocolId");
 
-                    b.HasIndex("TreatmentId");
+                    b.HasIndex("TreatmentProtocolId");
 
-                    b.ToTable("treatment_pathogens", (string)null);
+                    b.ToTable("treatment_protocol_pathogens", (string)null);
                 });
 
             modelBuilder.Entity("Respira.Clinical.Domain.Entities.Antibiogram", b =>
@@ -403,34 +403,6 @@ namespace Respira.Clinical.Infrastructure.Migrations
                     b.ToTable("dosages", (string)null);
                 });
 
-            modelBuilder.Entity("Respira.Clinical.Domain.Entities.Treatment", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTimeOffset>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTimeOffset?>("DeletedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean");
-
-                    b.Property<Guid>("TreatmentId")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTimeOffset>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TreatmentId");
-
-                    b.ToTable("treatment_medicine_compositions", (string)null);
-                });
-
             modelBuilder.Entity("Respira.Clinical.Domain.Entities.MetricRule", b =>
                 {
                     b.Property<Guid>("Id")
@@ -590,6 +562,34 @@ namespace Respira.Clinical.Infrastructure.Migrations
                     b.ToTable("suspected_causes", (string)null);
                 });
 
+            modelBuilder.Entity("Respira.Clinical.Domain.Entities.Treatment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<Guid>("TreatmentProtocolId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTimeOffset>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TreatmentProtocolId");
+
+                    b.ToTable("treatments", (string)null);
+                });
+
             modelBuilder.Entity("Respira.Clinical.Domain.Entities.TreatmentProtocol", b =>
                 {
                     b.Property<Guid>("Id")
@@ -618,7 +618,7 @@ namespace Respira.Clinical.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("treatments", (string)null);
+                    b.ToTable("treatment_protocols", (string)null);
                 });
 
             modelBuilder.Entity("Respira.Clinical.Domain.Entities.BooleanClinicalVariable", b =>
@@ -682,22 +682,22 @@ namespace Respira.Clinical.Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("AntibioticMedicineComposition", b =>
+            modelBuilder.Entity("AntibioticTreatment", b =>
                 {
                     b.HasOne("Respira.Clinical.Domain.Entities.Antibiotic", null)
                         .WithMany()
-                        .HasForeignKey("AntibioticsId")
+                        .HasForeignKey("CombinationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Respira.Clinical.Domain.Entities.Treatment", null)
                         .WithMany()
-                        .HasForeignKey("MedicineCompositionId")
+                        .HasForeignKey("TreatmentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("CriterionTreatment", b =>
+            modelBuilder.Entity("CriterionTreatmentProtocol", b =>
                 {
                     b.HasOne("Respira.Clinical.Domain.Entities.Criterion", null)
                         .WithMany()
@@ -707,12 +707,12 @@ namespace Respira.Clinical.Infrastructure.Migrations
 
                     b.HasOne("Respira.Clinical.Domain.Entities.TreatmentProtocol", null)
                         .WithMany()
-                        .HasForeignKey("TreatmentId")
+                        .HasForeignKey("TreatmentProtocolId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("PathogenTreatment", b =>
+            modelBuilder.Entity("PathogenTreatmentProtocol", b =>
                 {
                     b.HasOne("Respira.Clinical.Domain.Entities.Pathogen", null)
                         .WithMany()
@@ -722,7 +722,7 @@ namespace Respira.Clinical.Infrastructure.Migrations
 
                     b.HasOne("Respira.Clinical.Domain.Entities.TreatmentProtocol", null)
                         .WithMany()
-                        .HasForeignKey("TreatmentId")
+                        .HasForeignKey("TreatmentProtocolId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -797,17 +797,6 @@ namespace Respira.Clinical.Infrastructure.Migrations
                     b.Navigation("Crcl");
                 });
 
-            modelBuilder.Entity("Respira.Clinical.Domain.Entities.Treatment", b =>
-                {
-                    b.HasOne("Respira.Clinical.Domain.Entities.TreatmentProtocol", "TreatmentProtocol")
-                        .WithMany("Medicines")
-                        .HasForeignKey("TreatmentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("TreatmentProtocol");
-                });
-
             modelBuilder.Entity("Respira.Clinical.Domain.Entities.MetricRule", b =>
                 {
                     b.HasOne("Respira.Clinical.Domain.Entities.ClinicalMetric", "ClinicalMetric")
@@ -855,6 +844,17 @@ namespace Respira.Clinical.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("Pathogen");
+                });
+
+            modelBuilder.Entity("Respira.Clinical.Domain.Entities.Treatment", b =>
+                {
+                    b.HasOne("Respira.Clinical.Domain.Entities.TreatmentProtocol", "TreatmentProtocol")
+                        .WithMany("Treatments")
+                        .HasForeignKey("TreatmentProtocolId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("TreatmentProtocol");
                 });
 
             modelBuilder.Entity("Respira.Clinical.Domain.Entities.NumericClinicalVariable", b =>
@@ -934,7 +934,7 @@ namespace Respira.Clinical.Infrastructure.Migrations
 
             modelBuilder.Entity("Respira.Clinical.Domain.Entities.TreatmentProtocol", b =>
                 {
-                    b.Navigation("Medicines");
+                    b.Navigation("Treatments");
                 });
 #pragma warning restore 612, 618
         }

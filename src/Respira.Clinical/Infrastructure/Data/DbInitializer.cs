@@ -16,8 +16,9 @@ namespace Respira.Clinical.Infrastructure.Data
                 await context.SuspectedCauses.AnyAsync() ||
                 await context.AntibioticGroups.AnyAsync() ||
                 await context.Antibiotics.AnyAsync() ||
-                await context.MedicineCompositions.AnyAsync() ||
-                await context.TreatmentProtocols.AnyAsync();
+                await context.Treatments.AnyAsync() ||
+                await context.TreatmentProtocols.AnyAsync() ||
+                await context.Antibiograms.AnyAsync();
         }
 
         public static async Task InitializeAsync(ClinicalDbContext context, IOptions<SeedDataOptions> options, ILogger<DbInitializer> logger)

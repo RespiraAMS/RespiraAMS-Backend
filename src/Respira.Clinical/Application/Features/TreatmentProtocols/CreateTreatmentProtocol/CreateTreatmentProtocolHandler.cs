@@ -74,7 +74,7 @@ namespace Respira.Clinical.Application.Features.TreatmentProtocols.CreateTreatme
 
             // Save changes to database
             await context.TreatmentProtocols.AddAsync(treatment, cancellationToken);
-            await context.MedicineCompositions.AddRangeAsync(compositions, cancellationToken);
+            await context.Treatments.AddRangeAsync(compositions, cancellationToken);
             await context.SaveChangesAsync(cancellationToken);
             return Result<CreateTreatmentResult>.Success(ApplicationStatus.Success, new CreateTreatmentResult(treatment.Id));
         }
