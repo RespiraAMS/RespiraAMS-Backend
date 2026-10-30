@@ -1,23 +1,23 @@
-using Respira.Clinical.Application.Contracts.Data;
-using Respira.ServiceDefaults.Contracts.CQRS;
-using Respira.ServiceDefaults.Contracts.Results;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Respira.Clinical.Domain.Entities;
+using Respira.Clinical.Application.Contracts.Data;
 using Respira.Clinical.Application.Contracts.Mappers;
+using Respira.Clinical.Domain.Entities;
+using Respira.ServiceDefaults.Contracts.CQRS;
+using Respira.ServiceDefaults.Contracts.Results;
 
-namespace Respira.Clinical.Application.Features.Treatments.CreateTreatment
+namespace Respira.Clinical.Application.Features.TreatmentProtocols.CreateTreatmentProtocol
 {
-    public class CreateTreatmentHandler(
+    public class CreateTreatmentProtocolHandler(
         IDbContext context,
-        ICreateMapper<CreateTreatmentCommand, Treatment> mapper,
-        ILogger<CreateTreatmentHandler> logger)
-        : ICommandHandler<CreateTreatmentCommand, Result<CreateTreatmentResult>>
+        ICreateMapper<CreateTreatmentProtocolCommand, TreatmentProtocol> mapper,
+        ILogger<CreateTreatmentProtocolHandler> logger)
+        : ICommandHandler<CreateTreatmentProtocolCommand, Result<CreateTreatmentResult>>
     {
-        public async Task<Result<CreateTreatmentResult>> HandleAsync(CreateTreatmentCommand command, CancellationToken cancellationToken = default)
+        public async Task<Result<CreateTreatmentResult>> HandleAsync(CreateTreatmentProtocolCommand protocolCommand, CancellationToken cancellationToken = default)
         {
             // Check if antibiotics, pathogens and criteria exist in database
-            var antibioticIds = command.Medicines.SelectMany(x => x).Distinct().ToList();
+            var antibioticIds = protocolCommand.Medicines.SelectMany(x => x).Distinct().ToList();
             var antibioticDbCount = await context.Antibiotics.CountAsync(x => antibioticIds.Contains(x.Id), cancellationToken);
             if (antibioticDbCount != antibioticIds.Count)
             {
@@ -29,51 +29,51 @@ namespace Respira.Clinical.Application.Features.Treatments.CreateTreatment
                 return Result<CreateTreatmentResult>.Failure(new ApplicationError(ApplicationStatus.BadRequest, "Not all antibiotic IDs given exist"));
             }
 
-            var pathogenIds = command.Pathogens.Distinct().ToList();
+            var pathogenIds = protocolCommand.Pathogens.Distinct().ToList();
             var pathogenDbCount = await context.Pathogens.CountAsync(x => pathogenIds.Contains(x.Id), cancellationToken);
-            if (pathogenDbCount != command.Pathogens.Count)
+            if (pathogenDbCount != protocolCommand.Pathogens.Count)
             {
                 logger.LogDebug("Not all pathogen IDs given exist in database: {detail}", new
                 {
-                    TotalIdsGiven = command.Pathogens.Count,
+                    TotalIdsGiven = protocolCommand.Pathogens.Count,
                     TotalFoundInDb = pathogenDbCount,
                 });
                 return Result<CreateTreatmentResult>.Failure(new ApplicationError(ApplicationStatus.BadRequest, "Not all pathogen IDs given exist"));
             }
 
-            var criteriaIds = command.Criteria.Distinct().ToList();
+            var criteriaIds = protocolCommand.Criteria.Distinct().ToList();
             var criteriaDbCount = await context.Criteria.CountAsync(x => criteriaIds.Contains(x.Id), cancellationToken);
-            if (criteriaDbCount != command.Criteria.Count)
+            if (criteriaDbCount != protocolCommand.Criteria.Count)
             {
                 logger.LogDebug("Not all criteria IDs given exist in database: {detail}", new
                 {
-                    TotalIdsGiven = command.Criteria.Count,
+                    TotalIdsGiven = protocolCommand.Criteria.Count,
                     TotalFoundInDb = criteriaDbCount,
                 });
                 return Result<CreateTreatmentResult>.Failure(new ApplicationError(ApplicationStatus.BadRequest, "Not all criteria IDs given exist"));
             }
 
-            // Map from command to entities
-            var mapResult = mapper.ToModel(command);
+            // Map from protocolCommand to entities
+            var mapResult = mapper.ToModel(protocolCommand);
             if (mapResult.IsFailure())
             {
-                logger.LogDebug("Failed to map command to model: {ApplicationError}", mapResult.Error);
+                logger.LogDebug("Failed to map protocolCommand to model: {ApplicationError}", mapResult.Error);
                 return Result<CreateTreatmentResult>.Failure(mapResult.Error!);
             }
             var treatment = mapResult.Data!;
-            context.UpdateRelations(treatment.Pathogens, command.Pathogens);
-            context.UpdateRelations(treatment.Criteria, command.Criteria);
+            context.UpdateRelations(treatment.Pathogens, protocolCommand.Pathogens);
+            context.UpdateRelations(treatment.Criteria, protocolCommand.Criteria);
 
             // Adding medicine compositions from a MedicalComposition entity
-            var compositions = command.Medicines.ConvertAll(m =>
+            var compositions = protocolCommand.Medicines.ConvertAll(m =>
             {
-                var composition = new MedicineComposition { TreatmentId = treatment.Id };
-                context.UpdateRelations(composition.Antibiotics, m);
+                var composition = new Treatment { TreatmentProtocolId = treatment.Id };
+                context.UpdateRelations(composition.Combination, m);
                 return composition;
             });
 
             // Save changes to database
-            await context.Treatments.AddAsync(treatment, cancellationToken);
+            await context.TreatmentProtocols.AddAsync(treatment, cancellationToken);
             await context.MedicineCompositions.AddRangeAsync(compositions, cancellationToken);
             await context.SaveChangesAsync(cancellationToken);
             return Result<CreateTreatmentResult>.Success(ApplicationStatus.Success, new CreateTreatmentResult(treatment.Id));

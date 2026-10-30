@@ -44,7 +44,7 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.DeleteCriterion
                 .ExecuteDeleteAsync(TestContext.Current.CancellationToken);
             await _context.RiskFactors.IgnoreQueryFilters()
                 .ExecuteDeleteAsync(TestContext.Current.CancellationToken);
-            await _context.Treatments.IgnoreQueryFilters()
+            await _context.TreatmentProtocols.IgnoreQueryFilters()
                 .ExecuteDeleteAsync(TestContext.Current.CancellationToken);
             await _context.ClinicalMetrics.IgnoreQueryFilters()
                 .ExecuteDeleteAsync(TestContext.Current.CancellationToken);
@@ -138,16 +138,16 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.DeleteCriterion
             return rule;
         }
 
-        private async Task<Treatment> SeedTreatmentAsync(
+        private async Task<TreatmentProtocol> SeedTreatmentAsync(
             Severity severity, TreatmentSite treatmentSite, params Criterion[] criteria)
         {
-            var treatment = new Treatment
+            var treatment = new TreatmentProtocol
             {
                 Severity = severity,
                 TreatmentSite = treatmentSite,
                 Criteria = [.. criteria],
             };
-            await _context.Treatments.AddAsync(treatment, TestContext.Current.CancellationToken);
+            await _context.TreatmentProtocols.AddAsync(treatment, TestContext.Current.CancellationToken);
             await _context.SaveChangesAsync(TestContext.Current.CancellationToken);
             return treatment;
         }
@@ -288,8 +288,8 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.DeleteCriterion
             Assert.Equal(ApplicationStatus.Deleted, result.StatusCode);
 
             await using var freshContext = new ClinicalDbContext(_options);
-            await AssertNotDeletedAsync(freshContext.Treatments, targetTreatment.Id);
-            await AssertNotDeletedAsync(freshContext.Treatments, otherTreatment.Id);
+            await AssertNotDeletedAsync(freshContext.TreatmentProtocols, targetTreatment.Id);
+            await AssertNotDeletedAsync(freshContext.TreatmentProtocols, otherTreatment.Id);
             await AssertNotDeletedAsync(freshContext.Criteria, other.Id);
         }
 
@@ -343,20 +343,20 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.DeleteCriterion
             await AssertSoftDeletedAsync(freshContext.RiskFactors, targetFactorTwo.Id);
             await AssertSoftDeletedAsync(freshContext.MetricRules, targetRuleOne.Id);
             await AssertSoftDeletedAsync(freshContext.MetricRules, targetRuleTwo.Id);
-            await AssertNotDeletedAsync(freshContext.Treatments, targetTreatmentOne.Id);
-            await AssertNotDeletedAsync(freshContext.Treatments, targetTreatmentTwo.Id);
+            await AssertNotDeletedAsync(freshContext.TreatmentProtocols, targetTreatmentOne.Id);
+            await AssertNotDeletedAsync(freshContext.TreatmentProtocols, targetTreatmentTwo.Id);
 
             Assert.Equal(2, await freshContext.RiskFactors.IgnoreQueryFilters()
                 .CountAsync(x => x.CriterionId == target.Id, TestContext.Current.CancellationToken));
             Assert.Equal(2, await freshContext.MetricRules.IgnoreQueryFilters()
                 .CountAsync(x => x.CriterionId == target.Id, TestContext.Current.CancellationToken));
-            Assert.Equal(2, await freshContext.Treatments.IgnoreQueryFilters()
+            Assert.Equal(2, await freshContext.TreatmentProtocols.IgnoreQueryFilters()
                 .CountAsync(x => x.Criteria.Any(c => c.Id == target.Id), TestContext.Current.CancellationToken));
 
             // The control set of the second criterion stays live
             await AssertNotDeletedAsync(freshContext.RiskFactors, otherFactor.Id);
             await AssertNotDeletedAsync(freshContext.MetricRules, otherRule.Id);
-            await AssertNotDeletedAsync(freshContext.Treatments, otherTreatment.Id);
+            await AssertNotDeletedAsync(freshContext.TreatmentProtocols, otherTreatment.Id);
             await AssertNotDeletedAsync(freshContext.Criteria, other.Id);
 
             // Parents of the cascade are never deleted themselves
@@ -394,7 +394,7 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.DeleteCriterion
                 .CountAsync(x => x.IsDeleted, TestContext.Current.CancellationToken));
             Assert.Equal(0, await freshContext.MetricRules.IgnoreQueryFilters()
                 .CountAsync(x => x.IsDeleted, TestContext.Current.CancellationToken));
-            Assert.Equal(0, await freshContext.Treatments.IgnoreQueryFilters()
+            Assert.Equal(0, await freshContext.TreatmentProtocols.IgnoreQueryFilters()
                 .CountAsync(x => x.IsDeleted, TestContext.Current.CancellationToken));
         }
 

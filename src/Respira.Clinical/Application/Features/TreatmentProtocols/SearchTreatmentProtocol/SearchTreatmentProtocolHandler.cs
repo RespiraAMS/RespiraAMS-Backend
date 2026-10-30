@@ -4,28 +4,28 @@ using Respira.Clinical.Application.Contracts.Data;
 using Respira.ServiceDefaults.Contracts.CQRS;
 using Respira.ServiceDefaults.Contracts.Results;
 
-namespace Respira.Clinical.Application.Features.Treatments.SearchTreatment
+namespace Respira.Clinical.Application.Features.TreatmentProtocols.SearchTreatmentProtocol
 {
-    public class SearchTreatmentHandler(IDbContext context, ILogger<SearchTreatmentHandler> logger)
-        : IQueryHandler<SearchTreatmentQuery, Result<SearchTreatmentResult>>
+    public class SearchTreatmentProtocolHandler(IDbContext context, ILogger<SearchTreatmentProtocolHandler> logger)
+        : IQueryHandler<SearchTreatmentProtocolQuery, Result<SearchTreatmentResult>>
     {
         public async Task<Result<SearchTreatmentResult>> HandleAsync(
-            SearchTreatmentQuery query,
+            SearchTreatmentProtocolQuery protocolQuery,
             CancellationToken cancellationToken = default
         )
         {
             // Check if pathogen and criteria are valid
             var pathogenDbCount = await context.Pathogens.CountAsync(
-                p => query.PathogenIds.Contains(p.Id),
+                p => protocolQuery.PathogenIds.Contains(p.Id),
                 cancellationToken
             );
-            if (pathogenDbCount != query.PathogenIds.Count)
+            if (pathogenDbCount != protocolQuery.PathogenIds.Count)
             {
                 logger.LogDebug(
                     "Not all pathogen IDs given exist in database: {detail}",
                     new
                     {
-                        TotalIdsGiven = query.PathogenIds.Count,
+                        TotalIdsGiven = protocolQuery.PathogenIds.Count,
                         TotalFoundInDb = pathogenDbCount,
                     }
                 );
@@ -35,16 +35,16 @@ namespace Respira.Clinical.Application.Features.Treatments.SearchTreatment
             }
 
             var criteriaDbCount = await context.Criteria.CountAsync(
-                c => query.CriteriaIds.Contains(c.Id),
+                c => protocolQuery.CriteriaIds.Contains(c.Id),
                 cancellationToken
             );
-            if (criteriaDbCount != query.CriteriaIds.Count)
+            if (criteriaDbCount != protocolQuery.CriteriaIds.Count)
             {
                 logger.LogDebug(
                     "Not all criteria IDs given exist in database: {detail}",
                     new
                     {
-                        TotalIdsGiven = query.CriteriaIds.Count,
+                        TotalIdsGiven = protocolQuery.CriteriaIds.Count,
                         TotalFoundInDb = criteriaDbCount,
                     }
                 );
@@ -54,20 +54,20 @@ namespace Respira.Clinical.Application.Features.Treatments.SearchTreatment
             }
 
             // Empty PathogenIds means no pathogen filter; otherwise the treatment must cover
-            // all selected pathogens (treatment.Pathogens ⊆ query.PathogenIds).
+            // all selected pathogens (treatment.Pathogens ⊆ protocolQuery.PathogenIds).
             var candidates = await context
-                .Treatments.AsNoTracking()
+                .TreatmentProtocols.AsNoTracking()
                 .Where(x =>
-                    x.Severity == query.Severity
-                    && x.TreatmentSite == query.TreatmentSite
-                    && x.Criteria.Select(c => c.Id).All(c => query.CriteriaIds.Contains(c))
+                    x.Severity == protocolQuery.Severity
+                    && x.TreatmentSite == protocolQuery.TreatmentSite
+                    && x.Criteria.Select(c => c.Id).All(c => protocolQuery.CriteriaIds.Contains(c))
                 )
                 .Select(x => new TreatmentCandidate(
                     x.Id,
                     x.Pathogens.Select(p => p.Id).ToList(),
                     x.Criteria.Select(c => c.Id).ToList(),
-                    x.Medicines.Select(mc =>
-                            mc.Antibiotics.Select(a => new MedicineResult(
+                    x.Treatments.Select(mc =>
+                            mc.Combination.Select(a => new MedicineResult(
                                     a.Id,
                                     a.Name,
                                     a.AntibioticGroup.Name
@@ -78,11 +78,11 @@ namespace Respira.Clinical.Application.Features.Treatments.SearchTreatment
                 ))
                 .ToListAsync(cancellationToken);
 
-            if (query.PathogenIds.Count > 0)
+            if (protocolQuery.PathogenIds.Count > 0)
             {
                 candidates =
                 [
-                    .. candidates.Where(t => t.PathogenIds.All(p => query.PathogenIds.Contains(p))),
+                    .. candidates.Where(t => t.PathogenIds.All(p => protocolQuery.PathogenIds.Contains(p))),
                 ];
             }
 
@@ -92,7 +92,7 @@ namespace Respira.Clinical.Application.Features.Treatments.SearchTreatment
             // (see TreatmentDominance.Filter). e.g. with pathogens [Pseudomonas, S. aureus],
             // the Pseudomonas-only treatment is hidden in favor of the
             // Pseudomonas + S. aureus treatment; if no combo exists, the single stays.
-            var survivors = TreatmentDominance.Filter(candidates, query.PathogenIds);
+            var survivors = TreatmentDominance.Filter(candidates, protocolQuery.PathogenIds);
 
             var dominanceRemovedCount = matchedCount - survivors.Count;
 
@@ -110,11 +110,11 @@ namespace Respira.Clinical.Application.Features.Treatments.SearchTreatment
                 .ToList();
 
             logger.LogInformation(
-                "Treatment search: severity={Severity}, site={TreatmentSite}, pathogensGiven={PathogenCount}, criteriaGiven={CriteriaCount}, matched={Matched}, dominanceRemoved={DominanceRemoved}, distinctSolutions={DistinctSolutions}",
-                query.Severity,
-                query.TreatmentSite,
-                query.PathogenIds.Count,
-                query.CriteriaIds.Count,
+                "TreatmentProtocol search: severity={Severity}, site={TreatmentSite}, pathogensGiven={PathogenCount}, criteriaGiven={CriteriaCount}, matched={Matched}, dominanceRemoved={DominanceRemoved}, distinctSolutions={DistinctSolutions}",
+                protocolQuery.Severity,
+                protocolQuery.TreatmentSite,
+                protocolQuery.PathogenIds.Count,
+                protocolQuery.CriteriaIds.Count,
                 matchedCount,
                 dominanceRemovedCount,
                 solutions.Count

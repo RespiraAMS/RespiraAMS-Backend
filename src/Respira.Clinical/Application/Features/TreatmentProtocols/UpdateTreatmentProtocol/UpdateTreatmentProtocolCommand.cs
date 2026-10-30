@@ -1,12 +1,12 @@
 using Respira.Clinical.Domain.Enums;
 using Respira.ServiceDefaults.Contracts.CQRS;
 
-namespace Respira.Clinical.Application.Features.Treatments.UpdateTreatment
+namespace Respira.Clinical.Application.Features.TreatmentProtocols.UpdateTreatmentProtocol
 {
-    public record UpdateTreatmentCommand : ICommand
+    public record UpdateTreatmentProtocolCommand : ICommand
     {
         /// <summary>
-        /// Treatment ID
+        /// TreatmentProtocol ID
         /// </summary>
         public required Guid Id { get; set; }
 
@@ -16,7 +16,7 @@ namespace Respira.Clinical.Application.Features.Treatments.UpdateTreatment
         public required Severity Severity { get; set; }
 
         /// <summary>
-        /// Treatment site of the treatment
+        /// TreatmentProtocol site of the treatment
         /// </summary>
         public required TreatmentSite TreatmentSite { get; set; }
 

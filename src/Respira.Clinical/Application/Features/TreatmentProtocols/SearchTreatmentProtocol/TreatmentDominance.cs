@@ -1,10 +1,10 @@
-namespace Respira.Clinical.Application.Features.Treatments.SearchTreatment
+namespace Respira.Clinical.Application.Features.TreatmentProtocols.SearchTreatmentProtocol
 {
     /// <summary>
     /// Lightweight projection of a matched treatment, used to evaluate dominance
     /// between treatments without loading the whole entity graph
     /// </summary>
-    /// <param name="Id">Treatment ID</param>
+    /// <param name="Id">TreatmentProtocol ID</param>
     /// <param name="PathogenIds">Pathogens this treatment covers</param>
     /// <param name="CriteriaIds">Criteria this treatment requires to be applicable</param>
     /// <param name="Solutions">Medicine compositions of this treatment</param>

@@ -42,7 +42,7 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.GetReferencedEntit
                 .ExecuteDeleteAsync(TestContext.Current.CancellationToken);
             await _context.RiskFactors.IgnoreQueryFilters()
                 .ExecuteDeleteAsync(TestContext.Current.CancellationToken);
-            await _context.Treatments.IgnoreQueryFilters()
+            await _context.TreatmentProtocols.IgnoreQueryFilters()
                 .ExecuteDeleteAsync(TestContext.Current.CancellationToken);
             await _context.ClinicalMetrics.IgnoreQueryFilters()
                 .ExecuteDeleteAsync(TestContext.Current.CancellationToken);
@@ -146,13 +146,13 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.GetReferencedEntit
             return rule;
         }
 
-        private async Task<Treatment> SeedTreatmentAsync(
+        private async Task<TreatmentProtocol> SeedTreatmentAsync(
             Severity severity,
             TreatmentSite treatmentSite,
             IEnumerable<Criterion> criteria,
             bool isDeleted = false)
         {
-            var treatment = new Treatment
+            var treatment = new TreatmentProtocol
             {
                 Severity = severity,
                 TreatmentSite = treatmentSite,
@@ -160,7 +160,7 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.GetReferencedEntit
                 IsDeleted = isDeleted,
                 DeletedAt = isDeleted ? DateTimeOffset.UtcNow : null,
             };
-            await _context.Treatments.AddAsync(treatment, TestContext.Current.CancellationToken);
+            await _context.TreatmentProtocols.AddAsync(treatment, TestContext.Current.CancellationToken);
             await _context.SaveChangesAsync(TestContext.Current.CancellationToken);
             return treatment;
         }

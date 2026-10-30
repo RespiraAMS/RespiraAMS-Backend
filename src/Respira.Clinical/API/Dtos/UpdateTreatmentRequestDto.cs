@@ -1,4 +1,4 @@
-using Respira.Clinical.Application.Features.Treatments.UpdateTreatment;
+using Respira.Clinical.Application.Features.TreatmentProtocols.UpdateTreatmentProtocol;
 using Respira.Clinical.Domain.Enums;
 
 namespace Respira.Clinical.API.Dtos
@@ -11,9 +11,9 @@ namespace Respira.Clinical.API.Dtos
         public List<Guid> Pathogens { get; set; } = [];
         public List<Guid> Criteria { get; set; } = [];
 
-        public UpdateTreatmentCommand ToCommand(Guid id)
+        public UpdateTreatmentProtocolCommand ToCommand(Guid id)
         {
-            return new UpdateTreatmentCommand
+            return new UpdateTreatmentProtocolCommand
             {
                 Id = id,
                 Severity = Severity,

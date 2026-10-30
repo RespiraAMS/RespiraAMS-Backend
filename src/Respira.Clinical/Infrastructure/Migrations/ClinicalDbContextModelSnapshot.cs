@@ -403,7 +403,7 @@ namespace Respira.Clinical.Infrastructure.Migrations
                     b.ToTable("dosages", (string)null);
                 });
 
-            modelBuilder.Entity("Respira.Clinical.Domain.Entities.MedicineComposition", b =>
+            modelBuilder.Entity("Respira.Clinical.Domain.Entities.Treatment", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -590,7 +590,7 @@ namespace Respira.Clinical.Infrastructure.Migrations
                     b.ToTable("suspected_causes", (string)null);
                 });
 
-            modelBuilder.Entity("Respira.Clinical.Domain.Entities.Treatment", b =>
+            modelBuilder.Entity("Respira.Clinical.Domain.Entities.TreatmentProtocol", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -690,7 +690,7 @@ namespace Respira.Clinical.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Respira.Clinical.Domain.Entities.MedicineComposition", null)
+                    b.HasOne("Respira.Clinical.Domain.Entities.Treatment", null)
                         .WithMany()
                         .HasForeignKey("MedicineCompositionId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -705,7 +705,7 @@ namespace Respira.Clinical.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Respira.Clinical.Domain.Entities.Treatment", null)
+                    b.HasOne("Respira.Clinical.Domain.Entities.TreatmentProtocol", null)
                         .WithMany()
                         .HasForeignKey("TreatmentId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -720,7 +720,7 @@ namespace Respira.Clinical.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Respira.Clinical.Domain.Entities.Treatment", null)
+                    b.HasOne("Respira.Clinical.Domain.Entities.TreatmentProtocol", null)
                         .WithMany()
                         .HasForeignKey("TreatmentId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -797,15 +797,15 @@ namespace Respira.Clinical.Infrastructure.Migrations
                     b.Navigation("Crcl");
                 });
 
-            modelBuilder.Entity("Respira.Clinical.Domain.Entities.MedicineComposition", b =>
+            modelBuilder.Entity("Respira.Clinical.Domain.Entities.Treatment", b =>
                 {
-                    b.HasOne("Respira.Clinical.Domain.Entities.Treatment", "Treatment")
+                    b.HasOne("Respira.Clinical.Domain.Entities.TreatmentProtocol", "TreatmentProtocol")
                         .WithMany("Medicines")
                         .HasForeignKey("TreatmentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Treatment");
+                    b.Navigation("TreatmentProtocol");
                 });
 
             modelBuilder.Entity("Respira.Clinical.Domain.Entities.MetricRule", b =>
@@ -932,7 +932,7 @@ namespace Respira.Clinical.Infrastructure.Migrations
                     b.Navigation("RiskFactors");
                 });
 
-            modelBuilder.Entity("Respira.Clinical.Domain.Entities.Treatment", b =>
+            modelBuilder.Entity("Respira.Clinical.Domain.Entities.TreatmentProtocol", b =>
                 {
                     b.Navigation("Medicines");
                 });

@@ -307,7 +307,7 @@ namespace Respira.Clinical.Domain.Services
 
             if (majorMatched >= 1 || minorMatched >= 3)
             {
-                logger.LogDebug("IDSA/ATS satisfied: Major matched = {MajorMatched}; Minor Mathed = {MinorMatched}", majorMatched, minorMatched);
+                logger.LogDebug("IDSA/ATS satisfied: Major matched = {MajorMatched}; Minor Matched = {MinorMatched}", majorMatched, minorMatched);
                 return new MajorMinorMetricsSeverityDiagnosis
                 {
                     Code = metric.Code,
@@ -329,7 +329,7 @@ namespace Respira.Clinical.Domain.Services
         /// <param name="context">Clinical context</param>
         /// <param name="observations">Clinical observations</param>
         /// <param name="severity">Severity diagnosis</param>
-        /// <param name="treatmentSite">Treatment site diagnosis</param>
+        /// <param name="treatmentSite">TreatmentProtocol site diagnosis</param>
         /// <returns>Infection assessment</returns>
         public InfectionAssessment AssessInfection(ClinicalContext context, IEnumerable<ClinicalObservation> observations, Severity severity, TreatmentSite treatmentSite)
         {
@@ -338,7 +338,7 @@ namespace Respira.Clinical.Domain.Services
              * The result is categorized into 2 lists: 
              * 1. Heavy suspected: these pathogen has clear evidences using risk factors,
              * doctor and recommendation engine should focus on this list. This list can
-             * still be empty, if patient's syntomps does not include any risk factors
+             * still be empty, if patient's symptom does not include any risk factors
              * 1.1. A pathogen can only be added if its score exceed 50%
              * 1.2. The result is not sorted, since a patient can be infected to multiple
              * pathogens at once, and the treatment should cover all of them, so ranking
@@ -351,7 +351,7 @@ namespace Respira.Clinical.Domain.Services
              * engine (or rather, this list should just be used to show, nothing more).
              * 2.1. This list should be not empty, as long as the data is not deleted, or clinical context is
              * populated correctly
-             * 2.2. If a pathogen is in this worth suspected list and has risk factors, they will be remove
+             * 2.2. If a pathogen is in this worth suspected list and has risk factors, they will be removed
              * from the worth suspected list
              */
 
@@ -415,7 +415,7 @@ namespace Respira.Clinical.Domain.Services
 
                 // Since the threshold is exactly 50%, we can avoid division by checking if 
                 // any critical factor matched (they equal 100%, so obviously passed), or if
-                // double the non critical factor matched greater or equal than total risk factors
+                // double the non-critical factor matched greater or equal than total risk factors
                 if (matchedAsCritical > 0 || 2 * matchedAsNonCritical >= pathogen.RiskFactors.Count)
                 {
                     logger.LogDebug("Risk factor calculate: {Detail}", new
@@ -449,11 +449,11 @@ namespace Respira.Clinical.Domain.Services
 
         /// <summary>
         /// Check if antibiotic groups has common ancestor. For example, monobactam and cephalosporin
-        /// has beta-lactam as common ancestor.</br>
+        /// has beta-lactam as common ancestor.<br></br><br></br>
         /// Business rule: each treatment medicines should belong to the same antibiotic group linage.
-        /// For example, for a treatment medicines:</br>
-        /// 1. Carbapenem + Cephalosporin -> invalid (both belong to beta-lactam linage)</br>
-        /// 2. Cephalosporin + Macrolid -> valid (Macrolid does not belong to beta-lactam linage)</br>
+        /// For example, for a treatment medicines:<br></br>
+        /// 1. Carbapenem + Cephalosporin -> invalid (both belong to beta-lactam linage)<br></br>
+        /// 2. Cephalosporin + Macrolid -> valid (Macrolid does not belong to beta-lactam linage)<br></br>
         /// </summary>
         /// <param name="context">Clinical context</param>
         /// <param name="group1">Antibiotic group 1</param>
@@ -494,9 +494,9 @@ namespace Respira.Clinical.Domain.Services
             return Result<bool>.Success(ApplicationStatus.Success, isSame);
         }
 
-        public Result<bool> IsMedicineCombinationValid(ClinicalContext context, MedicineComposition combination)
+        public Result<bool> IsMedicineCombinationValid(ClinicalContext context, Treatment combination)
         {
-            var antibiotics = combination.Antibiotics.OrderBy(x => x.Id).ToList();
+            var antibiotics = combination.Combination.OrderBy(x => x.Id).ToList();
 
             for (int i = 0; i < antibiotics.Count - 1; i++)
             {
@@ -583,7 +583,7 @@ namespace Respira.Clinical.Domain.Services
                 // Check if all the variables used for the prerequisite formula are present
                 if (!variable.Prerequisite!.Variables.All(v => variables.Select(x => x.Code).Contains(v.Code)))
                 {
-                    var msg = $"Varible {variable.Code}'s prerequisite formula required all this variables: {string.Join(", ", variable.Prerequisite!.Variables.Select(v => v.Code))}";
+                    var msg = $"Variable {variable.Code}'s prerequisite formula required all this variables: {string.Join(", ", variable.Prerequisite!.Variables.Select(v => v.Code))}";
                     logger.LogDebug("Prerequisite formula for variable {Code} is not satisfied: {Message}", variable.Code, msg);
                     errors.Add(variable.Id, msg);
                 }
@@ -765,37 +765,40 @@ namespace Respira.Clinical.Domain.Services
         }
 
         /// <summary>
-        /// Treatment recommendation. This method recommend treatment protocols based on patient's clinical
+        /// TreatmentProtocol recommendation. This method recommend treatment protocols based on patient's clinical
         /// picture and diagnosis result
         /// </summary>
         /// <param name="context">Clinical context</param>
         /// <param name="clinicalPicture">Clinical picture</param>
         /// <param name="diagnosis">Diagnosis result</param>
         /// <returns>List of treatment protocols used</returns>
-        public Result<IEnumerable<Treatment>> RecommendTreatment(ClinicalContext context, ClinicalPicture clinicalPicture, Diagnosis diagnosis)
+        public Result<IEnumerable<TreatmentProtocol>> RecommendTreatment(ClinicalContext context, ClinicalPicture clinicalPicture, Diagnosis diagnosis)
         {
             // Get the list of candidate protocols using diagnosis result
             var candidates = context.TreatmentProtocols
-                .Where(x => x.Severity == diagnosis.Severity && x.TreatmentSite == diagnosis.TreatmentSite);
+                .Where(x => x.Severity == diagnosis.Severity && x.TreatmentSite == diagnosis.TreatmentSite)
+                .ToList();
 
             // As long as data is persisted correctly and loaded correctly, this shouldn't happen
             if (!candidates.Any())
             {
                 logger.LogDebug("Failed to find any candidate treatment protocols");
-                return Result<IEnumerable<Treatment>>.Failure(new ApplicationError(ApplicationStatus.Failure, "Failed to find any candidate treatment protocols"));
+                return Result<IEnumerable<TreatmentProtocol>>.Failure(new ApplicationError(ApplicationStatus.Failure, "Failed to find any candidate treatment protocols"));
             }
 
             // Filter by criteria: only pick protocols where their criteria all matched
             logger.LogDebug("Start filtering candidates by criteria using clinical observation");
-            var filtererByCriteria = candidates.Where(x => x.Criteria.All(c => c.IsCriterionSatisfied(clinicalPicture.Observations)));
+            var filtererByCriteria = candidates
+                .Where(x => x.Criteria.All(c => c.IsCriterionSatisfied(clinicalPicture.Observations)))
+                .ToList();
             logger.LogDebug("Done filtering candidates by criteria: {Detail}", new
             {
-                CandidateCount = candidates.Count(),
-                FilterByCriteria = filtererByCriteria.Count(),
+                CandidateCount = candidates.Count,
+                FilterByCriteria = filtererByCriteria.Count,
             });
 
             // Filter by pathogens: prioritize protocols that has wider cover for pathogens.
-            // For example, infecction assessment have pseudomonas and MRSA, and there are
+            // For example, infection assessment have pseudomonas and MRSA, and there are
             // have 3 protocols, one cover pseudomonas, one cover MRSA and one cover
             // BOTH pseudomonas and MRSA, then the third one must be picked, while the other 2 don't
 
@@ -803,14 +806,14 @@ namespace Respira.Clinical.Domain.Services
 
             // First, since the treatment protocol Pathogens list is equivalent to AND (which means that
             // this treatment protocol can only be applied if ALL the pathogens is suspected), so any protocols
-            // that have a pathogen that didn't exists in heavy suspected list
+            // that have a pathogen that didn't exist in heavy suspected list
             var filteredByPathogen = filtererByCriteria
                 .Where(x => x.Pathogens
                         .Select(p => p.Id)
                         .All(p => diagnosis.HeavySuspected.Select(hs => hs.Id).Contains(p)))
                 .ToList();
 
-            // Filter by dominance. This only make sense if the heavt suspected has more than
+            // Filter by dominance. This only make sense if the heavy suspected has more than
             // one pathogen
             if (diagnosis.HeavySuspected.Count() >= 2)
             {
@@ -848,22 +851,22 @@ namespace Respira.Clinical.Domain.Services
                 {
                     // Materialize first: removing from a ToList() copy would leave the
                     // treatment's own collection untouched
-                    var allergicCompositions = protocol.Medicines
-                        .Where(composition => composition.Antibiotics.Any(a => a.Id == allergy.Id))
+                    var allergicCompositions = protocol.Treatments
+                        .Where(composition => composition.Combination.Any(a => a.Id == allergy.Id))
                         .ToList();
 
                     foreach (var composition in allergicCompositions)
                     {
-                        protocol.Medicines.Remove(composition);
+                        protocol.Treatments.Remove(composition);
                     }
                 }
             }
 
             // If the allergy filter make the protocol's medicines list become empty as well,
             // then remove that protocol, since it serves no purpose anymore
-            protocols.RemoveAll(p => !p.Medicines.Any());
+            protocols.RemoveAll(p => !p.Treatments.Any());
 
-            return Result<IEnumerable<Treatment>>.Success(ApplicationStatus.Success, protocols);
+            return Result<IEnumerable<TreatmentProtocol>>.Success(ApplicationStatus.Success, protocols);
         }
     }
 }

@@ -16,7 +16,7 @@ namespace Respira.Clinical.Application.Features.SuspectedCauses.CreateSuspectedC
         public required Severity Severity { get; set; }
 
         /// <summary>
-        /// Treatment site assigned to patient when catching the disease with this pathogen
+        /// TreatmentProtocol site assigned to patient when catching the disease with this pathogen
         /// </summary>
         public required TreatmentSite TreatmentSite { get; set; }
     }

@@ -49,7 +49,7 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.UpdateCriterion
                 .ExecuteDeleteAsync(TestContext.Current.CancellationToken);
             await _context.RiskFactors.IgnoreQueryFilters()
                 .ExecuteDeleteAsync(TestContext.Current.CancellationToken);
-            await _context.Treatments.IgnoreQueryFilters()
+            await _context.TreatmentProtocols.IgnoreQueryFilters()
                 .ExecuteDeleteAsync(TestContext.Current.CancellationToken);
             await _context.ClinicalMetrics.IgnoreQueryFilters()
                 .ExecuteDeleteAsync(TestContext.Current.CancellationToken);
@@ -73,8 +73,8 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.UpdateCriterion
             ClinicalMetric Metrics,
             MetricRule TargetRule,
             MetricRule ControlRule,
-            Treatment TargetTreatment,
-            Treatment ControlTreatment,
+            TreatmentProtocol TargetTreatmentProtocol,
+            TreatmentProtocol ControlTreatmentProtocol,
             DateTimeOffset StoredTargetUpdatedAt,
             DateTimeOffset StoredControlUpdatedAt);
 
@@ -170,19 +170,19 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.UpdateCriterion
             await _context.MetricRules.AddRangeAsync(
                 [targetRule, controlRule], TestContext.Current.CancellationToken);
 
-            var targetTreatment = new Treatment
+            var targetTreatment = new TreatmentProtocol
             {
                 Severity = Severity.Severe,
                 TreatmentSite = TreatmentSite.IntensiveCareUnit,
                 Criteria = [target],
             };
-            var controlTreatment = new Treatment
+            var controlTreatment = new TreatmentProtocol
             {
                 Severity = Severity.Mild,
                 TreatmentSite = TreatmentSite.Outpatient,
                 Criteria = [control],
             };
-            await _context.Treatments.AddRangeAsync(
+            await _context.TreatmentProtocols.AddRangeAsync(
                 [targetTreatment, controlTreatment], TestContext.Current.CancellationToken);
             await _context.SaveChangesAsync(TestContext.Current.CancellationToken);
 
@@ -399,7 +399,7 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.UpdateCriterion
                 .AnyAsync(x => x.IsDeleted, TestContext.Current.CancellationToken));
             Assert.False(await readContext.MetricRules.IgnoreQueryFilters()
                 .AnyAsync(x => x.IsDeleted, TestContext.Current.CancellationToken));
-            Assert.False(await readContext.Treatments.IgnoreQueryFilters()
+            Assert.False(await readContext.TreatmentProtocols.IgnoreQueryFilters()
                 .AnyAsync(x => x.IsDeleted, TestContext.Current.CancellationToken));
 
             var targetFactor = await readContext.RiskFactors.IgnoreQueryFilters()
@@ -412,8 +412,8 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.UpdateCriterion
             Assert.False(targetRule.IsDeleted);
             Assert.Null(targetRule.DeletedAt);
 
-            var targetTreatment = await readContext.Treatments.IgnoreQueryFilters()
-                .SingleAsync(x => x.Id == data.TargetTreatment.Id, TestContext.Current.CancellationToken);
+            var targetTreatment = await readContext.TreatmentProtocols.IgnoreQueryFilters()
+                .SingleAsync(x => x.Id == data.TargetTreatmentProtocol.Id, TestContext.Current.CancellationToken);
             Assert.False(targetTreatment.IsDeleted);
             Assert.Null(targetTreatment.DeletedAt);
 

@@ -1,9 +1,9 @@
 using Respira.Clinical.Domain.Enums;
 using Respira.ServiceDefaults.Contracts.CQRS;
 
-namespace Respira.Clinical.Application.Features.Treatments.SearchTreatment
+namespace Respira.Clinical.Application.Features.TreatmentProtocols.SearchTreatmentProtocol
 {
-    public record SearchTreatmentQuery : IQuery
+    public record SearchTreatmentProtocolQuery : IQuery
     {
         public required Severity Severity { get; set; }
         public required TreatmentSite TreatmentSite { get; set; }

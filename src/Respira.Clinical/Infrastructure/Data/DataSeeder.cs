@@ -16,7 +16,7 @@ namespace Respira.Clinical.Infrastructure.Data
         public required ICollection<SuspectedCause> SuspectedCauses { get; init; }
         public required ICollection<AntibioticGroup> AntibioticGroups { get; init; }
         public required ICollection<Antibiotic> Antibiotics { get; init; }
-        public required ICollection<Treatment> Treatments { get; init; }
+        public required ICollection<TreatmentProtocol> Treatments { get; init; }
         public required ICollection<Antibiogram> Antibiograms { get; init; }
     }
 
@@ -305,21 +305,21 @@ namespace Respira.Clinical.Infrastructure.Data
                 var pathogenIds = t.PathogenIds.Select(p => pathogenLookup[p]);
                 var criterionIds = t.CriteriaIds.Select(c => criterionLookup[c]);
                 var medicines = t.MedicineIds
-                    .Select(composition => new MedicineComposition
+                    .Select(composition => new Treatment
                     {
-                        TreatmentId = treatmentId,
-                        Antibiotics = [.. composition.Select(m => antibiotics.First(a => a.Id == m))]
+                        TreatmentProtocolId = treatmentId,
+                        Combination = [.. composition.Select(m => antibiotics.First(a => a.Id == m))]
                     })
                     .ToList();
 
-                return new Treatment
+                return new TreatmentProtocol
                 {
                     Id = treatmentId,
                     Severity = ParseEnum(t.Severity, Severity.Mild),
                     TreatmentSite = ParseEnum(t.TreatmentSite, TreatmentSite.Outpatient),
                     Pathogens = [.. pathogenIds],
                     Criteria = [.. criterionIds],
-                    Medicines = [.. medicines],
+                    Treatments = [.. medicines],
                 };
             }).ToList();
 

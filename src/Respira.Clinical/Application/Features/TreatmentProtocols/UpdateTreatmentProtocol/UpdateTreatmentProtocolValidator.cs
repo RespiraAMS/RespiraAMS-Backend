@@ -1,11 +1,14 @@
 using FluentValidation;
 
-namespace Respira.Clinical.Application.Features.Treatments.CreateTreatment
+namespace Respira.Clinical.Application.Features.TreatmentProtocols.UpdateTreatmentProtocol
 {
-    public class CreateTreatmentValidator : AbstractValidator<CreateTreatmentCommand>
+    public class UpdateTreatmentProtocolValidator : AbstractValidator<UpdateTreatmentProtocolCommand>
     {
-        public CreateTreatmentValidator()
+        public UpdateTreatmentProtocolValidator()
         {
+            RuleFor(x => x.Id)
+                .NotEmpty()
+                .WithMessage("TreatmentProtocol ID must be valid UUID");
             RuleFor(x => x.Severity)
                 .IsInEnum()
                 .WithMessage("Invalid value for severity");

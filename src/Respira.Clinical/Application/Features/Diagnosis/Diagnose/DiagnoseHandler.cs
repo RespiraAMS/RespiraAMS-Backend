@@ -52,12 +52,12 @@ namespace Respira.Clinical.Application.Features.Diagnosis.Diagnose
                     .Include(x => x.Pathogen)
                     .Include(x => x.Antibiotics)
                     .ToListAsync(cancellationToken),
-                TreatmentProtocols = await context.Treatments
+                TreatmentProtocols = await context.TreatmentProtocols
                     .AsNoTracking()
                     .Include(x => x.Pathogens)
                     .Include(x => x.Criteria)
-                    .Include(x => x.Medicines)
-                    .ThenInclude(x => x.Antibiotics)
+                    .Include(x => x.Treatments)
+                    .ThenInclude(x => x.Combination)
                     .ThenInclude(x => x.AntibioticGroup)
                     .ToListAsync(cancellationToken),
             };
@@ -199,7 +199,7 @@ namespace Respira.Clinical.Application.Features.Diagnosis.Diagnose
                     TreatmentSite = x.TreatmentSite,
                     Pathogens = x.Pathogens.Select(p => new PathogenResult(p.Id, p.Name)),
                     Criteria = x.Criteria.Select(c => new CriterionResult(c.Id, c.Name, c.Formula.ToString()!)),
-                    Medicines = x.Medicines.Select(mc => mc.Antibiotics.Select(a => new AntibioticResult(a.Id, a.Name)))
+                    Medicines = x.Treatments.Select(mc => mc.Combination.Select(a => new AntibioticResult(a.Id, a.Name)))
                 })
             });
         }

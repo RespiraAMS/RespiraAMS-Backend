@@ -1,8 +1,8 @@
 using Asp.Versioning;
 using Microsoft.AspNetCore.Mvc;
 using Respira.Clinical.API.Dtos;
-using Respira.Clinical.Application.Features.Treatments.CreateTreatment;
-using Respira.Clinical.Application.Features.Treatments.SearchTreatment;
+using Respira.Clinical.Application.Features.TreatmentProtocols.CreateTreatmentProtocol;
+using Respira.Clinical.Application.Features.TreatmentProtocols.SearchTreatmentProtocol;
 using Respira.ServiceDefaults.Contracts.Results;
 using Wolverine;
 
@@ -14,7 +14,7 @@ namespace Respira.Clinical.API.Controllers
     public class TreatmentsController(IMessageBus bus) : ControllerBase
     {
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] CreateTreatmentCommand request)
+        public async Task<IActionResult> Create([FromBody] CreateTreatmentProtocolCommand request)
         {
             var result = await bus.InvokeAsync<Result<CreateTreatmentResult>>(request);
             return result.ToApiResponse();
@@ -29,7 +29,7 @@ namespace Respira.Clinical.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Search([FromQuery] SearchTreatmentQuery request)
+        public async Task<IActionResult> Search([FromQuery] SearchTreatmentProtocolQuery request)
         {
             var result = await bus.InvokeAsync<Result<SearchTreatmentResult>>(request);
             return result.ToApiResponse();

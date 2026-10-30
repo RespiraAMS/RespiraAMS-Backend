@@ -1,9 +1,9 @@
 using Respira.Clinical.Domain.Enums;
 using Respira.ServiceDefaults.Contracts.CQRS;
 
-namespace Respira.Clinical.Application.Features.Treatments.CreateTreatment
+namespace Respira.Clinical.Application.Features.TreatmentProtocols.CreateTreatmentProtocol
 {
-    public record CreateTreatmentCommand : ICommand
+    public record CreateTreatmentProtocolCommand : ICommand
     {
         /// <summary>
         /// Severity of the treatment
@@ -11,7 +11,7 @@ namespace Respira.Clinical.Application.Features.Treatments.CreateTreatment
         public required Severity Severity { get; set; }
 
         /// <summary>
-        /// Treatment site of the treatment
+        /// TreatmentProtocol site of the treatment
         /// </summary>
         public required TreatmentSite TreatmentSite { get; set; }
 
