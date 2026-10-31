@@ -3,6 +3,8 @@ using Microsoft.Extensions.Logging;
 using Respira.Clinical.Application.Contracts.Data;
 using Respira.Clinical.Application.Contracts.Mappers;
 using Respira.Clinical.Domain.Entities;
+using Respira.Clinical.Domain.Models;
+using Respira.Clinical.Domain.Services;
 using Respira.ServiceDefaults.Contracts.CQRS;
 using Respira.ServiceDefaults.Contracts.Results;
 
@@ -10,26 +12,28 @@ namespace Respira.Clinical.Application.Features.TreatmentProtocols.UpdateTreatme
 {
     public class UpdateTreatmentProtocolHandler(
         IDbContext context,
+        IDiagnoseService service,
         IUpdateMapper<TreatmentProtocol, UpdateTreatmentProtocolCommand> mapper,
         ILogger<UpdateTreatmentProtocolHandler> logger)
         : ICommandHandler<UpdateTreatmentProtocolCommand, Result>
     {
-        public async Task<Result> HandleAsync(UpdateTreatmentProtocolCommand protocolCommand, CancellationToken cancellationToken = default)
+        public async Task<Result> HandleAsync(UpdateTreatmentProtocolCommand command, CancellationToken cancellationToken = default)
         {
             // Check if treatment exists in database
-            var treatment = await context.TreatmentProtocols
+            var protocol = await context.TreatmentProtocols
+
                 .Include(x => x.Pathogens)
                 .Include(x => x.Criteria)
                 .Include(x => x.Treatments)
-                .FirstOrDefaultAsync(x => x.Id == protocolCommand.Id, cancellationToken);
-            if (treatment is null)
+                .FirstOrDefaultAsync(x => x.Id == command.Id, cancellationToken);
+            if (protocol is null)
             {
-                logger.LogDebug("TreatmentProtocol with ID {id} does not exist in database", protocolCommand.Id);
+                logger.LogDebug("TreatmentProtocol with ID {id} does not exist in database", command.Id);
                 return Result.Failure(new ApplicationError(ApplicationStatus.BadRequest, "TreatmentProtocol not found"));
             }
 
             // Check if antibiotics, pathogens and criteria exist in database
-            var antibioticIds = protocolCommand.Medicines.SelectMany(x => x).Distinct().ToList();
+            var antibioticIds = command.Medicines.SelectMany(x => x).Distinct().ToList();
             var antibioticDbCount = await context.Antibiotics.CountAsync(x => antibioticIds.Contains(x.Id), cancellationToken);
             if (antibioticDbCount != antibioticIds.Count)
             {
@@ -41,54 +45,95 @@ namespace Respira.Clinical.Application.Features.TreatmentProtocols.UpdateTreatme
                 return Result.Failure(new ApplicationError(ApplicationStatus.BadRequest, "Not all antibiotic IDs given exist"));
             }
 
-            var pathogenIds = protocolCommand.Pathogens.Distinct().ToList();
+            var pathogenIds = command.Pathogens.Distinct().ToList();
             var pathogenDbCount = await context.Pathogens.CountAsync(x => pathogenIds.Contains(x.Id), cancellationToken);
-            if (pathogenDbCount != protocolCommand.Pathogens.Count)
+            if (pathogenDbCount != command.Pathogens.Count)
             {
                 logger.LogDebug("Not all pathogen IDs given exist in database: {detail}", new
                 {
-                    TotalIdsGiven = protocolCommand.Pathogens.Count,
+                    TotalIdsGiven = command.Pathogens.Count,
                     TotalFoundInDb = pathogenDbCount,
                 });
                 return Result.Failure(new ApplicationError(ApplicationStatus.BadRequest, "Not all pathogen IDs given exist"));
             }
 
-            var criteriaIds = protocolCommand.Criteria.Distinct().ToList();
+            var criteriaIds = command.Criteria.Distinct().ToList();
             var criteriaDbCount = await context.Criteria.CountAsync(x => criteriaIds.Contains(x.Id), cancellationToken);
-            if (criteriaDbCount != protocolCommand.Criteria.Count)
+            if (criteriaDbCount != command.Criteria.Count)
             {
                 logger.LogDebug("Not all criteria IDs given exist in database: {detail}", new
                 {
-                    TotalIdsGiven = protocolCommand.Criteria.Count,
+                    TotalIdsGiven = command.Criteria.Count,
                     TotalFoundInDb = criteriaDbCount,
                 });
                 return Result.Failure(new ApplicationError(ApplicationStatus.BadRequest, "Not all criteria IDs given exist"));
             }
 
-            // Map from protocolCommand to entities
-            var mapResult = mapper.MapModel(treatment, protocolCommand);
+            // Map from command to entities
+            var mapResult = mapper.MapModel(protocol, command);
             if (mapResult.IsFailure())
             {
-                logger.LogDebug("Failed to map protocolCommand to model: {ApplicationError}", mapResult.Error);
+                logger.LogDebug("Failed to map command to model: {ApplicationError}", mapResult.Error);
                 return Result.Failure(mapResult.Error!);
             }
 
             // Clean all the join tables data
-            treatment.Treatments.Clear();
-            treatment.Pathogens.Clear();
-            treatment.Criteria.Clear();
+            protocol.Treatments.Clear();
+            protocol.Pathogens.Clear();
+            protocol.Criteria.Clear();
 
-            context.UpdateRelations(treatment.Pathogens, protocolCommand.Pathogens);
-            context.UpdateRelations(treatment.Criteria, protocolCommand.Criteria);
+            context.UpdateRelations(protocol.Pathogens, command.Pathogens);
+            context.UpdateRelations(protocol.Criteria, command.Criteria);
 
-            // Adding medicine compositions from a MedicalComposition entity
-            var compositions = protocolCommand.Medicines.ConvertAll(m =>
+            var clinicalContext = new ClinicalContext
             {
-                var composition = new Treatment { TreatmentProtocolId = treatment.Id };
-                context.UpdateRelations(composition.Combination, m);
-                return composition;
+                AntibioticGroups = await context.AntibioticGroups.ToListAsync(cancellationToken),
+                Antibiograms = [],
+                Antibiotics = await context.Antibiotics.Include(x => x.AntibioticGroup).ToListAsync(cancellationToken),
+                Metrics = [],
+                Pathogens = [],
+                SuspectedCauses = [],
+                TreatmentProtocols = [],
+                Variables = [],
+            };
+
+            // Adding treatments from a Treatment entity
+            var treatments = command.Medicines.ConvertAll(combination =>
+            {
+                // Because we need a full entity treatment to use in the service,
+                // we won't use the stub attach method, but building the list of
+                // antibiotics manually using the clinical context
+                var antibiotics = clinicalContext.Antibiotics
+                    .Where(x => combination.Contains(x.Id))
+                    .ToList();
+                return new Treatment
+                {
+                    TreatmentProtocolId = protocol.Id,
+                    Combination = antibiotics,
+                };
             });
-            await context.Treatments.AddRangeAsync(compositions, cancellationToken);
+
+            foreach (var treatment in treatments)
+            {
+                var validateResult = service.IsMedicineCombinationValid(clinicalContext, treatment);
+                if (validateResult.IsFailure())
+                {
+                    logger.LogDebug("Failed to validate treatment: {Error}", validateResult.Error);
+                    return Result.Failure(validateResult.Error!);
+                }
+
+                if (!validateResult.Data)
+                {
+                    logger.LogDebug("Invalid treatment: all antibiotics in a treatment must belong to different group: {Detail}", new
+                    {
+                        AntibioticNames = treatment.Combination.Select(x => x.Name)
+                    });
+                    return Result.Failure(new ApplicationError(
+                        ApplicationStatus.BusinessRuleViolation,
+                        "Invalid treatment: all antibiotics in a treatment must belong to different group"));
+                }
+            }
+            await context.Treatments.AddRangeAsync(treatments, cancellationToken);
 
             // Save changes to database
             await context.SaveChangesAsync(cancellationToken);

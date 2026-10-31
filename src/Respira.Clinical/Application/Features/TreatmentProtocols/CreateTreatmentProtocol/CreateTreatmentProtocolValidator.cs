@@ -29,6 +29,8 @@ namespace Respira.Clinical.Application.Features.TreatmentProtocols.CreateTreatme
                 .NotEmpty()
                 .When(x => x.Criteria.Count > 0)
                 .WithMessage("Criteria ID must be valid UUID");
+            RuleFor(x => x.Version).NotEmpty().WithMessage("Treatment protocol version is required");
+            RuleFor(x => x.Publisher).NotEmpty().WithMessage("Treatment protocol publisher is required");
         }
     }
 }

@@ -6,12 +6,15 @@ namespace Respira.Clinical.Application.Features.TreatmentProtocols.CreateTreatme
 {
     public class CreateTreatmentProtocolMapper : ICreateMapper<CreateTreatmentProtocolCommand, TreatmentProtocol>
     {
-        public Result<TreatmentProtocol> ToModel(CreateTreatmentProtocolCommand protocolCommand)
+        public Result<TreatmentProtocol> ToModel(CreateTreatmentProtocolCommand command)
         {
             return Result<TreatmentProtocol>.Success(ApplicationStatus.Success, new TreatmentProtocol
             {
-                Severity = protocolCommand.Severity,
-                TreatmentSite = protocolCommand.TreatmentSite,
+                Severity = command.Severity,
+                TreatmentSite = command.TreatmentSite,
+                Publisher = command.Publisher,
+                Version = command.Version,
+                IsApplied = command.IsApplied,
                 // Leave the collection empty for the UpdateRelations to work
                 Treatments = [],
                 Pathogens = [],
@@ -19,9 +22,9 @@ namespace Respira.Clinical.Application.Features.TreatmentProtocols.CreateTreatme
             });
         }
 
-        public Result<TreatmentProtocol> ToModel(CreateTreatmentProtocolCommand protocolCommand, object dependencies)
+        public Result<TreatmentProtocol> ToModel(CreateTreatmentProtocolCommand command, object dependencies)
         {
-            return ToModel(protocolCommand);
+            return ToModel(command);
         }
     }
 }

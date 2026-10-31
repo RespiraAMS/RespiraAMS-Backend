@@ -30,7 +30,22 @@ namespace Respira.Clinical.Application.Features.TreatmentProtocols.CreateTreatme
         /// List of criteria IDs associated with the treatment
         /// </summary>
         public List<Guid> Criteria { get; set; } = [];
+
+        /// <summary>
+        /// Version of the metric
+        /// </summary>
+        public required string Version { get; set; }
+
+        /// <summary>
+        /// Metric publisher
+        /// </summary>
+        public required string Publisher { get; set; }
+
+        /// <summary>
+        /// Metric status, is applied or not
+        /// </summary>
+        public required bool IsApplied { get; set; }
     }
 
-    public record CreateTreatmentResult(Guid Id);
+    public record CreateTreatmentProtocolResult(Guid Id);
 }

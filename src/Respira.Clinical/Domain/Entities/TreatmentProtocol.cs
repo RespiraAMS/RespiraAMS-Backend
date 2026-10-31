@@ -35,5 +35,20 @@ namespace Respira.Clinical.Domain.Entities
         /// this list has
         /// </summary>
         public ICollection<Criterion> Criteria { get; set; } = [];
+
+        /// <summary>
+        /// Version of the metric
+        /// </summary>
+        public required string Version { get; set; }
+
+        /// <summary>
+        /// Metric publisher
+        /// </summary>
+        public required string Publisher { get; set; }
+
+        /// <summary>
+        /// Metric status, is applied or not
+        /// </summary>
+        public required bool IsApplied { get; set; }
     }
 }

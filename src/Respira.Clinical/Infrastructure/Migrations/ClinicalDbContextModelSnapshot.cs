@@ -602,8 +602,15 @@ namespace Respira.Clinical.Infrastructure.Migrations
                     b.Property<DateTimeOffset?>("DeletedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<bool>("IsApplied")
+                        .HasColumnType("boolean");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
+
+                    b.Property<string>("Publisher")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<string>("Severity")
                         .IsRequired()
@@ -615,6 +622,10 @@ namespace Respira.Clinical.Infrastructure.Migrations
 
                     b.Property<DateTimeOffset>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Version")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 

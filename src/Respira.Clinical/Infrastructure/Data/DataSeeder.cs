@@ -299,7 +299,7 @@ namespace Respira.Clinical.Infrastructure.Data
                 };
             }).ToList();
 
-            var treatments = dto.Treatments.Select(t =>
+            var treatments = dto.TreatmentProtocols.Select(t =>
             {
                 var treatmentId = GenerateId(t.Id);
                 var pathogenIds = t.PathogenIds.Select(p => pathogenLookup[p]);
@@ -320,6 +320,9 @@ namespace Respira.Clinical.Infrastructure.Data
                     Pathogens = [.. pathogenIds],
                     Criteria = [.. criterionIds],
                     Treatments = [.. medicines],
+                    Publisher = t.Publisher,
+                    IsApplied = t.IsApplied,
+                    Version = t.Version
                 };
             }).ToList();
 

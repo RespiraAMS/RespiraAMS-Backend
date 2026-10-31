@@ -6,17 +6,20 @@ namespace Respira.Clinical.Application.Features.TreatmentProtocols.UpdateTreatme
 {
     public class UpdateTreatmentProtocolMapper : IUpdateMapper<TreatmentProtocol, UpdateTreatmentProtocolCommand>
     {
-        public Result MapModel(TreatmentProtocol model, UpdateTreatmentProtocolCommand protocolCommand)
+        public Result MapModel(TreatmentProtocol model, UpdateTreatmentProtocolCommand command)
         {
-            model.Severity = protocolCommand.Severity;
-            model.TreatmentSite = protocolCommand.TreatmentSite;
+            model.Severity = command.Severity;
+            model.TreatmentSite = command.TreatmentSite;
+            model.Publisher = command.Publisher;
+            model.Version = command.Version;
+            model.IsApplied = command.IsApplied;
             model.UpdatedAt = DateTimeOffset.UtcNow;
             return Result.Success(ApplicationStatus.Success);
         }
 
-        public Result MapModel(TreatmentProtocol model, UpdateTreatmentProtocolCommand protocolCommand, object dependencies)
+        public Result MapModel(TreatmentProtocol model, UpdateTreatmentProtocolCommand command, object dependencies)
         {
-            return MapModel(model, protocolCommand);
+            return MapModel(model, command);
         }
     }
 }
