@@ -459,7 +459,7 @@ namespace Respira.Clinical.Domain.Services
         /// <param name="group1">Antibiotic group 1</param>
         /// <param name="group2">Antibiotic group 2</param>
         /// <returns>Result, true if  groups has same command ancestor</returns>
-        public Result<bool> IsAntibioticGroupHasCommonAncestor(ClinicalContext context, AntibioticGroup group1, AntibioticGroup group2)
+        public Result<bool> AreAntibioticGroupsHaveCommonAncestor(ClinicalContext context, AntibioticGroup group1, AntibioticGroup group2)
         {
             // Check if group 1 and group 2 is in context
             if (!context.AntibioticGroups.Any(g => g.Id.Equals(group1.Id)))
@@ -500,14 +500,14 @@ namespace Respira.Clinical.Domain.Services
 
             for (int i = 0; i < antibiotics.Count - 1; i++)
             {
-                for (int j = 1; j < antibiotics.Count; j++)
+                for (int j = i + 1; j < antibiotics.Count; j++)
                 {
-                    var result = IsAntibioticGroupHasCommonAncestor(
+                    var result = AreAntibioticGroupsHaveCommonAncestor(
                         context,
                         antibiotics[i].AntibioticGroup,
                         antibiotics[j].AntibioticGroup);
                     if (result.IsFailure()) return Result<bool>.Failure(result.Error!);
-                    if (!result.Data) return Result<bool>.Success(ApplicationStatus.Success, false);
+                    if (result.Data) return Result<bool>.Success(ApplicationStatus.Success, false);
                 }
             }
 
@@ -832,7 +832,7 @@ namespace Respira.Clinical.Domain.Services
 
             logger.LogDebug("Done filtering candidates by pathogens: {Detail}", new
             {
-                FiltererByCriteriaCount = filtererByCriteria.Count(),
+                FiltererByCriteriaCount = filtererByCriteria.Count,
                 FilterByPathogenCount = filteredByPathogen.Count
             });
 

@@ -71,6 +71,11 @@ namespace Respira.Clinical.Domain.Test.Services
             return _context.AntibioticGroups.FirstOrDefault(x => x.Name.Equals(Name)) ?? throw new ArgumentException($"Antibiotic group {Name} not found");
         }
 
+        private static Antibiotic Antibiotic(string Name)
+        {
+            return _context.Antibiotics.FirstOrDefault(x => x.Name.Equals(Name)) ?? throw new ArgumentException($"Antibiotic {Name} not found");
+        }
+
         #region Test eGFR
 
         [Theory]
@@ -448,7 +453,7 @@ namespace Respira.Clinical.Domain.Test.Services
         [MemberData(nameof(IsAncestorCase))]
         public void IsAntibioticGroupHasCommonAncestor_Success(AntibioticGroup group1, AntibioticGroup group2, bool expected)
         {
-            var result = _service.IsAntibioticGroupHasCommonAncestor(_context, group1, group2);
+            var result = _service.AreAntibioticGroupsHaveCommonAncestor(_context, group1, group2);
             Assert.True(result.IsSuccess());
             Assert.Null(result.Error);
             Assert.Equal(ApplicationStatus.Success, result.StatusCode);
@@ -490,12 +495,48 @@ namespace Respira.Clinical.Domain.Test.Services
         [MemberData(nameof(IsAncestorCase_NotInContext))]
         public void IsAntibioticGroupHasCommonAncestor_GroupNotInContext_Failure(AntibioticGroup group1, AntibioticGroup group2)
         {
-            var result = _service.IsAntibioticGroupHasCommonAncestor(_context, group1, group2);
+            var result = _service.AreAntibioticGroupsHaveCommonAncestor(_context, group1, group2);
             Assert.True(result.IsFailure());
             Assert.NotNull(result.Error);
             Assert.Equal(ApplicationStatus.BadRequest, result.Error.StatusCode);
         }
 
         #endregion
+
+        #region IsMedicineCombinationValid
+
+        public static readonly TheoryData<string[], bool> Combination_Valid = [
+            new(["Cefotaxim", "Moxifloxacin", "Erythromycin"], true),
+            new(["Cefotaxim", "Moxifloxacin", "Erythromycin", "Linezolid"], true),
+            new(["Cefotaxim", "Moxifloxacin"], true),
+            new(["Cefotaxim", "Ceftazidim", "Penicilin G (Benzylpenicillin)"], false),
+            new(["Cefotaxim", "Amoxicillin", "Penicilin G (Benzylpenicillin)"], false),
+            new(["Cefotaxim"], true),
+        ];
+
+        [Theory]
+        [MemberData(nameof(Combination_Valid))]
+        public void IsMedicineCombinationValid_Success(string[] antibioticNames, bool expected)
+        {
+            var antibiotics = new List<Antibiotic>();
+            foreach (var name in antibioticNames)
+            {
+                antibiotics.Add(Antibiotic(name));
+            }
+            var treatment = new Treatment
+            {
+                TreatmentProtocolId = Guid.CreateVersion7(),
+                Combination = antibiotics
+            };
+
+            var result = _service.IsMedicineCombinationValid(_context, treatment);
+            Assert.True(result.IsSuccess());
+            Assert.Null(result.Error);
+            Assert.Equal(ApplicationStatus.Success, result.StatusCode);
+            Assert.Equal(expected, result.Data);
+        }
+
+        #endregion
+
     }
 }
