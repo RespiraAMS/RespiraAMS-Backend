@@ -10,32 +10,32 @@ namespace Respira.Clinical.Domain.Entities
         /// <summary>
         /// Scoring metric name
         /// </summary>
-        public string Name { get; set; }
+        public required string Name { get; set; }
 
         /// <summary>
         /// Scoring metric code. Preferably follow LOINC code
         /// </summary>
-        public string Code { get; set; }
+        public required string Code { get; set; }
 
         /// <summary>
         /// Scoring metric description
         /// </summary>
-        public string Description { get; set; }
+        public required string Description { get; set; }
 
         /// <summary>
         /// Version of the metric
         /// </summary>
-        public string Version { get; set; }
+        public required string Version { get; set; }
 
         /// <summary>
         /// Metric publisher
         /// </summary>
-        public string Publisher { get; set; }
+        public required string Publisher { get; set; }
 
         /// <summary>
         /// Metric status, is applied or not
         /// </summary>
-        public bool IsApplied { get; set; }
+        public required bool IsApplied { get; set; }
 
         /// <summary>
         /// Scoring rules
@@ -52,19 +52,6 @@ namespace Respira.Clinical.Domain.Entities
                 field = value;
             }
         } = [];
-
-        /// <summary>
-        /// This is just a parameterless constructor for EF Core stuff. For normal usage,
-        /// it's better to use the parameter constructor
-        /// </summary>
-        public ClinicalMetric()
-        {
-            Name = string.Empty;
-            Code = string.Empty;
-            Description = string.Empty;
-            Version = string.Empty;
-            Publisher = string.Empty;
-        }
 
         // A metric with no rules belongs to neither system: All() would vacuously be
         // true for both predicates on an empty collection, making every metric both

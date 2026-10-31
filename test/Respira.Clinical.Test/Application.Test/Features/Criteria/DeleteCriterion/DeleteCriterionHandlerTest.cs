@@ -117,6 +117,9 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.DeleteCriterion
                 Name = name,
                 Code = code,
                 Description = description,
+                Publisher = string.Empty,
+                Version = string.Empty,
+                IsApplied = true
             };
             await _context.ClinicalMetrics.AddAsync(metrics, TestContext.Current.CancellationToken);
             await _context.SaveChangesAsync(TestContext.Current.CancellationToken);
@@ -146,6 +149,9 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.DeleteCriterion
                 Severity = severity,
                 TreatmentSite = treatmentSite,
                 Criteria = [.. criteria],
+                Publisher = string.Empty,
+                Version = string.Empty,
+                IsApplied = true
             };
             await _context.TreatmentProtocols.AddAsync(treatment, TestContext.Current.CancellationToken);
             await _context.SaveChangesAsync(TestContext.Current.CancellationToken);

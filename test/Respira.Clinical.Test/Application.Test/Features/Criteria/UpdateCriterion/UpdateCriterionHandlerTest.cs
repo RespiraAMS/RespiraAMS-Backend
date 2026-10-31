@@ -145,6 +145,9 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.UpdateCriterion
                 Name = "Severity metrics CURB-65",
                 Code = "CURB-65",
                 Description = "CURB-65 metrics to assess severity of a patient",
+                Publisher = string.Empty,
+                Version = string.Empty,
+                IsApplied = true
             };
             await _context.ClinicalMetrics.AddAsync(metrics, TestContext.Current.CancellationToken);
             await _context.SaveChangesAsync(TestContext.Current.CancellationToken);
@@ -175,12 +178,18 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.UpdateCriterion
                 Severity = Severity.Severe,
                 TreatmentSite = TreatmentSite.IntensiveCareUnit,
                 Criteria = [target],
+                Publisher = string.Empty,
+                Version = string.Empty,
+                IsApplied = true
             };
             var controlTreatment = new TreatmentProtocol
             {
                 Severity = Severity.Mild,
                 TreatmentSite = TreatmentSite.Outpatient,
                 Criteria = [control],
+                Publisher = string.Empty,
+                Version = string.Empty,
+                IsApplied = true
             };
             await _context.TreatmentProtocols.AddRangeAsync(
                 [targetTreatment, controlTreatment], TestContext.Current.CancellationToken);
