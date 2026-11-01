@@ -4,6 +4,9 @@ namespace Respira.Clinical.Application.Features.TreatmentProtocols.DeleteTreatme
 {
     public record DeleteTreatmentProtocolCommand : ICommand
     {
+        /// <summary>
+        /// Treatment protocol ID
+        /// </summary>
         public required Guid Id { get; set; }
     }
 }

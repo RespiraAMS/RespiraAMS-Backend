@@ -7,9 +7,6 @@ namespace Respira.Clinical.Domain.Enums
     /// clinical variables, but we still add them here.
     /// </summary>
     [JsonConverter(typeof(JsonStringEnumConverter))]
-    /// <summary>
-    /// Other active infections (Appendix 5).
-    /// </summary>
     public enum InfectionType
     {
         #region Skin, soft tissue, bone & joint

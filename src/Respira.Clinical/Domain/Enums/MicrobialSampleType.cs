@@ -2,6 +2,9 @@ using System.Text.Json.Serialization;
 
 namespace Respira.Clinical.Domain.Enums
 {
+    /// <summary>
+    /// Microbial sample type (các mẫu xét nghiệm vi sinh)
+    /// </summary>
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum MicrobialSampleType
     {

@@ -16,6 +16,11 @@ namespace Respira.Clinical.API.Controllers
     public class AntibiogramsController(IMessageBus bus) : ControllerBase
     {
         [HttpPost]
+        [ProducesResponseType<Result<CreateAntibiogramResult>>(StatusCodes.Status201Created)]
+        [ProducesResponseType<Result>(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType<Result>(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType<Result>(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType<Result>(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> CreateAntibiogram([FromBody] CreateAntibiogramCommand req)
         {
             var result = await bus.InvokeAsync<Result<CreateAntibiogramResult>>(req);
@@ -23,14 +28,25 @@ namespace Respira.Clinical.API.Controllers
         }
 
         [HttpGet]
+        [ProducesResponseType<Result<Pagination<PagedAntibiogramItem>>>(StatusCodes.Status200OK)]
+        [ProducesResponseType<Result>(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType<Result>(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType<Result>(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType<Result>(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetPagedAntibiogram([FromQuery] GetPagedAntibiogramRequestDto req)
         {
-            var result = await bus.InvokeAsync<Result<Pagination<AntibiogramItem>>>(req.ToQuery());
+            var result = await bus.InvokeAsync<Result<Pagination<PagedAntibiogramItem>>>(req.ToQuery());
             return result.ToApiResponse();
         }
 
         [HttpPut]
         [Route("{id:guid}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType<Result>(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType<Result>(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType<Result>(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType<Result>(StatusCodes.Status404NotFound)]
+        [ProducesResponseType<Result>(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> UpdateAntibiogram(Guid id, [FromBody] UpdateAntibiogramRequestDto req)
         {
             var result = await bus.InvokeAsync<Result>(req.ToCommand(id));
@@ -39,6 +55,11 @@ namespace Respira.Clinical.API.Controllers
 
         [HttpDelete]
         [Route("{id:guid}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType<Result>(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType<Result>(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType<Result>(StatusCodes.Status404NotFound)]
+        [ProducesResponseType<Result>(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> DeleteAntibiogram(Guid id)
         {
             var result = await bus.InvokeAsync<Result>(new DeleteAntibiogramCommand { Id = id });

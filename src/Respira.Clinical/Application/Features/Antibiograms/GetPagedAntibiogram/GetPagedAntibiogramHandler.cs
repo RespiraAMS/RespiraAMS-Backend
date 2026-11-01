@@ -9,9 +9,9 @@ using X.PagedList.EF;
 namespace Respira.Clinical.Application.Features.Antibiograms.GetPagedAntibiogram
 {
     public class GetPagedAntibiogramHandler(IDbContext context, IPaginationFactory factory)
-        : IQueryHandler<GetPagedAntibiogramQuery, Result<Pagination<AntibiogramItem>>>
+        : IQueryHandler<GetPagedAntibiogramQuery, Result<Pagination<PagedAntibiogramItem>>>
     {
-        public async Task<Result<Pagination<AntibiogramItem>>> HandleAsync(GetPagedAntibiogramQuery query, CancellationToken cancellationToken = default)
+        public async Task<Result<Pagination<PagedAntibiogramItem>>> HandleAsync(GetPagedAntibiogramQuery query, CancellationToken cancellationToken = default)
         {
             // Apply filter
             var queryable = context.Antibiograms.AsQueryable();
@@ -32,7 +32,7 @@ namespace Respira.Clinical.Application.Features.Antibiograms.GetPagedAntibiogram
             var antibiograms = await queryable
                 .AsNoTracking()
                 .OrderByDescending(x => x.CreatedAt)
-                .Select(x => new AntibiogramItem
+                .Select(x => new PagedAntibiogramItem
                 {
                     Id = x.Id,
                     Pathogen = new PathogenResult(x.Pathogen.Id, x.Pathogen.Name),
@@ -48,7 +48,7 @@ namespace Respira.Clinical.Application.Features.Antibiograms.GetPagedAntibiogram
                 })
                 .ToPagedListAsync(query.Param.Page, query.Param.Size, cancellationToken: cancellationToken);
 
-            return Result<Pagination<AntibiogramItem>>.Success(ApplicationStatus.Success, factory.Create(antibiograms));
+            return Result<Pagination<PagedAntibiogramItem>>.Success(ApplicationStatus.Success, factory.Create(antibiograms));
         }
     }
 }
