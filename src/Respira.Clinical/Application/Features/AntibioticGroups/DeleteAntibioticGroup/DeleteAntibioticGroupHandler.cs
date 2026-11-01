@@ -20,21 +20,26 @@ namespace Respira.Clinical.Application.Features.AntibioticGroups.DeleteAntibioti
                 return Result.Failure(new ApplicationError(ApplicationStatus.BadRequest, "Antibiotic group not found"));
             }
 
-            // Delete antibiotic group - cascade delete all associating antibiotic
-            await context.ExecuteInTransactionAsync(async () =>
+            // Business rule: if this antibiotic group is used by either other group,
+            // or antibiotic, we FORBID deleting antibiotic group to preserve data integrity
+            if (await context.AntibioticGroups.AnyAsync(x => x.ParentId == group.Id, cancellationToken))
             {
-                // Soft delete antibiotic group
-                group.IsDeleted = true;
-                group.DeletedAt = DateTimeOffset.UtcNow;
+                return Result.Failure(new ApplicationError(
+                    ApplicationStatus.BusinessRuleViolation,
+                    "This antibiotic group is referenced by other group, cannot delete"));
+            }
 
-                // Cascade delete antibiotic
-                var count = await context.Antibiotics
-                    .Where(x => x.AntibioticGroupId == command.Id)
-                    .ExecuteUpdateAsync(x => x
-                        .SetProperty(a => a.IsDeleted, true)
-                        .SetProperty(a => a.DeletedAt, DateTimeOffset.UtcNow), cancellationToken);
-                logger.LogDebug("Cascade delete {count} antibiotics when delete antibiotic group {Id}", count, command.Id);
-            }, cancellationToken);
+            if (await context.Antibiotics.AnyAsync(x => x.AntibioticGroupId == group.Id, cancellationToken))
+            {
+                return Result.Failure(new ApplicationError(
+                    ApplicationStatus.BusinessRuleViolation,
+                    "This antibiotic group is referenced by other antibiotic, cannot delete"));
+            }
+
+            // Soft delete antibiotic group
+            group.IsDeleted = true;
+            group.DeletedAt = DateTimeOffset.UtcNow;
+            await context.SaveChangesAsync(cancellationToken);
             return Result.Success(ApplicationStatus.Deleted);
         }
     }

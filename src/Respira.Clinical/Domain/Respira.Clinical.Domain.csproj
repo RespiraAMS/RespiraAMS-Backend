@@ -3,9 +3,17 @@
         <TargetFramework>net10.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <!-- Enable XML documentation export -->
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <!-- Optional: Suppress compiler warnings for missing comments -->
+        <NoWarn>$(NoWarn);1591</NoWarn>
     </PropertyGroup>
 
     <ItemGroup>
         <ProjectReference Include="../../Respira.ServiceDefaults/Respira.ServiceDefaults.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <InternalsVisibleTo Include="Respira.Clinical.Domain.Test" />
     </ItemGroup>
 </Project>

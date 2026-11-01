@@ -42,7 +42,7 @@ namespace Respira.Clinical.Application.Test.Features.RiskFactors.DeleteRiskFacto
                 .ExecuteDeleteAsync(TestContext.Current.CancellationToken);
             await _context.RiskFactors.IgnoreQueryFilters()
                 .ExecuteDeleteAsync(TestContext.Current.CancellationToken);
-            await _context.Treatments.IgnoreQueryFilters()
+            await _context.TreatmentProtocols.IgnoreQueryFilters()
                 .ExecuteDeleteAsync(TestContext.Current.CancellationToken);
             await _context.ClinicalMetrics.IgnoreQueryFilters()
                 .ExecuteDeleteAsync(TestContext.Current.CancellationToken);
@@ -89,12 +89,16 @@ namespace Respira.Clinical.Application.Test.Features.RiskFactors.DeleteRiskFacto
         }
 
         private async Task<RiskFactor> SeedRiskFactorAsync(
-            Guid pathogenId, Guid criterionId, bool isDeleted = false)
+            Guid pathogenId,
+            Guid criterionId,
+            bool isCritical = false,
+            bool isDeleted = false)
         {
             var factor = new RiskFactor
             {
                 PathogenId = pathogenId,
                 CriterionId = criterionId,
+                IsCriticalFactor = isCritical,
                 IsDeleted = isDeleted,
                 DeletedAt = isDeleted ? DateTimeOffset.UtcNow : null,
             };

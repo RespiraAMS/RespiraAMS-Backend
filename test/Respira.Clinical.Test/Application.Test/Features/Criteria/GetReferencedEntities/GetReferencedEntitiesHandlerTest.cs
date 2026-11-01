@@ -42,7 +42,7 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.GetReferencedEntit
                 .ExecuteDeleteAsync(TestContext.Current.CancellationToken);
             await _context.RiskFactors.IgnoreQueryFilters()
                 .ExecuteDeleteAsync(TestContext.Current.CancellationToken);
-            await _context.Treatments.IgnoreQueryFilters()
+            await _context.TreatmentProtocols.IgnoreQueryFilters()
                 .ExecuteDeleteAsync(TestContext.Current.CancellationToken);
             await _context.ClinicalMetrics.IgnoreQueryFilters()
                 .ExecuteDeleteAsync(TestContext.Current.CancellationToken);
@@ -103,6 +103,9 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.GetReferencedEntit
                 Name = name,
                 Code = code,
                 Description = description,
+                Publisher = string.Empty,
+                Version = string.Empty,
+                IsApplied = true
             };
             await _context.ClinicalMetrics.AddAsync(metrics, TestContext.Current.CancellationToken);
             await _context.SaveChangesAsync(TestContext.Current.CancellationToken);
@@ -110,12 +113,16 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.GetReferencedEntit
         }
 
         private async Task<RiskFactor> SeedRiskFactorAsync(
-            Guid pathogenId, Guid criterionId, bool isDeleted = false)
+            Guid pathogenId,
+            Guid criterionId,
+            bool isCritical = false,
+            bool isDeleted = false)
         {
             var factor = new RiskFactor
             {
                 PathogenId = pathogenId,
                 CriterionId = criterionId,
+                IsCriticalFactor = isCritical,
                 IsDeleted = isDeleted,
                 DeletedAt = isDeleted ? DateTimeOffset.UtcNow : null,
             };
@@ -142,21 +149,24 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.GetReferencedEntit
             return rule;
         }
 
-        private async Task<Treatment> SeedTreatmentAsync(
+        private async Task<TreatmentProtocol> SeedTreatmentAsync(
             Severity severity,
             TreatmentSite treatmentSite,
             IEnumerable<Criterion> criteria,
             bool isDeleted = false)
         {
-            var treatment = new Treatment
+            var treatment = new TreatmentProtocol
             {
                 Severity = severity,
                 TreatmentSite = treatmentSite,
                 Criteria = [.. criteria],
+                Publisher = string.Empty,
+                Version = string.Empty,
+                IsApplied = true,
                 IsDeleted = isDeleted,
                 DeletedAt = isDeleted ? DateTimeOffset.UtcNow : null,
             };
-            await _context.Treatments.AddAsync(treatment, TestContext.Current.CancellationToken);
+            await _context.TreatmentProtocols.AddAsync(treatment, TestContext.Current.CancellationToken);
             await _context.SaveChangesAsync(TestContext.Current.CancellationToken);
             return treatment;
         }

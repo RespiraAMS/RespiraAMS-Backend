@@ -15,6 +15,9 @@ namespace Respira.Clinical.Domain.Models
         /// </summary>
         public required TreatmentSite TreatmentSite { get; set; }
 
+        /// <summary>
+        /// The list of invidual diagnosis result of severity metric
+        /// </summary>
         public required IEnumerable<MetricsSeverityDiagnosis> MetricsSeverityDiagnosis { get; set; }
 
         /// <summary>
@@ -45,16 +48,16 @@ namespace Respira.Clinical.Domain.Models
         public required IEnumerable<ClinicalVariable> MissingVariables { get; set; }
 
         /// <summary>
-        /// The list of antibiotics that patient is allergic to. This is important,
-        /// because the medicine recommendation MUST not have these allergic antibiotics
-        /// </summary>
-        public required IEnumerable<Antibiotic> Allergies { get; set; }
-
-        /// <summary>
         /// True if patient is pregnant or in lactation phase. This is important
         /// because some antibiotic may have negative effect on pregnant or lactating woman,
         /// so the final result MUST avoid them.
         /// </summary>
         public required bool IsPatientPregnantOrInLactationPhase { get; set; }
+
+        /// <summary>
+        /// Patient's eGFR. The value is null if not enough information is
+        /// provided for calculation
+        /// </summary>
+        public double? Egfr { get; set; }
     }
 }

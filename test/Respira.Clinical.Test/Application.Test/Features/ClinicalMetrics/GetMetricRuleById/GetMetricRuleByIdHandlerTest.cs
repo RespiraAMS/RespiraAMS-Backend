@@ -226,9 +226,9 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.GetMetricRu
          * Skipped: a live rule whose ClinicalMetric or Criterion navigation is soft
          * deleted would null deref in the projection (rule.ClinicalMetric.Name), but
          * that state cannot arise in reality - DeleteClinicalMetricHandler cascades the
-         * soft delete to every rule of the metric, DeleteCriterionHandler cascades to
-         * every rule of the criterion, and AddRule/UpdateRule only accept live parents,
-         * so a rule that is still live always has live navigations
+         * soft delete to every rule of the metric, DeleteCriterionHandler forbids
+         * deleting a criterion that rules still reference, and AddRule/UpdateRule only
+         * accept live parents, so a rule that is still live always has live navigations
          */
 
         #endregion

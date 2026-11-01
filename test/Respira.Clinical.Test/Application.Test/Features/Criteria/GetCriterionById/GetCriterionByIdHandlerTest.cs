@@ -46,7 +46,7 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.GetCriterionById
                 .ExecuteDeleteAsync(TestContext.Current.CancellationToken);
             await _context.RiskFactors.IgnoreQueryFilters()
                 .ExecuteDeleteAsync(TestContext.Current.CancellationToken);
-            await _context.Treatments.IgnoreQueryFilters()
+            await _context.TreatmentProtocols.IgnoreQueryFilters()
                 .ExecuteDeleteAsync(TestContext.Current.CancellationToken);
             await _context.Criteria.IgnoreQueryFilters()
                 .ExecuteDeleteAsync(TestContext.Current.CancellationToken);

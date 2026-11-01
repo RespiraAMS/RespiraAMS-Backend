@@ -20,6 +20,7 @@ namespace Respira.Clinical.Application.Test.Features.RiskFactors.CreateRiskFacto
             {
                 PathogenId = pathogenId,
                 CriterionId = criterionId,
+                IsCriticalFactor = true
             };
 
             var result = _mapper.ToModel(command);
@@ -32,6 +33,7 @@ namespace Respira.Clinical.Application.Test.Features.RiskFactors.CreateRiskFacto
 
             Assert.Equal(pathogenId, model.PathogenId);
             Assert.Equal(criterionId, model.CriterionId);
+            Assert.True(model.IsCriticalFactor);
             // Base generates the ID so the handler can return it right after saving
             Assert.NotEqual(Guid.Empty, model.Id);
 
@@ -51,6 +53,7 @@ namespace Respira.Clinical.Application.Test.Features.RiskFactors.CreateRiskFacto
             {
                 PathogenId = Guid.CreateVersion7(),
                 CriterionId = Guid.CreateVersion7(),
+                IsCriticalFactor = false,
             };
 
             var withoutDependencies = _mapper.ToModel(command);
@@ -63,6 +66,7 @@ namespace Respira.Clinical.Application.Test.Features.RiskFactors.CreateRiskFacto
 
             Assert.Equal(withoutDependencies.Data.PathogenId, withObjectDependencies.Data.PathogenId);
             Assert.Equal(withoutDependencies.Data.CriterionId, withObjectDependencies.Data.CriterionId);
+            Assert.Equal(withoutDependencies.Data.IsCriticalFactor, withObjectDependencies.Data.IsCriticalFactor);
 
             // Every call mints its own entity, so one command never shares a row
             Assert.NotEqual(withoutDependencies.Data.Id, withObjectDependencies.Data.Id);
@@ -80,6 +84,7 @@ namespace Respira.Clinical.Application.Test.Features.RiskFactors.CreateRiskFacto
             {
                 PathogenId = Guid.Empty,
                 CriterionId = Guid.Empty,
+                IsCriticalFactor = true,
             };
 
             var result = _mapper.ToModel(command);

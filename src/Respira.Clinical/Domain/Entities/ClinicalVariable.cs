@@ -102,7 +102,7 @@ namespace Respira.Clinical.Domain.Entities
 
         public override ClinicalValueType ValueType => ClinicalValueType.Categorical;
 
-        private string SanitizeCategory(string value)
+        public static string SanitizeCategory(string value)
         {
             // Trim space and normalize to upper case
             var sanitized = value.Trim().ToUpper();
