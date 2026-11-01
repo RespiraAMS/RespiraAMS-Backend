@@ -19,38 +19,33 @@ namespace Respira.Clinical.Application.Features.Criteria.DeleteCriterion
                 return Result.Failure(new ApplicationError(ApplicationStatus.BadRequest, "Criterion not found"));
             }
 
-            // Delete criterion and all entities that associated with it
-            await context.ExecuteInTransactionAsync(async () =>
+            // Business rule: if this criterion is being used somewhere, forbid delete
+            // to keep data integrity
+            if (await context.RiskFactors.AnyAsync(x => x.CriterionId == command.Id, cancellationToken))
             {
-                // Soft delete criterion
-                criterion.IsDeleted = true;
-                criterion.DeletedAt = DateTimeOffset.UtcNow;
+                return Result.Failure(new ApplicationError(
+                    ApplicationStatus.BusinessRuleViolation,
+                    "This criterion is being referenced in other risk factors, cannot delete"));
+            }
 
-                // Delete all risk factors that used this criterion
-                var factorCount = await context.RiskFactors
-                    .Where(x => x.CriterionId == command.Id)
-                    .ExecuteUpdateAsync(x => x
-                        .SetProperty(rf => rf.IsDeleted, true)
-                        .SetProperty(rf => rf.DeletedAt, DateTimeOffset.UtcNow), cancellationToken);
+            if (await context.MetricRules.AnyAsync(x => x.CriterionId == command.Id, cancellationToken))
+            {
+                return Result.Failure(new ApplicationError(
+                    ApplicationStatus.BusinessRuleViolation,
+                    "This criterion is being referenced in other metric rules, cannot delete"));
+            }
 
-                // Delete all clinical metrics rule that used this criterion
-                var ruleCount = await context.MetricRules
-                    .Where(x => x.CriterionId == command.Id)
-                    .ExecuteUpdateAsync(x => x
-                        .SetProperty(mr => mr.IsDeleted, true)
-                        .SetProperty(mr => mr.DeletedAt, DateTimeOffset.UtcNow), cancellationToken);
+            if (await context.TreatmentProtocols.AnyAsync(x => x.Criteria.Select(c => c.Id).Contains(command.Id), cancellationToken))
+            {
+                return Result.Failure(new ApplicationError(
+                    ApplicationStatus.BusinessRuleViolation,
+                    "This criterion is being referenced in other treatment protocols, cannot delete"));
+            }
 
-                // NOTE: Unlike RiskFactor and MetricsRule, which depend on heavy to criterion (risk factor and
-                // metrics rules are simply just criteria with additional information), treatment is
-                // a strong entity that can exist independently, so it won't be cascade deleted
-
-                logger.LogDebug("Cascade delete criterion success: {detail}", new
-                {
-                    factorCount,
-                    ruleCount,
-                });
-            }, cancellationToken);
-
+            // Soft delete criterion
+            criterion.IsDeleted = true;
+            criterion.DeletedAt = DateTimeOffset.UtcNow;
+            await context.SaveChangesAsync(cancellationToken);
             return Result.Success(ApplicationStatus.Deleted);
         }
     }

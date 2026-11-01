@@ -54,6 +54,8 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.DeleteCriterion
                 .ExecuteDeleteAsync(TestContext.Current.CancellationToken);
         }
 
+        #region Seed helpers
+
         /*
          * The two criteria every scenario seeds: the target of the delete and an
          * unrelated control that must never be touched. The formulas mirror the real
@@ -68,6 +70,7 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.DeleteCriterion
                 new NumericConstantFormula(65),
                 ExpressionOperator.Gte)
         };
+
         private static Criterion CreateHypotensionCriterion() => new()
         {
             Name = "Huyết áp tâm thu < 90 mmHg",
@@ -97,13 +100,16 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.DeleteCriterion
             return pathogen;
         }
 
-        private async Task<RiskFactor> SeedRiskFactorAsync(Guid pathogenId, Guid criterionId, bool isCritical = false)
+        private async Task<RiskFactor> SeedRiskFactorAsync(
+            Guid pathogenId, Guid criterionId, bool isCritical = false, bool softDeleted = false)
         {
             var factor = new RiskFactor
             {
                 PathogenId = pathogenId,
                 CriterionId = criterionId,
                 IsCriticalFactor = isCritical,
+                IsDeleted = softDeleted,
+                DeletedAt = softDeleted ? DateTimeOffset.UtcNow.AddDays(-1) : null,
             };
             await _context.RiskFactors.AddAsync(factor, TestContext.Current.CancellationToken);
             await _context.SaveChangesAsync(TestContext.Current.CancellationToken);
@@ -119,7 +125,8 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.DeleteCriterion
                 Description = description,
                 Publisher = string.Empty,
                 Version = string.Empty,
-                IsApplied = true
+                IsApplied = true,
+                Rules = [],
             };
             await _context.ClinicalMetrics.AddAsync(metrics, TestContext.Current.CancellationToken);
             await _context.SaveChangesAsync(TestContext.Current.CancellationToken);
@@ -128,13 +135,34 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.DeleteCriterion
 
         // Every CURB-65 criterion contributes exactly 1 point, so the score function is
         // a constant 1 rather than an arbitrary number
-        private async Task<MetricRule> SeedScoringRuleAsync(Guid metricsId, Guid criterionId)
+        private async Task<ScoringRule> SeedScoringRuleAsync(
+            Guid metricsId, Guid criterionId, bool softDeleted = false)
         {
             var rule = new ScoringRule
             {
                 ClinicalMetricId = metricsId,
                 CriterionId = criterionId,
                 ScoreFunction = new NumericConstantFormula(1),
+                IsDeleted = softDeleted,
+                DeletedAt = softDeleted ? DateTimeOffset.UtcNow.AddDays(-1) : null,
+            };
+            await _context.MetricRules.AddAsync(rule, TestContext.Current.CancellationToken);
+            await _context.SaveChangesAsync(TestContext.Current.CancellationToken);
+            return rule;
+        }
+
+        // A major/minor rule is the second concrete metric rule type, so it exercises the
+        // same MetricRules check through the TPH discriminator
+        private async Task<MajorMinorRule> SeedMajorMinorRuleAsync(
+            Guid metricsId, Guid criterionId, bool isMajor, bool softDeleted = false)
+        {
+            var rule = new MajorMinorRule
+            {
+                ClinicalMetricId = metricsId,
+                CriterionId = criterionId,
+                IsMajor = isMajor,
+                IsDeleted = softDeleted,
+                DeletedAt = softDeleted ? DateTimeOffset.UtcNow.AddDays(-1) : null,
             };
             await _context.MetricRules.AddAsync(rule, TestContext.Current.CancellationToken);
             await _context.SaveChangesAsync(TestContext.Current.CancellationToken);
@@ -142,7 +170,10 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.DeleteCriterion
         }
 
         private async Task<TreatmentProtocol> SeedTreatmentAsync(
-            Severity severity, TreatmentSite treatmentSite, params Criterion[] criteria)
+            Severity severity,
+            TreatmentSite treatmentSite,
+            Criterion[] criteria,
+            bool softDeleted = false)
         {
             var treatment = new TreatmentProtocol
             {
@@ -151,7 +182,9 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.DeleteCriterion
                 Criteria = [.. criteria],
                 Publisher = string.Empty,
                 Version = string.Empty,
-                IsApplied = true
+                IsApplied = true,
+                IsDeleted = softDeleted,
+                DeletedAt = softDeleted ? DateTimeOffset.UtcNow.AddDays(-1) : null,
             };
             await _context.TreatmentProtocols.AddAsync(treatment, TestContext.Current.CancellationToken);
             await _context.SaveChangesAsync(TestContext.Current.CancellationToken);
@@ -174,12 +207,27 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.DeleteCriterion
             Assert.Null(entity.DeletedAt);
         }
 
+        private async Task AssertNothingSoftDeletedAsync()
+        {
+            await using var freshContext = new ClinicalDbContext(_options);
+            Assert.Equal(0, await freshContext.Criteria.IgnoreQueryFilters()
+                .CountAsync(x => x.IsDeleted, TestContext.Current.CancellationToken));
+            Assert.Equal(0, await freshContext.RiskFactors.IgnoreQueryFilters()
+                .CountAsync(x => x.IsDeleted, TestContext.Current.CancellationToken));
+            Assert.Equal(0, await freshContext.MetricRules.IgnoreQueryFilters()
+                .CountAsync(x => x.IsDeleted, TestContext.Current.CancellationToken));
+            Assert.Equal(0, await freshContext.TreatmentProtocols.IgnoreQueryFilters()
+                .CountAsync(x => x.IsDeleted, TestContext.Current.CancellationToken));
+        }
+
+        #endregion
+
         #region Happy path
 
         [Fact]
         public async Task DeleteCriterion_WithoutAssociations_Success()
         {
-            // Lower boundary of the cascade: nothing references the deleted criterion
+            // A criterion that no risk factor, metric rule or treatment protocol mentions
             var target = await SeedCriterionAsync(CreateAgeCriterion());
             var other = await SeedCriterionAsync(CreateHypotensionCriterion());
 
@@ -212,46 +260,35 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.DeleteCriterion
         }
 
         [Fact]
-        public async Task DeleteCriterion_SingleRiskFactor_CascadeDeleted_Success()
+        public async Task DeleteCriterion_OnlySoftDeletedReferences_Success()
         {
-            // Boundary: exactly one risk factor references the deleted criterion
+            /*
+             * Soft-deleted risk factors, metric rules and treatment protocols are hidden
+             * by the query filter, so they are no longer part of the clinical knowledge
+             * base and must not forbid the delete. Their own deletion timestamps and their
+             * links to the criterion must stay untouched
+             */
             var target = await SeedCriterionAsync(CreateAgeCriterion());
             var other = await SeedCriterionAsync(CreateHypotensionCriterion());
             var pathogen = await SeedPathogenAsync(
                 "Streptococcus pneumoniae",
                 "Gram-positive diplococcus, most common cause of community-acquired pneumonia",
                 isAtypical: false);
-            var targetFactor = await SeedRiskFactorAsync(pathogen.Id, target.Id);
-            var otherFactor = await SeedRiskFactorAsync(pathogen.Id, other.Id);
-
-            var result = await _handler.HandleAsync(
-                new DeleteCriterionCommand { Id = target.Id }, TestContext.Current.CancellationToken);
-
-            Assert.True(result.IsSuccess());
-            Assert.Null(result.Error);
-            Assert.Equal(ApplicationStatus.Deleted, result.StatusCode);
-
-            await using var freshContext = new ClinicalDbContext(_options);
-            await AssertSoftDeletedAsync(freshContext.RiskFactors, targetFactor.Id);
-            await AssertNotDeletedAsync(freshContext.RiskFactors, otherFactor.Id);
-
-            // The pathogen is a parent of the risk factor, not a cascade target
-            await AssertNotDeletedAsync(freshContext.Pathogens, pathogen.Id);
-            await AssertNotDeletedAsync(freshContext.Criteria, other.Id);
-        }
-
-        [Fact]
-        public async Task DeleteCriterion_ScoringRule_CascadeDeleted_Success()
-        {
-            // Boundary: exactly one metrics rule references the deleted criterion
-            var target = await SeedCriterionAsync(CreateAgeCriterion());
-            var other = await SeedCriterionAsync(CreateHypotensionCriterion());
             var metrics = await SeedMetricAsync(
                 "Severity metrics CURB-65",
                 "CURB-65",
                 "CURB-65 metrics to assess severity of a patient");
-            var targetRule = await SeedScoringRuleAsync(metrics.Id, target.Id);
-            var otherRule = await SeedScoringRuleAsync(metrics.Id, other.Id);
+
+            var deletedFactor = await SeedRiskFactorAsync(
+                pathogen.Id, target.Id, softDeleted: true);
+            var deletedRule = await SeedScoringRuleAsync(
+                metrics.Id, target.Id, softDeleted: true);
+            var deletedTreatment = await SeedTreatmentAsync(
+                Severity.Severe, TreatmentSite.IntensiveCareUnit, [target], softDeleted: true);
+
+            var factorDeletedAt = (await LoadRiskFactorAsync(deletedFactor.Id)).DeletedAt;
+            var ruleDeletedAt = (await LoadMetricRuleAsync(deletedRule.Id)).DeletedAt;
+            var treatmentDeletedAt = (await LoadTreatmentAsync(deletedTreatment.Id)).DeletedAt;
 
             var result = await _handler.HandleAsync(
                 new DeleteCriterionCommand { Id = target.Id }, TestContext.Current.CancellationToken);
@@ -259,55 +296,134 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.DeleteCriterion
             Assert.True(result.IsSuccess());
             Assert.Null(result.Error);
             Assert.Equal(ApplicationStatus.Deleted, result.StatusCode);
+            await AssertSoftDeletedAsync(_context.Criteria, target.Id);
 
-            await using var freshContext = new ClinicalDbContext(_options);
-            await AssertSoftDeletedAsync(freshContext.MetricRules, targetRule.Id);
-            await AssertNotDeletedAsync(freshContext.MetricRules, otherRule.Id);
+            // The already deleted references keep their own timestamps and stay linked
+            var keptFactor = await LoadRiskFactorAsync(deletedFactor.Id);
+            Assert.True(keptFactor.IsDeleted);
+            Assert.Equal(factorDeletedAt, keptFactor.DeletedAt);
+            Assert.Equal(target.Id, keptFactor.CriterionId);
 
-            // Only the rule cascades, the metric itself keeps living
-            await AssertNotDeletedAsync(freshContext.ClinicalMetrics, metrics.Id);
+            var keptRule = await LoadMetricRuleAsync(deletedRule.Id);
+            Assert.True(keptRule.IsDeleted);
+            Assert.Equal(ruleDeletedAt, keptRule.DeletedAt);
+            Assert.Equal(target.Id, keptRule.CriterionId);
 
-            // The score function of the surviving rule survives the jsonb round trip
-            var keptRule = await freshContext.MetricRules.IgnoreQueryFilters()
-                .OfType<ScoringRule>()
-                .SingleAsync(x => x.Id == otherRule.Id, TestContext.Current.CancellationToken);
-            Assert.Equal(
-                1m, Assert.IsType<NumericConstantFormula>(keptRule.ScoreFunction).Constant);
+            var keptTreatment = await LoadTreatmentAsync(deletedTreatment.Id);
+            Assert.True(keptTreatment.IsDeleted);
+            Assert.Equal(treatmentDeletedAt, keptTreatment.DeletedAt);
+            Assert.Contains(keptTreatment.Criteria, x => x.Id == target.Id);
+
+            // Parents and the control criterion are never deleted
+            await AssertNotDeletedAsync(_context.Pathogens, pathogen.Id);
+            await AssertNotDeletedAsync(_context.ClinicalMetrics, metrics.Id);
+            await AssertNotDeletedAsync(_context.Criteria, other.Id);
         }
 
+        #endregion
+
+        #region Fail path
+
         [Fact]
-        public async Task DeleteCriterion_SingleTreatment_Untouch_Success()
+        public async Task DeleteCriterion_ReferencedByRiskFactor_Fail()
         {
-            // Boundary: exactly one treatment protocol references the deleted criterion
+            // Business rule: a live risk factor is evaluated with this criterion
             var target = await SeedCriterionAsync(CreateAgeCriterion());
-            var other = await SeedCriterionAsync(CreateHypotensionCriterion());
-            var targetTreatment = await SeedTreatmentAsync(
-                Severity.Moderate, TreatmentSite.Inpatient, target);
-            var otherTreatment = await SeedTreatmentAsync(
-                Severity.Mild, TreatmentSite.Outpatient, other);
+            var pathogen = await SeedPathogenAsync(
+                "Streptococcus pneumoniae",
+                "Gram-positive diplococcus, most common cause of community-acquired pneumonia",
+                isAtypical: false);
+            var factor = await SeedRiskFactorAsync(pathogen.Id, target.Id);
 
             var result = await _handler.HandleAsync(
                 new DeleteCriterionCommand { Id = target.Id }, TestContext.Current.CancellationToken);
 
-            Assert.True(result.IsSuccess());
-            Assert.Null(result.Error);
-            Assert.Equal(ApplicationStatus.Deleted, result.StatusCode);
+            Assert.True(result.IsFailure());
+            Assert.NotNull(result.Error);
+            Assert.Equal(ApplicationStatus.BusinessRuleViolation, result.StatusCode);
 
-            await using var freshContext = new ClinicalDbContext(_options);
-            await AssertNotDeletedAsync(freshContext.TreatmentProtocols, targetTreatment.Id);
-            await AssertNotDeletedAsync(freshContext.TreatmentProtocols, otherTreatment.Id);
-            await AssertNotDeletedAsync(freshContext.Criteria, other.Id);
+            // Nothing may be soft deleted when the rule is violated
+            await AssertNothingSoftDeletedAsync();
+            await AssertNotDeletedAsync(_context.Criteria, target.Id);
+            await AssertNotDeletedAsync(_context.RiskFactors, factor.Id);
         }
 
         [Fact]
-        public async Task DeleteCriterion_AllAssociations_UpperBoundaryCascade_Success()
+        public async Task DeleteCriterion_ReferencedByScoringRule_Fail()
         {
-            /*
-             * Upper boundary of the cascade: several of every associated kind at once,
-             * plus a control set on a second criterion that must not be touched
-             */
+            // Business rule: a scoring metric evaluates this criterion
             var target = await SeedCriterionAsync(CreateAgeCriterion());
-            var other = await SeedCriterionAsync(CreateHypotensionCriterion());
+            var metrics = await SeedMetricAsync(
+                "Severity metrics CURB-65",
+                "CURB-65",
+                "CURB-65 metrics to assess severity of a patient");
+            var rule = await SeedScoringRuleAsync(metrics.Id, target.Id);
+
+            var result = await _handler.HandleAsync(
+                new DeleteCriterionCommand { Id = target.Id }, TestContext.Current.CancellationToken);
+
+            Assert.True(result.IsFailure());
+            Assert.NotNull(result.Error);
+            Assert.Equal(ApplicationStatus.BusinessRuleViolation, result.StatusCode);
+
+            await AssertNothingSoftDeletedAsync();
+            await AssertNotDeletedAsync(_context.Criteria, target.Id);
+            await AssertNotDeletedAsync(_context.MetricRules, rule.Id);
+        }
+
+        [Fact]
+        public async Task DeleteCriterion_ReferencedByMajorMinorRule_Fail()
+        {
+            // The second concrete metric rule type must be caught by the same rule
+            var target = await SeedCriterionAsync(CreateHypotensionCriterion());
+            var metrics = await SeedMetricAsync(
+                "ICU hospitalization criteria by IDSA/ATS",
+                "IDSA/ATS",
+                "IDSA/ATS metrics to assess whether a severe patient need ICU or not");
+            var rule = await SeedMajorMinorRuleAsync(metrics.Id, target.Id, isMajor: true);
+
+            var result = await _handler.HandleAsync(
+                new DeleteCriterionCommand { Id = target.Id }, TestContext.Current.CancellationToken);
+
+            Assert.True(result.IsFailure());
+            Assert.NotNull(result.Error);
+            Assert.Equal(ApplicationStatus.BusinessRuleViolation, result.StatusCode);
+
+            await AssertNothingSoftDeletedAsync();
+            await AssertNotDeletedAsync(_context.Criteria, target.Id);
+            await AssertNotDeletedAsync(_context.MetricRules, rule.Id);
+        }
+
+        [Fact]
+        public async Task DeleteCriterion_ReferencedByTreatmentProtocol_Fail()
+        {
+            // Business rule: the protocol's applicability depends on this criterion
+            var target = await SeedCriterionAsync(CreateAgeCriterion());
+            var treatment = await SeedTreatmentAsync(
+                Severity.Moderate, TreatmentSite.Inpatient, [target]);
+
+            var result = await _handler.HandleAsync(
+                new DeleteCriterionCommand { Id = target.Id }, TestContext.Current.CancellationToken);
+
+            Assert.True(result.IsFailure());
+            Assert.NotNull(result.Error);
+            Assert.Equal(ApplicationStatus.BusinessRuleViolation, result.StatusCode);
+
+            await AssertNothingSoftDeletedAsync();
+
+            // The protocol is a strong entity, so it must not be cascaded or removed
+            await AssertNotDeletedAsync(_context.TreatmentProtocols, treatment.Id);
+            await AssertNotDeletedAsync(_context.Criteria, target.Id);
+
+            var kept = await LoadTreatmentAsync(treatment.Id);
+            Assert.Contains(kept.Criteria, x => x.Id == target.Id);
+        }
+
+        [Fact]
+        public async Task DeleteCriterion_ReferencedByAll_Fail()
+        {
+            // Upper boundary of the rule: every kind of reference exists at once
+            var target = await SeedCriterionAsync(CreateAgeCriterion());
             var pathogen = await SeedPathogenAsync(
                 "Klebsiella pneumoniae",
                 "Gram-negative bacillus causing hospital-acquired pneumonia",
@@ -317,62 +433,24 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.DeleteCriterion
                 "CURB-65",
                 "CURB-65 metrics to assess severity of a patient");
 
-            var targetFactorOne = await SeedRiskFactorAsync(pathogen.Id, target.Id);
-            var targetFactorTwo = await SeedRiskFactorAsync(pathogen.Id, target.Id);
-            var otherFactor = await SeedRiskFactorAsync(pathogen.Id, other.Id);
-
-            var targetRuleOne = await SeedScoringRuleAsync(metrics.Id, target.Id);
-            var targetRuleTwo = await SeedScoringRuleAsync(metrics.Id, target.Id);
-            var otherRule = await SeedScoringRuleAsync(metrics.Id, other.Id);
-
-            var targetTreatmentOne = await SeedTreatmentAsync(
-                Severity.Severe, TreatmentSite.IntensiveCareUnit, target);
-            var targetTreatmentTwo = await SeedTreatmentAsync(
-                Severity.Moderate, TreatmentSite.Inpatient, target);
-            var otherTreatment = await SeedTreatmentAsync(
-                Severity.Mild, TreatmentSite.Outpatient, other);
+            var factor = await SeedRiskFactorAsync(pathogen.Id, target.Id);
+            var rule = await SeedScoringRuleAsync(metrics.Id, target.Id);
+            var treatment = await SeedTreatmentAsync(
+                Severity.Severe, TreatmentSite.IntensiveCareUnit, [target]);
 
             var result = await _handler.HandleAsync(
                 new DeleteCriterionCommand { Id = target.Id }, TestContext.Current.CancellationToken);
 
-            Assert.True(result.IsSuccess());
-            Assert.Null(result.Error);
-            Assert.Equal(ApplicationStatus.Deleted, result.StatusCode);
+            Assert.True(result.IsFailure());
+            Assert.NotNull(result.Error);
+            Assert.Equal(ApplicationStatus.BusinessRuleViolation, result.StatusCode);
 
-            await using var freshContext = new ClinicalDbContext(_options);
-
-            // The criterion itself
-            await AssertSoftDeletedAsync(freshContext.Criteria, target.Id);
-
-            // Every associated row of the deleted criterion
-            await AssertSoftDeletedAsync(freshContext.RiskFactors, targetFactorOne.Id);
-            await AssertSoftDeletedAsync(freshContext.RiskFactors, targetFactorTwo.Id);
-            await AssertSoftDeletedAsync(freshContext.MetricRules, targetRuleOne.Id);
-            await AssertSoftDeletedAsync(freshContext.MetricRules, targetRuleTwo.Id);
-            await AssertNotDeletedAsync(freshContext.TreatmentProtocols, targetTreatmentOne.Id);
-            await AssertNotDeletedAsync(freshContext.TreatmentProtocols, targetTreatmentTwo.Id);
-
-            Assert.Equal(2, await freshContext.RiskFactors.IgnoreQueryFilters()
-                .CountAsync(x => x.CriterionId == target.Id, TestContext.Current.CancellationToken));
-            Assert.Equal(2, await freshContext.MetricRules.IgnoreQueryFilters()
-                .CountAsync(x => x.CriterionId == target.Id, TestContext.Current.CancellationToken));
-            Assert.Equal(2, await freshContext.TreatmentProtocols.IgnoreQueryFilters()
-                .CountAsync(x => x.Criteria.Any(c => c.Id == target.Id), TestContext.Current.CancellationToken));
-
-            // The control set of the second criterion stays live
-            await AssertNotDeletedAsync(freshContext.RiskFactors, otherFactor.Id);
-            await AssertNotDeletedAsync(freshContext.MetricRules, otherRule.Id);
-            await AssertNotDeletedAsync(freshContext.TreatmentProtocols, otherTreatment.Id);
-            await AssertNotDeletedAsync(freshContext.Criteria, other.Id);
-
-            // Parents of the cascade are never deleted themselves
-            await AssertNotDeletedAsync(freshContext.Pathogens, pathogen.Id);
-            await AssertNotDeletedAsync(freshContext.ClinicalMetrics, metrics.Id);
+            await AssertNothingSoftDeletedAsync();
+            await AssertNotDeletedAsync(_context.Criteria, target.Id);
+            await AssertNotDeletedAsync(_context.RiskFactors, factor.Id);
+            await AssertNotDeletedAsync(_context.MetricRules, rule.Id);
+            await AssertNotDeletedAsync(_context.TreatmentProtocols, treatment.Id);
         }
-
-        #endregion
-
-        #region Fail path
 
         [Fact]
         public async Task DeleteCriterion_UnknownId_Fail()
@@ -393,15 +471,8 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.DeleteCriterion
             Assert.Equal(ApplicationStatus.BadRequest, result.StatusCode);
 
             // Nothing must be soft-deleted when the target does not exist
-            await using var freshContext = new ClinicalDbContext(_options);
-            Assert.Equal(0, await freshContext.Criteria.IgnoreQueryFilters()
-                .CountAsync(x => x.IsDeleted, TestContext.Current.CancellationToken));
-            Assert.Equal(0, await freshContext.RiskFactors.IgnoreQueryFilters()
-                .CountAsync(x => x.IsDeleted, TestContext.Current.CancellationToken));
-            Assert.Equal(0, await freshContext.MetricRules.IgnoreQueryFilters()
-                .CountAsync(x => x.IsDeleted, TestContext.Current.CancellationToken));
-            Assert.Equal(0, await freshContext.TreatmentProtocols.IgnoreQueryFilters()
-                .CountAsync(x => x.IsDeleted, TestContext.Current.CancellationToken));
+            await AssertNothingSoftDeletedAsync();
+            await AssertNotDeletedAsync(_context.Criteria, target.Id);
         }
 
         [Fact]
@@ -417,35 +488,27 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.DeleteCriterion
             Assert.NotNull(result.Error);
             Assert.Equal(ApplicationStatus.BadRequest, result.StatusCode);
 
-            await using var freshContext = new ClinicalDbContext(_options);
-            Assert.Equal(0, await freshContext.Criteria.IgnoreQueryFilters()
-                .CountAsync(x => x.IsDeleted, TestContext.Current.CancellationToken));
+            await AssertNothingSoftDeletedAsync();
         }
 
         [Fact]
         public async Task DeleteCriterion_AlreadyDeleted_Fail()
         {
-            // The !IsDeleted query filter hides soft-deleted rows, so deleting twice
-            // is reported as a missing criterion
+            // The !IsDeleted query filter hides soft-deleted rows, so a retried delete is
+            // reported as a missing criterion and must not move the deletion timestamp
             var target = await SeedCriterionAsync(CreateAgeCriterion());
             var other = await SeedCriterionAsync(CreateHypotensionCriterion());
-            var pathogen = await SeedPathogenAsync(
-                "Klebsiella pneumoniae",
-                "Gram-negative bacillus causing hospital-acquired pneumonia",
-                isAtypical: true);
-            var factor = await SeedRiskFactorAsync(pathogen.Id, target.Id);
 
             var firstDelete = await _handler.HandleAsync(
                 new DeleteCriterionCommand { Id = target.Id }, TestContext.Current.CancellationToken);
             Assert.True(firstDelete.IsSuccess());
+            Assert.Equal(ApplicationStatus.Deleted, firstDelete.StatusCode);
 
             // PostgreSQL truncates the timestamp to microsecond precision, so compare
             // against the value that was actually persisted
             await using var seedContext = new ClinicalDbContext(_options);
-            var storedCriterionDeletedAt = (await seedContext.Criteria.IgnoreQueryFilters()
+            var storedDeletedAt = (await seedContext.Criteria.IgnoreQueryFilters()
                 .SingleAsync(x => x.Id == target.Id, TestContext.Current.CancellationToken)).DeletedAt;
-            var storedFactorDeletedAt = (await seedContext.RiskFactors.IgnoreQueryFilters()
-                .SingleAsync(x => x.Id == factor.Id, TestContext.Current.CancellationToken)).DeletedAt;
 
             var secondDelete = await _handler.HandleAsync(
                 new DeleteCriterionCommand { Id = target.Id }, TestContext.Current.CancellationToken);
@@ -456,19 +519,40 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.DeleteCriterion
 
             await using var freshContext = new ClinicalDbContext(_options);
 
-            // The handler bails out before the cascade, so the original timestamps are kept
+            // The handler bails out before soft deleting again, the original timestamp stays
             var criterion = await freshContext.Criteria.IgnoreQueryFilters()
                 .SingleAsync(x => x.Id == target.Id, TestContext.Current.CancellationToken);
             Assert.True(criterion.IsDeleted);
-            Assert.Equal(storedCriterionDeletedAt, criterion.DeletedAt);
-
-            var keptFactor = await freshContext.RiskFactors.IgnoreQueryFilters()
-                .SingleAsync(x => x.Id == factor.Id, TestContext.Current.CancellationToken);
-            Assert.True(keptFactor.IsDeleted);
-            Assert.Equal(storedFactorDeletedAt, keptFactor.DeletedAt);
+            Assert.Equal(storedDeletedAt, criterion.DeletedAt);
 
             // The unrelated criterion is untouched
             await AssertNotDeletedAsync(freshContext.Criteria, other.Id);
+        }
+
+        #endregion
+
+        #region Read helpers
+
+        private async Task<RiskFactor> LoadRiskFactorAsync(Guid id)
+        {
+            await using var freshContext = new ClinicalDbContext(_options);
+            return await freshContext.RiskFactors.IgnoreQueryFilters()
+                .SingleAsync(x => x.Id == id, TestContext.Current.CancellationToken);
+        }
+
+        private async Task<MetricRule> LoadMetricRuleAsync(Guid id)
+        {
+            await using var freshContext = new ClinicalDbContext(_options);
+            return await freshContext.MetricRules.IgnoreQueryFilters()
+                .SingleAsync(x => x.Id == id, TestContext.Current.CancellationToken);
+        }
+
+        private async Task<TreatmentProtocol> LoadTreatmentAsync(Guid id)
+        {
+            await using var freshContext = new ClinicalDbContext(_options);
+            return await freshContext.TreatmentProtocols.IgnoreQueryFilters()
+                .Include(x => x.Criteria)
+                .SingleAsync(x => x.Id == id, TestContext.Current.CancellationToken);
         }
 
         #endregion
