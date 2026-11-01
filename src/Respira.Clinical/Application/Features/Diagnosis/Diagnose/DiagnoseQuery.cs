@@ -16,7 +16,7 @@ namespace Respira.Clinical.Application.Features.Diagnosis.Diagnose
         /// <summary>
         /// The list of antibiotic IDs that patient's allergic to
         /// </summary>
-        public IEnumerable<Guid> AllergicAntibiotics { get; set; } = [];
+        public IEnumerable<Guid> AllergicAntibioticIds { get; set; } = [];
 
         /// <summary>
         /// Other allergy, corresponding to <see cref="AllergyType.Unknown"/> or
@@ -40,7 +40,7 @@ namespace Respira.Clinical.Application.Features.Diagnosis.Diagnose
         /// <summary>
         /// Pathogen ID
         /// </summary>
-        public required Guid Pathogen { get; set; }
+        public required Guid PathogenId { get; set; }
     }
 
     public record DiagnoseQuery : IQuery
@@ -74,7 +74,7 @@ namespace Respira.Clinical.Application.Features.Diagnosis.Diagnose
 
     public record PathogenResult(Guid Id, string Name);
 
-    public record AntibioticResult(Guid Id, string Name);
+    public record AntibioticResult(Guid Id, string Name, AwareClassification Classification);
 
     public record CriterionResult(Guid Id, string Name, string Formula);
 

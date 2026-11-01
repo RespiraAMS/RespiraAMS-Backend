@@ -2972,7 +2972,7 @@ function buildQuery() {
 		observations: collectObservations(),
 		allergy: {
 			type: state.allergyType,
-			allergicAntibiotics: isYes ? [...state.selectedAllergies.keys()] : [],
+			allergicAntibioticIds: isYes ? [...state.selectedAllergies.keys()] : [],
 			otherAllergy: isOther ? (state.otherAllergy.trim() || null) : null
 		},
 		specialMedicalHistory: [...state.specialHistory],
@@ -2984,7 +2984,7 @@ function buildQuery() {
 			// backend, so the wire value is numeric.
 			sampleType: sampleTypeWire(sample.sampleType),
 			micCategory: sample.micCategory,
-			pathogen: sample.pathogen
+			pathogenId: sample.pathogen
 		}))
 };
 }
@@ -3599,75 +3599,75 @@ function renderProtocols(items) {
 
 		const pathogenHtml = Array.isArray(pathogens) && pathogens.length > 0
 		? `<div class="protocol-section">
-			<div class="protocol-section-title">Suspected pathogens</div>
-			<div class="protocol-chips">
-			${pathogens.map(p => `<span class="protocol-chip">${esc(pick(p, 'name', 'Name') || 'Pathogen')}</span>`).join('')}
-			</div>
+		<div class="protocol-section-title">Suspected pathogens</div>
+		<div class="protocol-chips">
+		${pathogens.map(p => `<span class="protocol-chip">${esc(pick(p, 'name', 'Name') || 'Pathogen')}</span>`).join('')}
+		</div>
 		</div>`
 		: '';
 
 		const criteriaHtml = Array.isArray(criteria) && criteria.length > 0
 		? `<div class="protocol-section">
-			<div class="protocol-section-title">Matching criteria</div>
-			<div class="protocol-criteria">
-			${criteria.map(c => {
-				const name = pick(c, 'name', 'Name') || 'Criterion';
-				const formula = pick(c, 'formula', 'Formula');
-				return `<div class="protocol-criterion">
-					<span>${esc(name)}</span>
-					${formula ? `<code class="protocol-formula">${esc(formula)}</code>` : ''}
-				</div>`;
-			}).join('')}
-			</div>
-		</div>`
-		: '';
-
-		const combinations = Array.isArray(medicines) ? medicines : [];
-		const optionHtml = combinations.map((combination, optionIndex) => {
-			const medicinesInOption = (Array.isArray(combination) ? combination : [combination])
-			.map(item => item && typeof item === 'object' ? (pick(item, 'name', 'Name') || '') : (item ?? ''))
-			.map(name => String(name).trim())
-			.filter(Boolean);
-
-			const medicineHtml = medicinesInOption.length > 0
-			? medicinesInOption.map((name, i) => `${i > 0 ? '<span class="protocol-plus" aria-hidden="true">+</span>' : ''}<span class="protocol-medicine">${esc(name)}</span>`).join('')
-			: '<span class="empty-state">No medicines specified for this option.</span>';
-
-			return `<div class="protocol-option">
-				<span class="protocol-option-label">Option ${optionIndex + 1}</span>
-				<div class="protocol-medicines">${medicineHtml}</div>
+		<div class="protocol-section-title">Matching criteria</div>
+		<div class="protocol-criteria">
+		${criteria.map(c => {
+			const name = pick(c, 'name', 'Name') || 'Criterion';
+			const formula = pick(c, 'formula', 'Formula');
+			return `<div class="protocol-criterion">
+			<span>${esc(name)}</span>
+			${formula ? `<code class="protocol-formula">${esc(formula)}</code>` : ''}
 			</div>`;
-		}).join('<div class="protocol-or">or</div>');
+		}).join('')}
+	</div>
+	</div>`
+	: '';
 
-		const medicinesHtml = combinations.length > 0
-		? `<div class="protocol-section">
-			<div class="protocol-section-title">Medicine combinations</div>
-			<p class="protocol-hint">Every medicine in one option is used together. Different options are alternatives.</p>
-			<div class="protocol-options">${optionHtml}</div>
-		</div>`
-		: `<div class="protocol-section">
-			<div class="protocol-section-title">Medicine combinations</div>
-			<div class="empty-state">No medicine combinations specified.</div>
+	const combinations = Array.isArray(medicines) ? medicines : [];
+	const optionHtml = combinations.map((combination, optionIndex) => {
+		const medicinesInOption = (Array.isArray(combination) ? combination : [combination])
+		.map(item => item && typeof item === 'object' ? (pick(item, 'name', 'Name') || '') : (item ?? ''))
+		.map(name => String(name).trim())
+		.filter(Boolean);
+
+		const medicineHtml = medicinesInOption.length > 0
+		? medicinesInOption.map((name, i) => `${i > 0 ? '<span class="protocol-plus" aria-hidden="true">+</span>' : ''}<span class="protocol-medicine">${esc(name)}</span>`).join('')
+		: '<span class="empty-state">No medicines specified for this option.</span>';
+
+		return `<div class="protocol-option">
+		<span class="protocol-option-label">Option ${optionIndex + 1}</span>
+		<div class="protocol-medicines">${medicineHtml}</div>
 		</div>`;
+	}).join('<div class="protocol-or">or</div>');
 
-		const detailsId = `protocol-details-${index}`;
-		return `<article class="protocol-item">
-			<h3 class="protocol-heading">
-				<button type="button" class="collapse-toggle protocol-toggle" data-protocol-toggle aria-expanded="false" aria-controls="${detailsId}">
-					<svg class="collapse-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-						<polyline points="9 6 15 12 9 18"></polyline>
-					</svg>
-					<span class="protocol-name">Protocol ${index + 1}</span>
-					${meta.length > 0 ? `<span class="protocol-meta">${meta.join('')}</span>` : ''}
-				</button>
-			</h3>
-			<div id="${detailsId}" class="protocol-body" hidden>
-				${pathogenHtml}
-				${criteriaHtml}
-				${medicinesHtml}
-			</div>
-		</article>`;
-	}).join('');
+const medicinesHtml = combinations.length > 0
+? `<div class="protocol-section">
+<div class="protocol-section-title">Medicine combinations</div>
+<p class="protocol-hint">Every medicine in one option is used together. Different options are alternatives.</p>
+<div class="protocol-options">${optionHtml}</div>
+</div>`
+: `<div class="protocol-section">
+<div class="protocol-section-title">Medicine combinations</div>
+<div class="empty-state">No medicine combinations specified.</div>
+</div>`;
+
+const detailsId = `protocol-details-${index}`;
+return `<article class="protocol-item">
+<h3 class="protocol-heading">
+<button type="button" class="collapse-toggle protocol-toggle" data-protocol-toggle aria-expanded="false" aria-controls="${detailsId}">
+<svg class="collapse-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<polyline points="9 6 15 12 9 18"></polyline>
+</svg>
+<span class="protocol-name">Protocol ${index + 1}</span>
+${meta.length > 0 ? `<span class="protocol-meta">${meta.join('')}</span>` : ''}
+</button>
+</h3>
+<div id="${detailsId}" class="protocol-body" hidden>
+${pathogenHtml}
+${criteriaHtml}
+${medicinesHtml}
+</div>
+</article>`;
+}).join('');
 }
 
 function showResults(data, query) {

@@ -520,7 +520,7 @@ namespace Respira.Clinical.Domain.Services
         /// <param name="context">Clinical context</param>
         /// <param name="observations">Clinical observations</param>
         /// <returns>Boolean result, true if valid</returns>
-        internal Result ValidateObservations(ClinicalContext context, IEnumerable<ClinicalObservation> observations)
+        public Result ValidateObservations(ClinicalContext context, IEnumerable<ClinicalObservation> observations)
         {
             observations = observations.ToList().AsReadOnly();
 
@@ -586,6 +586,7 @@ namespace Respira.Clinical.Domain.Services
                     var msg = $"Variable {variable.Code}'s prerequisite formula required all this variables: {string.Join(", ", variable.Prerequisite!.Variables.Select(v => v.Code))}";
                     logger.LogDebug("Prerequisite formula for variable {Code} is not satisfied: {Message}", variable.Code, msg);
                     errors.Add(variable.Id, msg);
+                    continue;
                 }
 
                 // Evaluate prerequisite formula
@@ -610,14 +611,6 @@ namespace Respira.Clinical.Domain.Services
         public Result<Diagnosis> Diagnose(ClinicalContext context, IEnumerable<ClinicalObservation> observations)
         {
             observations = observations.ToList().AsReadOnly();
-
-            // Internal validation
-            var validationResult = ValidateObservations(context, observations);
-            if (validationResult.IsFailure())
-            {
-                logger.LogDebug("Validation failed: {detail}", validationResult.Error);
-                return Result<Diagnosis>.Failure(validationResult.Error!);
-            }
 
             // Store the severity diagnosis for final judgment
             var severityDiagnosis = new HashSet<(Severity severity, TreatmentSite treatmentSite)>();
@@ -719,7 +712,9 @@ namespace Respira.Clinical.Domain.Services
                 // so if they are null, it should be an exception, not an expected
                 // failure behavior
                 var age = (int)observations.First(x => x.Variable.Code.Equals("AGE")).NumericValue!;
-                var isFemale = observations.First(x => x.Variable.Code.Equals("GENDER")).CategoricalValue!.Equals("FEMALE");
+                var isFemale = CategoricalClinicalVariable.SanitizeCategory(observations
+                    .First(x => x.Variable.Code.Equals("GENDER")).CategoricalValue!)
+                    .Equals("FEMALE");
                 var isBlackAmerican = (bool)observations.First(x => x.Variable.Code.Equals("BLACK-AMERICAN")).BooleanValue!;
                 egfr = CalculateEgfr(age, (double)scr.NumericValue!, isFemale, isBlackAmerican);
             }

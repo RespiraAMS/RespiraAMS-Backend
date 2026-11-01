@@ -54,6 +54,7 @@ namespace Respira.Clinical.Application.Features.Diagnosis.Diagnose
                     .ToListAsync(cancellationToken),
                 TreatmentProtocols = await context.TreatmentProtocols
                     .AsNoTracking()
+                    .Where(x => x.IsApplied)
                     .Include(x => x.Pathogens)
                     .Include(x => x.Criteria)
                     .Include(x => x.Treatments)
@@ -106,7 +107,7 @@ namespace Respira.Clinical.Application.Features.Diagnosis.Diagnose
             }
 
             // Check if the samples are valid
-            var pathogenIds = query.MicrobialSamples.Select(x => x.Pathogen).Distinct().ToList();
+            var pathogenIds = query.MicrobialSamples.Select(x => x.PathogenId).Distinct().ToList();
             var pathogenDbCount = await context.Pathogens.CountAsync(x => pathogenIds.Contains(x.Id), cancellationToken);
             if (pathogenDbCount != pathogenIds.Count)
             {
@@ -119,10 +120,18 @@ namespace Respira.Clinical.Application.Features.Diagnosis.Diagnose
             }
 
             // Validate the allergies list: check if antibiotic IDs exist
-            if (!query.Allergy.AllergicAntibiotics.All(a => clinicalContext.Antibiotics.Select(x => x.Id).Contains(a)))
+            if (!query.Allergy.AllergicAntibioticIds.All(a => clinicalContext.Antibiotics.Select(x => x.Id).Contains(a)))
             {
                 logger.LogDebug("Allergies list contains invalid antibiotic IDs");
                 return Result<DiagnoseResult>.Failure(new ApplicationError(ApplicationStatus.BadRequest, "Invalid allergies list, all IDs must be valid antibiotic IDs"));
+            }
+
+            // Internal business rule validation of clinical observations
+            var validationResult = service.ValidateObservations(clinicalContext, observations);
+            if (validationResult.IsFailure())
+            {
+                logger.LogDebug("Validation failed: {detail}", validationResult.Error);
+                return Result<DiagnoseResult>.Failure(validationResult.Error!);
             }
 
             // Construct clinical picture
@@ -132,7 +141,7 @@ namespace Respira.Clinical.Application.Features.Diagnosis.Diagnose
                 Allergy = new Allergy
                 {
                     Type = query.Allergy.Type,
-                    AllergicAntibiotics = query.Allergy.AllergicAntibiotics.Select(a => clinicalContext.Antibiotics.First(ab => ab.Id == a)),
+                    AllergicAntibiotics = query.Allergy.AllergicAntibioticIds.Select(a => clinicalContext.Antibiotics.First(ab => ab.Id == a)),
                     OtherAllergy = query.Allergy.OtherAllergy
                 },
                 OtherInfections = query.OtherInfections,
@@ -141,7 +150,7 @@ namespace Respira.Clinical.Application.Features.Diagnosis.Diagnose
                 {
                     MicCategory = x.MicCategory,
                     SampleType = x.SampleType,
-                    Pathogen = clinicalContext.Pathogens.First(p => p.Id == x.Pathogen)
+                    Pathogen = clinicalContext.Pathogens.First(p => p.Id == x.PathogenId)
                 })
             };
 
@@ -190,7 +199,7 @@ namespace Respira.Clinical.Application.Features.Diagnosis.Diagnose
                     Id = x.Id,
                     Category = x.MicCategory,
                     Pathogen = new PathogenResult(x.Pathogen.Id, x.Pathogen.Name),
-                    Antibiotics = x.Antibiotics.Select(x => new AntibioticResult(x.Id, x.Name))
+                    Antibiotics = x.Antibiotics.Select(x => new AntibioticResult(x.Id, x.Name, x.Classification))
                 }),
                 Protocols = treatment.Select(x => new TreatmentProtocolResult
                 {
@@ -199,7 +208,7 @@ namespace Respira.Clinical.Application.Features.Diagnosis.Diagnose
                     TreatmentSite = x.TreatmentSite,
                     Pathogens = x.Pathogens.Select(p => new PathogenResult(p.Id, p.Name)),
                     Criteria = x.Criteria.Select(c => new CriterionResult(c.Id, c.Name, c.Formula.ToString()!)),
-                    Medicines = x.Treatments.Select(mc => mc.Combination.Select(a => new AntibioticResult(a.Id, a.Name)))
+                    Medicines = x.Treatments.Select(mc => mc.Combination.Select(a => new AntibioticResult(a.Id, a.Name, a.Classification)))
                 })
             });
         }

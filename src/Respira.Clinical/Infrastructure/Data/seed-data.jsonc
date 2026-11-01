@@ -5659,7 +5659,7 @@
             ]
         }
     ],
-    "treatments": [
+    "treatmentProtocols": [
         // Phác đồ VPCĐ (xem VPCĐ.md). Mỗi treatment là một nhóm các phác đồ thay thế
         // cho nhau; mỗi phần tử trong medicineIds là một composition (các kháng sinh
         // dùng phối hợp). Nhóm "Trung bình" trong bảng nguồn được bỏ qua.

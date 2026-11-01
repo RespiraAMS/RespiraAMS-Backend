@@ -20,19 +20,5 @@ namespace Respira.Clinical.Domain.Models
         /// <see cref="AllergyType.NonRegisteredAntibiotic"/>
         /// </summary>
         public string? OtherAllergy { get; set; }
-
-        /// <summary>
-        /// Check if this allergy object is valid
-        /// </summary>
-        /// <returns>True if valid, false otherwise</returns>
-        public bool IsValidAllergy()
-        {
-            return Type switch
-            {
-                AllergyType.No => !AllergicAntibiotics.Any() && OtherAllergy is null,
-                AllergyType.Yes => AllergicAntibiotics.Any() && OtherAllergy is null,
-                _ => !AllergicAntibiotics.Any() && OtherAllergy is not null
-            };
-        }
     }
 }

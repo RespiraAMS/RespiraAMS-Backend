@@ -478,7 +478,7 @@
             "description": "Bệnh nhân có bị gan mạn không?",
             "valueType": "Boolean",
             "canonicalUnit": null,
-            "isRequired": false,
+            "isRequired": true,
             "category": "Clinical"
         },
         {
@@ -692,16 +692,6 @@
             "category": "Clinical"
         },
         {
-            "id": "00000000-0000-0000-0000-100000000051",
-            "name": "Nhiễm trùng khác đang hoạt động ngoài viêm phổi ",
-            "code": "OTHER-INFECTIONS",
-            "description": "Bệnh nhân có đang có nhiễm trùng khác đang hoạt động ngoài viêm phổi không?",
-            "valueType": "Boolean",
-            "canonicalUnit": null,
-            "isRequired": true,
-            "category": "Clinical"
-        },
-        {
             "id": "00000000-0000-0000-0000-100000000052",
             "name": "Urea máu",
             "code": "UREA",
@@ -732,7 +722,14 @@
                 "isMinExclusive": true,
                 "max": null,
                 "isMaxExclusive": false,
-                "unit": "mmol/L"
+                "unit": "umol/L"
+            },
+            "normalRange": {
+                "min": 62,
+                "isMinExclusive": false,
+                "max": 115,
+                "isMaxExclusive": false,
+                "unit": "umol/L"
             }
         },
         {
@@ -5662,7 +5659,7 @@
             ]
         }
     ],
-    "treatments": [
+    "treatmentProtocols": [
         // Phác đồ VPCĐ (xem VPCĐ.md). Mỗi treatment là một nhóm các phác đồ thay thế
         // cho nhau; mỗi phần tử trong medicineIds là một composition (các kháng sinh
         // dùng phối hợp). Nhóm "Trung bình" trong bảng nguồn được bỏ qua.

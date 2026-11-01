@@ -15,6 +15,6 @@ namespace Respira.Clinical.Domain.Models
         public required IEnumerable<AntibioticGroup> AntibioticGroups { get; set; }
         public required IEnumerable<Antibiotic> Antibiotics { get; set; }
         public required IEnumerable<Antibiogram> Antibiograms { get; set; }
-        public required IEnumerable<TreatmentProtocol> TreatmentProtocols { get; set; }
+        public required IEnumerable<TreatmentProtocol> TreatmentProtocols { get; set => field = value.Where(x => x.IsApplied); }
     }
 }
