@@ -1,0 +1,48 @@
+using Asp.Versioning;
+using Microsoft.AspNetCore.Mvc;
+using Respira.Clinical.API.Dtos;
+using Respira.Clinical.Application.Features.Antibiograms.CreateAntibiogram;
+using Respira.Clinical.Application.Features.Antibiograms.DeleteAntibiogram;
+using Respira.Clinical.Application.Features.Antibiograms.GetPagedAntibiogram;
+using Respira.ServiceDefaults.Contracts.Pagination;
+using Respira.ServiceDefaults.Contracts.Results;
+using Wolverine;
+
+namespace Respira.Clinical.API.Controllers
+{
+    [ApiController]
+    [Route("api/v{version:apiVersion}/antibiograms")]
+    [ApiVersion("1.0")]
+    public class AntibiogramsController(IMessageBus bus) : ControllerBase
+    {
+        [HttpPost]
+        public async Task<IActionResult> CreateAntibiogram([FromBody] CreateAntibiogramCommand req)
+        {
+            var result = await bus.InvokeAsync<Result<CreateAntibiogramResult>>(req);
+            return result.ToApiResponse();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetPagedAntibiogram([FromQuery] GetPagedAntibiogramRequestDto req)
+        {
+            var result = await bus.InvokeAsync<Result<Pagination<AntibiogramItem>>>(req.ToQuery());
+            return result.ToApiResponse();
+        }
+
+        [HttpPut]
+        [Route("{id:guid}")]
+        public async Task<IActionResult> UpdateAntibiogram(Guid id, [FromBody] UpdateAntibiogramRequestDto req)
+        {
+            var result = await bus.InvokeAsync<Result>(req.ToCommand(id));
+            return result.ToApiResponse();
+        }
+
+        [HttpDelete]
+        [Route("{id:guid}")]
+        public async Task<IActionResult> DeleteAntibiogram(Guid id)
+        {
+            var result = await bus.InvokeAsync<Result>(new DeleteAntibiogramCommand { Id = id });
+            return result.ToApiResponse();
+        }
+    }
+}

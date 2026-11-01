@@ -186,13 +186,13 @@ namespace Respira.Patient.Application.Test.Features.Patients.CreatePatient
             // Boundary value: month doesn't matter when calculating age
             new DateOnly(
                 DateTimeOffset.UtcNow.Year - 15,
-                DateTimeOffset.UtcNow.Month >= 1 ? DateTimeOffset.UtcNow.Month - 1 : DateTimeOffset.UtcNow.Month,
+                DateTimeOffset.UtcNow.Month > 1 ? DateTimeOffset.UtcNow.Month - 1 : DateTimeOffset.UtcNow.Month,
                 22),
             // Boundary value: day doesn't matter when calculating age
             new DateOnly(
                 DateTimeOffset.UtcNow.Year - 15,
                 DateTimeOffset.UtcNow.Month,
-                DateTimeOffset.UtcNow.Day >= 1 ? DateTimeOffset.UtcNow.Day - 1 : DateTimeOffset.UtcNow.Day),
+                DateTimeOffset.UtcNow.Day > 1 ? DateTimeOffset.UtcNow.Day - 1 : DateTimeOffset.UtcNow.Day),
         ];
 
         [Theory]
