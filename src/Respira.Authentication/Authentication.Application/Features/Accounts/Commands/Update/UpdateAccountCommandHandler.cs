@@ -2,8 +2,10 @@ using Authentication.Application.Constracts.Authentication;
 using Authentication.Application.Constracts.Cache;
 using Authentication.Application.Constracts.Data;
 using Authentication.Application.Features.Accounts.Commands.Update.Events;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Respira.ServiceDefaults.Contracts.CQRS;
+using Respira.ServiceDefaults.Contracts.Messages.Audit;
 using Wolverine;
 
 namespace Authentication.Application.Features.Accounts.Commands.Update
@@ -21,7 +23,10 @@ namespace Authentication.Application.Features.Accounts.Commands.Update
             CancellationToken cancellationToken = default
         )
         {
-            var account = await dbContext.Accounts.FindAsync(command.AccountId);
+            var account = await dbContext.Accounts.FirstOrDefaultAsync(
+                x => x.Id == command.AccountId,
+                cancellationToken
+            );
 
             if (account is null)
             {
@@ -108,6 +113,25 @@ namespace Authentication.Application.Features.Accounts.Commands.Update
                     OldRole = oldRole,
                     OldStatus = oldStatus,
                     AccountId = accountId,
+                }
+            );
+            await messageBus.PublishAsync(
+                new AuditEvent
+                {
+                    ActorAccountId = command.ActorAccountId == Guid.Empty ? null : command.ActorAccountId,
+                    ActorRole = string.IsNullOrWhiteSpace(command.ActorRole) ? "System" : command.ActorRole,
+                    Action = "Authentication.AccountUpdated",
+                    EntityType = "Account",
+                    EntityId = account.Id,
+                    CorrelationId = command.SagaId,
+                    DetailsJson = System.Text.Json.JsonSerializer.Serialize(new
+                    {
+                        EmailChanged = !string.Equals(oldEmail, account.Email, StringComparison.Ordinal),
+                        PhoneChanged = oldPhone != account.Phone,
+                        PasswordChanged = oldHash != account.HashPassword,
+                        RoleChanged = oldRole != account.Role,
+                        StatusChanged = oldStatus != account.Status,
+                    }),
                 }
             );
         }

@@ -11,7 +11,7 @@ namespace Respira.Doctor.Application.Features.Doctors.Queries.GetById.Result
         /// <summary>Account this profile is linked to</summary>
         public Guid AccountId { get; set; }
 
-        /// <summary>Kind of staff profile (Doctor or Manager)</summary>
+        /// <summary>Kind of staff profile (Doctor or HeadDepartmentDoctor)</summary>
         public ProfileRole Role { get; set; }
 
         /// <summary>Profile first name</summary>

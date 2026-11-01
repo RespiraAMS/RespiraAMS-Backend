@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Respira.Doctor.Application.Constracts.Data;
 using Respira.Doctor.Domain.Entities;
+using Respira.ServiceDefaults.Utils.FullTextSearch;
 using DoctorEntity = Respira.Doctor.Domain.Entities.Doctor;
 
 namespace Respira.Doctor.Infrastructure.Persistence
@@ -10,7 +11,7 @@ namespace Respira.Doctor.Infrastructure.Persistence
             IDoctorDbContext
     {
         public DbSet<DoctorEntity> Doctors { get; set; }
-        public DbSet<Manager> Managers { get; set; }
+        public DbSet<HeadDepartmentDoctor> HeadDepartmentDoctors { get; set; }
 
         public override async Task<int> SaveChangesAsync(
             CancellationToken cancellationToken = default
@@ -38,24 +39,55 @@ namespace Respira.Doctor.Infrastructure.Persistence
         {
             base.OnModelCreating(modelBuilder);
 
+            // Accent-insensitive full text search. The "unaccent" dictionary is
+            // chained in front of the "simple" one via the custom "respira_vi"
+            // text search configuration.
+            modelBuilder.HasPostgresExtension("unaccent");
+
             modelBuilder.Entity<DoctorEntity>().HasQueryFilter(x => !x.IsDeleted);
             modelBuilder.Entity<DoctorEntity>().HasIndex(x => x.AccountId).IsUnique();
             modelBuilder.Entity<DoctorEntity>().HasIndex(x => x.MediaId);
             modelBuilder.Entity<DoctorEntity>().HasIndex(x => x.CitizenIdentificationNumber);
+            modelBuilder
+                .Entity<DoctorEntity>()
+                .HasOne<HeadDepartmentDoctor>()
+                .WithMany(x => x.Subordinates)
+                .HasForeignKey(x => x.HeadDepartmentDoctorId);
             modelBuilder.Entity<DoctorEntity>().Property(x => x.Position).HasConversion<string>();
             modelBuilder
                 .Entity<DoctorEntity>()
                 .Property(x => x.AcademicTitle)
                 .HasConversion<string>();
             modelBuilder.Entity<DoctorEntity>().Property(x => x.Gender).HasConversion<string>();
+            modelBuilder.Entity<DoctorEntity>()
+                .HasGeneratedTsVectorColumn(
+                    x => x.SearchVector,
+                    FullTextSearchUtil.ConfigurationName,
+                    x => new { x.FirstName, x.LastName, x.CitizenIdentificationNumber })
+                .HasIndex(x => x.SearchVector)
+                .HasMethod("GIN");
 
-            modelBuilder.Entity<Manager>().HasQueryFilter(x => !x.IsDeleted);
-            modelBuilder.Entity<Manager>().HasIndex(x => x.AccountId).IsUnique();
-            modelBuilder.Entity<Manager>().HasIndex(x => x.MediaId);
-            modelBuilder.Entity<Manager>().HasIndex(x => x.CitizenIdentificationNumber);
-            modelBuilder.Entity<Manager>().Property(x => x.Position).HasConversion<string>();
-            modelBuilder.Entity<Manager>().Property(x => x.AcademicTitle).HasConversion<string>();
-            modelBuilder.Entity<Manager>().Property(x => x.Gender).HasConversion<string>();
+            modelBuilder.Entity<HeadDepartmentDoctor>().HasQueryFilter(x => !x.IsDeleted);
+            modelBuilder.Entity<HeadDepartmentDoctor>().HasIndex(x => x.AccountId).IsUnique();
+            modelBuilder.Entity<HeadDepartmentDoctor>().HasIndex(x => x.MediaId);
+            modelBuilder.Entity<HeadDepartmentDoctor>().HasIndex(x => x.CitizenIdentificationNumber);
+            modelBuilder
+                .Entity<HeadDepartmentDoctor>()
+                .Property(x => x.Position)
+                .HasConversion<string>();
+            modelBuilder
+                .Entity<HeadDepartmentDoctor>()
+                .Property(x => x.AcademicTitle)
+                .HasConversion<string>();
+            modelBuilder.Entity<HeadDepartmentDoctor>().Property(x => x.Gender).HasConversion<string>();
+            modelBuilder
+                .Entity<HeadDepartmentDoctor>()
+                .HasGeneratedTsVectorColumn(
+                    x => x.SearchVector,
+                    FullTextSearchUtil.ConfigurationName,
+                    x => new { x.FirstName, x.LastName, x.CitizenIdentificationNumber })
+                .HasIndex(x => x.SearchVector)
+                .HasMethod("GIN");
         }
     }
 }

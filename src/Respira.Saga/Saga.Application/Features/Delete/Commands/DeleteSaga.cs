@@ -33,6 +33,10 @@ namespace Respira.Saga.Application.Features.Delete.Commands
         /// <summary>Identifier shared with every command and event of this flow.</summary>
         public Guid SagaId { get; set; }
 
+        public Guid ActorAccountId { get; set; }
+
+        public string ActorRole { get; set; } = string.Empty;
+
         // -------------------------------------------------------- deletion targets
         public Guid AccountId { get; set; }
 
@@ -55,13 +59,22 @@ namespace Respira.Saga.Application.Features.Delete.Commands
         public async Task StartAsync(StartDeleteCommand command, IMessageBus bus)
         {
             SagaId = command.SagaId;
+            ActorAccountId = command.ActorAccountId;
+            ActorRole = command.ActorRole;
             AccountId = command.AccountId;
             DoctorId = command.DoctorId;
             MediaId = command.MediaId;
             Step = DeleteStep.DeletingProfile;
 
             await bus.SendAsync(
-                new SoftDeleteDoctorCommand { SagaId = SagaId, DoctorId = DoctorId }
+                new SoftDeleteDoctorCommand
+                {
+                    SagaId = SagaId,
+                    DoctorId = DoctorId,
+                    TargetAccountId = AccountId,
+                    ActorAccountId = ActorAccountId,
+                    ActorRole = ActorRole,
+                }
             );
         }
 
@@ -73,7 +86,15 @@ namespace Respira.Saga.Application.Features.Delete.Commands
         {
             Step = DeleteStep.DeletingAccount;
 
-            await bus.SendAsync(new SoftDeleteCommand { SagaId = SagaId, AccountId = AccountId });
+            await bus.SendAsync(
+                new SoftDeleteCommand
+                {
+                    SagaId = SagaId,
+                    AccountId = AccountId,
+                    ActorAccountId = ActorAccountId,
+                    ActorRole = ActorRole,
+                }
+            );
         }
 
         public Task HandleAsync(SoftDeleteDoctorFailure message)
@@ -103,7 +124,12 @@ namespace Respira.Saga.Application.Features.Delete.Commands
 
                 try
                 {
-                    deletion = await mediaClient.DeleteAssetAsync(MediaId, cancellationToken);
+                    deletion = await mediaClient.DeleteAssetAsync(
+                        MediaId,
+                        cancellationToken,
+                        ActorAccountId == Guid.Empty ? null : ActorAccountId,
+                        ActorRole
+                    );
                 }
                 catch (Exception exception)
                 {

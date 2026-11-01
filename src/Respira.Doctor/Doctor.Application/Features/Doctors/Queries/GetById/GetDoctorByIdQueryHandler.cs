@@ -25,7 +25,7 @@ namespace Respira.Doctor.Application.Features.Doctors.Queries.GetById
                 .Doctors.AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == query.DoctorId, cancellationToken);
             profile ??= await dbContext
-                .Managers.AsNoTracking()
+                .HeadDepartmentDoctors.AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == query.DoctorId, cancellationToken);
 
             if (profile is null)
@@ -37,7 +37,10 @@ namespace Respira.Doctor.Application.Features.Doctors.Queries.GetById
                 );
             }
 
-            var role = profile is Manager ? ProfileRole.Manager : ProfileRole.Doctor;
+            var role =
+                profile is HeadDepartmentDoctor
+                    ? ProfileRole.HeadDepartmentDoctor
+                    : ProfileRole.Doctor;
 
             var result = new DoctorResult
             {

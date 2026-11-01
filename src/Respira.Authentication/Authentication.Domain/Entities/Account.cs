@@ -17,7 +17,7 @@ namespace Authentication.Domain.Entities
         /// <summary>Contact phone number</summary>
         public required string Phone { get; set; }
 
-        /// <summary>Role of the account (Doctor, Manager, Admin)</summary>
+        /// <summary>Role of the account (Doctor, HeadDepartmentDoctor, MedicalRegulationReviewer, Admin)</summary>
         public RoleType Role { get; set; }
 
         /// <summary>Whether the email address has been confirmed via the verification link</summary>

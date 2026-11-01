@@ -4,9 +4,10 @@ using Respira.Doctor.Application.Constracts.Data;
 using Respira.Doctor.Application.Features.Doctors.Commands.Create.Events;
 using Respira.Doctor.Domain.Enums;
 using Respira.ServiceDefaults.Contracts.CQRS;
+using Respira.ServiceDefaults.Contracts.Messages.Audit;
 using Wolverine;
 using DoctorEntity = Respira.Doctor.Domain.Entities.Doctor;
-using ManagerEntity = Respira.Doctor.Domain.Entities.Manager;
+using HeadDepartmentDoctorEntity = Respira.Doctor.Domain.Entities.HeadDepartmentDoctor;
 
 namespace Respira.Doctor.Application.Features.Doctors.Commands.Create
 {
@@ -26,7 +27,7 @@ namespace Respira.Doctor.Application.Features.Doctors.Commands.Create
                     x => x.AccountId == command.AccountId,
                     cancellationToken
                 )
-                || await dbContext.Managers.AnyAsync(
+                || await dbContext.HeadDepartmentDoctors.AnyAsync(
                     x => x.AccountId == command.AccountId,
                     cancellationToken
                 );
@@ -49,9 +50,9 @@ namespace Respira.Doctor.Application.Features.Doctors.Commands.Create
 
             try
             {
-                if (command.Role == ProfileRole.Manager)
+                if (command.Role == ProfileRole.HeadDepartmentDoctor)
                 {
-                    var manager = new ManagerEntity
+                    var headDepartmentDoctor = new HeadDepartmentDoctorEntity
                     {
                         AccountId = command.AccountId,
                         FirstName = command.FirstName,
@@ -65,14 +66,35 @@ namespace Respira.Doctor.Application.Features.Doctors.Commands.Create
                         Address = command.Address,
                     };
 
-                    profileId = manager.Id;
-                    dbContext.Managers.Add(manager);
+                    profileId = headDepartmentDoctor.Id;
+                    dbContext.HeadDepartmentDoctors.Add(headDepartmentDoctor);
                 }
                 else
                 {
+                    Guid? headDepartmentDoctorId = null;
+                    if (command.HeadDepartmentDoctorAccountId != Guid.Empty)
+                    {
+                        headDepartmentDoctorId = await dbContext.HeadDepartmentDoctors
+                            .Where(item => item.AccountId == command.HeadDepartmentDoctorAccountId)
+                            .Select(item => (Guid?)item.Id)
+                            .FirstOrDefaultAsync(cancellationToken);
+
+                        if (!headDepartmentDoctorId.HasValue)
+                        {
+                            await bus.PublishAsync(
+                                new DoctorProfileFailure(
+                                    command.SagaId,
+                                    "The creating head of department doctor profile was not found"
+                                )
+                            );
+                            return;
+                        }
+                    }
+
                     var doctor = new DoctorEntity
                     {
                         AccountId = command.AccountId,
+                        HeadDepartmentDoctorId = headDepartmentDoctorId,
                         FirstName = command.FirstName,
                         LastName = command.LastName,
                         Degrees = command.Degrees,
@@ -114,6 +136,18 @@ namespace Respira.Doctor.Application.Features.Doctors.Commands.Create
 
             await bus.PublishAsync(
                 new DoctorProfileCreated(command.SagaId, profileId, command.AccountId, command.Role)
+            );
+            await bus.PublishAsync(
+                new AuditEvent
+                {
+                    ActorAccountId = command.CreatorAccountId == Guid.Empty ? null : command.CreatorAccountId,
+                    ActorRole = string.IsNullOrWhiteSpace(command.CreatorRole) ? "System" : command.CreatorRole,
+                    Action = "Doctor.ProfileCreated",
+                    EntityType = command.Role.ToString(),
+                    EntityId = profileId,
+                    CorrelationId = command.SagaId,
+                    DetailsJson = System.Text.Json.JsonSerializer.Serialize(new { command.AccountId }),
+                }
             );
         }
     }

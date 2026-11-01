@@ -9,7 +9,7 @@ namespace Respira.Doctor.Domain.Enums
         /// <summary>A standard doctor profile.</summary>
         Doctor,
 
-        /// <summary>A manager profile with subordinates.</summary>
-        Manager,
+        /// <summary>A head of department doctor profile managing the doctors under them.</summary>
+        HeadDepartmentDoctor,
     }
 }

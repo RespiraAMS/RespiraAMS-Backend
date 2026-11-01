@@ -10,5 +10,9 @@ namespace Media.Application.Features.MediaAssets.Delete
     {
         /// <summary>Identifier of the media asset to remove.</summary>
         public required Guid MediaId { get; init; }
+
+        public Guid? ActorAccountId { get; init; }
+
+        public string ActorRole { get; init; } = "Service";
     }
 }

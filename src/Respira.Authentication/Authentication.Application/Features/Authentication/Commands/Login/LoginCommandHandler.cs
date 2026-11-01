@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Respira.ServiceDefaults.Contracts.CQRS;
 using Respira.ServiceDefaults.Contracts.Results;
+using Respira.ServiceDefaults.Contracts.Messages.Audit;
+using Wolverine;
 
 namespace Authentication.Application.Features.Authentication.Commands.Login
 {
@@ -16,7 +18,8 @@ namespace Authentication.Application.Features.Authentication.Commands.Login
         ILogger<LoginCommandHandler> logger,
         IHashService hashService,
         IJwtService jwtService,
-        ICacheService cacheService
+        ICacheService cacheService,
+        IMessageBus bus
     ) : ICommandHandler<LoginCommand, Result<LoginResult?>>
     {
         private static readonly TimeSpan CacheExpiration = TimeSpan.FromMinutes(5);
@@ -50,6 +53,13 @@ namespace Authentication.Application.Features.Authentication.Commands.Login
             {
                 hashService.HashPassword(command.Password);
                 logger.LogInformation("Email: {Email} login failed", command.Email);
+                await bus.PublishAsync(new AuditEvent
+                {
+                    ActorRole = "Anonymous",
+                    Action = "Authentication.LoginFailed",
+                    EntityType = "Account",
+                    DetailsJson = "{\"reason\":\"invalid_credentials\"}",
+                });
                 return Result<LoginResult?>.Failure(
                     new Error(ApplicationStatus.LoginFailure, "Email or password is incorrect")
                 );
@@ -58,6 +68,15 @@ namespace Authentication.Application.Features.Authentication.Commands.Login
             if (!hashService.VerifyPassword(command.Password, account.HashPassword))
             {
                 logger.LogInformation("Email: {Email} login failed", command.Email);
+                await bus.PublishAsync(new AuditEvent
+                {
+                    ActorAccountId = account.Id,
+                    ActorRole = account.Role.ToString(),
+                    Action = "Authentication.LoginFailed",
+                    EntityType = "Account",
+                    EntityId = account.Id,
+                    DetailsJson = "{\"reason\":\"invalid_credentials\"}",
+                });
                 return Result<LoginResult?>.Failure(
                     new Error(ApplicationStatus.LoginFailure, "Email or password is incorrect")
                 );
@@ -65,6 +84,15 @@ namespace Authentication.Application.Features.Authentication.Commands.Login
 
             var accessToken = jwtService.GenerateAccessToken(account);
             var refreshToken = await jwtService.GenerateRefreshTokenAsync(account);
+
+            await bus.PublishAsync(new AuditEvent
+            {
+                ActorAccountId = account.Id,
+                ActorRole = account.Role.ToString(),
+                Action = "Authentication.LoginSucceeded",
+                EntityType = "Account",
+                EntityId = account.Id,
+            });
 
             return Result<LoginResult?>.Success(
                 ApplicationStatus.Success,

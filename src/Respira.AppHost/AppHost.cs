@@ -88,9 +88,14 @@ var sagaService = builder
     .WithReference(rabbitmq)
     .WithReference(cache)
     .WithEnvironment("Media__BaseUrl", mediaService.GetEndpoint("http"))
+    .WithEnvironment("Jwt__Secret", jwtSecret)
+    .WithEnvironment("Jwt__Issuer", jwtIssuer)
+    .WithEnvironment("Jwt__Audience", jwtAudience)
     .WaitFor(sagaDb)
     .WaitFor(rabbitmq)
     .WaitFor(cache)
     .WaitFor(mediaService);
+
+gateway.WithReference(sagaService);
 
 await builder.Build().RunAsync();

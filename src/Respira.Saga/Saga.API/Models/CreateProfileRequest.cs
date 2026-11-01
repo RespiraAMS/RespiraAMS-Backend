@@ -1,5 +1,6 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Authentication.Domain.Enums;
 using Respira.Doctor.Domain.Enums;
 
 namespace Respira.Saga.API.Models
@@ -25,7 +26,11 @@ namespace Respira.Saga.API.Models
 
         public string Phone { get; set; } = string.Empty;
 
-        public ProfileRole Role { get; set; }
+        /// <summary>
+        /// Account role to create. Doctor and head of department doctor roles also get a
+        /// profile; a medical regulation reviewer account has no profile.
+        /// </summary>
+        public RoleType Role { get; set; }
 
         public string FirstName { get; set; } = string.Empty;
 

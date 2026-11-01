@@ -18,12 +18,15 @@ namespace Media.API.Controllers
         /// The file name and content type are derived from the stream itself.
         /// </summary>
         [HttpPost]
+        [RequestSizeLimit(5 * 1024 * 1024)]
         [Consumes("multipart/form-data")]
         [ProducesResponseType(typeof(Result<Guid>), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(Result<Guid>), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Create(
             [FromForm] IFormFile file,
             [FromQuery] string? folder,
+            [FromForm] Guid? actorAccountId,
+            [FromForm] string? actorRole,
             CancellationToken cancellationToken
         )
         {
@@ -42,6 +45,8 @@ namespace Media.API.Controllers
             {
                 MediaFile = content,
                 Folder = folder,
+                ActorAccountId = actorAccountId,
+                ActorRole = actorRole ?? "Service",
             };
 
             var result = await bus.InvokeAsync<Result<Guid>>(command, cancellationToken);
@@ -57,10 +62,20 @@ namespace Media.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(Result<Guid>), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(Result<Guid>), StatusCodes.Status503ServiceUnavailable)]
-        public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
+        public async Task<IActionResult> Delete(
+            Guid id,
+            [FromQuery] Guid? actorAccountId,
+            [FromQuery] string? actorRole,
+            CancellationToken cancellationToken
+        )
         {
             var result = await bus.InvokeAsync<Result<Guid>>(
-                new DeleteMediaAssetCommand { MediaId = id },
+                new DeleteMediaAssetCommand
+                {
+                    MediaId = id,
+                    ActorAccountId = actorAccountId,
+                    ActorRole = actorRole ?? "Service",
+                },
                 cancellationToken
             );
 

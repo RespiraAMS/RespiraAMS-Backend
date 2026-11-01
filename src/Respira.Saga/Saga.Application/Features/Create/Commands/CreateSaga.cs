@@ -21,8 +21,9 @@ using Wolverine;
 namespace Respira.Saga.Application.Features.Create.Commands
 {
     /// <summary>
-    /// Orchestrates account profile creation: create account → create doctor/manager profile →
-    /// upload the avatar → link the media to the profile → send the verification email.
+    /// Orchestrates account creation: create account → create doctor/head of department doctor
+    /// profile → upload the avatar → link the media to the profile → send the verification
+    /// email. A medical regulation reviewer account has no profile, so it goes straight to the verification email.
     /// </summary>
     /// <remarks>
     /// Wolverine requires saga types to have a public parameterless constructor, so every
@@ -43,12 +44,16 @@ namespace Respira.Saga.Application.Features.Create.Commands
         /// <summary>Identifier shared with every command and event of this flow.</summary>
         public Guid SagaId { get; set; }
 
+        public Guid CreatorAccountId { get; set; }
+
+        public RoleType CreatorRole { get; set; }
+
         // -------------------------------------------------------- profile creation input
         public string Email { get; set; } = string.Empty;
 
         public string Phone { get; set; } = string.Empty;
 
-        public ProfileRole Role { get; set; }
+        public RoleType Role { get; set; }
 
         public string FirstName { get; set; } = string.Empty;
 
@@ -84,6 +89,8 @@ namespace Respira.Saga.Application.Features.Create.Commands
         public async Task StartAsync(StartCreateCommand command, IMessageBus bus)
         {
             SagaId = command.SagaId;
+            CreatorAccountId = command.CreatorAccountId;
+            CreatorRole = command.CreatorRole;
             Email = command.Email.Trim().ToLowerInvariant();
             Phone = command.Phone;
             Role = command.Role;
@@ -105,22 +112,33 @@ namespace Respira.Saga.Application.Features.Create.Commands
                 new CreateAccountCommand
                 {
                     SagaId = SagaId,
+                    ActorAccountId = CreatorAccountId,
+                    ActorRole = CreatorRole.ToString(),
                     Email = Email,
                     Password = command.Password,
                     Phone = Phone,
-                    Role = Role == ProfileRole.Manager ? RoleType.Manager : RoleType.Doctor,
+                    Role = Role,
                     Status = StatusType.Active,
                 }
             );
         }
 
         // =====================================================================
-        // Step 2 — create the doctor/manager profile
+        // Step 2 — create the doctor/head of department doctor profile
         // =====================================================================
 
         public async Task HandleAsync(CreateAccountCompleted message, IMessageBus bus)
         {
             AccountId = message.AccountId;
+
+            // A medical regulation reviewer is only an account: it has no doctor profile, no avatar and no
+            // media, so the flow goes straight to the verification email.
+            if (Role == RoleType.MedicalRegulationReviewer)
+            {
+                await SendVerificationAsync(bus);
+                return;
+            }
+
             Step = CreateStep.CreatingProfile;
 
             await bus.SendAsync(
@@ -128,7 +146,16 @@ namespace Respira.Saga.Application.Features.Create.Commands
                 {
                     SagaId = SagaId,
                     AccountId = AccountId,
-                    Role = Role,
+                    CreatorAccountId = CreatorAccountId,
+                    CreatorRole = CreatorRole.ToString(),
+                    Role =
+                        Role == RoleType.HeadDepartmentDoctor
+                            ? ProfileRole.HeadDepartmentDoctor
+                            : ProfileRole.Doctor,
+                    HeadDepartmentDoctorAccountId =
+                        CreatorRole == RoleType.HeadDepartmentDoctor
+                            ? CreatorAccountId
+                            : Guid.Empty,
                     FirstName = FirstName,
                     LastName = LastName,
                     Degrees = Degrees,
@@ -181,7 +208,9 @@ namespace Respira.Saga.Application.Features.Create.Commands
                         avatar,
                         Path.GetFileName(TempAvatarPath),
                         $"doctors/{DoctorId}/avatar",
-                        cancellationToken
+                        cancellationToken,
+                        CreatorAccountId == Guid.Empty ? null : CreatorAccountId,
+                        CreatorRole.ToString()
                     );
                 }
             }
@@ -214,6 +243,8 @@ namespace Respira.Saga.Application.Features.Create.Commands
                 new UpdateDoctorMediaIdCommand
                 {
                     SagaId = SagaId,
+                    ActorAccountId = CreatorAccountId,
+                    ActorRole = CreatorRole.ToString(),
                     DoctorId = DoctorId,
                     MediaId = MediaId,
                 }
@@ -228,9 +259,8 @@ namespace Respira.Saga.Application.Features.Create.Commands
         public async Task HandleAsync(DoctorMediaUpdated message, IMessageBus bus)
         {
             MediaId = message.MediaId;
-            Step = CreateStep.SendingVerificationEmail;
 
-            await bus.SendAsync(new SendVerifyCommand { Email = Email, SagaId = SagaId });
+            await SendVerificationAsync(bus);
         }
 
         public async Task HandleAsync(DoctorMediaUpdateFailure message, IMessageBus bus)
@@ -280,7 +310,6 @@ namespace Respira.Saga.Application.Features.Create.Commands
             return Task.CompletedTask;
         }
 
-        /// </summary>
         public static Task NotFound(SoftDeleteDoctorCompleted message)
         {
             return Task.CompletedTask;
@@ -299,6 +328,21 @@ namespace Respira.Saga.Application.Features.Create.Commands
         public static Task NotFound(SoftDeleteFailure message)
         {
             return Task.CompletedTask;
+        }
+
+        private async Task SendVerificationAsync(IMessageBus bus)
+        {
+            Step = CreateStep.SendingVerificationEmail;
+            await bus.SendAsync(
+                new SendVerifyCommand
+                {
+                    Email = Email,
+                    SagaId = SagaId,
+                    ActorAccountId = CreatorAccountId,
+                    ActorRole = CreatorRole.ToString(),
+                    TargetAccountId = AccountId,
+                }
+            );
         }
 
         private async Task CompensateAsync(IMessageBus bus, string reason)

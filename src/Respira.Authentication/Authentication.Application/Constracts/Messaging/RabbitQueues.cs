@@ -12,5 +12,8 @@ namespace Authentication.Application.Constracts.Messaging
 
         /// <summary>Queue the saga listens on for completion/failure events.</summary>
         public const string SagaEvents = "respira.saga.events";
+
+        /// <summary>Queue this service listens on for account lookup queries.</summary>
+        public const string AuthQueries = "respira.auth.queries";
     }
 }

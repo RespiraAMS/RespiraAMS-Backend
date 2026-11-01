@@ -4,7 +4,9 @@ using Respira.Doctor.Application.Constracts.Data;
 using Respira.Doctor.Application.Features.Doctors.Commands.Update.Events;
 using Respira.Doctor.Domain.Entities;
 using Respira.ServiceDefaults.Contracts.CQRS;
+using Respira.ServiceDefaults.Contracts.Messages.Audit;
 using Wolverine;
+using DomainDoctor = Respira.Doctor.Domain.Entities.Doctor;
 
 namespace Respira.Doctor.Application.Features.Doctors.Commands.Update
 {
@@ -23,7 +25,7 @@ namespace Respira.Doctor.Application.Features.Doctors.Commands.Update
                 x => x.Id == command.DoctorId,
                 cancellationToken
             );
-            profile ??= await dbContext.Managers.FirstOrDefaultAsync(
+            profile ??= await dbContext.HeadDepartmentDoctors.FirstOrDefaultAsync(
                 x => x.Id == command.DoctorId,
                 cancellationToken
             );
@@ -38,6 +40,33 @@ namespace Respira.Doctor.Application.Features.Doctors.Commands.Update
 
                 await bus.PublishAsync(
                     new DoctorProfileUpdateFailure(command.SagaId, "Profile not found")
+                );
+                return;
+            }
+
+            if (profile.AccountId != command.AccountId)
+            {
+                await bus.PublishAsync(
+                    new DoctorProfileUpdateFailure(command.SagaId, "Profile does not belong to the account")
+                );
+                return;
+            }
+
+            if (!await CanActorManageAsync(profile, command, cancellationToken))
+            {
+                await bus.PublishAsync(
+                    new AuditEvent
+                    {
+                        ActorAccountId = command.ActorAccountId == Guid.Empty ? null : command.ActorAccountId,
+                        ActorRole = command.ActorRole,
+                        Action = "Authorization.ProfileUpdateDenied",
+                        EntityType = profile is DomainDoctor ? "Doctor" : "HeadDepartmentDoctor",
+                        EntityId = profile.Id,
+                        CorrelationId = command.SagaId,
+                    }
+                );
+                await bus.PublishAsync(
+                    new DoctorProfileUpdateFailure(command.SagaId, "The actor cannot manage this profile")
                 );
                 return;
             }
@@ -99,6 +128,67 @@ namespace Respira.Doctor.Application.Features.Doctors.Commands.Update
                     oldMediaId
                 )
             );
+            await bus.PublishAsync(
+                new AuditEvent
+                {
+                    ActorAccountId = command.ActorAccountId == Guid.Empty ? null : command.ActorAccountId,
+                    ActorRole = string.IsNullOrWhiteSpace(command.ActorRole) ? "System" : command.ActorRole,
+                    Action = "Doctor.ProfileUpdated",
+                    EntityType = profile is DomainDoctor ? "Doctor" : "HeadDepartmentDoctor",
+                    EntityId = profile.Id,
+                    CorrelationId = command.SagaId,
+                    DetailsJson = System.Text.Json.JsonSerializer.Serialize(
+                        new
+                        {
+                            ChangedFields = new[]
+                            {
+                                "FirstName",
+                                "LastName",
+                                "Degrees",
+                                "AcademicTitle",
+                                "Position",
+                                "Gender",
+                                "CitizenIdentificationNumber",
+                                "DateOfBirth",
+                                "Address",
+                            },
+                            MediaChanged = command.NewMediaId != Guid.Empty,
+                        }
+                    ),
+                }
+            );
+        }
+
+        private async Task<bool> CanActorManageAsync(
+            BaseDoctor profile,
+            UpdateDoctorProfileCommand command,
+            CancellationToken cancellationToken
+        )
+        {
+            if (command.ActorRole == "Admin")
+            {
+                return true;
+            }
+
+            if (
+                profile.AccountId == command.ActorAccountId
+                && command.ActorRole is "Doctor" or "HeadDepartmentDoctor"
+            )
+            {
+                return true;
+            }
+
+            if (command.ActorRole != "HeadDepartmentDoctor" || profile is not DomainDoctor doctor)
+            {
+                return false;
+            }
+
+            var headId = await dbContext.HeadDepartmentDoctors
+                .Where(item => item.AccountId == command.ActorAccountId)
+                .Select(item => (Guid?)item.Id)
+                .FirstOrDefaultAsync(cancellationToken);
+
+            return headId.HasValue && doctor.HeadDepartmentDoctorId == headId.Value;
         }
     }
 }

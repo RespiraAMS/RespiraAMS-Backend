@@ -22,7 +22,9 @@ namespace Respira.Saga.Application.Constracts.Media
             Stream content,
             string fileName,
             string folder,
-            CancellationToken cancellationToken = default
+            CancellationToken cancellationToken = default,
+            Guid? actorAccountId = null,
+            string actorRole = "Service"
         );
 
         /// <summary>
@@ -32,6 +34,11 @@ namespace Respira.Saga.Application.Constracts.Media
         /// <param name="mediaId">Identifier of the media asset to remove.</param>
         /// <param name="cancellationToken">Token used to cancel the HTTP request.</param>
         /// <returns>The identifier of the deleted asset, or a failure describing why the delete failed.</returns>
-        Task<Result<Guid>> DeleteAssetAsync(Guid mediaId, CancellationToken cancellationToken = default);
+        Task<Result<Guid>> DeleteAssetAsync(
+            Guid mediaId,
+            CancellationToken cancellationToken = default,
+            Guid? actorAccountId = null,
+            string actorRole = "Service"
+        );
     }
 }

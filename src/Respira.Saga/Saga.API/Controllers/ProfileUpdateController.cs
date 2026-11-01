@@ -1,9 +1,13 @@
 using System.Text.Json;
+using System.Security.Claims;
 using Asp.Versioning;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Respira.Saga.API.Models;
 using Respira.Saga.Application.Features.Update.Commands;
 using Respira.Saga.Application.Features.Update.Queries;
+using Respira.ServiceDefaults.Contracts.Messages.Audit;
+using Respira.ServiceDefaults.Contracts.Messages.Doctors;
 using Respira.ServiceDefaults.Contracts.Results;
 using Wolverine;
 
@@ -18,6 +22,8 @@ namespace Respira.Saga.API.Controllers
     [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/profile/update")]
     [Tags("Profile")]
+    [Authorize]
+    [RequestSizeLimit(6 * 1024 * 1024)]
     public class ProfileUpdateController(IMessageBus bus, ILogger<ProfileUpdateController> logger)
         : ControllerBase
     {
@@ -91,6 +97,24 @@ namespace Respira.Saga.API.Controllers
                     .ToApiResponse();
             }
 
+            if (!await CanManageDoctorAsync(payload, cancellationToken))
+            {
+                await bus.PublishAsync(
+                    new AuditEvent
+                    {
+                        ActorAccountId = Guid.TryParse(
+                            User.FindFirstValue(ClaimTypes.NameIdentifier) ?? User.FindFirstValue("sub"),
+                            out var deniedActorId
+                        ) ? deniedActorId : null,
+                        ActorRole = User.FindFirstValue(ClaimTypes.Role) ?? "Unknown",
+                        Action = "Authorization.ProfileUpdateDenied",
+                        EntityType = "DoctorProfile",
+                        EntityId = payload.DoctorId,
+                    }
+                );
+                return Forbid();
+            }
+
             var invalidField = Validate(payload);
 
             if (invalidField is not null)
@@ -104,6 +128,12 @@ namespace Respira.Saga.API.Controllers
             string? tempAvatarPath = null;
             if (avatar is not null && avatar.Length > 0)
             {
+                if (avatar.Length > 5 * 1024 * 1024)
+                {
+                    return Result<Guid>
+                        .Failure(new Error(ApplicationStatus.BadRequest, "Avatar must be 5 MB or smaller"))
+                        .ToApiResponse();
+                }
                 var extension = Path.GetExtension(avatar.FileName).ToLowerInvariant();
 
                 if (!AllowedAvatarExtensions.Contains(extension))
@@ -136,17 +166,21 @@ namespace Respira.Saga.API.Controllers
                 command.AccountId,
                 command.DoctorId
             );
-
             return Result<Guid>.Success(ApplicationStatus.Created, sagaId).ToApiResponse();
         }
 
-        private static StartUpdateCommand CreateCommand(
+        private StartUpdateCommand CreateCommand(
             UpdateProfileRequest payload,
             Guid sagaId,
             string? tempAvatarPath
         ) => new()
         {
             SagaId = sagaId,
+            ActorAccountId = Guid.TryParse(
+                User.FindFirstValue(ClaimTypes.NameIdentifier) ?? User.FindFirstValue("sub"),
+                out var actorId
+            ) ? actorId : Guid.Empty,
+            ActorRole = User.FindFirstValue(ClaimTypes.Role) ?? string.Empty,
             AccountId = payload.AccountId,
             DoctorId = payload.DoctorId,
             Email = payload.Email,
@@ -247,6 +281,39 @@ namespace Respira.Saga.API.Controllers
             }
 
             return null;
+        }
+
+        private async Task<bool> CanManageDoctorAsync(
+            UpdateProfileRequest payload,
+            CancellationToken cancellationToken
+        )
+        {
+            var actorRole = User.FindFirstValue(ClaimTypes.Role);
+            var actorAccountId = Guid.TryParse(
+                User.FindFirstValue(ClaimTypes.NameIdentifier) ?? User.FindFirstValue("sub"),
+                out var parsedActorId
+            ) ? parsedActorId : Guid.Empty;
+
+            try
+            {
+                var authorization = await bus.InvokeAsync<Result<DoctorManagementAuthorization>>(
+                    new CanManageDoctorQuery
+                    {
+                        ActorAccountId = actorAccountId,
+                        ActorRole = actorRole ?? string.Empty,
+                        DoctorId = payload.DoctorId,
+                        TargetAccountId = payload.AccountId,
+                    },
+                    cancellationToken
+                );
+
+                return authorization.IsSuccess() && authorization.Data?.Allowed == true;
+            }
+            catch (Exception exception)
+            {
+                logger.LogError(exception, "Could not verify access to doctor {DoctorId}", payload.DoctorId);
+                return false;
+            }
         }
 
         /// <summary>

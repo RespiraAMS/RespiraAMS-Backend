@@ -13,6 +13,9 @@ namespace Respira.Saga.Application.Constracts.Messaging
         /// <summary>Queue the Doctor service listens on for commands.</summary>
         public const string DoctorCommands = "respira.doctor.commands";
 
+        /// <summary>Queue for authorization queries handled by the Doctor service.</summary>
+        public const string DoctorQueries = "respira.doctor.queries";
+
         /// <summary>Queue this service listens on for completion and failure events.</summary>
         public const string SagaEvents = "respira.saga.events";
     }

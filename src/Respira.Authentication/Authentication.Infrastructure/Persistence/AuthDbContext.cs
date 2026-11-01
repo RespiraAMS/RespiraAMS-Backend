@@ -64,7 +64,7 @@ namespace Authentication.Infrastructure.Persistence
         }
 
         /// <summary>
-        /// Seeds a bootstrap administrator account so the manager/admin flows (e.g. the
+        /// Seeds a bootstrap administrator account so the medical regulation reviewer/admin flows (e.g. the
         /// Create/Update/Delete saga endpoints) can be exercised without first registering an
         /// account out-of-band. Idempotent: the row is keyed by a fixed Id, so re-running the
         /// migration only ever touches this one record.

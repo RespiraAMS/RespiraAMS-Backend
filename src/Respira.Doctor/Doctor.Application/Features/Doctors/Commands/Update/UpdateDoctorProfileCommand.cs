@@ -11,6 +11,9 @@ namespace Respira.Doctor.Application.Features.Doctors.Commands.Update
     public record UpdateDoctorProfileCommand : ICommand
     {
         public Guid SagaId { get; set; }
+        public Guid AccountId { get; set; }
+        public Guid ActorAccountId { get; set; }
+        public string ActorRole { get; set; } = string.Empty;
         public Guid DoctorId { get; set; }
         public required string FirstName { get; set; }
         public required string LastName { get; set; }

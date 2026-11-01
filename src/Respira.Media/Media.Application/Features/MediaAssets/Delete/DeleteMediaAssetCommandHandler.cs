@@ -4,13 +4,16 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Respira.ServiceDefaults.Contracts.CQRS;
 using Respira.ServiceDefaults.Contracts.Results;
+using Respira.ServiceDefaults.Contracts.Messages.Audit;
+using Wolverine;
 
 namespace Media.Application.Features.MediaAssets.Delete
 {
     public class DeleteMediaAssetCommandHandler(
         IMediaDbContext dbContext,
         IStorageService storageService,
-        ILogger<DeleteMediaAssetCommandHandler> logger
+        ILogger<DeleteMediaAssetCommandHandler> logger,
+        IMessageBus bus
     ) : ICommandHandler<DeleteMediaAssetCommand, Result<Guid>>
     {
         public async Task<Result<Guid>> HandleAsync(
@@ -85,6 +88,17 @@ namespace Media.Application.Features.MediaAssets.Delete
             }
 
             logger.LogInformation("Deleted MediaAsset {MediaAssetId}", command.MediaId);
+
+            await bus.PublishAsync(
+                new AuditEvent
+                {
+                    ActorAccountId = command.ActorAccountId,
+                    ActorRole = command.ActorRole,
+                    Action = "Media.AssetDeleted",
+                    EntityType = "MediaAsset",
+                    EntityId = command.MediaId,
+                }
+            );
 
             return Result<Guid>.Success(ApplicationStatus.Deleted, command.MediaId);
         }
