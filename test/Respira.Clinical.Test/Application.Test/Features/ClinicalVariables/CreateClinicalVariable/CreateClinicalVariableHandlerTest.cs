@@ -25,7 +25,7 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalVariables.CreateCli
             // Create handler dependencies
             _options = new DbContextOptionsBuilder<ClinicalDbContext>().UseNpgsql(fixture.ConnectionString).Options;
             _context = new ClinicalDbContext(_options);
-            var mapper = new CreateClinicalVariableMapper(new FormulaMapper());
+            var mapper = new CreateClinicalVariableMapper(new FormulaDtoMapper());
             var logger = new Mock<ILogger<CreateClinicalVariableHandler>>().Object;
 
             // Initialize handler

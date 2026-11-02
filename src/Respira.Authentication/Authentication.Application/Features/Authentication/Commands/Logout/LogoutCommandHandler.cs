@@ -1,16 +1,16 @@
-using Authentication.Application.Constracts.Authentication;
-using Authentication.Application.Constracts.Cache;
-using Authentication.Application.Constracts.Data;
-using Authentication.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Respira.Authentication.Application.Constracts.Authentication;
+using Respira.Authentication.Application.Constracts.Cache;
+using Respira.Authentication.Application.Constracts.Data;
+using Respira.Authentication.Domain.Entities;
 using Respira.ServiceDefaults.Contracts.CQRS;
 using Respira.ServiceDefaults.Contracts.Results;
 using Respira.ServiceDefaults.Contracts.Messages.Audit;
 using Wolverine;
 
-namespace Authentication.Application.Features.Authentication.Commands.Logout
+namespace Respira.Authentication.Application.Features.Authentication.Commands.Logout
 {
     public class LogoutCommandHandler(
         IAuthDbContext dbContext,
@@ -35,7 +35,7 @@ namespace Authentication.Application.Features.Authentication.Commands.Logout
             {
                 logger.LogInformation("Invalid token");
                 return Result<bool>.Failure(
-                    new Error(ApplicationStatus.Unauthorized, "Invalid token")
+                    new ApplicationError(ApplicationStatus.Unauthorized, "Invalid token")
                 );
             }
 

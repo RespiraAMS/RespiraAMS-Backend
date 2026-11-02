@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using Respira.Saga.Application.Constracts.Data;
+using Respira.Saga.Application.Contracts.Data;
 using Respira.Saga.Domain.Entities;
 
 namespace Respira.Saga.Infrastructure.Persistence;

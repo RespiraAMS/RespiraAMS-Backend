@@ -41,13 +41,14 @@ namespace Respira.Clinical.Domain.Test.Entities
                 IsRequired = false,
                 Category = ClinicalVariableCategory.Clinical,
             },
-            _ => new CategoricalClinicalVariable([])
+            _ => new CategoricalClinicalVariable
             {
                 Code = variable.Code,
                 Name = variable.Code,
                 Description = $"Observed clinical value of {variable.Code}",
                 IsRequired = false,
                 Category = ClinicalVariableCategory.Clinical,
+                AcceptedValues = [],
             },
         };
 
@@ -61,29 +62,41 @@ namespace Respira.Clinical.Domain.Test.Entities
             new(ObservationVariable(variable), value);
 
         // AGE >= 65, the CURB-65 age criterion
-        private static Criterion AgeCriterion() =>
-            new("Tuổi >= 65", new BinaryFormula(
+        private static Criterion AgeCriterion() => new()
+        {
+            Name = "Tuổi >= 65",
+            Formula = new BinaryFormula(
                 new VariableFormula(Age),
                 new NumericConstantFormula(65),
-                ExpressionOperator.Gte));
+                ExpressionOperator.Gte)
+        };
 
         // Hút thuốc (smoker), a plain boolean criterion
-        private static Criterion SmokerCriterion() =>
-            new("Hút thuốc", new VariableFormula(Smoker));
+        private static Criterion SmokerCriterion() => new()
+        {
+            Name = "Hút thuốc",
+            Formula = new VariableFormula(Smoker),
+        };
 
         // AGE >= 65 AND SBP < 90, a criterion that needs two observations
-        private static Criterion AgeAndHypotensionCriterion() =>
-            new("Tuổi cao và huyết áp thấp", new BinaryFormula(
+        private static Criterion AgeAndHypotensionCriterion() => new()
+        {
+            Name = "Tuổi cao và huyết áp thấp",
+            Formula = new BinaryFormula(
                 new BinaryFormula(new VariableFormula(Age), new NumericConstantFormula(65), ExpressionOperator.Gte),
                 new BinaryFormula(new VariableFormula(Sbp), new NumericConstantFormula(90), ExpressionOperator.Lt),
-                ExpressionOperator.And));
+                ExpressionOperator.And)
+        };
 
         // AGE >= 65 OR SBP < 90, a criterion that only needs one of two observations
-        private static Criterion AgeOrHypotensionCriterion() =>
-            new("Tuổi cao hoặc huyết áp thấp", new BinaryFormula(
+        private static Criterion AgeOrHypotensionCriterion() => new()
+        {
+            Name = "Tuổi cao hoặc huyết áp thấp",
+            Formula = new BinaryFormula(
                 new BinaryFormula(new VariableFormula(Age), new NumericConstantFormula(65), ExpressionOperator.Gte),
                 new BinaryFormula(new VariableFormula(Sbp), new NumericConstantFormula(90), ExpressionOperator.Lt),
-                ExpressionOperator.Or));
+                ExpressionOperator.Or)
+        };
 
         #region Satisfied
 
@@ -117,10 +130,14 @@ namespace Respira.Clinical.Domain.Test.Entities
         [InlineData("Streptococcus pneumoniae", false)]
         public void IsCriterionSatisfied_CategoricalComparison_Evaluates(string observed, bool expected)
         {
-            var criterion = new Criterion("Tác nhân là Klebsiella", new BinaryFormula(
-                new VariableFormula(PathogenCode),
-                new CategoricalConstantFormula("Klebsiella pneumoniae"),
-                ExpressionOperator.Eq));
+            var criterion = new Criterion
+            {
+                Name = "Tác nhân là Klebsiella",
+                Formula = new BinaryFormula(
+                    new VariableFormula(PathogenCode),
+                    new CategoricalConstantFormula("Klebsiella pneumoniae"),
+                    ExpressionOperator.Eq)
+            };
 
             var result = criterion.IsCriterionSatisfied([Categorical(PathogenCode, observed)]);
 
@@ -128,19 +145,9 @@ namespace Respira.Clinical.Domain.Test.Entities
         }
 
         [Fact]
-        public void IsCriterionSatisfied_DefaultCriterion_ReturnsTrue()
-        {
-            // The parameterless constructor stores a constant true formula
-            var criterion = new Criterion();
-
-            Assert.True(criterion.IsCriterionSatisfied([]));
-        }
-
-        [Fact]
         public void IsCriterionSatisfied_ConstantFalseCriterion_ReturnsFalse()
         {
-            var criterion = new Criterion("Không bao giờ đúng", new BooleanConstantFormula(false));
-
+            var criterion = new Criterion { Name = "Không bao giờ đúng", Formula = new BooleanConstantFormula(false) };
             Assert.False(criterion.IsCriterionSatisfied([]));
         }
 
@@ -192,10 +199,14 @@ namespace Respira.Clinical.Domain.Test.Entities
         {
             // A stored formula that divides by zero throws while the expression is
             // being built; the evaluation must swallow it instead of crashing
-            var criterion = new Criterion("Chia cho 0", new BinaryFormula(
-                new BinaryFormula(new VariableFormula(Age), new NumericConstantFormula(0), ExpressionOperator.Div),
-                new NumericConstantFormula(1),
-                ExpressionOperator.Gt));
+            var criterion = new Criterion
+            {
+                Name = "Chia cho 0",
+                Formula = new BinaryFormula(
+                    new BinaryFormula(new VariableFormula(Age), new NumericConstantFormula(0), ExpressionOperator.Div),
+                    new NumericConstantFormula(1),
+                    ExpressionOperator.Gt)
+            };
 
             Assert.False(criterion.IsCriterionSatisfied([Numeric(Age, 5)]));
         }
@@ -203,16 +214,11 @@ namespace Respira.Clinical.Domain.Test.Entities
         [Fact]
         public void IsCriterionSatisfied_NonBooleanFormula_Throws()
         {
-            // The Criterion constructor rejects a non-boolean formula, so the only way
-            // to end up with one is assigning the property directly (for instance a
-            // corrupt row materialized by EF). That broken state must be reported loudly
-            var criterion = new Criterion
+            Assert.Throws<ArgumentException>(() => new Criterion
             {
                 Name = "Công thức không phải boolean",
                 Formula = new NumericConstantFormula(65),
-            };
-
-            Assert.Throws<Exception>(() => criterion.IsCriterionSatisfied([Numeric(Age, 70)]));
+            });
         }
 
         #endregion

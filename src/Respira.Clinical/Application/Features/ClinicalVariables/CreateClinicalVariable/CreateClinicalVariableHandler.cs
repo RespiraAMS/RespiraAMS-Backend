@@ -31,7 +31,7 @@ namespace Respira.Clinical.Application.Features.ClinicalVariables.CreateClinical
             var mapResult = mapper.ToModel(command, variables);
             if (mapResult.IsFailure())
             {
-                logger.LogDebug("Failed to map command to model: {Error}", mapResult.Error);
+                logger.LogDebug("Failed to map command to model: {ApplicationError}", mapResult.Error);
                 return Result<CreateClinicalVariableResult>.Failure(mapResult.Error!);
             }
             var variable = mapResult.Data!;
@@ -49,7 +49,7 @@ namespace Respira.Clinical.Application.Features.ClinicalVariables.CreateClinical
                         numericVar.NormalRange,
                         numericVar.AcceptedRange,
                     });
-                    return Result<CreateClinicalVariableResult>.Failure(new Error(ApplicationStatus.BadRequest, "Normal range is not within the accepted range"));
+                    return Result<CreateClinicalVariableResult>.Failure(new ApplicationError(ApplicationStatus.BadRequest, "Normal range is not within the accepted range"));
                 }
             }
 

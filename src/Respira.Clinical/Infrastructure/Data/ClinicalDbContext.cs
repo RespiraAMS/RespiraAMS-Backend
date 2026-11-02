@@ -22,8 +22,9 @@ namespace Respira.Clinical.Infrastructure.Data
         public DbSet<Antibiotic> Antibiotics { get; set; }
         public DbSet<AntibioticGroup> AntibioticGroups { get; set; }
         public DbSet<Dosage> Dosages { get; set; }
-        public DbSet<MedicineComposition> MedicineCompositions { get; set; }
         public DbSet<Treatment> Treatments { get; set; }
+        public DbSet<TreatmentProtocol> TreatmentProtocols { get; set; }
+        public DbSet<Antibiogram> Antibiograms { get; set; }
 
         public async Task ExecuteInTransactionAsync(Func<Task> action, CancellationToken cancellationToken = default)
         {
@@ -133,11 +134,12 @@ namespace Respira.Clinical.Infrastructure.Data
             modelBuilder.Entity<ClinicalMetric>().HasQueryFilter(x => !x.IsDeleted);
             modelBuilder.Entity<MetricRule>().HasQueryFilter(x => !x.IsDeleted);
             modelBuilder.Entity<SuspectedCause>().HasQueryFilter(x => !x.IsDeleted);
-            modelBuilder.Entity<MedicineComposition>().HasQueryFilter(x => !x.IsDeleted);
             modelBuilder.Entity<Treatment>().HasQueryFilter(x => !x.IsDeleted);
+            modelBuilder.Entity<TreatmentProtocol>().HasQueryFilter(x => !x.IsDeleted);
             modelBuilder.Entity<Antibiotic>().HasQueryFilter(x => !x.IsDeleted);
             modelBuilder.Entity<AntibioticGroup>().HasQueryFilter(x => !x.IsDeleted);
             modelBuilder.Entity<Dosage>().HasQueryFilter(x => !x.IsDeleted);
+            modelBuilder.Entity<Antibiogram>().HasQueryFilter(x => !x.IsDeleted);
 
             // Activate unaccent extension for full text search on Vietnamese dataset
             modelBuilder.HasPostgresExtension("unaccent");
@@ -260,6 +262,7 @@ namespace Respira.Clinical.Infrastructure.Data
                 .HasConversion<string>();
             modelBuilder.Entity<Dosage>()
                 .OwnsOne(x => x.Crcl, builder => builder.ToJson());
+            modelBuilder.Entity<Dosage>().Ignore(x => x.IsStandardDose);
 
             // Config on antibiotic
             modelBuilder.Entity<Antibiotic>().ToTable("antibiotics");
@@ -279,36 +282,48 @@ namespace Respira.Clinical.Infrastructure.Data
                 .HasMethod("GIN");
 
             // Config on medicine composition
-            modelBuilder.Entity<MedicineComposition>().ToTable("treatment_medicine_compositions");
-            modelBuilder.Entity<MedicineComposition>()
-                .HasMany(x => x.Antibiotics)
-                .WithMany()
-                .UsingEntity(t => t.ToTable("medicine_composition_antibiotics"));
-            modelBuilder.Entity<MedicineComposition>()
-                .HasOne(x => x.Treatment)
-                .WithMany(x => x.Medicines)
-                .HasForeignKey(x => x.TreatmentId);
-
-            // Config on treatment
             modelBuilder.Entity<Treatment>().ToTable("treatments");
             modelBuilder.Entity<Treatment>()
+                .HasMany(x => x.Combination)
+                .WithMany()
+                .UsingEntity(t => t.ToTable("treatment_antibiotics"));
+            modelBuilder.Entity<Treatment>()
+                .HasOne(x => x.TreatmentProtocol)
+                .WithMany(x => x.Treatments)
+                .HasForeignKey(x => x.TreatmentProtocolId);
+
+            // Config on treatment
+            modelBuilder.Entity<TreatmentProtocol>().ToTable("treatment_protocols");
+            modelBuilder.Entity<TreatmentProtocol>()
                 .HasMany(x => x.Pathogens)
                 .WithMany()
-                .UsingEntity(t => t.ToTable("treatment_pathogens"));
-            modelBuilder.Entity<Treatment>()
+                .UsingEntity(t => t.ToTable("treatment_protocol_pathogens"));
+            modelBuilder.Entity<TreatmentProtocol>()
                 .HasMany(x => x.Criteria)
                 .WithMany()
-                .UsingEntity(t => t.ToTable("treatment_criteria"));
-            modelBuilder.Entity<Treatment>()
+                .UsingEntity(t => t.ToTable("treatment_protocol_criteria"));
+            modelBuilder.Entity<TreatmentProtocol>()
                 .Property(x => x.Severity)
                 .HasConversion<string>();
-            modelBuilder.Entity<Treatment>()
+            modelBuilder.Entity<TreatmentProtocol>()
                 .Property(x => x.TreatmentSite)
                 .HasConversion<string>();
+
+            modelBuilder.Entity<Antibiogram>().ToTable("antibiograms");
+            modelBuilder.Entity<Antibiogram>()
+                .HasOne(x => x.Pathogen)
+                .WithMany()
+                .HasForeignKey(x => x.PathogenId);
+            modelBuilder.Entity<Antibiogram>()
+                .HasMany(x => x.Antibiotics)
+                .WithMany()
+                .UsingEntity(t => t.ToTable("antibiogram_antibiotics"));
+            modelBuilder.Entity<Antibiogram>().Property(x => x.MicCategory).HasConversion<string>();
         }
 
         public override async ValueTask DisposeAsync()
         {
+            GC.SuppressFinalize(this);
             await base.DisposeAsync();
         }
     }

@@ -48,8 +48,15 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.SearchClini
             string name, string code, string description, string version, string publisher,
             bool isApplied, bool softDeleted = false)
         {
-            var metric = new ClinicalMetric(name, code, description, version, publisher, isApplied, [])
+            var metric = new ClinicalMetric
             {
+                Name = name,
+                Code = code,
+                Description = description,
+                Version = version,
+                Publisher = publisher,
+                IsApplied = isApplied,
+                Rules = [],
                 IsDeleted = softDeleted,
                 DeletedAt = softDeleted ? DateTimeOffset.UtcNow : null,
             };

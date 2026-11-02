@@ -10,7 +10,6 @@ namespace Respira.Clinical.Application.Features.ClinicalVariables.UpdateClinical
         public UpdateClinicalVariableValidator()
         {
             RuleFor(x => x.Id).NotEmpty().WithMessage("ID is required");
-            RuleFor(x => x.Code).NotEmpty().WithMessage("Code is required");
             RuleFor(x => x.Name).NotEmpty().WithMessage("Name is required");
             RuleFor(x => x.Description).NotEmpty().WithMessage("Description is required");
             RuleFor(x => x.ValueType).IsInEnum().WithMessage("Value type is required");

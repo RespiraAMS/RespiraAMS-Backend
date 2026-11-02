@@ -1,11 +1,11 @@
-using Authentication.Application.Constracts.Email;
 using MailKit.Net.Smtp;
 using MailKit.Security;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MimeKit;
+using Respira.Authentication.Application.Constracts.Email;
 
-namespace Authentication.Infrastructure.Email;
+namespace Respira.Authentication.Infrastructure.Email;
 
 public sealed class EmailService(
     IOptions<EmailOption> emailOption,

@@ -24,7 +24,7 @@ namespace Respira.Doctor.Application.Features.Doctors.Queries.GetById.Result
         public required List<DegreeType> Degrees { get; set; }
 
         /// <summary>Academic title</summary>
-        public AcademicTitleEnum AcademicTitle { get; set; }
+        public AcademicTitle AcademicTitle { get; set; }
 
         /// <summary>Hospital position</summary>
         public PositionType Position { get; set; }

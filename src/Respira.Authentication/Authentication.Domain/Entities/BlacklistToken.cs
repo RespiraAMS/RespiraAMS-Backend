@@ -1,6 +1,6 @@
 using Respira.ServiceDefaults.Models;
 
-namespace Authentication.Domain.Entities
+namespace Respira.Authentication.Domain.Entities
 {
     /// <summary>
     /// A revoked token that must be rejected even if it has not expired yet.

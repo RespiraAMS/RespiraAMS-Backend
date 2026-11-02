@@ -1,4 +1,4 @@
-namespace Media.Application.Validators
+namespace Respira.Media.Application.Validators
 {
     /// <summary>
     /// Validates that an uploaded file is an image. The MIME content type is derived

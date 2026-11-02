@@ -1,8 +1,8 @@
 using System.Security.Cryptography;
 using System.Text;
-using Authentication.Application.Constracts.Authentication;
+using Respira.Authentication.Application.Constracts.Authentication;
 
-namespace Authentication.Infrastructure.Authentication
+namespace Respira.Authentication.Infrastructure.Authentication
 {
     public class HashService : IHashService
     {

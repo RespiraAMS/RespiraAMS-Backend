@@ -33,7 +33,7 @@ namespace Respira.Doctor.Application.Features.Doctors.Queries.GetById
                 logger.LogDebug("Doctor profile {DoctorId} not found", query.DoctorId);
 
                 return Result<DoctorResult>.Failure(
-                    new Error(ApplicationStatus.ResourceNotFound, "Doctor not found")
+                    new ApplicationError(ApplicationStatus.ResourceNotFound, "Doctor not found")
                 );
             }
 

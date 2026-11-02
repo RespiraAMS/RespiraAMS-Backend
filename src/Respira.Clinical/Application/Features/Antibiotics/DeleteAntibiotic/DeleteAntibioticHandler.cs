@@ -17,7 +17,7 @@ namespace Respira.Clinical.Application.Features.Antibiotics.DeleteAntibiotic
             if (antibiotic is null)
             {
                 logger.LogDebug("Antibiotic not found: {Id}", command.Id);
-                return Result.Failure(new Error(ApplicationStatus.BadRequest, "Antibiotic not found"));
+                return Result.Failure(new ApplicationError(ApplicationStatus.BadRequest, "Antibiotic not found"));
             }
 
             // Delete antibiotic

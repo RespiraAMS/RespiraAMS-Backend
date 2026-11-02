@@ -1,15 +1,15 @@
-using Media.Application.Constracts.Data;
-using Media.Application.Constracts.Storage;
-using Media.Application.Validators;
-using Media.Domain.Entities;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Respira.Media.Application.Constracts.Data;
+using Respira.Media.Application.Constracts.Storage;
+using Respira.Media.Application.Validators;
+using Respira.Media.Domain.Entities;
 using Respira.ServiceDefaults.Contracts.CQRS;
 using Respira.ServiceDefaults.Contracts.Results;
 using Respira.ServiceDefaults.Contracts.Messages.Audit;
 using Wolverine;
 
-namespace Media.Application.Features.MediaAssets.Create
+namespace Respira.Media.Application.Features.MediaAssets.Create
 {
     public class CreateMediaAssetCommandHandler(
         IMediaDbContext dbContext,
@@ -196,7 +196,7 @@ namespace Media.Application.Features.MediaAssets.Create
 
         private static Result<Guid> Failure(string statusCode, string description)
         {
-            return Result<Guid>.Failure(new Error(statusCode, description));
+            return Result<Guid>.Failure(new ApplicationError(statusCode, description));
         }
 
         private static string? BuildPublicUrl(string? publicUrl, string objectKey)

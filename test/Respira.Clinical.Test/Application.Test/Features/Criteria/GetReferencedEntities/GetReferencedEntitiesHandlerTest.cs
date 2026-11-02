@@ -42,7 +42,7 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.GetReferencedEntit
                 .ExecuteDeleteAsync(TestContext.Current.CancellationToken);
             await _context.RiskFactors.IgnoreQueryFilters()
                 .ExecuteDeleteAsync(TestContext.Current.CancellationToken);
-            await _context.Treatments.IgnoreQueryFilters()
+            await _context.TreatmentProtocols.IgnoreQueryFilters()
                 .ExecuteDeleteAsync(TestContext.Current.CancellationToken);
             await _context.ClinicalMetrics.IgnoreQueryFilters()
                 .ExecuteDeleteAsync(TestContext.Current.CancellationToken);
@@ -58,17 +58,23 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.GetReferencedEntit
          * mirror the real seed data (CURB-65 age >= 65, hypotension SBP < 90 mmHg)
          * and both evaluate to a boolean as a criterion requires
          */
-        private static Criterion CreateAgeCriterion() =>
-            new("Tuổi >= 65", new BinaryFormula(
+        private static Criterion CreateAgeCriterion() => new()
+        {
+            Name = "Tuổi >= 65",
+            Formula = new BinaryFormula(
                 new VariableFormula(new VariableRef(Guid.CreateVersion7(), "AGE", ClinicalValueType.Numeric)),
                 new NumericConstantFormula(65),
-                ExpressionOperator.Gte));
+                ExpressionOperator.Gte)
+        };
 
-        private static Criterion CreateHypotensionCriterion() =>
-            new("Huyết áp tâm thu < 90 mmHg", new BinaryFormula(
+        private static Criterion CreateHypotensionCriterion() => new()
+        {
+            Name = "Huyết áp tâm thu < 90 mmHg",
+            Formula = new BinaryFormula(
                 new VariableFormula(new VariableRef(Guid.CreateVersion7(), "SBP", ClinicalValueType.Numeric)),
                 new NumericConstantFormula(90),
-                ExpressionOperator.Lt));
+                ExpressionOperator.Lt)
+        };
 
         private async Task<Criterion> SeedCriterionAsync(Criterion criterion)
         {
@@ -97,6 +103,9 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.GetReferencedEntit
                 Name = name,
                 Code = code,
                 Description = description,
+                Publisher = string.Empty,
+                Version = string.Empty,
+                IsApplied = true
             };
             await _context.ClinicalMetrics.AddAsync(metrics, TestContext.Current.CancellationToken);
             await _context.SaveChangesAsync(TestContext.Current.CancellationToken);
@@ -104,12 +113,16 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.GetReferencedEntit
         }
 
         private async Task<RiskFactor> SeedRiskFactorAsync(
-            Guid pathogenId, Guid criterionId, bool isDeleted = false)
+            Guid pathogenId,
+            Guid criterionId,
+            bool isCritical = false,
+            bool isDeleted = false)
         {
             var factor = new RiskFactor
             {
                 PathogenId = pathogenId,
                 CriterionId = criterionId,
+                IsCriticalFactor = isCritical,
                 IsDeleted = isDeleted,
                 DeletedAt = isDeleted ? DateTimeOffset.UtcNow : null,
             };
@@ -136,21 +149,24 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.GetReferencedEntit
             return rule;
         }
 
-        private async Task<Treatment> SeedTreatmentAsync(
+        private async Task<TreatmentProtocol> SeedTreatmentAsync(
             Severity severity,
             TreatmentSite treatmentSite,
             IEnumerable<Criterion> criteria,
             bool isDeleted = false)
         {
-            var treatment = new Treatment
+            var treatment = new TreatmentProtocol
             {
                 Severity = severity,
                 TreatmentSite = treatmentSite,
                 Criteria = [.. criteria],
+                Publisher = string.Empty,
+                Version = string.Empty,
+                IsApplied = true,
                 IsDeleted = isDeleted,
                 DeletedAt = isDeleted ? DateTimeOffset.UtcNow : null,
             };
-            await _context.Treatments.AddAsync(treatment, TestContext.Current.CancellationToken);
+            await _context.TreatmentProtocols.AddAsync(treatment, TestContext.Current.CancellationToken);
             await _context.SaveChangesAsync(TestContext.Current.CancellationToken);
             return treatment;
         }

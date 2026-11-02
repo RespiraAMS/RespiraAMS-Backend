@@ -38,7 +38,7 @@ namespace Respira.Patient.Application.Features.Patients.GetPatientById
                 .FirstOrDefaultAsync(x => x.Id == query.Id, cancellationToken);
 
             return patient is null
-                ? Result<PatientResult>.Failure(new Error(ApplicationStatus.ResourceNotFound, "Patient not found"))
+                ? Result<PatientResult>.Failure(new ApplicationError(ApplicationStatus.ResourceNotFound, "Patient not found"))
                 : Result<PatientResult>.Success(ApplicationStatus.Success, patient);
         }
     }

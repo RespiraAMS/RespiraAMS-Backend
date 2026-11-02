@@ -1,14 +1,14 @@
 using System.Security.Cryptography;
 using System.Text;
-using Authentication.Application.Constracts.Cache;
-using Authentication.Application.Constracts.Data;
-using Authentication.Application.Features.Authentication.Queries.Search.Result;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Respira.Authentication.Application.Constracts.Cache;
+using Respira.Authentication.Application.Constracts.Data;
+using Respira.Authentication.Application.Features.Authentication.Queries.Search.Result;
 using Respira.ServiceDefaults.Contracts.CQRS;
 using Respira.ServiceDefaults.Contracts.Results;
 
-namespace Authentication.Application.Features.Authentication.Queries.Search
+namespace Respira.Authentication.Application.Features.Authentication.Queries.Search
 {
     public class SearchAccountQueryHandler(
         IAuthDbContext dbContext,

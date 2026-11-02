@@ -1,4 +1,4 @@
-namespace Authentication.Application.Features.Authentication.Commands.SendVerify.Events
+namespace Respira.Authentication.Application.Features.Authentication.Commands.SendVerify.Events
 {
     /// <summary>
     /// Published when the verification email has been handed to the SMTP service.

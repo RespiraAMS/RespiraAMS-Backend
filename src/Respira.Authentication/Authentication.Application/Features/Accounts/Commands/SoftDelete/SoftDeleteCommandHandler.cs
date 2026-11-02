@@ -1,13 +1,13 @@
-using Authentication.Application.Constracts.Cache;
-using Authentication.Application.Constracts.Data;
-using Authentication.Application.Features.Accounts.Commands.SoftDelete.Events;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Respira.Authentication.Application.Constracts.Cache;
+using Respira.Authentication.Application.Constracts.Data;
+using Respira.Authentication.Application.Features.Accounts.Commands.SoftDelete.Events;
 using Respira.ServiceDefaults.Contracts.CQRS;
 using Respira.ServiceDefaults.Contracts.Messages.Audit;
 using Wolverine;
 
-namespace Authentication.Application.Features.Accounts.Commands.SoftDelete
+namespace Respira.Authentication.Application.Features.Accounts.Commands.SoftDelete
 {
     /// <summary>
     /// Compensation step for the create saga: hides the account created by a flow that

@@ -1,6 +1,6 @@
 using Respira.ServiceDefaults.Contracts.CQRS;
 
-namespace Authentication.Application.Features.Authentication.Queries.Search
+namespace Respira.Authentication.Application.Features.Authentication.Queries.Search
 {
     public record SearchAccountQuery : IQuery
     {

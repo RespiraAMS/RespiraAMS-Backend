@@ -1,15 +1,14 @@
-using Asp.Versioning;
-using Asp.Versioning.ApiExplorer;
-using Media.API.Extensions;
-using Media.Application.Constracts.Messaging;
-using Media.Application.Constracts.Storage;
-using Media.Application.Features.MediaAssets.Create;
-using Media.Infrastructure.Extensions;
-using Media.Infrastructure.Persistence;
 using Respira.ServiceDefaults.Contracts.Messages.Audit;
+using Respira.Media.API.Extensions;
+using Respira.ServiceDefaults.Extensions;
 using Wolverine;
 using Wolverine.Postgresql;
+using Respira.Media.Infrastructure.Persistence;
+using Respira.Media.Infrastructure.Extensions;
+using Respira.Media.Application.Features.MediaAssets.Create;
+using Respira.Media.Application.Constracts.Storage;
 using Wolverine.RabbitMQ;
+using Respira.Media.Application.Contracts.Messaging;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,20 +19,7 @@ builder.Services
     .ValidateOnStart();
 
 builder.Services.AddControllers();
-builder.Services
-    .AddApiVersioning(options =>
-    {
-        options.DefaultApiVersion = new ApiVersion(1.0);
-        options.ReportApiVersions = true;
-        options.ApiVersionReader = new UrlSegmentApiVersionReader();
-    })
-    .AddMvc()
-    .AddApiExplorer(options =>
-    {
-        options.GroupNameFormat = "'v'VVV";
-        options.SubstituteApiVersionInUrl = true;
-    })
-    .AddOpenApi();
+builder.Services.AddApiVersion();
 
 builder.AddNpgsqlDbContext<MediaDbContext>("mediadb");
 builder.Services.AddMediaInfrastructure();
@@ -44,19 +30,13 @@ builder.Host.UseWolverine(options =>
     options.UseRuntimeCompilation();
     options.Discovery.IncludeAssembly(typeof(CreateMediaAssetCommand).Assembly);
 
-    options
-        .UseRabbitMq(
-            builder.Configuration.GetConnectionString("rabbitmq")
-                ?? throw new InvalidOperationException(
-                    "Connection string 'rabbitmq' is not configured"
-                )
-        )
-        .AutoProvision();
+    var mqconn = builder.Configuration.GetConnectionString("rabbitmq")
+        ?? throw new InvalidOperationException("Connection string 'rabbitmq' is not configured");
+    options.UseRabbitMq(mqconn).AutoProvision();
 
-    options.PersistMessagesWithPostgresql(
-        builder.Configuration.GetConnectionString("mediadb")
-            ?? throw new InvalidOperationException("Connection string 'mediadb' is not configured")
-    );
+    var conn = builder.Configuration.GetConnectionString("mediadb")
+        ?? throw new InvalidOperationException("Connection string 'mediadb' is not configured");
+    options.PersistMessagesWithPostgresql(conn);
 
     // Inbound: media asset lookups requested by other microservices (e.g. Doctor search).
     options.ListenToRabbitQueue(RabbitQueues.MediaQueries);
@@ -70,11 +50,11 @@ await app.ApplyMigrationsAsync();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi().WithDocumentPerVersion();
+    app.UseApiDocumentation();
 }
 
 app.UseHttpsRedirection();
 
 app.MapControllers();
 
-app.Run();
+await app.RunAsync();

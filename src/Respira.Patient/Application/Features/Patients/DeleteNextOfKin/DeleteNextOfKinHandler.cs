@@ -16,7 +16,7 @@ namespace Respira.Patient.Application.Features.Patients.DeleteNextOfKin
             if (nextOfKin is null)
             {
                 logger.LogDebug("Next of kin not found: {Id}", command.Id);
-                return Result.Failure(new Error(ApplicationStatus.BadRequest, "Next of kin not found"));
+                return Result.Failure(new ApplicationError(ApplicationStatus.BadRequest, "Next of kin not found"));
             }
 
             // Delete next of kin

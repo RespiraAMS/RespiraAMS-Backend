@@ -1,12 +1,12 @@
-using Authentication.Application.Constracts.Cache;
-using Authentication.Application.Constracts.Authentication;
-using Authentication.Application.Constracts.Email;
-using Authentication.Infrastructure.Authentication;
-using Authentication.Infrastructure.Cache;
-using Authentication.Infrastructure.Email;
 using Microsoft.Extensions.DependencyInjection;
+using Respira.Authentication.Application.Constracts.Authentication;
+using Respira.Authentication.Application.Constracts.Cache;
+using Respira.Authentication.Application.Constracts.Email;
+using Respira.Authentication.Infrastructure.Authentication;
+using Respira.Authentication.Infrastructure.Cache;
+using Respira.Authentication.Infrastructure.Email;
 
-namespace Authentication.Infrastructure.Extensions
+namespace Respira.Authentication.Infrastructure.Extensions
 {
     public static class DependencyInjection
     {

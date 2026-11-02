@@ -8,15 +8,16 @@ namespace Respira.Clinical.Application.Features.ClinicalMetrics.CreateClinicalMe
     {
         public Result<ClinicalMetric> ToModel(CreateClinicalMetricCommand command)
         {
-            return Result<ClinicalMetric>.Success(ApplicationStatus.Success, new ClinicalMetric(
-                command.Name,
-                command.Code,
-                command.Description,
-                command.Version,
-                command.Publisher,
-                true,
-                []
-            ));
+            return Result<ClinicalMetric>.Success(ApplicationStatus.Success, new ClinicalMetric
+            {
+                Name = command.Name,
+                Code = command.Code,
+                Description = command.Description,
+                Version = command.Version,
+                Publisher = command.Publisher,
+                IsApplied = true,
+                Rules = [],
+            });
         }
 
         public Result<ClinicalMetric> ToModel(CreateClinicalMetricCommand command, object dependencies)

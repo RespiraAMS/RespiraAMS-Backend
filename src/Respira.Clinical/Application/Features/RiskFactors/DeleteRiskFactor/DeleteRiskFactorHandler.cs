@@ -16,7 +16,7 @@ namespace Respira.Clinical.Application.Features.RiskFactors.DeleteRiskFactor
             if (factor is null)
             {
                 logger.LogDebug("Risk factor not found: {Id}", command.Id);
-                return Result.Failure(new Error(ApplicationStatus.BadRequest, "Risk factor not found"));
+                return Result.Failure(new ApplicationError(ApplicationStatus.BadRequest, "Risk factor not found"));
             }
 
             // Delete risk factor

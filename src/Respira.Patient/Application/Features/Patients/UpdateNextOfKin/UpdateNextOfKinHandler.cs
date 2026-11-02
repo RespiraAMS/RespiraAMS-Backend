@@ -21,7 +21,7 @@ namespace Respira.Patient.Application.Features.Patients.UpdateNextOfKin
             if (nextOfKin is null)
             {
                 logger.LogDebug("Next of kin not found: {Id}", command.Id);
-                return Result.Failure(new Error(ApplicationStatus.BadRequest, "Next of kin not found"));
+                return Result.Failure(new ApplicationError(ApplicationStatus.BadRequest, "Next of kin not found"));
             }
 
             // Check of phone number uniqueness
@@ -35,14 +35,14 @@ namespace Respira.Patient.Application.Features.Patients.UpdateNextOfKin
                     nextOfKin.PatientId,
                     command.PhoneNumber
                 });
-                return Result.Failure(new Error(ApplicationStatus.BadRequest, "Next of kin phone number already registered for this patient"));
+                return Result.Failure(new ApplicationError(ApplicationStatus.BadRequest, "Next of kin phone number already registered for this patient"));
             }
 
             // Map command to domain model
             var mapResult = mapper.MapModel(nextOfKin, command);
             if (mapResult.IsFailure())
             {
-                logger.LogDebug("Failed to map command to domain model: {Error}", mapResult.Error!);
+                logger.LogDebug("Failed to map command to domain model: {ApplicationError}", mapResult.Error!);
                 return Result.Failure(mapResult.Error!);
             }
 

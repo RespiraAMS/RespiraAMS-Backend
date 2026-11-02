@@ -28,7 +28,7 @@ namespace Respira.Clinical.Domain.Entities
             // Check rule 1
             if (dosages.Count == 0)
             {
-                return Result<bool>.Failure(new Error(ApplicationStatus.BusinessRuleViolation, "Dosage list is empty"));
+                return Result<bool>.Failure(new ApplicationError(ApplicationStatus.BusinessRuleViolation, "Dosage list is empty"));
             }
 
             foreach (var route in dosages.Select(d => d.RouteOfAdministration).Distinct().ToList())
@@ -38,10 +38,10 @@ namespace Respira.Clinical.Domain.Entities
                     .ToList();
 
                 // Check rule 2
-                if (dosagePerRoute.Count(d => d.Crcl == null) != 1)
+                if (dosagePerRoute.Count(d => d.IsStandardDose) != 1)
                 {
                     var msg = $"Route {route} has more than 1 standard dose";
-                    return Result<bool>.Failure(new Error(ApplicationStatus.BusinessRuleViolation, msg));
+                    return Result<bool>.Failure(new ApplicationError(ApplicationStatus.BusinessRuleViolation, msg));
                 }
 
                 // Check rule 3
@@ -49,6 +49,9 @@ namespace Respira.Clinical.Domain.Entities
                 {
                     // Because we have ensured that each route can only have 1 dosage with CrCl is null,
                     // we can simply ignore null case in this check
+                    // NOTE: in this case, the check should be a direct comparison of CrCl != null,
+                    // instead of using the self infer IsStandardDose for clarity, even if the 2 is
+                    // equal
                     if (dosagePerRoute[i].Crcl is null) continue;
                     for (var j = i + 1; j < dosagePerRoute.Count; j++)
                     {
@@ -56,7 +59,7 @@ namespace Respira.Clinical.Domain.Entities
                         if (dosagePerRoute[i].Crcl!.IsRangeOverlapped(dosagePerRoute[j].Crcl))
                         {
                             var msg = $"Route {route} has overlapped CrCl ranges";
-                            return Result<bool>.Failure(new Error(ApplicationStatus.BusinessRuleViolation, msg, new
+                            return Result<bool>.Failure(new ApplicationError(ApplicationStatus.BusinessRuleViolation, msg, new
                             {
                                 Range1 = dosagePerRoute[i].Crcl!,
                                 Range2 = dosagePerRoute[j].Crcl!

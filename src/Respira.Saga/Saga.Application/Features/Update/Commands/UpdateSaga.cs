@@ -1,10 +1,10 @@
-using Authentication.Application.Features.Accounts.Commands.Update;
-using Authentication.Application.Features.Accounts.Commands.Update.Events;
 using Microsoft.Extensions.Logging;
-using Respira.Doctor.Application.Features.Doctors.Commands.Update;
-using Respira.Doctor.Application.Features.Doctors.Commands.Update.Events;
 using Respira.Doctor.Domain.Enums;
 using Respira.Saga.Application.Constracts.Media;
+using Respira.Saga.Application.Constracts.Messages.Authentication.Update;
+using Respira.Saga.Application.Constracts.Messages.Authentication.Update.Events;
+using Respira.Saga.Application.Constracts.Messages.Doctor.Update;
+using Respira.Saga.Application.Constracts.Messages.Doctor.Update.Events;
 using Respira.Saga.Domain.Enums;
 using Respira.ServiceDefaults.Contracts.Results;
 using Wolverine;
@@ -51,7 +51,7 @@ namespace Respira.Saga.Application.Features.Update.Commands
 
         public List<DegreeType> Degrees { get; set; } = [];
 
-        public AcademicTitleEnum AcademicTitle { get; set; }
+        public AcademicTitle AcademicTitle { get; set; }
 
         public PositionType Position { get; set; }
 
@@ -146,7 +146,7 @@ namespace Respira.Saga.Application.Features.Update.Commands
                 if (string.IsNullOrWhiteSpace(TempAvatarPath) || !File.Exists(TempAvatarPath))
                 {
                     upload = Result<Guid>.Failure(
-                        new Error(ApplicationStatus.BadRequest, "The avatar file is missing")
+                        new ApplicationError(ApplicationStatus.BadRequest, "The avatar file is missing")
                     );
                 }
                 else
@@ -167,7 +167,7 @@ namespace Respira.Saga.Application.Features.Update.Commands
                 // Never throw out of a saga handler: a blind retry would upload the file twice.
                 logger.LogError(exception, "{SagaId} Uploading the avatar failed", SagaId);
                 upload = Result<Guid>.Failure(
-                    new Error(ApplicationStatus.ThirdPartyServiceFailure, exception.Message)
+                    new ApplicationError(ApplicationStatus.ThirdPartyServiceFailure, exception.Message)
                 );
             }
             finally
@@ -233,7 +233,7 @@ namespace Respira.Saga.Application.Features.Update.Commands
                         message.OldMediaId
                     );
                     deletion = Result<Guid>.Failure(
-                        new Error(ApplicationStatus.ThirdPartyServiceFailure, exception.Message)
+                        new ApplicationError(ApplicationStatus.ThirdPartyServiceFailure, exception.Message)
                     );
                 }
 

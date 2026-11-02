@@ -22,14 +22,14 @@ namespace Respira.Clinical.Application.Features.Antibiotics.AddDosage
             if (antibiotic is null)
             {
                 logger.LogDebug("Antibiotic not found: {Id}", command.AntibioticId);
-                return Result<AddDosageResult>.Failure(new Error(ApplicationStatus.BadRequest, "Antibiotic not found"));
+                return Result<AddDosageResult>.Failure(new ApplicationError(ApplicationStatus.BadRequest, "Antibiotic not found"));
             }
 
             // Map from command to entity
             var mapResult = mapper.ToModel(command);
             if (mapResult.IsFailure())
             {
-                logger.LogDebug("Failed to map command to model: {Error}", mapResult.Error);
+                logger.LogDebug("Failed to map command to model: {ApplicationError}", mapResult.Error);
                 return Result<AddDosageResult>.Failure(mapResult.Error!);
             }
             var dosage = mapResult.Data!;

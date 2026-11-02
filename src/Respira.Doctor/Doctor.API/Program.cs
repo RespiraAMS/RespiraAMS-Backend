@@ -1,5 +1,3 @@
-using Asp.Versioning;
-using Asp.Versioning.ApiExplorer;
 using FluentValidation;
 using Respira.Doctor.API.Extensions;
 using Respira.Doctor.Application.Constracts.Messaging;
@@ -13,6 +11,7 @@ using Respira.Doctor.Infrastructure.Persistence;
 using Respira.ServiceDefaults.Contracts.Messages.Accounts;
 using Respira.ServiceDefaults.Contracts.Messages.Audit;
 using Respira.ServiceDefaults.Contracts.Messages.Media;
+using Respira.ServiceDefaults.Extensions;
 using Wolverine;
 using Wolverine.FluentValidation;
 using Wolverine.Postgresql;
@@ -21,20 +20,7 @@ using Wolverine.RabbitMQ;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
-builder.Services
-    .AddApiVersioning(options =>
-    {
-        options.DefaultApiVersion = new ApiVersion(1.0);
-        options.ReportApiVersions = true;
-        options.ApiVersionReader = new UrlSegmentApiVersionReader();
-    })
-    .AddMvc()
-    .AddApiExplorer(options =>
-    {
-        options.GroupNameFormat = "'v'VVV";
-        options.SubstituteApiVersionInUrl = true;
-    })
-    .AddOpenApi();
+builder.Services.AddApiVersion();
 
 builder.AddNpgsqlDbContext<DoctorDbContext>("doctordb");
 builder.Services.AddDoctorInfrastructure();
@@ -46,18 +32,11 @@ builder.Host.UseWolverine(options =>
     options.UseRuntimeCompilation();
     options.Discovery.IncludeAssembly(typeof(CreateDoctorProfileCommand).Assembly);
     options.UseFluentValidation(RegistrationBehavior.ExplicitRegistration);
-    options
-        .UseRabbitMq(
-            builder.Configuration.GetConnectionString("rabbitmq")
-                ?? throw new InvalidOperationException(
-                    "Connection string 'rabbitmq' is not configured"
-                )
-        )
-        .AutoProvision();
-    options.PersistMessagesWithPostgresql(
-        builder.Configuration.GetConnectionString("doctordb")
-            ?? throw new InvalidOperationException("Connection string 'doctordb' is not configured")
-    );
+    var mqconn = builder.Configuration.GetConnectionString("rabbitmq") ?? throw new InvalidOperationException("Connection string 'rabbitmq' is not configured");
+    options.UseRabbitMq(mqconn).AutoProvision();
+    var conn = builder.Configuration.GetConnectionString("doctordb")
+        ?? throw new InvalidOperationException("Connection string 'doctordb' is not configured");
+    options.PersistMessagesWithPostgresql(conn);
     options.ListenToRabbitQueue(RabbitQueues.DoctorCommands);
     options.ListenToRabbitQueue(RabbitQueues.DoctorQueries);
     options.PublishMessage<DoctorProfileCreated>().ToRabbitQueue(RabbitQueues.SagaEvents);
@@ -85,11 +64,11 @@ await app.ApplyMigrationsAsync();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi().WithDocumentPerVersion();
+    app.UseApiDocumentation();
 }
 
 app.UseHttpsRedirection();
 
 app.MapControllers();
 
-app.Run();
+await app.RunAsync();

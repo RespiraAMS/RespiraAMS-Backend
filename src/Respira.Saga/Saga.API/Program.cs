@@ -1,26 +1,24 @@
-using Asp.Versioning;
-using Asp.Versioning.ApiExplorer;
-using FluentValidation;
 using System.Text;
+using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using Authentication.Application.Features.Accounts.Commands.Create;
-using Authentication.Application.Features.Accounts.Commands.SoftDelete;
-using Authentication.Application.Features.Accounts.Commands.Update;
-using Authentication.Application.Features.Authentication.Commands.SendVerify;
-using Respira.Doctor.Application.Features.Doctors.Commands.Create;
-using Respira.Doctor.Application.Features.Doctors.Commands.SoftDelete;
-using Respira.Doctor.Application.Features.Doctors.Commands.Update;
+using Respira.Saga.Application.Constracts.Messages.Authentication;
+using Respira.Saga.Application.Constracts.Messages.Authentication.Create;
+using Respira.Saga.Application.Constracts.Messages.Authentication.SoftDelete;
+using Respira.Saga.Application.Constracts.Messages.Authentication.Update;
+using Respira.Saga.Application.Constracts.Messages.Doctor.Create;
+using Respira.Saga.Application.Constracts.Messages.Doctor.SoftDelete;
+using Respira.Saga.Application.Constracts.Messages.Doctor.Update;
 using Respira.Saga.Application.Constracts.Messaging;
+using Respira.Saga.Application.Contracts.Data;
+using Respira.Saga.Application.Features.Audit.Queries.Search;
 using Respira.Saga.Application.Features.Create.Commands;
 using Respira.Saga.Infrastructure.Extensions;
 using Respira.Saga.Infrastructure.Persistence;
-using Respira.Saga.Application.Constracts.Data;
-using Respira.Saga.Application.Features.Audit.Queries.Search;
-using Respira.ServiceDefaults.Extensions;
-using Respira.ServiceDefaults.Contracts.Messages.Doctors;
 using Respira.ServiceDefaults.Contracts.Messages.Audit;
+using Respira.ServiceDefaults.Contracts.Messages.Doctors;
+using Respira.ServiceDefaults.Extensions;
 using Wolverine;
 using Wolverine.FluentValidation;
 using Wolverine.Postgresql;
@@ -49,24 +47,9 @@ builder.Services
     });
 builder.Services.AddAuthorization();
 builder.AddNpgsqlDbContext<SagaAuditDbContext>("sagadb");
-builder.Services.AddScoped<ISagaAuditDbContext>(services =>
-    services.GetRequiredService<SagaAuditDbContext>()
-);
+builder.Services.AddScoped<ISagaAuditDbContext>(services => services.GetRequiredService<SagaAuditDbContext>());
 builder.Services.AddValidatorsFromAssemblyContaining<SearchSagaAuditQuery>();
-builder.Services
-    .AddApiVersioning(options =>
-    {
-        options.DefaultApiVersion = new ApiVersion(1.0);
-        options.ReportApiVersions = true;
-        options.ApiVersionReader = new UrlSegmentApiVersionReader();
-    })
-    .AddMvc()
-    .AddApiExplorer(options =>
-    {
-        options.GroupNameFormat = "'v'VVV";
-        options.SubstituteApiVersionInUrl = true;
-    })
-    .AddOpenApi();
+builder.Services.AddApiVersion();
 
 // The avatar is uploaded to the Media service over HTTP, every other step travels
 // over RabbitMQ.
@@ -93,10 +76,9 @@ builder.Host.UseWolverine(options =>
             ?? throw new InvalidOperationException("Connection string 'sagadb' is not configured")
     );
 
-    options.UseRabbitMq(
-        builder.Configuration.GetConnectionString("rabbitmq")
-            ?? throw new InvalidOperationException("Connection string 'rabbitmq' is not configured")
-    ).AutoProvision();
+    var mqconn = builder.Configuration.GetConnectionString("rabbitmq")
+        ?? throw new InvalidOperationException("Connection string 'rabbitmq' is not configured");
+    options.UseRabbitMq(mqconn).AutoProvision();
 
     // Inbound: completion and failure events raised by Authentication and Doctor.
     options.ListenToRabbitQueue(RabbitQueues.SagaEvents);
@@ -133,7 +115,7 @@ await using (var scope = app.Services.CreateAsyncScope())
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi().WithDocumentPerVersion();
+    app.UseApiDocumentation();
 }
 
 app.UseHttpsRedirection();
@@ -143,4 +125,4 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.Run();
+await app.RunAsync();

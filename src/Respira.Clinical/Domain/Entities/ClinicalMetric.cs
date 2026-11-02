@@ -10,73 +10,48 @@ namespace Respira.Clinical.Domain.Entities
         /// <summary>
         /// Scoring metric name
         /// </summary>
-        public string Name { get; set; }
+        public required string Name { get; set; }
 
         /// <summary>
         /// Scoring metric code. Preferably follow LOINC code
         /// </summary>
-        public string Code { get; set; }
+        public required string Code { get; set; }
 
         /// <summary>
         /// Scoring metric description
         /// </summary>
-        public string Description { get; set; }
+        public required string Description { get; set; }
 
         /// <summary>
         /// Version of the metric
         /// </summary>
-        public string Version { get; set; }
+        public required string Version { get; set; }
 
         /// <summary>
         /// Metric publisher
         /// </summary>
-        public string Publisher { get; set; }
+        public required string Publisher { get; set; }
 
         /// <summary>
         /// Metric status, is applied or not
         /// </summary>
-        public bool IsApplied { get; set; }
+        public required bool IsApplied { get; set; }
 
         /// <summary>
         /// Scoring rules
         /// </summary>
-        public ICollection<MetricRule> Rules { get; set; } = [];
-
-        public ClinicalMetric(
-            string name,
-            string code,
-            string description,
-            string version,
-            string publisher,
-            bool isApplied,
-            ICollection<MetricRule> rules)
+        public ICollection<MetricRule> Rules
         {
-            if (rules.Any(r => r.GetType() != typeof(ScoringRule)) && rules.Any(r => r.GetType() != typeof(MajorMinorRule)))
+            get;
+            set
             {
-                throw new ArgumentException("All rules belong to a clinical metrics should be of the same type");
+                if (value.Any(r => r.GetType() != typeof(ScoringRule)) && value.Any(r => r.GetType() != typeof(MajorMinorRule)))
+                {
+                    throw new ArgumentException("All rules belong to a clinical metrics should be of the same type");
+                }
+                field = value;
             }
-
-            Name = name;
-            Code = code;
-            Description = description;
-            Version = version;
-            Publisher = publisher;
-            IsApplied = isApplied;
-            Rules = rules;
-        }
-
-        /// <summary>
-        /// This is just a parameterless constructor for EF Core stuff. For normal usage,
-        /// it's better to use the parameter constructor
-        /// </summary>
-        public ClinicalMetric()
-        {
-            Name = string.Empty;
-            Code = string.Empty;
-            Description = string.Empty;
-            Version = string.Empty;
-            Publisher = string.Empty;
-        }
+        } = [];
 
         // A metric with no rules belongs to neither system: All() would vacuously be
         // true for both predicates on an empty collection, making every metric both

@@ -4,6 +4,9 @@ using System.Text.Json.Serialization;
 
 namespace Respira.Clinical.Domain.Enums
 {
+    /// <summary>
+    /// Antibiotic route of administration
+    /// </summary>
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum RouteOfAdministration
     {

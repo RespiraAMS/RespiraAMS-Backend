@@ -21,10 +21,10 @@ namespace Respira.ServiceDefaults.Contracts.Results
         /// <summary>
         /// Operation error if failed
         /// </summary>
-        public Error? Error { get; }
+        public ApplicationError? Error { get; }
 
         [JsonConstructor] // JsonConstructor is needed for RabbitMQ communication
-        private Result(string statusCode, Error? error)
+        private Result(string statusCode, ApplicationError? error)
         {
             if (ApplicationStatus.IsSuccess(statusCode) && error != null)
             {
@@ -61,9 +61,9 @@ namespace Respira.ServiceDefaults.Contracts.Results
         /// <summary>
         /// Construct a failure result
         /// </summary>
-        /// <param name="error">Operation error</param>
+        /// <param name="applicationError">Operation applicationError</param>
         /// <returns>A failure result</returns>
-        public static Result Failure(Error error) => new(error.StatusCode, error);
+        public static Result Failure(ApplicationError applicationError) => new(applicationError.StatusCode, applicationError);
 
         /// <summary>
         /// Check if the result is a success result
@@ -133,7 +133,7 @@ namespace Respira.ServiceDefaults.Contracts.Results
         /// <summary>
         /// Operation error if failed
         /// </summary>
-        public Error? Error { get; }
+        public ApplicationError? Error { get; }
 
         /// <summary>
         /// Operation data result if success. When failure occurs, this property will be
@@ -144,7 +144,7 @@ namespace Respira.ServiceDefaults.Contracts.Results
         public T? Data { get; }
 
         [JsonConstructor] // JsonConstructor is needed for RabbitMQ communication
-        private Result(string statusCode, Error? error, T? data)
+        private Result(string statusCode, ApplicationError? error, T? data)
         {
             if (ApplicationStatus.IsSuccess(statusCode) && error != null)
             {
@@ -183,9 +183,9 @@ namespace Respira.ServiceDefaults.Contracts.Results
         /// <summary>
         /// Construct a failure result
         /// </summary>
-        /// <param name="error">Operation error</param>
+        /// <param name="applicationError">Operation applicationError</param>
         /// <returns>A failure result</returns>
-        public static Result<T> Failure(Error error) => new(error.StatusCode, error, default);
+        public static Result<T> Failure(ApplicationError applicationError) => new(applicationError.StatusCode, applicationError, default);
 
         /// <summary>
         /// Check if the result is a success result

@@ -12,7 +12,7 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.UpdateMetri
     public class UpdateMetricRuleMapperTest
     {
         private readonly IUpdateMapper<MetricRule, UpdateMetricRuleCommand> _mapper =
-            new UpdateMetricRuleMapper(new FormulaMapper());
+            new UpdateMetricRuleMapper(new FormulaDtoMapper());
 
         // Fixed stamp for the rules before the update, well in the past so the
         // assertion on the new UpdatedAt cannot be flaky

@@ -16,8 +16,9 @@ namespace Respira.Clinical.Infrastructure.Data
                 await context.SuspectedCauses.AnyAsync() ||
                 await context.AntibioticGroups.AnyAsync() ||
                 await context.Antibiotics.AnyAsync() ||
-                await context.MedicineCompositions.AnyAsync() ||
-                await context.Treatments.AnyAsync();
+                await context.Treatments.AnyAsync() ||
+                await context.TreatmentProtocols.AnyAsync() ||
+                await context.Antibiograms.AnyAsync();
         }
 
         public static async Task InitializeAsync(ClinicalDbContext context, IOptions<SeedDataOptions> options, ILogger<DbInitializer> logger)
@@ -40,7 +41,7 @@ namespace Respira.Clinical.Infrastructure.Data
             await context.SuspectedCauses.AddRangeAsync(seedData.SuspectedCauses);
             await context.AntibioticGroups.AddRangeAsync(seedData.AntibioticGroups);
             await context.Antibiotics.AddRangeAsync(seedData.Antibiotics);
-            await context.Treatments.AddRangeAsync(seedData.Treatments);
+            await context.TreatmentProtocols.AddRangeAsync(seedData.Treatments);
 
             var count = await context.SaveChangesAsync();
             logger.LogInformation("Seeded {Count} records into database", count);

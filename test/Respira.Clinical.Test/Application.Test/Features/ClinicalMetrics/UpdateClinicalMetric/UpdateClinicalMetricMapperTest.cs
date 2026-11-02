@@ -21,7 +21,6 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.UpdateClini
                 Id = model.Id,
                 // Severity metrics CURB-65, published under the name of its guideline
                 Name = "Severity metrics CURB-65 (BTS guideline)",
-                Code = "CURB-65",
                 Description = "CURB-65 metrics to assess severity of a patient, per the BTS guideline",
                 Version = "2009",
                 Publisher = "Hiệp hội Lồng ngực Anh (BTS)",
@@ -35,7 +34,6 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.UpdateClini
             Assert.Equal(ApplicationStatus.Success, result.StatusCode);
 
             Assert.Equal(command.Name, model.Name);
-            Assert.Equal(command.Code, model.Code);
             Assert.Equal(command.Description, model.Description);
             Assert.Equal(command.Version, model.Version);
             Assert.Equal(command.Publisher, model.Publisher);
@@ -62,7 +60,6 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.UpdateClini
             {
                 Id = model.Id,
                 Name = "ICU hospitalization criteria by IDSA/ATS",
-                Code = "IDSA/ATS",
                 Description = "IDSA/ATS metrics to assess whether a severe patient need ICU or not",
                 Version = "2026",
                 Publisher = "Hiệp hội Bệnh nhiễm trùng Mỹ (IDSA) và Hiệp hội Lồng ngực Mỹ (ATS)",
@@ -75,7 +72,6 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.UpdateClini
             Assert.Null(result.Error);
             Assert.Equal(isApplied, model.IsApplied);
             Assert.Equal(command.Name, model.Name);
-            Assert.Equal(command.Code, model.Code);
         }
 
         [Fact]
@@ -88,7 +84,6 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.UpdateClini
             {
                 Id = model.Id,
                 Name = "Pneumonia Severity Index (PSI)",
-                Code = "PSI",
                 Description = "PSI metrics to assess severity of a patient with more detail than CURB-65",
                 Version = "1997",
                 Publisher = "Đội ngũ Nghiên cứu Kết quả Điều trị Viêm phổi (PORT - Pneumonia Outcomes Research Team)",
@@ -101,11 +96,42 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.UpdateClini
             Assert.Null(result.Error);
             Assert.Equal(ApplicationStatus.Success, result.StatusCode);
             Assert.Equal(command.Name, model.Name);
-            Assert.Equal(command.Code, model.Code);
             Assert.Equal(command.Description, model.Description);
             Assert.Equal(command.Version, model.Version);
             Assert.Equal(command.Publisher, model.Publisher);
             Assert.True(model.IsApplied);
+        }
+
+        [Fact]
+        public void MapModel_CodeImmutableAfterUpdating_Success()
+        {
+            var model = CreateMetric();
+            var code = model.Code;
+
+            var command = new UpdateClinicalMetricCommand
+            {
+                Id = model.Id,
+                Name = "Severity metrics CURB-65 (BTS guideline)",
+                Description = "CURB-65 metrics to assess severity of a patient, per the BTS guideline",
+                Version = "2009",
+                Publisher = "Hiệp hội Lồng ngực Anh (BTS)",
+                IsApplied = true,
+            };
+
+            var result = _mapper.MapModel(model, command);
+
+            Assert.True(result.IsSuccess());
+            Assert.Null(result.Error);
+            Assert.Equal(ApplicationStatus.Success, result.StatusCode);
+
+            Assert.Equal(command.Name, model.Name);
+            Assert.Equal(command.Description, model.Description);
+            Assert.Equal(command.Version, model.Version);
+            Assert.Equal(command.Publisher, model.Publisher);
+            Assert.True(model.IsApplied);
+
+            // The code is immutable after creation, so it should remain the same
+            Assert.Equal(code, model.Code);
         }
 
         #endregion
@@ -119,14 +145,16 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.UpdateClini
 
         private static ClinicalMetric CreateMetric(bool isApplied = true)
         {
-            return new ClinicalMetric(
-                "Severity metrics CURB-65",
-                "CURB-65",
-                "CURB-65 metrics to assess severity of a patient",
-                "2002-2003",
-                "Hiệp hội Lồng ngực Anh (BTS)",
-                isApplied,
-                []);
+            return new ClinicalMetric
+            {
+                Name = "Severity metrics CURB-65",
+                Code = "CURB-65",
+                Description = "CURB-65 metrics to assess severity of a patient",
+                Version = "2002-2003",
+                Publisher = "Hiệp hội Lồng ngực Anh (BTS)",
+                IsApplied = isApplied,
+                Rules = [],
+            };
         }
     }
 }

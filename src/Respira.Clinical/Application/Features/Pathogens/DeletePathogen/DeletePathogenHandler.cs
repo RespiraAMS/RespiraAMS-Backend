@@ -18,7 +18,7 @@ namespace Respira.Clinical.Application.Features.Pathogens.DeletePathogen
             if (pathogen is null)
             {
                 logger.LogWarning("Pathogen ID not found");
-                return Result.Failure(new Error(ApplicationStatus.BadRequest, "Pathogen ID not found"));
+                return Result.Failure(new ApplicationError(ApplicationStatus.BadRequest, "Pathogen ID not found"));
             }
 
             // Delete cascade in transaction

@@ -1,6 +1,10 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using Moq;
 using Respira.Clinical.Application.Contracts.Data;
+using Respira.Clinical.Application.Contracts.Mappers;
 using Respira.Clinical.Application.Features.ClinicalMetrics.GetMetricRuleById;
+using Respira.Clinical.Application.Features.Shared.ManageFormula;
 using Respira.Clinical.Domain.Entities;
 using Respira.Clinical.Domain.Enums;
 using Respira.Clinical.Domain.Models;
@@ -35,7 +39,9 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.GetMetricRu
             _context = new ClinicalDbContext(_options);
 
             // Initialize handler
-            _handler = new(_context);
+            IMapper<Formula, Application.Features.Shared.ManageFormula.FormulaDto> mapper = new FormulaModelMapper();
+            var logger = new Mock<ILogger<GetMetricRuleByIdHandler>>().Object;
+            _handler = new(_context, mapper, logger);
         }
 
         public async ValueTask DisposeAsync()
@@ -87,6 +93,7 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.GetMetricRu
             // Business rule: a scoring rule renders its score function and carries no
             // major/minor flag
             Assert.Equal("1", result.Data.ScoreFunction);
+            Assert.NotNull(result.Data.ScoreFunctionFormula);
             Assert.Null(result.Data.IsMajor);
         }
 
@@ -125,6 +132,7 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.GetMetricRu
                 Assert.NotNull(result.Data);
                 Assert.Equal(ruleIds[i], result.Data.Id);
                 Assert.Equal(expectedScoreFunctions[i], result.Data.ScoreFunction);
+                Assert.NotNull(result.Data.ScoreFunctionFormula);
                 Assert.Null(result.Data.IsMajor);
             }
         }
@@ -160,6 +168,7 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.GetMetricRu
             // Business rule: a major/minor rule carries no score function, only its weight
             Assert.Equal(isMajor, result.Data.IsMajor);
             Assert.Null(result.Data.ScoreFunction);
+            Assert.Null(result.Data.ScoreFunctionFormula);
         }
 
         #endregion
@@ -217,9 +226,9 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.GetMetricRu
          * Skipped: a live rule whose ClinicalMetric or Criterion navigation is soft
          * deleted would null deref in the projection (rule.ClinicalMetric.Name), but
          * that state cannot arise in reality - DeleteClinicalMetricHandler cascades the
-         * soft delete to every rule of the metric, DeleteCriterionHandler cascades to
-         * every rule of the criterion, and AddRule/UpdateRule only accept live parents,
-         * so a rule that is still live always has live navigations
+         * soft delete to every rule of the metric, DeleteCriterionHandler forbids
+         * deleting a criterion that rules still reference, and AddRule/UpdateRule only
+         * accept live parents, so a rule that is still live always has live navigations
          */
 
         #endregion
@@ -228,14 +237,16 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.GetMetricRu
             (string Name, string Code, string Description, string Version, string Publisher) metric,
             bool isApplied = true)
         {
-            var entity = new ClinicalMetric(
-                metric.Name,
-                metric.Code,
-                metric.Description,
-                metric.Version,
-                metric.Publisher,
-                isApplied,
-                []);
+            var entity = new ClinicalMetric
+            {
+                Name = metric.Name,
+                Code = metric.Code,
+                Description = metric.Description,
+                Version = metric.Version,
+                Publisher = metric.Publisher,
+                IsApplied = isApplied,
+                Rules = [],
+            };
             await _context.ClinicalMetrics.AddAsync(entity, TestContext.Current.CancellationToken);
             await _context.SaveChangesAsync(TestContext.Current.CancellationToken);
             return entity.Id;
@@ -245,7 +256,7 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.GetMetricRu
         // boolean criterion (CURB-65 age >= 65, hypotension SBP < 90 mmHg)
         private async Task<Guid> SeedCriterionAsync(string name, Formula formula)
         {
-            var criterion = new Criterion(name, formula);
+            var criterion = new Criterion { Name = name, Formula = formula };
             await _context.Criteria.AddAsync(criterion, TestContext.Current.CancellationToken);
             await _context.SaveChangesAsync(TestContext.Current.CancellationToken);
             return criterion.Id;

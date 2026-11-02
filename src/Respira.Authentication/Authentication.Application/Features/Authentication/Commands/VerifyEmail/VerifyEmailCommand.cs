@@ -1,6 +1,6 @@
 using Respira.ServiceDefaults.Contracts.CQRS;
 
-namespace Authentication.Application.Features.Authentication.Commands.VerifyEmail
+namespace Respira.Authentication.Application.Features.Authentication.Commands.VerifyEmail
 {
     /// <summary>
     /// Confirms an account's email address using the raw token carried by the

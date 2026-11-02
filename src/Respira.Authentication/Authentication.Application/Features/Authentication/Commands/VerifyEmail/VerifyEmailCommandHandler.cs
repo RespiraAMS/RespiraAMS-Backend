@@ -1,15 +1,15 @@
-using Authentication.Application.Constracts.Authentication;
-using Authentication.Application.Constracts.Cache;
-using Authentication.Application.Constracts.Data;
-using Authentication.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Respira.Authentication.Application.Constracts.Authentication;
+using Respira.Authentication.Application.Constracts.Cache;
+using Respira.Authentication.Application.Constracts.Data;
+using Respira.Authentication.Domain.Enums;
 using Respira.ServiceDefaults.Contracts.CQRS;
 using Respira.ServiceDefaults.Contracts.Results;
 using Respira.ServiceDefaults.Contracts.Messages.Audit;
 using Wolverine;
 
-namespace Authentication.Application.Features.Authentication.Commands.VerifyEmail
+namespace Respira.Authentication.Application.Features.Authentication.Commands.VerifyEmail
 {
     /// <summary>
     /// Consumes a single-use email verification token and flags the owning account
@@ -133,7 +133,7 @@ namespace Authentication.Application.Features.Authentication.Commands.VerifyEmai
 
         private static Result<bool> Failure(string statusCode, string description)
         {
-            return Result<bool>.Failure(new Error(statusCode, description));
+            return Result<bool>.Failure(new ApplicationError(statusCode, description));
         }
     }
 }

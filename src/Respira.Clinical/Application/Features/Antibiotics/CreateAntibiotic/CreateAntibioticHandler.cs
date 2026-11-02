@@ -22,14 +22,14 @@ namespace Respira.Clinical.Application.Features.Antibiotics.CreateAntibiotic
             if (group is null)
             {
                 logger.LogDebug("Antibiotic group ID not found for antibiotic group: {Id}", command.AntibioticGroupId);
-                return Result<CreateAntibioticResult>.Failure(new Error(ApplicationStatus.BadRequest, "Antibiotic group ID not exists"));
+                return Result<CreateAntibioticResult>.Failure(new ApplicationError(ApplicationStatus.BadRequest, "Antibiotic group ID not exists"));
             }
 
             // Map command to model
             var mapResult = mapper.ToModel(command);
             if (mapResult.IsFailure())
             {
-                logger.LogDebug("Failed to map command to model: {Error}", mapResult.Error);
+                logger.LogDebug("Failed to map command to model: {ApplicationError}", mapResult.Error);
                 return Result<CreateAntibioticResult>.Failure(mapResult.Error!);
             }
             var antibiotic = mapResult.Data!;

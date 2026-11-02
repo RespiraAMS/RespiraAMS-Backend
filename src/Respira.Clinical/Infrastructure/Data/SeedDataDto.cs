@@ -11,7 +11,8 @@ namespace Respira.Clinical.Infrastructure.Data
         public ICollection<SuspectedCauseDto> SuspectedCauses { get; init; } = [];
         public ICollection<AntibioticGroupDto> AntibioticGroups { get; init; } = [];
         public ICollection<AntibioticDto> Antibiotics { get; init; } = [];
-        public ICollection<TreatmentDto> Treatments { get; init; } = [];
+        public ICollection<TreatmentProtocolDto> TreatmentProtocols { get; init; } = [];
+        public ICollection<AntibiogramDto> Antibiograms { get; init; } = [];
     }
 
     public record ClinicalVariableDto
@@ -88,6 +89,7 @@ namespace Respira.Clinical.Infrastructure.Data
     public record RiskFactorDto
     {
         public string CriterionId { get; init; } = string.Empty;
+        public bool IsCriticalFactor { get; init; }
     }
 
     public record SuspectedCauseDto
@@ -132,7 +134,7 @@ namespace Respira.Clinical.Infrastructure.Data
         public string? Unit { get; init; }
     }
 
-    public record TreatmentDto
+    public record TreatmentProtocolDto
     {
         public string Id { get; init; } = string.Empty;
         public string Severity { get; init; } = string.Empty;
@@ -140,5 +142,15 @@ namespace Respira.Clinical.Infrastructure.Data
         public ICollection<ICollection<Guid>> MedicineIds { get; init; } = [];
         public ICollection<Guid> PathogenIds { get; init; } = [];
         public ICollection<Guid> CriteriaIds { get; init; } = [];
+        public string Version { get; set; } = string.Empty;
+        public string Publisher { get; set; } = string.Empty;
+        public bool IsApplied { get; set; } = true;
+    }
+
+    public record AntibiogramDto
+    {
+        public string MicCategory { get; init; } = string.Empty;
+        public string PathogenId { get; init; } = string.Empty;
+        public List<string> AntibioticIds { get; init; } = [];
     }
 }

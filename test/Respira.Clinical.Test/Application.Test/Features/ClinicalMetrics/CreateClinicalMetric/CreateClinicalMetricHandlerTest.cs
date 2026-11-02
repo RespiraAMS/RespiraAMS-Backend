@@ -226,7 +226,7 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.CreateClini
             var mapper = new Mock<ICreateMapper<CreateClinicalMetricCommand, ClinicalMetric>>();
             mapper.Setup(x => x.ToModel(It.IsAny<CreateClinicalMetricCommand>()))
                 .Returns(Result<ClinicalMetric>.Failure(
-                    new Error(ApplicationStatus.BadRequest, "Unable to map the clinical metric")));
+                    new ApplicationError(ApplicationStatus.BadRequest, "Unable to map the clinical metric")));
             var handler = new CreateClinicalMetricHandler(
                 _context,
                 mapper.Object,
@@ -251,15 +251,15 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.CreateClini
             bool isApplied = true,
             bool isDeleted = false)
         {
-            var entity = new ClinicalMetric(
-                metric.Name,
-                metric.Code,
-                metric.Description,
-                metric.Version,
-                metric.Publisher,
-                isApplied,
-                [])
+            var entity = new ClinicalMetric
             {
+                Name = metric.Name,
+                Code = metric.Code,
+                Description = metric.Description,
+                Version = metric.Version,
+                Publisher = metric.Publisher,
+                IsApplied = isApplied,
+                Rules = [],
                 IsDeleted = isDeleted,
                 DeletedAt = isDeleted ? DateTimeOffset.UtcNow : null,
             };

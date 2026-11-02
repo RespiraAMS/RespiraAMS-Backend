@@ -37,7 +37,7 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.AddMetricRu
             // Create handler dependencies
             _options = new DbContextOptionsBuilder<ClinicalDbContext>().UseNpgsql(fixture.ConnectionString).Options;
             _context = new ClinicalDbContext(_options);
-            var mapper = new AddMetricRuleMapper(new FormulaMapper());
+            var mapper = new AddMetricRuleMapper(new FormulaDtoMapper());
             var logger = new Mock<ILogger<AddMetricRuleHandler>>().Object;
 
             // Initialize handler
@@ -589,9 +589,15 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.AddMetricRu
             (string Name, string Code, string Description, string Version, string Publisher) metric,
             bool isDeleted = false)
         {
-            var entity = new ClinicalMetric(
-                metric.Name, metric.Code, metric.Description, metric.Version, metric.Publisher, isApplied: true, [])
+            var entity = new ClinicalMetric
             {
+                Name = metric.Name,
+                Code = metric.Code,
+                Description = metric.Description,
+                Version = metric.Version,
+                Publisher = metric.Publisher,
+                IsApplied = true,
+                Rules = [],
                 IsDeleted = isDeleted,
                 DeletedAt = isDeleted ? DateTimeOffset.UtcNow : null,
             };
@@ -602,8 +608,10 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.AddMetricRu
 
         private async Task<Guid> SeedCriterionAsync(string name, Formula formula, bool isDeleted = false)
         {
-            var criterion = new Criterion(name, formula)
+            var criterion = new Criterion
             {
+                Name = name,
+                Formula = formula,
                 IsDeleted = isDeleted,
                 DeletedAt = isDeleted ? DateTimeOffset.UtcNow : null,
             };

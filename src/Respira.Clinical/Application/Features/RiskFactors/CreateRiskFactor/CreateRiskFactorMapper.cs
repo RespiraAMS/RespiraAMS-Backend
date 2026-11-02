@@ -11,7 +11,8 @@ namespace Respira.Clinical.Application.Features.RiskFactors.CreateRiskFactor
             return Result<RiskFactor>.Success(ApplicationStatus.Success, new RiskFactor
             {
                 PathogenId = command.PathogenId,
-                CriterionId = command.CriterionId
+                CriterionId = command.CriterionId,
+                IsCriticalFactor = command.IsCriticalFactor,
             });
         }
 

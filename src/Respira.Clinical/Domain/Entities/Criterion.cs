@@ -12,37 +12,29 @@ namespace Respira.Clinical.Domain.Entities
         /// <summary>
         /// Criterion name
         /// </summary>
-        public string Name { get; set; }
+        public required string Name { get; set; }
 
         /// <summary>
         /// A criterion should be evaluated into a boolean value
         /// </summary>
-        public Formula Formula { get; set; }
+        public required Formula Formula
+        {
+            get;
+            set
+            {
+                if (value.ResultType != ExpressionResultType.Boolean)
+                {
+                    throw new ArgumentException("Formula result type should be boolean");
+                }
+
+                field = value;
+            }
+        }
 
         /// <summary>
         /// The variables used by this criterion
         /// </summary>
         public IEnumerable<VariableRef> Variables => Formula.Variables;
-
-        /// <summary>
-        /// This is just a parameterless constructor for EF Core stuff
-        /// </summary>
-        public Criterion()
-        {
-            Name = string.Empty;
-            Formula = new BooleanConstantFormula(true);
-        }
-
-        public Criterion(string name, Formula formula)
-        {
-            if (formula.ResultType != ExpressionResultType.Boolean)
-            {
-                throw new ArgumentException("Formula result type should be boolean");
-            }
-
-            Name = name;
-            Formula = formula;
-        }
 
         /// <summary>
         /// Evaluate if the criterion is satisfied by the given observations
@@ -59,8 +51,8 @@ namespace Respira.Clinical.Domain.Entities
                     return x;
                 }
 
-                // The only way to reach this if the criterion is constructed not using
-                // constructor
+                // There shouldn't be any way for this to reach, unless the setter is
+                // somehow modified/broken
                 throw new Exception($"Formula result type should be boolean, but get {result.GetType()}");
             }
             catch (ArgumentException)

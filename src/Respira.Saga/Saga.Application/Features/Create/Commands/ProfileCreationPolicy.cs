@@ -1,4 +1,4 @@
-using Authentication.Domain.Enums;
+using Respira.Authentication.Domain.Enums;
 
 namespace Respira.Saga.Application.Features.Create.Commands
 {

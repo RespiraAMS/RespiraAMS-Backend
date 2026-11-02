@@ -3,6 +3,9 @@ using System.Text.Json.Serialization;
 
 namespace Respira.Clinical.Domain.Enums
 {
+    /// <summary>
+    /// WHO's AWaRe antibiotic classification
+    /// </summary>
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum AwareClassification
     {

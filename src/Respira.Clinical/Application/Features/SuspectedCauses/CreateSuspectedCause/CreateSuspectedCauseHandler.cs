@@ -21,7 +21,7 @@ namespace Respira.Clinical.Application.Features.SuspectedCauses.CreateSuspectedC
             if (pathogen is null)
             {
                 logger.LogDebug("Pathogen ID not found: {Id}", command.PathogenId);
-                return Result<CreateSuspectedCauseResult>.Failure(new Error(ApplicationStatus.BadRequest, "Pathogen ID not exists"));
+                return Result<CreateSuspectedCauseResult>.Failure(new ApplicationError(ApplicationStatus.BadRequest, "Pathogen ID not exists"));
             }
 
             // Check if this cause (pathogen, severity, treatment site) exists.
@@ -36,14 +36,14 @@ namespace Respira.Clinical.Application.Features.SuspectedCauses.CreateSuspectedC
             if (causeDb is not null)
             {
                 logger.LogDebug("Disease's cause duplicate: {cause}", command);
-                return Result<CreateSuspectedCauseResult>.Failure(new Error(ApplicationStatus.BadRequest, "Disease's cause duplicate"));
+                return Result<CreateSuspectedCauseResult>.Failure(new ApplicationError(ApplicationStatus.BadRequest, "Disease's cause duplicate"));
             }
 
             // Map command to model
             var mapResult = mapper.ToModel(command);
             if (mapResult.IsFailure())
             {
-                logger.LogDebug("Failed to map command to model: {Error}", mapResult.Error);
+                logger.LogDebug("Failed to map command to model: {ApplicationError}", mapResult.Error);
                 return Result<CreateSuspectedCauseResult>.Failure(mapResult.Error!);
             }
             var cause = mapResult.Data!;

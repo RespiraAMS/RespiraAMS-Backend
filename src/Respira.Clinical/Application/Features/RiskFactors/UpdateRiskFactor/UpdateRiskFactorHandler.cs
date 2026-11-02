@@ -21,21 +21,21 @@ namespace Respira.Clinical.Application.Features.RiskFactors.UpdateRiskFactor
             if (factor is null)
             {
                 logger.LogDebug("Risk factor not found: {Id}", command.Id);
-                return Result.Failure(new Error(ApplicationStatus.BadRequest, "Risk factor not found"));
+                return Result.Failure(new ApplicationError(ApplicationStatus.BadRequest, "Risk factor not found"));
             }
 
             // Check if pathogen ID exists
             if (await context.Pathogens.FirstOrDefaultAsync(x => x.Id == command.PathogenId, cancellationToken) is null)
             {
                 logger.LogDebug("Pathogen not found: {Id}", command.PathogenId);
-                return Result.Failure(new Error(ApplicationStatus.BadRequest, "Pathogen not found"));
+                return Result.Failure(new ApplicationError(ApplicationStatus.BadRequest, "Pathogen not found"));
             }
 
             // Check if criterion ID exists
             if (await context.Criteria.FirstOrDefaultAsync(x => x.Id == command.CriterionId, cancellationToken) is null)
             {
                 logger.LogDebug("Criterion not found: {Id}", command.CriterionId);
-                return Result.Failure(new Error(ApplicationStatus.BadRequest, "Criterion not found"));
+                return Result.Failure(new ApplicationError(ApplicationStatus.BadRequest, "Criterion not found"));
             }
 
             // Check if the new update violate the unique constraints on risk factor
@@ -48,7 +48,7 @@ namespace Respira.Clinical.Application.Features.RiskFactors.UpdateRiskFactor
             {
                 const string msg = "Update violate unique constraints on risk factor: pathogen and criterion combination must be unique";
                 logger.LogDebug(msg);
-                return Result.Failure(new Error(ApplicationStatus.BadRequest, msg));
+                return Result.Failure(new ApplicationError(ApplicationStatus.BadRequest, msg));
             }
 
             // Map from command to model

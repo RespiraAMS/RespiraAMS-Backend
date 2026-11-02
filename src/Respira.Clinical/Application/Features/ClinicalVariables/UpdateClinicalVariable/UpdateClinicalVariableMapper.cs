@@ -48,7 +48,6 @@ namespace Respira.Clinical.Application.Features.ClinicalVariables.UpdateClinical
             {
                 case ClinicalValueType.Boolean:
                     model.Name = command.Name;
-                    model.Code = command.Code;
                     model.Description = command.Description;
                     model.CanonicalUnit = command.CanonicalUnit;
                     model.IsRequired = command.IsRequired;
@@ -57,7 +56,6 @@ namespace Respira.Clinical.Application.Features.ClinicalVariables.UpdateClinical
                     break;
                 case ClinicalValueType.Numeric:
                     model.Name = command.Name;
-                    model.Code = command.Code;
                     model.Description = command.Description;
                     model.CanonicalUnit = command.CanonicalUnit;
                     model.IsRequired = command.IsRequired;
@@ -68,7 +66,6 @@ namespace Respira.Clinical.Application.Features.ClinicalVariables.UpdateClinical
                     break;
                 case ClinicalValueType.Categorical:
                     model.Name = command.Name;
-                    model.Code = command.Code;
                     model.Description = command.Description;
                     model.CanonicalUnit = command.CanonicalUnit;
                     model.IsRequired = command.IsRequired;

@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Respira.Saga.Application.Constracts.Data;
+using Respira.Saga.Application.Contracts.Data;
 using Respira.Saga.Domain.Entities;
 using Respira.ServiceDefaults.Contracts.Messages.Audit;
 

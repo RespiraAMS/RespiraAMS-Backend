@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 namespace Respira.Clinical.Domain.Enums
 {
     /// <summary>
-    /// Disease severity
+    /// CAP disease severity
     /// </summary>
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum Severity

@@ -1,13 +1,13 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using Authentication.Domain.Enums;
+using Respira.Authentication.Domain.Enums;
 using Respira.Doctor.Domain.Enums;
 
 namespace Respira.Saga.API.Models
 {
     /// <summary>
     /// Payload of the <c>request</c> form part sent to the profile creation endpoint. It mirrors
-    /// <see cref="Respira.Saga.Application.Features.Create.Commands.StartCreateCommand"/>
+    /// <see cref="Application.Features.Create.Commands.StartCreateCommand"/>
     /// minus the two fields the API owns: the saga identifier and the path of the stored avatar.
     /// </summary>
     public record CreateProfileRequest
@@ -38,7 +38,7 @@ namespace Respira.Saga.API.Models
 
         public List<DegreeType> Degrees { get; set; } = [];
 
-        public AcademicTitleEnum AcademicTitle { get; set; }
+        public AcademicTitle AcademicTitle { get; set; }
 
         public PositionType Position { get; set; }
 

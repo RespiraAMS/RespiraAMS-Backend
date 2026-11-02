@@ -32,7 +32,7 @@ namespace Respira.ServiceDefaults.Middlewares
 
                 // Create result object
                 var msg = string.Join("; ", valEx.Errors.Select(e => e.ErrorMessage));
-                var result = Result.Failure(new Error(ApplicationStatus.BadRequest, msg));
+                var result = Result.Failure(new ApplicationError(ApplicationStatus.BadRequest, msg));
 
                 httpContext.Response.StatusCode = ApplicationStatus.ToHttpStatusCode(result.StatusCode);
                 httpContext.Response.ContentType = "application/json";
@@ -54,7 +54,7 @@ namespace Respira.ServiceDefaults.Middlewares
             // Create API response 
             httpContext.Response.StatusCode = StatusCodes.Status500InternalServerError;
             httpContext.Response.ContentType = "application/json";
-            var res = Result.Failure(new Error(ApplicationStatus.ServerError, exception.Message));
+            var res = Result.Failure(new ApplicationError(ApplicationStatus.ServerError, exception.Message));
 
             // Write response
             await httpContext.Response.WriteAsJsonAsync(res, _jsonOptions, cancellationToken);

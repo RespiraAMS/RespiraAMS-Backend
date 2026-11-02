@@ -46,7 +46,7 @@ namespace Respira.Clinical.Application.Test.Features.RiskFactors.UpdateRiskFacto
                 .ExecuteDeleteAsync(TestContext.Current.CancellationToken);
             await _context.RiskFactors.IgnoreQueryFilters()
                 .ExecuteDeleteAsync(TestContext.Current.CancellationToken);
-            await _context.Treatments.IgnoreQueryFilters()
+            await _context.TreatmentProtocols.IgnoreQueryFilters()
                 .ExecuteDeleteAsync(TestContext.Current.CancellationToken);
             await _context.ClinicalMetrics.IgnoreQueryFilters()
                 .ExecuteDeleteAsync(TestContext.Current.CancellationToken);
@@ -77,11 +77,13 @@ namespace Respira.Clinical.Application.Test.Features.RiskFactors.UpdateRiskFacto
         private async Task<Guid> SeedCriterionAsync(
             string name, string code, decimal threshold, ExpressionOperator op, bool isDeleted = false)
         {
-            var criterion = new Criterion(name, new BinaryFormula(
-                new VariableFormula(new VariableRef(Guid.CreateVersion7(), code, ClinicalValueType.Numeric)),
-                new NumericConstantFormula(threshold),
-                op))
+            var criterion = new Criterion
             {
+                Name = name,
+                Formula = new BinaryFormula(
+                    new VariableFormula(new VariableRef(Guid.CreateVersion7(), code, ClinicalValueType.Numeric)),
+                    new NumericConstantFormula(threshold),
+                    op),
                 IsDeleted = isDeleted,
                 DeletedAt = isDeleted ? DateTimeOffset.UtcNow : null,
             };
@@ -91,12 +93,13 @@ namespace Respira.Clinical.Application.Test.Features.RiskFactors.UpdateRiskFacto
         }
 
         private async Task<RiskFactor> SeedRiskFactorAsync(
-            Guid pathogenId, Guid criterionId, bool isDeleted = false)
+            Guid pathogenId, Guid criterionId, bool isCritical = false, bool isDeleted = false)
         {
             var factor = new RiskFactor
             {
                 PathogenId = pathogenId,
                 CriterionId = criterionId,
+                IsCriticalFactor = isCritical,
                 UpdatedAt = Stale,
                 IsDeleted = isDeleted,
                 DeletedAt = isDeleted ? DateTimeOffset.UtcNow : null,
@@ -129,11 +132,12 @@ namespace Respira.Clinical.Application.Test.Features.RiskFactors.UpdateRiskFacto
                 .SingleOrDefaultAsync(x => x.Id == id, TestContext.Current.CancellationToken);
         }
 
-        private static UpdateRiskFactorCommand Command(Guid id, Guid pathogenId, Guid criterionId) => new()
+        private static UpdateRiskFactorCommand Command(Guid id, Guid pathogenId, Guid criterionId, bool isCritical = false) => new()
         {
             Id = id,
             PathogenId = pathogenId,
             CriterionId = criterionId,
+            IsCriticalFactor = isCritical,
         };
 
         #region Happy path
@@ -145,7 +149,8 @@ namespace Respira.Clinical.Application.Test.Features.RiskFactors.UpdateRiskFacto
             // different criterion
             var pathogen = await SeedKlebsiellaAsync();
             var criterion = await SeedAgeCriterionAsync();
-            var target = await SeedRiskFactorAsync(pathogen, criterion);
+            const bool isCritical = false;
+            var target = await SeedRiskFactorAsync(pathogen, criterion, isCritical);
 
             var newPathogen = await SeedPneumococcusAsync();
             var newCriterion = await SeedHypotensionCriterionAsync();
@@ -162,6 +167,7 @@ namespace Respira.Clinical.Application.Test.Features.RiskFactors.UpdateRiskFacto
             Assert.NotNull(saved);
             Assert.Equal(newPathogen, saved.PathogenId);
             Assert.Equal(newCriterion, saved.CriterionId);
+            Assert.Equal(isCritical, saved.IsCriticalFactor);
 
             // The update must move the timestamp and keep the identity and the state
             Assert.True(
@@ -182,10 +188,11 @@ namespace Respira.Clinical.Application.Test.Features.RiskFactors.UpdateRiskFacto
              */
             var pathogen = await SeedKlebsiellaAsync();
             var criterion = await SeedAgeCriterionAsync();
-            var target = await SeedRiskFactorAsync(pathogen, criterion);
+            const bool isCritical = true;
+            var target = await SeedRiskFactorAsync(pathogen, criterion, isCritical);
 
-            var result = await _handler.HandleAsync(
-                Command(target.Id, pathogen, criterion), TestContext.Current.CancellationToken);
+            // Is critical -> false
+            var result = await _handler.HandleAsync(Command(target.Id, pathogen, criterion), TestContext.Current.CancellationToken);
 
             Assert.True(result.IsSuccess());
             Assert.Null(result.Error);
@@ -195,6 +202,7 @@ namespace Respira.Clinical.Application.Test.Features.RiskFactors.UpdateRiskFacto
             Assert.NotNull(saved);
             Assert.Equal(pathogen, saved.PathogenId);
             Assert.Equal(criterion, saved.CriterionId);
+            Assert.False(saved.IsCriticalFactor);
             Assert.True(saved.UpdatedAt > Stale);
 
             Assert.Equal(1, await _context.RiskFactors
@@ -241,6 +249,28 @@ namespace Respira.Clinical.Application.Test.Features.RiskFactors.UpdateRiskFacto
             Assert.NotNull(saved);
             Assert.Equal(pathogen, saved.PathogenId);
             Assert.Equal(newCriterion, saved.CriterionId);
+        }
+
+        [Fact]
+        public async Task UpdateRiskFactor_OnlyIsCriticalFactorChanged_Success()
+        {
+            // The other half of the pair moves while the pathogen stays where it is
+            var pathogen = await SeedKlebsiellaAsync();
+            var criterion = await SeedAgeCriterionAsync();
+            const bool isCritical = true;
+            var target = await SeedRiskFactorAsync(pathogen, criterion, isCritical);
+
+            var result = await _handler.HandleAsync(
+                Command(target.Id, pathogen, criterion, isCritical: false), TestContext.Current.CancellationToken);
+
+            Assert.True(result.IsSuccess());
+            Assert.Equal(ApplicationStatus.Updated, result.StatusCode);
+
+            var saved = await FindIncludingDeletedAsync(target.Id);
+            Assert.NotNull(saved);
+            Assert.Equal(pathogen, saved.PathogenId);
+            Assert.Equal(criterion, saved.CriterionId);
+            Assert.False(saved.IsCriticalFactor);
         }
 
         [Fact]

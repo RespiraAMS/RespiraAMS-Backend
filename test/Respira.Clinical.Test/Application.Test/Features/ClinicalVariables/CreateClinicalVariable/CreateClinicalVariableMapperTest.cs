@@ -12,7 +12,7 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalVariables.CreateCli
     public class CreateClinicalVariableMapperTest
     {
         private readonly ICreateMapper<CreateClinicalVariableCommand, ClinicalVariable> _mapper =
-            new CreateClinicalVariableMapper(new FormulaMapper());
+            new CreateClinicalVariableMapper(new FormulaDtoMapper());
 
         #region Boolean mapping
 

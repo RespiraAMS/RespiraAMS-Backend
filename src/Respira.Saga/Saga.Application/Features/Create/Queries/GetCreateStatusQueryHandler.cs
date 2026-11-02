@@ -28,7 +28,7 @@ namespace Respira.Saga.Application.Features.Create.Queries
             if (saga is null)
             {
                 return Result<CreateStatusResult>.Failure(
-                    new Error(
+                    new ApplicationError(
                         ApplicationStatus.ResourceNotFound,
                         "No profile creation with this id is currently in progress; it has either finished or never started"
                     )

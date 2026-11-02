@@ -1,19 +1,19 @@
-using Authentication.Application.Features.Accounts.Commands.Create;
-using Authentication.Application.Features.Accounts.Commands.Create.Events;
-using Authentication.Application.Features.Accounts.Commands.SoftDelete;
-using Authentication.Application.Features.Accounts.Commands.SoftDelete.Events;
-using Authentication.Application.Features.Authentication.Commands.SendVerify;
-using Authentication.Application.Features.Authentication.Commands.SendVerify.Events;
-using Authentication.Domain.Enums;
 using Microsoft.Extensions.Logging;
-using Respira.Doctor.Application.Features.Doctors.Commands.Create;
-using Respira.Doctor.Application.Features.Doctors.Commands.Create.Events;
-using Respira.Doctor.Application.Features.Doctors.Commands.SoftDelete;
-using Respira.Doctor.Application.Features.Doctors.Commands.SoftDelete.Events;
-using Respira.Doctor.Application.Features.Doctors.Commands.Update;
-using Respira.Doctor.Application.Features.Doctors.Commands.Update.Events;
+using Respira.Authentication.Domain.Enums;
 using Respira.Doctor.Domain.Enums;
 using Respira.Saga.Application.Constracts.Media;
+using Respira.Saga.Application.Constracts.Messages.Authentication;
+using Respira.Saga.Application.Constracts.Messages.Authentication.Create;
+using Respira.Saga.Application.Constracts.Messages.Authentication.Create.Events;
+using Respira.Saga.Application.Constracts.Messages.Authentication.Events;
+using Respira.Saga.Application.Constracts.Messages.Authentication.SoftDelete;
+using Respira.Saga.Application.Constracts.Messages.Authentication.SoftDelete.Events;
+using Respira.Saga.Application.Constracts.Messages.Doctor.Create;
+using Respira.Saga.Application.Constracts.Messages.Doctor.Create.Events;
+using Respira.Saga.Application.Constracts.Messages.Doctor.SoftDelete;
+using Respira.Saga.Application.Constracts.Messages.Doctor.SoftDelete.Events;
+using Respira.Saga.Application.Constracts.Messages.Doctor.Update;
+using Respira.Saga.Application.Constracts.Messages.Doctor.Update.Events;
 using Respira.Saga.Domain.Enums;
 using Respira.ServiceDefaults.Contracts.Results;
 using Wolverine;
@@ -61,7 +61,7 @@ namespace Respira.Saga.Application.Features.Create.Commands
 
         public List<DegreeType> Degrees { get; set; } = [];
 
-        public AcademicTitleEnum AcademicTitle { get; set; }
+        public AcademicTitle AcademicTitle { get; set; }
 
         public PositionType Position { get; set; }
 
@@ -198,7 +198,7 @@ namespace Respira.Saga.Application.Features.Create.Commands
                 if (string.IsNullOrWhiteSpace(TempAvatarPath) || !File.Exists(TempAvatarPath))
                 {
                     upload = Result<Guid>.Failure(
-                        new Error(ApplicationStatus.BadRequest, "The avatar file is missing")
+                        new ApplicationError(ApplicationStatus.BadRequest, "The avatar file is missing")
                     );
                 }
                 else
@@ -219,7 +219,7 @@ namespace Respira.Saga.Application.Features.Create.Commands
                 // Never throw out of a saga handler: a blind retry would upload the file twice.
                 logger.LogError(exception, "{SagaId} Uploading the avatar failed", SagaId);
                 upload = Result<Guid>.Failure(
-                    new Error(ApplicationStatus.ThirdPartyServiceFailure, exception.Message)
+                    new ApplicationError(ApplicationStatus.ThirdPartyServiceFailure, exception.Message)
                 );
             }
             finally

@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using Respira.Saga.Application.Constracts.Data;
+using Respira.Saga.Application.Contracts.Data;
 using Respira.Saga.Application.Features.Audit.Queries.Search.Result;
 using Respira.Saga.Domain.Entities;
 using Respira.ServiceDefaults.Contracts.CQRS;

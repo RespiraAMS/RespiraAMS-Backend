@@ -1,4 +1,4 @@
-namespace Authentication.Application.Features.Authentication.Commands.Refresh.Result
+namespace Respira.Authentication.Application.Features.Authentication.Commands.Refresh.Result
 {
     /// <summary>
     /// Contains the replacement access and refresh tokens issued after a successful refresh.

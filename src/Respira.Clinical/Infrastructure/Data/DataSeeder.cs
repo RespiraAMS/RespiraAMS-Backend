@@ -1,8 +1,8 @@
 using System.Text.Json;
-using ImTools;
 using Respira.Clinical.Domain.Entities;
 using Respira.Clinical.Domain.Enums;
 using Respira.Clinical.Domain.Models;
+using Range = Respira.Clinical.Domain.Models.Range;
 
 namespace Respira.Clinical.Infrastructure.Data
 {
@@ -16,7 +16,8 @@ namespace Respira.Clinical.Infrastructure.Data
         public required ICollection<SuspectedCause> SuspectedCauses { get; init; }
         public required ICollection<AntibioticGroup> AntibioticGroups { get; init; }
         public required ICollection<Antibiotic> Antibiotics { get; init; }
-        public required ICollection<Treatment> Treatments { get; init; }
+        public required ICollection<TreatmentProtocol> Treatments { get; init; }
+        public required ICollection<Antibiogram> Antibiograms { get; init; }
     }
 
     public static class DataSeeder
@@ -84,7 +85,7 @@ namespace Respira.Clinical.Infrastructure.Data
 
                 if (v.AcceptedValues.Count > 0)
                 {
-                    return new CategoricalClinicalVariable([.. v.AcceptedValues])
+                    return new CategoricalClinicalVariable
                     {
                         Id = variableId,
                         Name = v.Name,
@@ -93,6 +94,7 @@ namespace Respira.Clinical.Infrastructure.Data
                         CanonicalUnit = v.CanonicalUnit,
                         IsRequired = v.IsRequired,
                         Category = ParseEnum(v.Category, ClinicalVariableCategory.PersonalInformation),
+                        AcceptedValues = [.. v.AcceptedValues],
                     };
                 }
 
@@ -125,12 +127,22 @@ namespace Respira.Clinical.Infrastructure.Data
 
             var criteria = dto.Criteria.Select(c =>
             {
-                var criterionId = GenerateId(c.Id);
-                var formula = MapFormula(c.Formula, variableLookup);
-                return new Criterion(c.Name, formula)
+                try
                 {
-                    Id = criterionId,
-                };
+                    var criterionId = GenerateId(c.Id);
+                    var formula = MapFormula(c.Formula, variableLookup);
+                    return new Criterion()
+                    {
+                        Id = criterionId,
+                        Name = c.Name,
+                        Formula = formula,
+                    };
+                }
+                catch (ArgumentException)
+                {
+                    Console.WriteLine($"Criterion {c.Id} has invalid formula: {c.Formula}");
+                    throw;
+                }
 
             }).ToList();
 
@@ -141,42 +153,62 @@ namespace Respira.Clinical.Infrastructure.Data
                 var metricId = GenerateId(s.Id);
                 var scoringRules = s.Rules.Select<MetricRuleDto, MetricRule>(r =>
                 {
-                    var ruleId = GenerateId(r.Id);
-                    var criterionId = GenerateId(r.CriterionId);
-                    var criterion = criterionLookup[criterionId];
-
-                    // If score function provided, return ScoringRule
-                    if (r.ScoreFunction is not null)
+                    try
                     {
-                        var scoreFunction = MapFormula(r.ScoreFunction, variableLookup);
-                        return new ScoringRule
-                        {
-                            Id = ruleId,
-                            ClinicalMetricId = metricId,
-                            CriterionId = criterionId,
-                            Criterion = criterion,
-                            ScoreFunction = scoreFunction,
-                        };
-                    }
+                        var ruleId = GenerateId(r.Id);
+                        var criterionId = GenerateId(r.CriterionId);
+                        var criterion = criterionLookup[criterionId];
 
-                    if (r.IsMajor is not null)
+                        // If score function provided, return ScoringRule
+                        if (r.ScoreFunction is not null)
+                        {
+                            var scoreFunction = MapFormula(r.ScoreFunction, variableLookup);
+                            return new ScoringRule
+                            {
+                                Id = ruleId,
+                                ClinicalMetricId = metricId,
+                                CriterionId = criterionId,
+                                Criterion = criterion,
+                                ScoreFunction = scoreFunction,
+                            };
+                        }
+
+                        if (r.IsMajor is not null)
+                        {
+                            return new MajorMinorRule
+                            {
+                                Id = ruleId,
+                                ClinicalMetricId = metricId,
+                                CriterionId = criterionId,
+                                Criterion = criterion,
+                                IsMajor = r.IsMajor.Value,
+                            };
+                        }
+
+                        throw new ArgumentException("Invalid rule type for metrics rule: either score function or is major be provided");
+                    }
+                    catch (ArgumentException)
                     {
-                        return new MajorMinorRule
-                        {
-                            Id = ruleId,
-                            ClinicalMetricId = metricId,
-                            CriterionId = criterionId,
-                            Criterion = criterion,
-                            IsMajor = r.IsMajor.Value,
-                        };
+                        Console.WriteLine($"Criterion {r.CriterionId} has invalid formula: {r.ScoreFunction}");
+                        throw;
                     }
-
-                    throw new ArgumentException("Invalid rule type for metrics rule: either score function or is major be provided");
+                    catch (Exception)
+                    {
+                        Console.WriteLine($"Criterion {r.CriterionId} has invalid formula: {r.ScoreFunction}");
+                        throw;
+                    }
                 });
 
-                return new ClinicalMetric(s.Name, s.Code, s.Description, s.Version, s.Publisher, s.IsApplied, [.. scoringRules])
+                return new ClinicalMetric
                 {
                     Id = metricId,
+                    Name = s.Name,
+                    Code = s.Code,
+                    Description = s.Description,
+                    Version = s.Version,
+                    Publisher = s.Publisher,
+                    IsApplied = s.IsApplied,
+                    Rules = [.. scoringRules],
                 };
             }).ToList();
 
@@ -193,6 +225,7 @@ namespace Respira.Clinical.Infrastructure.Data
                         PathogenId = pathogenId,
                         CriterionId = criterionId,
                         Criterion = criterion,
+                        IsCriticalFactor = rf.IsCriticalFactor,
                     };
                     allRiskFactors.Add(riskFactor);
                     return riskFactor;
@@ -231,15 +264,29 @@ namespace Respira.Clinical.Infrastructure.Data
                 ParentId = ParseNullableId(g.ParentId),
             }).ToList();
 
+            var antibioticGroupLookup = antibioticGroups.ToDictionary(v => v.Id);
+
+            // Antibiotic group also have self reference is parent, so we need to map them on a second time
+            foreach (var (antibioticGroupDto, antibioticGroup) in dto.AntibioticGroups.Zip(antibioticGroups))
+            {
+                if (antibioticGroupDto.ParentId is not null)
+                {
+                    var parentId = GenerateId(antibioticGroupDto.ParentId);
+                    antibioticGroup.ParentId = parentId;
+                    antibioticGroup.Parent = antibioticGroupLookup[parentId];
+                }
+            }
 
             var antibiotics = dto.Antibiotics.Select(a =>
             {
                 var antibioticId = GenerateId(a.Id);
+                var antibioticGroupId = ParseRequiredId(a.AntibioticGroupId, "antibiotic.antibioticGroupId");
                 return new Antibiotic
                 {
                     Id = antibioticId,
                     Name = a.Name,
-                    AntibioticGroupId = ParseRequiredId(a.AntibioticGroupId, "antibiotic.antibioticGroupId"),
+                    AntibioticGroupId = antibioticGroupId,
+                    AntibioticGroup = antibioticGroupLookup[antibioticGroupId],
                     Classification = ParseEnum(a.Classification, AwareClassification.Unclassified),
                     Dosages = [.. a.Dosages.Select(d => new Dosage
                     {
@@ -252,27 +299,46 @@ namespace Respira.Clinical.Infrastructure.Data
                 };
             }).ToList();
 
-            var treatments = dto.Treatments.Select(t =>
+            var treatments = dto.TreatmentProtocols.Select(t =>
             {
                 var treatmentId = GenerateId(t.Id);
                 var pathogenIds = t.PathogenIds.Select(p => pathogenLookup[p]);
                 var criterionIds = t.CriteriaIds.Select(c => criterionLookup[c]);
                 var medicines = t.MedicineIds
-                    .Select(composition => new MedicineComposition
+                    .Select(composition => new Treatment
                     {
-                        TreatmentId = treatmentId,
-                        Antibiotics = [.. composition.Select(m => antibiotics.First(a => a.Id == m))]
+                        TreatmentProtocolId = treatmentId,
+                        Combination = [.. composition.Select(m => antibiotics.First(a => a.Id == m))]
                     })
                     .ToList();
 
-                return new Treatment
+                return new TreatmentProtocol
                 {
                     Id = treatmentId,
                     Severity = ParseEnum(t.Severity, Severity.Mild),
                     TreatmentSite = ParseEnum(t.TreatmentSite, TreatmentSite.Outpatient),
                     Pathogens = [.. pathogenIds],
                     Criteria = [.. criterionIds],
-                    Medicines = [.. medicines],
+                    Treatments = [.. medicines],
+                    Publisher = t.Publisher,
+                    IsApplied = t.IsApplied,
+                    Version = t.Version
+                };
+            }).ToList();
+
+            var antibiograms = dto.Antibiograms.Select(a =>
+            {
+                var category = ParseEnum(a.MicCategory, MicCategory.Susceptible);
+                var pathogenId = ParseRequiredId(a.PathogenId, "pathogenId");
+                var pathogen = pathogenLookup[pathogenId];
+
+                return new Antibiogram
+                {
+                    MicCategory = category,
+                    PathogenId = pathogenId,
+                    Pathogen = pathogen,
+                    Antibiotics = a.AntibioticIds
+                        .ConvertAll(ai => antibiotics.First(x => x.Id == ParseRequiredId(ai, "antibioticIds"))),
                 };
             }).ToList();
 
@@ -288,6 +354,7 @@ namespace Respira.Clinical.Infrastructure.Data
                 AntibioticGroups = [.. antibioticGroups],
                 Antibiotics = [.. antibiotics],
                 Treatments = [.. treatments],
+                Antibiograms = [.. antibiograms],
             };
         }
 
@@ -360,14 +427,14 @@ namespace Respira.Clinical.Infrastructure.Data
             return Enum.TryParse(value, true, out T result) ? result : fallback;
         }
 
-        private static Domain.Models.Range? MapRange(RangeDto? dto)
+        private static Range? MapRange(RangeDto? dto)
         {
             if (dto is null)
             {
                 return null;
             }
 
-            return new Domain.Models.Range
+            return new Range
             {
                 Min = dto.Min,
                 IsMinExclusive = dto.IsMinExclusive,

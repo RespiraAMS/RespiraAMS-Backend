@@ -13,7 +13,7 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.CreateCriterion
     public class CreateCriterionMapperTest
     {
         private readonly ICreateMapper<CreateCriterionCommand, Criterion> _mapper =
-            new CreateCriterionMapper(new FormulaMapper());
+            new CreateCriterionMapper(new FormulaDtoMapper());
 
         #region Happy path
 

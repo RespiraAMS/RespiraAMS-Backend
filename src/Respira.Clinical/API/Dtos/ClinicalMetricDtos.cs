@@ -67,11 +67,6 @@ namespace Respira.Clinical.API.Dtos
         public required string Name { get; set; }
 
         /// <summary>
-        /// Clinical metric code
-        /// </summary>
-        public required string Code { get; set; }
-
-        /// <summary>
         /// Clinical metric description
         /// </summary>
         public required string Description { get; set; }
@@ -97,7 +92,6 @@ namespace Respira.Clinical.API.Dtos
             {
                 Id = id,
                 Name = Name,
-                Code = Code,
                 Description = Description,
                 Version = Version,
                 Publisher = Publisher,

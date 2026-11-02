@@ -20,21 +20,21 @@ namespace Respira.Clinical.Application.Features.RiskFactors.CreateRiskFactor
             if (await context.Pathogens.FirstOrDefaultAsync(x => x.Id == command.PathogenId, cancellationToken) is null)
             {
                 logger.LogDebug("Pathogen not found: {Id}", command.PathogenId);
-                return Result<CreateRiskFactorResult>.Failure(new Error(ApplicationStatus.BadRequest, "Pathogen not found"));
+                return Result<CreateRiskFactorResult>.Failure(new ApplicationError(ApplicationStatus.BadRequest, "Pathogen not found"));
             }
 
             // Check if criterion ID exists
             if (await context.Criteria.FirstOrDefaultAsync(x => x.Id == command.CriterionId, cancellationToken) is null)
             {
                 logger.LogDebug("Criterion not found: {Id}", command.CriterionId);
-                return Result<CreateRiskFactorResult>.Failure(new Error(ApplicationStatus.BadRequest, "Criterion not found"));
+                return Result<CreateRiskFactorResult>.Failure(new ApplicationError(ApplicationStatus.BadRequest, "Criterion not found"));
             }
 
             // Check for unique: if any risk factor with (pathogen, criterion) exists
             if (await context.RiskFactors.AnyAsync(x => x.PathogenId == command.PathogenId && x.CriterionId == command.CriterionId, cancellationToken))
             {
                 logger.LogDebug("The risk factor with this pathogen and criterion combination has already exist");
-                return Result<CreateRiskFactorResult>.Failure(new Error(
+                return Result<CreateRiskFactorResult>.Failure(new ApplicationError(
                     ApplicationStatus.BadRequest,
                     "The risk factor with this pathogen and criterion combination has already exist"));
             }

@@ -21,7 +21,7 @@ namespace Respira.Clinical.Application.Features.Criteria.UpdateCriterion
             if (criterion is null)
             {
                 logger.LogDebug("Criterion with this ID not found: {Id}", command.Id);
-                return Result.Failure(new Error(ApplicationStatus.BadRequest, "Criterion not found"));
+                return Result.Failure(new ApplicationError(ApplicationStatus.BadRequest, "Criterion not found"));
             }
 
             // Get the list of variables for formula mapping

@@ -190,10 +190,15 @@ namespace Respira.Clinical.Domain.Models
             {
                 return Operator switch
                 {
-                    ExpressionOperator.Eq => (string)Left.Evaluate() == (string)Right.Evaluate(),
-                    ExpressionOperator.Ne => (string)Left.Evaluate() != (string)Right.Evaluate(),
+                    ExpressionOperator.Eq =>
+                        CategoricalClinicalVariable.SanitizeCategory((string)Left.Evaluate()) ==
+                        CategoricalClinicalVariable.SanitizeCategory((string)Right.Evaluate()),
+                    ExpressionOperator.Ne =>
+                        CategoricalClinicalVariable.SanitizeCategory((string)Left.Evaluate()) !=
+                        CategoricalClinicalVariable.SanitizeCategory((string)Right.Evaluate()),
                     _ => throw new Exception($"Unexpected logical operator: {Operator}"),
-                };
+                }
+            ;
             }
 
             // Handle logical expression

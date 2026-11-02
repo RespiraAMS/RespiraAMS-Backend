@@ -22,7 +22,7 @@ namespace Respira.Clinical.Application.Features.Antibiotics.UpdateDosage
             if (antibiotic is null)
             {
                 logger.LogDebug("Dosage with this antibiotic not found: {AntibioticId}", command.AntibioticId);
-                return Result.Failure(new Error(ApplicationStatus.BadRequest, "Antibiotic not found"));
+                return Result.Failure(new ApplicationError(ApplicationStatus.BadRequest, "Antibiotic not found"));
             }
 
             // Get the dosage for update from the fetched antibiotic
@@ -38,14 +38,14 @@ namespace Respira.Clinical.Application.Features.Antibiotics.UpdateDosage
             if (dosage is null)
             {
                 logger.LogDebug("Dosage with this ID ({DosageId}) not found in this antibiotic ({AntibioticId})", command.Id, command.AntibioticId);
-                return Result.Failure(new Error(ApplicationStatus.BadRequest, $"No dosage with this ID found in antibiotic {command.AntibioticId}"));
+                return Result.Failure(new ApplicationError(ApplicationStatus.BadRequest, $"No dosage with this ID found in antibiotic {command.AntibioticId}"));
             }
 
             // Map command to model
             var mapResult = mapper.MapModel(dosage, command);
             if (mapResult.IsFailure())
             {
-                logger.LogDebug("Failed to map command to model: {Error}", mapResult.Error);
+                logger.LogDebug("Failed to map command to model: {ApplicationError}", mapResult.Error);
                 return Result.Failure(mapResult.Error!);
             }
 

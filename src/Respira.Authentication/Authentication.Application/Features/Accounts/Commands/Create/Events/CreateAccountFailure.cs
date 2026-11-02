@@ -1,4 +1,4 @@
-namespace Authentication.Application.Features.Accounts.Commands.Create.Events
+namespace Respira.Authentication.Application.Features.Accounts.Commands.Create.Events
 {
     public record CreateAccountFailure
     {

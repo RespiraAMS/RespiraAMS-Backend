@@ -1,5 +1,5 @@
-using Authentication.Application.Constracts.Data;
 using Microsoft.EntityFrameworkCore;
+using Respira.Authentication.Application.Constracts.Data;
 using Respira.ServiceDefaults.Contracts.CQRS;
 using Respira.ServiceDefaults.Contracts.Messages.Accounts;
 using Respira.ServiceDefaults.Contracts.Results;
@@ -39,16 +39,14 @@ namespace Authentication.Application.Features.Accounts.Queries.GetByIds
                 })
                 .ToListAsync(cancellationToken);
 
-            var result = accounts
-                .Select(x => new AccountSummary
-                {
-                    Id = x.Id,
-                    Email = x.Email,
-                    Phone = x.Phone,
-                    Role = x.Role.ToString(),
-                    Status = x.Status.ToString(),
-                })
-                .ToList();
+            var result = accounts.ConvertAll(x => new AccountSummary
+            {
+                Id = x.Id,
+                Email = x.Email,
+                Phone = x.Phone,
+                Role = x.Role.ToString(),
+                Status = x.Status.ToString(),
+            });
 
             return Result<List<AccountSummary>>.Success(ApplicationStatus.Success, result);
         }

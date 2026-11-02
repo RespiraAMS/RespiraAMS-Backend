@@ -4,10 +4,9 @@ var builder = DistributedApplication.CreateBuilder(args);
 var k8s = builder.AddKubernetesEnvironment("k8s");
 
 // Setup databases, messaging and cache
-var cache = builder.AddRedis("cache");
+var cache = builder.AddRedis("cache").WithRedisInsight();
 var postgres = builder.AddPostgres("postgres").WithPgWeb().WithDataVolume();
 var rabbitmq = builder.AddRabbitMQ("rabbitmq").WithManagementPlugin();
-
 
 // Auth service parameters (values come from AppHost config: Parameters:* section)
 var jwtSecret = builder.AddParameter("jwt-secret");
@@ -37,7 +36,7 @@ var patientService = builder
 // Auth service
 var authDb = postgres.AddDatabase("authdb");
 var authService = builder
-    .AddProject<Projects.Authentication_API>("auth-service")
+    .AddProject<Projects.Respira_Authentication_API>("auth-service")
     .WithReference(authDb)
     .WithReference(rabbitmq)
     .WithReference(cache)
@@ -48,7 +47,7 @@ var authService = builder
 // Media service
 var mediaDb = postgres.AddDatabase("mediadb");
 var mediaService = builder
-    .AddProject<Projects.Media_API>("media-service")
+    .AddProject<Projects.Respira_Media_API>("media-service")
     .WithReference(mediaDb)
     .WithReference(rabbitmq)
     .WithReference(cache)
@@ -66,17 +65,6 @@ var doctorService = builder
     .WaitFor(doctorDb)
     .WaitFor(rabbitmq)
     .WaitFor(cache);
-
-// API gateway
-var gateway = builder
-    .AddProject<Projects.Respira_Gateway>("gateway")
-    .WithReference(clinicalService)
-    .WithReference(patientService)
-    .WithEnvironment("Jwt__Secret", jwtSecret)
-    .WithEnvironment("Jwt__Issuer", jwtIssuer)
-    .WithEnvironment("Jwt__Audience", jwtAudience)
-    .WithExternalHttpEndpoints();
-clinicalService.WithReference(gateway).WaitFor(gateway);
 
 // Saga orchestrator
 // The create saga orchestrator: it drives the other services over the broker and uploads
@@ -96,6 +84,24 @@ var sagaService = builder
     .WaitFor(cache)
     .WaitFor(mediaService);
 
-gateway.WithReference(sagaService);
+// API gateway
+var gateway = builder
+    .AddProject<Projects.Respira_Gateway>("gateway")
+    .WithReference(clinicalService)
+    .WithReference(patientService)
+    .WithReference(authService)
+    .WithReference(mediaService)
+    .WithReference(doctorService)
+    .WithReference(sagaService)
+    .WithEnvironment("Jwt__Secret", jwtSecret)
+    .WithEnvironment("Jwt__Issuer", jwtIssuer)
+    .WithEnvironment("Jwt__Audience", jwtAudience)
+    .WithExternalHttpEndpoints();
+clinicalService.WithReference(gateway).WaitFor(gateway);
+patientService.WithReference(gateway).WaitFor(gateway);
+authService.WithReference(gateway).WaitFor(gateway);
+mediaService.WithReference(gateway).WaitFor(gateway);
+doctorService.WithReference(gateway).WaitFor(gateway);
+sagaService.WithReference(gateway).WaitFor(gateway);
 
 await builder.Build().RunAsync();

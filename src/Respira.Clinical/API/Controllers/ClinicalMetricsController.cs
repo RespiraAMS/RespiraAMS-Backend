@@ -16,7 +16,7 @@ using Wolverine;
 namespace Respira.Clinical.API.Controllers
 {
     [ApiController]
-    [Route("api/{version:apiVersion}/clinical-metrics")]
+    [Route("api/v{version:apiVersion}/clinical-metrics")]
     [ApiVersion("1.0")]
     public class ClinicalMetricsController(IMessageBus bus) : ControllerBase
     {
@@ -106,9 +106,7 @@ namespace Respira.Clinical.API.Controllers
         }
 
         [HttpGet]
-#pragma warning disable ASP0018 // Unused route parameter
-        [Route("{metricId:guid}/rules/{ruleId:guid}")]
-#pragma warning restore ASP0018 // Unused route parameter
+        [Route("rules/{ruleId:guid}")]
         [ProducesResponseType<Result<MetricRuleResult>>(StatusCodes.Status200OK)]
         [ProducesResponseType<Result>(StatusCodes.Status400BadRequest)]
         [ProducesResponseType<Result>(StatusCodes.Status401Unauthorized)]
@@ -135,9 +133,7 @@ namespace Respira.Clinical.API.Controllers
         }
 
         [HttpDelete]
-#pragma warning disable ASP0018 // Unused route parameter
-        [Route("{metricId:guid}/rules/{ruleId:guid}")]
-#pragma warning restore ASP0018 // Unused route parameter
+        [Route("rules/{ruleId:guid}")]
         public async Task<IActionResult> DeleteMetricRule(Guid ruleId)
         {
             var result = await bus.InvokeAsync<Result>(new DeleteMetricRuleCommand { Id = ruleId });

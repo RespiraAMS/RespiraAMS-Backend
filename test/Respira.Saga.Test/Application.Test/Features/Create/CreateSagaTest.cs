@@ -1,18 +1,16 @@
-using Authentication.Application.Features.Accounts.Commands.Create;
-using Authentication.Application.Features.Accounts.Commands.Create.Events;
-using Authentication.Application.Features.Authentication.Commands.SendVerify;
-using Authentication.Application.Features.Accounts.Commands.Update;
-using Authentication.Domain.Enums;
 using Moq;
-using Respira.Doctor.Application.Features.Doctors.Commands.Create;
-using Respira.Doctor.Application.Features.Doctors.Commands.Create.Events;
+using Respira.Authentication.Domain.Enums;
 using Respira.Doctor.Domain.Enums;
+using Respira.Saga.Application.Constracts.Messages.Authentication;
+using Respira.Saga.Application.Constracts.Messages.Authentication.Create;
+using Respira.Saga.Application.Constracts.Messages.Authentication.Create.Events;
+using Respira.Saga.Application.Constracts.Messages.Authentication.Update;
+using Respira.Saga.Application.Constracts.Messages.Doctor.Create;
+using Respira.Saga.Application.Constracts.Messages.Doctor.SoftDelete;
 using Respira.Saga.Application.Features.Create.Commands;
 using Respira.Saga.Application.Features.Delete.Commands;
 using Respira.Saga.Application.Features.Update.Commands;
 using Respira.Saga.Domain.Enums;
-using Authentication.Application.Features.Accounts.Commands.SoftDelete;
-using Respira.Doctor.Application.Features.Doctors.Commands.SoftDelete;
 using Wolverine;
 
 namespace Respira.Saga.Application.Test.Features.Create;

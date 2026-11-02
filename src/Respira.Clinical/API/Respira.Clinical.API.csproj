@@ -16,11 +16,13 @@
         <PackageReference Include="WolverineFx.RabbitMQ" />
         <PackageReference Include="WolverineFx.FluentValidation" />
         <PackageReference Include="WolverineFx" />
-        <PackageReference Include="Scalar.AspNetCore" />
-        <PackageReference Include="Asp.Versioning.Mvc" />
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
         <PackageReference Include="Aspire.Npgsql" />
         <PackageReference Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" />
+        <PackageReference Include="ZiggyCreatures.FusionCache" />
+        <PackageReference Include="ZiggyCreatures.FusionCache.Serialization.SystemTextJson" />
+        <PackageReference Include="Aspire.StackExchange.Redis" />
+        <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" />
     </ItemGroup>
 
     <ItemGroup>

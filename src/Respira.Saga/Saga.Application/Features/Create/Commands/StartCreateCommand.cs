@@ -1,4 +1,4 @@
-using Authentication.Domain.Enums;
+using Respira.Authentication.Domain.Enums;
 using Respira.Doctor.Domain.Enums;
 using Respira.ServiceDefaults.Contracts.CQRS;
 
@@ -40,7 +40,7 @@ namespace Respira.Saga.Application.Features.Create.Commands
 
         public List<DegreeType> Degrees { get; set; } = [];
 
-        public AcademicTitleEnum AcademicTitle { get; set; }
+        public AcademicTitle AcademicTitle { get; set; }
 
         public PositionType Position { get; set; }
 

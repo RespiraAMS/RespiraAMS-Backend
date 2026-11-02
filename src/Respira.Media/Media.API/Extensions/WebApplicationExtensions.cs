@@ -1,7 +1,7 @@
-using Media.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
+using Respira.Media.Infrastructure.Persistence;
 
-namespace Media.API.Extensions;
+namespace Respira.Media.API.Extensions;
 
 public static class WebApplicationExtensions
 {

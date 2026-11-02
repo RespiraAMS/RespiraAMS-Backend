@@ -1,7 +1,7 @@
-using Authentication.Application.Constracts.Cache;
+using Respira.Authentication.Application.Constracts.Cache;
 using ZiggyCreatures.Caching.Fusion;
 
-namespace Authentication.Infrastructure.Cache
+namespace Respira.Authentication.Infrastructure.Cache
 {
     public class CacheService(IFusionCache cache) : ICacheService
     {

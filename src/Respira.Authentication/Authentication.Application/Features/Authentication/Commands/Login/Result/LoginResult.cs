@@ -1,4 +1,4 @@
-namespace Authentication.Application.Features.Authentication.Commands.Login.Result
+namespace Respira.Authentication.Application.Features.Authentication.Commands.Login.Result
 {
     public record LoginResult
     {

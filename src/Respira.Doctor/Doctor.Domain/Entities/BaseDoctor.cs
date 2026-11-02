@@ -15,7 +15,7 @@ namespace Respira.Doctor.Domain.Entities
         public required ICollection<DegreeType> Degrees { get; set; }
 
         /// <summary>Academic title</summary>
-        public required AcademicTitleEnum AcademicTitle { get; set; }
+        public required AcademicTitle AcademicTitle { get; set; }
 
         /// <summary>Hospital position</summary>
         public required PositionType Position { get; set; }

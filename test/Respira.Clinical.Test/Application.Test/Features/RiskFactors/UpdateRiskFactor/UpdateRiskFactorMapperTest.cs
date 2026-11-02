@@ -18,12 +18,18 @@ namespace Respira.Clinical.Application.Test.Features.RiskFactors.UpdateRiskFacto
             {
                 PathogenId = pathogenId,
                 CriterionId = criterionId,
+                IsCriticalFactor = true,
                 UpdatedAt = Stale,
             };
         }
 
-        private static UpdateRiskFactorCommand CreateCommand(RiskFactor model, Guid pathogenId, Guid criterionId) =>
-            new() { Id = model.Id, PathogenId = pathogenId, CriterionId = criterionId };
+        private static UpdateRiskFactorCommand CreateCommand(RiskFactor model, Guid pathogenId, Guid criterionId, bool isCritical = false) => new()
+        {
+            Id = model.Id,
+            PathogenId = pathogenId,
+            CriterionId = criterionId,
+            IsCriticalFactor = isCritical
+        };
 
         #region Pathogen and criterion mapping
 
@@ -34,7 +40,7 @@ namespace Respira.Clinical.Application.Test.Features.RiskFactors.UpdateRiskFacto
             var newPathogenId = Guid.CreateVersion7();
             var newCriterionId = Guid.CreateVersion7();
 
-            var result = _mapper.MapModel(model, CreateCommand(model, newPathogenId, newCriterionId));
+            var result = _mapper.MapModel(model, CreateCommand(model, newPathogenId, newCriterionId, false));
 
             Assert.True(result.IsSuccess());
             Assert.Null(result.Error);
@@ -42,6 +48,7 @@ namespace Respira.Clinical.Application.Test.Features.RiskFactors.UpdateRiskFacto
 
             Assert.Equal(newPathogenId, model.PathogenId);
             Assert.Equal(newCriterionId, model.CriterionId);
+            Assert.False(model.IsCriticalFactor);
             Assert.True(
                 model.UpdatedAt > Stale,
                 $"UpdatedAt {model.UpdatedAt} should move past the stale value {Stale}");

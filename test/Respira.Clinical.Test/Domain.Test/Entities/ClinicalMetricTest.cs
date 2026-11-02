@@ -23,7 +23,16 @@ namespace Respira.Clinical.Domain.Test.Entities
         [Fact]
         public void EmptyRules_BelongsToNeitherSystem()
         {
-            var metrics = new ClinicalMetric("Metric", "CODE", "Description", "", "", true, []);
+            var metrics = new ClinicalMetric
+            {
+                Name = "Metric",
+                Code = "CODE",
+                Description = "Description",
+                Version = "",
+                Publisher = "",
+                IsApplied = true,
+                Rules = [],
+            };
 
             Assert.False(metrics.IsScoringMetric);
             Assert.False(metrics.IsMajorMinorMetric);
@@ -32,7 +41,16 @@ namespace Respira.Clinical.Domain.Test.Entities
         [Fact]
         public void AllScoringRules_IsScoringMetricOnly()
         {
-            var metrics = new ClinicalMetric("Metric", "CODE", "Description", "", "", true, [NewScoringRule(), NewScoringRule()]);
+            var metrics = new ClinicalMetric
+            {
+                Name = "Metric",
+                Code = "CODE",
+                Description = "Description",
+                Version = "",
+                Publisher = "",
+                IsApplied = true,
+                Rules = [NewScoringRule(), NewScoringRule()],
+            };
 
             Assert.True(metrics.IsScoringMetric);
             Assert.False(metrics.IsMajorMinorMetric);
@@ -41,7 +59,16 @@ namespace Respira.Clinical.Domain.Test.Entities
         [Fact]
         public void AllMajorMinorRules_IsMajorMinorMetricOnly()
         {
-            var metrics = new ClinicalMetric("Metric", "CODE", "Description", "", "", true, [NewMajorMinorRule(), NewMajorMinorRule()]);
+            var metrics = new ClinicalMetric
+            {
+                Name = "Metric",
+                Code = "CODE",
+                Description = "Description",
+                Version = "",
+                Publisher = "",
+                IsApplied = true,
+                Rules = [NewMajorMinorRule(), NewMajorMinorRule()],
+            };
 
             Assert.True(metrics.IsMajorMinorMetric);
             Assert.False(metrics.IsScoringMetric);
@@ -50,8 +77,16 @@ namespace Respira.Clinical.Domain.Test.Entities
         [Fact]
         public void MixedRuleTypes_Throws()
         {
-            Assert.Throws<ArgumentException>(() =>
-                new ClinicalMetric("Metric", "CODE", "Description", "", "", true, [NewScoringRule(), NewMajorMinorRule()]));
+            Assert.Throws<ArgumentException>(() => new ClinicalMetric
+            {
+                Name = "Metric",
+                Code = "CODE",
+                Description = "Description",
+                Version = "",
+                Publisher = "",
+                IsApplied = true,
+                Rules = [NewScoringRule(), NewMajorMinorRule()],
+            });
         }
     }
 }

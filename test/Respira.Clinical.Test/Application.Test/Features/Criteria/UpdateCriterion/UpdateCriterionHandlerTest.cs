@@ -27,7 +27,7 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.UpdateCriterion
             // Create handler dependencies
             _options = new DbContextOptionsBuilder<ClinicalDbContext>().UseNpgsql(fixture.ConnectionString).Options;
             _context = new ClinicalDbContext(_options);
-            var mapper = new UpdateCriterionMapper(new FormulaMapper());
+            var mapper = new UpdateCriterionMapper(new FormulaDtoMapper());
             var logger = new Mock<ILogger<UpdateCriterionHandler>>().Object;
 
             // Initialize handler
@@ -49,7 +49,7 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.UpdateCriterion
                 .ExecuteDeleteAsync(TestContext.Current.CancellationToken);
             await _context.RiskFactors.IgnoreQueryFilters()
                 .ExecuteDeleteAsync(TestContext.Current.CancellationToken);
-            await _context.Treatments.IgnoreQueryFilters()
+            await _context.TreatmentProtocols.IgnoreQueryFilters()
                 .ExecuteDeleteAsync(TestContext.Current.CancellationToken);
             await _context.ClinicalMetrics.IgnoreQueryFilters()
                 .ExecuteDeleteAsync(TestContext.Current.CancellationToken);
@@ -73,8 +73,8 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.UpdateCriterion
             ClinicalMetric Metrics,
             MetricRule TargetRule,
             MetricRule ControlRule,
-            Treatment TargetTreatment,
-            Treatment ControlTreatment,
+            TreatmentProtocol TargetTreatmentProtocol,
+            TreatmentProtocol ControlTreatmentProtocol,
             DateTimeOffset StoredTargetUpdatedAt,
             DateTimeOffset StoredControlUpdatedAt);
 
@@ -120,16 +120,17 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.UpdateCriterion
                 [age, sbp, female], TestContext.Current.CancellationToken);
             await _context.SaveChangesAsync(TestContext.Current.CancellationToken);
 
-            var target = new Criterion(
-                "Tuổi >= 65",
-                new BinaryFormula(
-                    new VariableFormula(age), new NumericConstantFormula(65), ExpressionOperator.Gte));
-            var control = new Criterion(
-                "Huyết áp tâm thu < 90 mmHg",
-                new BinaryFormula(
-                    new VariableFormula(sbp), new NumericConstantFormula(90), ExpressionOperator.Lt));
-            await _context.Criteria.AddRangeAsync(
-                [target, control], TestContext.Current.CancellationToken);
+            var target = new Criterion
+            {
+                Name = "Tuổi >= 65",
+                Formula = new BinaryFormula(new VariableFormula(age), new NumericConstantFormula(65), ExpressionOperator.Gte)
+            };
+            var control = new Criterion
+            {
+                Name = "Huyết áp tâm thu < 90 mmHg",
+                Formula = new BinaryFormula(new VariableFormula(sbp), new NumericConstantFormula(90), ExpressionOperator.Lt)
+            };
+            await _context.Criteria.AddRangeAsync([target, control], TestContext.Current.CancellationToken);
             await _context.SaveChangesAsync(TestContext.Current.CancellationToken);
 
             var pathogen = new Pathogen
@@ -144,12 +145,15 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.UpdateCriterion
                 Name = "Severity metrics CURB-65",
                 Code = "CURB-65",
                 Description = "CURB-65 metrics to assess severity of a patient",
+                Publisher = string.Empty,
+                Version = string.Empty,
+                IsApplied = true
             };
             await _context.ClinicalMetrics.AddAsync(metrics, TestContext.Current.CancellationToken);
             await _context.SaveChangesAsync(TestContext.Current.CancellationToken);
 
-            var targetFactor = new RiskFactor { PathogenId = pathogen.Id, CriterionId = target.Id };
-            var controlFactor = new RiskFactor { PathogenId = pathogen.Id, CriterionId = control.Id };
+            var targetFactor = new RiskFactor { PathogenId = pathogen.Id, CriterionId = target.Id, IsCriticalFactor = true };
+            var controlFactor = new RiskFactor { PathogenId = pathogen.Id, CriterionId = control.Id, IsCriticalFactor = false };
             await _context.RiskFactors.AddRangeAsync(
                 [targetFactor, controlFactor], TestContext.Current.CancellationToken);
 
@@ -169,19 +173,25 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.UpdateCriterion
             await _context.MetricRules.AddRangeAsync(
                 [targetRule, controlRule], TestContext.Current.CancellationToken);
 
-            var targetTreatment = new Treatment
+            var targetTreatment = new TreatmentProtocol
             {
                 Severity = Severity.Severe,
                 TreatmentSite = TreatmentSite.IntensiveCareUnit,
                 Criteria = [target],
+                Publisher = string.Empty,
+                Version = string.Empty,
+                IsApplied = true
             };
-            var controlTreatment = new Treatment
+            var controlTreatment = new TreatmentProtocol
             {
                 Severity = Severity.Mild,
                 TreatmentSite = TreatmentSite.Outpatient,
                 Criteria = [control],
+                Publisher = string.Empty,
+                Version = string.Empty,
+                IsApplied = true
             };
-            await _context.Treatments.AddRangeAsync(
+            await _context.TreatmentProtocols.AddRangeAsync(
                 [targetTreatment, controlTreatment], TestContext.Current.CancellationToken);
             await _context.SaveChangesAsync(TestContext.Current.CancellationToken);
 
@@ -398,7 +408,7 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.UpdateCriterion
                 .AnyAsync(x => x.IsDeleted, TestContext.Current.CancellationToken));
             Assert.False(await readContext.MetricRules.IgnoreQueryFilters()
                 .AnyAsync(x => x.IsDeleted, TestContext.Current.CancellationToken));
-            Assert.False(await readContext.Treatments.IgnoreQueryFilters()
+            Assert.False(await readContext.TreatmentProtocols.IgnoreQueryFilters()
                 .AnyAsync(x => x.IsDeleted, TestContext.Current.CancellationToken));
 
             var targetFactor = await readContext.RiskFactors.IgnoreQueryFilters()
@@ -411,8 +421,8 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.UpdateCriterion
             Assert.False(targetRule.IsDeleted);
             Assert.Null(targetRule.DeletedAt);
 
-            var targetTreatment = await readContext.Treatments.IgnoreQueryFilters()
-                .SingleAsync(x => x.Id == data.TargetTreatment.Id, TestContext.Current.CancellationToken);
+            var targetTreatment = await readContext.TreatmentProtocols.IgnoreQueryFilters()
+                .SingleAsync(x => x.Id == data.TargetTreatmentProtocol.Id, TestContext.Current.CancellationToken);
             Assert.False(targetTreatment.IsDeleted);
             Assert.Null(targetTreatment.DeletedAt);
 

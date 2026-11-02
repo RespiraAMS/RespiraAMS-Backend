@@ -262,14 +262,16 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.DeleteMetri
             (string Name, string Code, string Description, string Version, string Publisher) metric,
             bool isApplied = true)
         {
-            var entity = new ClinicalMetric(
-                metric.Name,
-                metric.Code,
-                metric.Description,
-                metric.Version,
-                metric.Publisher,
-                isApplied,
-                []);
+            var entity = new ClinicalMetric
+            {
+                Name = metric.Name,
+                Code = metric.Code,
+                Description = metric.Description,
+                Version = metric.Version,
+                Publisher = metric.Publisher,
+                IsApplied = isApplied,
+                Rules = [],
+            };
 
             await _context.ClinicalMetrics.AddAsync(entity, TestContext.Current.CancellationToken);
             await _context.SaveChangesAsync(TestContext.Current.CancellationToken);
@@ -281,10 +283,14 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.DeleteMetri
         private async Task<Guid> SeedCriterionAsync(
             string name, string code, decimal threshold, ExpressionOperator op)
         {
-            var criterion = new Criterion(name, new BinaryFormula(
-                new VariableFormula(new VariableRef(Guid.CreateVersion7(), code, ClinicalValueType.Numeric)),
-                new NumericConstantFormula(threshold),
-                op));
+            var criterion = new Criterion
+            {
+                Name = name,
+                Formula = new BinaryFormula(
+                    new VariableFormula(new VariableRef(Guid.CreateVersion7(), code, ClinicalValueType.Numeric)),
+                    new NumericConstantFormula(threshold),
+                    op)
+            };
             await _context.Criteria.AddAsync(criterion, TestContext.Current.CancellationToken);
             await _context.SaveChangesAsync(TestContext.Current.CancellationToken);
             return criterion.Id;

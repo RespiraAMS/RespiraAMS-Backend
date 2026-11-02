@@ -68,7 +68,7 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalVariables.GetClinic
                     ClinicalVariableCategory.Paraclinical,
                     "mg/dL",
                     1000),
-                new CategoricalClinicalVariable(["DETECTED", "NOT_DETECTED"])
+                new CategoricalClinicalVariable
                 {
                     // LOINC 94500-6 - SARS-CoV-2 RNA detected
                     Code = "94500-6",
@@ -76,6 +76,7 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalVariables.GetClinic
                     Description = "SARS-CoV-2 RNA detected in respiratory specimen",
                     IsRequired = true,
                     Category = ClinicalVariableCategory.Paraclinical,
+                    AcceptedValues = ["DETECTED", "NOT_DETECTED"],
                     IsDeleted = true,
                     DeletedAt = DateTimeOffset.UtcNow,
                 },

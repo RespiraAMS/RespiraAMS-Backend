@@ -13,7 +13,7 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.UpdateCriterion
     public class UpdateCriterionMapperTest
     {
         private readonly IUpdateMapper<Criterion, UpdateCriterionCommand> _mapper =
-            new UpdateCriterionMapper(new FormulaMapper());
+            new UpdateCriterionMapper(new FormulaDtoMapper());
 
         #region Name and formula mapping
 
@@ -292,11 +292,14 @@ namespace Respira.Clinical.Application.Test.Features.Criteria.UpdateCriterion
         private static UpdateCriterionCommand CreateCommand(string name, FormulaDto formula) =>
             new() { Id = Guid.CreateVersion7(), Name = name, Formula = formula };
 
-        private static Criterion CreateAgeCriterion() =>
-            new("Tuổi >= 65", new BinaryFormula(
+        private static Criterion CreateAgeCriterion() => new()
+        {
+            Name = "Tuổi >= 65",
+            Formula = new BinaryFormula(
                 new VariableFormula(new VariableRef(Guid.CreateVersion7(), "AGE", ClinicalValueType.Numeric)),
                 new NumericConstantFormula(65),
-                ExpressionOperator.Gte));
+                ExpressionOperator.Gte)
+        };
 
         private static BooleanClinicalVariable CreateBooleanVariable(Guid id, string code)
         {

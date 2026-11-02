@@ -24,21 +24,21 @@ namespace Respira.Clinical.Application.Features.ClinicalMetrics.AddMetricRule
             if (metric is null)
             {
                 logger.LogDebug("Clinical metric does not exist: {Id}", command.ClinicalMetricId);
-                return Result<AddMetricRuleResult>.Failure(new Error(ApplicationStatus.BadRequest, "Clinical metric does not exist"));
+                return Result<AddMetricRuleResult>.Failure(new ApplicationError(ApplicationStatus.BadRequest, "Clinical metric does not exist"));
             }
 
             // Check if the criterion exists
             if (await context.Criteria.FirstOrDefaultAsync(x => x.Id == command.CriterionId, cancellationToken) is null)
             {
                 logger.LogDebug("Criterion does not exist: {Id}", command.CriterionId);
-                return Result<AddMetricRuleResult>.Failure(new Error(ApplicationStatus.BadRequest, "Criterion does not exist"));
+                return Result<AddMetricRuleResult>.Failure(new ApplicationError(ApplicationStatus.BadRequest, "Criterion does not exist"));
             }
 
             // Check if the pair (clinical metric, criterion) is unique
             if (metric.Rules.Any(x => x.CriterionId == command.CriterionId))
             {
                 logger.LogDebug("There already exists a rule with this criterion {Id} in this metric", command.CriterionId);
-                return Result<AddMetricRuleResult>.Failure(new Error(ApplicationStatus.BadRequest, "There already exists a rule with this criterion in this metric"));
+                return Result<AddMetricRuleResult>.Failure(new ApplicationError(ApplicationStatus.BadRequest, "There already exists a rule with this criterion in this metric"));
             }
 
             // Business rule: all rules belong to a metric should be of the same type
@@ -49,13 +49,13 @@ namespace Respira.Clinical.Application.Features.ClinicalMetrics.AddMetricRule
                 if (metric.IsScoringMetric && command.ScoreFunction is null)
                 {
                     logger.LogDebug("Cannot add major/minor rule to a scoring metric");
-                    return Result<AddMetricRuleResult>.Failure(new Error(ApplicationStatus.BusinessRuleViolation, "Cannot add major/minor rule to a scoring metric"));
+                    return Result<AddMetricRuleResult>.Failure(new ApplicationError(ApplicationStatus.BusinessRuleViolation, "Cannot add major/minor rule to a scoring metric"));
                 }
 
                 if (metric.IsMajorMinorMetric && command.IsMajor is null)
                 {
                     logger.LogDebug("Cannot add scoring rule to a major/minor metric");
-                    return Result<AddMetricRuleResult>.Failure(new Error(ApplicationStatus.BusinessRuleViolation, "Cannot add scoring rule to a major/minor metric"));
+                    return Result<AddMetricRuleResult>.Failure(new ApplicationError(ApplicationStatus.BusinessRuleViolation, "Cannot add scoring rule to a major/minor metric"));
                 }
             }
 

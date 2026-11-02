@@ -12,7 +12,7 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalMetrics.AddMetricRu
     public class AddMetricRuleMapperTest
     {
         private readonly ICreateMapper<AddMetricRuleCommand, MetricRule> _mapper =
-            new AddMetricRuleMapper(new FormulaMapper());
+            new AddMetricRuleMapper(new FormulaDtoMapper());
 
         #region Map command to model
 

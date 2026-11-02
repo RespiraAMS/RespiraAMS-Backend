@@ -98,21 +98,16 @@ namespace Respira.Clinical.Domain.Entities
         /// <summary>
         /// The categorical values that the value can be
         /// </summary>
-        public List<string> AcceptedValues { get; set => field = [.. value.Select(SanitizeCategory)]; } = [];
+        public required List<string> AcceptedValues { get; set => field = [.. value.Select(SanitizeCategory)]; } = [];
 
         public override ClinicalValueType ValueType => ClinicalValueType.Categorical;
 
-        private string SanitizeCategory(string value)
+        public static string SanitizeCategory(string value)
         {
             // Trim space and normalize to upper case
             var sanitized = value.Trim().ToUpper();
             // Remove all in-between spaces with a single underscore
             return string.Join("_", sanitized.Split((char[]?)null, StringSplitOptions.RemoveEmptyEntries));
-        }
-
-        public CategoricalClinicalVariable(List<string> acceptedValues)
-        {
-            AcceptedValues.AddRange(acceptedValues.Select(SanitizeCategory));
         }
 
         public override bool IsValidValue(object? value)

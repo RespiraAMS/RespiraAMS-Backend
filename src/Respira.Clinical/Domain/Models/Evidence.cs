@@ -41,7 +41,7 @@ namespace Respira.Clinical.Domain.Models
 
         public Evidence(string source, Formula formula, IEnumerable<VariableRef> variablesUsed, IEnumerable<ClinicalObservation> observations)
         {
-            observations = [.. observations];
+            observations = observations.ToList().AsReadOnly();
 
             Source = source;
             Formula = formula.ToString()!;

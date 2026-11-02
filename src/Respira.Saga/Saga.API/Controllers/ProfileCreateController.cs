@@ -1,9 +1,9 @@
 using System.Security.Claims;
 using System.Text.Json;
 using Asp.Versioning;
-using Authentication.Domain.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Respira.Authentication.Domain.Enums;
 using Respira.Saga.API.Models;
 using Respira.Saga.Application.Features.Create.Commands;
 using Respira.Saga.Application.Features.Create.Queries;
@@ -63,7 +63,7 @@ namespace Respira.Saga.API.Controllers
             if (string.IsNullOrWhiteSpace(request))
             {
                 return Result<Guid>
-                    .Failure(new Error(ApplicationStatus.BadRequest, "A 'request' part is required"))
+                    .Failure(new ApplicationError(ApplicationStatus.BadRequest, "A 'request' part is required"))
                     .ToApiResponse();
             }
 
@@ -80,7 +80,7 @@ namespace Respira.Saga.API.Controllers
             {
                 return Result<Guid>
                     .Failure(
-                        new Error(
+                        new ApplicationError(
                             ApplicationStatus.BadRequest,
                             $"The 'request' part is not valid JSON: {exception.Message}"
                         )
@@ -92,7 +92,7 @@ namespace Respira.Saga.API.Controllers
             {
                 return Result<Guid>
                     .Failure(
-                        new Error(ApplicationStatus.BadRequest, "The 'request' part is empty")
+                        new ApplicationError(ApplicationStatus.BadRequest, "The 'request' part is empty")
                     )
                     .ToApiResponse();
             }
@@ -102,7 +102,7 @@ namespace Respira.Saga.API.Controllers
             if (invalidField is not null)
             {
                 return Result<Guid>
-                    .Failure(new Error(ApplicationStatus.BadRequest, invalidField))
+                    .Failure(new ApplicationError(ApplicationStatus.BadRequest, invalidField))
                     .ToApiResponse();
             }
 
@@ -112,7 +112,7 @@ namespace Respira.Saga.API.Controllers
             {
                 return Result<Guid>
                     .Failure(
-                        new Error(
+                        new ApplicationError(
                             ApplicationStatus.SagaUnauthorized,
                             "The caller role is missing from the access token"
                         )
@@ -125,7 +125,7 @@ namespace Respira.Saga.API.Controllers
             {
                 return Result<Guid>
                     .Failure(
-                        new Error(
+                        new ApplicationError(
                             ApplicationStatus.SagaUnauthorized,
                             "The caller account id is missing from the access token"
                         )
@@ -142,14 +142,14 @@ namespace Respira.Saga.API.Controllers
                         ActorRole = callerRole.Value.ToString(),
                         Action = "Authorization.ProfileCreateDenied",
                         EntityType = "Account",
-                        DetailsJson = System.Text.Json.JsonSerializer.Serialize(
+                        DetailsJson = JsonSerializer.Serialize(
                             new { RequestedRole = payload.Role }
                         ),
                     }
                 );
                 return Result<Guid>
                     .Failure(
-                        new Error(
+                        new ApplicationError(
                             ApplicationStatus.SagaRestricted,
                             $"A {callerRole.Value} account cannot create a {payload.Role} account"
                         )
@@ -164,14 +164,14 @@ namespace Respira.Saga.API.Controllers
             if (requiresProfile && (avatar is null || avatar.Length == 0))
             {
                 return Result<Guid>
-                    .Failure(new Error(ApplicationStatus.BadRequest, "An 'avatar' file is required"))
+                    .Failure(new ApplicationError(ApplicationStatus.BadRequest, "An 'avatar' file is required"))
                     .ToApiResponse();
             }
 
-            if (avatar is not null && avatar.Length > 5 * 1024 * 1024)
+            if (avatar?.Length > 5 * 1024 * 1024)
             {
                 return Result<Guid>
-                    .Failure(new Error(ApplicationStatus.BadRequest, "Avatar must be 5 MB or smaller"))
+                    .Failure(new ApplicationError(ApplicationStatus.BadRequest, "Avatar must be 5 MB or smaller"))
                     .ToApiResponse();
             }
 
@@ -186,7 +186,7 @@ namespace Respira.Saga.API.Controllers
                 {
                     return Result<Guid>
                         .Failure(
-                            new Error(
+                            new ApplicationError(
                                 ApplicationStatus.BadRequest,
                                 $"The avatar must be one of: {string.Join(", ", AllowedAvatarExtensions)}"
                             )

@@ -22,7 +22,7 @@ namespace Respira.Clinical.Application.Features.SuspectedCauses.UpdateSuspectedC
             if (cause is null)
             {
                 logger.LogDebug("Disease's cause ID not found: {Id}", command.Id);
-                return Result.Failure(new Error(ApplicationStatus.BadRequest, "Disease's cause ID not found"));
+                return Result.Failure(new ApplicationError(ApplicationStatus.BadRequest, "Disease's cause ID not found"));
             }
 
             // Check if pathogen exists
@@ -30,7 +30,7 @@ namespace Respira.Clinical.Application.Features.SuspectedCauses.UpdateSuspectedC
             if (pathogen is null)
             {
                 logger.LogDebug("Pathogen ID not found: {Id}", command.PathogenId);
-                return Result.Failure(new Error(ApplicationStatus.BadRequest, "Pathogen ID not exists"));
+                return Result.Failure(new ApplicationError(ApplicationStatus.BadRequest, "Pathogen ID not exists"));
             }
 
             // Check if the new severity/treatment site will cause a duplicate problem
@@ -44,14 +44,14 @@ namespace Respira.Clinical.Application.Features.SuspectedCauses.UpdateSuspectedC
             if (hasDuplicate)
             {
                 logger.LogDebug("New severity and treatment site cause duplicate data: {command}", command);
-                return Result.Failure(new Error(ApplicationStatus.BadRequest, "New severity and treatment site cause duplicate data"));
+                return Result.Failure(new ApplicationError(ApplicationStatus.BadRequest, "New severity and treatment site cause duplicate data"));
             }
 
             // Map command to model
             var mapResult = mapper.MapModel(cause, command);
             if (mapResult.IsFailure())
             {
-                logger.LogDebug("Failed to map command to model: {Error}", mapResult.Error);
+                logger.LogDebug("Failed to map command to model: {ApplicationError}", mapResult.Error);
                 return Result.Failure(mapResult.Error!);
             }
 

@@ -99,13 +99,14 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalVariables.GetPagedC
                     CreatedAt = baseTime.AddMinutes(-3),
                 },
                 // LOINC 94500-6
-                new CategoricalClinicalVariable(["DETECTED", "NOT_DETECTED"])
+                new CategoricalClinicalVariable
                 {
                     Code = "94500-6",
                     Name = "SARS-CoV-2 RNA",
                     Description = "SARS-CoV-2 RNA detected in respiratory specimen",
                     IsRequired = false,
                     Category = ClinicalVariableCategory.Paraclinical,
+                    AcceptedValues = ["DETECTED", "NOT_DETECTED"],
                     CreatedAt = baseTime.AddMinutes(-1),
                 },
                 // Soft deleted: hidden by the query filter but still in the table
