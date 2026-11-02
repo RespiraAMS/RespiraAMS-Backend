@@ -1,8 +1,8 @@
 using System.Net;
 using System.Text.Json;
 using Microsoft.Extensions.Logging;
+using Respira.Saga.Application.Contracts.Media;
 using Respira.ServiceDefaults.Contracts.Results;
-using Respira.Saga.Application.Constracts.Media;
 
 namespace Respira.Saga.Infrastructure.Media
 {

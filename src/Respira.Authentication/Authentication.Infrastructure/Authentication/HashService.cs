@@ -1,6 +1,6 @@
 using System.Security.Cryptography;
 using System.Text;
-using Respira.Authentication.Application.Constracts.Authentication;
+using Respira.Authentication.Application.Contracts.Authentication;
 
 namespace Respira.Authentication.Infrastructure.Authentication
 {

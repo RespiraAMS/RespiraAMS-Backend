@@ -1,4 +1,4 @@
-namespace Respira.Saga.Application.Constracts.Messages.Doctor.Create.Events
+namespace Respira.Saga.Application.Contracts.Messages.Doctor.Create.Events
 {
     public record DoctorProfileFailure
     {

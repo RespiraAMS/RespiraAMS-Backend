@@ -1,4 +1,4 @@
-namespace Respira.Saga.Application.Constracts.Messages.Authentication.SoftDelete.Events
+namespace Respira.Saga.Application.Contracts.Messages.Authentication.SoftDelete.Events
 {
     /// <summary>
     /// Published when the account has been soft-deleted. Compensation is idempotent:

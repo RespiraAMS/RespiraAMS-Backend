@@ -1,4 +1,4 @@
-namespace Respira.Authentication.Application.Constracts.Authentication
+namespace Respira.Authentication.Application.Contracts.Authentication
 {
     public interface IHashService
     {

@@ -6,9 +6,9 @@ using Wolverine.Postgresql;
 using Respira.Media.Infrastructure.Persistence;
 using Respira.Media.Infrastructure.Extensions;
 using Respira.Media.Application.Features.MediaAssets.Create;
-using Respira.Media.Application.Constracts.Storage;
 using Wolverine.RabbitMQ;
 using Respira.Media.Application.Contracts.Messaging;
+using Respira.Media.Application.Contracts.Storage;
 
 var builder = WebApplication.CreateBuilder(args);
 

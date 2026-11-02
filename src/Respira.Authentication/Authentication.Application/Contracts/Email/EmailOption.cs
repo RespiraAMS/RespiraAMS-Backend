@@ -1,4 +1,4 @@
-namespace Respira.Authentication.Application.Constracts.Email;
+namespace Respira.Authentication.Application.Contracts.Email;
 
 public sealed class EmailOption
 {

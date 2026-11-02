@@ -1,4 +1,4 @@
-namespace Respira.Saga.Application.Constracts.Messages.Doctor.SoftDelete.Events
+namespace Respira.Saga.Application.Contracts.Messages.Doctor.SoftDelete.Events
 {
     public record SoftDeleteDoctorCompleted
     {

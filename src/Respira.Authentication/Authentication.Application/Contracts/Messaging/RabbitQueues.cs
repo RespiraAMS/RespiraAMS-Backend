@@ -1,4 +1,4 @@
-namespace Respira.Authentication.Application.Constracts.Messaging
+namespace Respira.Authentication.Application.Contracts.Messaging
 {
     /// <summary>
     /// RabbitMQ queue names used by the create saga. Every participating service keeps

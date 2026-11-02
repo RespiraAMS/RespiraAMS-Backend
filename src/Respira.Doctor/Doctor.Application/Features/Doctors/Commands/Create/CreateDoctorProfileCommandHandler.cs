@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Respira.Doctor.Application.Constracts.Data;
+using Respira.Doctor.Application.Contracts.Data;
 using Respira.Doctor.Application.Features.Doctors.Commands.Create.Events;
 using Respira.Doctor.Domain.Enums;
 using Respira.ServiceDefaults.Contracts.CQRS;

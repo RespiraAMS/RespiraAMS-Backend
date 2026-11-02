@@ -1,10 +1,10 @@
 using Microsoft.EntityFrameworkCore;
-using Respira.Authentication.Application.Constracts.Data;
+using Respira.Authentication.Application.Contracts.Data;
 using Respira.ServiceDefaults.Contracts.CQRS;
 using Respira.ServiceDefaults.Contracts.Messages.Accounts;
 using Respira.ServiceDefaults.Contracts.Results;
 
-namespace Authentication.Application.Features.Accounts.Queries.GetByIds
+namespace Respira.Authentication.Application.Features.Accounts.Queries.GetByIds
 {
     /// <summary>
     /// Answers account lookups sent by other microservices over the message broker.

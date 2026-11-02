@@ -2,7 +2,7 @@ using Amazon.S3;
 using Amazon.S3.Model;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Respira.Media.Application.Constracts.Storage;
+using Respira.Media.Application.Contracts.Storage;
 
 namespace Respira.Media.Infrastructure.Storage
 {

@@ -1,7 +1,7 @@
 using Respira.Authentication.Domain.Enums;
 using Respira.ServiceDefaults.Contracts.CQRS;
 
-namespace Respira.Saga.Application.Constracts.Messages.Authentication.Create
+namespace Respira.Saga.Application.Contracts.Messages.Authentication.Create
 {
     public record CreateAccountCommand : ICommand
     {

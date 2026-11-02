@@ -1,7 +1,7 @@
 using Respira.Authentication.Domain.Entities;
 using Respira.Authentication.Domain.Enums;
 
-namespace Respira.Authentication.Application.Constracts.Authentication
+namespace Respira.Authentication.Application.Contracts.Authentication
 {
     public interface IJwtService
     {

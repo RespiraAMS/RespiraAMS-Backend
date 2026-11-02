@@ -1,4 +1,4 @@
-namespace Respira.Saga.Application.Constracts.Messages.Doctor.Update.Events
+namespace Respira.Saga.Application.Contracts.Messages.Doctor.Update.Events
 {
     public record DoctorMediaUpdated
     {

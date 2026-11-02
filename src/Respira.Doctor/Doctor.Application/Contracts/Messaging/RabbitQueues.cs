@@ -1,4 +1,4 @@
-namespace Respira.Doctor.Application.Constracts.Messaging
+namespace Respira.Doctor.Application.Contracts.Messaging
 {
     /// <summary>
     /// RabbitMQ queue names shared (by convention, duplicated per service) across

@@ -4,8 +4,8 @@ using System.Text;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using Respira.Authentication.Application.Constracts.Authentication;
-using Respira.Authentication.Application.Constracts.Data;
+using Respira.Authentication.Application.Contracts.Authentication;
+using Respira.Authentication.Application.Contracts.Data;
 using Respira.Authentication.Domain.Entities;
 using Respira.Authentication.Domain.Enums;
 

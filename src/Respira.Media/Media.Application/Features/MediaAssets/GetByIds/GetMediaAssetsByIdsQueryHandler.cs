@@ -1,10 +1,10 @@
 using Microsoft.EntityFrameworkCore;
-using Respira.Media.Application.Constracts.Data;
+using Respira.Media.Application.Contracts.Data;
 using Respira.ServiceDefaults.Contracts.CQRS;
 using Respira.ServiceDefaults.Contracts.Messages.Media;
 using Respira.ServiceDefaults.Contracts.Results;
 
-namespace Media.Application.Features.MediaAssets.GetByIds
+namespace Respira.Media.Application.Features.MediaAssets.GetByIds
 {
     /// <summary>
     /// Answers media asset lookups sent by other microservices over the message broker.

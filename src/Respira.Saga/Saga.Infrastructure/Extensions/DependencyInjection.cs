@@ -1,7 +1,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Respira.Saga.Application.Constracts.Media;
-using Respira.Saga.Application.Constracts.Sagas;
+using Respira.Saga.Application.Contracts.Media;
+using Respira.Saga.Application.Contracts.Sagas;
 using Respira.Saga.Infrastructure.Media;
 using Respira.Saga.Infrastructure.Sagas;
 

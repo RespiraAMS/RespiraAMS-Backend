@@ -1,6 +1,6 @@
 using Respira.ServiceDefaults.Contracts.Results;
 
-namespace Respira.Saga.Application.Constracts.Media
+namespace Respira.Saga.Application.Contracts.Media
 {
     /// <summary>
     /// Thin HTTP wrapper over the Media microservice. The avatar is a file stream, which

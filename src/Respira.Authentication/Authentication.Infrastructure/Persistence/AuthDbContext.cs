@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using Respira.Authentication.Application.Constracts.Data;
+using Respira.Authentication.Application.Contracts.Data;
 using Respira.Authentication.Domain.Entities;
 using Respira.Authentication.Domain.Enums;
 

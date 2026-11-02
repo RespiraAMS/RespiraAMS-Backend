@@ -1,4 +1,4 @@
-namespace Respira.Saga.Application.Constracts.Sagas
+namespace Respira.Saga.Application.Contracts.Sagas
 {
     /// <summary>
     /// Reads the persisted state of a saga run. Wolverine deletes the row as soon as a saga

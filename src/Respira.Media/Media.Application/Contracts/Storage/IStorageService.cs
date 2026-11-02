@@ -1,4 +1,4 @@
-namespace Respira.Media.Application.Constracts.Storage
+namespace Respira.Media.Application.Contracts.Storage
 {
     public interface IStorageService
     {

@@ -1,4 +1,4 @@
-namespace Respira.Saga.Application.Constracts.Messages.Authentication.Events
+namespace Respira.Saga.Application.Contracts.Messages.Authentication.Events
 {
     /// <summary>
     /// Published when the verification email has been handed to the SMTP service.

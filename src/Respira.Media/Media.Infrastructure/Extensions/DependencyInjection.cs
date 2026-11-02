@@ -1,7 +1,7 @@
 using Amazon.S3;
 using Microsoft.Extensions.DependencyInjection;
-using Respira.Media.Application.Constracts.Data;
-using Respira.Media.Application.Constracts.Storage;
+using Respira.Media.Application.Contracts.Data;
+using Respira.Media.Application.Contracts.Storage;
 using Respira.Media.Infrastructure.Persistence;
 using Respira.Media.Infrastructure.Storage;
 

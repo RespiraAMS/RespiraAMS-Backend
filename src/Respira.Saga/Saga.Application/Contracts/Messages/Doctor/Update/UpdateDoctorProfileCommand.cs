@@ -1,7 +1,7 @@
 using Respira.Doctor.Domain.Enums;
 using Respira.ServiceDefaults.Contracts.CQRS;
 
-namespace Respira.Saga.Application.Constracts.Messages.Doctor.Update
+namespace Respira.Saga.Application.Contracts.Messages.Doctor.Update
 {
     /// <summary>
     /// Updates the profile fields of a doctor/manager and points it at the freshly

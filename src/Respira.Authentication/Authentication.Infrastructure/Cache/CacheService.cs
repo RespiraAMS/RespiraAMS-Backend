@@ -1,4 +1,4 @@
-using Respira.Authentication.Application.Constracts.Cache;
+using Respira.Authentication.Application.Contracts.Cache;
 using ZiggyCreatures.Caching.Fusion;
 
 namespace Respira.Authentication.Infrastructure.Cache

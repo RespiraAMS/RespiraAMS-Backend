@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Respira.Media.Application.Constracts.Data;
-using Respira.Media.Application.Constracts.Storage;
+using Respira.Media.Application.Contracts.Data;
+using Respira.Media.Application.Contracts.Storage;
 using Respira.ServiceDefaults.Contracts.CQRS;
 using Respira.ServiceDefaults.Contracts.Results;
 using Respira.ServiceDefaults.Contracts.Messages.Audit;

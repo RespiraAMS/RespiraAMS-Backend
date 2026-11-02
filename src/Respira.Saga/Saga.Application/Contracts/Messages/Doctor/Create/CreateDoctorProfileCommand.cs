@@ -1,7 +1,7 @@
 using Respira.Doctor.Domain.Enums;
 using Respira.ServiceDefaults.Contracts.CQRS;
 
-namespace Respira.Saga.Application.Constracts.Messages.Doctor.Create
+namespace Respira.Saga.Application.Contracts.Messages.Doctor.Create
 {
     public record CreateDoctorProfileCommand : ICommand
     {

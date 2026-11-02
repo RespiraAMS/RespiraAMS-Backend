@@ -3,7 +3,7 @@ using MailKit.Security;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MimeKit;
-using Respira.Authentication.Application.Constracts.Email;
+using Respira.Authentication.Application.Contracts.Email;
 
 namespace Respira.Authentication.Infrastructure.Email;
 

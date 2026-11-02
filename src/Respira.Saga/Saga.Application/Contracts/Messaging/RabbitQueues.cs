@@ -1,4 +1,4 @@
-namespace Respira.Saga.Application.Constracts.Messaging
+namespace Respira.Saga.Application.Contracts.Messaging
 {
     /// <summary>
     /// RabbitMQ queue names used by the profile creation saga. Every participating service keeps

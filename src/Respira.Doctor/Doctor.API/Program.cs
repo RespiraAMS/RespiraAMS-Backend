@@ -1,6 +1,6 @@
 using FluentValidation;
 using Respira.Doctor.API.Extensions;
-using Respira.Doctor.Application.Constracts.Messaging;
+using Respira.Doctor.Application.Contracts.Messaging;
 using Respira.Doctor.Application.Features.Doctors.Commands.Create;
 using Respira.Doctor.Application.Features.Doctors.Commands.Create.Events;
 using Respira.Doctor.Application.Features.Doctors.Commands.SoftDelete.Events;

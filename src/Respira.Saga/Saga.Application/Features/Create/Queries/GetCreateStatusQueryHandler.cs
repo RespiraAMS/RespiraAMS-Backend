@@ -1,4 +1,4 @@
-using Respira.Saga.Application.Constracts.Sagas;
+using Respira.Saga.Application.Contracts.Sagas;
 using Respira.Saga.Application.Features.Create.Commands;
 using Respira.Saga.Application.Features.Create.Queries;
 using Respira.ServiceDefaults.Contracts.CQRS;

@@ -1,6 +1,6 @@
 using Respira.ServiceDefaults.Contracts.CQRS;
 
-namespace Respira.Saga.Application.Constracts.Messages.Doctor.SoftDelete
+namespace Respira.Saga.Application.Contracts.Messages.Doctor.SoftDelete
 {
     public record SoftDeleteDoctorCommand : ICommand
     {

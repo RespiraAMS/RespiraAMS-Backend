@@ -1,4 +1,4 @@
-namespace Respira.Saga.Application.Constracts.Messages.Authentication.Create.Events
+namespace Respira.Saga.Application.Contracts.Messages.Authentication.Create.Events
 {
     public record CreateAccountFailure
     {

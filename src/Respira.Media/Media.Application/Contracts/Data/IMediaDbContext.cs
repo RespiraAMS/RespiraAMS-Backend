@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Respira.Media.Domain.Entities;
 
-namespace Respira.Media.Application.Constracts.Data
+namespace Respira.Media.Application.Contracts.Data
 {
     public interface IMediaDbContext
     {

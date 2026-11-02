@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using Respira.Doctor.Application.Constracts.Data;
+using Respira.Doctor.Application.Contracts.Data;
 using Respira.Doctor.Domain.Entities;
 using Respira.ServiceDefaults.Utils.FullTextSearch;
 using DoctorEntity = Respira.Doctor.Domain.Entities.Doctor;

@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using Respira.Doctor.Application.Constracts.Data;
+using Respira.Doctor.Application.Contracts.Data;
 using Respira.ServiceDefaults.Contracts.CQRS;
 using Respira.ServiceDefaults.Contracts.Messages.Doctors;
 using Respira.ServiceDefaults.Contracts.Results;

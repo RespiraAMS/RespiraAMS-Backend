@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using DoctorEntity = Respira.Doctor.Domain.Entities.Doctor;
 
-namespace Respira.Doctor.Application.Constracts.Data
+namespace Respira.Doctor.Application.Contracts.Data
 {
     public interface IDoctorDbContext
     {

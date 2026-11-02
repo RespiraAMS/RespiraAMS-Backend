@@ -1,7 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
-using Respira.Authentication.Application.Constracts.Authentication;
-using Respira.Authentication.Application.Constracts.Cache;
-using Respira.Authentication.Application.Constracts.Email;
+using Respira.Authentication.Application.Contracts.Authentication;
+using Respira.Authentication.Application.Contracts.Cache;
+using Respira.Authentication.Application.Contracts.Email;
 using Respira.Authentication.Infrastructure.Authentication;
 using Respira.Authentication.Infrastructure.Cache;
 using Respira.Authentication.Infrastructure.Email;
