@@ -25,7 +25,9 @@ namespace Respira.Saga.Infrastructure.Media
             Stream content,
             string fileName,
             string folder,
-            CancellationToken cancellationToken = default
+            CancellationToken cancellationToken = default,
+            Guid? actorAccountId = null,
+            string actorRole = "Service"
         )
         {
             ArgumentNullException.ThrowIfNull(content);
@@ -43,6 +45,11 @@ namespace Respira.Saga.Infrastructure.Media
                 "application/octet-stream"
             );
             form.Add(file, "file", fileName);
+            if (actorAccountId.HasValue)
+            {
+                form.Add(new StringContent(actorAccountId.Value.ToString()), "actorAccountId");
+            }
+            form.Add(new StringContent(actorRole), "actorRole");
 
             var url = $"api/v1/media-assets?folder={Uri.EscapeDataString(folder)}";
 
@@ -101,7 +108,9 @@ namespace Respira.Saga.Infrastructure.Media
         /// <inheritdoc />
         public async Task<Result<Guid>> DeleteAssetAsync(
             Guid mediaId,
-            CancellationToken cancellationToken = default
+            CancellationToken cancellationToken = default,
+            Guid? actorAccountId = null,
+            string actorRole = "Service"
         )
         {
             if (mediaId == Guid.Empty)
@@ -116,7 +125,7 @@ namespace Respira.Saga.Infrastructure.Media
             try
             {
                 response = await httpClient.DeleteAsync(
-                    $"api/v1/media-assets/{mediaId}",
+                    $"api/v1/media-assets/{mediaId}?actorAccountId={actorAccountId}&actorRole={Uri.EscapeDataString(actorRole)}",
                     cancellationToken
                 );
             }

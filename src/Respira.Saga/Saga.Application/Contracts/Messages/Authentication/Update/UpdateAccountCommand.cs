@@ -11,6 +11,8 @@ namespace Respira.Saga.Application.Constracts.Messages.Authentication.Update
     public record UpdateAccountCommand : ICommand
     {
         public Guid SagaId { get; set; }
+        public Guid ActorAccountId { get; set; }
+        public string ActorRole { get; set; } = string.Empty;
         public Guid AccountId { get; set; }
         public required string Email { get; set; }
         public required string Phone { get; set; }

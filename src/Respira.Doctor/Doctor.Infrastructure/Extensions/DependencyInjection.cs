@@ -1,5 +1,9 @@
 using Microsoft.Extensions.DependencyInjection;
 using Respira.Doctor.Application.Constracts.Data;
+using Respira.Doctor.Application.Constracts.Enrichment;
+using Respira.Doctor.Application.Constracts.Mappers;
+using Respira.Doctor.Application.Features.Doctors.Common;
+using Respira.Doctor.Infrastructure.Mappers;
 using Respira.Doctor.Infrastructure.Persistence;
 
 namespace Respira.Doctor.Infrastructure.Extensions
@@ -13,6 +17,8 @@ namespace Respira.Doctor.Infrastructure.Extensions
         public static IServiceCollection AddDoctorInfrastructure(this IServiceCollection services)
         {
             services.AddScoped<IDoctorDbContext>(sp => sp.GetRequiredService<DoctorDbContext>());
+            services.AddScoped<IPaginationFactory, PaginationFactory>();
+            services.AddScoped<IDoctorProfileEnricher, DoctorProfileEnricher>();
 
             return services;
         }

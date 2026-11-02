@@ -45,6 +45,9 @@
         <Project Path="test/Respira.Clinical.Test/Domain.Test/Respira.Clinical.Domain.Test.csproj" />
         <Project Path="test/Respira.Clinical.Test/Infrastructure.Test/Respira.Clinical.Infrastructure.Test.csproj" />
     </Folder>
+    <Folder Name="/test/Respira.Saga.Test/">
+        <Project Path="test/Respira.Saga.Test/Application.Test/Respira.Saga.Application.Test.csproj" />
+    </Folder>
     <Folder Name="/test/Respira.Patient.Test/">
         <Project Path="test/Respira.Patient.Test/Application.Test/Respira.Patient.Application.Test.csproj" />
         <Project Path="test/Respira.Patient.Test/Domain.Test/Respira.Patient.Domain.Test.csproj" />

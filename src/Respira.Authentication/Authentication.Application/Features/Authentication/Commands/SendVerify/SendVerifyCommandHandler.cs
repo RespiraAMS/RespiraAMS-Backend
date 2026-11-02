@@ -12,6 +12,7 @@ using Respira.Authentication.Domain.Entities;
 using Respira.Authentication.Domain.Enums;
 using Respira.ServiceDefaults.Contracts.CQRS;
 using Respira.ServiceDefaults.Contracts.Results;
+using Respira.ServiceDefaults.Contracts.Messages.Audit;
 using Wolverine;
 
 namespace Respira.Authentication.Application.Features.Authentication.Commands.SendVerify
@@ -54,6 +55,21 @@ namespace Respira.Authentication.Application.Features.Authentication.Commands.Se
             ArgumentNullException.ThrowIfNull(command);
 
             var result = await HandleCoreAsync(command, cancellationToken);
+
+            await bus.PublishAsync(new AuditEvent
+            {
+                ActorAccountId = command.ActorAccountId == Guid.Empty ? null : command.ActorAccountId,
+                ActorRole = string.IsNullOrWhiteSpace(command.ActorRole) ? "Public" : command.ActorRole,
+                Action = result.IsSuccess()
+                    ? "Authentication.VerificationEmailSent"
+                    : "Authentication.VerificationEmailFailed",
+                EntityType = "Account",
+                EntityId = command.TargetAccountId == Guid.Empty ? null : command.TargetAccountId,
+                CorrelationId = command.SagaId == Guid.Empty ? null : command.SagaId,
+                DetailsJson = System.Text.Json.JsonSerializer.Serialize(
+                    new { Status = result.StatusCode }
+                ),
+            });
 
             if (command.SagaId == Guid.Empty)
             {

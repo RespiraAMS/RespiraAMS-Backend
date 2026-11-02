@@ -6,6 +6,8 @@ using Respira.Authentication.Application.Constracts.Data;
 using Respira.Authentication.Domain.Enums;
 using Respira.ServiceDefaults.Contracts.CQRS;
 using Respira.ServiceDefaults.Contracts.Results;
+using Respira.ServiceDefaults.Contracts.Messages.Audit;
+using Wolverine;
 
 namespace Respira.Authentication.Application.Features.Authentication.Commands.VerifyEmail
 {
@@ -18,7 +20,8 @@ namespace Respira.Authentication.Application.Features.Authentication.Commands.Ve
         IAuthDbContext dbContext,
         IHashService hashService,
         ICacheService cacheService,
-        ILogger<VerifyEmailCommandHandler> logger
+        ILogger<VerifyEmailCommandHandler> logger,
+        IMessageBus bus
     ) : ICommandHandler<VerifyEmailCommand, Result<bool>>
     {
         /// <summary>
@@ -111,6 +114,15 @@ namespace Respira.Authentication.Application.Features.Authentication.Commands.Ve
                 $"auth:account:email:{account.Email.ToLowerInvariant()}",
                 cancellationToken
             );
+
+            await bus.PublishAsync(new AuditEvent
+            {
+                ActorAccountId = account.Id,
+                ActorRole = account.Role.ToString(),
+                Action = "Authentication.EmailVerified",
+                EntityType = "Account",
+                EntityId = account.Id,
+            });
             await cacheService.RemoveAsync(
                 $"auth:account:id:{account.Id}",
                 cancellationToken

@@ -6,7 +6,7 @@ namespace Respira.Saga.API.Models
 {
     /// <summary>
     /// Payload of the <c>request</c> form part sent to the profile update endpoint. It
-    /// mirrors <see cref="Respira.Saga.Application.Features.Update.Commands.StartUpdateCommand"/>
+    /// mirrors <see cref="Application.Features.Update.Commands.StartUpdateCommand"/>
     /// minus the fields the API owns: the saga identifier, the two target identifiers and
     /// the path of the stored avatar.
     /// </summary>

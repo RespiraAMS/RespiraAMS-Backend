@@ -6,6 +6,8 @@ using Respira.Media.Application.Validators;
 using Respira.Media.Domain.Entities;
 using Respira.ServiceDefaults.Contracts.CQRS;
 using Respira.ServiceDefaults.Contracts.Results;
+using Respira.ServiceDefaults.Contracts.Messages.Audit;
+using Wolverine;
 
 namespace Respira.Media.Application.Features.MediaAssets.Create
 {
@@ -13,9 +15,12 @@ namespace Respira.Media.Application.Features.MediaAssets.Create
         IMediaDbContext dbContext,
         IStorageService storageService,
         IOptions<R2Options> r2Options,
-        ILogger<CreateMediaAssetCommandHandler> logger
+        ILogger<CreateMediaAssetCommandHandler> logger,
+        IMessageBus bus
     ) : ICommandHandler<CreateMediaAssetCommand, Result<Guid>>
     {
+        private const long MaxImageSize = 5 * 1024 * 1024;
+
         public async Task<Result<Guid>> HandleAsync(
             CreateMediaAssetCommand command,
             CancellationToken cancellationToken = default
@@ -39,6 +44,11 @@ namespace Respira.Media.Application.Features.MediaAssets.Create
 
             content.Position = 0;
             var size = content.Length;
+
+            if (size > MaxImageSize)
+            {
+                return Failure(ApplicationStatus.BadRequest, "The image must be 5 MB or smaller");
+            }
 
             if (size == 0)
             {
@@ -157,6 +167,20 @@ namespace Respira.Media.Application.Features.MediaAssets.Create
                 mediaAsset.Id,
                 fileName,
                 objectKey
+            );
+
+            await bus.PublishAsync(
+                new AuditEvent
+                {
+                    ActorAccountId = command.ActorAccountId,
+                    ActorRole = command.ActorRole,
+                    Action = "Media.AssetCreated",
+                    EntityType = "MediaAsset",
+                    EntityId = mediaAsset.Id,
+                    DetailsJson = System.Text.Json.JsonSerializer.Serialize(
+                        new { mediaAsset.ContentType, mediaAsset.Size }
+                    ),
+                }
             );
 
             // The identifier is what the create saga links back to the doctor profile.

@@ -6,6 +6,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="WolverineFx" />
         <PackageReference Include="Microsoft.EntityFrameworkCore" />
     </ItemGroup>
 

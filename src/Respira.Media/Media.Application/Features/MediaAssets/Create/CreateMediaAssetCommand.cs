@@ -20,5 +20,9 @@ namespace Respira.Media.Application.Features.MediaAssets.Create
 
         /// <summary>Optional folder/prefix inside the R2 bucket.</summary>
         public string? Folder { get; init; }
+
+        public Guid? ActorAccountId { get; init; }
+
+        public string ActorRole { get; init; } = "Service";
     }
 }

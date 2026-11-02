@@ -1,9 +1,13 @@
+using System.Security.Claims;
 using System.Text.Json;
 using Asp.Versioning;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Respira.Authentication.Domain.Enums;
 using Respira.Saga.API.Models;
 using Respira.Saga.Application.Features.Create.Commands;
 using Respira.Saga.Application.Features.Create.Queries;
+using Respira.ServiceDefaults.Contracts.Messages.Audit;
 using Respira.ServiceDefaults.Contracts.Results;
 using Wolverine;
 
@@ -18,6 +22,8 @@ namespace Respira.Saga.API.Controllers
     [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/profile/create")]
     [Tags("Profile")]
+    [Authorize]
+    [RequestSizeLimit(6 * 1024 * 1024)]
     public class ProfileCreateController(IMessageBus bus, ILogger<ProfileCreateController> logger)
         : ControllerBase
     {
@@ -100,33 +106,107 @@ namespace Respira.Saga.API.Controllers
                     .ToApiResponse();
             }
 
-            if (avatar is null || avatar.Length == 0)
+            var callerRole = ResolveCallerRole();
+
+            if (callerRole is null)
+            {
+                return Result<Guid>
+                    .Failure(
+                        new ApplicationError(
+                            ApplicationStatus.SagaUnauthorized,
+                            "The caller role is missing from the access token"
+                        )
+                    )
+                    .ToApiResponse();
+            }
+
+            var creatorAccountId = ResolveCallerAccountId();
+            if (callerRole == RoleType.HeadDepartmentDoctor && creatorAccountId == Guid.Empty)
+            {
+                return Result<Guid>
+                    .Failure(
+                        new ApplicationError(
+                            ApplicationStatus.SagaUnauthorized,
+                            "The caller account id is missing from the access token"
+                        )
+                    )
+                    .ToApiResponse();
+            }
+
+            if (!ProfileCreationPolicy.CanCreate(callerRole.Value, payload.Role))
+            {
+                await bus.PublishAsync(
+                    new AuditEvent
+                    {
+                        ActorAccountId = creatorAccountId == Guid.Empty ? null : creatorAccountId,
+                        ActorRole = callerRole.Value.ToString(),
+                        Action = "Authorization.ProfileCreateDenied",
+                        EntityType = "Account",
+                        DetailsJson = JsonSerializer.Serialize(
+                            new { RequestedRole = payload.Role }
+                        ),
+                    }
+                );
+                return Result<Guid>
+                    .Failure(
+                        new ApplicationError(
+                            ApplicationStatus.SagaRestricted,
+                            $"A {callerRole.Value} account cannot create a {payload.Role} account"
+                        )
+                    )
+                    .ToApiResponse();
+            }
+
+            // A medical regulation reviewer is an account-only role, so it has no profile and needs no avatar.
+            var requiresProfile =
+                payload.Role is RoleType.Doctor or RoleType.HeadDepartmentDoctor;
+
+            if (requiresProfile && (avatar is null || avatar.Length == 0))
             {
                 return Result<Guid>
                     .Failure(new ApplicationError(ApplicationStatus.BadRequest, "An 'avatar' file is required"))
                     .ToApiResponse();
             }
 
-            var extension = Path.GetExtension(avatar.FileName).ToLowerInvariant();
-
-            if (!AllowedAvatarExtensions.Contains(extension))
+            if (avatar?.Length > 5 * 1024 * 1024)
             {
                 return Result<Guid>
-                    .Failure(
-                        new ApplicationError(
-                            ApplicationStatus.BadRequest,
-                            $"The avatar must be one of: {string.Join(", ", AllowedAvatarExtensions)}"
-                        )
-                    )
+                    .Failure(new ApplicationError(ApplicationStatus.BadRequest, "Avatar must be 5 MB or smaller"))
                     .ToApiResponse();
             }
 
             var sagaId = Guid.CreateVersion7();
-            var tempAvatarPath = await StoreAvatarAsync(avatar, sagaId, extension, cancellationToken);
+            string? tempAvatarPath = null;
+
+            if (requiresProfile && avatar is not null)
+            {
+                var extension = Path.GetExtension(avatar.FileName).ToLowerInvariant();
+
+                if (!AllowedAvatarExtensions.Contains(extension))
+                {
+                    return Result<Guid>
+                        .Failure(
+                            new ApplicationError(
+                                ApplicationStatus.BadRequest,
+                                $"The avatar must be one of: {string.Join(", ", AllowedAvatarExtensions)}"
+                            )
+                        )
+                        .ToApiResponse();
+                }
+
+                tempAvatarPath = await StoreAvatarAsync(
+                    avatar,
+                    sagaId,
+                    extension,
+                    cancellationToken
+                );
+            }
 
             var command = new StartCreateCommand
             {
                 SagaId = sagaId,
+                CreatorAccountId = creatorAccountId,
+                CreatorRole = callerRole.Value,
                 Email = payload.Email,
                 Password = payload.Password,
                 Phone = payload.Phone,
@@ -151,7 +231,6 @@ namespace Respira.Saga.API.Controllers
                 command.Email,
                 command.Role
             );
-
             return Result<Guid>.Success(ApplicationStatus.Created, sagaId).ToApiResponse();
         }
 
@@ -179,6 +258,24 @@ namespace Respira.Saga.API.Controllers
             return result.ToApiResponse();
         }
 
+        /// <summary>
+        /// Reads the caller role from the validated bearer token.
+        /// </summary>
+        private RoleType? ResolveCallerRole()
+        {
+            var value = User.FindFirstValue(ClaimTypes.Role);
+
+            return Enum.TryParse<RoleType>(value, ignoreCase: true, out var role) ? role : null;
+        }
+
+        private Guid ResolveCallerAccountId() =>
+            Guid.TryParse(
+                User.FindFirstValue(ClaimTypes.NameIdentifier) ?? User.FindFirstValue("sub"),
+                out var accountId
+            )
+                ? accountId
+                : Guid.Empty;
+
         /// <summary>Returns the first field that fails validation, or null when valid.</summary>
         private static string? Validate(CreateProfileRequest payload)
         {
@@ -195,6 +292,17 @@ namespace Respira.Saga.API.Controllers
             if (string.IsNullOrWhiteSpace(payload.Phone))
             {
                 return "Phone is required";
+            }
+
+            if (!Enum.IsDefined(payload.Role))
+            {
+                return $"Unknown role '{payload.Role}'";
+            }
+
+            // A medical regulation reviewer is account-only, so none of the profile fields are required.
+            if (payload.Role is not (RoleType.Doctor or RoleType.HeadDepartmentDoctor))
+            {
+                return null;
             }
 
             if (string.IsNullOrWhiteSpace(payload.FirstName))
@@ -215,11 +323,6 @@ namespace Respira.Saga.API.Controllers
             if (string.IsNullOrWhiteSpace(payload.Address))
             {
                 return "Address is required";
-            }
-
-            if (!Enum.IsDefined(payload.Role))
-            {
-                return $"Unknown role '{payload.Role}'";
             }
 
             if (!Enum.IsDefined(payload.Gender))

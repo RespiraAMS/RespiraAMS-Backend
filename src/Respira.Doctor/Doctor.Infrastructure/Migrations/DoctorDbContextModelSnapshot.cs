@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
+using NpgsqlTypes;
 using Respira.Doctor.Infrastructure.Persistence;
 
 #nullable disable
@@ -20,6 +21,7 @@ namespace Respira.Doctor.Infrastructure.Migrations
                 .HasAnnotation("ProductVersion", "10.0.12")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
+            NpgsqlModelBuilderExtensions.HasPostgresExtension(modelBuilder, "unaccent");
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.Entity("Respira.Doctor.Domain.Entities.Doctor", b =>
@@ -64,15 +66,15 @@ namespace Respira.Doctor.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<Guid?>("HeadDepartmentDoctorId")
+                        .HasColumnType("uuid");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
 
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasColumnType("text");
-
-                    b.Property<Guid?>("ManagerId")
-                        .HasColumnType("uuid");
 
                     b.Property<Guid?>("MediaId")
                         .HasColumnType("uuid");
@@ -84,6 +86,13 @@ namespace Respira.Doctor.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<NpgsqlTsVector>("SearchVector")
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("tsvector")
+                        .HasAnnotation("Npgsql:TsVectorConfig", "respira_vi")
+                        .HasAnnotation("Npgsql:TsVectorProperties", new[] { "FirstName", "LastName", "CitizenIdentificationNumber" });
+
                     b.Property<DateTimeOffset>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
 
@@ -94,14 +103,18 @@ namespace Respira.Doctor.Infrastructure.Migrations
 
                     b.HasIndex("CitizenIdentificationNumber");
 
-                    b.HasIndex("ManagerId");
+                    b.HasIndex("HeadDepartmentDoctorId");
 
                     b.HasIndex("MediaId");
+
+                    b.HasIndex("SearchVector");
+
+                    NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("SearchVector"), "GIN");
 
                     b.ToTable("Doctors");
                 });
 
-            modelBuilder.Entity("Respira.Doctor.Domain.Entities.Manager", b =>
+            modelBuilder.Entity("Respira.Doctor.Domain.Entities.HeadDepartmentDoctor", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -160,6 +173,13 @@ namespace Respira.Doctor.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<NpgsqlTsVector>("SearchVector")
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("tsvector")
+                        .HasAnnotation("Npgsql:TsVectorConfig", "respira_vi")
+                        .HasAnnotation("Npgsql:TsVectorProperties", new[] { "FirstName", "LastName", "CitizenIdentificationNumber" });
+
                     b.Property<DateTimeOffset>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
 
@@ -172,17 +192,21 @@ namespace Respira.Doctor.Infrastructure.Migrations
 
                     b.HasIndex("MediaId");
 
-                    b.ToTable("Managers");
+                    b.HasIndex("SearchVector");
+
+                    NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("SearchVector"), "GIN");
+
+                    b.ToTable("HeadDepartmentDoctors");
                 });
 
             modelBuilder.Entity("Respira.Doctor.Domain.Entities.Doctor", b =>
                 {
-                    b.HasOne("Respira.Doctor.Domain.Entities.Manager", null)
+                    b.HasOne("Respira.Doctor.Domain.Entities.HeadDepartmentDoctor", null)
                         .WithMany("Subordinates")
-                        .HasForeignKey("ManagerId");
+                        .HasForeignKey("HeadDepartmentDoctorId");
                 });
 
-            modelBuilder.Entity("Respira.Doctor.Domain.Entities.Manager", b =>
+            modelBuilder.Entity("Respira.Doctor.Domain.Entities.HeadDepartmentDoctor", b =>
                 {
                     b.Navigation("Subordinates");
                 });

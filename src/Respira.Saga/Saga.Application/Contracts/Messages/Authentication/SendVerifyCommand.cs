@@ -11,5 +11,11 @@ namespace Respira.Saga.Application.Constracts.Messages.Authentication
         /// originate from the saga, in which case no completion event is published.
         /// </summary>
         public Guid SagaId { get; init; }
+
+        public Guid ActorAccountId { get; init; }
+
+        public string ActorRole { get; init; } = string.Empty;
+
+        public Guid TargetAccountId { get; init; }
     }
 }

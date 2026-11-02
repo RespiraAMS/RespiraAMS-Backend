@@ -8,7 +8,6 @@ var cache = builder.AddRedis("cache").WithRedisInsight();
 var postgres = builder.AddPostgres("postgres").WithPgWeb().WithDataVolume();
 var rabbitmq = builder.AddRabbitMQ("rabbitmq").WithManagementPlugin();
 
-
 // Auth service parameters (values come from AppHost config: Parameters:* section)
 var jwtSecret = builder.AddParameter("jwt-secret");
 var jwtIssuer = builder.AddParameter("jwt-issuer");
@@ -77,6 +76,9 @@ var sagaService = builder
     .WithReference(rabbitmq)
     .WithReference(cache)
     .WithEnvironment("Media__BaseUrl", mediaService.GetEndpoint("http"))
+    .WithEnvironment("Jwt__Secret", jwtSecret)
+    .WithEnvironment("Jwt__Issuer", jwtIssuer)
+    .WithEnvironment("Jwt__Audience", jwtAudience)
     .WaitFor(sagaDb)
     .WaitFor(rabbitmq)
     .WaitFor(cache)
@@ -101,6 +103,5 @@ authService.WithReference(gateway).WaitFor(gateway);
 mediaService.WithReference(gateway).WaitFor(gateway);
 doctorService.WithReference(gateway).WaitFor(gateway);
 sagaService.WithReference(gateway).WaitFor(gateway);
-
 
 await builder.Build().RunAsync();

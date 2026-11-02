@@ -4,7 +4,9 @@ using Respira.Doctor.Application.Constracts.Data;
 using Respira.Doctor.Application.Features.Doctors.Commands.Update.Events;
 using Respira.Doctor.Domain.Entities;
 using Respira.ServiceDefaults.Contracts.CQRS;
+using Respira.ServiceDefaults.Contracts.Messages.Audit;
 using Wolverine;
+using DomainDoctor = Respira.Doctor.Domain.Entities.Doctor;
 
 namespace Respira.Doctor.Application.Features.Doctors.Commands.Update
 {
@@ -23,7 +25,7 @@ namespace Respira.Doctor.Application.Features.Doctors.Commands.Update
                 x => x.Id == command.DoctorId,
                 cancellationToken
             );
-            profile ??= await dbContext.Managers.FirstOrDefaultAsync(
+            profile ??= await dbContext.HeadDepartmentDoctors.FirstOrDefaultAsync(
                 x => x.Id == command.DoctorId,
                 cancellationToken
             );
@@ -73,6 +75,17 @@ namespace Respira.Doctor.Application.Features.Doctors.Commands.Update
 
             await bus.PublishAsync(
                 new DoctorMediaUpdated(command.SagaId, command.DoctorId, command.MediaId)
+            );
+            await bus.PublishAsync(
+                new AuditEvent
+                {
+                    ActorAccountId = command.ActorAccountId == Guid.Empty ? null : command.ActorAccountId,
+                    ActorRole = string.IsNullOrWhiteSpace(command.ActorRole) ? "System" : command.ActorRole,
+                    Action = "Doctor.ProfileMediaLinked",
+                    EntityType = profile is DomainDoctor ? "Doctor" : "HeadDepartmentDoctor",
+                    EntityId = profile.Id,
+                    CorrelationId = command.SagaId,
+                }
             );
         }
     }

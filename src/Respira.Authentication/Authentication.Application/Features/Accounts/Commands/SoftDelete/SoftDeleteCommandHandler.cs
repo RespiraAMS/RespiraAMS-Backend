@@ -4,6 +4,7 @@ using Respira.Authentication.Application.Constracts.Cache;
 using Respira.Authentication.Application.Constracts.Data;
 using Respira.Authentication.Application.Features.Accounts.Commands.SoftDelete.Events;
 using Respira.ServiceDefaults.Contracts.CQRS;
+using Respira.ServiceDefaults.Contracts.Messages.Audit;
 using Wolverine;
 
 namespace Respira.Authentication.Application.Features.Accounts.Commands.SoftDelete
@@ -56,6 +57,18 @@ namespace Respira.Authentication.Application.Features.Accounts.Commands.SoftDele
                 await cacheService.RemoveAsync(
                     $"auth:account:email:{account.Email.ToLowerInvariant()}",
                     cancellationToken
+                );
+
+                await bus.PublishAsync(
+                    new AuditEvent
+                    {
+                        ActorAccountId = command.ActorAccountId == Guid.Empty ? null : command.ActorAccountId,
+                        ActorRole = string.IsNullOrWhiteSpace(command.ActorRole) ? "System" : command.ActorRole,
+                        Action = "Authentication.AccountSoftDeleted",
+                        EntityType = "Account",
+                        EntityId = account.Id,
+                        CorrelationId = command.SagaId,
+                    }
                 );
                 await cacheService.RemoveAsync(
                     $"auth:account:id:{account.Id}",

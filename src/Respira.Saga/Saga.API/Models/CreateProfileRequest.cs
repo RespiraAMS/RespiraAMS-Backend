@@ -1,12 +1,13 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Respira.Authentication.Domain.Enums;
 using Respira.Doctor.Domain.Enums;
 
 namespace Respira.Saga.API.Models
 {
     /// <summary>
     /// Payload of the <c>request</c> form part sent to the profile creation endpoint. It mirrors
-    /// <see cref="Respira.Saga.Application.Features.Create.Commands.StartCreateCommand"/>
+    /// <see cref="Application.Features.Create.Commands.StartCreateCommand"/>
     /// minus the two fields the API owns: the saga identifier and the path of the stored avatar.
     /// </summary>
     public record CreateProfileRequest
@@ -25,7 +26,11 @@ namespace Respira.Saga.API.Models
 
         public string Phone { get; set; } = string.Empty;
 
-        public ProfileRole Role { get; set; }
+        /// <summary>
+        /// Account role to create. Doctor and head of department doctor roles also get a
+        /// profile; a medical regulation reviewer account has no profile.
+        /// </summary>
+        public RoleType Role { get; set; }
 
         public string FirstName { get; set; } = string.Empty;
 

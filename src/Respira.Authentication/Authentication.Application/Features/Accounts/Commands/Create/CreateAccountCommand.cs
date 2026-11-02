@@ -6,6 +6,8 @@ namespace Respira.Authentication.Application.Features.Accounts.Commands.Create
     public record CreateAccountCommand : ICommand
     {
         public Guid SagaId { get; set; }
+        public Guid ActorAccountId { get; set; }
+        public string ActorRole { get; set; } = string.Empty;
         public required string Email { get; set; }
         public required string Password { get; set; }
         public required string Phone { get; set; }

@@ -31,6 +31,10 @@ namespace Respira.Saga.Application.Features.Update.Commands
         /// <summary>Identifier shared with every command and event of this flow.</summary>
         public Guid SagaId { get; set; }
 
+        public Guid ActorAccountId { get; set; }
+
+        public string ActorRole { get; set; } = string.Empty;
+
         // ---------------------------------------------------------- update targets
         public Guid AccountId { get; set; }
 
@@ -80,6 +84,8 @@ namespace Respira.Saga.Application.Features.Update.Commands
         public async Task StartAsync(StartUpdateCommand command, IMessageBus bus)
         {
             SagaId = command.SagaId;
+            ActorAccountId = command.ActorAccountId;
+            ActorRole = command.ActorRole;
             AccountId = command.AccountId;
             DoctorId = command.DoctorId;
             Email = command.Email.Trim().ToLowerInvariant();
@@ -104,6 +110,8 @@ namespace Respira.Saga.Application.Features.Update.Commands
                 {
                     SagaId = SagaId,
                     AccountId = AccountId,
+                    ActorAccountId = ActorAccountId,
+                    ActorRole = ActorRole,
                     Email = Email,
                     Phone = Phone,
                     Password = command.Password,
@@ -148,7 +156,9 @@ namespace Respira.Saga.Application.Features.Update.Commands
                         avatar,
                         Path.GetFileName(TempAvatarPath),
                         $"doctors/{DoctorId}/avatar",
-                        cancellationToken
+                        cancellationToken,
+                        ActorAccountId == Guid.Empty ? null : ActorAccountId,
+                        ActorRole
                     );
                 }
             }
@@ -209,7 +219,9 @@ namespace Respira.Saga.Application.Features.Update.Commands
                 {
                     deletion = await mediaClient.DeleteAssetAsync(
                         message.OldMediaId,
-                        cancellationToken
+                        cancellationToken,
+                        ActorAccountId == Guid.Empty ? null : ActorAccountId,
+                        ActorRole
                     );
                 }
                 catch (Exception exception)
@@ -227,12 +239,15 @@ namespace Respira.Saga.Application.Features.Update.Commands
 
                 if (deletion.IsFailure())
                 {
-                    Complete(
-                        UpdateStep.Failed,
-                        deletion.Error?.Description
-                            ?? "The replaced avatar could not be deleted"
+                    var reason = deletion.Error?.Description
+                        ?? "The replaced avatar could not be deleted";
+
+                    // Leave the saga and durable inbox message uncompleted so Wolverine can
+                    // redeliver this event. The profile update already committed; consuming
+                    // the event here would strand the old object with no retry path.
+                    throw new InvalidOperationException(
+                        $"{SagaId} Could not delete replaced avatar {message.OldMediaId}: {reason}"
                     );
-                    return;
                 }
             }
 
@@ -296,6 +311,9 @@ namespace Respira.Saga.Application.Features.Update.Commands
                 new UpdateDoctorProfileCommand
                 {
                     SagaId = SagaId,
+                    AccountId = AccountId,
+                    ActorAccountId = ActorAccountId,
+                    ActorRole = ActorRole,
                     DoctorId = DoctorId,
                     FirstName = FirstName,
                     LastName = LastName,

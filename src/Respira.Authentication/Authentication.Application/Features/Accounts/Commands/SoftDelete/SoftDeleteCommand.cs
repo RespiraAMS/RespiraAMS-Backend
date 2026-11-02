@@ -10,6 +10,8 @@ namespace Respira.Authentication.Application.Features.Accounts.Commands.SoftDele
     {
         /// <summary>Identifier of the create saga requesting the compensation</summary>
         public Guid SagaId { get; set; }
+        public Guid ActorAccountId { get; set; }
+        public string ActorRole { get; set; } = string.Empty;
 
         /// <summary>Account to soft-delete</summary>
         public Guid AccountId { get; set; }

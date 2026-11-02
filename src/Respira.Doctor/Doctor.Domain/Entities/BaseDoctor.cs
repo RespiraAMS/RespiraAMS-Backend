@@ -3,7 +3,7 @@ using Respira.ServiceDefaults.Models;
 
 namespace Respira.Doctor.Domain.Entities
 {
-    public abstract class BaseDoctor : Base
+    public abstract class BaseDoctor : FullTextSearch
     {
         /// <summary>Doctor first name</summary>
         public required string FirstName { get; set; }

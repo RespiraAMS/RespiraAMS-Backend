@@ -7,6 +7,9 @@ namespace Respira.Doctor.Application.Features.Doctors.Commands.Create
     {
         public Guid SagaId { get; set; }
         public Guid AccountId { get; set; }
+        public Guid CreatorAccountId { get; set; }
+        public string CreatorRole { get; set; } = string.Empty;
+        public Guid HeadDepartmentDoctorAccountId { get; set; }
         public ProfileRole Role { get; set; }
         public required string FirstName { get; set; }
         public required string LastName { get; set; }

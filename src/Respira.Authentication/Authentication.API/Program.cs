@@ -15,6 +15,7 @@ using Respira.Authentication.Application.Features.Authentication.Commands.Login;
 using Respira.Authentication.Application.Features.Authentication.Commands.SendVerify.Events;
 using Respira.Authentication.Infrastructure.Extensions;
 using Respira.Authentication.Infrastructure.Persistence;
+using Respira.ServiceDefaults.Contracts.Messages.Audit;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -68,10 +69,15 @@ builder.Host.UseWolverine(options =>
         ?? throw new InvalidOperationException("Connection string 'authdb' is not configured");
     options.PersistMessagesWithPostgresql(conn);
 
-    options.UseRabbitMqUsingNamedConnection("rabbitmq").AutoProvision();
+    var mqconn = builder.Configuration.GetConnectionString("rabbitmq")
+        ?? throw new InvalidOperationException("Connection string 'rabbitmq' is not configured");
+    options.UseRabbitMq(mqconn).AutoProvision();
 
     // Inbound: commands dispatched by the create saga.
     options.ListenToRabbitQueue(RabbitQueues.AuthCommands);
+
+    // Inbound: account lookups requested by other microservices (e.g. Doctor search).
+    options.ListenToRabbitQueue(RabbitQueues.AuthQueries);
 
     // Outbound: saga progress events, all routed to the saga's inbox queue.
     options
@@ -92,6 +98,7 @@ builder.Host.UseWolverine(options =>
         .PublishMessage<SoftDeleteCompleted>()
         .ToRabbitQueue(RabbitQueues.SagaEvents);
     options.PublishMessage<SoftDeleteFailure>().ToRabbitQueue(RabbitQueues.SagaEvents);
+    options.PublishMessage<AuditEvent>().ToRabbitQueue(AuditQueues.Events);
 });
 
 var app = builder.Build();

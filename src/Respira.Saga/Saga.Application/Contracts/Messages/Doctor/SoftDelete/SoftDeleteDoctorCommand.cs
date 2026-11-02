@@ -6,5 +6,8 @@ namespace Respira.Saga.Application.Constracts.Messages.Doctor.SoftDelete
     {
         public Guid SagaId { get; set; }
         public Guid DoctorId { get; set; }
+        public Guid TargetAccountId { get; set; }
+        public Guid ActorAccountId { get; set; }
+        public string ActorRole { get; set; } = string.Empty;
     }
 }

@@ -6,6 +6,7 @@ using Respira.Authentication.Application.Constracts.Data;
 using Respira.Authentication.Application.Features.Accounts.Commands.Create.Events;
 using Respira.Authentication.Domain.Entities;
 using Respira.ServiceDefaults.Contracts.CQRS;
+using Respira.ServiceDefaults.Contracts.Messages.Audit;
 using Wolverine;
 
 namespace Respira.Authentication.Application.Features.Accounts.Commands.Create
@@ -92,6 +93,19 @@ namespace Respira.Authentication.Application.Features.Accounts.Commands.Create
                 account,
                 AccountCacheExpiration,
                 cancellationToken
+            );
+
+            await bus.PublishAsync(
+                new AuditEvent
+                {
+                    ActorAccountId = command.ActorAccountId == Guid.Empty ? null : command.ActorAccountId,
+                    ActorRole = string.IsNullOrWhiteSpace(command.ActorRole) ? "System" : command.ActorRole,
+                    Action = "Authentication.AccountCreated",
+                    EntityType = "Account",
+                    EntityId = account.Id,
+                    CorrelationId = command.SagaId,
+                    DetailsJson = System.Text.Json.JsonSerializer.Serialize(new { account.Role, account.Status }),
+                }
             );
 
             logger.LogInformation("{SagaId} Account {AccountId} created", command.SagaId, account.Id);

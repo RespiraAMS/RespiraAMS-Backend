@@ -7,6 +7,8 @@ using Respira.Authentication.Application.Constracts.Data;
 using Respira.Authentication.Domain.Entities;
 using Respira.ServiceDefaults.Contracts.CQRS;
 using Respira.ServiceDefaults.Contracts.Results;
+using Respira.ServiceDefaults.Contracts.Messages.Audit;
+using Wolverine;
 
 namespace Respira.Authentication.Application.Features.Authentication.Commands.Logout
 {
@@ -15,7 +17,8 @@ namespace Respira.Authentication.Application.Features.Authentication.Commands.Lo
         IHashService hashService,
         ILogger<LogoutCommandHandler> logger,
         IOptions<JwtOption> jwtOption,
-        ICacheService cacheService
+        ICacheService cacheService,
+        IMessageBus bus
     ) : ICommandHandler<LogoutCommand, Result<bool>>
     {
         public async Task<Result<bool>> HandleAsync(
@@ -62,6 +65,14 @@ namespace Respira.Authentication.Application.Features.Authentication.Commands.Lo
             }
 
             logger.LogInformation("User logged out successfully");
+            await bus.PublishAsync(new AuditEvent
+            {
+                ActorAccountId = isTokenExist.AccountId,
+                ActorRole = account?.Role.ToString() ?? "Unknown",
+                Action = "Authentication.LogoutSucceeded",
+                EntityType = "Account",
+                EntityId = isTokenExist.AccountId,
+            });
             return Result<bool>.Success(ApplicationStatus.Success, true);
         }
     }

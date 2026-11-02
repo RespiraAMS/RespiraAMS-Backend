@@ -8,6 +8,8 @@ using Respira.Authentication.Domain.Entities;
 using Respira.Authentication.Domain.Enums;
 using Respira.ServiceDefaults.Contracts.CQRS;
 using Respira.ServiceDefaults.Contracts.Results;
+using Respira.ServiceDefaults.Contracts.Messages.Audit;
+using Wolverine;
 
 namespace Respira.Authentication.Application.Features.Authentication.Commands.Refresh
 {
@@ -19,7 +21,8 @@ namespace Respira.Authentication.Application.Features.Authentication.Commands.Re
         IJwtService jwtService,
         IHashService hashService,
         ILogger<RefreshCommandHandler> logger,
-        ICacheService cacheService
+        ICacheService cacheService,
+        IMessageBus bus
     ) : ICommandHandler<RefreshCommand, Result<RefreshResult>>
     {
         private static readonly TimeSpan CacheExpiration = TimeSpan.FromMinutes(5);
@@ -110,6 +113,15 @@ namespace Respira.Authentication.Application.Features.Authentication.Commands.Re
                 $"auth:account:email:{user.Email.ToLowerInvariant()}",
                 cancellationToken
             );
+
+            await bus.PublishAsync(new AuditEvent
+            {
+                ActorAccountId = user.Id,
+                ActorRole = user.Role.ToString(),
+                Action = "Authentication.RefreshTokenRotated",
+                EntityType = "Account",
+                EntityId = user.Id,
+            });
 
             return Result<RefreshResult>.Success(
                 statusCode: ApplicationStatus.Success,
