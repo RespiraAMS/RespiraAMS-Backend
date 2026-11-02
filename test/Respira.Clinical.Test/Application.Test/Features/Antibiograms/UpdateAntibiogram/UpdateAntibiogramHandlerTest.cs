@@ -659,5 +659,141 @@ namespace Respira.Clinical.Application.Test.Features.Antibiograms.UpdateAntibiog
         }
 
         #endregion
+
+        #region Uniqueness
+
+        [Fact]
+        public async Task UpdateAntibiogram_DuplicatePathogenAndMic_Fail()
+        {
+            // Business rule: a pathogen can only have one antibiogram per MIC category
+            var group = Group("Aminopenicillins");
+            var amoxicillin = Antibiotic("Amoxicillin", group.Id, AwareClassification.Access);
+            var doxycycline = Antibiotic("Doxycycline", group.Id, AwareClassification.Access);
+            var pneumococcus = Pathogen("Streptococcus pneumoniae", isAtypical: false);
+            var klebsiella = Pathogen("Klebsiella pneumoniae", isAtypical: false);
+            await SeedAsync(group, amoxicillin, doxycycline, pneumococcus, klebsiella);
+
+            var conflicting = await SeedAntibiogramAsync(
+                pneumococcus.Id, MicCategory.Susceptible, [amoxicillin.Id]);
+            var target = await SeedAntibiogramAsync(
+                klebsiella.Id, MicCategory.Resistant, [doxycycline.Id]);
+            var conflictingBefore = await LoadAntibiogramAsync(conflicting.Id);
+            var targetBefore = await LoadAntibiogramAsync(target.Id);
+
+            var result = await _handler.HandleAsync(new UpdateAntibiogramCommand
+            {
+                Id = target.Id,
+                PathogenId = pneumococcus.Id,
+                MicCategory = MicCategory.Susceptible,
+                AntibioticIds = [doxycycline.Id],
+            }, TestContext.Current.CancellationToken);
+
+            Assert.True(result.IsFailure());
+            Assert.NotNull(result.Error);
+            Assert.Equal(ApplicationStatus.BusinessRuleViolation, result.StatusCode);
+            Assert.Equal(ApplicationStatus.BusinessRuleViolation, result.Error.StatusCode);
+
+            // Neither the conflicting antibiogram nor the target may be modified
+            AssertUnchanged(conflictingBefore, await LoadAntibiogramAsync(conflicting.Id));
+            AssertUnchanged(targetBefore, await LoadAntibiogramAsync(target.Id));
+        }
+
+        [Fact]
+        public async Task UpdateAntibiogram_SamePathogenDifferentMic_Success()
+        {
+            // Different MIC categories for the same pathogen are distinct records
+            var group = Group("Carbapenems");
+            var meropenem = Antibiotic("Meropenem", group.Id, AwareClassification.Watch);
+            var pneumococcus = Pathogen("Streptococcus pneumoniae", isAtypical: false);
+            await SeedAsync(group, meropenem, pneumococcus);
+
+            var susceptible = await SeedAntibiogramAsync(
+                pneumococcus.Id, MicCategory.Susceptible, [meropenem.Id]);
+            await SeedAntibiogramAsync(
+                pneumococcus.Id, MicCategory.Resistant, [meropenem.Id]);
+
+            var result = await _handler.HandleAsync(new UpdateAntibiogramCommand
+            {
+                Id = susceptible.Id,
+                PathogenId = pneumococcus.Id,
+                MicCategory = MicCategory.Intermediate,
+                AntibioticIds = [meropenem.Id],
+            }, TestContext.Current.CancellationToken);
+
+            Assert.True(result.IsSuccess());
+            Assert.Null(result.Error);
+            Assert.Equal(ApplicationStatus.Updated, result.StatusCode);
+
+            var saved = await LoadAntibiogramAsync(susceptible.Id);
+            Assert.Equal(pneumococcus.Id, saved.PathogenId);
+            Assert.Equal(MicCategory.Intermediate, saved.MicCategory);
+        }
+
+        [Fact]
+        public async Task UpdateAntibiogram_DifferentPathogenSameMic_Success()
+        {
+            // Different pathogens may share the same MIC category
+            var group = Group("Aminopenicillins");
+            var amoxicillin = Antibiotic("Amoxicillin", group.Id, AwareClassification.Access);
+            var pneumococcus = Pathogen("Streptococcus pneumoniae", isAtypical: false);
+            var klebsiella = Pathogen("Klebsiella pneumoniae", isAtypical: false);
+            await SeedAsync(group, amoxicillin, pneumococcus, klebsiella);
+
+            await SeedAntibiogramAsync(
+                pneumococcus.Id, MicCategory.Susceptible, [amoxicillin.Id]);
+            var target = await SeedAntibiogramAsync(
+                klebsiella.Id, MicCategory.Resistant, [amoxicillin.Id]);
+
+            var result = await _handler.HandleAsync(new UpdateAntibiogramCommand
+            {
+                Id = target.Id,
+                PathogenId = klebsiella.Id,
+                MicCategory = MicCategory.Susceptible,
+                AntibioticIds = [amoxicillin.Id],
+            }, TestContext.Current.CancellationToken);
+
+            Assert.True(result.IsSuccess());
+            Assert.Null(result.Error);
+            Assert.Equal(ApplicationStatus.Updated, result.StatusCode);
+
+            var saved = await LoadAntibiogramAsync(target.Id);
+            Assert.Equal(klebsiella.Id, saved.PathogenId);
+            Assert.Equal(MicCategory.Susceptible, saved.MicCategory);
+        }
+
+        [Fact]
+        public async Task UpdateAntibiogram_SoftDeletedConflict_Success()
+        {
+            // A soft-deleted antibiogram is hidden by the query filter, so it must
+            // not block the same pathogen + MIC pair from being used again
+            var group = Group("Carbapenems");
+            var meropenem = Antibiotic("Meropenem", group.Id, AwareClassification.Watch);
+            var pneumococcus = Pathogen("Streptococcus pneumoniae", isAtypical: false);
+            var klebsiella = Pathogen("Klebsiella pneumoniae", isAtypical: false);
+            await SeedAsync(group, meropenem, pneumococcus, klebsiella);
+
+            await SeedAntibiogramAsync(
+                pneumococcus.Id, MicCategory.Susceptible, [meropenem.Id], softDeleted: true);
+            var target = await SeedAntibiogramAsync(
+                klebsiella.Id, MicCategory.Resistant, [meropenem.Id]);
+
+            var result = await _handler.HandleAsync(new UpdateAntibiogramCommand
+            {
+                Id = target.Id,
+                PathogenId = pneumococcus.Id,
+                MicCategory = MicCategory.Susceptible,
+                AntibioticIds = [meropenem.Id],
+            }, TestContext.Current.CancellationToken);
+
+            Assert.True(result.IsSuccess());
+            Assert.Null(result.Error);
+            Assert.Equal(ApplicationStatus.Updated, result.StatusCode);
+
+            var saved = await LoadAntibiogramAsync(target.Id);
+            Assert.Equal(pneumococcus.Id, saved.PathogenId);
+            Assert.Equal(MicCategory.Susceptible, saved.MicCategory);
+        }
+
+        #endregion
     }
 }
