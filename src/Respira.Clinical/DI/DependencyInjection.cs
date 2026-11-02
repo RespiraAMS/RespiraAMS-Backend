@@ -6,6 +6,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Respira.Clinical.Application;
+using Respira.Clinical.Application.Contracts.Caching;
 using Respira.Clinical.Application.Contracts.Data;
 using Respira.Clinical.Application.Contracts.Mappers;
 using Respira.Clinical.Application.Features.AntibioticGroups.CreateAntibioticGroup;
@@ -32,6 +33,7 @@ using Respira.Clinical.Application.Features.SuspectedCauses.UpdateSuspectedCause
 using Respira.Clinical.Domain.Entities;
 using Respira.Clinical.Domain.Models;
 using Respira.Clinical.Domain.Services;
+using Respira.Clinical.Infrastructure.Caching;
 using Respira.Clinical.Infrastructure.Data;
 using Respira.Clinical.Infrastructure.Mapper;
 
@@ -109,6 +111,7 @@ namespace Respira.Clinical.DI
             builder.Services.AddScoped<IDbContext, ClinicalDbContext>();
             builder.Services.Configure<SeedDataOptions>(builder.Configuration.GetSection(SeedDataOptions.SectionName));
             builder.Services.AddScoped<IPaginationFactory, PaginationFactory>();
+            builder.Services.AddScoped<ICache, CacheService>();
         }
 
         public static void ApplyMigrations(this IHost host, bool isDevEnv)
