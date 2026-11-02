@@ -7,6 +7,8 @@ using Wolverine.RabbitMQ;
 using Respira.Clinical.Application;
 using Respira.Clinical.DI;
 using System.Text.Json.Serialization;
+using ZiggyCreatures.Caching.Fusion;
+using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,6 +33,29 @@ builder.AddServiceDefaults();
 
 // DI registration
 builder.AddDI();
+
+// Add caching
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = builder.Configuration.GetConnectionString("cache");
+    options.InstanceName = "respira-clinical:";
+});
+builder.Services
+    .AddFusionCache()
+    .WithSystemTextJsonSerializer(new JsonSerializerOptions
+    {
+        IncludeFields = true
+    })
+    .WithRegisteredDistributedCache()
+    .WithDefaultEntryOptions(options =>
+    {
+        options.Duration = TimeSpan.FromMinutes(2);
+        // Note that, since failed safe in enable, the actual
+        // TTL would be default to fusion cache value (1 day).
+        // The expiration time would still work, but just logically,
+        // the data still sit there
+        options.IsFailSafeEnabled = true;
+    });
 
 // Add Wolverine
 builder.Host.UseWolverine(opts =>

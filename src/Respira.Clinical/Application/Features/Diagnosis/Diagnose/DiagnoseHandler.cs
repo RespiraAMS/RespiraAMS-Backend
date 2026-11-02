@@ -2,6 +2,7 @@ using System.Globalization;
 using ImTools;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Respira.Clinical.Application.Contracts.Caching;
 using Respira.Clinical.Application.Contracts.Data;
 using Respira.Clinical.Domain.Enums;
 using Respira.Clinical.Domain.Models;
@@ -11,7 +12,11 @@ using Respira.ServiceDefaults.Contracts.Results;
 
 namespace Respira.Clinical.Application.Features.Diagnosis.Diagnose
 {
-    public class DiagnoseHandler(IDbContext context, IDiagnoseService service, ILogger<DiagnoseHandler> logger)
+    public class DiagnoseHandler(
+        IDbContext context,
+        IDiagnoseService service,
+        ICache cache,
+        ILogger<DiagnoseHandler> logger)
         : IQueryHandler<DiagnoseQuery, Result<DiagnoseResult>>
     {
         public async Task<Result<DiagnoseResult>> HandleAsync(DiagnoseQuery query, CancellationToken cancellationToken = default)
@@ -155,7 +160,7 @@ namespace Respira.Clinical.Application.Features.Diagnosis.Diagnose
             };
 
             // Start severity and infection diagnosis
-            logger.LogDebug("Start severity and infection assessment diagnosis");
+            logger.LogInformation("Start severity and infection assessment diagnosis");
             var diagnosisResult = service.Diagnose(clinicalContext, observations);
             if (diagnosisResult.IsFailure())
             {
@@ -163,8 +168,10 @@ namespace Respira.Clinical.Application.Features.Diagnosis.Diagnose
                 return Result<DiagnoseResult>.Failure(diagnosisResult.Error!);
             }
             var diagnosis = diagnosisResult.Data!;
+            logger.LogInformation("Complete severity and infection assessment diagnosis");
 
             // Start microbial sample test
+            logger.LogInformation("Start microbial test");
             var microbialResult = service.GetMicrobiologicalTestResult(clinicalContext, picture.MicrobialSamples);
             if (microbialResult.IsFailure())
             {
@@ -172,8 +179,10 @@ namespace Respira.Clinical.Application.Features.Diagnosis.Diagnose
                 return Result<DiagnoseResult>.Failure(microbialResult.Error!);
             }
             var microbial = microbialResult.Data!;
+            logger.LogInformation("Complete microbial test");
 
             // Start recommend treatment
+            logger.LogInformation("Start recommend treatment protocols");
             var treatmentResult = service.RecommendTreatment(clinicalContext, picture, diagnosis);
             if (treatmentResult.IsFailure())
             {
@@ -181,9 +190,12 @@ namespace Respira.Clinical.Application.Features.Diagnosis.Diagnose
                 return Result<DiagnoseResult>.Failure(treatmentResult.Error!);
             }
             var treatment = treatmentResult.Data!;
+            logger.LogInformation("End recommend treatment protocols");
 
-            return Result<DiagnoseResult>.Success(ApplicationStatus.Success, new DiagnoseResult
+            // Construct final result
+            var result = new DiagnoseResult
             {
+                DiagnosisId = Guid.CreateVersion7(),
                 Severity = diagnosis.Severity,
                 TreatmentSite = diagnosis.TreatmentSite,
                 MetricsSeverityDiagnosis = diagnosis.MetricsSeverityDiagnosis,
@@ -210,7 +222,13 @@ namespace Respira.Clinical.Application.Features.Diagnosis.Diagnose
                     Criteria = x.Criteria.Select(c => new CriterionResult(c.Id, c.Name, c.Formula.ToString()!)),
                     Medicines = x.Treatments.Select(mc => mc.Combination.Select(a => new AntibioticResult(a.Id, a.Name, a.Classification)))
                 })
-            });
+            };
+
+            // Store the diagnosis result in cache
+            await cache.SetAsync($"diagnosis:{result.DiagnosisId}", result, TimeSpan.FromMinutes(10), cancellationToken);
+            logger.LogInformation("Diagnosis complete: {DiagnosisId}", result.DiagnosisId);
+
+            return Result<DiagnoseResult>.Success(ApplicationStatus.Success, result);
         }
     }
 }
