@@ -1,3 +1,4 @@
+using Respira.Patient.API.Middlewares;
 using Respira.Patient.Application;
 using Respira.Patient.Application.Contracts.Messages;
 using Respira.Patient.Application.Features.TreatmentPlans.UpsertTreatmentPlan;
@@ -51,6 +52,7 @@ builder.Host.UseWolverine(opts =>
 var app = builder.Build();
 app.UseCustomErrorHandling();
 app.UseClaimsPropagation();
+app.UseAuthorizationMiddleware();
 app.MapControllers();
 
 // Configure the HTTP request pipeline.
