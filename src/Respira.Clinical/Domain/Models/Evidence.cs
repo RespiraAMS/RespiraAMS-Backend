@@ -1,5 +1,7 @@
 namespace Respira.Clinical.Domain.Models
 {
+    public record ClinicalObservationRef(VariableRef Variable, object Value);
+
     public record Evidence
     {
         /// <summary>
@@ -15,7 +17,7 @@ namespace Respira.Clinical.Domain.Models
         /// <summary>
         /// The observation of clinical variables used to evaluate this criterion
         /// </summary>
-        public IEnumerable<ClinicalObservation> RelatedObservations { get; init; }
+        public IEnumerable<ClinicalObservationRef> RelatedObservations { get; init; }
 
         /// <summary>
         /// The clinical variables that are missing in the observations
@@ -47,7 +49,16 @@ namespace Respira.Clinical.Domain.Models
             Formula = formula.ToString()!;
 
             // Filter related observations from the IEnumerable of all observations and used variables
-            RelatedObservations = [.. observations.Where(x => variablesUsed.Select(vu => vu.Code).Contains(x.Variable.Code))];
+            RelatedObservations = [.. observations
+                .Where(x => variablesUsed.Select(vu => vu.Code).Contains(x.Variable.Code))
+                .Select(x => {
+                    object value = default!;
+                    if (x.NumericValue is not null) value = x.NumericValue;
+                    else if (x.BooleanValue is not null) value = x.BooleanValue;
+                    else if (x.CategoricalValue is not null) value = x.CategoricalValue;
+                    return new ClinicalObservationRef(x.Variable, value);
+                })
+            ];
 
             // Filter missing variables from the IEnumerable of all observations and used variables
             MissingVariables = [.. variablesUsed.Where(x => !RelatedObservations.Any(ro => ro.Variable.Code.Equals(x.Code)))];
