@@ -16,10 +16,10 @@ namespace Respira.ServiceDefaults.Middlewares
                 if (!string.IsNullOrEmpty(userId))
                 {
                     var claims = new List<Claim>
-                {
-                    new(ClaimTypes.NameIdentifier, userId),
-                    new("sub", userId),
-                };
+                    {
+                        new(ClaimTypes.NameIdentifier, userId),
+                        new("sub", userId),
+                    };
 
                     if (context.Request.Headers.TryGetValue("X-Role", out var roleValues))
                     {
