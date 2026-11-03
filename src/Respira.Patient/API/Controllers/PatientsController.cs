@@ -146,6 +146,5 @@ namespace Respira.Patient.API.Controllers
             var result = await bus.InvokeAsync<Result>(new DeletePatientCommand { Id = id });
             return result.ToApiResponse();
         }
-
     }
 }

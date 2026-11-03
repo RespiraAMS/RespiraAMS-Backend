@@ -12,7 +12,7 @@ namespace Respira.Patient.Infrastructure.Data
 
         public DbSet<Domain.Entities.Patient> Patients { get; set; }
         public DbSet<NextOfKin> NextOfKins { get; set; }
-        public DbSet<Treatment> Treatments { get; set; }
+        public DbSet<TreatmentPlan> TreatmentPlans { get; set; }
 
         public async Task ExecuteInTransactionAsync(Func<Task> action, CancellationToken cancellationToken = default)
         {
@@ -81,7 +81,7 @@ namespace Respira.Patient.Infrastructure.Data
 
             modelBuilder.Entity<Domain.Entities.Patient>().HasQueryFilter(x => !x.IsDeleted);
             modelBuilder.Entity<NextOfKin>().HasQueryFilter(x => !x.IsDeleted);
-            modelBuilder.Entity<Treatment>().HasQueryFilter(x => !x.IsDeleted);
+            modelBuilder.Entity<TreatmentPlan>().HasQueryFilter(x => !x.IsDeleted);
 
             // Config on patient
             modelBuilder.Entity<Domain.Entities.Patient>().ToTable("patients");
@@ -105,11 +105,15 @@ namespace Respira.Patient.Infrastructure.Data
                 .HasForeignKey(x => x.PatientId);
 
             // Config on treatment
-            modelBuilder.Entity<Treatment>().ToTable("treatments");
-            modelBuilder.Entity<Treatment>()
+            modelBuilder.Entity<TreatmentPlan>().ToTable("treatment_plans");
+            modelBuilder.Entity<TreatmentPlan>()
                 .HasOne(x => x.Patient)
-                .WithMany(x => x.Treatments)
+                .WithMany(x => x.TreatmentPlans)
                 .HasForeignKey(x => x.PatientId);
+            modelBuilder.Entity<TreatmentPlan>().Property(x => x.AdherenceState).HasConversion<string>();
+            modelBuilder.Entity<TreatmentPlan>().Property(x => x.Status).HasConversion<string>();
+            modelBuilder.Entity<TreatmentPlan>()
+                .OwnsMany(x => x.Medicines, builder => builder.ToJson());
         }
     }
 }

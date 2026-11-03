@@ -13,7 +13,7 @@ namespace Respira.Patient.Application.Features.Patients.DischargePatient
         {
             // Get patient by ID
             var patient = await context.Patients
-                .Include(p => p.Treatments)
+                .Include(p => p.TreatmentPlans)
                 .FirstOrDefaultAsync(x => x.Id == command.Id, cancellationToken);
             if (patient is null)
             {
@@ -22,7 +22,7 @@ namespace Respira.Patient.Application.Features.Patients.DischargePatient
             }
 
             // Only discharge patient if they have receive at least one treatment
-            if (patient.Treatments.Count == 0)
+            if (patient.TreatmentPlans.Count == 0)
             {
                 logger.LogDebug("Patient does not have any treatment, cannot discharge");
                 return Result.Failure(new ApplicationError(ApplicationStatus.BadRequest, "Patient does not have any treatment, cannot discharge"));

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Respira.Clinical.API.Dtos;
 using Respira.Clinical.Application.Features.Diagnosis.Diagnose;
 using Respira.Clinical.Application.Features.Diagnosis.GetDiagnoseForm;
+using Respira.Clinical.Application.Features.Diagnosis.WarnAntibioticCombination;
 using Respira.ServiceDefaults.Contracts.Results;
 using Wolverine;
 
@@ -25,6 +26,14 @@ namespace Respira.Clinical.API.Controllers
         public async Task<IActionResult> Diagnose([FromBody] DiagnoseQuery req)
         {
             var result = await bus.InvokeAsync<Result<DiagnoseResult>>(req);
+            return result.ToApiResponse();
+        }
+
+        [HttpPost]
+        [Route("warn-antibiotic-combination")]
+        public async Task<IActionResult> WarnAntibioticCombination([FromBody] WarnAntibioticCombinationQuery req)
+        {
+            var result = await bus.InvokeAsync<Result<WarnAntibioticCombinationResult>>(req);
             return result.ToApiResponse();
         }
 

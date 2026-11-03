@@ -13,7 +13,7 @@ namespace Respira.Patient.Application.Features.Patients.DeletePatient
         {
             // Get patient by ID
             var patient = await context.Patients
-                .Include(p => p.Treatments)
+                .Include(p => p.TreatmentPlans)
                 .FirstOrDefaultAsync(x => x.Id == command.Id, cancellationToken);
             if (patient is null)
             {
@@ -23,7 +23,7 @@ namespace Respira.Patient.Application.Features.Patients.DeletePatient
 
             // Only delete patient if they have receive no treatment
             // (e.g. doctor input wrong and want to delete)
-            if (patient.Treatments.Count > 0)
+            if (patient.TreatmentPlans.Count > 0)
             {
                 logger.LogDebug("Patient already received treatments, cannot delete: {Id}", command.Id);
                 return Result.Failure(new ApplicationError(ApplicationStatus.BadRequest, "Patient already received treatments, cannot delete"));

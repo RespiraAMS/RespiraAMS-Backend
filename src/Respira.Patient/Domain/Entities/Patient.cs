@@ -91,7 +91,7 @@ namespace Respira.Patient.Domain.Entities
         /// <summary>
         /// Patient's treatments
         /// </summary>
-        public ICollection<Treatment> Treatments { get; set; } = [];
+        public ICollection<TreatmentPlan> TreatmentPlans { get; set; } = [];
 
         /// <summary>
         /// Age is only calculated using year, not full date

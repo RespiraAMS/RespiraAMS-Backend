@@ -989,6 +989,18 @@
 			
 			.error-modal-actions .btn { width: auto; padding: 0.6rem 1.5rem; }
 			
+			/* ---------------- Warning modal (antibiotic combination) ---------------- */
+			
+			.warning-modal { border-top-color: var(--warning); }
+			
+			.warning-modal h3 { color: var(--warning); }
+			
+			.warning-modal-actions {
+				justify-content: flex-end;
+				flex-wrap: wrap;
+				gap: 0.55rem;
+			}
+			
 			/* ---------------- Results ---------------- */
 			
 			.result-hero {
@@ -1950,6 +1962,24 @@
 				</div>
 			</div>
 
+			<div id="warningModal" class="error-modal-overlay" role="alertdialog" aria-modal="true" aria-labelledby="warningModalTitle">
+				<div class="error-modal warning-modal">
+					<h3 id="warningModalTitle">
+						<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+							<path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+							<line x1="12" y1="9" x2="12" y2="13"/>
+							<line x1="12" y1="17" x2="12.01" y2="17"/>
+						</svg>
+						Warning
+					</h3>
+					<p id="warningModalMsg"></p>
+					<div class="error-modal-actions warning-modal-actions">
+						<button type="button" class="btn btn-ghost" id="warningCancelBtn">Cancel</button>
+						<button type="button" class="btn btn-primary" id="warningContinueBtn">Continue anyway</button>
+					</div>
+				</div>
+			</div>
+
 			<div id="toast" class="toast" role="status" aria-live="polite"></div>
 
 			<div id="loadingState" class="loading-state">
@@ -2288,6 +2318,7 @@
 			const ENDPOINTS = {
 				form: `${API_BASE}/api/v1/diagnose`,
 				diagnose: `${API_BASE}/api/v1/diagnose`,
+				warnCombination: `${API_BASE}/api/v1/diagnose/warn-antibiotic-combination`,
 				confirmTreatment: `${API_BASE}/api/v1/diagnose/confirm-treatment`
 			};
 
@@ -3563,6 +3594,31 @@ function hideError() {
 	$('errorModal').classList.remove('open');
 }
 
+/* ---------------- Warning modal ---------------- */
+
+let warningResolver = null;
+
+// Shows the warning popup and resolves to true when the user continues,
+// or false when the warning is dismissed.
+function showWarning(message) {
+	$('warningModalMsg').textContent = message;
+	$('warningModal').classList.add('open');
+
+	return new Promise(resolve => {
+		if (warningResolver) warningResolver(false);
+		warningResolver = resolve;
+	});
+}
+
+function hideWarning(confirmed) {
+	$('warningModal').classList.remove('open');
+	if (!warningResolver) return;
+
+	const resolve = warningResolver;
+	warningResolver = null;
+	resolve(!!confirmed);
+}
+
 let toastTimer = null;
 function toast(message) {
 	const el = $('toast');
@@ -4335,6 +4391,28 @@ function renderCustomSelectedMedicines() {
 	}
 }
 
+// Asks the server whether a custom antibiotic combination should trigger a
+// warning (e.g. medicines belonging to the same antibiotic group).
+async function checkAntibioticCombinationWarning(antibioticIds) {
+	const res = await fetch(ENDPOINTS.warnCombination, {
+		method: 'POST',
+		headers: authHeaders({ 'Content-Type': 'application/json' }),
+		body: JSON.stringify({ antibioticIds })
+	});
+
+	const body = await readJson(res);
+	const status = resultStatus(body);
+	const error = resultError(body);
+
+	if (status && status !== 'SUCCESS') {
+		throw new Error(pick(error, 'description', 'Description') || 'Antibiotic combination check failed');
+	}
+	if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+
+	const data = pick(body, 'data', 'Data') || {};
+	return !!pick(data, 'needWarning', 'NeedWarning');
+}
+
 function showResults(data, query) {
 	data = data || {};
 
@@ -4465,8 +4543,18 @@ function showResults(data, query) {
 			$('errorModal').addEventListener('click', e => {
 				if (e.target.id === 'errorModal') hideError();
 			});
+			$('warningCancelBtn').addEventListener('click', () => hideWarning(false));
+			$('warningContinueBtn').addEventListener('click', () => hideWarning(true));
+			$('warningModal').addEventListener('click', e => {
+				if (e.target.id === 'warningModal') hideWarning(false);
+			});
 		document.addEventListener('keydown', e => {
-			if (e.key === 'Escape') hideError();
+			if (e.key !== 'Escape') return;
+			if ($('warningModal').classList.contains('open')) {
+				hideWarning(false);
+				return;
+			}
+			hideError();
 		});
 
 	// Step navigation
@@ -4714,7 +4802,7 @@ $('customReasonInput').addEventListener('input', () => {
 	clearGroupError($('customReasonGroup'));
 	updateCustomConfirmState();
 });
-$('confirmCustomBtn').addEventListener('click', () => {
+$('confirmCustomBtn').addEventListener('click', async () => {
 	const reason = $('customReasonInput').value.trim();
 	clearGroupError($('customReasonGroup'));
 
@@ -4728,11 +4816,41 @@ $('confirmCustomBtn').addEventListener('click', () => {
 		return;
 	}
 
-	confirmTreatment({
-		medicines: [...state.customMedicines.keys()],
-		reason,
-		source: 'custom'
-	});
+	const medicines = [...state.customMedicines.keys()];
+	const button = $('confirmCustomBtn');
+	const originalLabel = button.innerHTML;
+	button.disabled = true;
+	button.innerHTML = '<span class="spinner"></span>Checking combination...';
+
+	try {
+		// Ask the server before confirming: some combinations (e.g. medicines
+		// from the same antibiotic group) are unusual but not outright invalid.
+		const needWarning = await checkAntibioticCombinationWarning(medicines);
+		button.innerHTML = originalLabel;
+
+		if (needWarning) {
+			const proceed = await showWarning(
+				'The selected antibiotics include two or more medicines from the same antibiotic group. ' +
+				'This combination is unusual and normally avoided, but it may be acceptable in rare cases. ' +
+				'Review the combination before continuing.'
+			);
+			if (!proceed) {
+				updateCustomConfirmState();
+				return;
+			}
+		}
+
+		await confirmTreatment({
+			medicines,
+			reason,
+			source: 'custom'
+		});
+	} catch (err) {
+		console.error('Antibiotic combination check error:', err);
+		showError('Unable to check the antibiotic combination: ' + err.message);
+		button.innerHTML = originalLabel;
+		updateCustomConfirmState();
+	}
 });
 $('newDiagnosisBtn').addEventListener('click', resetForm);
 

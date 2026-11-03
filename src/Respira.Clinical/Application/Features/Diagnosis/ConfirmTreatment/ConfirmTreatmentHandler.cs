@@ -2,8 +2,6 @@ using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Respira.Clinical.Application.Contracts.Data;
-using Respira.Clinical.Domain.Models;
-using Respira.Clinical.Domain.Services;
 using Respira.ServiceDefaults.Contracts.CQRS;
 using Respira.ServiceDefaults.Contracts.Results;
 using Wolverine;
@@ -32,7 +30,6 @@ namespace Respira.Clinical.Application.Features.Diagnosis.ConfirmTreatment
 {
     public class ConfirmTreatmentHandler(
         IDbContext context,
-        IDiagnoseService service,
         IMessageBus bus,
         ILogger<ConfirmTreatmentHandler> logger)
         : IQueryHandler<ConfirmTreatmentQuery, Result>
@@ -67,27 +64,10 @@ namespace Respira.Clinical.Application.Features.Diagnosis.ConfirmTreatment
                     "Diagnosis result is missing the diagnosis ID"));
             }
 
-            // Load clinical context
-            var clinicalContext = new ClinicalContext
-            {
-                AntibioticGroups = await context.AntibioticGroups
-                    .Include(x => x.Parent)
-                    .ToListAsync(cancellationToken),
-                Antibiograms = [],
-                Antibiotics = await context.Antibiotics
-                    .Include(x => x.AntibioticGroup)
-                    .ToListAsync(cancellationToken),
-                Metrics = [],
-                Pathogens = [],
-                SuspectedCauses = [],
-                TreatmentProtocols = [],
-                Variables = [],
-            };
-
             // Get and validate antibiotic IDs
-            var medicines = clinicalContext.Antibiotics
+            var medicines = await context.Antibiotics
                 .Where(x => query.Medicines.Contains(x.Id))
-                .ToList();
+                .ToListAsync(cancellationToken);
             if (medicines.Count != query.Medicines.Count)
             {
                 logger.LogDebug("Not all medicine IDs exist in database: {Detail}", new
@@ -96,23 +76,6 @@ namespace Respira.Clinical.Application.Features.Diagnosis.ConfirmTreatment
                     AntibioticProvidedCount = query.Medicines.Count
                 });
                 return Result.Failure(new ApplicationError(ApplicationStatus.BadRequest, "Not all medicine IDs exist in database"));
-            }
-
-            // Check if the medicine that doctor chosen is valid.
-            // A valid treatment medicine must not violate rule:
-            // all antibiotics in a combination must not belong to a group
-            var validateResult = service.IsMedicineCombinationValid(clinicalContext, medicines);
-            if (validateResult.IsFailure())
-            {
-                logger.LogDebug("Failed to validate medicine combination: {Error}", validateResult.Error);
-                return Result.Failure(validateResult.Error!);
-            }
-
-            if (!validateResult.Data)
-            {
-                return Result.Failure(new ApplicationError(
-                    ApplicationStatus.BusinessRuleViolation,
-                    "All medicine must belong to different antibiotic group"));
             }
 
             // Check if this medicines picked by doctor is adherence to treatment protocol

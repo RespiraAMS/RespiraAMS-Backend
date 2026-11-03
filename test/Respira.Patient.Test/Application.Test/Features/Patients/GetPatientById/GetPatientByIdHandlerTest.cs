@@ -37,7 +37,7 @@ namespace Respira.Patient.Application.Test.Features.Patients.GetPatientById
             // Children reference patients through FKs, so delete them first.
             // IgnoreQueryFilters is needed because soft-deleted rows are hidden by the
             // query filter but still occupy the table
-            await _context.Treatments.IgnoreQueryFilters()
+            await _context.TreatmentPlans.IgnoreQueryFilters()
                 .ExecuteDeleteAsync(TestContext.Current.CancellationToken);
             await _context.NextOfKins.IgnoreQueryFilters()
                 .ExecuteDeleteAsync(TestContext.Current.CancellationToken);
@@ -163,7 +163,7 @@ namespace Respira.Patient.Application.Test.Features.Patients.GetPatientById
 
         private async Task<(
             Domain.Entities.Patient Patient,
-            Domain.Entities.Treatment Treatment,
+            Domain.Entities.TreatmentPlan Treatment,
             Domain.Entities.NextOfKin KinMother,
             Domain.Entities.NextOfKin KinChild)> SeedFullGraphAsync()
         {
@@ -190,11 +190,17 @@ namespace Respira.Patient.Application.Test.Features.Patients.GetPatientById
             };
             await context.Patients.AddAsync(patient, TestContext.Current.CancellationToken);
 
-            var treatment = new Domain.Entities.Treatment
+            var treatment = new Domain.Entities.TreatmentPlan
             {
                 PatientId = patient.Id,
+                DoctorId = Guid.CreateVersion7(),
+                DiagnosisId = Guid.CreateVersion7(),
+                Medicines = [],
+                Diagnosis = "",
+                AdherenceState = AdherenceState.Adhere,
+                Status = TreatmentPlanStatus.InProgress
             };
-            await context.Treatments.AddAsync(treatment, TestContext.Current.CancellationToken);
+            await context.TreatmentPlans.AddAsync(treatment, TestContext.Current.CancellationToken);
 
             var kinMother = new Domain.Entities.NextOfKin
             {

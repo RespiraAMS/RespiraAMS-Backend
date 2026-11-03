@@ -6,7 +6,6 @@ using Respira.Clinical.Application.Contracts.Data;
 using Respira.Clinical.Application.Features.Diagnosis.ConfirmTreatment;
 using Respira.Clinical.Domain.Entities;
 using Respira.Clinical.Domain.Enums;
-using Respira.Clinical.Domain.Services;
 using Respira.Clinical.Infrastructure.Data;
 using Respira.ServiceDefaults.Contracts.Results;
 using Wolverine;
@@ -28,15 +27,12 @@ namespace Respira.Clinical.Application.Test.Features.Diagnosis.ConfirmTreatment
             _options = new DbContextOptionsBuilder<ClinicalDbContext>()
                 .UseNpgsql(fixture.ConnectionString).Options;
             _context = new ClinicalDbContext(_options);
-            // The real diagnose service: the medicine combination rule is a domain
-            // rule and must be exercised against the seeded antibiotic catalogue
-            var service = new DiagnoseService(new Mock<ILogger<DiagnoseService>>().Object);
             // Strict so an unexpected message on the bus (wrong id, wrong order) fails
             _bus = new Mock<IMessageBus>(MockBehavior.Strict);
             var logger = new Mock<ILogger<ConfirmTreatmentHandler>>().Object;
 
             // Initialize handler
-            _handler = new(_context, service, _bus.Object, logger);
+            _handler = new(_context, _bus.Object, logger);
         }
 
         public async ValueTask DisposeAsync()
@@ -797,40 +793,6 @@ namespace Respira.Clinical.Application.Test.Features.Diagnosis.ConfirmTreatment
                 query, TestContext.Current.CancellationToken);
 
             AssertFailure(result, ApplicationStatus.BadRequest);
-            VerifyBusNotInvoked();
-        }
-
-        [Fact]
-        public async Task ConfirmTreatment_MedicineFromSameGroup_Fails()
-        {
-            var seed = await SeedAsync();
-            var diagnosis = Diagnosis(Guid.CreateVersion7(), [seed.Levofloxacin.Id]);
-            // Boundary: 2 medicines are the smallest combination that can violate
-            // the rule; both are beta-lactams (same group)
-            var query = CreateQuery(
-                diagnosis, [seed.Amoxicillin.Id, seed.Ampicillin.Id], "Combination");
-
-            var result = await _handler.HandleAsync(
-                query, TestContext.Current.CancellationToken);
-
-            AssertFailure(result, ApplicationStatus.BusinessRuleViolation);
-            VerifyBusNotInvoked();
-        }
-
-        [Fact]
-        public async Task ConfirmTreatment_MedicineFromSameLineage_Fails()
-        {
-            var seed = await SeedAsync();
-            var diagnosis = Diagnosis(Guid.CreateVersion7(), [seed.Levofloxacin.Id]);
-            // Ceftriaxone (cephalosporins) and meropenem (carbapenems) are different
-            // groups, but both descend from beta-lactams
-            var query = CreateQuery(
-                diagnosis, [seed.Ceftriaxone.Id, seed.Meropenem.Id], "Combination");
-
-            var result = await _handler.HandleAsync(
-                query, TestContext.Current.CancellationToken);
-
-            AssertFailure(result, ApplicationStatus.BusinessRuleViolation);
             VerifyBusNotInvoked();
         }
 
