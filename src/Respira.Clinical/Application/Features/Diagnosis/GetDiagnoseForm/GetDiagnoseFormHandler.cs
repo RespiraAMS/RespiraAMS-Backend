@@ -44,25 +44,26 @@ namespace Respira.Clinical.Application.Features.Diagnosis.GetDiagnoseForm
 
             var antibiotics = await context.Antibiotics
                 .AsNoTracking()
-                .Order()
+                .OrderBy(x => x.Name)
                 .Select(x => new AntibioticResult
                 {
                     Id = x.Id,
                     Name = x.Name,
                     AntibioticGroupId = x.AntibioticGroupId,
-                    AntibioticGroupName = x.AntibioticGroup.Name
+                    AntibioticGroupName = x.AntibioticGroup.Name,
+                    Classification = x.Classification
                 })
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
 
             var pathogens = await context.Pathogens
                 .AsNoTracking()
-                .Order()
+                .OrderBy(x => x.Name)
                 .Select(x => new PathogenResult
                 {
                     Id = x.Id,
                     Name = x.Name
                 })
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
 
             return Result<DiagnoseFormResult>.Success(ApplicationStatus.Success, new DiagnoseFormResult
             {

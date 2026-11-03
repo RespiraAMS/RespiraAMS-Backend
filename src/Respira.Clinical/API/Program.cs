@@ -9,6 +9,8 @@ using Respira.Clinical.DI;
 using System.Text.Json.Serialization;
 using ZiggyCreatures.Caching.Fusion;
 using System.Text.Json;
+using Respira.Clinical.Application.Contracts.Messages;
+using Respira.Clinical.Application.Features.Diagnosis.ConfirmTreatment;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -70,6 +72,9 @@ builder.Host.UseWolverine(opts =>
 
     // Setup queue
     opts.UseRabbitMqUsingNamedConnection("rabbitmq").AutoProvision();
+
+    opts.ListenToRabbitQueue(Queues.DiagnoseQueue);
+    opts.PublishMessage<UpsertTreatmentPlanCommand>().ToRabbitQueue(Queues.DiagnoseQueue);
 
     opts.Durability.Mode = DurabilityMode.Balanced;
 });

@@ -2,7 +2,6 @@ using System.Globalization;
 using ImTools;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Respira.Clinical.Application.Contracts.Caching;
 using Respira.Clinical.Application.Contracts.Data;
 using Respira.Clinical.Domain.Enums;
 using Respira.Clinical.Domain.Models;
@@ -15,7 +14,6 @@ namespace Respira.Clinical.Application.Features.Diagnosis.Diagnose
     public class DiagnoseHandler(
         IDbContext context,
         IDiagnoseService service,
-        ICache cache,
         ILogger<DiagnoseHandler> logger)
         : IQueryHandler<DiagnoseQuery, Result<DiagnoseResult>>
     {
@@ -206,13 +204,20 @@ namespace Respira.Clinical.Application.Features.Diagnosis.Diagnose
                 IsPatientPregnantOrInLactationPhase = diagnosis.IsPatientPregnantOrInLactationPhase,
                 Egfr = diagnosis.Egfr,
                 OtherInfections = query.OtherInfections,
-                MicrobialTestResult = microbial.Select(x => new AntibiogramResult
+                MicrobialTestResults = microbial.Select(x => new MicrobialTestResult
                 {
-                    Id = x.Id,
+                    SampleType = x.MicrobialSampleType,
                     Category = x.MicCategory,
                     Pathogen = new PathogenResult(x.Pathogen.Id, x.Pathogen.Name),
                     Antibiotics = x.Antibiotics.Select(x => new AntibioticResult(x.Id, x.Name, x.Classification))
                 }),
+                Allergy = new AllergyResult
+                {
+                    Type = picture.Allergy.Type,
+                    OtherAllergy = picture.Allergy.OtherAllergy,
+                    AllergicAntibiotics = picture.Allergy.AllergicAntibiotics
+                        .Select(x => new AntibioticResult(x.Id, x.Name, x.Classification))
+                },
                 Protocols = treatment.Select(x => new TreatmentProtocolResult
                 {
                     Id = x.Id,
@@ -223,10 +228,6 @@ namespace Respira.Clinical.Application.Features.Diagnosis.Diagnose
                     Medicines = x.Treatments.Select(mc => mc.Combination.Select(a => new AntibioticResult(a.Id, a.Name, a.Classification)))
                 })
             };
-
-            // Store the diagnosis result in cache
-            await cache.SetAsync($"diagnosis:{result.DiagnosisId}", result, TimeSpan.FromMinutes(10), cancellationToken);
-            logger.LogInformation("Diagnosis complete: {DiagnosisId}", result.DiagnosisId);
 
             return Result<DiagnoseResult>.Success(ApplicationStatus.Success, result);
         }

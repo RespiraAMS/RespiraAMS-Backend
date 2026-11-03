@@ -1,9 +1,8 @@
-using Asp.Versioning;
 using Respira.Patient.Application;
+using Respira.Patient.Application.Contracts.Messages;
+using Respira.Patient.Application.Features.TreatmentPlans;
 using Respira.Patient.DI;
 using Respira.ServiceDefaults.Extensions;
-using Respira.ServiceDefaults.Utils.OpenApiTransformers;
-using Scalar.AspNetCore;
 using Wolverine;
 using Wolverine.EntityFrameworkCore;
 using Wolverine.FluentValidation;
@@ -43,6 +42,8 @@ builder.Host.UseWolverine(opts =>
 
     // Setup queue
     opts.UseRabbitMqUsingNamedConnection("rabbitmq").AutoProvision();
+    opts.ListenToRabbitQueue(Queues.DiagnoseQueue);
+    opts.PublishMessage<UpsertTreatmentPlanResult>().ToRabbitQueue(Queues.DiagnoseQueue);
 
     opts.Durability.Mode = DurabilityMode.Balanced;
 });

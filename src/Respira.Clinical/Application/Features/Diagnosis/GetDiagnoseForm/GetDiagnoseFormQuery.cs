@@ -27,6 +27,7 @@ namespace Respira.Clinical.Application.Features.Diagnosis.GetDiagnoseForm
         public required string Name { get; set; }
         public required Guid AntibioticGroupId { get; set; }
         public required string AntibioticGroupName { get; set; }
+        public required AwareClassification Classification { get; set; }
     }
 
     public record PathogenResult

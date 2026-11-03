@@ -109,12 +109,31 @@ namespace Respira.Clinical.Application.Features.Diagnosis.Diagnose
     /// <param name="Formula">Criterion formula</param>
     public record CriterionResult(Guid Id, string Name, string Formula);
 
-    public record AntibiogramResult
+    public record AllergyResult
     {
         /// <summary>
-        /// Antibiogram ID
+        /// Type of allergy
         /// </summary>
-        public required Guid Id { get; set; }
+        public required AllergyType Type { get; set; }
+
+        /// <summary>
+        /// The list of antibiotic IDs that patient's allergic to
+        /// </summary>
+        public IEnumerable<AntibioticResult> AllergicAntibiotics { get; set; } = [];
+
+        /// <summary>
+        /// Other allergy, corresponding to <see cref="AllergyType.Unknown"/> or
+        /// <see cref="AllergyType.NonRegisteredAntibiotic"/>
+        /// </summary>
+        public string? OtherAllergy { get; set; }
+    }
+
+    public record MicrobialTestResult
+    {
+        /// <summary>
+        /// Microbial sample type
+        /// </summary>
+        public required MicrobialSampleType SampleType { get; set; }
 
         /// <summary>
         /// Antibiogram's MIC category
@@ -167,11 +186,6 @@ namespace Respira.Clinical.Application.Features.Diagnosis.Diagnose
 
     public record DiagnoseResult
     {
-        /// <summary>
-        /// Diagnosis ID. This ID is used for cross-validation when doctor
-        /// create the treatment plan for patient. Note that this is NOT
-        /// the actual treatment plan ID in database
-        /// </summary>
         public required Guid DiagnosisId { get; set; }
 
         /// <summary>
@@ -232,7 +246,12 @@ namespace Respira.Clinical.Application.Features.Diagnosis.Diagnose
         /// <summary>
         /// Microbial test result
         /// </summary>
-        public required IEnumerable<AntibiogramResult> MicrobialTestResult { get; set; }
+        public required IEnumerable<MicrobialTestResult> MicrobialTestResults { get; set; }
+
+        /// <summary>
+        /// Patient allergy
+        /// </summary>
+        public required AllergyResult Allergy { get; set; }
 
         /// <summary>
         /// List of recommended treatment protocols, based on the result of diagnosis
