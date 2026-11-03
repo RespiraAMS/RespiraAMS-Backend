@@ -37,7 +37,7 @@ namespace Respira.Patient.Application.Test.Features.Patients.CreatePatient
             // Children reference patients through FKs, so delete them first.
             // IgnoreQueryFilters is needed because soft-deleted rows are hidden by the
             // query filter but still occupy the table
-            await _context.Treatments.IgnoreQueryFilters()
+            await _context.TreatmentPlans.IgnoreQueryFilters()
                 .ExecuteDeleteAsync(TestContext.Current.CancellationToken);
             await _context.NextOfKins.IgnoreQueryFilters()
                 .ExecuteDeleteAsync(TestContext.Current.CancellationToken);

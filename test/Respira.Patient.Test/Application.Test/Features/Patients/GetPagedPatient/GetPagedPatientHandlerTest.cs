@@ -37,7 +37,7 @@ namespace Respira.Patient.Application.Test.Features.Patients.GetPagedPatient
             // Treatments reference patients through FKs, so delete them first.
             // IgnoreQueryFilters is needed because soft-deleted rows are hidden by the
             // query filter but still occupy the table
-            await _context.Treatments.IgnoreQueryFilters()
+            await _context.TreatmentPlans.IgnoreQueryFilters()
                 .ExecuteDeleteAsync(TestContext.Current.CancellationToken);
             await _context.NextOfKins.IgnoreQueryFilters()
                 .ExecuteDeleteAsync(TestContext.Current.CancellationToken);
@@ -134,9 +134,14 @@ namespace Respira.Patient.Application.Test.Features.Patients.GetPagedPatient
 
             await context.Patients.AddRangeAsync(
                 [kieu, tung, quan, removed], TestContext.Current.CancellationToken);
-            await context.Treatments.AddAsync(new Domain.Entities.Treatment
+            await context.TreatmentPlans.AddAsync(new Domain.Entities.TreatmentPlan
             {
                 PatientId = quan.Id,
+                DoctorId = Guid.CreateVersion7(),
+                DiagnosisId = Guid.CreateVersion7(),
+                AdherenceState = AdherenceState.Adhere,
+                Diagnosis = string.Empty,
+                Status = TreatmentPlanStatus.InProgress
             }, TestContext.Current.CancellationToken);
             await context.SaveChangesAsync(TestContext.Current.CancellationToken);
             return (kieu, tung, quan);

@@ -149,11 +149,18 @@ namespace Respira.Patient.Infrastructure.Migrations
                     b.ToTable("patients", (string)null);
                 });
 
-            modelBuilder.Entity("Respira.Patient.Domain.Entities.Treatment", b =>
+            modelBuilder.Entity("Respira.Patient.Domain.Entities.TreatmentPlan", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
+
+                    b.Property<string>("AdherenceState")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("CloseReason")
+                        .HasColumnType("text");
 
                     b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
@@ -161,11 +168,28 @@ namespace Respira.Patient.Infrastructure.Migrations
                     b.Property<DateTimeOffset?>("DeletedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<string>("Diagnosis")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("DiagnosisId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("DoctorId")
+                        .HasColumnType("uuid");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
 
                     b.Property<Guid>("PatientId")
                         .HasColumnType("uuid");
+
+                    b.Property<string>("ReasonForMedicineChoice")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<DateTimeOffset>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
@@ -174,7 +198,7 @@ namespace Respira.Patient.Infrastructure.Migrations
 
                     b.HasIndex("PatientId");
 
-                    b.ToTable("treatments", (string)null);
+                    b.ToTable("treatment_plans", (string)null);
                 });
 
             modelBuilder.Entity("Respira.Patient.Domain.Entities.NextOfKin", b =>
@@ -188,13 +212,42 @@ namespace Respira.Patient.Infrastructure.Migrations
                     b.Navigation("Patient");
                 });
 
-            modelBuilder.Entity("Respira.Patient.Domain.Entities.Treatment", b =>
+            modelBuilder.Entity("Respira.Patient.Domain.Entities.TreatmentPlan", b =>
                 {
                     b.HasOne("Respira.Patient.Domain.Entities.Patient", "Patient")
-                        .WithMany("Treatments")
+                        .WithMany("TreatmentPlans")
                         .HasForeignKey("PatientId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.OwnsMany("Respira.Patient.Domain.Models.Antibiotic", "Medicines", b1 =>
+                        {
+                            b1.Property<Guid>("TreatmentPlanId");
+
+                            b1.Property<int>("__synthesizedOrdinal")
+                                .ValueGeneratedOnAdd();
+
+                            b1.Property<string>("Classification")
+                                .IsRequired();
+
+                            b1.Property<Guid>("Id");
+
+                            b1.Property<string>("Name")
+                                .IsRequired();
+
+                            b1.HasKey("TreatmentPlanId", "__synthesizedOrdinal");
+
+                            b1.ToTable("treatment_plans");
+
+                            b1
+                                .ToJson("Medicines")
+                                .HasColumnType("jsonb");
+
+                            b1.WithOwner()
+                                .HasForeignKey("TreatmentPlanId");
+                        });
+
+                    b.Navigation("Medicines");
 
                     b.Navigation("Patient");
                 });
@@ -203,7 +256,7 @@ namespace Respira.Patient.Infrastructure.Migrations
                 {
                     b.Navigation("NextOfKins");
 
-                    b.Navigation("Treatments");
+                    b.Navigation("TreatmentPlans");
                 });
 #pragma warning restore 612, 618
         }

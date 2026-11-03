@@ -13,7 +13,7 @@ namespace Respira.Patient.Application.Features.Patients.UpdatePatient
         {
             // Get patient by ID
             var patient = await context.Patients
-                .Include(p => p.Treatments)
+                .Include(p => p.TreatmentPlans)
                 .FirstOrDefaultAsync(x => x.Id == command.Id, cancellationToken);
             if (patient is null)
             {
@@ -58,7 +58,7 @@ namespace Respira.Patient.Application.Features.Patients.UpdatePatient
             patient.Address = command.Address;
             patient.City = command.City;
             patient.UpdatedAt = DateTimeOffset.UtcNow;
-            if (patient.Treatments.Count == 0)
+            if (patient.TreatmentPlans.Count == 0)
             {
                 logger.LogDebug("Patient does not have any treatment, update patient clinical information");
 
