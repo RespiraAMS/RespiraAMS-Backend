@@ -17,24 +17,24 @@ namespace Respira.ServiceDefaults.Contracts.Results
         /// </summary>
         public object? Detail { get; set; }
 
-        public ApplicationError(string code, string description, object? detail = null)
+        public ApplicationError(string statusCode, string description, object? detail = null)
         {
             // Check if status code is what our application supports
-            if (!ApplicationStatus.IsSupportedStatusCode(code))
+            if (!ApplicationStatus.IsSupportedStatusCode(statusCode))
             {
-                throw new ArgumentException("Invalid status code", nameof(code));
+                throw new ArgumentException("Invalid status code", nameof(statusCode));
             }
 
             // Check if this status code is a failure code
-            if (ApplicationStatus.IsSuccess(code))
+            if (ApplicationStatus.IsSuccess(statusCode))
             {
                 throw new ArgumentException(
                     "Invalid status code, error must be failure code",
-                    nameof(code)
+                    nameof(statusCode)
                 );
             }
 
-            StatusCode = code;
+            StatusCode = statusCode;
             Description = description;
             Detail = detail;
         }

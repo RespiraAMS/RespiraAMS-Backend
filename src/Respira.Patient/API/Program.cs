@@ -1,6 +1,6 @@
 using Respira.Patient.Application;
 using Respira.Patient.Application.Contracts.Messages;
-using Respira.Patient.Application.Features.TreatmentPlans;
+using Respira.Patient.Application.Features.TreatmentPlans.UpsertTreatmentPlan;
 using Respira.Patient.DI;
 using Respira.ServiceDefaults.Extensions;
 using Wolverine;
