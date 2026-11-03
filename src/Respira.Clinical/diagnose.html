@@ -1609,6 +1609,229 @@
 			.protocol-or::before,
 			.protocol-or::after { content: ''; flex: 1; border-top: 1px dashed var(--border); }
 			
+			/* ---------------- AWaRe classification badges ---------------- */
+			
+			.aware-badge {
+				display: inline-block;
+				padding: 0.08rem 0.45rem;
+				border-radius: 999px;
+				font-size: 0.62rem;
+				font-weight: 800;
+				letter-spacing: 0.02em;
+				text-transform: uppercase;
+				white-space: nowrap;
+				vertical-align: 1px;
+			}
+			
+			.aware-access { background: #dcfce7; color: #166534; }
+			.aware-accesswatch { background: #ccfbf1; color: #115e59; }
+			.aware-watch { background: #fef3c7; color: #92400e; }
+			.aware-reserve { background: #fee2e2; color: #991b1b; }
+			.aware-others { background: #e0f2fe; color: #075985; }
+			.aware-unclassified { background: #f1f5f9; color: #475569; }
+			
+			.protocol-medicine {
+				display: inline-flex;
+				align-items: center;
+				gap: 0.3rem;
+			}
+			
+			/* ---------------- Result tabs ---------------- */
+			
+			.result-tabs {
+				display: flex;
+				gap: 0.35rem;
+				padding: 0.25rem;
+				background: var(--card);
+				border: 1px solid var(--border);
+				border-radius: 12px;
+				margin-bottom: 1rem;
+				box-shadow: var(--shadow);
+			}
+			
+			.result-tab {
+				flex: 1 1 0;
+				min-height: 44px;
+				padding: 0.55rem 0.7rem;
+				border: none;
+				border-radius: 9px;
+				background: transparent;
+				color: var(--text-muted);
+				font-size: 0.82rem;
+				font-weight: 800;
+				cursor: pointer;
+				transition: background 0.15s, color 0.15s;
+			}
+			
+			.result-tab:hover:not(.active) { background: #f1f5f9; }
+			
+			.result-tab.active { background: var(--primary); color: #fff; }
+			
+			/* ---------------- Treatment selection ---------------- */
+			
+			.protocol-option {
+				width: 100%;
+				text-align: left;
+				color: inherit;
+				font: inherit;
+				cursor: pointer;
+				transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
+			}
+			
+			.protocol-option:hover { border-color: var(--primary); }
+			
+			.protocol-option.selected {
+				border-color: var(--accent);
+				background: var(--accent-light);
+				box-shadow: 0 0 0 3px rgba(14, 147, 132, 0.15);
+			}
+			
+			.protocol-option-head {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				gap: 0.5rem;
+				margin-bottom: 0.4rem;
+			}
+			
+			.protocol-option-head .protocol-option-label { margin-bottom: 0; }
+			
+			.protocol-option-select {
+				display: inline-flex;
+				align-items: center;
+				gap: 0.35rem;
+				font-size: 0.7rem;
+				font-weight: 800;
+				color: var(--text-muted);
+			}
+			
+			.protocol-option.selected .protocol-option-select { color: #0a6c61; }
+			
+			.protocol-option-radio {
+				position: relative;
+				width: 18px;
+				height: 18px;
+				flex-shrink: 0;
+				border: 2px solid var(--border);
+				border-radius: 50%;
+				background: #fff;
+			}
+			
+			.protocol-option.selected .protocol-option-radio { border-color: var(--accent); }
+			
+			.protocol-option.selected .protocol-option-radio::after {
+				content: '';
+				position: absolute;
+				inset: 3px;
+				border-radius: 50%;
+				background: var(--accent);
+			}
+			
+			.treatment-confirm-bar {
+				display: flex;
+				flex-direction: column;
+				gap: 0.6rem;
+				margin-top: 1rem;
+				padding-top: 0.9rem;
+				border-top: 1px dashed var(--border);
+			}
+			
+			.treatment-confirm-summary {
+				font-size: 0.8rem;
+				font-weight: 600;
+				color: var(--text-muted);
+			}
+			
+			.treatment-confirm-bar .btn { width: 100%; }
+			
+			.protocol-option .field-warn-msg { width: 100%; }
+			
+			.treatment-confirmed {
+				display: flex;
+				align-items: flex-start;
+				gap: 0.6rem;
+				padding: 0.85rem 0.95rem;
+				margin-bottom: 1rem;
+				background: var(--success-bg);
+				border: 1px solid #a7f3d0;
+				border-radius: 12px;
+				color: #166534;
+				font-size: 0.85rem;
+				font-weight: 600;
+			}
+			
+			.treatment-confirmed strong { display: block; font-weight: 800; }
+			
+			/* ---------------- Custom medicine picker ---------------- */
+			
+			.custom-med-list {
+				display: flex;
+				flex-direction: column;
+				gap: 0.45rem;
+				max-height: 340px;
+				overflow-y: auto;
+				padding: 0.15rem;
+				margin-top: 0.55rem;
+			}
+			
+			.custom-med-option {
+				display: flex;
+				align-items: center;
+				gap: 0.6rem;
+				min-height: 44px;
+				padding: 0.5rem 0.7rem;
+				border: 1px solid var(--border);
+				border-radius: 8px;
+				background: #fbfcfe;
+				font-size: 0.86rem;
+				font-weight: 600;
+				cursor: pointer;
+				transition: border-color 0.15s, background 0.15s;
+			}
+			
+			.custom-med-option:hover { border-color: var(--primary); }
+			
+			.custom-med-option.selected {
+				border-color: var(--accent);
+				background: var(--accent-light);
+			}
+			
+			.custom-med-option input {
+				width: 18px;
+				height: 18px;
+				accent-color: var(--accent);
+				flex-shrink: 0;
+			}
+			
+			.custom-med-text {
+				display: flex;
+				flex-direction: column;
+				min-width: 0;
+			}
+			
+			.custom-med-name { overflow-wrap: anywhere; font-weight: 700; }
+			
+			.custom-med-meta {
+				display: flex;
+				align-items: center;
+				gap: 0.4rem;
+				flex-wrap: wrap;
+				margin-top: 0.15rem;
+			}
+			
+			.custom-med-meta .allergy-group { text-transform: none; letter-spacing: 0; }
+			
+			textarea.form-input {
+				min-height: 90px;
+				resize: vertical;
+				line-height: 1.5;
+			}
+			
+			@media (min-width: 760px) {
+				.treatment-confirm-bar { flex-direction: row; align-items: center; justify-content: space-between; flex-wrap: wrap; }
+				.treatment-confirm-bar .btn { width: auto; min-width: 200px; }
+			}
+			
 			.missing-card { border-left: 4px solid var(--warning); }
 			.missing-card.is-clear { border-left-color: var(--success); }
 			.missing-item { background: var(--warning-bg); border-color: #fcd34d; }
@@ -1897,101 +2120,160 @@
 			</form>
 
 			<div id="resultsSection" hidden>
-				<div class="card">
-					<h2><span class="step-num is-done">&#10003;</span>
-					Diagnosis result</h2>
-					<div class="result-hero">
-						<div class="hero-item">
-							<span class="hero-label">Severity</span>
-							<span id="severityBadge" class="severity-badge"></span>
-						</div>
-						<div class="hero-item">
-							<span class="hero-label">Treatment site</span>
-							<span id="treatmentBadge" class="treatment-badge"></span>
-						</div>
-						<div class="hero-item">
-							<span class="hero-label">eGFR (mL/minute/1.73 m²)</span>
-							<span id="egfrValue" class="hero-value"></span>
-						</div>
-					</div>
-
-					<div class="result-block-title">Clinical flags</div>
-					<div id="resultFlags" class="flag-grid"></div>
-
-					<div class="metrics-diagnosis-block">
-						<h3>Metrics severity diagnosis</h3>
-						<div id="metricsDiagnosisList"></div>
-					</div>
-				</div>
-
-				<div class="card missing-card" id="missingCard">
-					<h2>
-						<span class="step-num">!</span>
-						Missing variables
-						<span class="category-count" id="missingCount">0</span>
-					</h2>
-					<p class="form-desc">
-						These variables were not provided, so parts of the assessment could not be evaluated.
-						Consider adding them for a more complete diagnosis.
-					</p>
-					<div id="missingList"></div>
-				</div>
-
-				<div class="card">
-					<h2><span class="step-num">i</span>
-					Infection assessment</h2>
-
-					<div id="heavySection" class="heavy-suspected-box">
-						<h3>Heavy suspected</h3>
-						<p class="box-hint">The list contains of pathogen that is likely to infect patient, based on risk factor</p>
-						<div id="heavyList"></div>
-					</div>
-
-					<div id="worthSection" class="worth-suspected-box">
-						<h3 class="worth-header">
-							<button type="button" class="collapse-toggle" id="worthToggle" aria-expanded="false" aria-controls="worthBody">
-								<svg class="collapse-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-									<polyline points="9 6 15 12 9 18"></polyline>
-								</svg>
-								<span>Worth suspected</span>
-								<span class="category-count" id="worthCount">0</span>
-							</button>
-						</h3>
-						<div id="worthBody" class="worth-body" hidden>
-							<div id="worthList"></div>
-						</div>
-					</div>
-				</div>
-
-				<div class="card">
-					<h2><span class="step-num">Rx</span>
-					Recommended treatment protocols
-					<span class="category-count protocol-count" id="protocolCount">0</span></h2>
-					<p class="form-desc">
-						Each option is a complete antibiotic regimen. Use every medicine inside the same
-						option together; separate options are alternative regimens.
-					</p>
-					<div id="protocolList" class="protocol-list"></div>
-				</div>
-
-				<div class="card">
-					<h2><span class="step-num">i</span>
-					Supporting details</h2>
-
-					<button type="button" class="btn btn-secondary evidence-toggle" id="evidenceToggle" aria-expanded="false" aria-controls="evidencePanel">
-						View evidences (0)
+				<div class="result-tabs" role="tablist" aria-label="Treatment selection">
+					<button type="button" class="result-tab active" id="resultTabProtocol" role="tab" aria-selected="true" aria-controls="protocolTabPanel">
+						Follow protocol
 					</button>
-					<div id="evidencePanel" class="evidence-panel" hidden>
-						<h3>Evidences</h3>
-						<ul id="evidenceList" class="evidence-list"></ul>
+					<button type="button" class="result-tab" id="resultTabCustom" role="tab" aria-selected="false" aria-controls="customTabPanel">
+						Custom treatment
+					</button>
+				</div>
+
+				<div id="treatmentConfirmedBanner" class="treatment-confirmed" hidden></div>
+
+				<div id="protocolTabPanel" class="result-tab-panel" role="tabpanel" aria-labelledby="resultTabProtocol">
+					<div class="card">
+						<h2><span class="step-num is-done">&#10003;</span>
+						Diagnosis result</h2>
+						<div class="result-hero">
+							<div class="hero-item">
+								<span class="hero-label">Severity</span>
+								<span id="severityBadge" class="severity-badge"></span>
+							</div>
+							<div class="hero-item">
+								<span class="hero-label">Treatment site</span>
+								<span id="treatmentBadge" class="treatment-badge"></span>
+							</div>
+							<div class="hero-item">
+								<span class="hero-label">eGFR (mL/minute/1.73 m²)</span>
+								<span id="egfrValue" class="hero-value"></span>
+							</div>
+						</div>
+
+						<div class="result-block-title">Clinical flags</div>
+						<div id="resultFlags" class="flag-grid"></div>
+
+						<div class="metrics-diagnosis-block">
+							<h3>Metrics severity diagnosis</h3>
+							<div id="metricsDiagnosisList"></div>
+						</div>
 					</div>
 
-					<button type="button" class="btn btn-secondary evidence-toggle" id="microbialToggle" aria-expanded="false" aria-controls="microbialPanel">
-						View microbial tests (0)
-					</button>
-					<div id="microbialPanel" class="evidence-panel" hidden>
-						<h3>Microbial test results</h3>
-						<div id="microbialList" class="micro-list"></div>
+					<div class="card missing-card" id="missingCard">
+						<h2>
+							<span class="step-num">!</span>
+							Missing variables
+							<span class="category-count" id="missingCount">0</span>
+						</h2>
+						<p class="form-desc">
+							These variables were not provided, so parts of the assessment could not be evaluated.
+							Consider adding them for a more complete diagnosis.
+						</p>
+						<div id="missingList"></div>
+					</div>
+
+					<div class="card">
+						<h2><span class="step-num">i</span>
+						Infection assessment</h2>
+
+						<div id="heavySection" class="heavy-suspected-box">
+							<h3>Heavy suspected</h3>
+							<p class="box-hint">The list contains of pathogen that is likely to infect patient, based on risk factor</p>
+							<div id="heavyList"></div>
+						</div>
+
+						<div id="worthSection" class="worth-suspected-box">
+							<h3 class="worth-header">
+								<button type="button" class="collapse-toggle" id="worthToggle" aria-expanded="false" aria-controls="worthBody">
+									<svg class="collapse-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+										<polyline points="9 6 15 12 9 18"></polyline>
+									</svg>
+									<span>Worth suspected</span>
+									<span class="category-count" id="worthCount">0</span>
+								</button>
+							</h3>
+							<div id="worthBody" class="worth-body" hidden>
+								<div id="worthList"></div>
+							</div>
+						</div>
+					</div>
+
+					<div class="card">
+						<h2><span class="step-num">Rx</span>
+						Recommended treatment protocols
+						<span class="category-count protocol-count" id="protocolCount">0</span></h2>
+						<p class="form-desc">
+							Each option is a complete antibiotic regimen. Use every medicine inside the same
+							option together; separate options are alternative regimens.
+						</p>
+						<div id="protocolList" class="protocol-list"></div>
+						<div class="treatment-confirm-bar">
+							<div class="treatment-confirm-summary" id="protocolSelectionSummary">Select one treatment option to confirm.</div>
+							<button type="button" class="btn btn-primary" id="confirmProtocolBtn" disabled>Confirm selected treatment</button>
+						</div>
+					</div>
+
+					<div class="card">
+						<h2><span class="step-num">i</span>
+						Supporting details</h2>
+
+						<button type="button" class="btn btn-secondary evidence-toggle" id="evidenceToggle" aria-expanded="false" aria-controls="evidencePanel">
+							View evidences (0)
+						</button>
+						<div id="evidencePanel" class="evidence-panel" hidden>
+							<h3>Evidences</h3>
+							<ul id="evidenceList" class="evidence-list"></ul>
+						</div>
+
+						<button type="button" class="btn btn-secondary evidence-toggle" id="microbialToggle" aria-expanded="false" aria-controls="microbialPanel">
+							View microbial tests (0)
+						</button>
+						<div id="microbialPanel" class="evidence-panel" hidden>
+							<h3>Microbial test results</h3>
+							<div id="microbialList" class="micro-list"></div>
+						</div>
+					</div>
+				</div>
+
+				<div id="customTabPanel" class="result-tab-panel" role="tabpanel" aria-labelledby="resultTabCustom" hidden>
+					<div class="card">
+						<h2><span class="step-num">Rx</span>
+						Custom treatment</h2>
+						<p class="form-desc">
+							Choose any antibiotic combination when the recommended protocols are not appropriate
+							for this patient. All medicines in one combination must belong to different antibiotic
+							groups. A reason is required, and the combination is submitted for review.
+						</p>
+
+						<div class="search-wrap">
+							<label class="form-label" for="customMedicineSearch">Search antibiotics</label>
+							<input class="form-input" type="search" id="customMedicineSearch" placeholder="Filter by name, group or AWaRe class..." autocomplete="off">
+						</div>
+
+						<div id="customMedicineList" class="custom-med-list"></div>
+
+						<div class="allergy-selected-title">
+							Selected medicines
+							<span class="category-count" id="customMedicineCount">0</span>
+						</div>
+						<div id="customSelectedMedicines" class="token-list"></div>
+
+						<div id="customReserveWarning" class="field-warn-msg" hidden></div>
+
+						<div class="form-group" id="customReasonGroup" style="margin-top:1rem;">
+							<label class="form-label" for="customReasonInput">
+								Reason for not following the protocol<span class="required-mark">*</span>
+							</label>
+							<div class="form-desc">
+								Explain why this combination is preferred over the recommended protocols.
+							</div>
+							<textarea class="form-input" id="customReasonInput" rows="3" placeholder="e.g. suspected resistance, prior treatment failure, protocol medicine unavailable..." autocomplete="off"></textarea>
+						</div>
+
+						<div class="treatment-confirm-bar">
+							<div class="treatment-confirm-summary" id="customSelectionSummary">Select at least one antibiotic and provide a reason.</div>
+							<button type="button" class="btn btn-primary" id="confirmCustomBtn" disabled>Confirm custom treatment</button>
+						</div>
 					</div>
 				</div>
 
@@ -2002,10 +2284,11 @@
 		</main>
 
 		<script>
-			const API_BASE = 'https://gateway-respira.dev.localhost:7283';
+			const API_BASE = 'https://clinical-service-respira.dev.localhost:7145';
 			const ENDPOINTS = {
 				form: `${API_BASE}/api/v1/diagnose`,
-				diagnose: `${API_BASE}/api/v1/diagnose`
+				diagnose: `${API_BASE}/api/v1/diagnose`,
+				confirmTreatment: `${API_BASE}/api/v1/diagnose/confirm-treatment`
 			};
 
 			// The API represents "unbounded" range ends with decimal.MaxValue /
@@ -2035,6 +2318,19 @@
 				{ value: 'Intermediate', label: 'Intermediate' },
 				{ value: 'Resistant', label: 'Resistant' }
 			];
+
+			// Mirrors Respira.Clinical.Domain.Enums.AwareClassification.
+			// The backend enum uses JsonStringEnumConverter, so the wire values are
+			// enum names. AccessWatch uses the WHO display label "Access-Watch".
+			const AWARE_ORDER = ['Access', 'AccessWatch', 'Watch', 'Reserve', 'Others', 'Unclassified'];
+			const AWARE_LABELS = {
+				Access: 'Access',
+				AccessWatch: 'Access-Watch',
+				Watch: 'Watch',
+				Reserve: 'Reserve',
+				Others: 'Others',
+				Unclassified: 'Unclassified'
+			};
 
 			// Mirrors Respira.Clinical.Domain.Enums.MicrobialSampleType.
 			// NOTE: this enum has no JsonStringEnumConverter, so the wire value is its
@@ -2123,6 +2419,14 @@
 				sampleSeq: 0,
 				currentStep: 1,
 				lastQuery: null,
+				diagnosisId: null,
+				resultData: null,
+				patientId: '',
+				doctorId: '',
+				protocols: [],
+				selectedTreatment: null,
+				customMedicines: new Map(),
+				treatmentsConfirmed: false,
 				loaded: false
 			};
 
@@ -2130,301 +2434,399 @@
 
 			function $(id) { return document.getElementById(id); }
 
-			function esc(value) {
-				return String(value ?? '')
-				.replace(/&/g, '&amp;')
-				.replace(/</g, '&lt;')
-				.replace(/>/g, '&gt;')
-				.replace(/"/g, '&quot;')
-				.replace(/'/g, '&#39;');
-			}
+			/* ---------------- Treatment plan target (patient + doctor) ---------------- */
 
-			function pick(obj, lower, upper) {
-				if (obj === null || obj === undefined || typeof obj !== 'object') return undefined;
-				if (Object.prototype.hasOwnProperty.call(obj, lower)) return obj[lower];
-				if (upper && Object.prototype.hasOwnProperty.call(obj, upper)) return obj[upper];
-				return undefined;
-			}
-
-			function resultStatus(body) {
-				return pick(body, 'statusCode', 'StatusCode');
-			}
-
-			function resultError(body) {
-				return pick(body, 'error', 'Error') || {};
-			}
-
-			function prettyEnum(value) {
-				const text = String(value ?? '')
-				.replace(/_/g, ' ')
-				.replace(/([a-z0-9])([A-Z])/g, '$1 $2')
-				.replace(/\s+/g, ' ')
-				.trim();
-				if (!text) return '';
-				return text.replace(/\b\w/g, c => c.toUpperCase());
-			}
-
-			function formatTreatmentSite(site) {
-				if (!site) return 'Unknown';
-				return site === 'IntensiveCareUnit' ? 'ICU' : prettyEnum(site);
-			}
-
-			function plainNumber(value) {
-				const text = String(value ?? '').trim();
-				if (!/[eE]/.test(text)) return text;
-				const num = Number(text);
-				if (!Number.isFinite(num)) return text;
-				return num.toLocaleString('en-US', { useGrouping: false, maximumFractionDigits: 20 });
-			}
-
-			function antibioticId(a) { return String(pick(a, 'id', 'Id') ?? ''); }
-			function antibioticName(a) { return String(pick(a, 'name', 'Name') ?? ''); }
-			function antibioticGroupName(a) {
-				return String(pick(a, 'antibioticGroupName', 'AntibioticGroupName') ?? 'Ungrouped');
-			}
-
-			/* ---------------- Range helpers (mirror backend Range) ---------------- */
-
-			function normalizeRange(raw) {
-				if (!raw) return null;
-				const pickNumber = (a, b) => (a !== undefined && a !== null) ? a : b;
-				const minRaw = pickNumber(pick(raw, 'min', 'Min'), undefined);
-				const maxRaw = pickNumber(pick(raw, 'max', 'Max'), undefined);
-
-				const range = {
-					min: (minRaw !== undefined && minRaw !== null && minRaw !== '') ? Number(minRaw) : null,
-					max: (maxRaw !== undefined && maxRaw !== null && maxRaw !== '') ? Number(maxRaw) : null,
-					isMinExclusive: !!pick(raw, 'isMinExclusive', 'IsMinExclusive'),
-					isMaxExclusive: !!pick(raw, 'isMaxExclusive', 'IsMaxExclusive'),
-					unit: pick(raw, 'unit', 'Unit') || null
-				};
-
-				if (range.min !== null && (!Number.isFinite(range.min) || range.min < -UNBOUNDED)) range.min = null;
-				if (range.max !== null && (!Number.isFinite(range.max) || range.max > UNBOUNDED)) range.max = null;
-				if (range.min === null && range.max === null) return null;
-				return range;
-			}
-
-			function inRange(value, range) {
-				if (!range) return true;
-				if (range.min !== null) {
-					if (range.isMinExclusive ? value <= range.min : value < range.min) return false;
+			// IDs are generated randomly; they are not shown or editable in the UI.
+			function newGuid() {
+				if (window.crypto && typeof window.crypto.randomUUID === 'function') {
+					return window.crypto.randomUUID();
 				}
-				if (range.max !== null) {
-					if (range.isMaxExclusive ? value >= range.max : value > range.max) return false;
-				}
-				return true;
-			}
-
-			function describeRange(range, unit) {
-				if (!range) return '';
-				const suffix = (unit || range.unit) ? ` ${unit || range.unit}` : '';
-				const minOp = range.isMinExclusive ? '>' : '>=';
-				const maxOp = range.isMaxExclusive ? '<' : '<=';
-				if (range.min !== null && range.max !== null) return `${minOp} ${range.min} and ${maxOp} ${range.max}${suffix}`;
-				if (range.min !== null) return `${minOp} ${range.min}${suffix}`;
-				if (range.max !== null) return `${maxOp} ${range.max}${suffix}`;
-				return '';
-			}
-
-			function normalPlaceholder(meta) {
-				const range = meta && meta.normalRange;
-				if (!range) return 'Enter value';
-				if (range.min !== null && range.max !== null) return `normal: ${range.min}-${range.max}`;
-				if (range.min !== null) return `normal: ${range.min}+`;
-				return `normal: up to ${range.max}`;
-			}
-
-			/* ---------------- Metadata ---------------- */
-
-			function buildVariableMeta(variables) {
-				state.variableMeta = {};
-				variables.forEach(v => {
-					const id = String(pick(v, 'id', 'Id'));
-					state.variableMeta[id] = {
-						id,
-						name: pick(v, 'name', 'Name') || 'Field',
-						code: pick(v, 'code', 'Code') || '',
-						valueType: pick(v, 'valueType', 'ValueType'),
-						isRequired: !!pick(v, 'isRequired', 'IsRequired'),
-						unit: pick(v, 'canonicalUnit', 'CanonicalUnit') || null,
-						acceptedRange: normalizeRange(pick(v, 'acceptedRange', 'AcceptedRange')),
-						normalRange: normalizeRange(pick(v, 'normalRange', 'NormalRange'))
-					};
+				return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, char => {
+					const random = Math.random() * 16 | 0;
+					const value = char === 'x' ? random : (random & 0x3 | 0x8);
+					return value.toString(16);
 				});
 		}
 
-		function normalizeCategoryKey(raw) {
-			if (raw === undefined || raw === null || raw === '') return 'Other';
-			const text = String(raw).trim();
-			if (/^\d+$/.test(text)) return CATEGORY_ORDER[Number(text)] || 'Other';
-			const match = CATEGORY_ORDER.find(key => key.toLowerCase() === text.toLowerCase());
-			return match || text;
+		// UUIDv7: 48-bit unix-ms timestamp + version 7 + variant 10 + random bits.
+		function newUuidV7() {
+			const bytes = new Uint8Array(16);
+			if (window.crypto && window.crypto.getRandomValues) window.crypto.getRandomValues(bytes);
+			else for (let i = 0; i < 16; i++) bytes[i] = Math.random() * 256 | 0;
+			const ts = Date.now();
+			bytes[0] = Math.floor(ts / 2 ** 40) & 0xff;
+			bytes[1] = Math.floor(ts / 2 ** 32) & 0xff;
+			bytes[2] = (ts >>> 24) & 0xff;
+			bytes[3] = (ts >>> 16) & 0xff;
+			bytes[4] = (ts >>> 8) & 0xff;
+			bytes[5] = ts & 0xff;
+			bytes[6] = (bytes[6] & 0x0f) | 0x70;
+			bytes[8] = (bytes[8] & 0x3f) | 0x80;
+			const hex = Array.from(bytes, b => b.toString(16).padStart(2, '0')).join('');
+			return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20)}`;
 		}
 
-		function categoryLabel(key) {
-			return CATEGORY_LABELS[key] || prettyEnum(key) || 'Other';
+		function loadTreatmentTarget() {
+			state.patientId = newGuid();
+			state.doctorId = newUuidV7();
 		}
 
-		function categoryRank(key) {
-			const index = CATEGORY_ORDER.indexOf(key);
-			return index === -1 ? CATEGORY_ORDER.length : index;
-		}
-
-		function normalizeAllergyType(raw) {
-			if (raw === undefined || raw === null || raw === '') return 'No';
-			const text = String(raw).trim();
-			if (/^\d+$/.test(text)) return ALLERGY_TYPE_ORDER[Number(text)] || 'No';
-			const match = ALLERGY_TYPE_ORDER.find(t => t.toLowerCase() === text.toLowerCase());
-			return match || 'No';
-		}
-
-		function normalizeMicCategory(raw) {
-			if (raw === undefined || raw === null || raw === '') return '';
-			const text = String(raw).trim();
-			const values = MIC_CATEGORIES.map(x => x.value);
-			if (/^\d+$/.test(text)) return values[Number(text)] || '';
-			return values.find(t => t.toLowerCase() === text.toLowerCase()) || '';
-		}
-
-		function normalizeSampleType(raw) {
-			if (raw === undefined || raw === null || raw === '') return '';
-			const text = String(raw).trim();
-			if (/^\d+$/.test(text)) return (SAMPLE_TYPES[Number(text)] || {}).name || '';
-			const match = SAMPLE_TYPES.find(t => t.name.toLowerCase() === text.toLowerCase());
-			return match ? match.name : '';
-		}
-
-		function sampleTypeWire(name) {
-			const match = SAMPLE_TYPES.find(t => t.name === name);
-			return match ? match.value : name;
-		}
-
-		function infectionLabel(name) {
-			const match = INFECTION_TYPES.find(t => t.name === name);
-			return match ? match.label : prettyEnum(name);
-		}
-
-		function normalizeInfection(raw) {
-			if (raw === undefined || raw === null || raw === '') return '';
-			const text = String(raw).trim();
-			if (/^\d+$/.test(text)) {
-				const match = INFECTION_TYPES.find(t => t.value === Number(text));
-				return match ? match.name : text;
-			}
-			const match = INFECTION_TYPES.find(t => t.name.toLowerCase() === text.toLowerCase());
-			return match ? match.name : text;
-		}
-
-		function normalizeStringArray(value) {
-			if (value === undefined || value === null || value === '') return [];
-			const list = Array.isArray(value) ? value : [value];
-			const result = [];
-			list.forEach(item => {
-				const text = String(item ?? '').trim();
-				if (text && !result.includes(text)) result.push(text);
-			});
-		return result;
+		// Doctor identity is sent as request headers (not in the body).
+		function authHeaders(extra) {
+			return Object.assign({
+				'X-ID': state.doctorId,
+				'X-Role': 'Doctor',
+				'X-Email': 'doctor@respira.local'
+			}, extra || {});
 	}
 
-	/* ---------------- Boot ---------------- */
-
-	async function init() {
-		bindEvents();
-		try {
-			const res = await fetch(ENDPOINTS.form);
-			const body = await readJson(res);
-			const status = resultStatus(body);
-			if (!res.ok && !status) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
-			if (status && status !== 'SUCCESS') {
-				throw new Error(resultError(body).description || resultError(body).Description || 'Failed to load form');
-			}
-
-			const data = pick(body, 'data', 'Data');
-			if (!data) throw new Error('The server returned no form data.');
-
-			state.variables = pick(data, 'clinicalVariables', 'ClinicalVariables') || [];
-			state.antibiotics = pick(data, 'antibiotics', 'Antibiotics') || [];
-			state.pathogens = pick(data, 'pathogens', 'Pathogens') || [];
-
-			if (!Array.isArray(state.variables) || state.variables.length === 0) {
-				throw new Error('No clinical variables were returned by the API.');
-			}
-
-			buildVariableMeta(state.variables);
-			buildAntibioticGroups();
-			renderForm(state.variables);
-			refreshAllergyUI();
-			renderHistory();
-			renderInfections();
-			renderSamples();
-
-			state.loaded = true;
-			$('importBtn').disabled = false;
-			$('exportBtn').disabled = false;
-			$('loadingState').hidden = true;
-			$('diagnoseForm').hidden = false;
-			showStep(1);
-		} catch (err) {
-			console.error('Form load error:', err);
-			$('loadingState').innerHTML = `
-			<p style="color:var(--danger);font-weight:800;">Failed to load the diagnosis form.</p>
-			<p style="margin-top:0.35rem;">${esc(err.message)}</p>
-			<button type="button" class="btn btn-secondary" style="margin-top:1rem;" onclick="location.reload()">Retry</button>
-			`;
-			showError('Failed to load diagnosis form: ' + err.message);
-		}
+	// Backend reports this as an error, but the plan is treated as created.
+	const TREATMENT_PLAN_TOLERATED_ERROR = 'failed to create patient\'s treatment plan';
+	function isTolerableTreatmentError(error) {
+		const description = pick(error, 'description', 'Description');
+		return typeof description === 'string'
+		&& description.toLowerCase().includes(TREATMENT_PLAN_TOLERATED_ERROR);
 	}
 
-	async function readJson(res) {
-		const raw = await res.text();
-		if (!raw) return {};
-		try {
-			return JSON.parse(raw);
-		} catch {
-			throw new Error(`Invalid JSON from server (HTTP ${res.status}): ${raw.slice(0, 160)}`);
-		}
+	function esc(value) {
+		return String(value ?? '')
+		.replace(/&/g, '&amp;')
+		.replace(/</g, '&lt;')
+		.replace(/>/g, '&gt;')
+		.replace(/"/g, '&quot;')
+		.replace(/'/g, '&#39;');
 	}
 
-	/* ---------------- Step 1: clinical variables ---------------- */
+	function pick(obj, lower, upper) {
+		if (obj === null || obj === undefined || typeof obj !== 'object') return undefined;
+		if (Object.prototype.hasOwnProperty.call(obj, lower)) return obj[lower];
+		if (upper && Object.prototype.hasOwnProperty.call(obj, upper)) return obj[upper];
+		return undefined;
+	}
 
-	function renderForm(variables) {
-		const container = $('formFields');
-		container.innerHTML = '';
+	function resultStatus(body) {
+		return pick(body, 'statusCode', 'StatusCode');
+	}
 
-		const buckets = new Map();
-		variables.forEach(v => {
-			const key = normalizeCategoryKey(pick(v, 'category', 'Category'));
-			if (!buckets.has(key)) buckets.set(key, []);
-			buckets.get(key).push(v);
-		});
+	function resultError(body) {
+		return pick(body, 'error', 'Error') || {};
+	}
 
-	const orderedKeys = [...buckets.keys()]
-	.map((key, order) => ({ key, order }))
-	.sort((a, b) => (categoryRank(a.key) - categoryRank(b.key)) || (a.order - b.order))
-	.map(entry => entry.key);
+	function prettyEnum(value) {
+		const text = String(value ?? '')
+		.replace(/_/g, ' ')
+		.replace(/([a-z0-9])([A-Z])/g, '$1 $2')
+		.replace(/\s+/g, ' ')
+		.trim();
+		if (!text) return '';
+		return text.replace(/\b\w/g, c => c.toUpperCase());
+	}
 
-	orderedKeys.forEach(key => {
-		const list = buckets.get(key);
-		const section = document.createElement('section');
-		section.className = 'category-section';
+	function formatTreatmentSite(site) {
+		if (!site) return 'Unknown';
+		return site === 'IntensiveCareUnit' ? 'ICU' : prettyEnum(site);
+	}
 
-		const title = document.createElement('h3');
-		title.className = 'category-title';
-		title.textContent = categoryLabel(key);
-		const count = document.createElement('span');
-		count.className = 'category-count';
-		count.textContent = list.length;
-		title.appendChild(count);
+	function plainNumber(value) {
+		const text = String(value ?? '').trim();
+		if (!/[eE]/.test(text)) return text;
+		const num = Number(text);
+		if (!Number.isFinite(num)) return text;
+		return num.toLocaleString('en-US', { useGrouping: false, maximumFractionDigits: 20 });
+	}
 
-		const fields = document.createElement('div');
-		fields.className = 'category-fields';
-		list.forEach(v => fields.appendChild(buildFieldGroup(v)));
+	function antibioticId(a) { return String(pick(a, 'id', 'Id') ?? ''); }
+	function antibioticName(a) { return String(pick(a, 'name', 'Name') ?? ''); }
+	function antibioticGroupName(a) {
+		return String(pick(a, 'antibioticGroupName', 'AntibioticGroupName') ?? 'Ungrouped');
+	}
 
-		section.appendChild(title);
-		section.appendChild(fields);
-		container.appendChild(section);
+	function normalizeAwareClassification(raw) {
+		if (raw === undefined || raw === null || raw === '') return '';
+		const text = String(raw).trim();
+		if (/^\d+$/.test(text)) return AWARE_ORDER[Number(text)] || 'Unclassified';
+		const match = AWARE_ORDER.find(c => c.toLowerCase() === text.toLowerCase());
+		return match || 'Unclassified';
+	}
+
+	function antibioticClassification(a) {
+		return normalizeAwareClassification(pick(a, 'classification', 'Classification'));
+	}
+
+	function awareClassSuffix(classification) {
+		return String(classification || 'Unclassified').toLowerCase();
+	}
+
+	function awareBadgeHtml(a) {
+		const classification = antibioticClassification(a);
+		if (!classification) return '';
+		return `<span class="aware-badge aware-${esc(awareClassSuffix(classification))}">${esc(AWARE_LABELS[classification] || classification)}</span>`;
+	}
+
+	function isReserveAntibiotic(a) {
+		return antibioticClassification(a) === 'Reserve';
+	}
+
+	function medicinesFromCombination(combination) {
+		const items = Array.isArray(combination) ? combination : [combination];
+		return items
+		.map(item => {
+			if (item && typeof item === 'object') {
+				const id = String(pick(item, 'id', 'Id') ?? '');
+				const name = String(pick(item, 'name', 'Name') ?? '').trim();
+				const classification = normalizeAwareClassification(pick(item, 'classification', 'Classification'));
+				const group = String(pick(item, 'antibioticGroupName', 'AntibioticGroupName') ?? '').trim();
+				return { id, name, classification, group };
+			}
+			const name = String(item ?? '').trim();
+			return { id: '', name, classification: '', group: '' };
+		})
+	.filter(item => item.name);
+}
+
+/* ---------------- Range helpers (mirror backend Range) ---------------- */
+
+function normalizeRange(raw) {
+	if (!raw) return null;
+	const pickNumber = (a, b) => (a !== undefined && a !== null) ? a : b;
+	const minRaw = pickNumber(pick(raw, 'min', 'Min'), undefined);
+	const maxRaw = pickNumber(pick(raw, 'max', 'Max'), undefined);
+
+	const range = {
+		min: (minRaw !== undefined && minRaw !== null && minRaw !== '') ? Number(minRaw) : null,
+		max: (maxRaw !== undefined && maxRaw !== null && maxRaw !== '') ? Number(maxRaw) : null,
+		isMinExclusive: !!pick(raw, 'isMinExclusive', 'IsMinExclusive'),
+		isMaxExclusive: !!pick(raw, 'isMaxExclusive', 'IsMaxExclusive'),
+		unit: pick(raw, 'unit', 'Unit') || null
+	};
+
+	if (range.min !== null && (!Number.isFinite(range.min) || range.min < -UNBOUNDED)) range.min = null;
+	if (range.max !== null && (!Number.isFinite(range.max) || range.max > UNBOUNDED)) range.max = null;
+	if (range.min === null && range.max === null) return null;
+	return range;
+}
+
+function inRange(value, range) {
+	if (!range) return true;
+	if (range.min !== null) {
+		if (range.isMinExclusive ? value <= range.min : value < range.min) return false;
+	}
+	if (range.max !== null) {
+		if (range.isMaxExclusive ? value >= range.max : value > range.max) return false;
+	}
+	return true;
+}
+
+function describeRange(range, unit) {
+	if (!range) return '';
+	const suffix = (unit || range.unit) ? ` ${unit || range.unit}` : '';
+	const minOp = range.isMinExclusive ? '>' : '>=';
+	const maxOp = range.isMaxExclusive ? '<' : '<=';
+	if (range.min !== null && range.max !== null) return `${minOp} ${range.min} and ${maxOp} ${range.max}${suffix}`;
+	if (range.min !== null) return `${minOp} ${range.min}${suffix}`;
+	if (range.max !== null) return `${maxOp} ${range.max}${suffix}`;
+	return '';
+}
+
+function normalPlaceholder(meta) {
+	const range = meta && meta.normalRange;
+	if (!range) return 'Enter value';
+	if (range.min !== null && range.max !== null) return `normal: ${range.min}-${range.max}`;
+	if (range.min !== null) return `normal: ${range.min}+`;
+	return `normal: up to ${range.max}`;
+}
+
+/* ---------------- Metadata ---------------- */
+
+function buildVariableMeta(variables) {
+	state.variableMeta = {};
+	variables.forEach(v => {
+		const id = String(pick(v, 'id', 'Id'));
+		state.variableMeta[id] = {
+			id,
+			name: pick(v, 'name', 'Name') || 'Field',
+			code: pick(v, 'code', 'Code') || '',
+			valueType: pick(v, 'valueType', 'ValueType'),
+			isRequired: !!pick(v, 'isRequired', 'IsRequired'),
+			unit: pick(v, 'canonicalUnit', 'CanonicalUnit') || null,
+			acceptedRange: normalizeRange(pick(v, 'acceptedRange', 'AcceptedRange')),
+			normalRange: normalizeRange(pick(v, 'normalRange', 'NormalRange'))
+		};
 	});
+}
+
+function normalizeCategoryKey(raw) {
+	if (raw === undefined || raw === null || raw === '') return 'Other';
+	const text = String(raw).trim();
+	if (/^\d+$/.test(text)) return CATEGORY_ORDER[Number(text)] || 'Other';
+	const match = CATEGORY_ORDER.find(key => key.toLowerCase() === text.toLowerCase());
+	return match || text;
+}
+
+function categoryLabel(key) {
+	return CATEGORY_LABELS[key] || prettyEnum(key) || 'Other';
+}
+
+function categoryRank(key) {
+	const index = CATEGORY_ORDER.indexOf(key);
+	return index === -1 ? CATEGORY_ORDER.length : index;
+}
+
+function normalizeAllergyType(raw) {
+	if (raw === undefined || raw === null || raw === '') return 'No';
+	const text = String(raw).trim();
+	if (/^\d+$/.test(text)) return ALLERGY_TYPE_ORDER[Number(text)] || 'No';
+	const match = ALLERGY_TYPE_ORDER.find(t => t.toLowerCase() === text.toLowerCase());
+	return match || 'No';
+}
+
+function normalizeMicCategory(raw) {
+	if (raw === undefined || raw === null || raw === '') return '';
+	const text = String(raw).trim();
+	const values = MIC_CATEGORIES.map(x => x.value);
+	if (/^\d+$/.test(text)) return values[Number(text)] || '';
+	return values.find(t => t.toLowerCase() === text.toLowerCase()) || '';
+}
+
+function normalizeSampleType(raw) {
+	if (raw === undefined || raw === null || raw === '') return '';
+	const text = String(raw).trim();
+	if (/^\d+$/.test(text)) return (SAMPLE_TYPES[Number(text)] || {}).name || '';
+	const match = SAMPLE_TYPES.find(t => t.name.toLowerCase() === text.toLowerCase());
+	return match ? match.name : '';
+}
+
+function sampleTypeWire(name) {
+	const match = SAMPLE_TYPES.find(t => t.name === name);
+	return match ? match.value : name;
+}
+
+function infectionLabel(name) {
+	const match = INFECTION_TYPES.find(t => t.name === name);
+	return match ? match.label : prettyEnum(name);
+}
+
+function normalizeInfection(raw) {
+	if (raw === undefined || raw === null || raw === '') return '';
+	const text = String(raw).trim();
+	if (/^\d+$/.test(text)) {
+		const match = INFECTION_TYPES.find(t => t.value === Number(text));
+		return match ? match.name : text;
+	}
+	const match = INFECTION_TYPES.find(t => t.name.toLowerCase() === text.toLowerCase());
+	return match ? match.name : text;
+}
+
+function normalizeStringArray(value) {
+	if (value === undefined || value === null || value === '') return [];
+	const list = Array.isArray(value) ? value : [value];
+	const result = [];
+	list.forEach(item => {
+		const text = String(item ?? '').trim();
+		if (text && !result.includes(text)) result.push(text);
+	});
+return result;
+}
+
+/* ---------------- Boot ---------------- */
+
+async function init() {
+	loadTreatmentTarget();
+	bindEvents();
+	try {
+		const res = await fetch(ENDPOINTS.form, { headers: authHeaders() });
+		const body = await readJson(res);
+		const status = resultStatus(body);
+		if (!res.ok && !status) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+		if (status && status !== 'SUCCESS') {
+			throw new Error(resultError(body).description || resultError(body).Description || 'Failed to load form');
+		}
+
+		const data = pick(body, 'data', 'Data');
+		if (!data) throw new Error('The server returned no form data.');
+
+		state.variables = pick(data, 'clinicalVariables', 'ClinicalVariables') || [];
+		state.antibiotics = pick(data, 'antibiotics', 'Antibiotics') || [];
+		state.pathogens = pick(data, 'pathogens', 'Pathogens') || [];
+
+		if (!Array.isArray(state.variables) || state.variables.length === 0) {
+			throw new Error('No clinical variables were returned by the API.');
+		}
+
+		buildVariableMeta(state.variables);
+		buildAntibioticGroups();
+		renderForm(state.variables);
+		refreshAllergyUI();
+		renderHistory();
+		renderInfections();
+		renderSamples();
+
+		state.loaded = true;
+		$('importBtn').disabled = false;
+		$('exportBtn').disabled = false;
+		$('loadingState').hidden = true;
+		$('diagnoseForm').hidden = false;
+		showStep(1);
+	} catch (err) {
+		console.error('Form load error:', err);
+		$('loadingState').innerHTML = `
+		<p style="color:var(--danger);font-weight:800;">Failed to load the diagnosis form.</p>
+		<p style="margin-top:0.35rem;">${esc(err.message)}</p>
+		<button type="button" class="btn btn-secondary" style="margin-top:1rem;" onclick="location.reload()">Retry</button>
+		`;
+		showError('Failed to load diagnosis form: ' + err.message);
+	}
+}
+
+async function readJson(res) {
+	const raw = await res.text();
+	if (!raw) return {};
+	try {
+		return JSON.parse(raw);
+	} catch {
+		throw new Error(`Invalid JSON from server (HTTP ${res.status}): ${raw.slice(0, 160)}`);
+	}
+}
+
+/* ---------------- Step 1: clinical variables ---------------- */
+
+function renderForm(variables) {
+	const container = $('formFields');
+	container.innerHTML = '';
+
+	const buckets = new Map();
+	variables.forEach(v => {
+		const key = normalizeCategoryKey(pick(v, 'category', 'Category'));
+		if (!buckets.has(key)) buckets.set(key, []);
+		buckets.get(key).push(v);
+	});
+
+const orderedKeys = [...buckets.keys()]
+.map((key, order) => ({ key, order }))
+.sort((a, b) => (categoryRank(a.key) - categoryRank(b.key)) || (a.order - b.order))
+.map(entry => entry.key);
+
+orderedKeys.forEach(key => {
+	const list = buckets.get(key);
+	const section = document.createElement('section');
+	section.className = 'category-section';
+
+	const title = document.createElement('h3');
+	title.className = 'category-title';
+	title.textContent = categoryLabel(key);
+	const count = document.createElement('span');
+	count.className = 'category-count';
+	count.textContent = list.length;
+	title.appendChild(count);
+
+	const fields = document.createElement('div');
+	fields.className = 'category-fields';
+	list.forEach(v => fields.appendChild(buildFieldGroup(v)));
+
+	section.appendChild(title);
+	section.appendChild(fields);
+	container.appendChild(section);
+});
 
 applyVariableFilter();
 }
@@ -3575,10 +3977,13 @@ function renderProtocols(items) {
 	if (!list || !count) return;
 
 	const protocols = Array.isArray(items) ? items.filter(Boolean) : [];
+	state.protocols = protocols;
+	state.selectedTreatment = null;
 	count.textContent = String(protocols.length);
 
 	if (protocols.length === 0) {
 		list.innerHTML = '<div class="empty-state">No treatment protocol recommendations available.</div>';
+		renderProtocolSelectionSummary();
 		return;
 	}
 
@@ -3624,25 +4029,31 @@ function renderProtocols(items) {
 
 	const combinations = Array.isArray(medicines) ? medicines : [];
 	const optionHtml = combinations.map((combination, optionIndex) => {
-		const medicinesInOption = (Array.isArray(combination) ? combination : [combination])
-		.map(item => item && typeof item === 'object' ? (pick(item, 'name', 'Name') || '') : (item ?? ''))
-		.map(name => String(name).trim())
-		.filter(Boolean);
+		const medicinesInOption = medicinesFromCombination(combination);
 
 		const medicineHtml = medicinesInOption.length > 0
-		? medicinesInOption.map((name, i) => `${i > 0 ? '<span class="protocol-plus" aria-hidden="true">+</span>' : ''}<span class="protocol-medicine">${esc(name)}</span>`).join('')
+		? medicinesInOption.map((medicine, i) => `${i > 0 ? '<span class="protocol-plus" aria-hidden="true">+</span>' : ''}<span class="protocol-medicine">${esc(medicine.name)}${medicine.classification ? ' ' + awareBadgeHtml(medicine) : ''}</span>`).join('')
 		: '<span class="empty-state">No medicines specified for this option.</span>';
 
-		return `<div class="protocol-option">
+		const reserves = medicinesInOption.filter(medicine => medicine.classification === 'Reserve');
+		const reserveWarningHtml = reserves.length > 0
+		? `<span class="field-warn-msg protocol-option-warning" hidden><span>This option includes a <strong>Reserve</strong>-class antibiotic (${esc(reserves.map(medicine => medicine.name).join(', '))}). Reserve antibiotics should be used only when no alternative is appropriate. You can still confirm this treatment.</span></span>`
+		: '';
+
+		return `<button type="button" class="protocol-option" data-treatment-protocol="${index}" data-treatment-option="${optionIndex}" aria-pressed="false">
+		<span class="protocol-option-head">
 		<span class="protocol-option-label">Option ${optionIndex + 1}</span>
-		<div class="protocol-medicines">${medicineHtml}</div>
-		</div>`;
+		<span class="protocol-option-select"><span class="protocol-option-radio" aria-hidden="true"></span>Select</span>
+		</span>
+		<span class="protocol-medicines">${medicineHtml}</span>
+		${reserveWarningHtml}
+		</button>`;
 	}).join('<div class="protocol-or">or</div>');
 
 const medicinesHtml = combinations.length > 0
 ? `<div class="protocol-section">
 <div class="protocol-section-title">Medicine combinations</div>
-<p class="protocol-hint">Every medicine in one option is used together. Different options are alternatives.</p>
+<p class="protocol-hint">Every medicine in one option is used together. Different options are alternatives. Select one option to confirm it.</p>
 <div class="protocol-options">${optionHtml}</div>
 </div>`
 : `<div class="protocol-section">
@@ -3668,6 +4079,260 @@ ${medicinesHtml}
 </div>
 </article>`;
 }).join('');
+
+renderProtocolSelectionSummary();
+}
+
+function renderProtocolSelectionSummary() {
+	const summary = $('protocolSelectionSummary');
+	const button = $('confirmProtocolBtn');
+	if (!summary || !button) return;
+
+	if (state.treatmentsConfirmed) {
+		button.disabled = true;
+		button.textContent = 'Treatment confirmed';
+		return;
+	}
+
+	const selected = state.selectedTreatment;
+	if (!selected || selected.medicines.length === 0) {
+		summary.textContent = 'Select one treatment option to confirm.';
+		button.disabled = true;
+		button.textContent = 'Confirm selected treatment';
+		return;
+	}
+
+	const names = selected.medicines.map(medicine => medicine.name).filter(Boolean);
+	summary.textContent = `Selected: ${names.join(' + ')}.`;
+
+	const hasMissingIds = selected.medicines.some(medicine => !medicine.id);
+	button.disabled = hasMissingIds;
+	button.textContent = hasMissingIds ? 'Treatment cannot be confirmed' : 'Confirm selected treatment';
+}
+
+function selectProtocolTreatment(protocolIndex, optionIndex) {
+	const protocol = state.protocols[protocolIndex];
+	if (!protocol) return;
+
+	const combinations = pick(protocol, 'medicines', 'Medicines') || [];
+	const combination = combinations[optionIndex];
+	if (!combination) return;
+
+	const medicines = medicinesFromCombination(combination);
+	state.selectedTreatment = { protocolIndex, optionIndex, medicines };
+	clearGroupError($('customReasonGroup'));
+
+	document.querySelectorAll('#protocolList [data-treatment-protocol]').forEach(option => {
+		const selected = Number(option.dataset.treatmentProtocol) === protocolIndex
+		&& Number(option.dataset.treatmentOption) === optionIndex;
+		option.classList.toggle('selected', selected);
+		option.setAttribute('aria-pressed', String(selected));
+		const label = option.querySelector('.protocol-option-select');
+		if (label) {
+			label.innerHTML = `<span class="protocol-option-radio" aria-hidden="true"></span>${selected ? 'Selected' : 'Select'}`;
+		}
+		option.querySelectorAll('.protocol-option-warning').forEach(warning => {
+			warning.hidden = !selected;
+		});
+});
+
+renderProtocolSelectionSummary();
+}
+
+/* ---------------- Custom (off-protocol) treatment ---------------- */
+
+function renderCustomMedicineList() {
+	const list = $('customMedicineList');
+	if (!list) return;
+
+	if (state.antibiotics.length === 0) {
+		list.innerHTML = '<div class="empty-state">No antibiotics available from the API.</div>';
+		return;
+	}
+
+	const query = $('customMedicineSearch').value.trim().toLowerCase();
+	const antibiotics = state.antibiotics.filter(a => {
+		const classification = antibioticClassification(a);
+		const haystack = `${antibioticName(a)} ${antibioticGroupName(a)} ${classification} ${AWARE_LABELS[classification] || ''}`.toLowerCase();
+		return !query || haystack.includes(query);
+	});
+
+if (antibiotics.length === 0) {
+	list.innerHTML = '<div class="empty-state">No antibiotics match your search.</div>';
+	return;
+}
+
+list.innerHTML = antibiotics.map(a => {
+	const id = antibioticId(a);
+	const checked = state.customMedicines.has(id);
+	const classification = antibioticClassification(a);
+	return `
+	<label class="custom-med-option${checked ? ' selected' : ''}">
+	<input type="checkbox" data-custom-medicine="${esc(id)}"${checked ? ' checked' : ''}>
+	<span class="custom-med-text">
+	<span class="custom-med-name">${esc(antibioticName(a))}</span>
+	<span class="custom-med-meta">
+	<span class="allergy-group">${esc(antibioticGroupName(a))}</span>
+	${classification ? `<span class="aware-badge aware-${esc(awareClassSuffix(classification))}">${esc(AWARE_LABELS[classification] || classification)}</span>` : ''}
+	</span>
+	</span>
+	</label>
+	`;
+}).join('');
+}
+
+function renderCustomSelectedMedicines() {
+	const container = $('customSelectedMedicines');
+	const count = $('customMedicineCount');
+	if (!container || !count) return;
+
+	count.textContent = String(state.customMedicines.size);
+
+	if (state.customMedicines.size === 0) {
+		container.innerHTML = '<div class="empty-state">No medicines selected.</div>';
+	} else {
+		container.innerHTML = [...state.customMedicines.entries()].map(([id, antibiotic]) => `
+			<span class="allergy-chip">
+			${esc(antibioticName(antibiotic))}
+			<button type="button" class="chip-remove" data-remove-custom-medicine="${esc(id)}"
+			aria-label="Remove ${esc(antibioticName(antibiotic))}">&times;</button>
+			</span>
+			`).join('');
+		}
+
+		updateCustomConfirmState();
+	}
+
+	function updateCustomConfirmState() {
+		const warning = $('customReserveWarning');
+		const summary = $('customSelectionSummary');
+		const button = $('confirmCustomBtn');
+		const reason = $('customReasonInput').value.trim();
+		if (!warning || !summary || !button) return;
+
+		if (state.treatmentsConfirmed) {
+			button.disabled = true;
+			button.textContent = 'Treatment confirmed';
+			return;
+		}
+
+		const reserves = [...state.customMedicines.values()].filter(isReserveAntibiotic);
+		if (reserves.length > 0) {
+			warning.textContent = `This combination includes a Reserve-class antibiotic (${reserves.map(antibioticName).join(', ')}). Reserve antibiotics are last-resort agents and should be used only when no alternative is appropriate. You can still confirm this combination.`;
+			warning.hidden = false;
+		} else {
+			warning.hidden = true;
+			warning.textContent = '';
+		}
+
+		const names = [...state.customMedicines.values()].map(antibioticName).filter(Boolean);
+		const parts = [];
+		if (names.length > 0) parts.push(names.join(' + '));
+		if (!reason) parts.push('a reason is required');
+		summary.textContent = parts.length > 0 ? `Selected: ${parts.join(' · ')}.` : 'Select at least one antibiotic and provide a reason.';
+		button.disabled = state.customMedicines.size === 0 || !reason;
+		button.textContent = 'Confirm custom treatment';
+	}
+
+	function showResultTab(tab) {
+		const protocolSelected = tab === 'protocol';
+		const protocolPanel = $('protocolTabPanel');
+		const customPanel = $('customTabPanel');
+		const protocolTab = $('resultTabProtocol');
+		const customTab = $('resultTabCustom');
+		if (!protocolPanel || !customPanel || !protocolTab || !customTab) return;
+
+		protocolPanel.hidden = !protocolSelected;
+		customPanel.hidden = protocolSelected;
+		protocolTab.classList.toggle('active', protocolSelected);
+		customTab.classList.toggle('active', !protocolSelected);
+		protocolTab.setAttribute('aria-selected', String(protocolSelected));
+		customTab.setAttribute('aria-selected', String(!protocolSelected));
+
+		window.scrollTo({ top: 0, behavior: 'smooth' });
+	}
+
+	function markTreatmentConfirmed(source) {
+		state.treatmentsConfirmed = true;
+
+		const banner = $('treatmentConfirmedBanner');
+		banner.innerHTML = source === 'custom'
+		? '<span><strong>Custom treatment confirmed.</strong> The treatment plan, the selected antibiotic combination and the reason were sent to the patient service.</span>'
+		: '<span><strong>Protocol treatment confirmed.</strong> The treatment plan and the selected treatment option were sent to the patient service.</span>';
+		banner.hidden = false;
+
+		const protocolButton = $('confirmProtocolBtn');
+		protocolButton.disabled = true;
+		protocolButton.textContent = 'Treatment confirmed';
+
+		const customButton = $('confirmCustomBtn');
+		customButton.disabled = true;
+		customButton.textContent = 'Treatment confirmed';
+
+		toast('Treatment confirmed successfully.');
+		window.scrollTo({ top: 0, behavior: 'smooth' });
+	}
+
+	async function confirmTreatment({ medicines, reason, source }) {
+		if (!state.resultData) {
+			showError('The diagnosis result is missing. Please run the diagnosis again.');
+			return;
+		}
+		if (!Array.isArray(medicines) || medicines.length === 0) {
+			showError('Select at least one medicine before confirming.');
+			return;
+		}
+		if (state.treatmentsConfirmed) {
+			showError('This treatment has already been confirmed. Start a new diagnosis to confirm another treatment.');
+			return;
+		}
+
+		const button = source === 'custom' ? $('confirmCustomBtn') : $('confirmProtocolBtn');
+		const originalLabel = button.innerHTML;
+		button.disabled = true;
+		button.innerHTML = '<span class="spinner"></span>Confirming...';
+
+		try {
+			// The handler validates the medicine pick against the diagnosis the
+			// client received, then forwards both to the patient service.
+			const payload = {
+				patientId: state.patientId,
+				diagnosis: state.resultData,
+				medicines,
+				reasonForMedicineChoice: reason ? reason : null
+			};
+			console.debug('Confirm treatment request:', payload);
+
+			const res = await fetch(ENDPOINTS.confirmTreatment, {
+				method: 'POST',
+				headers: authHeaders({ 'Content-Type': 'application/json' }),
+				body: JSON.stringify(payload)
+			});
+
+		const body = await readJson(res);
+		const status = resultStatus(body);
+		const error = resultError(body);
+
+		const tolerated = isTolerableTreatmentError(error);
+
+		if (!tolerated) {
+			if (status && status !== 'SUCCESS') {
+				throw new Error(pick(error, 'description', 'Description') || 'Confirm treatment failed');
+			}
+			if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+		}
+
+		markTreatmentConfirmed(source);
+	} catch (err) {
+		console.error('Confirm treatment error:', err);
+		showError('Confirm treatment failed: ' + err.message);
+	} finally {
+		if (!state.treatmentsConfirmed) {
+			button.innerHTML = originalLabel;
+			if (source === 'custom') updateCustomConfirmState();
+			else renderProtocolSelectionSummary();
+		}
+	}
 }
 
 function showResults(data, query) {
@@ -3675,6 +4340,21 @@ function showResults(data, query) {
 
 	$('diagnoseForm').hidden = true;
 	$('resultsSection').hidden = false;
+
+	// Reset treatment confirmation state for this diagnosis.
+	state.diagnosisId = String(pick(data, 'diagnosisId', 'DiagnosisId') ?? '');
+	state.resultData = data;
+	state.selectedTreatment = null;
+	state.customMedicines.clear();
+	state.treatmentsConfirmed = false;
+	$('treatmentConfirmedBanner').hidden = true;
+	$('treatmentConfirmedBanner').innerHTML = '';
+	$('customMedicineSearch').value = '';
+	$('customReasonInput').value = '';
+	clearGroupError($('customReasonGroup'));
+	renderCustomMedicineList();
+	renderCustomSelectedMedicines();
+	showResultTab('protocol');
 
 	// Severity and treatment site
 	const severity = pick(data, 'severity', 'Severity') || '';
@@ -3750,6 +4430,22 @@ function showResults(data, query) {
 			// the same clinical picture and be adjusted before resubmitting.
 			$('resultsSection').hidden = true;
 			$('diagnoseForm').hidden = false;
+
+			// Clear the treatment selection / confirmation from the previous result.
+			state.diagnosisId = null;
+			state.resultData = null;
+			state.protocols = [];
+			state.selectedTreatment = null;
+			state.customMedicines.clear();
+			state.treatmentsConfirmed = false;
+			$('treatmentConfirmedBanner').hidden = true;
+			$('treatmentConfirmedBanner').innerHTML = '';
+			$('customMedicineSearch').value = '';
+			$('customReasonInput').value = '';
+			$('customReserveWarning').hidden = true;
+			clearGroupError($('customReasonGroup'));
+			renderCustomSelectedMedicines();
+			showResultTab('protocol');
 
 			// Only the view filters are reset; diagnosis input is preserved.
 			$('variableSearch').value = '';
@@ -3959,7 +4655,21 @@ $('worthToggle').addEventListener('click', () => {
 	body.hidden = !show;
 	toggle.setAttribute('aria-expanded', String(show));
 });
+// Result tabs
+$('resultTabProtocol').addEventListener('click', () => showResultTab('protocol'));
+$('resultTabCustom').addEventListener('click', () => showResultTab('custom'));
+
+// Protocol treatment selection + collapse
 $('protocolList').addEventListener('click', e => {
+	const option = e.target.closest('[data-treatment-protocol]');
+	if (option) {
+		selectProtocolTreatment(
+			Number(option.dataset.treatmentProtocol),
+			Number(option.dataset.treatmentOption)
+		);
+		return;
+	}
+
 	const toggle = e.target.closest('[data-protocol-toggle]');
 	if (!toggle) return;
 	const body = document.getElementById(toggle.getAttribute('aria-controls'));
@@ -3967,6 +4677,62 @@ $('protocolList').addEventListener('click', e => {
 	const show = body.hidden;
 	body.hidden = !show;
 	toggle.setAttribute('aria-expanded', String(show));
+});
+$('confirmProtocolBtn').addEventListener('click', () => {
+	if (!state.selectedTreatment) {
+		showError('Select one treatment option before confirming.');
+		return;
+	}
+	const medicines = state.selectedTreatment.medicines.map(medicine => medicine.id).filter(Boolean);
+	confirmTreatment({ medicines, reason: null, source: 'protocol' });
+});
+
+// Custom treatment picker
+$('customMedicineSearch').addEventListener('input', renderCustomMedicineList);
+$('customMedicineList').addEventListener('change', e => {
+	const checkbox = e.target.closest('input[data-custom-medicine]');
+	if (!checkbox) return;
+	const id = checkbox.getAttribute('data-custom-medicine');
+	if (checkbox.checked) {
+		const antibiotic = state.antibiotics.find(a => antibioticId(a) === id);
+		if (antibiotic) state.customMedicines.set(id, antibiotic);
+	} else {
+		state.customMedicines.delete(id);
+	}
+	const option = checkbox.closest('.custom-med-option');
+	if (option) option.classList.toggle('selected', checkbox.checked);
+	renderCustomSelectedMedicines();
+});
+$('customSelectedMedicines').addEventListener('click', e => {
+	const remove = e.target.closest('[data-remove-custom-medicine]');
+	if (!remove) return;
+	state.customMedicines.delete(remove.getAttribute('data-remove-custom-medicine'));
+	renderCustomMedicineList();
+	renderCustomSelectedMedicines();
+});
+$('customReasonInput').addEventListener('input', () => {
+	clearGroupError($('customReasonGroup'));
+	updateCustomConfirmState();
+});
+$('confirmCustomBtn').addEventListener('click', () => {
+	const reason = $('customReasonInput').value.trim();
+	clearGroupError($('customReasonGroup'));
+
+	if (state.customMedicines.size === 0) {
+		showError('Select at least one antibiotic before confirming.');
+		return;
+	}
+	if (!reason) {
+		showGroupError($('customReasonGroup'), 'A reason is required when choosing a custom combination.');
+		$('customReasonInput').focus();
+		return;
+	}
+
+	confirmTreatment({
+		medicines: [...state.customMedicines.keys()],
+		reason,
+		source: 'custom'
+	});
 });
 $('newDiagnosisBtn').addEventListener('click', resetForm);
 
@@ -4003,7 +4769,7 @@ async function handleSubmit(event) {
 	try {
 		const res = await fetch(ENDPOINTS.diagnose, {
 			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
+			headers: authHeaders({ 'Content-Type': 'application/json' }),
 			body: JSON.stringify(query)
 		});
 

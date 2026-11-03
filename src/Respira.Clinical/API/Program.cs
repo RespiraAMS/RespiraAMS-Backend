@@ -9,6 +9,9 @@ using Respira.Clinical.DI;
 using System.Text.Json.Serialization;
 using ZiggyCreatures.Caching.Fusion;
 using System.Text.Json;
+using Respira.Clinical.Application.Contracts.Messages;
+using Respira.Clinical.Application.Features.Diagnosis.ConfirmTreatment;
+using Respira.Clinical.API.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,11 +19,12 @@ var builder = WebApplication.CreateBuilder(args);
 var conn = builder.Configuration.GetConnectionString("clinicalDb") ?? throw new InvalidOperationException("No connection string found");
 
 // Add API controllers
-builder.Services.AddControllers().AddJsonOptions(options =>
-{
-    options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
-    options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
-});
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+        options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+    });
 
 // Add API versioning
 builder.Services.AddApiVersion();
@@ -71,25 +75,33 @@ builder.Host.UseWolverine(opts =>
     // Setup queue
     opts.UseRabbitMqUsingNamedConnection("rabbitmq").AutoProvision();
 
+    opts.ListenToRabbitQueue(Queues.DiagnoseQueue);
+    opts.PublishMessage<UpsertTreatmentPlanCommand>().ToRabbitQueue(Queues.DiagnoseQueue);
+
     opts.Durability.Mode = DurabilityMode.Balanced;
 });
 
-var app = builder.Build();
+builder.Services.AddCors(options => options.AddDefaultPolicy(policy => policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
 
-app.UseCustomErrorHandling();
-app.UseClaimsPropagation();
-app.MapControllers();
+var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseApiDocumentation();
+    // This is used for the internal HTML tool -> may migrate to a more robust solution
+    app.UseCors(policy => policy.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
 }
 
 if (!app.Environment.IsDevelopment())
 {
     app.UseHttpsRedirection();
 }
+
+app.UseCustomErrorHandling();
+app.UseClaimsPropagation();
+app.UseAuthorizationMiddleware(); // Comment this to deactivate auth middleware
+app.MapControllers();
 
 app.ApplyMigrations(app.Environment.IsDevelopment());
 await app.SeedData();

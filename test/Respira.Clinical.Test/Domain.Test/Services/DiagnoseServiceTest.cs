@@ -772,13 +772,8 @@ namespace Respira.Clinical.Domain.Test.Services
             {
                 antibiotics.Add(Antibiotic(name));
             }
-            var treatment = new Treatment
-            {
-                TreatmentProtocolId = Guid.CreateVersion7(),
-                Combination = antibiotics
-            };
 
-            var result = _service.IsMedicineCombinationValid(_context, treatment);
+            var result = _service.IsMedicineCombinationValid(_context, antibiotics);
             Assert.True(result.IsSuccess());
             Assert.Null(result.Error);
             Assert.Equal(ApplicationStatus.Success, result.StatusCode);
@@ -1685,11 +1680,12 @@ namespace Respira.Clinical.Domain.Test.Services
 
             // The exact antibiogram instance must be returned, with its susceptibility profile
             var returned = Assert.Single(result.Data!);
-            Assert.Same(antibiogram, returned);
-            Assert.Equal(pathogen.Id, returned.PathogenId);
+            Assert.Equal(pathogen.Id, returned.Pathogen.Id);
             Assert.Equal(MicCategory.Susceptible, returned.MicCategory);
-            Assert.Equal(2, returned.Antibiotics.Count);
+            Assert.Equal(2, returned.Antibiotics.Count());
+            Assert.Equal(MicrobialSampleType.Sputum, returned.MicrobialSampleType);
             Assert.Contains(returned.Antibiotics, a => a.Name.Equals("Amoxicillin"));
+            Assert.Contains(returned.Antibiotics, a => a.Name.Equals("Penicilin G (Benzylpenicillin)"));
         }
 
         [Theory]
@@ -1714,8 +1710,10 @@ namespace Respira.Clinical.Domain.Test.Services
 
             Assert.True(result.IsSuccess());
             var returned = Assert.Single(result.Data!);
-            Assert.Same(antibiograms.Single(a => a.MicCategory == micCategory), returned);
+            var expected = antibiograms.Single(a => a.MicCategory == micCategory);
+            Assert.Equal(expected.Pathogen.Id, returned.Pathogen.Id);
             Assert.Equal(micCategory, returned.MicCategory);
+            Assert.Same(expected.Antibiotics, returned.Antibiotics);
         }
 
         [Fact]
@@ -1736,8 +1734,14 @@ namespace Respira.Clinical.Domain.Test.Services
             Assert.True(result.IsSuccess());
             var returned = result.Data!.ToList();
             Assert.Equal(2, returned.Count);
-            Assert.Same(klebsiella, returned[0]);
-            Assert.Same(pneumococcus, returned[1]);
+
+            Assert.Equal(MicrobialSampleType.BronchoalveolarLavageFluid, returned[0].MicrobialSampleType);
+            Assert.Equal(klebsiella.PathogenId, returned[0].Pathogen.Id);
+            Assert.Same(klebsiella.Antibiotics, returned[0].Antibiotics);
+
+            Assert.Equal(MicrobialSampleType.Sputum, returned[1].MicrobialSampleType);
+            Assert.Equal(pneumococcus.PathogenId, returned[1].Pathogen.Id);
+            Assert.Same(pneumococcus.Antibiotics, returned[1].Antibiotics);
         }
 
         #endregion
@@ -1790,7 +1794,9 @@ namespace Respira.Clinical.Domain.Test.Services
 
             Assert.True(result.IsSuccess());
             var returned = Assert.Single(result.Data!);
-            Assert.Same(matched, returned);
+            Assert.Equal(matched.PathogenId, returned.Pathogen.Id);
+            Assert.Equal(matched.MicCategory, returned.MicCategory);
+            Assert.Same(matched.Antibiotics, returned.Antibiotics);
         }
 
         [Fact]

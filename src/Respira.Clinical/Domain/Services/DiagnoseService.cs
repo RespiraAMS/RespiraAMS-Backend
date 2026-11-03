@@ -494,9 +494,9 @@ namespace Respira.Clinical.Domain.Services
             return Result<bool>.Success(ApplicationStatus.Success, isSame);
         }
 
-        public Result<bool> IsMedicineCombinationValid(ClinicalContext context, Treatment combination)
+        public Result<bool> IsMedicineCombinationValid(ClinicalContext context, IEnumerable<Antibiotic> combination)
         {
-            var antibiotics = combination.Combination.OrderBy(x => x.Id).ToList();
+            var antibiotics = combination.OrderBy(x => x.Id).ToList();
 
             for (int i = 0; i < antibiotics.Count - 1; i++)
             {
@@ -739,9 +739,9 @@ namespace Respira.Clinical.Domain.Services
         /// <param name="context">Clinical context</param>
         /// <param name="samples">Microbial samples</param>
         /// <returns>Antibiograms result</returns>
-        public Result<IEnumerable<Antibiogram>> GetMicrobiologicalTestResult(ClinicalContext context, IEnumerable<MicrobialSample> samples)
+        public Result<IEnumerable<MicrobialTestResult>> GetMicrobiologicalTestResult(ClinicalContext context, IEnumerable<MicrobialSample> samples)
         {
-            var antibiograms = new List<Antibiogram>();
+            var results = new List<MicrobialTestResult>();
 
             foreach (var sample in samples)
             {
@@ -753,10 +753,16 @@ namespace Respira.Clinical.Domain.Services
                     continue;
                 }
 
-                antibiograms.Add(antibiogram);
+                results.Add(new MicrobialTestResult
+                {
+                    MicrobialSampleType = sample.SampleType,
+                    Pathogen = sample.Pathogen,
+                    MicCategory = sample.MicCategory,
+                    Antibiotics = antibiogram.Antibiotics
+                });
             }
 
-            return Result<IEnumerable<Antibiogram>>.Success(ApplicationStatus.Success, antibiograms);
+            return Result<IEnumerable<MicrobialTestResult>>.Success(ApplicationStatus.Success, results);
         }
 
         /// <summary>

@@ -21,4 +21,8 @@
         <ProjectReference Include="../Domain/Respira.Clinical.Domain.csproj" />
         <ProjectReference Include="../../Respira.ServiceDefaults/Respira.ServiceDefaults.csproj" />
     </ItemGroup>
+
+    <ItemGroup>
+        <RuntimeHostConfigurationOption Include="System.Text.Json.Serialization.RespectNullableAnnotationsDefault" Value="true" />
+    </ItemGroup>
 </Project>

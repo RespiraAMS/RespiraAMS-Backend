@@ -119,14 +119,46 @@ namespace Respira.Clinical.Application.Test.Features.Antibiograms.CreateAntibiog
                 .SingleAsync(x => x.Id == id, TestContext.Current.CancellationToken);
         }
 
+        private async Task<Antibiogram> SeedAntibiogramAsync(
+            Guid pathogenId,
+            MicCategory micCategory,
+            Guid[] antibioticIds,
+            bool softDeleted = false)
+        {
+            await using var seedContext = new ClinicalDbContext(_options);
+            var antibiotics = await seedContext.Antibiotics
+                .Where(x => antibioticIds.Contains(x.Id))
+                .ToListAsync(TestContext.Current.CancellationToken);
+
+            var antibiogram = new Antibiogram
+            {
+                PathogenId = pathogenId,
+                MicCategory = micCategory,
+                IsDeleted = softDeleted,
+                DeletedAt = softDeleted ? DateTimeOffset.UtcNow.AddDays(-1) : null,
+                Antibiotics = [.. antibiotics],
+            };
+
+            await seedContext.Antibiograms.AddAsync(
+                antibiogram, TestContext.Current.CancellationToken);
+            await seedContext.SaveChangesAsync(TestContext.Current.CancellationToken);
+            return antibiogram;
+        }
+
+        private async Task AssertAntibiogramCountAsync(int expected)
+        {
+            // Count with query filters ignored so soft-deleted rows are included
+            await using var freshContext = new ClinicalDbContext(_options);
+            Assert.Equal(expected, await freshContext.Antibiograms
+                .IgnoreQueryFilters()
+                .CountAsync(TestContext.Current.CancellationToken));
+        }
+
         private async Task AssertNothingPersistedAsync()
         {
             // The join table rows are cascade-deleted with their antibiogram, so an
             // empty antibiogram table also means no orphaned joins were written
-            await using var freshContext = new ClinicalDbContext(_options);
-            Assert.Equal(0, await freshContext.Antibiograms
-                .IgnoreQueryFilters()
-                .CountAsync(TestContext.Current.CancellationToken));
+            await AssertAntibiogramCountAsync(0);
         }
 
         #endregion
@@ -425,6 +457,142 @@ namespace Respira.Clinical.Application.Test.Features.Antibiograms.CreateAntibiog
             Assert.Null(result.Data);
 
             await AssertNothingPersistedAsync();
+        }
+
+        #endregion
+
+        #region Uniqueness
+
+        [Fact]
+        public async Task CreateAntibiogram_DuplicatePathogenAndMic_Fail()
+        {
+            // Business rule: a pathogen can only have one antibiogram per MIC category
+            var group = Group("Aminopenicillins");
+            var amoxicillin = Antibiotic("Amoxicillin", group.Id, AwareClassification.Access);
+            var doxycycline = Antibiotic("Doxycycline", group.Id, AwareClassification.Access);
+            var pneumococcus = Pathogen("Streptococcus pneumoniae", isAtypical: false);
+            await SeedAsync(group, amoxicillin, doxycycline, pneumococcus);
+
+            var existing = await SeedAntibiogramAsync(
+                pneumococcus.Id, MicCategory.Susceptible, [amoxicillin.Id]);
+
+            var command = new CreateAntibiogramCommand
+            {
+                PathogenId = pneumococcus.Id,
+                MicCategory = MicCategory.Susceptible,
+                AntibioticIds = [doxycycline.Id],
+            };
+
+            var result = await _handler.HandleAsync(
+                command, TestContext.Current.CancellationToken);
+
+            Assert.True(result.IsFailure());
+            Assert.NotNull(result.Error);
+            Assert.Equal(ApplicationStatus.BusinessRuleViolation, result.StatusCode);
+            Assert.Equal(ApplicationStatus.BusinessRuleViolation, result.Error.StatusCode);
+            Assert.Null(result.Data);
+
+            // The conflicting antibiogram must not be replaced nor duplicated
+            await AssertAntibiogramCountAsync(1);
+            var saved = await LoadAntibiogramAsync(existing.Id);
+            var antibiotic = Assert.Single(saved.Antibiotics);
+            Assert.Equal(amoxicillin.Id, antibiotic.Id);
+        }
+
+        [Fact]
+        public async Task CreateAntibiogram_SamePathogenDifferentMic_Success()
+        {
+            // Only the pathogen + MIC pair is unique, so another MIC category is allowed
+            var group = Group("Carbapenems");
+            var meropenem = Antibiotic("Meropenem", group.Id, AwareClassification.Watch);
+            var pneumococcus = Pathogen("Streptococcus pneumoniae", isAtypical: false);
+            await SeedAsync(group, meropenem, pneumococcus);
+
+            await SeedAntibiogramAsync(
+                pneumococcus.Id, MicCategory.Susceptible, [meropenem.Id]);
+
+            var command = new CreateAntibiogramCommand
+            {
+                PathogenId = pneumococcus.Id,
+                MicCategory = MicCategory.Resistant,
+                AntibioticIds = [meropenem.Id],
+            };
+
+            var result = await _handler.HandleAsync(
+                command, TestContext.Current.CancellationToken);
+
+            Assert.True(result.IsSuccess());
+            Assert.Equal(ApplicationStatus.Created, result.StatusCode);
+
+            await AssertAntibiogramCountAsync(2);
+            var saved = await LoadAntibiogramAsync(result.Data!.Id);
+            Assert.Equal(pneumococcus.Id, saved.PathogenId);
+            Assert.Equal(MicCategory.Resistant, saved.MicCategory);
+        }
+
+        [Fact]
+        public async Task CreateAntibiogram_DifferentPathogenSameMic_Success()
+        {
+            // Only the pathogen + MIC pair is unique, so another pathogen is allowed
+            var group = Group("Carbapenems");
+            var meropenem = Antibiotic("Meropenem", group.Id, AwareClassification.Watch);
+            var pneumococcus = Pathogen("Streptococcus pneumoniae", isAtypical: false);
+            var klebsiella = Pathogen("Klebsiella pneumoniae", isAtypical: false);
+            await SeedAsync(group, meropenem, pneumococcus, klebsiella);
+
+            await SeedAntibiogramAsync(
+                pneumococcus.Id, MicCategory.Susceptible, [meropenem.Id]);
+
+            var command = new CreateAntibiogramCommand
+            {
+                PathogenId = klebsiella.Id,
+                MicCategory = MicCategory.Susceptible,
+                AntibioticIds = [meropenem.Id],
+            };
+
+            var result = await _handler.HandleAsync(
+                command, TestContext.Current.CancellationToken);
+
+            Assert.True(result.IsSuccess());
+            Assert.Equal(ApplicationStatus.Created, result.StatusCode);
+
+            await AssertAntibiogramCountAsync(2);
+            var saved = await LoadAntibiogramAsync(result.Data!.Id);
+            Assert.Equal(klebsiella.Id, saved.PathogenId);
+            Assert.Equal(MicCategory.Susceptible, saved.MicCategory);
+        }
+
+        [Fact]
+        public async Task CreateAntibiogram_SoftDeletedConflict_Success()
+        {
+            // A soft-deleted antibiogram is hidden by the query filter, so the same
+            // pathogen + MIC pair can be created again
+            var group = Group("Carbapenems");
+            var meropenem = Antibiotic("Meropenem", group.Id, AwareClassification.Watch);
+            var pneumococcus = Pathogen("Streptococcus pneumoniae", isAtypical: false);
+            await SeedAsync(group, meropenem, pneumococcus);
+
+            await SeedAntibiogramAsync(
+                pneumococcus.Id, MicCategory.Susceptible, [meropenem.Id], softDeleted: true);
+
+            var command = new CreateAntibiogramCommand
+            {
+                PathogenId = pneumococcus.Id,
+                MicCategory = MicCategory.Susceptible,
+                AntibioticIds = [meropenem.Id],
+            };
+
+            var result = await _handler.HandleAsync(
+                command, TestContext.Current.CancellationToken);
+
+            Assert.True(result.IsSuccess());
+            Assert.Equal(ApplicationStatus.Created, result.StatusCode);
+
+            // Both the soft-deleted and the new antibiogram exist
+            await AssertAntibiogramCountAsync(2);
+            var saved = await LoadAntibiogramAsync(result.Data!.Id);
+            Assert.False(saved.IsDeleted);
+            Assert.Null(saved.DeletedAt);
         }
 
         #endregion

@@ -36,6 +36,15 @@ namespace Respira.Clinical.Application.Features.Antibiograms.CreateAntibiogram
                 return Result<CreateAntibiogramResult>.Failure(new ApplicationError(ApplicationStatus.BadRequest, "Not all antibiotic exist"));
             }
 
+            // Check for uniqness: (pathogen + MIC) must be unique
+            if (await context.Antibiograms.AnyAsync(x => x.PathogenId == command.PathogenId && x.MicCategory == command.MicCategory, cancellationToken))
+            {
+                logger.LogDebug("The combination between pathogen {PathogenId} and MIC category {MicCategory} already exist", command.PathogenId, command.MicCategory);
+                return Result<CreateAntibiogramResult>.Failure(new ApplicationError(
+                    ApplicationStatus.BusinessRuleViolation,
+                    "Antibiogram with this pathogen and MIC already exist"));
+            }
+
             // Map command to model
             var mapResult = mapper.ToModel(command);
             if (mapResult.IsFailure())

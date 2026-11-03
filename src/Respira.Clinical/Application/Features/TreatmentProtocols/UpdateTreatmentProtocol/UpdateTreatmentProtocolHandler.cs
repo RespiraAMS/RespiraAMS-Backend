@@ -87,7 +87,7 @@ namespace Respira.Clinical.Application.Features.TreatmentProtocols.UpdateTreatme
 
             var clinicalContext = new ClinicalContext
             {
-                AntibioticGroups = await context.AntibioticGroups.ToListAsync(cancellationToken),
+                AntibioticGroups = await context.AntibioticGroups.Include(x => x.Parent).ToListAsync(cancellationToken),
                 Antibiograms = [],
                 Antibiotics = await context.Antibiotics.Include(x => x.AntibioticGroup).ToListAsync(cancellationToken),
                 Metrics = [],
@@ -115,7 +115,7 @@ namespace Respira.Clinical.Application.Features.TreatmentProtocols.UpdateTreatme
 
             foreach (var treatment in treatments)
             {
-                var validateResult = service.IsMedicineCombinationValid(clinicalContext, treatment);
+                var validateResult = service.IsMedicineCombinationValid(clinicalContext, treatment.Combination);
                 if (validateResult.IsFailure())
                 {
                     logger.LogDebug("Failed to validate treatment: {Error}", validateResult.Error);
