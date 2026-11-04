@@ -20,11 +20,28 @@ namespace Respira.Patient.Application.Features.Patients.GetPatientById
     /// <param name="Relationship">Next of kin relationship with patient</param>
     public record NextOfKinItem(Guid Id, string FullName, string PhoneNumber, string Relationship);
 
-    /// <summary>
-    /// Patient treatment result
-    /// </summary>
-    /// <param name="Id">Treatment ID</param>
-    public record TreatmentItem(Guid Id);
+    public record TreatmentPlanItem
+    {
+        /// <summary>
+        /// Treatment plan ID
+        /// </summary>
+        public required Guid Id { get; set; }
+
+        /// <summary>
+        /// Adherence state
+        /// </summary>
+        public required AdherenceState AdherenceState { get; set; }
+
+        /// <summary>
+        /// Treatment plan status
+        /// </summary>
+        public required TreatmentPlanStatus TreatmentPlanStatus { get; set; }
+
+        /// <summary>
+        /// Updated timestamp
+        /// </summary>
+        public required DateTimeOffset UpdatedAt { get; set; }
+    }
 
     public record PatientResult
     {
@@ -106,6 +123,6 @@ namespace Respira.Patient.Application.Features.Patients.GetPatientById
         /// <summary>
         /// Patient treatments
         /// </summary>
-        public IEnumerable<TreatmentItem> Treatments { get; set; } = [];
+        public IEnumerable<TreatmentPlanItem> TreatmentPlans { get; set; } = [];
     }
 }

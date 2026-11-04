@@ -83,8 +83,11 @@ namespace Respira.Patient.Application.Test.Features.Patients.GetPatientById
             Assert.Equal(TreatmentOutcome.Recovered, data.TreatmentOutcome);
 
             // The nested treatment projection carries the episode's identity
-            var treatmentItem = Assert.Single(data.Treatments);
+            var treatmentItem = Assert.Single(data.TreatmentPlans);
             Assert.Equal(treatment.Id, treatmentItem.Id);
+            Assert.Equal(treatment.AdherenceState, treatmentItem.AdherenceState);
+            Assert.Equal(treatment.Status, treatmentItem.TreatmentPlanStatus);
+            Assert.Equal(treatment.UpdatedAt, treatmentItem.UpdatedAt, precision: TimeSpan.FromSeconds(1));
 
             // The nested next-of-kin projection describes each kin, not the patient
             Assert.Equal(2, data.NextOfKins.Count());
@@ -126,7 +129,7 @@ namespace Respira.Patient.Application.Test.Features.Patients.GetPatientById
             Assert.Null(data.Discharge);
             Assert.Equal(TreatmentOutcome.InTreatment, data.TreatmentOutcome);
             Assert.Empty(data.NextOfKins);
-            Assert.Empty(data.Treatments);
+            Assert.Empty(data.TreatmentPlans);
         }
 
         #endregion

@@ -33,7 +33,13 @@ namespace Respira.Patient.Application.Features.Patients.GetPatientById
                         nok.PhoneNumber,
                         nok.Relationship
                     )),
-                    Treatments = x.TreatmentPlans.Select(t => new TreatmentItem(t.Id))
+                    TreatmentPlans = x.TreatmentPlans.Select(t => new TreatmentPlanItem
+                    {
+                        Id = t.Id,
+                        AdherenceState = t.AdherenceState,
+                        TreatmentPlanStatus = t.Status,
+                        UpdatedAt = t.UpdatedAt
+                    })
                 })
                 .FirstOrDefaultAsync(x => x.Id == query.Id, cancellationToken);
 
