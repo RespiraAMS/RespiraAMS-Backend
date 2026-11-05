@@ -114,7 +114,20 @@ namespace Respira.Clinical.Application.Features.TreatmentProtocols.GetPagedTreat
         /// Treatment protocol's criteria list
         /// </summary>
         public required IEnumerable<CriterionResult> Criteria { get; set; }
+
+        /// <summary>
+        /// Version of the metric
+        /// </summary>
+        public required string Version { get; set; }
+
+        /// <summary>
+        /// Metric publisher
+        /// </summary>
+        public required string Publisher { get; set; }
+
+        /// <summary>
+        /// Metric status, is applied or not
+        /// </summary>
+        public required bool IsApplied { get; set; }
     }
-
-
 }

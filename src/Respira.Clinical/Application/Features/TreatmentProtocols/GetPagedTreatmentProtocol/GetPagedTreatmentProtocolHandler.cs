@@ -56,7 +56,10 @@ namespace Respira.Clinical.Application.Features.TreatmentProtocols.GetPagedTreat
                         AntibioticGroupId = c.AntibioticGroupId,
                         AntibioticGroupName = c.AntibioticGroup.Name,
                         Classification = c.Classification
-                    }))
+                    })),
+                    IsApplied = x.IsApplied,
+                    Publisher = x.Publisher,
+                    Version = x.Version
                 })
                 .ToPagedListAsync(query.Param.Page, query.Param.Size, cancellationToken: cancellationToken);
 
