@@ -15,6 +15,7 @@ namespace Respira.Patient.Application.Test.Features.Patients.DischargePatient
         private static readonly DateTimeOffset SeedAdmission = new(2026, 1, 15, 8, 30, 0, TimeSpan.Zero);
         private static readonly DateTimeOffset SeedUpdatedAt = new(2026, 1, 15, 8, 45, 0, TimeSpan.Zero);
         private static readonly DateTimeOffset SeedDeletedAt = new(2026, 9, 30, 14, 5, 0, TimeSpan.Zero);
+        private static readonly DateTimeOffset SeedDischarge = new(2026, 2, 20, 16, 10, 0, TimeSpan.Zero);
 
         private readonly DbContextOptions<PatientDbContext> _options;
         private readonly DischargePatientHandler _handler;
@@ -187,12 +188,48 @@ namespace Respira.Patient.Application.Test.Features.Patients.DischargePatient
             Assert.Equal(seeded.MedicalRecordCode, saved.MedicalRecordCode);
         }
 
+        [Fact]
+        public async Task DischargePatient_AlreadyDischarged_Fail()
+        {
+            /*
+             * Business rule (handler doc): "A patient already discharge shouldn't be
+             * discharged again" - a second discharge is rejected even though the
+             * patient has treatment, and the original discharge is left untouched
+             */
+            var seeded = await SeedPatientAsync(
+                withTreatment: true,
+                discharge: SeedDischarge,
+                treatmentOutcome: TreatmentOutcome.Recovered);
+            var command = new DischargePatientCommand
+            {
+                Id = seeded.Id,
+                Outcome = TreatmentOutcome.Death,
+            };
+
+            var result = await _handler.HandleAsync(command, TestContext.Current.CancellationToken);
+            Assert.True(result.IsFailure());
+            Assert.NotNull(result.Error);
+            Assert.Equal(ApplicationStatus.BadRequest, result.StatusCode);
+            Assert.Contains("already been discharged", result.Error.Description);
+
+            // The original discharge must survive: no new stamp, no outcome overwrite,
+            // no audit update
+            await using var freshContext = new PatientDbContext(_options);
+            var saved = await freshContext.Patients.SingleAsync(
+                x => x.Id == seeded.Id, TestContext.Current.CancellationToken);
+            Assert.Equal(SeedDischarge, saved.Discharge);
+            Assert.Equal(TreatmentOutcome.Recovered, saved.TreatmentOutcome);
+            Assert.Equal(SeedUpdatedAt, saved.UpdatedAt);
+        }
+
         #endregion
 
         private async Task<Domain.Entities.Patient> SeedPatientAsync(
             string medicalRecordCode = "BN-2026-004817",
             bool withTreatment = false,
-            bool softDeleted = false)
+            bool softDeleted = false,
+            DateTimeOffset? discharge = null,
+            TreatmentOutcome treatmentOutcome = TreatmentOutcome.InTreatment)
         {
             // Committed through a separate context so the handler's change tracker
             // never sees the row: the returned entity stays a pristine snapshot of
@@ -212,9 +249,9 @@ namespace Respira.Patient.Application.Test.Features.Patients.DischargePatient
                 Address = "27 Nguyễn Huệ, phường Bến Nghé",
                 City = "TP. Hồ Chí Minh",
                 Admission = SeedAdmission,
-                TreatmentOutcome = TreatmentOutcome.InTreatment,
+                TreatmentOutcome = treatmentOutcome,
                 IsDeleted = softDeleted,
-                Discharge = null,
+                Discharge = discharge,
                 DeletedAt = softDeleted ? SeedDeletedAt : null,
                 UpdatedAt = SeedUpdatedAt,
             };

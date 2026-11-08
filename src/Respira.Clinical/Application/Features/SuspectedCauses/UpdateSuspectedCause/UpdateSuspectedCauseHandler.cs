@@ -37,7 +37,7 @@ namespace Respira.Clinical.Application.Features.SuspectedCauses.UpdateSuspectedC
             var hasDuplicate = await context.SuspectedCauses
                 .Where(x =>
                     x.Id != command.Id &&
-                    x.PathogenId == cause.PathogenId &&
+                    x.PathogenId == command.PathogenId &&
                     x.Severity == command.Severity &&
                     x.TreatmentSite == command.TreatmentSite)
                 .AnyAsync(cancellationToken);

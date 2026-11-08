@@ -18,12 +18,10 @@ using Wolverine;
  * class (which normally anti-pattern in a Vertical Slice Architecture)
  *
  * Another thing to note: the validation rule for reason required
- * the evaluation of adherence, which is quite it should be checked
+ * the evaluation of adherence, which should be checked
  * on the handler instead of validator (for UX, we can just design 
  * the client in a clever way so that the reason check can be
- * achieve in client side as well). Of course, the antibiotic group
- * rule is a domain business rule, so it must stay on backend
- * (single source of truth)
+ * achieve in client side as well).
  */
 
 namespace Respira.Clinical.Application.Features.Diagnosis.ConfirmTreatment

@@ -11,6 +11,12 @@ namespace Respira.Patient.API.Middlewares
             await context.Response.WriteAsJsonAsync(result);
         }
 
+        private static async Task ForbiddenAccess(HttpContext context)
+        {
+            var result = Result.Failure(new ApplicationError(ApplicationStatus.Restricted, "Forbidden access"));
+            await WriteResult(context, result);
+        }
+
         private const string DoctorRole = "Doctor";
         private const string HeadDepartmentDoctorRole = "HeadDepartmentDoctor";
 
@@ -50,16 +56,27 @@ namespace Respira.Patient.API.Middlewares
                 return;
             }
 
-            // Authorization in patient service: only doctor and HDD can use
+            // Authorization in patient service: only doctor and HDD can use.
+            // Only HDD can review a treatment plan
 
             // Check for role if they are allow to access the endpoint
-            if (!role.Equals(DoctorRole, StringComparison.OrdinalIgnoreCase) &&
-                role.Equals(HeadDepartmentDoctorRole, StringComparison.OrdinalIgnoreCase))
+            var isDoctor = role.Equals(DoctorRole, StringComparison.OrdinalIgnoreCase);
+            var isHdd = role.Equals(HeadDepartmentDoctorRole, StringComparison.OrdinalIgnoreCase);
+            if (!isDoctor && !isHdd)
             {
                 logger.LogDebug("Unauthorized role in request header: {role}", role);
-                await WriteResult(
-                    context,
-                    Result.Failure(new ApplicationError(ApplicationStatus.Restricted, "Forbidden access")));
+                await ForbiddenAccess(context);
+                return;
+            }
+
+            if (path.Contains("review", StringComparison.OrdinalIgnoreCase) && !isHdd)
+            {
+                logger.LogDebug("Only head department doctor can review a treatment plan: {Detail}", new
+                {
+                    Path = $"{context.Request.Method} path",
+                    Role = role
+                });
+                await ForbiddenAccess(context);
                 return;
             }
 
