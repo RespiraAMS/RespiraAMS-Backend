@@ -70,6 +70,7 @@ docker run \
 
 # Clean project to get rid of all stale data
 dotnet clean
+rm -rf **/TestResults
 
 # Start the SonarQube scanner. The coverage reports are written by each test
 # project into bin/<Configuration>/<tfm>/TestResults/*.cobertura.xml, so we
@@ -80,7 +81,7 @@ dotnet sonarscanner begin \
     /d:sonar.cs.cobertura.reportsPaths="test/**/TestResults/*.cobertura.xml"
 
 # Build the solution
-dotnet build
+dotnet build --no-incremental
 
 # Run the tests and collect the code coverage report
 dotnet test --coverage --coverage-output-format cobertura
