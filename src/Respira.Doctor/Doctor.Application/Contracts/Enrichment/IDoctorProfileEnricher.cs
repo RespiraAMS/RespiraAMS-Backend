@@ -1,6 +1,6 @@
 using Respira.Doctor.Application.Features.Doctors.Common;
 
-namespace Respira.Doctor.Application.Constracts.Enrichment
+namespace Respira.Doctor.Application.Contracts.Enrichment
 {
     /// <summary>
     /// Fills the account and media fields of doctor profiles by querying the owning

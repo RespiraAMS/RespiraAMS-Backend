@@ -1,8 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using NpgsqlTypes;
-using Respira.Doctor.Application.Constracts.Enrichment;
-using Respira.Doctor.Application.Constracts.Mappers;
 using Respira.Doctor.Application.Contracts.Data;
+using Respira.Doctor.Application.Contracts.Enrichment;
+using Respira.Doctor.Application.Contracts.Mappers;
 using Respira.Doctor.Domain.Entities;
 using Respira.Doctor.Domain.Enums;
 using Respira.ServiceDefaults.Contracts.CQRS;

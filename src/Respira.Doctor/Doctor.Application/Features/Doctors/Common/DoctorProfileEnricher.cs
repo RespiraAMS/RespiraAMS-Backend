@@ -1,5 +1,5 @@
 using Microsoft.Extensions.Logging;
-using Respira.Doctor.Application.Constracts.Enrichment;
+using Respira.Doctor.Application.Contracts.Enrichment;
 using Respira.ServiceDefaults.Contracts.Messages.Accounts;
 using Respira.ServiceDefaults.Contracts.Messages.Media;
 using Respira.ServiceDefaults.Contracts.Results;
