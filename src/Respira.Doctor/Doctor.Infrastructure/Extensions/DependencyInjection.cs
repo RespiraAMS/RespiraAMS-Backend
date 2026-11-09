@@ -1,7 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
-using Respira.Doctor.Application.Constracts.Enrichment;
-using Respira.Doctor.Application.Constracts.Mappers;
 using Respira.Doctor.Application.Contracts.Data;
+using Respira.Doctor.Application.Contracts.Enrichment;
+using Respira.Doctor.Application.Contracts.Mappers;
 using Respira.Doctor.Application.Features.Doctors.Common;
 using Respira.Doctor.Infrastructure.Mappers;
 using Respira.Doctor.Infrastructure.Persistence;

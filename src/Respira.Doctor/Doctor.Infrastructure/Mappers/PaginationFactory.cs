@@ -1,4 +1,4 @@
-using Respira.Doctor.Application.Constracts.Mappers;
+using Respira.Doctor.Application.Contracts.Mappers;
 using Respira.ServiceDefaults.Contracts.Pagination;
 using X.PagedList;
 
