@@ -9,6 +9,8 @@ using Respira.Clinical.Application;
 using Respira.Clinical.Application.Contracts.Caching;
 using Respira.Clinical.Application.Contracts.Data;
 using Respira.Clinical.Application.Contracts.Mappers;
+using Respira.Clinical.Application.Features.Antibiograms.CreateAntibiogram;
+using Respira.Clinical.Application.Features.Antibiograms.UpdateAntibiogram;
 using Respira.Clinical.Application.Features.AntibioticGroups.CreateAntibioticGroup;
 using Respira.Clinical.Application.Features.AntibioticGroups.UpdateAntibioticGroup;
 using Respira.Clinical.Application.Features.Antibiotics.AddDosage;
@@ -30,6 +32,8 @@ using Respira.Clinical.Application.Features.RiskFactors.UpdateRiskFactor;
 using Respira.Clinical.Application.Features.Shared.ManageFormula;
 using Respira.Clinical.Application.Features.SuspectedCauses.CreateSuspectedCause;
 using Respira.Clinical.Application.Features.SuspectedCauses.UpdateSuspectedCause;
+using Respira.Clinical.Application.Features.TreatmentProtocols.CreateTreatmentProtocol;
+using Respira.Clinical.Application.Features.TreatmentProtocols.UpdateTreatmentProtocol;
 using Respira.Clinical.Domain.Entities;
 using Respira.Clinical.Domain.Models;
 using Respira.Clinical.Domain.Services;
@@ -62,6 +66,9 @@ namespace Respira.Clinical.DI
 
         public static void AddProfiles(this IServiceCollection services)
         {
+            services.AddScoped<ICreateMapper<CreateAntibiogramCommand, Antibiogram>, CreateAntibiogramMapper>();
+            services.AddScoped<IUpdateMapper<Antibiogram, UpdateAntibiogramCommand>, UpdateAntibiogramMapper>();
+
             services.AddScoped<ICreateMapper<CreateAntibioticGroupCommand, AntibioticGroup>, CreateAntibioticGroupMapper>();
             services.AddScoped<IUpdateMapper<AntibioticGroup, UpdateAntibioticGroupCommand>, UpdateAntibioticGroupMapper>();
 
@@ -70,14 +77,10 @@ namespace Respira.Clinical.DI
             services.AddScoped<IUpdateMapper<Antibiotic, UpdateAntibioticCommand>, UpdateAntibioticMapper>();
             services.AddScoped<IUpdateMapper<Dosage, UpdateDosageCommand>, UpdateDosageMapper>();
 
-            services.AddScoped<ICreateMapper<CreatePathogenCommand, Pathogen>, CreatePathogenMapper>();
-            services.AddScoped<IUpdateMapper<Pathogen, UpdatePathogenCommand>, UpdatePathogenMapper>();
-
-            services.AddScoped<ICreateMapper<CreateSuspectedCauseCommand, SuspectedCause>, CreateSuspectedCauseMapper>();
-            services.AddScoped<IUpdateMapper<SuspectedCause, UpdateSuspectedCauseCommand>, UpdateSuspectedCauseMapper>();
-
-            services.AddScoped<IMapper<Application.Features.Shared.ManageFormula.FormulaDto, Formula>, FormulaDtoMapper>();
-            services.AddScoped<IMapper<Formula, Application.Features.Shared.ManageFormula.FormulaDto>, FormulaModelMapper>();
+            services.AddScoped<ICreateMapper<CreateClinicalMetricCommand, ClinicalMetric>, CreateClinicalMetricMapper>();
+            services.AddScoped<IUpdateMapper<ClinicalMetric, UpdateClinicalMetricCommand>, UpdateClinicalMetricMapper>();
+            services.AddScoped<ICreateMapper<AddMetricRuleCommand, MetricRule>, AddMetricRuleMapper>();
+            services.AddScoped<IUpdateMapper<MetricRule, UpdateMetricRuleCommand>, UpdateMetricRuleMapper>();
 
             services.AddScoped<ICreateMapper<CreateClinicalVariableCommand, ClinicalVariable>, CreateClinicalVariableMapper>();
             services.AddScoped<IUpdateMapper<ClinicalVariable, UpdateClinicalVariableCommand>, UpdateClinicalVariableMapper>();
@@ -85,14 +88,23 @@ namespace Respira.Clinical.DI
             services.AddScoped<ICreateMapper<CreateCriterionCommand, Criterion>, CreateCriterionMapper>();
             services.AddScoped<IUpdateMapper<Criterion, UpdateCriterionCommand>, UpdateCriterionMapper>();
 
+            services.AddScoped<ICreateMapper<CreatePathogenCommand, Pathogen>, CreatePathogenMapper>();
+            services.AddScoped<IUpdateMapper<Pathogen, UpdatePathogenCommand>, UpdatePathogenMapper>();
+
             services.AddScoped<ICreateMapper<CreateRiskFactorCommand, RiskFactor>, CreateRiskFactorMapper>();
             services.AddScoped<IUpdateMapper<RiskFactor, UpdateRiskFactorCommand>, UpdateRiskFactorMapper>();
 
-            services.AddScoped<ICreateMapper<CreateClinicalMetricCommand, ClinicalMetric>, CreateClinicalMetricMapper>();
-            services.AddScoped<IUpdateMapper<ClinicalMetric, UpdateClinicalMetricCommand>, UpdateClinicalMetricMapper>();
+            services.AddScoped<ICreateMapper<CreateSuspectedCauseCommand, SuspectedCause>, CreateSuspectedCauseMapper>();
+            services.AddScoped<IUpdateMapper<SuspectedCause, UpdateSuspectedCauseCommand>, UpdateSuspectedCauseMapper>();
 
-            services.AddScoped<ICreateMapper<AddMetricRuleCommand, MetricRule>, AddMetricRuleMapper>();
-            services.AddScoped<IUpdateMapper<MetricRule, UpdateMetricRuleCommand>, UpdateMetricRuleMapper>();
+            services.AddScoped<ICreateMapper<CreateTreatmentProtocolCommand, TreatmentProtocol>, CreateTreatmentProtocolMapper>();
+            services.AddScoped<IUpdateMapper<TreatmentProtocol, UpdateTreatmentProtocolCommand>, UpdateTreatmentProtocolMapper>();
+
+            services.AddScoped<IMapper<Application.Features.Shared.ManageFormula.FormulaDto, Formula>, FormulaDtoMapper>();
+            services.AddScoped<IMapper<Formula, Application.Features.Shared.ManageFormula.FormulaDto>, FormulaModelMapper>();
+
+
+
         }
 
         public static void AddFluentValidators(this IServiceCollection services)
