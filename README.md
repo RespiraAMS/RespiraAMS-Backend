@@ -83,13 +83,22 @@ dotnet sonarscanner begin \
 # Build the solution
 dotnet build --no-incremental
 
-# Run the tests and collect the code coverage report
-dotnet test --coverage --coverage-output-format cobertura
+# Run the tests and collect the code coverage report.
+# coverage.settings.xml excludes source-generated files (obj/, source generators)
+# and EF Core migration artifacts from coverage. The settings path must be absolute,
+# because each test project receives the same value and resolves it from its
+# own directory.
+dotnet test --coverage --coverage-output-format cobertura --coverage-settings "$(pwd)/coverage.settings.xml"
 
 # Finish the SonarQube analysis and import the results
 dotnet sonarscanner end /d:sonar.token="<YOUR_SONAR_TOKEN>"
 
 # Go to http://localhost:9000 to see the results
+
+# You can also run this command to see the test report
+dotnet reportgenerator -reports:"test/**/TestResults/*.cobertura.xml" -targetdir:"docs/test-rep
+ort" -reporttypes:"Html_Dark;Cobertura" -assemblyfilters:"+Respira*;-[*]*"
+open docs/test-report/index.html
 ```
 
 > **NOTE:** `sonar.cs.cobertura.reportsPaths` requires SonarQube **2026.3** or
