@@ -28,6 +28,13 @@ namespace Respira.Patient.Application.Features.Patients.DischargePatient
                 return Result.Failure(new ApplicationError(ApplicationStatus.BadRequest, "Patient does not have any treatment, cannot discharge"));
             }
 
+            // A patient already discharge shouldn't be discharged again
+            if (patient.Discharge is not null)
+            {
+                logger.LogDebug("Patient already been discharged: {PatientId}", command.Id);
+                return Result.Failure(new ApplicationError(ApplicationStatus.BadRequest, "Patient has already been discharged, cannot discharge"));
+            }
+
             // Discharge patient.
             // NOTE: even though the TreatmentOutcome does have the OutOfScope value,
             // which doesn't fit the concept of discharge in clinical context (since without antibiotic

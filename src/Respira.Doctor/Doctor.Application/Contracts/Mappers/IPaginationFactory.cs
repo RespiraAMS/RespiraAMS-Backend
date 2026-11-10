@@ -1,7 +1,7 @@
 using Respira.ServiceDefaults.Contracts.Pagination;
 using X.PagedList;
 
-namespace Respira.Doctor.Application.Constracts.Mappers
+namespace Respira.Doctor.Application.Contracts.Mappers
 {
     public interface IPaginationFactory
     {

@@ -16,7 +16,7 @@ namespace Respira.Clinical.Domain.Services
         /// Calculate eGFR using MDRD equation
         /// </summary>
         /// <param name="age">Patient's age</param>
-        /// <param name="scr">Serum creatine used (mmol/L)</param>
+        /// <param name="scr">Serum creatine used (umol/L)</param>
         /// <param name="isFemale">Is patient female</param>
         /// <param name="isBlackAmerican">Is patient black american</param>
         /// <returns>eGFR (in mL/minute/1.73 m2)</returns>
