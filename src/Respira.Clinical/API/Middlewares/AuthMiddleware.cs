@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Respira.ServiceDefaults.Contracts.Results;
 
 namespace Respira.Clinical.API.Middlewares
@@ -14,6 +15,7 @@ namespace Respira.Clinical.API.Middlewares
         private const string DoctorRole = "Doctor";
         private const string HeadDepartmentDoctorRole = "HeadDepartmentDoctor";
         private const string MedicalRegulationReviewerRole = "MedicalRegulationReviewer";
+        private const string AdminRole = "Admin";
 
         public async Task InvokeAsync(HttpContext context)
         {
@@ -42,12 +44,33 @@ namespace Respira.Clinical.API.Middlewares
                 return;
             }
 
-            // Get the headers provided by the gateway
-            var role = context.Request.Headers["X-Role"].FirstOrDefault();
-            if (role is null)
+            // ClaimsPropagationMiddleware reconstructs the gateway identity for
+            // service-specific authorization rules.
+            var roles = context.User.FindAll(ClaimTypes.Role)
+                .Select(claim => claim.Value)
+                .ToHashSet(StringComparer.OrdinalIgnoreCase);
+            if (roles.Count == 0)
             {
-                logger.LogDebug("No role set in request header");
+                logger.LogDebug("No role claim set in request");
                 await WriteResult(context, Result.Failure(new ApplicationError(ApplicationStatus.Unauthorized, "Unauthorized access")));
+                return;
+            }
+
+            // Audit query and rollback are an explicit Admin-only exception to the
+            // clinical role matrix. The gateway also applies an Admin policy to
+            // the same route; this check protects direct service access.
+            if (path.StartsWith("/api/v1/clinical/audit-logs", StringComparison.OrdinalIgnoreCase))
+            {
+                if (!roles.Contains(AdminRole))
+                {
+                    logger.LogDebug("Forbidden audit access: {Detail}", new { Roles = roles, path });
+                    await WriteResult(
+                        context,
+                        Result.Failure(new ApplicationError(ApplicationStatus.Restricted, "Forbidden access")));
+                    return;
+                }
+
+                await next(context);
                 return;
             }
 
@@ -60,8 +83,7 @@ namespace Respira.Clinical.API.Middlewares
              */
 
             // Check for role if they are allow to access the endpoint
-            if (role.Equals(DoctorRole, StringComparison.OrdinalIgnoreCase) ||
-                role.Equals(HeadDepartmentDoctorRole, StringComparison.OrdinalIgnoreCase))
+            if (roles.Contains(DoctorRole) || roles.Contains(HeadDepartmentDoctorRole))
             {
                 var method = context.Request.Method;
 
@@ -69,18 +91,18 @@ namespace Respira.Clinical.API.Middlewares
                     (!method.Equals("POST", StringComparison.OrdinalIgnoreCase) ||
                      !path.Contains("diagnose", StringComparison.OrdinalIgnoreCase)))
                 {
-                    logger.LogDebug("Forbidden access: {Detail}", new { role, method, path });
+                    logger.LogDebug("Forbidden access: {Detail}", new { Roles = roles, method, path });
                     await WriteResult(
                         context,
                         Result.Failure(new ApplicationError(ApplicationStatus.Restricted, "Forbidden access")));
                     return;
                 }
             }
-            else if (role.Equals(MedicalRegulationReviewerRole, StringComparison.OrdinalIgnoreCase))
+            else if (roles.Contains(MedicalRegulationReviewerRole))
             {
                 if (path.Contains("diagnose", StringComparison.OrdinalIgnoreCase))
                 {
-                    logger.LogDebug("Forbidden access: {Detail}", new { role, context.Request.Method, path });
+                    logger.LogDebug("Forbidden access: {Detail}", new { Roles = roles, context.Request.Method, path });
                     await WriteResult(
                         context,
                         Result.Failure(new ApplicationError(ApplicationStatus.Restricted, "Forbidden access")));
@@ -89,7 +111,7 @@ namespace Respira.Clinical.API.Middlewares
             }
             else
             {
-                logger.LogDebug("Unauthorized role in request header: {role}", role);
+                logger.LogDebug("Unauthorized role in request: {Roles}", roles);
                 await WriteResult(
                     context,
                     Result.Failure(new ApplicationError(ApplicationStatus.Restricted, "Forbidden access")));

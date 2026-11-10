@@ -2,11 +2,15 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using Respira.Patient.Application.Contracts.Data;
 using Respira.Patient.Domain.Entities;
+using Respira.ServiceDefaults.Auditing;
 using Respira.ServiceDefaults.Utils.FullTextSearch;
 
 namespace Respira.Patient.Infrastructure.Data
 {
-    public class PatientDbContext(DbContextOptions<PatientDbContext> options) : DbContext(options), IDbContext
+    public class PatientDbContext(
+        DbContextOptions<PatientDbContext> options,
+        IAuditContextAccessor? auditContextAccessor = null
+    ) : AuditableDbContext(options, "Patient", auditContextAccessor), IDbContext
     {
         private IExecutionStrategy GetExecutionStrategy() => base.Database.CreateExecutionStrategy();
 
@@ -73,6 +77,8 @@ namespace Respira.Patient.Infrastructure.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.ConfigureAuditEntries();
 
             // Accent-insensitive full text search. The "unaccent" dictionary is
             // chained in front of the "simple" one via the custom "respira_vi"

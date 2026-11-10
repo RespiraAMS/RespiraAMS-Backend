@@ -52,6 +52,13 @@
         <Project Path="test/Respira.Patient.Test/Application.Test/Respira.Patient.Application.Test.csproj" />
         <Project Path="test/Respira.Patient.Test/Domain.Test/Respira.Patient.Domain.Test.csproj" />
     </Folder>
+    <Folder Name="/test/Respira.Analysis.Test/">
+        <Project Path="test/Respira.Analysis.Test/Application.Test/Respira.Analysis.Application.Test.csproj" />
+    </Folder>
+    <Project Path="src/Respira.Analysis/Analysis.API/Respira.Analysis.API.csproj" />
+    <Project Path="src/Respira.Analysis/Analysis.Application/Respira.Analysis.Application.csproj" />
+    <Project Path="src/Respira.Analysis/Analysis.Domain/Respira.Analysis.Domain.csproj" />
+    <Project Path="src/Respira.Analysis/Analysis.Infrastructure/Respira.Analysis.Infrastructure.csproj" />
 
     <Project Path="src/Respira.AppHost/Respira.AppHost.csproj" />
     <Project Path="src/Respira.Gateway/Respira.Gateway.csproj" />

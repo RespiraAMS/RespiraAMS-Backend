@@ -33,6 +33,18 @@ var patientService = builder
     .WithReference(rabbitmq)
     .WaitFor(rabbitmq);
 
+// Analysis reports persist immutable summaries and query closed treatment plans from Patient.
+var analysisDb = postgres.AddDatabase("analysisdb");
+var analysisService = builder
+    .AddProject<Projects.Respira_Analysis_API>("analysis-service")
+    .WithReference(analysisDb)
+    .WithReference(rabbitmq)
+    .WithEnvironment("Jwt__Secret", jwtSecret)
+    .WithEnvironment("Jwt__Issuer", jwtIssuer)
+    .WithEnvironment("Jwt__Audience", jwtAudience)
+    .WaitFor(analysisDb)
+    .WaitFor(rabbitmq);
+
 // Auth service
 var authDb = postgres.AddDatabase("authdb");
 var authService = builder
@@ -40,6 +52,11 @@ var authService = builder
     .WithReference(authDb)
     .WithReference(rabbitmq)
     .WithReference(cache)
+    .WithEnvironment("Jwt__SecretKey", jwtSecret)
+    .WithEnvironment("Jwt__Issuer", jwtIssuer)
+    .WithEnvironment("Jwt__Audience", jwtAudience)
+    .WithEnvironment("Jwt__AccessTokenExpires", "60")
+    .WithEnvironment("Jwt__RefreshTokenExpires", "7")
     .WaitFor(authDb)
     .WaitFor(rabbitmq)
     .WaitFor(cache);
@@ -89,6 +106,7 @@ var gateway = builder
     .AddProject<Projects.Respira_Gateway>("gateway")
     .WithReference(clinicalService)
     .WithReference(patientService)
+    .WithReference(analysisService)
     .WithReference(authService)
     .WithReference(mediaService)
     .WithReference(doctorService)
@@ -99,6 +117,7 @@ var gateway = builder
     .WithExternalHttpEndpoints();
 clinicalService.WithReference(gateway).WaitFor(gateway);
 patientService.WithReference(gateway).WaitFor(gateway);
+analysisService.WithReference(gateway).WaitFor(gateway);
 authService.WithReference(gateway).WaitFor(gateway);
 mediaService.WithReference(gateway).WaitFor(gateway);
 doctorService.WithReference(gateway).WaitFor(gateway);

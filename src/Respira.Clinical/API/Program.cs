@@ -11,7 +11,11 @@ using ZiggyCreatures.Caching.Fusion;
 using System.Text.Json;
 using Respira.Clinical.Application.Contracts.Messages;
 using Respira.Clinical.Application.Features.Diagnosis.ConfirmTreatment;
+using Respira.Clinical.API.Auditing;
 using Respira.Clinical.API.Middlewares;
+using Respira.Clinical.Infrastructure.Data;
+using Respira.ServiceDefaults.Auditing;
+using Respira.ServiceDefaults.Contracts.Messages.Audit;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -37,6 +41,9 @@ builder.AddServiceDefaults();
 
 // DI registration
 builder.AddDI();
+builder.Services.AddAuditLogging();
+builder.Services.AddScoped<IAuditEventPublisher, ClinicalAuditEventPublisher>();
+builder.Services.AddHostedService<AuditOutboxForwarder<ClinicalDbContext>>();
 
 // Add caching
 builder.Services.AddStackExchangeRedisCache(options =>
@@ -77,6 +84,7 @@ builder.Host.UseWolverine(opts =>
 
     opts.ListenToRabbitQueue(Queues.DiagnoseQueue);
     opts.PublishMessage<UpsertTreatmentPlanCommand>().ToRabbitQueue(Queues.DiagnoseQueue);
+    opts.PublishMessage<AuditEvent>().ToRabbitQueue(AuditQueues.Events);
 
     opts.Durability.Mode = DurabilityMode.Balanced;
 });

@@ -60,6 +60,7 @@ builder.Services.AddAuthenticationInfrastructure();
 
 builder.Host.UseWolverine(options =>
 {
+    options.RestoreV5Defaults();
     options.UseRuntimeCompilation();
     options.Discovery.IncludeAssembly(typeof(LoginCommand).Assembly);
 
@@ -110,8 +111,11 @@ if (app.Environment.IsDevelopment())
 {
     app.UseApiDocumentation();
 }
+else
+{
+    app.UseHttpsRedirection();
+}
 
-app.UseHttpsRedirection();
 app.MapControllers();
 
 await app.RunAsync();

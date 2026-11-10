@@ -21,6 +21,7 @@
         <ProjectReference Include="../Respira.Clinical/API/Respira.Clinical.API.csproj" />
         <ProjectReference Include="../Respira.Gateway/Respira.Gateway.csproj" />
         <ProjectReference Include="../Respira.Patient/API/Respira.Patient.API.csproj" />
+        <ProjectReference Include="../Respira.Analysis/Analysis.API/Respira.Analysis.API.csproj" />
         <ProjectReference Include="../Respira.Authentication/Authentication.API/Respira.Authentication.API.csproj" />
         <ProjectReference Include="..\Respira.Doctor\Doctor.API\Respira.Doctor.API.csproj" />
         <ProjectReference Include="../Respira.Media/Media.API/Respira.Media.API.csproj" />
