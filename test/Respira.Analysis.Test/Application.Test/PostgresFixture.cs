@@ -1,0 +1,39 @@
+using Microsoft.EntityFrameworkCore;
+using Respira.Analysis.Infrastructure.Data;
+using Testcontainers.PostgreSql;
+using Xunit;
+
+namespace Respira.Analysis.Application.Test;
+
+public class PostgresFixture : IAsyncLifetime
+{
+    private readonly PostgreSqlContainer _container;
+
+    public string ConnectionString => _container.GetConnectionString();
+
+    public PostgresFixture()
+    {
+        _container = new PostgreSqlBuilder("postgres:18.1-alpine3.22")
+            .WithDatabase("testdb")
+            .WithUsername("postgres")
+            .WithPassword("postgres")
+            .Build();
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        await _container.DisposeAsync();
+    }
+
+    public async ValueTask InitializeAsync()
+    {
+        await _container.StartAsync();
+
+        var options = new DbContextOptionsBuilder<AnalysisDbContext>()
+            .UseNpgsql(ConnectionString)
+            .Options;
+
+        await using var context = new AnalysisDbContext(options);
+        await context.Database.MigrateAsync();
+    }
+}

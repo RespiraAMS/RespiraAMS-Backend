@@ -59,6 +59,7 @@ builder.Services.AddSagaInfrastructure(builder.Configuration);
 // the other microservices while listening to their completion events.
 builder.Host.UseWolverine(options =>
 {
+    options.RestoreV5Defaults();
     options.UseRuntimeCompilation();
 
     // Discover the sagas and the status query handlers in the Saga.Application assembly.
@@ -117,8 +118,10 @@ if (app.Environment.IsDevelopment())
 {
     app.UseApiDocumentation();
 }
-
-app.UseHttpsRedirection();
+else
+{
+    app.UseHttpsRedirection();
+}
 
 app.UseAuthentication();
 app.UseAuthorization();

@@ -27,6 +27,7 @@ builder.Services.AddMediaInfrastructure();
 // Discover command/query handlers in the Media.Application assembly (e.g. CreateMediaAssetCommandHandler)
 builder.Host.UseWolverine(options =>
 {
+    options.RestoreV5Defaults();
     options.UseRuntimeCompilation();
     options.Discovery.IncludeAssembly(typeof(CreateMediaAssetCommand).Assembly);
 

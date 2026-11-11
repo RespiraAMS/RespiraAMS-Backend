@@ -3,12 +3,16 @@ using Microsoft.EntityFrameworkCore.Storage;
 using Respira.Clinical.Application.Contracts.Data;
 using Respira.Clinical.Domain.Entities;
 using Respira.Clinical.Infrastructure.Util.Database;
+using Respira.ServiceDefaults.Auditing;
 using Respira.ServiceDefaults.Models;
 using Respira.ServiceDefaults.Utils.FullTextSearch;
 
 namespace Respira.Clinical.Infrastructure.Data
 {
-    public class ClinicalDbContext(DbContextOptions<ClinicalDbContext> options) : DbContext(options), IDbContext
+    public class ClinicalDbContext(
+        DbContextOptions<ClinicalDbContext> options,
+        IAuditContextAccessor? auditContextAccessor = null
+    ) : AuditableDbContext(options, "Clinical", auditContextAccessor), IDbContext
     {
         private IExecutionStrategy GetExecutionStrategy() => base.Database.CreateExecutionStrategy();
 
@@ -125,6 +129,8 @@ namespace Respira.Clinical.Infrastructure.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.ConfigureAuditEntries();
 
             // Apply query filter to soft-delete items
             modelBuilder.Entity<ClinicalVariable>().HasQueryFilter(x => !x.IsDeleted);

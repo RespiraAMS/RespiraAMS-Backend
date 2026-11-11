@@ -29,6 +29,7 @@ builder.Services.AddValidatorsFromAssemblyContaining<SearchDoctorQuery>();
 // Discover command/query handlers in the Doctor.Application assembly
 builder.Host.UseWolverine(options =>
 {
+    options.RestoreV5Defaults();
     options.UseRuntimeCompilation();
     options.Discovery.IncludeAssembly(typeof(CreateDoctorProfileCommand).Assembly);
     options.UseFluentValidation(RegistrationBehavior.ExplicitRegistration);

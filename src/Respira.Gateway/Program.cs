@@ -34,7 +34,13 @@ builder
             ClockSkew = TimeSpan.Zero,
         };
     });
-builder.Services.AddAuthorization();
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy(
+        "AdminOnly",
+        policy => policy.RequireAuthenticatedUser().RequireRole("Admin")
+    );
+});
 
 builder.Services.AddCors(options =>
 {

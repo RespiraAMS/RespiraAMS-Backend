@@ -17,6 +17,7 @@ using Respira.Clinical.Application.Features.Antibiotics.AddDosage;
 using Respira.Clinical.Application.Features.Antibiotics.CreateAntibiotic;
 using Respira.Clinical.Application.Features.Antibiotics.UpdateAntibiotic;
 using Respira.Clinical.Application.Features.Antibiotics.UpdateDosage;
+using Respira.Clinical.Application.Features.Audit.Rollback;
 using Respira.Clinical.Application.Features.ClinicalMetrics.AddMetricRule;
 using Respira.Clinical.Application.Features.ClinicalMetrics.CreateClinicalMetric;
 using Respira.Clinical.Application.Features.ClinicalMetrics.UpdateClinicalMetric;
@@ -38,6 +39,7 @@ using Respira.Clinical.Domain.Entities;
 using Respira.Clinical.Domain.Models;
 using Respira.Clinical.Domain.Services;
 using Respira.Clinical.Infrastructure.Caching;
+using Respira.Clinical.Infrastructure.Auditing;
 using Respira.Clinical.Infrastructure.Data;
 using Respira.Clinical.Infrastructure.Mapper;
 
@@ -124,6 +126,10 @@ namespace Respira.Clinical.DI
             builder.Services.Configure<SeedDataOptions>(builder.Configuration.GetSection(SeedDataOptions.SectionName));
             builder.Services.AddScoped<IPaginationFactory, PaginationFactory>();
             builder.Services.AddScoped<ICache, CacheService>();
+            builder.Services.AddScoped<ClinicalRollbackService>();
+            builder.Services.AddScoped<IClinicalRollbackService>(sp =>
+                sp.GetRequiredService<ClinicalRollbackService>()
+            );
         }
 
         public static void ApplyMigrations(this IHost host, bool isDevEnv)
@@ -157,6 +163,7 @@ namespace Respira.Clinical.DI
                 var options = provider.GetRequiredService<IOptions<SeedDataOptions>>();
                 var logger = provider.GetRequiredService<ILogger<DbInitializer>>();
                 await DbInitializer.InitializeAsync(context, options, logger);
+                await DevelopmentAuditSeeder.SeedAuditDemoDataAsync(context, logger);
             }
         }
 

@@ -1,8 +1,12 @@
 using Respira.Patient.API.Middlewares;
+using Respira.Patient.API.Auditing;
 using Respira.Patient.Application;
 using Respira.Patient.Application.Contracts.Messages;
 using Respira.Patient.Application.Features.TreatmentPlans.UpsertTreatmentPlan;
 using Respira.Patient.DI;
+using Respira.Patient.Infrastructure.Data;
+using Respira.ServiceDefaults.Auditing;
+using Respira.ServiceDefaults.Contracts.Messages.Audit;
 using Respira.ServiceDefaults.Extensions;
 using Wolverine;
 using Wolverine.EntityFrameworkCore;
@@ -29,6 +33,9 @@ builder.AddServiceDefaults();
 
 // DI registration
 builder.AddDI();
+builder.Services.AddAuditLogging();
+builder.Services.AddScoped<IAuditEventPublisher, PatientAuditEventPublisher>();
+builder.Services.AddHostedService<AuditOutboxForwarder<PatientDbContext>>();
 
 // Add Wolverine
 builder.Host.UseWolverine(opts =>
@@ -44,7 +51,9 @@ builder.Host.UseWolverine(opts =>
     // Setup queue
     opts.UseRabbitMqUsingNamedConnection("rabbitmq").AutoProvision();
     opts.ListenToRabbitQueue(Queues.DiagnoseQueue);
+    opts.ListenToRabbitQueue(Queues.AnalysisQueries);
     opts.PublishMessage<UpsertTreatmentPlanResult>().ToRabbitQueue(Queues.DiagnoseQueue);
+    opts.PublishMessage<AuditEvent>().ToRabbitQueue(AuditQueues.Events);
 
     opts.Durability.Mode = DurabilityMode.Balanced;
 });
@@ -66,5 +75,10 @@ if (!app.Environment.IsDevelopment())
     app.UseHttpsRedirection();
 }
 app.ApplyMigrations(app.Environment.IsDevelopment());
+
+if (app.Environment.IsDevelopment())
+{
+    await app.SeedAnalysisDataAsync();
+}
 
 await app.RunAsync();

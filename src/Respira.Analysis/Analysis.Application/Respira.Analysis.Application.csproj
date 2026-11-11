@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" />
+    <PackageReference Include="WolverineFx" />
+    <PackageReference Include="X.PagedList.EF" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Analysis.Domain\Respira.Analysis.Domain.csproj" />
+    <ProjectReference Include="..\..\Respira.ServiceDefaults\Respira.ServiceDefaults.csproj" />
+  </ItemGroup>
+
+</Project>
