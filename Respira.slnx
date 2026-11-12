@@ -40,6 +40,10 @@
     </Folder>
 
     <Folder Name="/test/" />
+    <Folder Name="/test/Respira.Authentication.Test/">
+        <Project Path="test/Respira.Authentication.Test/Domain.Test/Respira.Authentication.Domain.Test.csproj" />
+        <Project Path="test/Respira.Authentication.Test/Infrastructure.Test/Respira.Authentication.Infrastructure.Test.csproj" />
+    </Folder>
     <Folder Name="/test/Respira.Clinical.Test/">
         <Project Path="test/Respira.Clinical.Test/Application.Test/Respira.Clinical.Application.Test.csproj" />
         <Project Path="test/Respira.Clinical.Test/Domain.Test/Respira.Clinical.Domain.Test.csproj" />
@@ -47,13 +51,25 @@
     </Folder>
     <Folder Name="/test/Respira.Saga.Test/">
         <Project Path="test/Respira.Saga.Test/Application.Test/Respira.Saga.Application.Test.csproj" />
+        <Project Path="test/Respira.Saga.Test/Domain.Test/Respira.Saga.Domain.Test.csproj" />
+        <Project Path="test/Respira.Saga.Test/Infrastructure.Test/Respira.Saga.Infrastructure.Test.csproj" />
     </Folder>
     <Folder Name="/test/Respira.Patient.Test/">
         <Project Path="test/Respira.Patient.Test/Application.Test/Respira.Patient.Application.Test.csproj" />
         <Project Path="test/Respira.Patient.Test/Domain.Test/Respira.Patient.Domain.Test.csproj" />
     </Folder>
+    <Folder Name="/test/Respira.Doctor.Test/">
+        <Project Path="test/Respira.Doctor.Test/Application.Test/Respira.Doctor.Application.Test.csproj" />
+        <Project Path="test/Respira.Doctor.Test/Domain.Test/Respira.Doctor.Domain.Test.csproj" />
+        <Project Path="test/Respira.Doctor.Test/Infrastructure.Test/Respira.Doctor.Infrastructure.Test.csproj" />
+    </Folder>
+    <Folder Name="/test/Respira.ServiceDefaults.Test/">
+        <Project Path="test/Respira.ServiceDefaults.Test/Application.Test/Respira.ServiceDefaults.Application.Test.csproj" />
+    </Folder>
     <Folder Name="/test/Respira.Analysis.Test/">
         <Project Path="test/Respira.Analysis.Test/Application.Test/Respira.Analysis.Application.Test.csproj" />
+        <Project Path="test/Respira.Analysis.Test/Domain.Test/Respira.Analysis.Domain.Test.csproj" />
+        <Project Path="test/Respira.Analysis.Test/Infrastructure.Test/Respira.Analysis.Infrastructure.Test.csproj" />
     </Folder>
     <Project Path="src/Respira.Analysis/Analysis.API/Respira.Analysis.API.csproj" />
     <Project Path="src/Respira.Analysis/Analysis.Application/Respira.Analysis.Application.csproj" />

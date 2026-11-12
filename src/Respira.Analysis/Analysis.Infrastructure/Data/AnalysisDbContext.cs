@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Respira.Analysis.Application.Contracts;
 using Respira.Analysis.Domain.Entities;
 using Respira.ServiceDefaults.Auditing;
+using Respira.ServiceDefaults.Utils.JsonbSearch;
 
 namespace Respira.Analysis.Infrastructure.Data
 {
@@ -16,6 +17,7 @@ namespace Respira.Analysis.Infrastructure.Data
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.ConfigureAuditEntries();
+            JsonbSearchFunctions.RegisterToText(modelBuilder);
             modelBuilder.Entity<ClinicalAnalysis>(entity =>
             {
                 entity.ToTable("clinical_analyses");
