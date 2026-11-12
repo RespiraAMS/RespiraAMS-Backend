@@ -1,9 +1,12 @@
+using Wolverine.Attributes;
+
 namespace Respira.Authentication.Application.Features.Accounts.Commands.SoftDelete.Events
 {
     /// <summary>
     /// Published when the account could not be soft-deleted, leaving the saga partially
     /// applied and requiring operator attention.
     /// </summary>
+    [MessageIdentity("soft-delete-failure")]
     public record SoftDeleteFailure
     {
         public SoftDeleteFailure(Guid sagaId, string reason)

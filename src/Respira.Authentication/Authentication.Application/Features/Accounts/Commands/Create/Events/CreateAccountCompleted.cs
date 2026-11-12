@@ -1,9 +1,12 @@
+using Wolverine.Attributes;
+
 namespace Respira.Authentication.Application.Features.Accounts.Commands.Create.Events
 {
     /// <summary>
     /// Published when an account has been persisted, carrying the identifiers the
     /// create saga needs to continue with the next step.
     /// </summary>
+    [MessageIdentity("create-account-completed")]
     public record CreateAccountCompleted
     {
         /// <summary>Identifier of the create saga waiting for this event</summary>

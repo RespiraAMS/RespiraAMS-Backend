@@ -2,8 +2,7 @@ namespace Respira.Authentication.Application.Contracts.Messaging
 {
     /// <summary>
     /// RabbitMQ queue names used by the create saga. Every participating service keeps
-    /// its own copy of these constants: Wolverine routes messages by the CLR full type name,
-    /// so the queue names are the only thing that has to be agreed out of band.
+    /// its own copy of these constants and pairs its message contracts via <c>[MessageIdentity]</c>.
     /// </summary>
     public static class RabbitQueues
     {

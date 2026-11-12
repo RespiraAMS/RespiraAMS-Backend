@@ -39,22 +39,29 @@ namespace Respira.Authentication.Application.Features.Accounts.Commands.Create
             // address, so the account must be stored the same way.
             var email = command.Email.Trim().ToLowerInvariant();
 
-            var isExist = await dbContext
+            var existingAccount = await dbContext
                 .Accounts.IgnoreQueryFilters()
-                .AnyAsync(x => x.Email == email, cancellationToken);
+                .FirstOrDefaultAsync(x => x.Email == email, cancellationToken);
 
-            if (isExist)
+            if (existingAccount is not null)
             {
-                logger.LogInformation(
-                    "{SagaId} Account {Email} already exists",
-                    command.SagaId,
-                    email
-                );
+                if (!existingAccount.IsDeleted)
+                {
+                    logger.LogInformation(
+                        "{SagaId} Account {Email} already exists",
+                        command.SagaId,
+                        email
+                    );
 
-                await bus.PublishAsync(
-                    new CreateAccountFailure(command.SagaId, "Account already exists")
-                );
-                return;
+                    await bus.PublishAsync(
+                        new CreateAccountFailure(command.SagaId, "Account already exists")
+                    );
+                    return;
+                }
+
+                // Remove the previously soft-deleted account with the same email so the
+                // unique index on Email allows recreating the profile.
+                dbContext.Accounts.Remove(existingAccount);
             }
 
             var account = new Account
@@ -98,17 +105,26 @@ namespace Respira.Authentication.Application.Features.Accounts.Commands.Create
             await bus.PublishAsync(
                 new AuditEvent
                 {
-                    ActorAccountId = command.ActorAccountId == Guid.Empty ? null : command.ActorAccountId,
-                    ActorRole = string.IsNullOrWhiteSpace(command.ActorRole) ? "System" : command.ActorRole,
+                    ActorAccountId =
+                        command.ActorAccountId == Guid.Empty ? null : command.ActorAccountId,
+                    ActorRole = string.IsNullOrWhiteSpace(command.ActorRole)
+                        ? "System"
+                        : command.ActorRole,
                     Action = "Authentication.AccountCreated",
                     EntityType = "Account",
                     EntityId = account.Id,
                     CorrelationId = command.SagaId,
-                    DetailsJson = System.Text.Json.JsonSerializer.Serialize(new { account.Role, account.Status }),
+                    DetailsJson = System.Text.Json.JsonSerializer.Serialize(
+                        new { account.Role, account.Status }
+                    ),
                 }
             );
 
-            logger.LogInformation("{SagaId} Account {AccountId} created", command.SagaId, account.Id);
+            logger.LogInformation(
+                "{SagaId} Account {AccountId} created",
+                command.SagaId,
+                account.Id
+            );
 
             await bus.PublishAsync(
                 new CreateAccountCompleted { SagaId = command.SagaId, AccountId = account.Id }

@@ -1,9 +1,12 @@
+using Wolverine.Attributes;
+
 namespace Respira.Saga.Application.Contracts.Messages.Authentication.SoftDelete.Events
 {
     /// <summary>
     /// Published when the account has been soft-deleted. Compensation is idempotent:
     /// an account that is already gone also reports completion.
     /// </summary>
+    [MessageIdentity("soft-delete-completed")]
     public record SoftDeleteCompleted
     {
         public SoftDeleteCompleted(Guid sagaId, Guid accountId)

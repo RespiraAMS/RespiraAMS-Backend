@@ -1,5 +1,8 @@
+using Wolverine.Attributes;
+
 namespace Respira.Authentication.Application.Features.Accounts.Commands.Create.Events
 {
+    [MessageIdentity("create-account-failure")]
     public record CreateAccountFailure
     {
         public CreateAccountFailure(Guid sagaId, string reason)

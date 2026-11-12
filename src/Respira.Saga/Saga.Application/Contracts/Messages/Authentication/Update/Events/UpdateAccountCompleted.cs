@@ -1,7 +1,9 @@
 using Respira.Authentication.Domain.Enums;
+using Wolverine.Attributes;
 
 namespace Respira.Saga.Application.Contracts.Messages.Authentication.Update.Events
 {
+    [MessageIdentity("update-account-completed")]
     public class UpdateAccountCompleted
     {
         public Guid SagaId { get; set; }

@@ -1,7 +1,9 @@
 using Respira.ServiceDefaults.Contracts.CQRS;
+using Wolverine.Attributes;
 
 namespace Respira.Saga.Application.Contracts.Messages.Doctor.Update
 {
+    [MessageIdentity("update-doctor-media-id-command")]
     public record UpdateDoctorMediaIdCommand : ICommand
     {
         public Guid SagaId { get; set; }

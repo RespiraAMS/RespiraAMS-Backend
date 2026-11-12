@@ -1,3 +1,4 @@
+using Amazon.Runtime;
 using Amazon.S3;
 using Microsoft.Extensions.DependencyInjection;
 using Respira.Media.Application.Contracts.Data;
@@ -30,6 +31,8 @@ namespace Respira.Media.Infrastructure.Extensions
                     ServiceURL = options.Endpoint,
                     ForcePathStyle = true,
                     UseAccelerateEndpoint = false,
+                    RequestChecksumCalculation = RequestChecksumCalculation.WHEN_REQUIRED,
+                    ResponseChecksumValidation = ResponseChecksumValidation.WHEN_REQUIRED,
                 };
 
                 return new AmazonS3Client(options.AccessKey, options.SecretKey, config);

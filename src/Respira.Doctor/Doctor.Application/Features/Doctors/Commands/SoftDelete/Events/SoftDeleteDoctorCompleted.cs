@@ -1,5 +1,8 @@
+using Wolverine.Attributes;
+
 namespace Respira.Doctor.Application.Features.Doctors.Commands.SoftDelete.Events
 {
+    [MessageIdentity("soft-delete-doctor-completed")]
     public record SoftDeleteDoctorCompleted
     {
         public SoftDeleteDoctorCompleted(Guid sagaId, Guid doctorId)

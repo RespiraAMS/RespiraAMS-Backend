@@ -1,8 +1,10 @@
 using Respira.Authentication.Domain.Enums;
 using Respira.ServiceDefaults.Contracts.CQRS;
+using Wolverine.Attributes;
 
 namespace Respira.Saga.Application.Contracts.Messages.Authentication.Create
 {
+    [MessageIdentity("create-account-command")]
     public record CreateAccountCommand : ICommand
     {
         public Guid SagaId { get; set; }

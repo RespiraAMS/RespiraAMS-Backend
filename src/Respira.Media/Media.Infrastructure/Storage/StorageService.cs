@@ -36,6 +36,8 @@ namespace Respira.Media.Infrastructure.Storage
                 Key = objectKey,
                 InputStream = request.Content,
                 ContentType = request.ContentType,
+                DisablePayloadSigning = true,
+                DisableDefaultChecksumValidation = true,
             };
 
             var response = await _s3Client.PutObjectAsync(putRequest, cancellationToken);
