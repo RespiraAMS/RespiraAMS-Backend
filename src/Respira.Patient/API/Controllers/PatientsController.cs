@@ -108,7 +108,7 @@ namespace Respira.Patient.API.Controllers
         }
 
         [HttpPut]
-        [Route("/next-of-kin/{nextOfKinId:guid}")]
+        [Route("next-of-kin/{nextOfKinId:guid}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType<Result>(StatusCodes.Status400BadRequest)]
         [ProducesResponseType<Result>(StatusCodes.Status401Unauthorized)]
@@ -122,7 +122,7 @@ namespace Respira.Patient.API.Controllers
         }
 
         [HttpDelete]
-        [Route("/next-of-kin/{nextOfKinId:guid}")]
+        [Route("next-of-kin/{nextOfKinId:guid}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType<Result>(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType<Result>(StatusCodes.Status403Forbidden)]
