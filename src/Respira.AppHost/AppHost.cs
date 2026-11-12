@@ -5,7 +5,7 @@ var k8s = builder.AddKubernetesEnvironment("k8s");
 
 // Setup databases, messaging and cache
 var cache = builder.AddRedis("cache").WithRedisInsight();
-var postgres = builder.AddPostgres("postgres").WithPgWeb().WithDataVolume();
+var postgres = builder.AddPostgres("postgres").WithPgWeb().WithPgAdmin().WithDataVolume();
 var rabbitmq = builder.AddRabbitMQ("rabbitmq").WithManagementPlugin();
 
 // Auth service parameters (values come from AppHost config: Parameters:* section)
