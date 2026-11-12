@@ -5,6 +5,7 @@ using Respira.Analysis.Domain.Entities;
 using Respira.ServiceDefaults.Contracts.CQRS;
 using Respira.ServiceDefaults.Contracts.Pagination;
 using Respira.ServiceDefaults.Contracts.Results;
+using Respira.ServiceDefaults.Utils.JsonbSearch;
 using X.PagedList.EF;
 
 namespace Respira.Analysis.Application.Features.Queries.GetPagedAnalysisReport;
@@ -56,10 +57,12 @@ public sealed class GetPagedAnalysisReportQueryHandler(IAnalysisDbContext contex
             var term = filter.SearchTerm.Trim().ToLowerInvariant();
             var isGuid = Guid.TryParse(term, out var reportId);
 
+            // The JSON payloads live in jsonb columns, which PostgreSQL cannot
+            // compare with LIKE directly, so they are cast to text first.
             queryable = queryable.Where(analysis =>
-                analysis.ReportJson.ToLower().Contains(term)
-                || analysis.PatientIdsJson.ToLower().Contains(term)
-                || analysis.TreatmentPlanIdsJson.ToLower().Contains(term)
+                JsonbSearchFunctions.ToText(analysis.ReportJson).ToLower().Contains(term)
+                || JsonbSearchFunctions.ToText(analysis.PatientIdsJson).ToLower().Contains(term)
+                || JsonbSearchFunctions.ToText(analysis.TreatmentPlanIdsJson).ToLower().Contains(term)
                 || (isGuid && analysis.Id == reportId)
             );
         }

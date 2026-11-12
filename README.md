@@ -90,6 +90,15 @@ dotnet build --no-incremental
 # own directory.
 dotnet test --coverage --coverage-output-format cobertura --coverage-settings "$(pwd)/coverage.settings.xml"
 
+# Run every test project without the coverage report.
+# `dotnet test` goes through the Microsoft.Testing.Platform handshake, which needs a
+# working runner setup. The script invokes the test executables directly instead, so it
+# also works where the handshake is unavailable.
+./scripts/run-tests.sh
+
+# Print how many test cases each feature (namespace) has.
+./scripts/test-coverage-report.sh
+
 # Finish the SonarQube analysis and import the results
 dotnet sonarscanner end /d:sonar.token="<YOUR_SONAR_TOKEN>"
 
