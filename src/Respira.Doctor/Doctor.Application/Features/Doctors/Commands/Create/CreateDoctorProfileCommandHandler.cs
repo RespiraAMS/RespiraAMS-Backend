@@ -22,17 +22,17 @@ namespace Respira.Doctor.Application.Features.Doctors.Commands.Create
             CancellationToken cancellationToken = default
         )
         {
-            var profileExists =
-                await dbContext.Doctors.AnyAsync(
-                    x => x.AccountId == command.AccountId,
-                    cancellationToken
-                )
-                || await dbContext.HeadDepartmentDoctors.AnyAsync(
-                    x => x.AccountId == command.AccountId,
-                    cancellationToken
-                );
+            var existingDoctor = await dbContext
+                .Doctors.IgnoreQueryFilters()
+                .FirstOrDefaultAsync(x => x.AccountId == command.AccountId, cancellationToken);
+            var existingHead = await dbContext
+                .HeadDepartmentDoctors.IgnoreQueryFilters()
+                .FirstOrDefaultAsync(x => x.AccountId == command.AccountId, cancellationToken);
 
-            if (profileExists)
+            if (
+                (existingDoctor is not null && !existingDoctor.IsDeleted)
+                || (existingHead is not null && !existingHead.IsDeleted)
+            )
             {
                 logger.LogDebug(
                     "{SagaId} Doctor profile already exists for account {AccountId}",
@@ -44,6 +44,16 @@ namespace Respira.Doctor.Application.Features.Doctors.Commands.Create
                     new DoctorProfileFailure(command.SagaId, "Profile already exists")
                 );
                 return;
+            }
+
+            if (existingDoctor is not null)
+            {
+                dbContext.Doctors.Remove(existingDoctor);
+            }
+
+            if (existingHead is not null)
+            {
+                dbContext.HeadDepartmentDoctors.Remove(existingHead);
             }
 
             Guid profileId;

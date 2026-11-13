@@ -1,7 +1,9 @@
 using Respira.ServiceDefaults.Contracts.CQRS;
+using Wolverine.Attributes;
 
 namespace Respira.Doctor.Application.Features.Doctors.Commands.SoftDelete
 {
+    [MessageIdentity("soft-delete-doctor-command")]
     public record SoftDeleteDoctorCommand : ICommand
     {
         public Guid SagaId { get; set; }

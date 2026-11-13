@@ -2,8 +2,7 @@ namespace Respira.Saga.Application.Contracts.Messaging
 {
     /// <summary>
     /// RabbitMQ queue names used by the profile creation saga. Every participating service keeps
-    /// its own copy of these constants: they are the only thing that has to be agreed out
-    /// band, since message types are matched by their CLR full type name.
+    /// its own copy of these constants and pairs its message contracts via <c>[MessageIdentity]</c>.
     /// </summary>
     public static class RabbitQueues
     {

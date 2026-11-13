@@ -1,8 +1,11 @@
+using Wolverine.Attributes;
+
 namespace Respira.Authentication.Application.Features.Authentication.Commands.SendVerify.Events
 {
     /// <summary>
     /// Published when the verification email could not be issued or delivered.
     /// </summary>
+    [MessageIdentity("send-verify-failure")]
     public record SendVerifyFailure
     {
         public SendVerifyFailure(Guid sagaId, string reason)

@@ -63,6 +63,18 @@ namespace Respira.Authentication.Application.Features.Accounts.Commands.Update
                     await cacheService.RemoveAsync(oldCachePrefix, cancellationToken);
                 }
 
+                var normalizedEmail = command.Email.Trim().ToLowerInvariant();
+                var conflictingDeletedAccount = await dbContext
+                    .Accounts.IgnoreQueryFilters()
+                    .FirstOrDefaultAsync(
+                        x => x.Email == normalizedEmail && x.Id != account.Id && x.IsDeleted,
+                        cancellationToken
+                    );
+                if (conflictingDeletedAccount is not null)
+                {
+                    dbContext.Accounts.Remove(conflictingDeletedAccount);
+                }
+
                 account.Email = command.Email;
                 account.Phone = command.Phone;
 

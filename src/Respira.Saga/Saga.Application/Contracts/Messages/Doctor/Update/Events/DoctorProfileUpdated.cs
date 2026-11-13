@@ -1,5 +1,8 @@
+using Wolverine.Attributes;
+
 namespace Respira.Saga.Application.Contracts.Messages.Doctor.Update.Events
 {
+    [MessageIdentity("doctor-profile-updated")]
     public record DoctorProfileUpdated
     {
         public DoctorProfileUpdated(Guid sagaId, Guid doctorId, Guid mediaId, Guid oldMediaId)

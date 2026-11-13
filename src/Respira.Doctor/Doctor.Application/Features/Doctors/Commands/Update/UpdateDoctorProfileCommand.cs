@@ -1,5 +1,6 @@
 using Respira.Doctor.Domain.Enums;
 using Respira.ServiceDefaults.Contracts.CQRS;
+using Wolverine.Attributes;
 
 namespace Respira.Doctor.Application.Features.Doctors.Commands.Update
 {
@@ -8,6 +9,7 @@ namespace Respira.Doctor.Application.Features.Doctors.Commands.Update
     /// uploaded avatar in one step. The event it raises carries the previous media id so
     /// the saga can drop the old avatar afterwards.
     /// </summary>
+    [MessageIdentity("update-doctor-profile-command")]
     public record UpdateDoctorProfileCommand : ICommand
     {
         public Guid SagaId { get; set; }

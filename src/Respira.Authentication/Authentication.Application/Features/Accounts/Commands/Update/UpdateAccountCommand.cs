@@ -1,5 +1,6 @@
 using Respira.Authentication.Domain.Enums;
 using Respira.ServiceDefaults.Contracts.CQRS;
+using Wolverine.Attributes;
 
 namespace Respira.Authentication.Application.Features.Accounts.Commands.Update
 {
@@ -8,6 +9,7 @@ namespace Respira.Authentication.Application.Features.Accounts.Commands.Update
     /// contact data is optional, so a profile-only change never resets the password, the
     /// role or the status of the account.
     /// </summary>
+    [MessageIdentity("update-account-command")]
     public record UpdateAccountCommand : ICommand
     {
         public Guid SagaId { get; set; }

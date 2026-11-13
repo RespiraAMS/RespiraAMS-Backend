@@ -1,5 +1,8 @@
+using Wolverine.Attributes;
+
 namespace Respira.Doctor.Application.Features.Doctors.Commands.Update.Events
 {
+    [MessageIdentity("doctor-media-update-failure")]
     public record DoctorMediaUpdateFailure
     {
         public DoctorMediaUpdateFailure(Guid sagaId, string reason)

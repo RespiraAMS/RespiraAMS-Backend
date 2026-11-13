@@ -1,7 +1,9 @@
 using Respira.ServiceDefaults.Contracts.CQRS;
+using Wolverine.Attributes;
 
 namespace Respira.Authentication.Application.Features.Authentication.Commands.SendVerify
 {
+    [MessageIdentity("send-verify-command")]
     public record SendVerifyCommand : ICommand
     {
         public required string Email { get; init; }

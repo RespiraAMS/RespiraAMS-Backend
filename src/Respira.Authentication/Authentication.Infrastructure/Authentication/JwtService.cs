@@ -72,7 +72,7 @@ namespace Respira.Authentication.Infrastructure.Authentication
             );
             var signingCredentials = new SigningCredentials(
                 securityKey,
-                SecurityAlgorithms.HmacSha512
+                SecurityAlgorithms.HmacSha256
             );
 
             var token = new JwtSecurityToken(

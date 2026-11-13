@@ -1,7 +1,9 @@
 using Respira.Doctor.Domain.Enums;
+using Wolverine.Attributes;
 
 namespace Respira.Doctor.Application.Features.Doctors.Commands.Create.Events
 {
+    [MessageIdentity("doctor-profile-created")]
     public record DoctorProfileCreated
     {
         public DoctorProfileCreated(Guid sagaId, Guid doctorId, Guid accountId, ProfileRole role)

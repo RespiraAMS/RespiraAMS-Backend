@@ -1,8 +1,10 @@
 using Respira.Doctor.Domain.Enums;
 using Respira.ServiceDefaults.Contracts.CQRS;
+using Wolverine.Attributes;
 
 namespace Respira.Doctor.Application.Features.Doctors.Commands.Create
 {
+    [MessageIdentity("create-doctor-profile-command")]
     public record CreateDoctorProfileCommand : ICommand
     {
         public Guid SagaId { get; set; }
