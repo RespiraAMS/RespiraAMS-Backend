@@ -1,0 +1,329 @@
+{
+  "function_code": "ClosedXmlAnalysisReportExcelWriter.Write",
+  "sheet_name": "AnalysisReportExcelWriter",
+  "lines_of_code": 477,
+  "requirement": "Render an analysis report as a styled Excel workbook with exactly three sheets (overview, by doctor, by medicine): write the metadata and count/percentage metrics, one row per doctor and one row per doctor-medicine pair with sorting, empty-state rows for empty collections, and guarded rate formatting when totals are zero.",
+  "preconditions": [
+    {
+      "text": "An AnalysisReportResult is built for the case",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ]
+    },
+    {
+      "text": "The report carries the doctors, medicines, and totals seeded for the case",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ]
+    },
+    {
+      "text": "The totals or collections are zero/empty for the boundary cases",
+      "marks": [
+        2,
+        3,
+        4,
+        5,
+        10,
+        18,
+        19
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "Write DoctorAndMedicineSheets SortDoctorsByIdAndMedicinesByName",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "Write DoctorWithoutMedicines StillWritesDoctorRow",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "Write EmptyDoctorCollection WritesEmptyMessageRowOnMedicineSheet",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "Write EmptyDoctors WritesEmptyStateOnDoctorAndMedicineSheets",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "Write EmptyReport WritesEmptyStateWithoutThrowing",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "Write FullReport CreatesAllSheetsAndMetrics",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "Write FullReport CreatesThreeSheetsWithExpectedOrderAndMetrics",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "Write LongMedicineNames ClampsColumnWidthsBetween10And40",
+      "marks": [
+        8
+      ]
+    },
+    {
+      "text": "Write MedicineSheet WritesOneRowPerDoctorMedicinePair",
+      "marks": [
+        9
+      ]
+    },
+    {
+      "text": "Write NoDoctors WritesEmptyRowOnDoctorSheet",
+      "marks": [
+        10
+      ]
+    },
+    {
+      "text": "Write OverviewSheet ContainsEveryIntegerMetricRow",
+      "marks": [
+        11
+      ]
+    },
+    {
+      "text": "Write OverviewSheet ContainsReportMetadata",
+      "marks": [
+        12
+      ]
+    },
+    {
+      "text": "Write OverviewSheet ContainsTheThreePercentageRows",
+      "marks": [
+        13
+      ]
+    },
+    {
+      "text": "Write OverviewSheet WithoutDoctor ShowsAllDoctorsLabel",
+      "marks": [
+        14
+      ]
+    },
+    {
+      "text": "Write ProducesExactlyTheThreeExpectedSheets",
+      "marks": [
+        15
+      ]
+    },
+    {
+      "text": "Write UsesPercentFormatForRatesAndIntegerFormatForCounts",
+      "marks": [
+        16
+      ]
+    },
+    {
+      "text": "Write WithDoctors WritesOneRowPerDoctorWithCounts",
+      "marks": [
+        17
+      ]
+    },
+    {
+      "text": "Write ZeroPlanTotals DoesNotDivideByZero",
+      "marks": [
+        18
+      ]
+    },
+    {
+      "text": "Write ZeroTotalPlans AdherenceRateIsZeroAndNotNaN",
+      "marks": [
+        19
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "The workbook contains exactly the three expected sheets in order",
+      "marks": [
+        6,
+        7,
+        15
+      ]
+    },
+    {
+      "text": "The overview sheet carries the report metadata, every count metric, the percentage rows, and the integer/percent formats",
+      "marks": [
+        11,
+        12,
+        13,
+        14,
+        16
+      ]
+    },
+    {
+      "text": "The doctor sheet writes one row per doctor with counts, sorted by doctor id, or an empty-state message when there are none",
+      "marks": [
+        1,
+        4,
+        10,
+        17
+      ]
+    },
+    {
+      "text": "The medicine sheet writes one row per doctor-medicine pair with clamped widths and an empty-state message when there are none",
+      "marks": [
+        2,
+        3,
+        4,
+        8,
+        9
+      ]
+    },
+    {
+      "text": "Zero totals produce a zero rate without NaN or a divide-by-zero",
+      "marks": [
+        18,
+        19
+      ]
+    }
+  ],
+  "exception_text": "No unhandled exception; empty reports still produce a valid workbook",
+  "exception_marks": [],
+  "cases": [
+    {
+      "method": "Write_DoctorAndMedicineSheets_SortDoctorsByIdAndMedicinesByName",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Write_DoctorWithoutMedicines_StillWritesDoctorRow",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Write_EmptyDoctorCollection_WritesEmptyMessageRowOnMedicineSheet",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Write_EmptyDoctors_WritesEmptyStateOnDoctorAndMedicineSheets",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Write_EmptyReport_WritesEmptyStateWithoutThrowing",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Write_FullReport_CreatesAllSheetsAndMetrics",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Write_FullReport_CreatesThreeSheetsWithExpectedOrderAndMetrics",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Write_LongMedicineNames_ClampsColumnWidthsBetween10And40",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Write_MedicineSheet_WritesOneRowPerDoctorMedicinePair",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Write_NoDoctors_WritesEmptyRowOnDoctorSheet",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Write_OverviewSheet_ContainsEveryIntegerMetricRow",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Write_OverviewSheet_ContainsReportMetadata",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Write_OverviewSheet_ContainsTheThreePercentageRows",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Write_OverviewSheet_WithoutDoctor_ShowsAllDoctorsLabel",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Write_ProducesExactlyTheThreeExpectedSheets",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Write_UsesPercentFormatForRatesAndIntegerFormatForCounts",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Write_WithDoctors_WritesOneRowPerDoctorWithCounts",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Write_ZeroPlanTotals_DoesNotDivideByZero",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "Write_ZeroTotalPlans_AdherenceRateIsZeroAndNotNaN",
+      "type": "B",
+      "result": "P"
+    }
+  ]
+}

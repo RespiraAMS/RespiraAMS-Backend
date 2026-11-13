@@ -1,0 +1,670 @@
+{
+  "function_code": "FormulaDtoMapper.Map",
+  "sheet_name": "FormulaDtoMapper",
+  "lines_of_code": 117,
+  "requirement": "Map a FormulaDto tree to the domain Formula model: resolve constants by content (boolean, then numeric, then categorical), resolve variable references against the supplied clinical variables, and build binary, unary, or ternary formulas by shape precedence, reporting a failure for unknown variables, missing parts, mismatched operand types, or disallowed operators.",
+  "preconditions": [
+    {
+      "text": "The mapper is constructed without dependencies",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42
+      ]
+    },
+    {
+      "text": "The clinical variables are supplied as a variable list",
+      "marks": [
+        4,
+        8,
+        10,
+        12,
+        14,
+        15,
+        16,
+        23,
+        24,
+        30,
+        36,
+        41
+      ]
+    },
+    {
+      "text": "The DTO forms exactly one complete formula shape",
+      "marks": [
+        4,
+        5,
+        8,
+        10,
+        11,
+        12,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        23,
+        24,
+        29,
+        30,
+        34,
+        35,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "Binary formula missing the operator",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "Binary formula missing the left operand",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "Binary formula missing the right operand",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "Bare variable reference present among the dependencies",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "DTO with both a constant and a variable",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "Null dependencies",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "Unary formula over a non-boolean operand",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "Binary comparison over a variable and a constant",
+      "marks": [
+        8
+      ]
+    },
+    {
+      "text": "Ternary formula with boolean branches",
+      "marks": [
+        9
+      ]
+    },
+    {
+      "text": "Variable reference found among several dependencies",
+      "marks": [
+        10
+      ]
+    },
+    {
+      "text": "Constant equal to decimal.MaxValue",
+      "marks": [
+        11
+      ]
+    },
+    {
+      "text": "DTO with unary, ternary, and constant fields set at once",
+      "marks": [
+        12
+      ]
+    },
+    {
+      "text": "Ternary formula with branches of different types",
+      "marks": [
+        13
+      ]
+    },
+    {
+      "text": "Variable reference not present among the dependencies",
+      "marks": [
+        14
+      ]
+    },
+    {
+      "text": "DTO with both binary and unary fields set",
+      "marks": [
+        15
+      ]
+    },
+    {
+      "text": "Numeric-looking constant with a declared string result type",
+      "marks": [
+        16
+      ]
+    },
+    {
+      "text": "Numeric constant '0'",
+      "marks": [
+        17
+      ]
+    },
+    {
+      "text": "Numeric constant '1'",
+      "marks": [
+        18
+      ]
+    },
+    {
+      "text": "Numeric constant '-42'",
+      "marks": [
+        19
+      ]
+    },
+    {
+      "text": "Numeric constant '3.5'",
+      "marks": [
+        20
+      ]
+    },
+    {
+      "text": "Numeric constant ' 42 ' with surrounding whitespace",
+      "marks": [
+        21
+      ]
+    },
+    {
+      "text": "DTO with no fields at all",
+      "marks": [
+        22
+      ]
+    },
+    {
+      "text": "Complete ternary formula",
+      "marks": [
+        23
+      ]
+    },
+    {
+      "text": "Complete unary formula",
+      "marks": [
+        24
+      ]
+    },
+    {
+      "text": "Dependencies that are not a variable list",
+      "marks": [
+        25
+      ]
+    },
+    {
+      "text": "Ternary formula with a non-boolean condition",
+      "marks": [
+        26
+      ]
+    },
+    {
+      "text": "Binary formula whose operands have different types",
+      "marks": [
+        27
+      ]
+    },
+    {
+      "text": "Ternary formula without an else branch",
+      "marks": [
+        28
+      ]
+    },
+    {
+      "text": "Constant empty string",
+      "marks": [
+        29
+      ]
+    },
+    {
+      "text": "Complete binary formula",
+      "marks": [
+        30
+      ]
+    },
+    {
+      "text": "Binary formula adding two booleans",
+      "marks": [
+        31
+      ]
+    },
+    {
+      "text": "Binary formula applying AND to two numbers",
+      "marks": [
+        32
+      ]
+    },
+    {
+      "text": "Binary formula adding two categories",
+      "marks": [
+        33
+      ]
+    },
+    {
+      "text": "Categorical constant 'SEVERE'",
+      "marks": [
+        34
+      ]
+    },
+    {
+      "text": "Categorical constant 'A+'",
+      "marks": [
+        35
+      ]
+    },
+    {
+      "text": "Variable reference among several dependencies that does not match",
+      "marks": [
+        36
+      ]
+    },
+    {
+      "text": "Boolean constant 'true'",
+      "marks": [
+        37
+      ]
+    },
+    {
+      "text": "Boolean constant 'True'",
+      "marks": [
+        38
+      ]
+    },
+    {
+      "text": "Boolean constant 'TRUE'",
+      "marks": [
+        39
+      ]
+    },
+    {
+      "text": "Boolean constant ' false ' with surrounding whitespace",
+      "marks": [
+        40
+      ]
+    },
+    {
+      "text": "DTO with both a variable and a complete binary formula",
+      "marks": [
+        41
+      ]
+    },
+    {
+      "text": "Constant one past decimal.MaxValue (numeric overflow)",
+      "marks": [
+        42
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "Success with the mapped formula tree",
+      "marks": [
+        4,
+        5,
+        8,
+        10,
+        11,
+        12,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        23,
+        24,
+        29,
+        30,
+        34,
+        35,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42
+      ]
+    },
+    {
+      "text": "Constants are resolved by content: boolean, then numeric, then categorical",
+      "marks": [
+        16,
+        17,
+        18,
+        19,
+        20,
+        29,
+        34,
+        35,
+        37,
+        38,
+        39,
+        40
+      ]
+    },
+    {
+      "text": "Shape precedence: constant, then variable, then binary, then unary, then ternary",
+      "marks": [
+        5,
+        12,
+        15,
+        41
+      ]
+    },
+    {
+      "text": "Failure with BadRequest for an unknown variable, a missing part, or bad types",
+      "marks": [
+        1,
+        2,
+        3,
+        6,
+        7,
+        9,
+        13,
+        14,
+        22,
+        25,
+        26,
+        27,
+        28,
+        31,
+        32,
+        33,
+        36
+      ]
+    },
+    {
+      "text": "Empty constants and numeric overflow fall through to a categorical constant",
+      "marks": [
+        29,
+        42
+      ]
+    }
+  ],
+  "exception_text": "No unhandled exception; domain ArgumentExceptions are caught and returned as failed Results",
+  "exception_marks": [
+    1,
+    2,
+    3,
+    7,
+    9,
+    13,
+    26,
+    27,
+    28,
+    31,
+    32,
+    33
+  ],
+  "cases": [
+    {
+      "method": "Map_BinaryMissingPart_Failure",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Map_BinaryMissingPart_Failure",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Map_BinaryMissingPart_Failure",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Map_Variable_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Map_ConstantTakesPrecedenceOverVariable_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Map_NullDependencies_Failure",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Map_UnaryNonBooleanOperand_Failure",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Map_BinaryWithVariable_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Map_TernaryBooleanBranches_Failure",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Map_VariableFoundAmongMultiple_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Map_DecimalMaxValue_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Map_UnaryTakesPrecedenceOverTernary_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Map_TernaryMismatchedBranches_Failure",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Map_UnknownVariable_Failure",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Map_BinaryTakesPrecedenceOverUnary_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Map_ConstantResolvedByContent_IgnoresResultType",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Map_NumericConstant_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Map_NumericConstant_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Map_NumericConstant_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Map_NumericConstant_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Map_NumericConstant_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "Map_EmptyDto_Failure",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Map_Ternary_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Map_Unary_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Map_NonVariableListDependencies_Failure",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Map_TernaryNonBooleanCondition_Failure",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Map_BinaryOperandTypeMismatch_Failure",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Map_TernaryMissingIfFalse_Failure",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Map_EmptyConstant_MapsToCategorical",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "Map_Binary_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Map_BinaryOperatorNotAllowedForOperand_Failure",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Map_BinaryOperatorNotAllowedForOperand_Failure",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Map_BinaryOperatorNotAllowedForOperand_Failure",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Map_CategoricalConstant_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Map_CategoricalConstant_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Map_UnknownVariableAmongMultiple_Failure",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Map_BooleanConstant_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Map_BooleanConstant_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Map_BooleanConstant_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Map_BooleanConstant_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "Map_VariableTakesPrecedenceOverBinary_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Map_NumericOverflow_MapsToCategorical",
+      "type": "B",
+      "result": "P"
+    }
+  ]
+}

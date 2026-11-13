@@ -1,0 +1,517 @@
+{
+  "function_code": "UpsertTreatmentPlanValidator.Validate",
+  "sheet_name": "UpsertTreatmentPlanValidator",
+  "lines_of_code": 42,
+  "requirement": "Validate an upsert-treatment-plan command: the doctor, patient, and diagnosis ids and the diagnosis text must not be empty, the medicine list must be non-empty and every medicine must carry an id, name, and classification, and the medicine-choice reason must be null when IsAdhere is true or non-blank when IsAdhere is false.",
+  "preconditions": [
+    {
+      "text": "Validation runs on an in-memory command without database access",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33
+      ]
+    },
+    {
+      "text": "Every supplied field satisfies its rule",
+      "marks": [
+        5,
+        25,
+        26,
+        33
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "UpsertTreatmentPlan AdhereWithReason Fail (reason: ' ')",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "UpsertTreatmentPlan AdhereWithReason Fail (reason: '')",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "UpsertTreatmentPlan AdhereWithReason Fail (reason: 'Patient requested a different medicine')",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "UpsertTreatmentPlan AdhereWithReason Fail (reason: '\\t')",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "UpsertTreatmentPlan AdhereWithoutReason Success",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "UpsertTreatmentPlan AllSectionsInvalid Fail",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "UpsertTreatmentPlan EmptyMedicineId Fail",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "UpsertTreatmentPlan EmptyMedicineList Fail",
+      "marks": [
+        8
+      ]
+    },
+    {
+      "text": "UpsertTreatmentPlan EmptyRequiredId Fail (propertyName: 'DiagnosisId')",
+      "marks": [
+        9
+      ]
+    },
+    {
+      "text": "UpsertTreatmentPlan EmptyRequiredId Fail (propertyName: 'DoctorId')",
+      "marks": [
+        10
+      ]
+    },
+    {
+      "text": "UpsertTreatmentPlan EmptyRequiredId Fail (propertyName: 'PatientId')",
+      "marks": [
+        11
+      ]
+    },
+    {
+      "text": "UpsertTreatmentPlan InvalidLaterMedicine Fail",
+      "marks": [
+        12
+      ]
+    },
+    {
+      "text": "UpsertTreatmentPlan MissingDiagnosis Fail (diagnosis: ' ')",
+      "marks": [
+        13
+      ]
+    },
+    {
+      "text": "UpsertTreatmentPlan MissingDiagnosis Fail (diagnosis: '')",
+      "marks": [
+        14
+      ]
+    },
+    {
+      "text": "UpsertTreatmentPlan MissingDiagnosis Fail (diagnosis: '\\t')",
+      "marks": [
+        15
+      ]
+    },
+    {
+      "text": "UpsertTreatmentPlan MissingDiagnosis Fail (diagnosis: null)",
+      "marks": [
+        16
+      ]
+    },
+    {
+      "text": "UpsertTreatmentPlan MissingMedicineClassification Fail (classification: ' ')",
+      "marks": [
+        17
+      ]
+    },
+    {
+      "text": "UpsertTreatmentPlan MissingMedicineClassification Fail (classification: '')",
+      "marks": [
+        18
+      ]
+    },
+    {
+      "text": "UpsertTreatmentPlan MissingMedicineClassification Fail (classification: '\\t')",
+      "marks": [
+        19
+      ]
+    },
+    {
+      "text": "UpsertTreatmentPlan MissingMedicineClassification Fail (classification: null)",
+      "marks": [
+        20
+      ]
+    },
+    {
+      "text": "UpsertTreatmentPlan MissingMedicineName Fail (name: ' ')",
+      "marks": [
+        21
+      ]
+    },
+    {
+      "text": "UpsertTreatmentPlan MissingMedicineName Fail (name: '')",
+      "marks": [
+        22
+      ]
+    },
+    {
+      "text": "UpsertTreatmentPlan MissingMedicineName Fail (name: '\\t')",
+      "marks": [
+        23
+      ]
+    },
+    {
+      "text": "UpsertTreatmentPlan MissingMedicineName Fail (name: null)",
+      "marks": [
+        24
+      ]
+    },
+    {
+      "text": "UpsertTreatmentPlan NotAdhereWithPaddedReason Success",
+      "marks": [
+        25
+      ]
+    },
+    {
+      "text": "UpsertTreatmentPlan NotAdhereWithReason Success",
+      "marks": [
+        26
+      ]
+    },
+    {
+      "text": "UpsertTreatmentPlan NotAdhereWithoutReason Fail (reason: ' ')",
+      "marks": [
+        27
+      ]
+    },
+    {
+      "text": "UpsertTreatmentPlan NotAdhereWithoutReason Fail (reason: '')",
+      "marks": [
+        28
+      ]
+    },
+    {
+      "text": "UpsertTreatmentPlan NotAdhereWithoutReason Fail (reason: '\\n')",
+      "marks": [
+        29
+      ]
+    },
+    {
+      "text": "UpsertTreatmentPlan NotAdhereWithoutReason Fail (reason: '\\t')",
+      "marks": [
+        30
+      ]
+    },
+    {
+      "text": "UpsertTreatmentPlan NotAdhereWithoutReason Fail (reason: null)",
+      "marks": [
+        31
+      ]
+    },
+    {
+      "text": "UpsertTreatmentPlan NullMedicineList Fail",
+      "marks": [
+        32
+      ]
+    },
+    {
+      "text": "UpsertTreatmentPlan TwoMedicines Success",
+      "marks": [
+        33
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "No validation errors",
+      "marks": [
+        5,
+        25,
+        26,
+        33
+      ]
+    },
+    {
+      "text": "Validation error on DoctorId, PatientId, or DiagnosisId",
+      "marks": [
+        9,
+        10,
+        11
+      ]
+    },
+    {
+      "text": "Validation error on Diagnosis or the medicine list",
+      "marks": [
+        8,
+        13,
+        14,
+        15,
+        16,
+        32
+      ]
+    },
+    {
+      "text": "Validation error on a medicine's Id, Name, or Classification",
+      "marks": [
+        7,
+        12,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24
+      ]
+    },
+    {
+      "text": "Validation error on the medicine-choice reason for the IsAdhere flag, or every section reported at once",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31
+      ]
+    }
+  ],
+  "exception_text": "No unhandled exception; invalid input is reported as validation errors",
+  "exception_marks": [
+    1,
+    2,
+    3,
+    4,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32
+  ],
+  "cases": [
+    {
+      "method": "UpsertTreatmentPlan_AdhereWithReason_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpsertTreatmentPlan_AdhereWithReason_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpsertTreatmentPlan_AdhereWithReason_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpsertTreatmentPlan_AdhereWithReason_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpsertTreatmentPlan_AdhereWithoutReason_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "UpsertTreatmentPlan_AllSectionsInvalid_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpsertTreatmentPlan_EmptyMedicineId_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpsertTreatmentPlan_EmptyMedicineList_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpsertTreatmentPlan_EmptyRequiredId_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpsertTreatmentPlan_EmptyRequiredId_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpsertTreatmentPlan_EmptyRequiredId_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpsertTreatmentPlan_InvalidLaterMedicine_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpsertTreatmentPlan_MissingDiagnosis_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpsertTreatmentPlan_MissingDiagnosis_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpsertTreatmentPlan_MissingDiagnosis_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpsertTreatmentPlan_MissingDiagnosis_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpsertTreatmentPlan_MissingMedicineClassification_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpsertTreatmentPlan_MissingMedicineClassification_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpsertTreatmentPlan_MissingMedicineClassification_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpsertTreatmentPlan_MissingMedicineClassification_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpsertTreatmentPlan_MissingMedicineName_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpsertTreatmentPlan_MissingMedicineName_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpsertTreatmentPlan_MissingMedicineName_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpsertTreatmentPlan_MissingMedicineName_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpsertTreatmentPlan_NotAdhereWithPaddedReason_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "UpsertTreatmentPlan_NotAdhereWithReason_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "UpsertTreatmentPlan_NotAdhereWithoutReason_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpsertTreatmentPlan_NotAdhereWithoutReason_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpsertTreatmentPlan_NotAdhereWithoutReason_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpsertTreatmentPlan_NotAdhereWithoutReason_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpsertTreatmentPlan_NotAdhereWithoutReason_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpsertTreatmentPlan_NullMedicineList_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpsertTreatmentPlan_TwoMedicines_Success",
+      "type": "N",
+      "result": "P"
+    }
+  ]
+}

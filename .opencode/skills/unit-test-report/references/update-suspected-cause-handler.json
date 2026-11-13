@@ -1,0 +1,195 @@
+{
+  "function_code": "UpdateSuspectedCauseHandler.HandleAsync",
+  "sheet_name": "UpdateSuspectedCauseHandler",
+  "lines_of_code": 63,
+  "requirement": "Update a suspected cause: the target and the new pathogen must exist and be live, the new (pathogen, severity, treatment site) tuple must not be held by another live cause, then map the new values, save, and report Updated.",
+  "preconditions": [
+    {
+      "text": "A live suspected cause exists for the target id",
+      "marks": [
+        1,
+        2,
+        3,
+        6,
+        8
+      ]
+    },
+    {
+      "text": "The requested pathogen exists and is live",
+      "marks": [
+        1,
+        2,
+        3,
+        6,
+        8
+      ]
+    },
+    {
+      "text": "No other live cause holds the requested tuple",
+      "marks": [
+        2,
+        3,
+        6,
+        8
+      ]
+    },
+    {
+      "text": "Another live cause already holds the requested tuple",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "The target or the pathogen is missing, soft-deleted, or unknown",
+      "marks": [
+        4,
+        5,
+        7,
+        9
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "Update to a tuple already held by another live cause",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "Move the cause to a different pathogen",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "Update whose tuple is held only by a soft-deleted cause",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "Update request with an unknown cause id",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "Update request referencing a soft-deleted pathogen",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "Same tuple applied to another pathogen",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "Update request for a cause that was soft deleted beforehand",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "Update the severity and treatment site of a live cause",
+      "marks": [
+        8
+      ]
+    },
+    {
+      "text": "Update request with an unknown pathogen id",
+      "marks": [
+        9
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "Success with Updated status; the new tuple is persisted and UpdatedAt refreshed",
+      "marks": [
+        2,
+        3,
+        6,
+        8
+      ]
+    },
+    {
+      "text": "Failure with BadRequest when the cause or pathogen is missing, deleted, or unknown",
+      "marks": [
+        4,
+        5,
+        7,
+        9
+      ]
+    },
+    {
+      "text": "Failure with BadRequest when another live cause holds the requested tuple",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "Uniqueness only considers live causes, so a soft-deleted duplicate does not block",
+      "marks": [
+        3
+      ]
+    }
+  ],
+  "exception_text": "No unhandled exception; every rejection is returned as a failed Result",
+  "exception_marks": [
+    1,
+    4,
+    5,
+    7,
+    9
+  ],
+  "cases": [
+    {
+      "method": "UpdateCause_DuplicateSeveritySite_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdateCause_MoveToOtherPathogen_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "UpdateCause_SoftDeletedDuplicate_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "UpdateCause_CauseNotFound_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdateCause_SoftDeletedPathogen_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdateCause_SameTupleOnOtherPathogen_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "UpdateCause_SoftDeletedCause_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdateCause_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "UpdateCause_PathogenNotFound_Fail",
+      "type": "A",
+      "result": "P"
+    }
+  ]
+}

@@ -1,0 +1,146 @@
+{
+  "function_code": "UpdateAntibiogramHandler.HandleAsync",
+  "sheet_name": "UpdateAntibiogramHandler",
+  "lines_of_code": 77,
+  "requirement": "Update an antibiogram in place: reject an unknown or soft-deleted target, unknown or soft-deleted pathogens and antibiotics, and a pathogen + MIC pair owned by another antibiogram, then map the command, reconcile the antibiotic joins, and persist.",
+  "preconditions": [
+    {
+      "text": "A live antibiogram exists for the target ID",
+      "marks": [1, 2, 3, 4, 5, 6, 10, 11, 12, 13, 14, 15]
+    },
+    {
+      "text": "A live pathogen exists for the requested pathogen ID",
+      "marks": [1, 2, 3, 4, 5, 6, 15, 16, 17, 18]
+    },
+    {
+      "text": "Every requested antibiotic exists and is not soft-deleted",
+      "marks": [1, 2, 3, 4, 5, 6, 15, 16, 17, 18]
+    },
+    {
+      "text": "Another live antibiogram already uses the requested pathogen and MIC pair",
+      "marks": [15]
+    },
+    {
+      "text": "A soft-deleted antibiogram already uses the requested pathogen and MIC pair",
+      "marks": [18]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "Update with one antibiotic and MIC Susceptible (lowest enum member)",
+      "marks": [1]
+    },
+    {
+      "text": "Update with one antibiotic and MIC Resistant (highest enum member)",
+      "marks": [2]
+    },
+    {
+      "text": "Add a second antibiotic to a single-antibiotic panel",
+      "marks": [3]
+    },
+    {
+      "text": "Remove one antibiotic from a two-antibiotic panel",
+      "marks": [4]
+    },
+    {
+      "text": "Replace the whole panel with two different antibiotics",
+      "marks": [5]
+    },
+    {
+      "text": "Two beta-lactams sharing the same group lineage",
+      "marks": [6]
+    },
+    {
+      "text": "Update request with an unknown antibiogram ID",
+      "marks": [7]
+    },
+    {
+      "text": "Update request with Guid.Empty as the antibiogram ID",
+      "marks": [8]
+    },
+    {
+      "text": "Update request for an already soft-deleted antibiogram",
+      "marks": [9]
+    },
+    {
+      "text": "Update with an unknown pathogen ID",
+      "marks": [10]
+    },
+    {
+      "text": "Update with a soft-deleted pathogen ID",
+      "marks": [11]
+    },
+    {
+      "text": "One valid and one unknown antibiotic ID",
+      "marks": [12]
+    },
+    {
+      "text": "Only unknown antibiotic IDs",
+      "marks": [13]
+    },
+    {
+      "text": "Soft-deleted antibiotic ID",
+      "marks": [14]
+    },
+    {
+      "text": "Pathogen and MIC pair used by another live antibiogram",
+      "marks": [15]
+    },
+    {
+      "text": "Same pathogen with a different MIC category",
+      "marks": [16]
+    },
+    {
+      "text": "Different pathogen with the same MIC category",
+      "marks": [17]
+    },
+    {
+      "text": "Pathogen and MIC pair used only by a soft-deleted antibiogram",
+      "marks": [18]
+    }
+  ],
+  "returns": [
+    {
+      "text": "Success with Updated status; pathogen, MIC category, and timestamp refreshed",
+      "marks": [1, 2, 3, 4, 5, 6, 16, 17, 18]
+    },
+    {
+      "text": "The antibiotic join collection matches the requested set",
+      "marks": [1, 2, 3, 4, 5, 6]
+    },
+    {
+      "text": "Failure with BadRequest; target antibiogram or pathogen not found",
+      "marks": [7, 8, 9, 10, 11]
+    },
+    {
+      "text": "Failure with BadRequest and the 'Not all antibiotic exist' error",
+      "marks": [12, 13, 14]
+    },
+    {
+      "text": "Failure with BusinessRuleViolation for a duplicate pathogen and MIC pair",
+      "marks": [15]
+    }
+  ],
+  "exception_text": "No unhandled exception; every failure is returned as a failed Result",
+  "exception_marks": [7, 8, 9, 10, 11, 12, 13, 14, 15],
+  "cases": [
+    { "method": "UpdateAntibiogram_MinimalValues_Success", "type": "B", "result": "P" },
+    { "method": "UpdateAntibiogram_MinimalValues_Success", "type": "B", "result": "P" },
+    { "method": "UpdateAntibiogram_AddAntibiotic_Success", "type": "N", "result": "P" },
+    { "method": "UpdateAntibiogram_RemoveAntibiotic_Success", "type": "N", "result": "P" },
+    { "method": "UpdateAntibiogram_ReplaceAntibiotics_Success", "type": "N", "result": "P" },
+    { "method": "UpdateAntibiogram_SameLineageAntibiotics_Success", "type": "N", "result": "P" },
+    { "method": "UpdateAntibiogram_UnknownId_Fail", "type": "A", "result": "P" },
+    { "method": "UpdateAntibiogram_EmptyId_Fail", "type": "A", "result": "P" },
+    { "method": "UpdateAntibiogram_AlreadyDeleted_Fail", "type": "A", "result": "P" },
+    { "method": "UpdateAntibiogram_UnknownPathogen_Fail", "type": "A", "result": "P" },
+    { "method": "UpdateAntibiogram_SoftDeletedPathogen_Fail", "type": "A", "result": "P" },
+    { "method": "UpdateAntibiogram_UnknownAntibiotic_Fail", "type": "A", "result": "P" },
+    { "method": "UpdateAntibiogram_AllAntibioticsUnknown_Fail", "type": "A", "result": "P" },
+    { "method": "UpdateAntibiogram_SoftDeletedAntibiotic_Fail", "type": "A", "result": "P" },
+    { "method": "UpdateAntibiogram_DuplicatePathogenAndMic_Fail", "type": "A", "result": "P" },
+    { "method": "UpdateAntibiogram_SamePathogenDifferentMic_Success", "type": "N", "result": "P" },
+    { "method": "UpdateAntibiogram_DifferentPathogenSameMic_Success", "type": "N", "result": "P" },
+    { "method": "UpdateAntibiogram_SoftDeletedConflict_Success", "type": "N", "result": "P" }
+  ]
+}

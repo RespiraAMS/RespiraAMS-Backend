@@ -1,0 +1,313 @@
+{
+  "function_code": "Doctor.Constructor",
+  "sheet_name": "Doctor",
+  "lines_of_code": 9,
+  "requirement": "Doctor profile entity contract: a new doctor receives a UUID v7 id, UTC audit timestamps, a not-soft-deleted state, an empty patient collection, no assigned head doctor, and null media/date-of-birth/search-vector defaults; degrees, media, date of birth, and the head-doctor link are assignable, and the entity remains a distinct BaseDoctor type covering the declared doctor enums.",
+  "preconditions": [
+    {
+      "text": "A Doctor is constructed with the required profile fields",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ]
+    },
+    {
+      "text": "The BaseDoctor, patient, and degree members are available",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "AcademicTitle_HasNoneAssociateProfessorAndProfessor",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "DegreeType_HasNineDeclaredMembersWithStableOrdinals",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "Doctor_AndHeadDepartmentDoctor_AreBaseDoctorInstances",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "Doctor_AndHeadDepartmentDoctor_AreDifferentTypes",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "Doctor_DateOfBirthIsNullByDefaultAndCanBeSet",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "Doctor_DegreesCanCarrySeveralDegrees",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "Doctor_DegreesHoldTheAcademicDegrees",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "Doctor_MediaIdIsNullByDefaultAndCanBeSet",
+      "marks": [
+        8
+      ]
+    },
+    {
+      "text": "GenderType_HasExactlyMaleAndFemale",
+      "marks": [
+        9
+      ]
+    },
+    {
+      "text": "NewDoctor_HasANonEmptyUuidV7Identifier",
+      "marks": [
+        10
+      ]
+    },
+    {
+      "text": "NewDoctor_HasCreatedAtAndUpdatedAtCloseToNow",
+      "marks": [
+        11
+      ]
+    },
+    {
+      "text": "NewDoctor_HasNoHeadDepartmentDoctorAssigned",
+      "marks": [
+        12
+      ]
+    },
+    {
+      "text": "NewDoctor_HasNoPatientsAssigned",
+      "marks": [
+        13
+      ]
+    },
+    {
+      "text": "NewDoctor_HasNoSearchVectorBecauseTheDatabaseGeneratesIt",
+      "marks": [
+        14
+      ]
+    },
+    {
+      "text": "NewDoctor_IsNotSoftDeletedAndHasNoDeletedAt",
+      "marks": [
+        15
+      ]
+    },
+    {
+      "text": "NewHeadDepartmentDoctor_HasAnEmptySubordinatesCollection",
+      "marks": [
+        16
+      ]
+    },
+    {
+      "text": "PositionType_StartsAtStaffDoctorAndEndsAtDirector",
+      "marks": [
+        17
+      ]
+    },
+    {
+      "text": "ProfileRole_CoversBothProfileEntityTypes",
+      "marks": [
+        18
+      ]
+    },
+    {
+      "text": "SettingHeadDepartmentDoctorId_LinksTheDoctorToItsHead",
+      "marks": [
+        19
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "A non-empty UUID v7 id, UTC audit timestamps, and a not-soft-deleted row",
+      "marks": [
+        10,
+        11,
+        15
+      ]
+    },
+    {
+      "text": "The doctor defaults to no head doctor, no patients, null media/date of birth, and a database-generated search vector",
+      "marks": [
+        5,
+        8,
+        12,
+        13,
+        14
+      ]
+    },
+    {
+      "text": "Degrees, media, date of birth, and the head-doctor link can be assigned and read back",
+      "marks": [
+        5,
+        6,
+        7,
+        8,
+        19
+      ]
+    },
+    {
+      "text": "Doctor and HeadDepartmentDoctor are distinct BaseDoctor types, and the enums expose the expected members",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        9,
+        17,
+        18
+      ]
+    }
+  ],
+  "exception_text": "No unhandled exception; entity initialization and property assignment succeed",
+  "exception_marks": [],
+  "cases": [
+    {
+      "method": "AcademicTitle_HasNoneAssociateProfessorAndProfessor",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "DegreeType_HasNineDeclaredMembersWithStableOrdinals",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Doctor_AndHeadDepartmentDoctor_AreBaseDoctorInstances",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Doctor_AndHeadDepartmentDoctor_AreDifferentTypes",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Doctor_DateOfBirthIsNullByDefaultAndCanBeSet",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Doctor_DegreesCanCarrySeveralDegrees",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Doctor_DegreesHoldTheAcademicDegrees",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Doctor_MediaIdIsNullByDefaultAndCanBeSet",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "GenderType_HasExactlyMaleAndFemale",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "NewDoctor_HasANonEmptyUuidV7Identifier",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "NewDoctor_HasCreatedAtAndUpdatedAtCloseToNow",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "NewDoctor_HasNoHeadDepartmentDoctorAssigned",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "NewDoctor_HasNoPatientsAssigned",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "NewDoctor_HasNoSearchVectorBecauseTheDatabaseGeneratesIt",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "NewDoctor_IsNotSoftDeletedAndHasNoDeletedAt",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "NewHeadDepartmentDoctor_HasAnEmptySubordinatesCollection",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "PositionType_StartsAtStaffDoctorAndEndsAtDirector",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "ProfileRole_CoversBothProfileEntityTypes",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SettingHeadDepartmentDoctorId_LinksTheDoctorToItsHead",
+      "type": "N",
+      "result": "P"
+    }
+  ]
+}

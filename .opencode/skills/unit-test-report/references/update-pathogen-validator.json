@@ -1,0 +1,147 @@
+{
+  "function_code": "UpdatePathogenValidator.Validate",
+  "sheet_name": "UpdatePathogenValidator",
+  "lines_of_code": 20,
+  "requirement": "Validate an update-pathogen command: the pathogen id, name, and description must all be non-empty.",
+  "preconditions": [
+    {
+      "text": "Validation runs on an in-memory command without database access",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "Empty name with otherwise valid fields",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "Whitespace-only name with otherwise valid fields",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "Empty description with otherwise valid fields",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "Whitespace-only description with otherwise valid fields",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "Guid.Empty as the pathogen id",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "Valid update to 'Streptococcus pneumoniae' with atypical flag true",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "Valid update to 'Haemophilus influenzae' with atypical flag false",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "Empty id, empty name, and empty description",
+      "marks": [
+        8
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "No validation errors",
+      "marks": [
+        6,
+        7
+      ]
+    },
+    {
+      "text": "Single validation error reported on Name, Description, or Id",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ]
+    },
+    {
+      "text": "Three violations reported for three invalid fields",
+      "marks": [
+        8
+      ]
+    }
+  ],
+  "exception_text": "No unhandled exception; invalid input is reported as validation errors",
+  "exception_marks": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    8
+  ],
+  "cases": [
+    {
+      "method": "UpdatePathogen_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdatePathogen_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdatePathogen_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdatePathogen_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdatePathogen_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdatePathogen_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "UpdatePathogen_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "UpdatePathogen_AllFieldsEmpty_Fail",
+      "type": "A",
+      "result": "P"
+    }
+  ]
+}

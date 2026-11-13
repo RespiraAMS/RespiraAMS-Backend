@@ -90,15 +90,6 @@ dotnet build --no-incremental
 # own directory.
 dotnet test --coverage --coverage-output-format cobertura --coverage-settings "$(pwd)/coverage.settings.xml"
 
-# Run every test project without the coverage report.
-# `dotnet test` goes through the Microsoft.Testing.Platform handshake, which needs a
-# working runner setup. The script invokes the test executables directly instead, so it
-# also works where the handshake is unavailable.
-./scripts/run-tests.sh
-
-# Print how many test cases each feature (namespace) has.
-./scripts/test-coverage-report.sh
-
 # Finish the SonarQube analysis and import the results
 dotnet sonarscanner end /d:sonar.token="<YOUR_SONAR_TOKEN>"
 
@@ -115,45 +106,18 @@ open docs/test-report/index.html
 > `--coverage-output-format xml` and the scanner option with
 > `/d:sonar.cs.vscoveragexml.reportsPaths=test/**/TestResults/*.xml`.
 
-## Audit logs and Clinical rollback
+### Test report generators
 
-Clinical, Patient, and Analysis record data changes in an `audit_entries` table
-in the same database transaction as the changed data. Each entry includes the
-actor and role, action, entity type and id, timestamp, correlation and trace
-ids, request path, changed fields, and before/after snapshots where available.
-Entries from one `SaveChanges` call share a `changeSetId`; rolling back an entry
-therefore previews and reverses the whole set. Audit rows are immutable history:
-a rollback writes a separate `Clinical.AuditRollback` entry.
+```bash
+# Ensure that the build and test steps (similar to SonarQube setup) is run first
+dotnet reportgenerator -reports:"test/**/TestResults/*.cobertura.xml" \
+-targetdir:"docs/test-report" -reporttypes:"Html_Dark;Cobertura" -assemblyfilters:"+Respira*;-[*]*"
 
-The services forward audit events asynchronously to Saga's audit log. Use the
-Saga endpoint to search across forwarded events:
-
-```http
-GET /api/v1/audit-logs?entityType=Respira.Clinical.Domain.Entities.Antibiotic&page=1&pageSize=50
+open docs/test-report/index.html
 ```
 
-Saga results expose an `id` that is the source service's audit entry id. Use it
-with the Clinical endpoints below to inspect the local record and preview or
-apply a rollback:
+### Development notes
 
-```http
-GET  /api/v1/clinical/audit-logs/{id}
-POST /api/v1/clinical/audit-logs/{id}/rollback/preview
-POST /api/v1/clinical/audit-logs/{id}/rollback
-```
-
-The endpoints require the `Admin` role. The gateway authenticates the caller
-and forwards identity headers; ServiceDefaults turns those headers into claims,
-then Clinical authorization applies its service-specific role rules. Review the
-preview before applying. Preview returns each proposed change and any conflicts;
-the apply endpoint returns `409 Conflict` if current data no longer matches the
-audited after-state. This prevents overwriting later edits. The transaction
-restores updates and deletes, removes rows created by the change set, and
-reverses many-to-many relationship changes. Rollback audit entries cannot
-themselves be rolled back.
-
-Audit forwarding is asynchronous, so a newly committed change may take a short
-time to appear in Saga search. Rollback reads the local Clinical database and
-can use the local audit entry as soon as it is committed. Snapshots omit
-non-owned relationship graphs; the Clinical rollback handles captured
-many-to-many join rows separately.
+Some distinctive features in this project has some special rules that is applied
+for all services, so it's recommended to refer to the `docs` directory and read
+the rules first

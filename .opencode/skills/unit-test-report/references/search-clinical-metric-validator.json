@@ -1,0 +1,562 @@
+{
+  "function_code": "SearchClinicalMetricValidator.Validate",
+  "sheet_name": "SearchClinicalMetricValidator",
+  "lines_of_code": 14,
+  "requirement": "Validate a search-clinical-metric query: the pagination parameters must satisfy page >= 1 and 1 <= size <= 100, and the search term must be at least two characters after trimming and contain only letters, digits, hyphens, or spaces.",
+  "preconditions": [
+    {
+      "text": "Validation runs on an in-memory query without database access",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32
+      ]
+    },
+    {
+      "text": "The pagination parameters are within the valid range",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        28,
+        29,
+        30,
+        31,
+        32
+      ]
+    },
+    {
+      "text": "The search term satisfies both the length and character-set rules",
+      "marks": [
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18
+      ]
+    },
+    {
+      "text": "The trimmed search term is shorter than two characters",
+      "marks": [
+        1,
+        19,
+        20,
+        21,
+        22,
+        28,
+        29,
+        30,
+        31,
+        32
+      ]
+    },
+    {
+      "text": "The search term contains a forbidden character",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        19,
+        20,
+        21,
+        22
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "Page 0, size 10, search term 'curb&65'",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "Search term 'curb&65' (ampersand)",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "Search term '50%' (percent sign)",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "Search term 'covid-19!' (exclamation mark)",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "Search term 'idsa/ats' (slash)",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "Search term 'ab_cd' (underscore)",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "Search term 'ab' (lower boundary of the trimmed length)",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "Search term '4c' (letters and digits)",
+      "marks": [
+        8
+      ]
+    },
+    {
+      "text": "Search term 'curb' (single word)",
+      "marks": [
+        9
+      ]
+    },
+    {
+      "text": "Search term 'curb-65' (hyphen allowed)",
+      "marks": [
+        10
+      ]
+    },
+    {
+      "text": "Search term 'blood urea' (multi-word)",
+      "marks": [
+        11
+      ]
+    },
+    {
+      "text": "Search term '  ab  ' (padding ignored by the length rule)",
+      "marks": [
+        12
+      ]
+    },
+    {
+      "text": "Search term 'IdsA2026' (mixed case and digits)",
+      "marks": [
+        13
+      ]
+    },
+    {
+      "text": "Search term 'Kháng' (accented Unicode letters)",
+      "marks": [
+        14
+      ]
+    },
+    {
+      "text": "Page 1, size 1 (smallest allowed values)",
+      "marks": [
+        15
+      ]
+    },
+    {
+      "text": "Page 1, size 10 (default values)",
+      "marks": [
+        16
+      ]
+    },
+    {
+      "text": "Page 1, size 100 (largest allowed size)",
+      "marks": [
+        17
+      ]
+    },
+    {
+      "text": "Page 7, size 50",
+      "marks": [
+        18
+      ]
+    },
+    {
+      "text": "Search term '!' (single forbidden character)",
+      "marks": [
+        19
+      ]
+    },
+    {
+      "text": "Search term '%' (single forbidden character)",
+      "marks": [
+        20
+      ]
+    },
+    {
+      "text": "Search term '&' (single forbidden character)",
+      "marks": [
+        21
+      ]
+    },
+    {
+      "text": "Search term ' @ ' (forbidden character with padding)",
+      "marks": [
+        22
+      ]
+    },
+    {
+      "text": "Page 0, size 10, search term 'curb'",
+      "marks": [
+        23
+      ]
+    },
+    {
+      "text": "Page -3, size 10, search term 'curb'",
+      "marks": [
+        24
+      ]
+    },
+    {
+      "text": "Page 1, size 0, search term 'curb'",
+      "marks": [
+        25
+      ]
+    },
+    {
+      "text": "Page 1, size -20, search term 'curb'",
+      "marks": [
+        26
+      ]
+    },
+    {
+      "text": "Page 1, size 101, search term 'curb'",
+      "marks": [
+        27
+      ]
+    },
+    {
+      "text": "Search term '' (empty)",
+      "marks": [
+        28
+      ]
+    },
+    {
+      "text": "Search term 'a' (one character)",
+      "marks": [
+        29
+      ]
+    },
+    {
+      "text": "Search term ' ' (single space)",
+      "marks": [
+        30
+      ]
+    },
+    {
+      "text": "Search term '   ' (three spaces)",
+      "marks": [
+        31
+      ]
+    },
+    {
+      "text": "Search term '  a  ' (one character with padding)",
+      "marks": [
+        32
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "No validation errors",
+      "marks": [
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18
+      ]
+    },
+    {
+      "text": "Single validation error reported on Param",
+      "marks": [
+        23,
+        24,
+        25,
+        26,
+        27
+      ]
+    },
+    {
+      "text": "Single validation error reported on SearchTerm",
+      "marks": [
+        28,
+        29,
+        30,
+        31,
+        32
+      ]
+    },
+    {
+      "text": "Two errors on SearchTerm: too short and forbidden character",
+      "marks": [
+        19,
+        20,
+        21,
+        22
+      ]
+    },
+    {
+      "text": "Two errors: one on Param and one on SearchTerm",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ]
+    }
+  ],
+  "exception_text": "No unhandled exception; invalid input is reported as validation errors",
+  "exception_marks": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32
+  ],
+  "cases": [
+    {
+      "method": "SearchClinicalMetric_InvalidSearchTermAndPaginationParam_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SearchClinicalMetric_SearchTermWithForbiddenCharacter_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SearchClinicalMetric_SearchTermWithForbiddenCharacter_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SearchClinicalMetric_SearchTermWithForbiddenCharacter_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SearchClinicalMetric_SearchTermWithForbiddenCharacter_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SearchClinicalMetric_SearchTermWithForbiddenCharacter_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SearchClinicalMetric_ValidSearchTerm_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "SearchClinicalMetric_ValidSearchTerm_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SearchClinicalMetric_ValidSearchTerm_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SearchClinicalMetric_ValidSearchTerm_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SearchClinicalMetric_ValidSearchTerm_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SearchClinicalMetric_ValidSearchTerm_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "SearchClinicalMetric_ValidSearchTerm_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SearchClinicalMetric_ValidSearchTerm_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SearchClinicalMetric_ValidPaginationParam_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "SearchClinicalMetric_ValidPaginationParam_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SearchClinicalMetric_ValidPaginationParam_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "SearchClinicalMetric_ValidPaginationParam_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SearchClinicalMetric_SearchTermTooShortAndForbiddenCharacter_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SearchClinicalMetric_SearchTermTooShortAndForbiddenCharacter_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SearchClinicalMetric_SearchTermTooShortAndForbiddenCharacter_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SearchClinicalMetric_SearchTermTooShortAndForbiddenCharacter_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SearchClinicalMetric_InvalidPaginationParam_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SearchClinicalMetric_InvalidPaginationParam_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SearchClinicalMetric_InvalidPaginationParam_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SearchClinicalMetric_InvalidPaginationParam_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SearchClinicalMetric_InvalidPaginationParam_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SearchClinicalMetric_SearchTermTooShort_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SearchClinicalMetric_SearchTermTooShort_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SearchClinicalMetric_SearchTermTooShort_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SearchClinicalMetric_SearchTermTooShort_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SearchClinicalMetric_SearchTermTooShort_Fail",
+      "type": "A",
+      "result": "P"
+    }
+  ]
+}

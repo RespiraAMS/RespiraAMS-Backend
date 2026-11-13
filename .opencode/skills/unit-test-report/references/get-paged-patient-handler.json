@@ -1,0 +1,205 @@
+{
+  "function_code": "GetPagedPatientHandler.HandleAsync",
+  "sheet_name": "GetPagedPatientHandler",
+  "lines_of_code": 63,
+  "requirement": "Return a page of live patients ordered by creation time descending: apply the optional gender filter on the server and the optional minimum/maximum age filters after evaluating the computed age, then project the patient summary fields.",
+  "preconditions": [
+    {
+      "text": "The patient table contains the rows seeded for the case",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ]
+    },
+    {
+      "text": "The age filters include the seeded boundary ages",
+      "marks": [
+        5,
+        6,
+        7
+      ]
+    },
+    {
+      "text": "The filters match no stored patient",
+      "marks": [
+        2,
+        10
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "GetPagedPatient CombinedFilters AppliedTogether Success",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "GetPagedPatient FilterMatchesNothing ReturnsEmpty Success",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "GetPagedPatient GenderFilter ReturnsOnlyThatGender Success",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "GetPagedPatient LastPartialPage HasNoNext Success",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "GetPagedPatient MaxAgeFilter IncludesBoundaryAge Success",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "GetPagedPatient MinAgeFilter ExcludesBelowBoundary Success",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "GetPagedPatient MinAndMaxAgeRange AppliedTogether Success",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "GetPagedPatient NoFilter FirstPageNewestFirstWithMetadata Success",
+      "marks": [
+        8
+      ]
+    },
+    {
+      "text": "GetPagedPatient NullFilter ReturnsEveryLivePatient Success",
+      "marks": [
+        9
+      ]
+    },
+    {
+      "text": "GetPagedPatient PageBeyondRangeWithMinimumSize ReturnsEmptyPage Success",
+      "marks": [
+        10
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "Success with the requested page and its metadata",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ]
+    },
+    {
+      "text": "Items ordered by CreatedAt descending with the summary projection",
+      "marks": [
+        8,
+        9
+      ]
+    },
+    {
+      "text": "Gender, minimum-age, and maximum-age filters narrow the page",
+      "marks": [
+        1,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ]
+    },
+    {
+      "text": "Boundary ages are included for the max filter and excluded below the minimum",
+      "marks": [
+        5,
+        6
+      ]
+    },
+    {
+      "text": "An empty page when the filter matches nothing or the page is beyond range",
+      "marks": [
+        2,
+        10
+      ]
+    }
+  ],
+  "exception_text": "No unhandled exception; the read-only query has no failure branch",
+  "exception_marks": [],
+  "cases": [
+    {
+      "method": "GetPagedPatient_CombinedFilters_AppliedTogether_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "GetPagedPatient_FilterMatchesNothing_ReturnsEmpty_Success",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "GetPagedPatient_GenderFilter_ReturnsOnlyThatGender_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "GetPagedPatient_LastPartialPage_HasNoNext_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "GetPagedPatient_MaxAgeFilter_IncludesBoundaryAge_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "GetPagedPatient_MinAgeFilter_ExcludesBelowBoundary_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "GetPagedPatient_MinAndMaxAgeRange_AppliedTogether_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "GetPagedPatient_NoFilter_FirstPageNewestFirstWithMetadata_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "GetPagedPatient_NullFilter_ReturnsEveryLivePatient_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "GetPagedPatient_PageBeyondRangeWithMinimumSize_ReturnsEmptyPage_Success",
+      "type": "A",
+      "result": "P"
+    }
+  ]
+}

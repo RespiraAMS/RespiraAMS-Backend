@@ -1,0 +1,136 @@
+{
+  "function_code": "UpsertTreatmentPlanMiddleware.InvokeAsync",
+  "sheet_name": "UpsertTreatmentPlanMiddleware",
+  "lines_of_code": 35,
+  "requirement": "Convert a FluentValidation ValidationException raised while handling an upsert-treatment-plan command into a normal failure Result: join the individual failure messages, fall back to the exception message when that join is blank, and return BadRequest.",
+  "preconditions": [
+    {
+      "text": "Wolverine's FluentValidation middleware raised a ValidationException",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ]
+    },
+    {
+      "text": "One or more validation failures, or a blank message on the exception",
+      "marks": [
+        2,
+        3,
+        4,
+        5
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "UpsertTreatmentPlan ExceptionWithoutFailures UsesExceptionMessage",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "UpsertTreatmentPlan FailureWithBlankMessage UsesExceptionMessage (message: ' ')",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "UpsertTreatmentPlan FailureWithBlankMessage UsesExceptionMessage (message: '')",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "UpsertTreatmentPlan FailureWithBlankMessage UsesExceptionMessage (message: '\\t')",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "UpsertTreatmentPlan MultipleValidationFailures ReturnsBadRequest",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "UpsertTreatmentPlan SingleValidationFailure ReturnsBadRequest",
+      "marks": [
+        6
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "Failure with BadRequest instead of an escaping exception",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ]
+    },
+    {
+      "text": "All validation messages are joined into the error text",
+      "marks": [
+        5,
+        6
+      ]
+    },
+    {
+      "text": "The exception message is used when the joined failures are blank",
+      "marks": [
+        1,
+        2,
+        3,
+        4
+      ]
+    }
+  ],
+  "exception_text": "The ValidationException is swallowed and returned as a failed Result",
+  "exception_marks": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ],
+  "cases": [
+    {
+      "method": "UpsertTreatmentPlan_ExceptionWithoutFailures_UsesExceptionMessage",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpsertTreatmentPlan_FailureWithBlankMessage_UsesExceptionMessage",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpsertTreatmentPlan_FailureWithBlankMessage_UsesExceptionMessage",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpsertTreatmentPlan_FailureWithBlankMessage_UsesExceptionMessage",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpsertTreatmentPlan_MultipleValidationFailures_ReturnsBadRequest",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpsertTreatmentPlan_SingleValidationFailure_ReturnsBadRequest",
+      "type": "A",
+      "result": "P"
+    }
+  ]
+}

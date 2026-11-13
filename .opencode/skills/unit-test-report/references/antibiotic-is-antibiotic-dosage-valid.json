@@ -1,0 +1,358 @@
+{
+  "function_code": "Antibiotic.IsAntibioticDosageValid",
+  "sheet_name": "Antibiotic",
+  "lines_of_code": 75,
+  "requirement": "Check that a set of dosages is a valid antibiotic dosage list: at least one dosage must exist, each route of administration must have exactly one standard dose (null CrCl), and the renal-adjusted CrCl ranges of the same route must not overlap.",
+  "preconditions": [
+    {
+      "text": "The dosage list is built in memory for the antibiotic under test",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23
+      ]
+    },
+    {
+      "text": "The expected violation is one of the dosage rules (empty list, missing/duplicate standard dose, overlapping range)",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "IsAntibioticDosageValid EmptyDosage Fail (dosages: [])",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "IsAntibioticDosageValid MoreThanOneStandardDose ThrowsStandardDoseInvalidException (dosages: [01a1c5ab-17b1-754f-867b-f7a6234c850c, Crcl = null, 2026-",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "IsAntibioticDosageValid MoreThanOneStandardDose ThrowsStandardDoseInvalidException (dosages: [01a1c5ab-17b1-7b90-81b9-b2ea399e909c, Crcl = null, 2026-",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "IsAntibioticDosageValid MoreThanOneStandardDose ThrowsStandardDoseInvalidException (dosages: [01a1c5ab-17b1-7f68-9232-d72430eb3a18, Crcl = null, 2026-",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "IsAntibioticDosageValid MoreThanOneStandardDose ThrowsStandardDoseInvalidException (dosages: [01a1c5ab-17b1-7fd0-a39f-28c284dffc9c, Crcl = null, 2026-",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "IsAntibioticDosageValid NoStandardDose Fail (dosages: [01a1c5ab-17b1-76a6-8592-149915bc6e01, Crcl = ≥ 15 và < 30, 2026-11-10T13:34:4...)",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "IsAntibioticDosageValid NoStandardDose Fail (dosages: [01a1c5ab-17b1-7b44-8236-13698d8b8332, Crcl = null, 2026-11-10T13:34:46.705023...)",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "IsAntibioticDosageValid NonOverlappingCrcl Success (dosages: [01a1c5ab-17b1-7304-9a64-0f5ad68e1aa7, Crcl = null, 2026-11-10T13:34:46.705045...)",
+      "marks": [
+        8
+      ]
+    },
+    {
+      "text": "IsAntibioticDosageValid NonOverlappingCrcl Success (dosages: [01a1c5ab-17b1-76b9-8501-cb0b44d90b26, Crcl = null, 2026-11-10T13:34:46.705052...)",
+      "marks": [
+        9
+      ]
+    },
+    {
+      "text": "IsAntibioticDosageValid NonOverlappingCrcl Success (dosages: [01a1c5ab-17b1-7865-983e-a9384d852c2a, Crcl = null, 2026-11-10T13:34:46.705042...)",
+      "marks": [
+        10
+      ]
+    },
+    {
+      "text": "IsAntibioticDosageValid NonOverlappingCrcl Success (dosages: [01a1c5ab-17b1-79ac-b5ab-b10a43429bbd, Crcl = null, 2026-11-10T13:34:46.705058...)",
+      "marks": [
+        11
+      ]
+    },
+    {
+      "text": "IsAntibioticDosageValid NonOverlappingCrcl Success (dosages: [01a1c5ab-17b1-7a2c-bc03-7704ef548096, Crcl = null, 2026-11-10T13:34:46.705050...)",
+      "marks": [
+        12
+      ]
+    },
+    {
+      "text": "IsAntibioticDosageValid NonOverlappingCrcl Success (dosages: [01a1c5ab-17b1-7a2d-b3f8-386feb1915bf, Crcl = null, 2026-11-10T13:34:46.705048...)",
+      "marks": [
+        13
+      ]
+    },
+    {
+      "text": "IsAntibioticDosageValid OverlappingCrcl Fail (dosages: [01a1c5ab-17b1-72b7-94b8-37ad0c38e900, Crcl = null, 2026-11-10T13:34:46.705069...)",
+      "marks": [
+        14
+      ]
+    },
+    {
+      "text": "IsAntibioticDosageValid OverlappingCrcl Fail (dosages: [01a1c5ab-17b1-7427-ac94-88917d9f5f01, Crcl = null, 2026-11-10T13:34:46.705062...)",
+      "marks": [
+        15
+      ]
+    },
+    {
+      "text": "IsAntibioticDosageValid OverlappingCrcl Fail (dosages: [01a1c5ab-17b1-7b74-8d0f-a1cebd28f057, Crcl = null, 2026-11-10T13:34:46.705060...)",
+      "marks": [
+        16
+      ]
+    },
+    {
+      "text": "IsAntibioticDosageValid OverlappingCrcl Fail (dosages: [01a1c5ab-17b1-7d45-a087-92315543e6d7, Crcl = null, 2026-11-10T13:34:46.705064...)",
+      "marks": [
+        17
+      ]
+    },
+    {
+      "text": "IsAntibioticDosageValid OverlappingCrcl Fail (dosages: [01a1c5ab-17b1-7d8c-9e02-d9cf487dbeda, Crcl = null, 2026-11-10T13:34:46.705074...)",
+      "marks": [
+        18
+      ]
+    },
+    {
+      "text": "IsAntibioticDosageValid OverlappingCrcl Fail (dosages: [01a1c5ab-17b1-7dc2-b738-ba32201a43d8, Crcl = null, 2026-11-10T13:34:46.705072...)",
+      "marks": [
+        19
+      ]
+    },
+    {
+      "text": "IsAntibioticDosageValid ValidStandardDose Success (dosages: [01a1c5ab-17b0-7490-9f59-60a78d62e71a, Crcl = null, 2026-11-10T13:34:46.704850...)",
+      "marks": [
+        20
+      ]
+    },
+    {
+      "text": "IsAntibioticDosageValid ValidStandardDose Success (dosages: [01a1c5ab-17b0-7811-bda3-9bfbae0ac2b0, Crcl = null, 2026-11-10T13:34:46.704778...)",
+      "marks": [
+        21
+      ]
+    },
+    {
+      "text": "IsAntibioticDosageValid ValidStandardDose Success (dosages: [01a1c5ab-17b1-75d6-848c-45852dc62d97, Crcl = null, 2026-11-10T13:34:46.705015...)",
+      "marks": [
+        22
+      ]
+    },
+    {
+      "text": "IsAntibioticDosageValid ValidStandardDose Success (dosages: [01a1c5ab-17b1-7a3e-bf5b-e5c7327b2aee, Crcl = null, 2026-11-10T13:34:46.705018...)",
+      "marks": [
+        23
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "Success result for a valid dosage list",
+      "marks": [
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        20,
+        21,
+        22,
+        23
+      ]
+    },
+    {
+      "text": "Failure result naming the violated dosage rule",
+      "marks": [
+        1,
+        6,
+        7,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ]
+    },
+    {
+      "text": "StandardDoseInvalidException is thrown when more than one standard dose exists for a route",
+      "marks": [
+        2,
+        3,
+        4,
+        5
+      ]
+    }
+  ],
+  "exception_text": "StandardDoseInvalidException is thrown when a route holds more than one standard dose",
+  "exception_marks": [
+    2,
+    3,
+    4,
+    5
+  ],
+  "cases": [
+    {
+      "method": "IsAntibioticDosageValid_EmptyDosage_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "IsAntibioticDosageValid_MoreThanOneStandardDose_ThrowsStandardDoseInvalidException",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "IsAntibioticDosageValid_MoreThanOneStandardDose_ThrowsStandardDoseInvalidException",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "IsAntibioticDosageValid_MoreThanOneStandardDose_ThrowsStandardDoseInvalidException",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "IsAntibioticDosageValid_MoreThanOneStandardDose_ThrowsStandardDoseInvalidException",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "IsAntibioticDosageValid_NoStandardDose_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "IsAntibioticDosageValid_NoStandardDose_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "IsAntibioticDosageValid_NonOverlappingCrcl_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IsAntibioticDosageValid_NonOverlappingCrcl_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IsAntibioticDosageValid_NonOverlappingCrcl_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IsAntibioticDosageValid_NonOverlappingCrcl_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IsAntibioticDosageValid_NonOverlappingCrcl_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IsAntibioticDosageValid_NonOverlappingCrcl_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IsAntibioticDosageValid_OverlappingCrcl_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "IsAntibioticDosageValid_OverlappingCrcl_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "IsAntibioticDosageValid_OverlappingCrcl_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "IsAntibioticDosageValid_OverlappingCrcl_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "IsAntibioticDosageValid_OverlappingCrcl_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "IsAntibioticDosageValid_OverlappingCrcl_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "IsAntibioticDosageValid_ValidStandardDose_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IsAntibioticDosageValid_ValidStandardDose_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IsAntibioticDosageValid_ValidStandardDose_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IsAntibioticDosageValid_ValidStandardDose_Success",
+      "type": "N",
+      "result": "P"
+    }
+  ]
+}

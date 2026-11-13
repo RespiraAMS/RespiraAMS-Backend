@@ -1,0 +1,37 @@
+{
+  "function_code": "CreateAntibioticMapper.Map",
+  "sheet_name": "CreateAntibioticMapper",
+  "lines_of_code": 38,
+  "requirement": "Map a create-antibiotic command to a new Antibiotic model: copy the name, group, and classification, build exactly one standard Dosage linked to the new antibiotic with a null CrCl range, let the entity generate its ID, and report success.",
+  "preconditions": [
+    {
+      "text": "The mapper is constructed without dependencies",
+      "marks": [1]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "Amoxicillin, Access classification, oral standard dose of 500 mg every 8 hours",
+      "marks": [1]
+    }
+  ],
+  "returns": [
+    {
+      "text": "Success at ApplicationStatus.Success with a new Antibiotic",
+      "marks": [1]
+    },
+    {
+      "text": "Name, group ID, and classification copied; a generated non-empty ID is assigned",
+      "marks": [1]
+    },
+    {
+      "text": "Exactly one standard dosage is attached, with the antibiotic ID, route, and dose copied and a null CrCl",
+      "marks": [1]
+    }
+  ],
+  "exception_text": "No unhandled exception; the mapper always returns a successful result",
+  "exception_marks": [],
+  "cases": [
+    { "method": "ToModel_CreatesAntibioticWithStandardDosage_Success", "type": "N", "result": "P" }
+  ]
+}

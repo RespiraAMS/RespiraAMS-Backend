@@ -1,0 +1,375 @@
+{
+  "function_code": "UpdateCriterionValidator.Validate",
+  "sheet_name": "UpdateCriterionValidator",
+  "lines_of_code": 20,
+  "requirement": "Validate an update-criterion command: the id and name must not be empty, and the formula must be exactly one complete shape (constant, variable, binary, unary, or ternary) with a defined operator and non-empty operands.",
+  "preconditions": [
+    {
+      "text": "Validation runs on an in-memory command without database access",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23
+      ]
+    },
+    {
+      "text": "The formula is one of the shapes the recursive validator walks",
+      "marks": [
+        1,
+        4,
+        5,
+        9,
+        14,
+        15,
+        16,
+        17,
+        19,
+        23
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "Variable reference with Guid.Empty",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "Empty name with a valid formula",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "Whitespace-only name with a valid formula",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "Formula mixing constant and binary shapes",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "Unary formula without an operand",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "Single-character criterion name 'H'",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "Criterion name 'Tuổi >= 65'",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "Criterion name 'Huyết áp tâm thu < 90 mmHg'",
+      "marks": [
+        8
+      ]
+    },
+    {
+      "text": "Empty id, empty name, and empty formula",
+      "marks": [
+        9
+      ]
+    },
+    {
+      "text": "Whitespace-only name with an empty id and formula",
+      "marks": [
+        10
+      ]
+    },
+    {
+      "text": "Nested logical formula",
+      "marks": [
+        11
+      ]
+    },
+    {
+      "text": "Guid.Empty as the id",
+      "marks": [
+        12
+      ]
+    },
+    {
+      "text": "Unary and ternary formulas",
+      "marks": [
+        13
+      ]
+    },
+    {
+      "text": "Binary formula without a left operand",
+      "marks": [
+        14
+      ]
+    },
+    {
+      "text": "Binary formula with operator 999",
+      "marks": [
+        15
+      ]
+    },
+    {
+      "text": "Ternary formula without a condition",
+      "marks": [
+        16
+      ]
+    },
+    {
+      "text": "Constant formula with an empty constant",
+      "marks": [
+        17
+      ]
+    },
+    {
+      "text": "Comparison of systolic blood pressure against a threshold",
+      "marks": [
+        18
+      ]
+    },
+    {
+      "text": "Binary formula without a right operand",
+      "marks": [
+        19
+      ]
+    },
+    {
+      "text": "Valid update with a version-7 id",
+      "marks": [
+        20
+      ]
+    },
+    {
+      "text": "Valid update with GUID 00000000-0000-0000-0000-000000000001",
+      "marks": [
+        21
+      ]
+    },
+    {
+      "text": "Valid update with GUID ffffffff-ffff-ffff-ffff-ffffffffffff",
+      "marks": [
+        22
+      ]
+    },
+    {
+      "text": "Formula with no fields at all",
+      "marks": [
+        23
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "No validation errors",
+      "marks": [
+        6,
+        7,
+        8,
+        11,
+        13,
+        18,
+        20,
+        21,
+        22
+      ]
+    },
+    {
+      "text": "Single validation error reported on Id",
+      "marks": [
+        12
+      ]
+    },
+    {
+      "text": "Single validation error reported on Name",
+      "marks": [
+        2,
+        3
+      ]
+    },
+    {
+      "text": "Single validation error reported on Formula for an incomplete or mixed shape",
+      "marks": [
+        1,
+        4,
+        5,
+        14,
+        15,
+        16,
+        17,
+        19,
+        23
+      ]
+    },
+    {
+      "text": "Multiple violations reported when the id, name, and formula are all invalid",
+      "marks": [
+        9,
+        10
+      ]
+    }
+  ],
+  "exception_text": "No unhandled exception; invalid input is reported as validation errors",
+  "exception_marks": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    9,
+    10,
+    12,
+    14,
+    15,
+    16,
+    17,
+    19,
+    23
+  ],
+  "cases": [
+    {
+      "method": "UpdateCriterion_EmptyGuidVariable_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdateCriterion_EmptyName_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdateCriterion_EmptyName_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdateCriterion_MixedShapeFormula_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdateCriterion_EmptyUnaryOperand_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdateCriterion_ValidName_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "UpdateCriterion_ValidName_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "UpdateCriterion_ValidName_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "UpdateCriterion_EmptyIdAndNameAndFormula_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdateCriterion_EmptyIdAndNameAndFormula_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdateCriterion_NestedLogicalFormula_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "UpdateCriterion_EmptyId_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdateCriterion_UnaryAndTernaryFormulas_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "UpdateCriterion_EmptyLeftOperand_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdateCriterion_OperatorNotInEnum_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdateCriterion_EmptyTernaryCondition_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdateCriterion_EmptyConstant_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdateCriterion_ComparisonFormula_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "UpdateCriterion_BinaryFormulaMissingRightOperand_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdateCriterion_ValidId_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "UpdateCriterion_ValidId_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "UpdateCriterion_ValidId_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "UpdateCriterion_EmptyFormula_Fail",
+      "type": "A",
+      "result": "P"
+    }
+  ]
+}

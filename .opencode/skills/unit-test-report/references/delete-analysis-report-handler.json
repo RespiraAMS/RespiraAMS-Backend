@@ -1,0 +1,352 @@
+{
+  "function_code": "DeleteAnalysisReportCommandHandler.HandleAsync",
+  "sheet_name": "DeleteAnalysisReportHandler",
+  "lines_of_code": 82,
+  "requirement": "Soft delete an analysis report: reject an empty id, load the live report, allow the owner doctor or an admin/head-of-department doctor (role match is case-insensitive and trimmed) to delete it, then stamp the soft-delete/updated timestamps and return the analysis id.",
+  "preconditions": [
+    {
+      "text": "A live analysis report exists for the target id",
+      "marks": [
+        1,
+        2,
+        4,
+        5,
+        6,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20
+      ]
+    },
+    {
+      "text": "The actor is the report owner, an admin, or a head-of-department doctor",
+      "marks": [
+        1,
+        2,
+        4,
+        8,
+        9,
+        11,
+        12,
+        13,
+        14,
+        16,
+        17,
+        18,
+        19,
+        20
+      ]
+    },
+    {
+      "text": "The report is missing, already deleted, or owned by another doctor, or the id is empty",
+      "marks": [
+        3,
+        5,
+        6,
+        7,
+        10,
+        15,
+        21
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "Delete ActorRoleWithWhitespace IsTrimmed",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "Delete Admin DeletesAnyReport",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "Delete AlreadySoftDeleted ReturnsNotFound",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "Delete DeletedReport IsExcludedFromFreshQuery",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "Delete DifferentDoctor IsRestricted",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "Delete EmptyActorAccountIdWithoutPrivileges IsRestricted",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "Delete EmptyAnalysisId ReturnsBadRequest",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "Delete HeadDepartmentDoctor DeletesAnyReport",
+      "marks": [
+        8
+      ]
+    },
+    {
+      "text": "Delete IsSoftDelete RowStillExists",
+      "marks": [
+        9
+      ]
+    },
+    {
+      "text": "Delete NullActorRole NonOwnerIsRestricted",
+      "marks": [
+        10
+      ]
+    },
+    {
+      "text": "Delete NullActorRole OwnerStillAllowed",
+      "marks": [
+        11
+      ]
+    },
+    {
+      "text": "Delete OwnerDoctor DeletesOwnReport",
+      "marks": [
+        12
+      ]
+    },
+    {
+      "text": "Delete ReportWithoutDoctor AdminSucceeds",
+      "marks": [
+        13
+      ]
+    },
+    {
+      "text": "Delete ReportWithoutDoctor HeadDepartmentDoctorSucceeds",
+      "marks": [
+        14
+      ]
+    },
+    {
+      "text": "Delete ReportWithoutDoctor PlainDoctorIsRestricted",
+      "marks": [
+        15
+      ]
+    },
+    {
+      "text": "Delete ReturnsSuccessStatusAndAnalysisId",
+      "marks": [
+        16
+      ]
+    },
+    {
+      "text": "Delete RoleComparisonIsCaseInsensitive (role: 'ADMIN')",
+      "marks": [
+        17
+      ]
+    },
+    {
+      "text": "Delete RoleComparisonIsCaseInsensitive (role: 'HeadDepartmentDoctor')",
+      "marks": [
+        18
+      ]
+    },
+    {
+      "text": "Delete RoleComparisonIsCaseInsensitive (role: 'admin')",
+      "marks": [
+        19
+      ]
+    },
+    {
+      "text": "Delete RoleComparisonIsCaseInsensitive (role: 'headdepartmentdoctor')",
+      "marks": [
+        20
+      ]
+    },
+    {
+      "text": "Delete UnknownId ReturnsNotFound",
+      "marks": [
+        21
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "Success with the analysis id; the row is soft-deleted and its timestamps are updated",
+      "marks": [
+        2,
+        8,
+        9,
+        11,
+        12,
+        14,
+        16
+      ]
+    },
+    {
+      "text": "Admins and head-of-department doctors may delete any report, and the role comparison ignores case and surrounding whitespace",
+      "marks": [
+        1,
+        2,
+        8,
+        13,
+        14,
+        17,
+        18,
+        19,
+        20
+      ]
+    },
+    {
+      "text": "Restricted when the actor is not the owner and lacks privileges",
+      "marks": [
+        5,
+        6,
+        10,
+        15
+      ]
+    },
+    {
+      "text": "NotFound for an unknown or already-deleted report, and BadRequest for an empty id",
+      "marks": [
+        3,
+        7,
+        21
+      ]
+    }
+  ],
+  "exception_text": "No unhandled exception; every rejection is returned as a failed Result",
+  "exception_marks": [
+    3,
+    5,
+    6,
+    7,
+    10,
+    15,
+    21
+  ],
+  "cases": [
+    {
+      "method": "Delete_ActorRoleWithWhitespace_IsTrimmed",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Delete_Admin_DeletesAnyReport",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Delete_AlreadySoftDeleted_ReturnsNotFound",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Delete_DeletedReport_IsExcludedFromFreshQuery",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Delete_DifferentDoctor_IsRestricted",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Delete_EmptyActorAccountIdWithoutPrivileges_IsRestricted",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Delete_EmptyAnalysisId_ReturnsBadRequest",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Delete_HeadDepartmentDoctor_DeletesAnyReport",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Delete_IsSoftDelete_RowStillExists",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Delete_NullActorRole_NonOwnerIsRestricted",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Delete_NullActorRole_OwnerStillAllowed",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Delete_OwnerDoctor_DeletesOwnReport",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Delete_ReportWithoutDoctor_AdminSucceeds",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Delete_ReportWithoutDoctor_HeadDepartmentDoctorSucceeds",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Delete_ReportWithoutDoctor_PlainDoctorIsRestricted",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Delete_ReturnsSuccessStatusAndAnalysisId",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Delete_RoleComparisonIsCaseInsensitive",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Delete_RoleComparisonIsCaseInsensitive",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Delete_RoleComparisonIsCaseInsensitive",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Delete_RoleComparisonIsCaseInsensitive",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Delete_UnknownId_ReturnsNotFound",
+      "type": "A",
+      "result": "P"
+    }
+  ]
+}

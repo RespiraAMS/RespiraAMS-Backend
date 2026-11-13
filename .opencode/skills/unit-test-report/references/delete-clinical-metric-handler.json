@@ -1,0 +1,194 @@
+{
+  "function_code": "DeleteClinicalMetricHandler.HandleAsync",
+  "sheet_name": "DeleteClinicalMetricHandler",
+  "lines_of_code": 48,
+  "requirement": "Soft delete a clinical metric inside one transaction: stamp IsDeleted/DeletedAt on the metric and cascade the soft delete to every rule of that metric only, and report an unknown or already-deleted id as not found.",
+  "preconditions": [
+    {
+      "text": "A live clinical metric exists for the target id",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ]
+    },
+    {
+      "text": "The target metric owns the scoring or major/minor rules seeded for the case",
+      "marks": [
+        2,
+        3,
+        4
+      ]
+    },
+    {
+      "text": "Another live metric with its own rules exists",
+      "marks": [
+        4,
+        5
+      ]
+    },
+    {
+      "text": "The target id matches no live metric",
+      "marks": [
+        6,
+        7,
+        8,
+        9
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "Delete a metric that has no rule",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "Delete a metric holding five scoring rules",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "Delete a metric holding two major/minor rules",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "Delete one of two metrics whose rules reference the same criteria",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "Delete the middle one of three metrics",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "Delete request with an unknown id",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "Delete request with Guid.Empty",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "Second delete request for an already deleted metric",
+      "marks": [
+        8
+      ]
+    },
+    {
+      "text": "Delete request for a metric that was soft deleted beforehand",
+      "marks": [
+        9
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "Success with Deleted status; the metric keeps its payload and gains a deletion timestamp",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ]
+    },
+    {
+      "text": "Every rule of the deleted metric is soft deleted in the same transaction",
+      "marks": [
+        2,
+        3
+      ]
+    },
+    {
+      "text": "Other metrics, their rules, and the shared criteria stay untouched",
+      "marks": [
+        4,
+        5
+      ]
+    },
+    {
+      "text": "Failure with BadRequest and the 'Clinical metric not found' error",
+      "marks": [
+        6,
+        7,
+        8,
+        9
+      ]
+    },
+    {
+      "text": "A rejected delete never moves an existing deletion timestamp",
+      "marks": [
+        8,
+        9
+      ]
+    }
+  ],
+  "exception_text": "No unhandled exception; a missing or already-deleted metric is returned as a failed Result",
+  "exception_marks": [
+    6,
+    7,
+    8,
+    9
+  ],
+  "cases": [
+    {
+      "method": "DeleteClinicalMetric_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "DeleteClinicalMetric_CascadeDeletesAllScoringRules_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "DeleteClinicalMetric_CascadeDeletesMajorMinorRules_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "DeleteClinicalMetric_CascadeOnlyTargetsOwnRules_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "DeleteClinicalMetric_OneAmongSeveral_UpperBoundary_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "DeleteClinicalMetric_UnknownId_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "DeleteClinicalMetric_EmptyId_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "DeleteClinicalMetric_AlreadyDeleted_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "DeleteClinicalMetric_SoftDeletedMetric_Fail",
+      "type": "A",
+      "result": "P"
+    }
+  ]
+}

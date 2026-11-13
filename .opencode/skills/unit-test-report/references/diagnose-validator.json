@@ -1,0 +1,631 @@
+{
+  "function_code": "DiagnoseValidator.Validate",
+  "sheet_name": "DiagnoseValidator",
+  "lines_of_code": 72,
+  "requirement": "Validate a diagnose query: the allergy must be internally consistent with its type, every microbial sample needs a pathogen id plus defined sample type and MIC category, every observation needs a variable id and a non-empty value, and other infections and medical history entries must be defined and non-empty.",
+  "preconditions": [
+    {
+      "text": "Validation runs on an in-memory query without database access",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40
+      ]
+    },
+    {
+      "text": "The allergy section is one consistent shape",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "Minimal query with no allergy antibiotic, sample, observation, infection, or history",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "Allergy type No without antibiotic or other allergy",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "Allergy type Yes with one allergic antibiotic",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "Allergy type NonRegisteredAntibiotic with an other-allergy text",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "Allergy type Unknown with an other-allergy text",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "Sputum sample with MIC Susceptible",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "Other sample type with MIC Resistant",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "Full query with every section populated",
+      "marks": [
+        8
+      ]
+    },
+    {
+      "text": "Type No with an allergic antibiotic",
+      "marks": [
+        9
+      ]
+    },
+    {
+      "text": "Type No with an other-allergy text",
+      "marks": [
+        10
+      ]
+    },
+    {
+      "text": "Type No with both an antibiotic and an other-allergy text",
+      "marks": [
+        11
+      ]
+    },
+    {
+      "text": "Type Yes without any allergy detail",
+      "marks": [
+        12
+      ]
+    },
+    {
+      "text": "Type Yes with both an antibiotic and an other-allergy text",
+      "marks": [
+        13
+      ]
+    },
+    {
+      "text": "Type NonRegisteredAntibiotic with an antibiotic and an other-allergy text",
+      "marks": [
+        14
+      ]
+    },
+    {
+      "text": "Type NonRegisteredAntibiotic without any allergy detail",
+      "marks": [
+        15
+      ]
+    },
+    {
+      "text": "Type Unknown with an antibiotic and an other-allergy text",
+      "marks": [
+        16
+      ]
+    },
+    {
+      "text": "Type Unknown without any allergy detail",
+      "marks": [
+        17
+      ]
+    },
+    {
+      "text": "Observation with an empty value",
+      "marks": [
+        18
+      ]
+    },
+    {
+      "text": "Observation with a whitespace-only value",
+      "marks": [
+        19
+      ]
+    },
+    {
+      "text": "Empty special medical history entry",
+      "marks": [
+        20
+      ]
+    },
+    {
+      "text": "Whitespace-only special medical history entry",
+      "marks": [
+        21
+      ]
+    },
+    {
+      "text": "Allergy type -1 (below the defined range)",
+      "marks": [
+        22
+      ]
+    },
+    {
+      "text": "Allergy type 4 (above the defined range)",
+      "marks": [
+        23
+      ]
+    },
+    {
+      "text": "Observation with Guid.Empty as the variable id",
+      "marks": [
+        24
+      ]
+    },
+    {
+      "text": "Other infection type 0",
+      "marks": [
+        25
+      ]
+    },
+    {
+      "text": "Other infection type 32",
+      "marks": [
+        26
+      ]
+    },
+    {
+      "text": "Other infection type 98",
+      "marks": [
+        27
+      ]
+    },
+    {
+      "text": "Other infection type 100",
+      "marks": [
+        28
+      ]
+    },
+    {
+      "text": "Sample type -1 (below the defined range)",
+      "marks": [
+        29
+      ]
+    },
+    {
+      "text": "Sample type 9 (above the defined range)",
+      "marks": [
+        30
+      ]
+    },
+    {
+      "text": "Every section invalid at once",
+      "marks": [
+        31
+      ]
+    },
+    {
+      "text": "Other infection SkinAndSoftTissueInfection (lowest defined member)",
+      "marks": [
+        32
+      ]
+    },
+    {
+      "text": "Other infection MaxillofacialAbscess",
+      "marks": [
+        33
+      ]
+    },
+    {
+      "text": "Other infection Other (highest defined member)",
+      "marks": [
+        34
+      ]
+    },
+    {
+      "text": "Microbial sample with Guid.Empty as the pathogen id",
+      "marks": [
+        35
+      ]
+    },
+    {
+      "text": "Allergy listing Guid.Empty as an antibiotic id",
+      "marks": [
+        36
+      ]
+    },
+    {
+      "text": "MIC category -1 (below the defined range)",
+      "marks": [
+        37
+      ]
+    },
+    {
+      "text": "MIC category 3 (above the defined range)",
+      "marks": [
+        38
+      ]
+    },
+    {
+      "text": "Empty other-allergy text",
+      "marks": [
+        39
+      ]
+    },
+    {
+      "text": "Whitespace-only other-allergy text",
+      "marks": [
+        40
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "No validation errors",
+      "marks": [
+        2,
+        3,
+        4,
+        5,
+        8,
+        32,
+        33,
+        34
+      ]
+    },
+    {
+      "text": "Single or multiple violations for the pathological query",
+      "marks": [
+        1,
+        6,
+        7
+      ]
+    },
+    {
+      "text": "Validation error for a semantically conflicted allergy",
+      "marks": [
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17
+      ]
+    },
+    {
+      "text": "Validation error for an empty observation value, history, or variable id",
+      "marks": [
+        18,
+        19,
+        20,
+        21,
+        24
+      ]
+    },
+    {
+      "text": "Validation error for an undefined enum member or an empty id",
+      "marks": [
+        22,
+        23,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40
+      ]
+    }
+  ],
+  "exception_text": "No unhandled exception; invalid input is reported as validation errors",
+  "exception_marks": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    35,
+    36,
+    37,
+    38,
+    39,
+    40
+  ],
+  "cases": [
+    {
+      "method": "Diagnose_MinimalValues_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "Diagnose_ValidAllergyCombination_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Diagnose_ValidAllergyCombination_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Diagnose_ValidAllergyCombination_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Diagnose_ValidAllergyCombination_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Diagnose_SampleEnumBoundaries_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "Diagnose_SampleEnumBoundaries_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "Diagnose_FullValues_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Diagnose_ConflictedAllergy_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Diagnose_ConflictedAllergy_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Diagnose_ConflictedAllergy_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Diagnose_ConflictedAllergy_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Diagnose_ConflictedAllergy_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Diagnose_ConflictedAllergy_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Diagnose_ConflictedAllergy_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Diagnose_ConflictedAllergy_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Diagnose_ConflictedAllergy_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Diagnose_ObservationWithEmptyValue_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Diagnose_ObservationWithEmptyValue_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Diagnose_EmptySpecialMedicalHistory_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Diagnose_EmptySpecialMedicalHistory_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Diagnose_InvalidAllergyType_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Diagnose_InvalidAllergyType_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Diagnose_ObservationWithEmptyVariableId_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Diagnose_InvalidOtherInfection_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Diagnose_InvalidOtherInfection_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Diagnose_InvalidOtherInfection_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Diagnose_InvalidOtherInfection_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Diagnose_InvalidSampleType_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Diagnose_InvalidSampleType_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Diagnose_AllSectionsInvalid_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Diagnose_OtherInfectionBoundaries_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "Diagnose_OtherInfectionBoundaries_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "Diagnose_OtherInfectionBoundaries_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "Diagnose_MicrobialSampleWithEmptyPathogenId_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Diagnose_AllergicAntibioticWithEmptyId_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Diagnose_InvalidMicCategory_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Diagnose_InvalidMicCategory_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Diagnose_OtherAllergyEmpty_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Diagnose_OtherAllergyEmpty_Fail",
+      "type": "A",
+      "result": "P"
+    }
+  ]
+}

@@ -1,0 +1,130 @@
+{
+  "function_code": "AcademicTitle.Parse",
+  "sheet_name": "AcademicTitle",
+  "lines_of_code": 17,
+  "requirement": "AcademicTitle enum contract: None, AssociateProfessor, and Professor keep ordinals 0-2, parse and serialize round-trip through their names with the JSON string enum converter, and undefined ordinals are rejected.",
+  "preconditions": [
+    {
+      "text": "The AcademicTitle enum is loaded",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ]
+    },
+    {
+      "text": "A declared member or an undefined ordinal is supplied",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "AcademicTitle_HasThreeDeclaredMembersWithExpectedOrdinals",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "AcademicTitle_IsAnnotatedWithJsonStringEnumConverter",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "IsDefined_RejectsUndefinedOrdinal",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "ParseAndSerialize_RoundTripEveryMember (title: AssociateProfessor, expectedName: \"AssociateProfessor\")",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "ParseAndSerialize_RoundTripEveryMember (title: None, expectedName: \"None\")",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "ParseAndSerialize_RoundTripEveryMember (title: Professor, expectedName: \"Professor\")",
+      "marks": [
+        6
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "Each declared member round-trips through parse and JSON serialization",
+      "marks": [
+        4,
+        5,
+        6
+      ]
+    },
+    {
+      "text": "Three members keep the expected ordinals",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "The enum is annotated with JsonStringEnumConverter",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "Undefined ordinals are rejected",
+      "marks": [
+        3
+      ]
+    }
+  ],
+  "exception_text": "No unhandled exception; undefined ordinals are reported as false",
+  "exception_marks": [],
+  "cases": [
+    {
+      "method": "AcademicTitle_HasThreeDeclaredMembersWithExpectedOrdinals",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "AcademicTitle_IsAnnotatedWithJsonStringEnumConverter",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IsDefined_RejectsUndefinedOrdinal",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "ParseAndSerialize_RoundTripEveryMember",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "ParseAndSerialize_RoundTripEveryMember",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "ParseAndSerialize_RoundTripEveryMember",
+      "type": "N",
+      "result": "P"
+    }
+  ]
+}

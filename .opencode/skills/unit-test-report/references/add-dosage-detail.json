@@ -1,0 +1,129 @@
+{
+  "function_code": "AddDosageHandler.HandleAsync",
+  "sheet_name": "AddDosageHandler",
+  "lines_of_code": 65,
+  "requirement": "Add a dosage to an existing antibiotic: reject unknown or soft-deleted antibiotics, map the command, enforce exactly one standard dose per route, and reject overlapping CrCl ranges before persisting the dosage.",
+  "preconditions": [
+    {
+      "text": "Antibiotic exists and the requested route has no dosage yet",
+      "marks": [1, 7]
+    },
+    {
+      "text": "Antibiotic exists with one standard oral dose",
+      "marks": [2, 6, 7]
+    },
+    {
+      "text": "Antibiotic exists with an IV standard dose and an inclusive CrCl range [30, 60]",
+      "marks": [3, 8, 9]
+    },
+    {
+      "text": "Antibiotic ID is not present in the database",
+      "marks": [4]
+    },
+    {
+      "text": "Antibiotic is soft-deleted",
+      "marks": [5]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "Standard dose for a new route of administration",
+      "marks": [1]
+    },
+    {
+      "text": "Adjusted dose with CrCl (15, 29) for a route that already has a standard dose",
+      "marks": [2]
+    },
+    {
+      "text": "Adjusted dose with CrCl (60, 90] when the existing range is [30, 60]",
+      "marks": [3]
+    },
+    {
+      "text": "Command with an antibiotic ID that does not exist",
+      "marks": [4]
+    },
+    {
+      "text": "Command targeting a soft-deleted antibiotic",
+      "marks": [5]
+    },
+    {
+      "text": "Second standard dose for a route that already has one",
+      "marks": [6]
+    },
+    {
+      "text": "Adjusted dose for a new route that has no standard dose",
+      "marks": [7]
+    },
+    {
+      "text": "Adjusted dose with CrCl (45, 75] overlapping the existing range [30, 60]",
+      "marks": [8]
+    },
+    {
+      "text": "Adjusted dose with CrCl [60, 90] touching the existing [30, 60] range at 60",
+      "marks": [9]
+    }
+  ],
+  "returns": [
+    {
+      "text": "Success result with Created status and the new dosage ID",
+      "marks": [1, 2, 3]
+    },
+    {
+      "text": "Failure result with BadRequest and the 'Antibiotic not found' error",
+      "marks": [4, 5]
+    },
+    {
+      "text": "Failure result with BusinessRuleViolation and no persisted dosage",
+      "marks": [6, 7, 8, 9]
+    }
+  ],
+  "exception_text": "No unhandled exception; validation failure is returned as a failed Result",
+  "exception_marks": [4, 5, 6, 7, 8, 9],
+  "cases": [
+    {
+      "method": "AddDosage_StandardDoseToNewRoute_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "AddDosage_AdjustedDoseToRouteWithStandard_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "AddDosage_CrclRangesTouchAtExclusiveBoundary_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "AddDosage_AntibioticNotFound_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "AddDosage_SoftDeletedAntibiotic_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "AddDosage_SecondStandardDoseForSameRoute_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "AddDosage_AdjustedDoseForRouteWithoutStandard_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "AddDosage_OverlappedCrclRange_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "AddDosage_CrclRangesTouchAtInclusiveBoundary_Fail",
+      "type": "B",
+      "result": "P"
+    }
+  ]
+}

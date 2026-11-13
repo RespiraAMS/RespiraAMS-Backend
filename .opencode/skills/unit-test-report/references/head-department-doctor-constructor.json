@@ -1,0 +1,75 @@
+{
+  "function_code": "HeadDepartmentDoctor.Constructor",
+  "sheet_name": "HeadDepartmentDoctor",
+  "lines_of_code": 12,
+  "requirement": "Head-of-department doctor entity contract: the profile derives from BaseDoctor and the full-text-search base, starts with an empty Subordinates collection, and can carry managed doctors, patients, and all profile fields.",
+  "preconditions": [
+    {
+      "text": "A HeadDepartmentDoctor is constructed",
+      "marks": [
+        1,
+        2,
+        3
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "HeadDepartmentDoctor_CanManagePatientsListAndProfileFields",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "NewHeadDepartmentDoctor_DerivesFromBaseDoctorAndFullTextSearch",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "Subordinates_CanBePopulatedWithManagedDoctors",
+      "marks": [
+        3
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "The entity derives from BaseDoctor and the full-text-search base",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "Subordinates starts empty and can be populated with managed doctors",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "Patients and every profile field can be assigned",
+      "marks": [
+        1
+      ]
+    }
+  ],
+  "exception_text": "No unhandled exception; entity initialization succeeds",
+  "exception_marks": [],
+  "cases": [
+    {
+      "method": "HeadDepartmentDoctor_CanManagePatientsListAndProfileFields",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "NewHeadDepartmentDoctor_DerivesFromBaseDoctorAndFullTextSearch",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Subordinates_CanBePopulatedWithManagedDoctors",
+      "type": "N",
+      "result": "P"
+    }
+  ]
+}

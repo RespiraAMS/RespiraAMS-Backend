@@ -1,0 +1,209 @@
+{
+  "function_code": "GetTreatmentPlanByIdHandler.HandleAsync",
+  "sheet_name": "GetTreatmentPlanByIdHandler",
+  "lines_of_code": 33,
+  "requirement": "Return one treatment plan as a read-only projection: the plan fields, the nested patient summary, the medicine list, adherence state, status, and close reason; a missing or soft-deleted plan is reported as ResourceNotFound.",
+  "preconditions": [
+    {
+      "text": "The requested plan exists and is live",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        7,
+        8
+      ]
+    },
+    {
+      "text": "The plan carries the adherence state, status, and relations seeded for the case",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ]
+    },
+    {
+      "text": "The requested id matches no live plan",
+      "marks": [
+        6,
+        9,
+        10
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "GetTreatmentPlanById ClosedPlan ReturnsCloseReason",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "GetTreatmentPlanById EachAdherenceState ReturnsState (adherenceState: Adhere)",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "GetTreatmentPlanById EachAdherenceState ReturnsState (adherenceState: NotAdhere)",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "GetTreatmentPlanById EachAdherenceState ReturnsState (adherenceState: NotAdhereInvalid)",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "GetTreatmentPlanById EachAdherenceState ReturnsState (adherenceState: NotAdhereValid)",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "GetTreatmentPlanById EmptyPlanId ReturnsResourceNotFound",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "GetTreatmentPlanById ExistingInProgressPlan ReturnsAllFields",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "GetTreatmentPlanById MultiplePlansForPatient ReturnsRequestedPlan",
+      "marks": [
+        8
+      ]
+    },
+    {
+      "text": "GetTreatmentPlanById SoftDeletedPlan ReturnsResourceNotFound",
+      "marks": [
+        9
+      ]
+    },
+    {
+      "text": "GetTreatmentPlanById UnknownPlan ReturnsResourceNotFound",
+      "marks": [
+        10
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "Success with the full plan projection",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ]
+    },
+    {
+      "text": "Every adherence state is projected unchanged",
+      "marks": [
+        2,
+        3,
+        4,
+        5
+      ]
+    },
+    {
+      "text": "A closed plan returns its close reason",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "Only the requested plan is returned when the patient has several",
+      "marks": [
+        8
+      ]
+    },
+    {
+      "text": "Failure with ResourceNotFound and a null payload",
+      "marks": [
+        6,
+        9,
+        10
+      ]
+    }
+  ],
+  "exception_text": "No unhandled exception; a missing or soft-deleted plan is returned as a failed Result",
+  "exception_marks": [
+    6,
+    9,
+    10
+  ],
+  "cases": [
+    {
+      "method": "GetTreatmentPlanById_ClosedPlan_ReturnsCloseReason",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "GetTreatmentPlanById_EachAdherenceState_ReturnsState",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "GetTreatmentPlanById_EachAdherenceState_ReturnsState",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "GetTreatmentPlanById_EachAdherenceState_ReturnsState",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "GetTreatmentPlanById_EachAdherenceState_ReturnsState",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "GetTreatmentPlanById_EmptyPlanId_ReturnsResourceNotFound",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "GetTreatmentPlanById_ExistingInProgressPlan_ReturnsAllFields",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "GetTreatmentPlanById_MultiplePlansForPatient_ReturnsRequestedPlan",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "GetTreatmentPlanById_SoftDeletedPlan_ReturnsResourceNotFound",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "GetTreatmentPlanById_UnknownPlan_ReturnsResourceNotFound",
+      "type": "A",
+      "result": "P"
+    }
+  ]
+}

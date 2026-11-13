@@ -1,0 +1,39 @@
+{
+  "function_code": "CreateAntibiogramMapper.Map",
+  "sheet_name": "CreateAntibiogramMapper",
+  "lines_of_code": 24,
+  "requirement": "Map a create-antibiogram command to a new Antibiogram model: copy the pathogen ID and MIC category, let the entity generate its ID, and leave the antibiotic join collection empty for the handler to fill.",
+  "preconditions": [
+    {
+      "text": "The mapper is constructed without dependencies",
+      "marks": [1, 2, 3]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "Command with MIC Susceptible and two antibiotic IDs",
+      "marks": [1]
+    },
+    {
+      "text": "Command with MIC Resistant and two antibiotic IDs",
+      "marks": [2]
+    },
+    {
+      "text": "Command with MIC Intermediate and one antibiotic ID through the dependency overload",
+      "marks": [3]
+    }
+  ],
+  "returns": [
+    {
+      "text": "Antibiogram with the command pathogen and MIC, a generated ID, and an empty antibiotic collection",
+      "marks": [1, 2, 3]
+    }
+  ],
+  "exception_text": "No unhandled exception; the mapper always returns a successful result",
+  "exception_marks": [],
+  "cases": [
+    { "method": "ToModel_MapsAntibiogramFields_Success", "type": "N", "result": "P" },
+    { "method": "ToModel_MapsAntibiogramFields_Success", "type": "N", "result": "P" },
+    { "method": "ToModel_WithDependencies_Success", "type": "N", "result": "P" }
+  ]
+}

@@ -1,0 +1,112 @@
+{
+  "function_code": "SearchSagaAuditValidator.Validate",
+  "sheet_name": "SearchSagaAuditValidator",
+  "lines_of_code": 15,
+  "requirement": "Validate a saga audit search query: the pagination parameters must satisfy page >= 1 and 1 <= size <= 100, and when both dates are supplied the from date must be earlier than or equal to the to date.",
+  "preconditions": [
+    {
+      "text": "Validation runs on an in-memory query without database access",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ]
+    },
+    {
+      "text": "The pagination and date range are consistent",
+      "marks": [
+        5
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "FromAfterTo Fails",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "InvalidPagination Fails (page: 0, size: 10)",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "InvalidPagination Fails (page: 1, size: 0)",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "InvalidPagination Fails (page: 1, size: 101)",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "ValidFiltersAndPagination Pass",
+      "marks": [
+        5
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "No validation errors",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "Validation error reported on Param for an invalid page or size",
+      "marks": [
+        2,
+        3,
+        4
+      ]
+    },
+    {
+      "text": "Validation error reported when the from date is after the to date",
+      "marks": [
+        1
+      ]
+    }
+  ],
+  "exception_text": "No unhandled exception; invalid input is reported as validation errors",
+  "exception_marks": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "cases": [
+    {
+      "method": "FromAfterTo_Fails",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "InvalidPagination_Fails",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "InvalidPagination_Fails",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "InvalidPagination_Fails",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "ValidFiltersAndPagination_Pass",
+      "type": "N",
+      "result": "P"
+    }
+  ]
+}

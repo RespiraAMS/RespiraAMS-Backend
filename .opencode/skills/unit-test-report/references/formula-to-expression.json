@@ -1,0 +1,790 @@
+{
+  "function_code": "Formula.ToExpression",
+  "sheet_name": "Formula",
+  "lines_of_code": 395,
+  "requirement": "Convert a domain formula into an evaluable expression: constants become constant expressions, variables resolve through the observation set, binary formulas evaluate with the stored operator, ternary formulas evaluate only the reachable branch, and a missing observation for a reachable operand produces a failure result.",
+  "preconditions": [
+    {
+      "text": "The formula tree is built in memory from constants, variables, and operators",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52
+      ]
+    },
+    {
+      "text": "Every variable the formula needs has an observation, unless a short-circuit spares it",
+      "marks": [
+        2,
+        3,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        51,
+        52
+      ]
+    },
+    {
+      "text": "A reachable variable of the formula has no observation",
+      "marks": [
+        1,
+        4,
+        22,
+        33,
+        49,
+        50
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "BinaryFormula ToExpression AndBothObservationsMissing Fail",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "BinaryFormula ToExpression AndFalseLeft ObservationOfRightNotRequired",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "BinaryFormula ToExpression AndObservedFalseLeft ObservationOfRightNotRequired",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "BinaryFormula ToExpression AndTrueLeftMissingRightObservation Fail",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "BinaryFormula ToExpression And Evaluates (left: False, right: False, expected: False)",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "BinaryFormula ToExpression And Evaluates (left: False, right: True, expected: False)",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "BinaryFormula ToExpression And Evaluates (left: True, right: False, expected: False)",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "BinaryFormula ToExpression And Evaluates (left: True, right: True, expected: True)",
+      "marks": [
+        8
+      ]
+    },
+    {
+      "text": "BinaryFormula ToExpression Arithmetic Evaluates (observedAge: 0, expected: 5)",
+      "marks": [
+        9
+      ]
+    },
+    {
+      "text": "BinaryFormula ToExpression Arithmetic Evaluates (observedAge: 250, expected: 255)",
+      "marks": [
+        10
+      ]
+    },
+    {
+      "text": "BinaryFormula ToExpression Arithmetic Evaluates (observedAge: 59.99, expected: 64.99)",
+      "marks": [
+        11
+      ]
+    },
+    {
+      "text": "BinaryFormula ToExpression Arithmetic Evaluates (observedAge: 60, expected: 65)",
+      "marks": [
+        12
+      ]
+    },
+    {
+      "text": "BinaryFormula ToExpression CategoricalComparison Evaluates (observed: \"Klebsiella pneumoniae\", constant: \"Klebsiella pneumoniae\", op: Eq, expected: True)",
+      "marks": [
+        13
+      ]
+    },
+    {
+      "text": "BinaryFormula ToExpression CategoricalComparison Evaluates (observed: \"Klebsiella pneumoniae\", constant: \"Streptococcus pneumoniae\", op: Eq, expected: False)",
+      "marks": [
+        14
+      ]
+    },
+    {
+      "text": "BinaryFormula ToExpression CategoricalComparison Evaluates (observed: \"Klebsiella pneumoniae\", constant: \"Streptococcus pneumoniae\", op: Ne, expected: True)",
+      "marks": [
+        15
+      ]
+    },
+    {
+      "text": "BinaryFormula ToExpression ConstantOperands EvaluatesWithoutObservations (op: Eq, left: 90, right: 90, expected: True)",
+      "marks": [
+        16
+      ]
+    },
+    {
+      "text": "BinaryFormula ToExpression ConstantOperands EvaluatesWithoutObservations (op: Gt, left: 65, right: 90, expected: False)",
+      "marks": [
+        17
+      ]
+    },
+    {
+      "text": "BinaryFormula ToExpression ConstantOperands EvaluatesWithoutObservations (op: Gte, left: 90, right: 90, expected: True)",
+      "marks": [
+        18
+      ]
+    },
+    {
+      "text": "BinaryFormula ToExpression ConstantOperands EvaluatesWithoutObservations (op: Lt, left: 65, right: 90, expected: True)",
+      "marks": [
+        19
+      ]
+    },
+    {
+      "text": "BinaryFormula ToExpression ConstantOperands EvaluatesWithoutObservations (op: Lte, left: 90, right: 90, expected: True)",
+      "marks": [
+        20
+      ]
+    },
+    {
+      "text": "BinaryFormula ToExpression ConstantOperands EvaluatesWithoutObservations (op: Ne, left: 65, right: 90, expected: True)",
+      "marks": [
+        21
+      ]
+    },
+    {
+      "text": "BinaryFormula ToExpression MissingObservation Fail",
+      "marks": [
+        22
+      ]
+    },
+    {
+      "text": "BinaryFormula ToExpression NestedOperands Evaluates (observedAge: 59.99, expected: False)",
+      "marks": [
+        23
+      ]
+    },
+    {
+      "text": "BinaryFormula ToExpression NestedOperands Evaluates (observedAge: 60, expected: True)",
+      "marks": [
+        24
+      ]
+    },
+    {
+      "text": "BinaryFormula ToExpression NumericComparison Evaluates (op: Eq, observedAge: 65, expected: True)",
+      "marks": [
+        25
+      ]
+    },
+    {
+      "text": "BinaryFormula ToExpression NumericComparison Evaluates (op: Gt, observedAge: 65, expected: False)",
+      "marks": [
+        26
+      ]
+    },
+    {
+      "text": "BinaryFormula ToExpression NumericComparison Evaluates (op: Gt, observedAge: 66, expected: True)",
+      "marks": [
+        27
+      ]
+    },
+    {
+      "text": "BinaryFormula ToExpression NumericComparison Evaluates (op: Gte, observedAge: 64.99, expected: False)",
+      "marks": [
+        28
+      ]
+    },
+    {
+      "text": "BinaryFormula ToExpression NumericComparison Evaluates (op: Gte, observedAge: 65, expected: True)",
+      "marks": [
+        29
+      ]
+    },
+    {
+      "text": "BinaryFormula ToExpression NumericComparison Evaluates (op: Lt, observedAge: 64.99, expected: True)",
+      "marks": [
+        30
+      ]
+    },
+    {
+      "text": "BinaryFormula ToExpression NumericComparison Evaluates (op: Lte, observedAge: 65, expected: True)",
+      "marks": [
+        31
+      ]
+    },
+    {
+      "text": "BinaryFormula ToExpression NumericComparison Evaluates (op: Ne, observedAge: 65, expected: False)",
+      "marks": [
+        32
+      ]
+    },
+    {
+      "text": "BinaryFormula ToExpression OrFalseLeftMissingRightObservation Fail",
+      "marks": [
+        33
+      ]
+    },
+    {
+      "text": "BinaryFormula ToExpression OrTrueLeft ObservationOfRightNotRequired",
+      "marks": [
+        34
+      ]
+    },
+    {
+      "text": "BinaryFormula ToExpression Or Evaluates (left: False, right: False, expected: False)",
+      "marks": [
+        35
+      ]
+    },
+    {
+      "text": "BinaryFormula ToExpression Or Evaluates (left: False, right: True, expected: True)",
+      "marks": [
+        36
+      ]
+    },
+    {
+      "text": "BinaryFormula ToExpression Or Evaluates (left: True, right: False, expected: True)",
+      "marks": [
+        37
+      ]
+    },
+    {
+      "text": "BinaryFormula ToExpression Or Evaluates (left: True, right: True, expected: True)",
+      "marks": [
+        38
+      ]
+    },
+    {
+      "text": "BinaryFormula ToExpression WithBothObservations Evaluates (observedAge: 64.99, observedSbp: 89, expected: False)",
+      "marks": [
+        39
+      ]
+    },
+    {
+      "text": "BinaryFormula ToExpression WithBothObservations Evaluates (observedAge: 64.99, observedSbp: 90, expected: False)",
+      "marks": [
+        40
+      ]
+    },
+    {
+      "text": "BinaryFormula ToExpression WithBothObservations Evaluates (observedAge: 65, observedSbp: 89, expected: True)",
+      "marks": [
+        41
+      ]
+    },
+    {
+      "text": "BinaryFormula ToExpression WithBothObservations Evaluates (observedAge: 65, observedSbp: 90, expected: False)",
+      "marks": [
+        42
+      ]
+    },
+    {
+      "text": "TernaryFormula ToExpression CategoricalBranch Evaluates",
+      "marks": [
+        43
+      ]
+    },
+    {
+      "text": "TernaryFormula ToExpression ConditionConstant EvaluatesBranch (conditionValue: False, expected: 75)",
+      "marks": [
+        44
+      ]
+    },
+    {
+      "text": "TernaryFormula ToExpression ConditionConstant EvaluatesBranch (conditionValue: True, expected: 65)",
+      "marks": [
+        45
+      ]
+    },
+    {
+      "text": "TernaryFormula ToExpression ConditionFromObservation EvaluatesBranch (observedAge: 64.99, expected: 0)",
+      "marks": [
+        46
+      ]
+    },
+    {
+      "text": "TernaryFormula ToExpression ConditionFromObservation EvaluatesBranch (observedAge: 65, expected: 1)",
+      "marks": [
+        47
+      ]
+    },
+    {
+      "text": "TernaryFormula ToExpression ConditionFromObservation EvaluatesBranch (observedAge: 70, expected: 1)",
+      "marks": [
+        48
+      ]
+    },
+    {
+      "text": "TernaryFormula ToExpression MissingConditionObservation Fail",
+      "marks": [
+        49
+      ]
+    },
+    {
+      "text": "TernaryFormula ToExpression MissingReachableBranchObservation Fail",
+      "marks": [
+        50
+      ]
+    },
+    {
+      "text": "TernaryFormula ToExpression UnreachableFalseBranchObservationNotRequired",
+      "marks": [
+        51
+      ]
+    },
+    {
+      "text": "TernaryFormula ToExpression UnreachableTrueBranchObservationNotRequired",
+      "marks": [
+        52
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "The expression evaluates to the expected boolean result",
+      "marks": [
+        2,
+        3,
+        5,
+        6,
+        7,
+        8,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        51,
+        52
+      ]
+    },
+    {
+      "text": "The expression evaluates to the expected numeric result",
+      "marks": [
+        9,
+        10,
+        11,
+        12,
+        44,
+        45,
+        46,
+        47,
+        48
+      ]
+    },
+    {
+      "text": "AND/OR short-circuiting skips the observation of the unused operand",
+      "marks": [
+        2,
+        3,
+        34,
+        51,
+        52
+      ]
+    },
+    {
+      "text": "Failure result naming the missing observation",
+      "marks": [
+        1,
+        4,
+        22,
+        33,
+        49,
+        50
+      ]
+    }
+  ],
+  "exception_text": "No unhandled exception; a missing observation is returned as a failed Result",
+  "exception_marks": [
+    1,
+    4,
+    22,
+    33,
+    49,
+    50
+  ],
+  "cases": [
+    {
+      "method": "BinaryFormula_ToExpression_AndBothObservationsMissing_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "BinaryFormula_ToExpression_AndFalseLeft_ObservationOfRightNotRequired",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "BinaryFormula_ToExpression_AndObservedFalseLeft_ObservationOfRightNotRequired",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "BinaryFormula_ToExpression_AndTrueLeftMissingRightObservation_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "BinaryFormula_ToExpression_And_Evaluates",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "BinaryFormula_ToExpression_And_Evaluates",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "BinaryFormula_ToExpression_And_Evaluates",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "BinaryFormula_ToExpression_And_Evaluates",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "BinaryFormula_ToExpression_Arithmetic_Evaluates",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "BinaryFormula_ToExpression_Arithmetic_Evaluates",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "BinaryFormula_ToExpression_Arithmetic_Evaluates",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "BinaryFormula_ToExpression_Arithmetic_Evaluates",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "BinaryFormula_ToExpression_CategoricalComparison_Evaluates",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "BinaryFormula_ToExpression_CategoricalComparison_Evaluates",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "BinaryFormula_ToExpression_CategoricalComparison_Evaluates",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "BinaryFormula_ToExpression_ConstantOperands_EvaluatesWithoutObservations",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "BinaryFormula_ToExpression_ConstantOperands_EvaluatesWithoutObservations",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "BinaryFormula_ToExpression_ConstantOperands_EvaluatesWithoutObservations",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "BinaryFormula_ToExpression_ConstantOperands_EvaluatesWithoutObservations",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "BinaryFormula_ToExpression_ConstantOperands_EvaluatesWithoutObservations",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "BinaryFormula_ToExpression_ConstantOperands_EvaluatesWithoutObservations",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "BinaryFormula_ToExpression_MissingObservation_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "BinaryFormula_ToExpression_NestedOperands_Evaluates",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "BinaryFormula_ToExpression_NestedOperands_Evaluates",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "BinaryFormula_ToExpression_NumericComparison_Evaluates",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "BinaryFormula_ToExpression_NumericComparison_Evaluates",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "BinaryFormula_ToExpression_NumericComparison_Evaluates",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "BinaryFormula_ToExpression_NumericComparison_Evaluates",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "BinaryFormula_ToExpression_NumericComparison_Evaluates",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "BinaryFormula_ToExpression_NumericComparison_Evaluates",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "BinaryFormula_ToExpression_NumericComparison_Evaluates",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "BinaryFormula_ToExpression_NumericComparison_Evaluates",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "BinaryFormula_ToExpression_OrFalseLeftMissingRightObservation_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "BinaryFormula_ToExpression_OrTrueLeft_ObservationOfRightNotRequired",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "BinaryFormula_ToExpression_Or_Evaluates",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "BinaryFormula_ToExpression_Or_Evaluates",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "BinaryFormula_ToExpression_Or_Evaluates",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "BinaryFormula_ToExpression_Or_Evaluates",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "BinaryFormula_ToExpression_WithBothObservations_Evaluates",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "BinaryFormula_ToExpression_WithBothObservations_Evaluates",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "BinaryFormula_ToExpression_WithBothObservations_Evaluates",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "BinaryFormula_ToExpression_WithBothObservations_Evaluates",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "TernaryFormula_ToExpression_CategoricalBranch_Evaluates",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "TernaryFormula_ToExpression_ConditionConstant_EvaluatesBranch",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "TernaryFormula_ToExpression_ConditionConstant_EvaluatesBranch",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "TernaryFormula_ToExpression_ConditionFromObservation_EvaluatesBranch",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "TernaryFormula_ToExpression_ConditionFromObservation_EvaluatesBranch",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "TernaryFormula_ToExpression_ConditionFromObservation_EvaluatesBranch",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "TernaryFormula_ToExpression_MissingConditionObservation_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "TernaryFormula_ToExpression_MissingReachableBranchObservation_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "TernaryFormula_ToExpression_UnreachableFalseBranchObservationNotRequired",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "TernaryFormula_ToExpression_UnreachableTrueBranchObservationNotRequired",
+      "type": "N",
+      "result": "P"
+    }
+  ]
+}

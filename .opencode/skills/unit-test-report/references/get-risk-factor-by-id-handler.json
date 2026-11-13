@@ -1,0 +1,172 @@
+{
+  "function_code": "GetRiskFactorByIdHandler.HandleAsync",
+  "sheet_name": "GetRiskFactorByIdHandler",
+  "lines_of_code": 29,
+  "requirement": "Return one risk factor as a read-only projection: its id, the joined pathogen with its atypical flag, the criterion with its rendered formula, and the critical-factor flag; a missing id is reported as ResourceNotFound.",
+  "preconditions": [
+    {
+      "text": "The requested risk factor exists and is live",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ]
+    },
+    {
+      "text": "The linked pathogen and criterion exist",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ]
+    },
+    {
+      "text": "The requested id matches no live risk factor, or the row is soft-deleted",
+      "marks": [
+        1,
+        7,
+        8
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "Query for a risk factor that was soft deleted beforehand",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "Query for a risk factor whose criterion is the tachypnea threshold",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "Query for a risk factor whose criterion is a nested logical formula",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "Query for a risk factor with its pathogen and criterion",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "Query for a risk factor whose pathogen is atypical",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "Query for a risk factor whose pathogen is not atypical",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "Query with Guid.Empty",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "Query with an unknown id",
+      "marks": [
+        8
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "Success with the joined pathogen and criterion projection",
+      "marks": [
+        2,
+        3,
+        4,
+        5,
+        6
+      ]
+    },
+    {
+      "text": "The criterion formula is rendered back into its human-readable form",
+      "marks": [
+        2,
+        3,
+        4
+      ]
+    },
+    {
+      "text": "Only non-leaf operands are parenthesised and the pathogen atypical flag is projected",
+      "marks": [
+        3,
+        5,
+        6
+      ]
+    },
+    {
+      "text": "Failure with ResourceNotFound and a null payload",
+      "marks": [
+        1,
+        7,
+        8
+      ]
+    }
+  ],
+  "exception_text": "No unhandled exception; a missing or soft-deleted row is returned as a failed Result",
+  "exception_marks": [
+    1,
+    7,
+    8
+  ],
+  "cases": [
+    {
+      "method": "GetRiskFactorById_SoftDeletedRiskFactor_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "GetRiskFactorById_TachypneaFormula_Rendered_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "GetRiskFactorById_NestedFormula_RenderedWithParentheses_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "GetRiskFactorById_ProjectsPathogenAndCriterion_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "GetRiskFactorById_IsAtypicalProjected_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "GetRiskFactorById_IsAtypicalProjected_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "GetRiskFactorById_EmptyId_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "GetRiskFactorById_UnknownId_Fail",
+      "type": "A",
+      "result": "P"
+    }
+  ]
+}

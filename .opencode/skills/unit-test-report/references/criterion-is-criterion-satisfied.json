@@ -1,0 +1,251 @@
+{
+  "function_code": "Criterion.IsCriterionSatisfied",
+  "sheet_name": "Criterion",
+  "lines_of_code": 65,
+  "requirement": "Evaluate whether an observation set satisfies the criterion: missing variables make the criterion unsatisfied, the formula is evaluated against the observations with AND/OR short-circuiting, and a malformed or non-boolean formula is rejected.",
+  "preconditions": [
+    {
+      "text": "The criterion formula and the observation set are built in memory",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14
+      ]
+    },
+    {
+      "text": "Every variable the formula needs is present in the observation set",
+      "marks": [
+        1,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        10,
+        11,
+        12,
+        13
+      ]
+    },
+    {
+      "text": "A required variable is missing, or the formula is malformed or non-boolean",
+      "marks": [
+        8,
+        9,
+        10
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "IsCriterionSatisfied AndNeedsBothObservations ReturnsFalse",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "IsCriterionSatisfied AndShortCircuitsWithoutFullObservations ReturnsFalse",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "IsCriterionSatisfied BooleanVariable Evaluates (observed: False, expected: False)",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "IsCriterionSatisfied BooleanVariable Evaluates (observed: True, expected: True)",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "IsCriterionSatisfied CategoricalComparison Evaluates (observed: \"Klebsiella pneumoniae\", expected: True)",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "IsCriterionSatisfied CategoricalComparison Evaluates (observed: \"Streptococcus pneumoniae\", expected: False)",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "IsCriterionSatisfied ConstantFalseCriterion ReturnsFalse",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "IsCriterionSatisfied MalformedFormula ReturnsFalse",
+      "marks": [
+        8
+      ]
+    },
+    {
+      "text": "IsCriterionSatisfied MissingObservation ReturnsFalse",
+      "marks": [
+        9
+      ]
+    },
+    {
+      "text": "IsCriterionSatisfied NonBooleanFormula Throws",
+      "marks": [
+        10
+      ]
+    },
+    {
+      "text": "IsCriterionSatisfied NumericComparison Evaluates (observedAge: 64.99, expected: False)",
+      "marks": [
+        11
+      ]
+    },
+    {
+      "text": "IsCriterionSatisfied NumericComparison Evaluates (observedAge: 65, expected: True)",
+      "marks": [
+        12
+      ]
+    },
+    {
+      "text": "IsCriterionSatisfied NumericComparison Evaluates (observedAge: 66, expected: True)",
+      "marks": [
+        13
+      ]
+    },
+    {
+      "text": "IsCriterionSatisfied OrShortCircuitsWithoutFullObservations ReturnsTrue",
+      "marks": [
+        14
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "True: the observations satisfy the formula",
+      "marks": [
+        4,
+        5,
+        12,
+        13,
+        14
+      ]
+    },
+    {
+      "text": "False: the observations do not satisfy the formula, or a variable is missing",
+      "marks": [
+        1,
+        2,
+        3,
+        6,
+        7,
+        8,
+        9,
+        11
+      ]
+    },
+    {
+      "text": "AND/OR short-circuiting avoids requiring the unused observation",
+      "marks": [
+        2,
+        14
+      ]
+    },
+    {
+      "text": "ArgumentException is thrown for a non-boolean formula",
+      "marks": [
+        10
+      ]
+    }
+  ],
+  "exception_text": "ArgumentException is thrown when the criterion formula does not evaluate to a boolean",
+  "exception_marks": [
+    10
+  ],
+  "cases": [
+    {
+      "method": "IsCriterionSatisfied_AndNeedsBothObservations_ReturnsFalse",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IsCriterionSatisfied_AndShortCircuitsWithoutFullObservations_ReturnsFalse",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IsCriterionSatisfied_BooleanVariable_Evaluates",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IsCriterionSatisfied_BooleanVariable_Evaluates",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IsCriterionSatisfied_CategoricalComparison_Evaluates",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IsCriterionSatisfied_CategoricalComparison_Evaluates",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IsCriterionSatisfied_ConstantFalseCriterion_ReturnsFalse",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IsCriterionSatisfied_MalformedFormula_ReturnsFalse",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "IsCriterionSatisfied_MissingObservation_ReturnsFalse",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "IsCriterionSatisfied_NonBooleanFormula_Throws",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "IsCriterionSatisfied_NumericComparison_Evaluates",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IsCriterionSatisfied_NumericComparison_Evaluates",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IsCriterionSatisfied_NumericComparison_Evaluates",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IsCriterionSatisfied_OrShortCircuitsWithoutFullObservations_ReturnsTrue",
+      "type": "N",
+      "result": "P"
+    }
+  ]
+}

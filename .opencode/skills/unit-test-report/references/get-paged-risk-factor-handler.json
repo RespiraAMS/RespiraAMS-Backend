@@ -1,0 +1,237 @@
+{
+  "function_code": "GetPagedRiskFactorHandler.HandleAsync",
+  "sheet_name": "GetPagedRiskFactorHandler",
+  "lines_of_code": 37,
+  "requirement": "Return a page of risk factors ordered by creation time descending: apply the optional pathogen filter, project the joined pathogen and criterion (with its rendered formula) plus the critical-factor flag, and wrap the page with pagination metadata.",
+  "preconditions": [
+    {
+      "text": "Five live risk factors are seeded one minute apart",
+      "marks": [
+        1,
+        2,
+        3,
+        5,
+        6,
+        8,
+        10,
+        11,
+        12
+      ]
+    },
+    {
+      "text": "One further risk factor is soft-deleted",
+      "marks": [
+        7,
+        9
+      ]
+    },
+    {
+      "text": "The pathogen filter matches stored rows",
+      "marks": [
+        3,
+        7
+      ]
+    },
+    {
+      "text": "The pathogen filter matches nothing",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "The risk factor table is empty",
+      "marks": [
+        5
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "No filter, page 3, size 2 (one past the last page)",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "No filter, page 1, size 100, inspect the joined projection",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "Pathogen filter for a seeded pathogen, page 1, size 100",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "Pathogen filter with an unknown id",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "No filter, page 1, size 10, on an empty database",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "No filter, page 1, size 2",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "Pathogen filter for the pathogen owning the soft-deleted row",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "Empty filter object, page 1, size 100",
+      "marks": [
+        8
+      ]
+    },
+    {
+      "text": "No filter, page 1, size 100, inspect the soft-deleted row",
+      "marks": [
+        9
+      ]
+    },
+    {
+      "text": "No filter, page 1, size 100 (maximum page size)",
+      "marks": [
+        10
+      ]
+    },
+    {
+      "text": "No filter, page 3, size 2 (last partial page)",
+      "marks": [
+        11
+      ]
+    },
+    {
+      "text": "No filter, page 1, size 1 (minimum page size); pages 1, 5 and 6",
+      "marks": [
+        12
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "Success with the requested page and its metadata",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ]
+    },
+    {
+      "text": "Items ordered by CreatedAt descending",
+      "marks": [
+        2,
+        3,
+        6,
+        9,
+        10
+      ]
+    },
+    {
+      "text": "Each item carries the joined pathogen, criterion with rendered formula, and critical-factor flag",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "The pathogen filter narrows the page and excludes soft-deleted rows",
+      "marks": [
+        3,
+        7,
+        9
+      ]
+    },
+    {
+      "text": "An empty page beyond the last page or on an empty database",
+      "marks": [
+        1,
+        4,
+        5
+      ]
+    }
+  ],
+  "exception_text": "No unhandled exception; the read-only query has no failure branch",
+  "exception_marks": [],
+  "cases": [
+    {
+      "method": "GetPagedRiskFactor_PageBeyondRange_ReturnsNoItems",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "GetPagedRiskFactor_ProjectsPathogenAndCriterionAndFormulaAndIsCriticalFactor_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "GetPagedRiskFactor_PathogenFilter_ReturnsOnlyThatPathogen_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "GetPagedRiskFactor_PathogenFilter_NoMatch_ReturnsEmpty",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "GetPagedRiskFactor_EmptyDatabase_ReturnsEmptySuccess",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "GetPagedRiskFactor_FirstPageNewestFirst_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "GetPagedRiskFactor_PathogenFilter_HidesSoftDeletedRows_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "GetPagedRiskFactor_FilterWithoutPathogenId_AppliesNoFilter_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "GetPagedRiskFactor_ExcludesSoftDeleted_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "GetPagedRiskFactor_MaxPageSize_AllItemsFitOnFirstPage_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "GetPagedRiskFactor_LastPartialPage_HasNoNext_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "GetPagedRiskFactor_MinimumPageSize_WalksOneItemPerPage_Success",
+      "type": "B",
+      "result": "P"
+    }
+  ]
+}

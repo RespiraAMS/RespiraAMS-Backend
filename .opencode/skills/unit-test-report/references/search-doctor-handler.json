@@ -1,0 +1,370 @@
+{
+  "function_code": "SearchDoctorHandler.HandleAsync",
+  "sheet_name": "SearchDoctorHandler",
+  "lines_of_code": 143,
+  "requirement": "Full-text search for doctor profiles: build a prefix tsquery, return an empty page for empty, symbol-only, or single-character terms, match first name, last name, and citizen id with accent-insensitive ranking, page the combined doctor/head-doctor projection, and enrich account/media data.",
+  "preconditions": [
+    {
+      "text": "Doctor and head-doctor profiles with search vectors are seeded",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22
+      ]
+    },
+    {
+      "text": "The query carries a search term and pagination parameter",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22
+      ]
+    },
+    {
+      "text": "The term is empty, symbol-only, single-character, or matches nothing",
+      "marks": [
+        10,
+        11,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "HandleAsync_ExcludesSoftDeletedProfiles",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "HandleAsync_MatchingCitizenIdentificationNumber_ReturnsTheProfile",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "HandleAsync_MatchingFirstName_ReturnsTheProfile",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "HandleAsync_MatchingHeadDepartmentDoctor_ReturnsTheHeadProfile",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "HandleAsync_MatchingLastName_ReturnsTheProfile",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "HandleAsync_ReturnsSuccessStatusCode",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "HandleAsync_WithAccentedSearchTerm_IgnoresTheAccent",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "HandleAsync_WithAccentedStoredName_IgnoresTheAccent",
+      "marks": [
+        8
+      ]
+    },
+    {
+      "text": "HandleAsync_WithDifferentCase_ReturnsTheProfile",
+      "marks": [
+        9
+      ]
+    },
+    {
+      "text": "HandleAsync_WithEmptySearchTerm_ReturnsEmptyResult",
+      "marks": [
+        10
+      ]
+    },
+    {
+      "text": "HandleAsync_WithEmptySearchTerm_SkipsTheEnricher",
+      "marks": [
+        11
+      ]
+    },
+    {
+      "text": "HandleAsync_WithPartialWord_ReturnsTheProfile",
+      "marks": [
+        12
+      ]
+    },
+    {
+      "text": "HandleAsync_WithSanitizedSearchTerm_DoesNotThrowAndReturnsEmptyResult (searchTerm: \"!\")",
+      "marks": [
+        13
+      ]
+    },
+    {
+      "text": "HandleAsync_WithSanitizedSearchTerm_DoesNotThrowAndReturnsEmptyResult (searchTerm: \"&\")",
+      "marks": [
+        14
+      ]
+    },
+    {
+      "text": "HandleAsync_WithSanitizedSearchTerm_DoesNotThrowAndReturnsEmptyResult (searchTerm: \"a!b\")",
+      "marks": [
+        15
+      ]
+    },
+    {
+      "text": "HandleAsync_WithSanitizedSearchTerm_DoesNotThrowAndReturnsEmptyResult (searchTerm: \"a&b\")",
+      "marks": [
+        16
+      ]
+    },
+    {
+      "text": "HandleAsync_WithSanitizedSearchTerm_DoesNotThrowAndReturnsEmptyResult (searchTerm: \"a(b\")",
+      "marks": [
+        17
+      ]
+    },
+    {
+      "text": "HandleAsync_WithSanitizedSearchTerm_DoesNotThrowAndReturnsEmptyResult (searchTerm: \"beta-lactam\")",
+      "marks": [
+        18
+      ]
+    },
+    {
+      "text": "HandleAsync_WithSanitizedSearchTerm_DoesNotThrowAndReturnsEmptyResult (searchTerm: \"nguyen & !pham\")",
+      "marks": [
+        19
+      ]
+    },
+    {
+      "text": "HandleAsync_WithSingleCharacterSearchTerm_ReturnsEmptyResult",
+      "marks": [
+        20
+      ]
+    },
+    {
+      "text": "HandleAsync_WithSymbolOnlySearchTerm_ReturnsEmptyResult",
+      "marks": [
+        21
+      ]
+    },
+    {
+      "text": "HandleAsync_WithoutMatch_ReturnsEmptyResult",
+      "marks": [
+        22
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "Matching first name, last name, citizen id, partial word, or different case returns the profile",
+      "marks": [
+        2,
+        3,
+        5,
+        9,
+        12
+      ]
+    },
+    {
+      "text": "Stored or searched accents are ignored and head-doctor profiles are matched",
+      "marks": [
+        4,
+        7,
+        8
+      ]
+    },
+    {
+      "text": "Soft-deleted profiles are excluded",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "Empty or non-matching terms return an empty page without calling the enricher",
+      "marks": [
+        10,
+        11,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22
+      ]
+    }
+  ],
+  "exception_text": "No unhandled exception; unusable terms return an empty successful page",
+  "exception_marks": [],
+  "cases": [
+    {
+      "method": "HandleAsync_ExcludesSoftDeletedProfiles",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_MatchingCitizenIdentificationNumber_ReturnsTheProfile",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_MatchingFirstName_ReturnsTheProfile",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_MatchingHeadDepartmentDoctor_ReturnsTheHeadProfile",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_MatchingLastName_ReturnsTheProfile",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_ReturnsSuccessStatusCode",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithAccentedSearchTerm_IgnoresTheAccent",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithAccentedStoredName_IgnoresTheAccent",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithDifferentCase_ReturnsTheProfile",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithEmptySearchTerm_ReturnsEmptyResult",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithEmptySearchTerm_SkipsTheEnricher",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithPartialWord_ReturnsTheProfile",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithSanitizedSearchTerm_DoesNotThrowAndReturnsEmptyResult",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithSanitizedSearchTerm_DoesNotThrowAndReturnsEmptyResult",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithSanitizedSearchTerm_DoesNotThrowAndReturnsEmptyResult",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithSanitizedSearchTerm_DoesNotThrowAndReturnsEmptyResult",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithSanitizedSearchTerm_DoesNotThrowAndReturnsEmptyResult",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithSanitizedSearchTerm_DoesNotThrowAndReturnsEmptyResult",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithSanitizedSearchTerm_DoesNotThrowAndReturnsEmptyResult",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithSingleCharacterSearchTerm_ReturnsEmptyResult",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithSymbolOnlySearchTerm_ReturnsEmptyResult",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithoutMatch_ReturnsEmptyResult",
+      "type": "A",
+      "result": "P"
+    }
+  ]
+}

@@ -1,0 +1,98 @@
+{
+  "function_code": "GetPatientByIdValidator.Validate",
+  "sheet_name": "GetPatientByIdValidator",
+  "lines_of_code": 12,
+  "requirement": "Validate a get-patient-by-id query: the patient id must not be empty.",
+  "preconditions": [
+    {
+      "text": "Validation runs on an in-memory query without database access",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "GetPatientById EmptyId Fail",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "GetPatientById RealisticQuery Success",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "GetPatientById ValidId Success (id: 00000000-0000-0000-0000-000000000001)",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "GetPatientById ValidId Success (id: 01a1c5ab-1ccc-7750-a9fd-bdd62514459f)",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "GetPatientById ValidId Success (id: ffffffff-ffff-ffff-ffff-ffffffffffff)",
+      "marks": [
+        5
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "No validation errors",
+      "marks": [
+        2,
+        3,
+        4,
+        5
+      ]
+    },
+    {
+      "text": "Single validation error reported on Id",
+      "marks": [
+        1
+      ]
+    }
+  ],
+  "exception_text": "No unhandled exception; an empty id is reported as a validation error",
+  "exception_marks": [
+    1
+  ],
+  "cases": [
+    {
+      "method": "GetPatientById_EmptyId_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "GetPatientById_RealisticQuery_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "GetPatientById_ValidId_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "GetPatientById_ValidId_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "GetPatientById_ValidId_Success",
+      "type": "B",
+      "result": "P"
+    }
+  ]
+}

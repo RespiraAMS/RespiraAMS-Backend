@@ -1,0 +1,215 @@
+{
+  "function_code": "CloseTreatmentPlanValidator.Validate",
+  "sheet_name": "CloseTreatmentPlanValidator",
+  "lines_of_code": 13,
+  "requirement": "Validate a close-treatment-plan command: the treatment plan id must not be empty and a closing reason must be supplied, including on whitespace-only input.",
+  "preconditions": [
+    {
+      "text": "Validation runs on an in-memory command without database access",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ]
+    },
+    {
+      "text": "The plan id and reason satisfy their rules",
+      "marks": [
+        8,
+        9,
+        10,
+        11,
+        12
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "CloseTreatmentPlan AllSectionsInvalid Fail",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "CloseTreatmentPlan EmptyPlanId Fail",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "CloseTreatmentPlan MissingReason Fail (reason: ' ')",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "CloseTreatmentPlan MissingReason Fail (reason: '')",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "CloseTreatmentPlan MissingReason Fail (reason: '\\n')",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "CloseTreatmentPlan MissingReason Fail (reason: '\\t')",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "CloseTreatmentPlan MissingReason Fail (reason: null)",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "CloseTreatmentPlan ValidPlanId Success (treatmentPlanId: 00000000-0000-0000-0000-000000000001)",
+      "marks": [
+        8
+      ]
+    },
+    {
+      "text": "CloseTreatmentPlan ValidPlanId Success (treatmentPlanId: 01a1c5ab-1cad-7afe-ad8c-43eda598518b)",
+      "marks": [
+        9
+      ]
+    },
+    {
+      "text": "CloseTreatmentPlan ValidPlanId Success (treatmentPlanId: ffffffff-ffff-ffff-ffff-ffffffffffff)",
+      "marks": [
+        10
+      ]
+    },
+    {
+      "text": "CloseTreatmentPlan ValidReason Success (reason: 'Patient completed the antibiotic course and was di'···)",
+      "marks": [
+        11
+      ]
+    },
+    {
+      "text": "CloseTreatmentPlan ValidReason Success (reason: 'Recovered')",
+      "marks": [
+        12
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "No validation errors",
+      "marks": [
+        8,
+        9,
+        10,
+        11,
+        12
+      ]
+    },
+    {
+      "text": "Single validation error reported on TreatmentPlanId",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "Validation error reported on Reason for null, empty, or whitespace input",
+      "marks": [
+        3,
+        4,
+        5,
+        6,
+        7
+      ]
+    },
+    {
+      "text": "Both violations reported together",
+      "marks": [
+        1
+      ]
+    }
+  ],
+  "exception_text": "No unhandled exception; invalid input is reported as validation errors",
+  "exception_marks": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ],
+  "cases": [
+    {
+      "method": "CloseTreatmentPlan_AllSectionsInvalid_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CloseTreatmentPlan_EmptyPlanId_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CloseTreatmentPlan_MissingReason_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CloseTreatmentPlan_MissingReason_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CloseTreatmentPlan_MissingReason_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CloseTreatmentPlan_MissingReason_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CloseTreatmentPlan_MissingReason_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CloseTreatmentPlan_ValidPlanId_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "CloseTreatmentPlan_ValidPlanId_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "CloseTreatmentPlan_ValidPlanId_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "CloseTreatmentPlan_ValidReason_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "CloseTreatmentPlan_ValidReason_Success",
+      "type": "N",
+      "result": "P"
+    }
+  ]
+}

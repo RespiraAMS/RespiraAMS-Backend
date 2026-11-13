@@ -1,0 +1,427 @@
+{
+  "function_code": "UpdateMetricRuleHandler.HandleAsync",
+  "sheet_name": "UpdateMetricRuleHandler",
+  "lines_of_code": 82,
+  "requirement": "Update one metric rule of a clinical metric: the metric, the rule inside it, and the criterion must exist and be live, the criterion may not repeat within the metric, the rule type cannot change, then the formula is mapped against the clinical variables and saved.",
+  "preconditions": [
+    {
+      "text": "The target clinical metric exists and is live",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        22,
+        24
+      ]
+    },
+    {
+      "text": "The rule belongs to that metric and is live",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        11,
+        12,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        22,
+        24
+      ]
+    },
+    {
+      "text": "The target criterion exists and is live",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        17,
+        18,
+        20,
+        22,
+        24
+      ]
+    },
+    {
+      "text": "A live clinical variable exists for the score function",
+      "marks": [
+        9
+      ]
+    },
+    {
+      "text": "A soft-deleted rule already reserves the criterion in the metric",
+      "marks": [
+        11
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "Replace only the score function of a scoring rule",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "Set IsMajor = true on a major/minor rule",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "Set IsMajor = false on a major/minor rule",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "Command that sets both a score function and IsMajor",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "Update request with Guid.Empty as the rule id",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "Update request for a rule that was soft deleted beforehand",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "Criterion already held by another live rule of the metric",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "Score function supplied for a major/minor rule",
+      "marks": [
+        8
+      ]
+    },
+    {
+      "text": "Score function with a variable that resolves to a new formula",
+      "marks": [
+        9
+      ]
+    },
+    {
+      "text": "Rule id that belongs to a different metric",
+      "marks": [
+        10
+      ]
+    },
+    {
+      "text": "Criterion reserved only by a soft-deleted rule",
+      "marks": [
+        11
+      ]
+    },
+    {
+      "text": "Reassign the rule to a different live criterion",
+      "marks": [
+        12
+      ]
+    },
+    {
+      "text": "Update request with an unknown rule id",
+      "marks": [
+        13
+      ]
+    },
+    {
+      "text": "Command that sets neither a score function nor IsMajor",
+      "marks": [
+        14
+      ]
+    },
+    {
+      "text": "Score function referencing a soft-deleted clinical variable",
+      "marks": [
+        15
+      ]
+    },
+    {
+      "text": "Reassign the rule to a soft-deleted criterion",
+      "marks": [
+        16
+      ]
+    },
+    {
+      "text": "Score function adding a boolean constant to a number",
+      "marks": [
+        17
+      ]
+    },
+    {
+      "text": "Update of one rule while two sibling rules stay live",
+      "marks": [
+        18
+      ]
+    },
+    {
+      "text": "Reassign the rule to an unknown criterion",
+      "marks": [
+        19
+      ]
+    },
+    {
+      "text": "Score function referencing an unknown clinical variable",
+      "marks": [
+        20
+      ]
+    },
+    {
+      "text": "Update request with an unknown clinical metric id",
+      "marks": [
+        21
+      ]
+    },
+    {
+      "text": "Toggle only the IsMajor flag of a major/minor rule",
+      "marks": [
+        22
+      ]
+    },
+    {
+      "text": "Update request for a metric that was soft deleted beforehand",
+      "marks": [
+        23
+      ]
+    },
+    {
+      "text": "IsMajor supplied for a scoring rule",
+      "marks": [
+        24
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "Success with Updated status; criterion, score function or flag, and UpdatedAt are persisted",
+      "marks": [
+        1,
+        2,
+        3,
+        9,
+        11,
+        12,
+        18,
+        22
+      ]
+    },
+    {
+      "text": "A scoring rule keeps its score function form; a major/minor rule keeps its weight",
+      "marks": [
+        1,
+        2,
+        3,
+        12,
+        22
+      ]
+    },
+    {
+      "text": "Failure with BadRequest for a missing, deleted, duplicate, or unresolvable reference",
+      "marks": [
+        5,
+        6,
+        7,
+        10,
+        13,
+        15,
+        16,
+        17,
+        19,
+        20,
+        21,
+        23
+      ]
+    },
+    {
+      "text": "Failure with BadRequest when the command would change the rule type",
+      "marks": [
+        8,
+        24
+      ]
+    },
+    {
+      "text": "Sibling rules and the rule count of the metric stay unchanged",
+      "marks": [
+        7,
+        11,
+        18
+      ]
+    }
+  ],
+  "exception_text": "ArgumentException is thrown when the command sets both or neither of the score function and major/minor flag",
+  "exception_marks": [
+    4,
+    14
+  ],
+  "cases": [
+    {
+      "method": "UpdateRule_UpdateScoreFunctionOnly_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "UpdateRule_IsMajorBoundary_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "UpdateRule_IsMajorBoundary_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "UpdateRule_BothScoreFunctionAndIsMajor_Throws",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdateRule_EmptyRuleId_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdateRule_SoftDeletedRule_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdateRule_DuplicateCriterion_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdateRule_MajorMinorRuleToScoring_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdateRule_NewScoreFunctionWithVariable_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "UpdateRule_RuleBelongsToAnotherMetric_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdateRule_SoftDeletedRuleDoesNotReserveCriterion_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "UpdateRule_ReassignCriterion_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "UpdateRule_UnknownRuleId_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdateRule_WithoutScoreFunctionNorIsMajor_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdateRule_SoftDeletedVariableInScoreFunction_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdateRule_SoftDeletedCriterion_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdateRule_TypeInvalidFormulaOperands_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdateRule_SiblingRulesStayUntouched_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "UpdateRule_UnknownCriterion_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdateRule_UnknownVariableInScoreFunction_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdateRule_UnknownMetric_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdateRule_ToggleIsMajorOnly_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "UpdateRule_SoftDeletedMetric_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdateRule_ScoringRuleToMajorMinor_Fail",
+      "type": "A",
+      "result": "P"
+    }
+  ]
+}

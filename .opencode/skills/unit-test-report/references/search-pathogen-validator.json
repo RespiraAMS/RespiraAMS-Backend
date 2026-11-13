@@ -1,0 +1,547 @@
+{
+  "function_code": "SearchPathogenValidator.Validate",
+  "sheet_name": "SearchPathogenValidator",
+  "lines_of_code": 14,
+  "requirement": "Validate a search-pathogen query: the pagination parameters must satisfy page >= 1 and 1 <= size <= 100, and the search term must be at least two characters after trimming and contain only letters, digits, hyphens, or spaces.",
+  "preconditions": [
+    {
+      "text": "Validation runs on an in-memory query without database access",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31
+      ]
+    },
+    {
+      "text": "The pagination parameters are within the valid range",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31
+      ]
+    },
+    {
+      "text": "The search term satisfies both the length and character-set rules",
+      "marks": [
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27
+      ]
+    },
+    {
+      "text": "The trimmed search term is shorter than two characters",
+      "marks": [
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        28,
+        29,
+        30,
+        31
+      ]
+    },
+    {
+      "text": "The search term contains a forbidden character",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        11,
+        28,
+        29,
+        30,
+        31
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "Search term 'community&acquired' (ampersand)",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "Search term '50%' (percent sign)",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "Search term 'covid-19!' (exclamation mark)",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "Search term 'hi/pa' (slash)",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "Search term 'ab_cd' (underscore)",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "Page 0, size 10, search term 'aureus'",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "Page -3, size 10, search term 'aureus'",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "Page 1, size 0, search term 'aureus'",
+      "marks": [
+        8
+      ]
+    },
+    {
+      "text": "Page 1, size -20, search term 'aureus'",
+      "marks": [
+        9
+      ]
+    },
+    {
+      "text": "Page 1, size 101, search term 'aureus'",
+      "marks": [
+        10
+      ]
+    },
+    {
+      "text": "Page 0, size 10, search term 'community&acquired'",
+      "marks": [
+        11
+      ]
+    },
+    {
+      "text": "Search term '' (empty)",
+      "marks": [
+        12
+      ]
+    },
+    {
+      "text": "Search term 'a' (one character)",
+      "marks": [
+        13
+      ]
+    },
+    {
+      "text": "Search term ' ' (single space)",
+      "marks": [
+        14
+      ]
+    },
+    {
+      "text": "Search term '   ' (three spaces)",
+      "marks": [
+        15
+      ]
+    },
+    {
+      "text": "Search term '  a  ' (one character with padding)",
+      "marks": [
+        16
+      ]
+    },
+    {
+      "text": "Search term 'ab' (lower boundary of the trimmed length)",
+      "marks": [
+        17
+      ]
+    },
+    {
+      "text": "Search term 'lao' (single word)",
+      "marks": [
+        18
+      ]
+    },
+    {
+      "text": "Search term 'aureus' (single word)",
+      "marks": [
+        19
+      ]
+    },
+    {
+      "text": "Search term 'sars-cov-2' (mixed letters, digits, and hyphens)",
+      "marks": [
+        20
+      ]
+    },
+    {
+      "text": "Search term 'community acquired' (multi-word)",
+      "marks": [
+        21
+      ]
+    },
+    {
+      "text": "Search term '  ab  ' (padding ignored by the length rule)",
+      "marks": [
+        22
+      ]
+    },
+    {
+      "text": "Search term 'Trực' (accented Unicode letters)",
+      "marks": [
+        23
+      ]
+    },
+    {
+      "text": "Page 1, size 1 (smallest allowed values)",
+      "marks": [
+        24
+      ]
+    },
+    {
+      "text": "Page 1, size 10 (default values)",
+      "marks": [
+        25
+      ]
+    },
+    {
+      "text": "Page 1, size 100 (largest allowed size)",
+      "marks": [
+        26
+      ]
+    },
+    {
+      "text": "Page 7, size 50",
+      "marks": [
+        27
+      ]
+    },
+    {
+      "text": "Search term '!' (single forbidden character)",
+      "marks": [
+        28
+      ]
+    },
+    {
+      "text": "Search term '%' (single forbidden character)",
+      "marks": [
+        29
+      ]
+    },
+    {
+      "text": "Search term '&' (single forbidden character)",
+      "marks": [
+        30
+      ]
+    },
+    {
+      "text": "Search term ' @ ' (forbidden character with padding)",
+      "marks": [
+        31
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "No validation errors",
+      "marks": [
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27
+      ]
+    },
+    {
+      "text": "Single validation error reported on Param",
+      "marks": [
+        6,
+        7,
+        8,
+        9,
+        10
+      ]
+    },
+    {
+      "text": "Single validation error reported on SearchTerm (too short or forbidden character)",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        12,
+        13,
+        14,
+        15,
+        16
+      ]
+    },
+    {
+      "text": "Two errors on SearchTerm: too short and forbidden character",
+      "marks": [
+        28,
+        29,
+        30,
+        31
+      ]
+    },
+    {
+      "text": "Two errors: one on Param and one on SearchTerm",
+      "marks": [
+        11
+      ]
+    }
+  ],
+  "exception_text": "No unhandled exception; invalid input is reported as validation errors",
+  "exception_marks": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    28,
+    29,
+    30,
+    31
+  ],
+  "cases": [
+    {
+      "method": "SearchPathogen_SearchTermWithForbiddenCharacter_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SearchPathogen_SearchTermWithForbiddenCharacter_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SearchPathogen_SearchTermWithForbiddenCharacter_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SearchPathogen_SearchTermWithForbiddenCharacter_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SearchPathogen_SearchTermWithForbiddenCharacter_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SearchPathogen_InvalidPaginationParam_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SearchPathogen_InvalidPaginationParam_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SearchPathogen_InvalidPaginationParam_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SearchPathogen_InvalidPaginationParam_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SearchPathogen_InvalidPaginationParam_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SearchPathogen_InvalidSearchTermAndPaginationParam_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SearchPathogen_SearchTermTooShort_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SearchPathogen_SearchTermTooShort_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SearchPathogen_SearchTermTooShort_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SearchPathogen_SearchTermTooShort_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SearchPathogen_SearchTermTooShort_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SearchPathogen_ValidSearchTerm_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "SearchPathogen_ValidSearchTerm_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SearchPathogen_ValidSearchTerm_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SearchPathogen_ValidSearchTerm_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SearchPathogen_ValidSearchTerm_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SearchPathogen_ValidSearchTerm_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "SearchPathogen_ValidSearchTerm_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SearchPathogen_ValidPaginationParam_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "SearchPathogen_ValidPaginationParam_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SearchPathogen_ValidPaginationParam_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "SearchPathogen_ValidPaginationParam_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SearchPathogen_SearchTermTooShortAndForbiddenCharacter_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SearchPathogen_SearchTermTooShortAndForbiddenCharacter_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SearchPathogen_SearchTermTooShortAndForbiddenCharacter_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SearchPathogen_SearchTermTooShortAndForbiddenCharacter_Fail",
+      "type": "A",
+      "result": "P"
+    }
+  ]
+}

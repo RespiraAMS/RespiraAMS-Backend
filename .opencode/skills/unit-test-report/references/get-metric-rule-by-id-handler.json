@@ -1,0 +1,169 @@
+{
+  "function_code": "GetMetricRuleByIdHandler.HandleAsync",
+  "sheet_name": "GetMetricRuleByIdHandler",
+  "lines_of_code": 56,
+  "requirement": "Return one metric rule as a read-only projection: its parent metric name, its criterion with rendered formula, and either the rendered score function plus its formula DTO or the major/minor weight; a missing id is reported as ResourceNotFound.",
+  "preconditions": [
+    {
+      "text": "The requested metric rule exists and is live",
+      "marks": [
+        1,
+        2,
+        3,
+        5,
+        6,
+        7
+      ]
+    },
+    {
+      "text": "The rule is a scoring rule or a major/minor rule",
+      "marks": [
+        1,
+        2,
+        3,
+        5,
+        6,
+        7
+      ]
+    },
+    {
+      "text": "The parent metric and the criterion exist",
+      "marks": [
+        1,
+        2,
+        3,
+        5,
+        6,
+        7
+      ]
+    },
+    {
+      "text": "The requested id matches no live rule",
+      "marks": [
+        4,
+        5,
+        6
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "Query for four scoring rules with constant, variable, arithmetic, and ternary score functions",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "Query for a rule whose id is not stored",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "Query for the CURB-65 scoring rule of the age criterion",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "Query for a rule that was soft deleted beforehand",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "Query with Guid.Empty",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "Query for a major rule of the IDSA/ATS metric",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "Query for a minor rule of the IDSA/ATS metric",
+      "marks": [
+        7
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "Success with the rule id, parent metric id and name, and criterion",
+      "marks": [
+        1,
+        3,
+        6,
+        7
+      ]
+    },
+    {
+      "text": "A scoring rule renders its score function text and formula DTO with no major/minor flag",
+      "marks": [
+        1,
+        3
+      ]
+    },
+    {
+      "text": "A major/minor rule renders its weight and no score function",
+      "marks": [
+        6,
+        7
+      ]
+    },
+    {
+      "text": "Failure with ResourceNotFound and a null payload",
+      "marks": [
+        2,
+        4,
+        5
+      ]
+    }
+  ],
+  "exception_text": "No unhandled exception; a missing or soft-deleted rule is returned as a failed Result",
+  "exception_marks": [
+    2,
+    4,
+    5
+  ],
+  "cases": [
+    {
+      "method": "GetMetricRuleById_ScoreFunctionVariants_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "GetMetricRuleById_UnknownId_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "GetMetricRuleById_ScoringRule_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "GetMetricRuleById_SoftDeletedRule_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "GetMetricRuleById_EmptyId_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "GetMetricRuleById_MajorMinorRule_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "GetMetricRuleById_MajorMinorRule_Success",
+      "type": "B",
+      "result": "P"
+    }
+  ]
+}

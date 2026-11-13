@@ -1,0 +1,98 @@
+{
+  "function_code": "DeletePatientValidator.Validate",
+  "sheet_name": "DeletePatientValidator",
+  "lines_of_code": 12,
+  "requirement": "Validate a delete-patient command: the patient id must not be empty.",
+  "preconditions": [
+    {
+      "text": "Validation runs on an in-memory command without database access",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "DeletePatient EmptyId Fail",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "DeletePatient RealisticCommand Success",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "DeletePatient ValidId Success (id: 00000000-0000-0000-0000-000000000001)",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "DeletePatient ValidId Success (id: 01a1c5ab-1ced-734a-accc-81a9cc832a65)",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "DeletePatient ValidId Success (id: ffffffff-ffff-ffff-ffff-ffffffffffff)",
+      "marks": [
+        5
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "No validation errors",
+      "marks": [
+        2,
+        3,
+        4,
+        5
+      ]
+    },
+    {
+      "text": "Single validation error reported on Id",
+      "marks": [
+        1
+      ]
+    }
+  ],
+  "exception_text": "No unhandled exception; an empty id is reported as a validation error",
+  "exception_marks": [
+    1
+  ],
+  "cases": [
+    {
+      "method": "DeletePatient_EmptyId_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "DeletePatient_RealisticCommand_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "DeletePatient_ValidId_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "DeletePatient_ValidId_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "DeletePatient_ValidId_Success",
+      "type": "B",
+      "result": "P"
+    }
+  ]
+}

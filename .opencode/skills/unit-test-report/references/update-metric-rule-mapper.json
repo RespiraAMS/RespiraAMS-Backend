@@ -1,0 +1,194 @@
+{
+  "function_code": "UpdateMetricRuleMapper.Map",
+  "sheet_name": "UpdateMetricRuleMapper",
+  "lines_of_code": 51,
+  "requirement": "Apply an update-metric-rule command to an existing rule: reject a command that sets both or neither of the score function and major/minor flag, reassign the criterion, refresh UpdatedAt, and update the score function or the weight according to the rule type.",
+  "preconditions": [
+    {
+      "text": "The mapper is constructed with a formula mapper",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ]
+    },
+    {
+      "text": "The clinical variables are supplied as mapper dependencies",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        6,
+        7,
+        8,
+        9,
+        10
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "Score function referencing an unknown variable",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "Major/minor command with IsMajor = true",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "Major/minor command with IsMajor = false",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "Command that sets both a score function and IsMajor",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "Command that sets neither a score function nor IsMajor",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "Scoring command applied to a major/minor rule",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "Mapping through the dependency-less overload",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "Scoring command with a ternary formula referencing a supplied variable",
+      "marks": [
+        8
+      ]
+    },
+    {
+      "text": "Major/minor command applied to a scoring rule",
+      "marks": [
+        9
+      ]
+    },
+    {
+      "text": "Scoring command that keeps the criterion",
+      "marks": [
+        10
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "Success at ApplicationStatus.Success with the updated rule",
+      "marks": [
+        2,
+        3,
+        8,
+        10
+      ]
+    },
+    {
+      "text": "The criterion is replaced and UpdatedAt is refreshed",
+      "marks": [
+        2,
+        3,
+        8,
+        10
+      ]
+    },
+    {
+      "text": "A scoring rule gets the mapped score function; a major/minor rule gets the requested flag",
+      "marks": [
+        2,
+        3,
+        8,
+        10
+      ]
+    },
+    {
+      "text": "Failure with BadRequest when the formula references an unknown variable",
+      "marks": [
+        1
+      ]
+    }
+  ],
+  "exception_text": "NotImplementedException from the dependency-less overload; ArgumentException when both or neither of the score function and flag is set; InvalidCastException when the command type contradicts the stored rule type",
+  "exception_marks": [
+    4,
+    5,
+    6,
+    7,
+    9
+  ],
+  "cases": [
+    {
+      "method": "MapModel_UnknownVariable_Failure",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "MapModel_MajorMinorRule_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "MapModel_MajorMinorRule_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "MapModel_BothScoreFunctionAndIsMajor_ThrowsArgumentException",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "MapModel_NeitherScoreFunctionNorIsMajor_ThrowsArgumentException",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "MapModel_ScoringCommandOnMajorMinorRule_ThrowsInvalidCastException",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "MapModel_WithoutDependencies_ThrowsNotImplementedException",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "MapModel_ScoringRuleTernaryWithVariable_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "MapModel_MajorMinorCommandOnScoringRule_ThrowsInvalidCastException",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "MapModel_ScoringRuleKeepsCriterion_Success",
+      "type": "N",
+      "result": "P"
+    }
+  ]
+}

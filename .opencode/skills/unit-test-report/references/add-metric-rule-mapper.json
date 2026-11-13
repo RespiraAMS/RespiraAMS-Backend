@@ -1,0 +1,80 @@
+{
+  "function_code": "AddMetricRuleMapper.Map",
+  "sheet_name": "AddMetricRuleMapper",
+  "lines_of_code": 54,
+  "requirement": "Map an add-metric-rule command to a rule: reject a command that sets both or neither of the score function and major/minor flag, map a ScoreFunction into a ScoringRule, otherwise build a MajorMinorRule, and forward formula-mapping failures.",
+  "preconditions": [
+    {
+      "text": "The mapper is constructed with a formula mapper",
+      "marks": [1, 2, 3, 4, 5, 6, 7, 8]
+    },
+    {
+      "text": "The clinical variables are supplied as mapper dependencies",
+      "marks": [1, 2, 3, 4, 6, 7, 8]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "Command with the constant score function 1",
+      "marks": [1]
+    },
+    {
+      "text": "Command with a ternary age-band formula referencing a supplied AGE variable",
+      "marks": [2]
+    },
+    {
+      "text": "Command with IsMajor = true",
+      "marks": [3]
+    },
+    {
+      "text": "Command with IsMajor = false",
+      "marks": [4]
+    },
+    {
+      "text": "Command mapped through the dependency-less overload",
+      "marks": [5]
+    },
+    {
+      "text": "Command that sets both a score function and IsMajor",
+      "marks": [6]
+    },
+    {
+      "text": "Command that sets neither a score function nor IsMajor",
+      "marks": [7]
+    },
+    {
+      "text": "Command whose score function references an unknown variable",
+      "marks": [8]
+    }
+  ],
+  "returns": [
+    {
+      "text": "Success at ApplicationStatus.Success with a metric rule",
+      "marks": [1, 2, 3, 4]
+    },
+    {
+      "text": "A ScoringRule carries the metric, criterion, and mapped score function",
+      "marks": [1, 2]
+    },
+    {
+      "text": "A MajorMinorRule carries the metric, criterion, and the requested flag",
+      "marks": [3, 4]
+    },
+    {
+      "text": "Failure with BadRequest when the formula references an unknown variable",
+      "marks": [8]
+    }
+  ],
+  "exception_text": "NotImplementedException from the dependency-less overload; ArgumentException when both or neither of the score function and major/minor flag is set",
+  "exception_marks": [5, 6, 7],
+  "cases": [
+    { "method": "ToModel_ScoringRuleConstant_Success", "type": "N", "result": "P" },
+    { "method": "ToModel_ScoringRuleTernaryWithVariable_Success", "type": "N", "result": "P" },
+    { "method": "ToModel_MajorMinorRule_Success", "type": "B", "result": "P" },
+    { "method": "ToModel_MajorMinorRule_Success", "type": "B", "result": "P" },
+    { "method": "ToModel_WithoutDependencies_ThrowsNotImplementedException", "type": "A", "result": "P" },
+    { "method": "ToModel_BothScoreFunctionAndIsMajor_ThrowsArgumentException", "type": "A", "result": "P" },
+    { "method": "ToModel_NeitherScoreFunctionNorIsMajor_ThrowsArgumentException", "type": "A", "result": "P" },
+    { "method": "ToModel_UnknownVariable_Failure", "type": "A", "result": "P" }
+  ]
+}

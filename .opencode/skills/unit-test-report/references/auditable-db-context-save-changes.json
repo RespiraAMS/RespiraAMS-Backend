@@ -1,0 +1,300 @@
+{
+  "function_code": "AuditableDbContext.SaveChangesAsync",
+  "sheet_name": "AuditableDbContext",
+  "lines_of_code": 312,
+  "requirement": "Capture audit entries while saving: write Created, Updated, SoftDeleted, Restored, and Deleted entries with before/after snapshots, share one change-set id per call, honour preferred entry/change-set ids and the scoped audit context, write nothing when no rows change, never audit the audit rows themselves, and support nested audit-capture suppression.",
+  "preconditions": [
+    {
+      "text": "An auditable DbContext backed by an audit-aware database",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17
+      ]
+    },
+    {
+      "text": "Rows are inserted, updated, soft-deleted, restored, hard-deleted, or unchanged",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17
+      ]
+    },
+    {
+      "text": "A scoped audit context, preferred ids, or suppression scope is configured",
+      "marks": [
+        3,
+        4,
+        13,
+        15,
+        16,
+        17
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "SaveChangesAsync_AuditRowIsNotAuditedItself",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "SaveChangesAsync_HardDelete_WritesDeletedAuditEntry",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "SaveChangesAsync_HonoursThePreferredAuditEntryId",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "SaveChangesAsync_HonoursThePreferredChangeSetId",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "SaveChangesAsync_Insert_WritesCreatedAuditEntry",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "SaveChangesAsync_MultipleChanges_ShareOneChangeSetId",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "SaveChangesAsync_NoChanges_WritesNoAuditEntry",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "SaveChangesAsync_Restore_WritesRestoredAuditEntry",
+      "marks": [
+        8
+      ]
+    },
+    {
+      "text": "SaveChangesAsync_SeparateCalls_UseDifferentChangeSetIds",
+      "marks": [
+        9
+      ]
+    },
+    {
+      "text": "SaveChangesAsync_SoftDelete_WritesSoftDeletedAuditEntry",
+      "marks": [
+        10
+      ]
+    },
+    {
+      "text": "SaveChangesAsync_Update_CapturesBeforeAndAfterValues",
+      "marks": [
+        11
+      ]
+    },
+    {
+      "text": "SaveChangesAsync_Update_WritesUpdatedAuditEntry",
+      "marks": [
+        12
+      ]
+    },
+    {
+      "text": "SaveChangesAsync_UsesTheScopedAuditContext",
+      "marks": [
+        13
+      ]
+    },
+    {
+      "text": "SaveChangesAsync_WithoutScopedContext_UsesSystemActor",
+      "marks": [
+        14
+      ]
+    },
+    {
+      "text": "SuppressAuditCapture_AfterDisposing_WritesEntriesAgain",
+      "marks": [
+        15
+      ]
+    },
+    {
+      "text": "SuppressAuditCapture_NestedScopes_AreRestored",
+      "marks": [
+        16
+      ]
+    },
+    {
+      "text": "SuppressAuditCapture_SkipsTheAutomaticEntries",
+      "marks": [
+        17
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "Insert, update, soft-delete, restore, and hard-delete write the expected audit entries with before/after snapshots",
+      "marks": [
+        2,
+        5,
+        8,
+        10,
+        11,
+        12
+      ]
+    },
+    {
+      "text": "Changes in one call share a change-set id; separate calls differ; preferred ids are honoured",
+      "marks": [
+        3,
+        4,
+        6,
+        9
+      ]
+    },
+    {
+      "text": "The scoped audit context is used, falling back to the system actor when absent",
+      "marks": [
+        13,
+        14
+      ]
+    },
+    {
+      "text": "Suppression skips automatic entries, nests safely, and resumes after disposal",
+      "marks": [
+        15,
+        16,
+        17
+      ]
+    },
+    {
+      "text": "No changes and audit rows themselves produce no audit entries",
+      "marks": [
+        1,
+        7
+      ]
+    }
+  ],
+  "exception_text": "No unhandled exception; audit capture never blocks the underlying save",
+  "exception_marks": [],
+  "cases": [
+    {
+      "method": "SaveChangesAsync_AuditRowIsNotAuditedItself",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SaveChangesAsync_HardDelete_WritesDeletedAuditEntry",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SaveChangesAsync_HonoursThePreferredAuditEntryId",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SaveChangesAsync_HonoursThePreferredChangeSetId",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SaveChangesAsync_Insert_WritesCreatedAuditEntry",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SaveChangesAsync_MultipleChanges_ShareOneChangeSetId",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SaveChangesAsync_NoChanges_WritesNoAuditEntry",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "SaveChangesAsync_Restore_WritesRestoredAuditEntry",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SaveChangesAsync_SeparateCalls_UseDifferentChangeSetIds",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SaveChangesAsync_SoftDelete_WritesSoftDeletedAuditEntry",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SaveChangesAsync_Update_CapturesBeforeAndAfterValues",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SaveChangesAsync_Update_WritesUpdatedAuditEntry",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SaveChangesAsync_UsesTheScopedAuditContext",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SaveChangesAsync_WithoutScopedContext_UsesSystemActor",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SuppressAuditCapture_AfterDisposing_WritesEntriesAgain",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SuppressAuditCapture_NestedScopes_AreRestored",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "SuppressAuditCapture_SkipsTheAutomaticEntries",
+      "type": "N",
+      "result": "P"
+    }
+  ]
+}

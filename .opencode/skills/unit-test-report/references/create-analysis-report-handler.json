@@ -1,0 +1,407 @@
+{
+  "function_code": "CreateAnalysisReportCommandHandler.HandleAsync",
+  "sheet_name": "CreateAnalysisReportHandler",
+  "lines_of_code": 198,
+  "requirement": "Create an analysis report for a window: validate the window and doctor id, ask the patient service for the patients/plans in the window, compute the patient, plan, adherence, and medicine counters plus the per-doctor and per-medicine summaries, and persist the report JSON and collected ids.",
+  "preconditions": [
+    {
+      "text": "The bus returns the patient/plan source for the requested window",
+      "marks": [
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23
+      ]
+    },
+    {
+      "text": "The analysis store is empty and can persist the new report",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23
+      ]
+    },
+    {
+      "text": "The command window is valid and the doctor id is non-empty",
+      "marks": [
+        4,
+        5,
+        6,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        23
+      ]
+    },
+    {
+      "text": "The bus returns null source data or throws",
+      "marks": [
+        1,
+        2,
+        3
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "Create BusReturnsNullPatients ReturnsServerError",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "Create BusReturnsNull ReturnsServerError",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "Create BusThrows PropagatesException",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "Create ConvertsStartAndEndToUtc",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "Create DeathOutcome CountsDeceasedPatients",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "Create DoctorsSummary ContainsPerDoctorBreakdown",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "Create EmptyDoctorId ReturnsBadRequest",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "Create InTreatmentOutcome CountsOtherOutcomePatients",
+      "marks": [
+        8
+      ]
+    },
+    {
+      "text": "Create MedicinesSummary ContainsPerMedicineBreakdown",
+      "marks": [
+        9
+      ]
+    },
+    {
+      "text": "Create NoPatients PersistsEmptyReport",
+      "marks": [
+        10
+      ]
+    },
+    {
+      "text": "Create NonAdherentStates CountAsNonAdherent (adherenceState: 'NotAdhereInvalid')",
+      "marks": [
+        11
+      ]
+    },
+    {
+      "text": "Create NonAdherentStates CountAsNonAdherent (adherenceState: 'NotAdhereValid')",
+      "marks": [
+        12
+      ]
+    },
+    {
+      "text": "Create NotAdhere CountsAsPendingReview",
+      "marks": [
+        13
+      ]
+    },
+    {
+      "text": "Create PersistsDoctorIdAndCollectedIds",
+      "marks": [
+        14
+      ]
+    },
+    {
+      "text": "Create PlanSharedByTwoPatients CountedOnce",
+      "marks": [
+        15
+      ]
+    },
+    {
+      "text": "Create RecoveredOutcome CountsRecoveredPatients",
+      "marks": [
+        16
+      ]
+    },
+    {
+      "text": "Create ReportJsonRoundTripsWithSameCounts",
+      "marks": [
+        17
+      ]
+    },
+    {
+      "text": "Create SameMedicineInTwoPlans CountsDistinctPlans",
+      "marks": [
+        18
+      ]
+    },
+    {
+      "text": "Create SameMedicineTwiceInOnePlan CountedOnce",
+      "marks": [
+        19
+      ]
+    },
+    {
+      "text": "Create SingleAdherentPlan CountsCorrectly",
+      "marks": [
+        20
+      ]
+    },
+    {
+      "text": "Create StartAfterEnd ReturnsBadRequest",
+      "marks": [
+        21
+      ]
+    },
+    {
+      "text": "Create StartEqualsEnd ReturnsBadRequest",
+      "marks": [
+        22
+      ]
+    },
+    {
+      "text": "Create TwoDoctors OrdersSummaryByDoctorId",
+      "marks": [
+        23
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "Created with the stored report: analysis id, doctor id, UTC window, and persisted JSON",
+      "marks": [
+        4,
+        10,
+        14,
+        17
+      ]
+    },
+    {
+      "text": "Patient and plan counters cover adherent, non-adherent, pending review, deceased, recovered, and other outcomes",
+      "marks": [
+        5,
+        8,
+        11,
+        12,
+        13,
+        16,
+        20
+      ]
+    },
+    {
+      "text": "Per-doctor and per-medicine summaries carry the expected breakdowns and ordering",
+      "marks": [
+        6,
+        9,
+        23
+      ]
+    },
+    {
+      "text": "A shared plan or a medicine repeated inside a plan is counted once, while a medicine in two plans counts two plans",
+      "marks": [
+        15,
+        18,
+        19
+      ]
+    },
+    {
+      "text": "Failure for an invalid window or doctor id, missing patient data, or the propagated bus exception",
+      "marks": [
+        1,
+        2,
+        3,
+        7,
+        21,
+        22
+      ]
+    }
+  ],
+  "exception_text": "A bus exception propagates; other rejections are returned as failed results",
+  "exception_marks": [
+    1,
+    2,
+    3,
+    7,
+    21,
+    22
+  ],
+  "cases": [
+    {
+      "method": "Create_BusReturnsNullPatients_ReturnsServerError",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Create_BusReturnsNull_ReturnsServerError",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Create_BusThrows_PropagatesException",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Create_ConvertsStartAndEndToUtc",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Create_DeathOutcome_CountsDeceasedPatients",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Create_DoctorsSummary_ContainsPerDoctorBreakdown",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Create_EmptyDoctorId_ReturnsBadRequest",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Create_InTreatmentOutcome_CountsOtherOutcomePatients",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Create_MedicinesSummary_ContainsPerMedicineBreakdown",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Create_NoPatients_PersistsEmptyReport",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Create_NonAdherentStates_CountAsNonAdherent",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Create_NonAdherentStates_CountAsNonAdherent",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Create_NotAdhere_CountsAsPendingReview",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Create_PersistsDoctorIdAndCollectedIds",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Create_PlanSharedByTwoPatients_CountedOnce",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Create_RecoveredOutcome_CountsRecoveredPatients",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Create_ReportJsonRoundTripsWithSameCounts",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Create_SameMedicineInTwoPlans_CountsDistinctPlans",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Create_SameMedicineTwiceInOnePlan_CountedOnce",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Create_SingleAdherentPlan_CountsCorrectly",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Create_StartAfterEnd_ReturnsBadRequest",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Create_StartEqualsEnd_ReturnsBadRequest",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Create_TwoDoctors_OrdersSummaryByDoctorId",
+      "type": "N",
+      "result": "P"
+    }
+  ]
+}

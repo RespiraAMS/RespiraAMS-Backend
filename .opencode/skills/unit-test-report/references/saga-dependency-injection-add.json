@@ -1,0 +1,187 @@
+{
+  "function_code": "DependencyInjection.AddSagaInfrastructure",
+  "sheet_name": "DependencyInjection",
+  "lines_of_code": 39,
+  "requirement": "Register the saga infrastructure: require the Media:BaseUrl setting, register the typed Media HTTP client with a normalized trailing-slash base address, and register the saga state reader as a singleton; the same suite also verifies the Doctor, Authentication, and Analysis infrastructure registrations resolve from a validated scope.",
+  "preconditions": [
+    {
+      "text": "A ServiceCollection and an in-memory IConfiguration are available",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ]
+    },
+    {
+      "text": "Media:BaseUrl is configured with an absolute URL",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        7,
+        8,
+        9,
+        10
+      ]
+    },
+    {
+      "text": "Media:BaseUrl is missing from configuration",
+      "marks": [
+        6
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "AddAnalysisExcelExport_RegistersClosedXmlWriterAsSingleton",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "AddAuthenticationInfrastructure_RegistersExpectedServiceDescriptorsAndLifetimes",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "AddAuthenticationInfrastructure_ResolvesAllServicesWithValidateScopesEnabled",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "AddDoctorInfrastructure_RegistersExpectedServicesAndScopedLifetimes",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "AddDoctorInfrastructure_ResolvesAllServicesFromScope_AndForwardsDoctorDbContext",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "AddSagaInfrastructure_MissingMediaBaseUrl_ThrowsInvalidOperationException",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "AddSagaInfrastructure_NormalizesTrailingSlashOnMediaHttpClientBaseAddress (configured without slash)",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "AddSagaInfrastructure_NormalizesTrailingSlashOnMediaHttpClientBaseAddress (configured with slash)",
+      "marks": [
+        8
+      ]
+    },
+    {
+      "text": "AddSagaInfrastructure_NormalizesTrailingSlashOnMediaHttpClientBaseAddress (configured with prefix)",
+      "marks": [
+        9
+      ]
+    },
+    {
+      "text": "AddSagaInfrastructure_RegistersMediaClientAndSagaStateReader",
+      "marks": [
+        10
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "The saga registers IMediaClient and ISagaStateReader with the expected implementations and lifetimes",
+      "marks": [
+        10
+      ]
+    },
+    {
+      "text": "The Media HTTP client base address ends with exactly one slash for every configured form",
+      "marks": [
+        7,
+        8,
+        9
+      ]
+    },
+    {
+      "text": "Doctor, Authentication, and Analysis services resolve from a validated scope",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ]
+    }
+  ],
+  "exception_text": "InvalidOperationException with message \"Configuration 'Media:BaseUrl' is not configured\" when the setting is missing",
+  "exception_marks": [
+    6
+  ],
+  "cases": [
+    {
+      "method": "AddAnalysisExcelExport_RegistersClosedXmlWriterAsSingleton",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "AddAuthenticationInfrastructure_RegistersExpectedServiceDescriptorsAndLifetimes",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "AddAuthenticationInfrastructure_ResolvesAllServicesWithValidateScopesEnabled",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "AddDoctorInfrastructure_RegistersExpectedServicesAndScopedLifetimes",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "AddDoctorInfrastructure_ResolvesAllServicesFromScope_AndForwardsDoctorDbContext",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "AddSagaInfrastructure_MissingMediaBaseUrl_ThrowsInvalidOperationException",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "AddSagaInfrastructure_NormalizesTrailingSlashOnMediaHttpClientBaseAddress",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "AddSagaInfrastructure_NormalizesTrailingSlashOnMediaHttpClientBaseAddress",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "AddSagaInfrastructure_NormalizesTrailingSlashOnMediaHttpClientBaseAddress",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "AddSagaInfrastructure_RegistersMediaClientAndSagaStateReader",
+      "type": "N",
+      "result": "P"
+    }
+  ]
+}

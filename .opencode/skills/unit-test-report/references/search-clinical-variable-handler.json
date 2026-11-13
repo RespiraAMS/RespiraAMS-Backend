@@ -1,0 +1,423 @@
+{
+  "function_code": "SearchClinicalVariableHandler.HandleAsync",
+  "sheet_name": "SearchClinicalVariableHandler",
+  "lines_of_code": 53,
+  "requirement": "Full-text search clinical variables: build a prefix tsquery from the search term, short-circuit to an empty first page when the term has no usable lexeme, rank name matches above code matches above description matches, project the variable fields, and return the requested page.",
+  "preconditions": [
+    {
+      "text": "The clinical variable table contains the rows seeded for the case",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25
+      ]
+    },
+    {
+      "text": "The search term yields at least one usable lexeme",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        14,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25
+      ]
+    },
+    {
+      "text": "Every word in the search term is a single character, so no lexeme survives",
+      "marks": [
+        12,
+        13
+      ]
+    },
+    {
+      "text": "The search term consists only of symbols the prefix-query builder strips",
+      "marks": [
+        15,
+        16,
+        17,
+        18
+      ]
+    },
+    {
+      "text": "A soft-deleted variable is the only match for the term",
+      "marks": [
+        6
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "Search 'systolic' over the blood pressure variables",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "Search 'Systolic' (upper case, folded by the respira_vi configuration)",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "Search 'syst' (shorter prefix)",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "Search 'blood', page 1, size 100 (maximum page size)",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "Search 'respiratory specimen' (description-only match)",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "Search 'temperature' when the only match is soft-deleted",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "Search 'blood', page 3, size 2 (last page)",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "Search 'systolic' with every projected field asserted",
+      "marks": [
+        8
+      ]
+    },
+    {
+      "text": "Search for a categorical variable and inspect the categorical shape",
+      "marks": [
+        9
+      ]
+    },
+    {
+      "text": "Search 'troponin' (no seeded match)",
+      "marks": [
+        10
+      ]
+    },
+    {
+      "text": "Search 'blood' with name and description matches",
+      "marks": [
+        11
+      ]
+    },
+    {
+      "text": "Search 'a b', page 3, size 5",
+      "marks": [
+        12
+      ]
+    },
+    {
+      "text": "Search 'x y z', page 3, size 5",
+      "marks": [
+        13
+      ]
+    },
+    {
+      "text": "Search 'sofa'-style term placed in the name, code, and description",
+      "marks": [
+        14
+      ]
+    },
+    {
+      "text": "Search '&&', page 1, size 10",
+      "marks": [
+        15
+      ]
+    },
+    {
+      "text": "Search '||', page 1, size 10",
+      "marks": [
+        16
+      ]
+    },
+    {
+      "text": "Search '!!', page 1, size 10",
+      "marks": [
+        17
+      ]
+    },
+    {
+      "text": "Search '((', page 1, size 10",
+      "marks": [
+        18
+      ]
+    },
+    {
+      "text": "Search 'can' (unaccented) over a Vietnamese variable name",
+      "marks": [
+        19
+      ]
+    },
+    {
+      "text": "Search 'cân' (accented) over a Vietnamese variable name",
+      "marks": [
+        20
+      ]
+    },
+    {
+      "text": "Search 'arm' which appears in two descriptions",
+      "marks": [
+        21
+      ]
+    },
+    {
+      "text": "Search 'cose' (infix of glucose, not a prefix)",
+      "marks": [
+        22
+      ]
+    },
+    {
+      "text": "Search for a boolean variable and inspect the boolean shape",
+      "marks": [
+        23
+      ]
+    },
+    {
+      "text": "Search 'blood', page 1, size 2",
+      "marks": [
+        24
+      ]
+    },
+    {
+      "text": "Search 'blood', page 1, size 1 (minimum page size)",
+      "marks": [
+        25
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "Success with the requested page and its pagination metadata",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        7,
+        8,
+        9,
+        10,
+        11,
+        14,
+        19,
+        20,
+        21,
+        23,
+        24,
+        25
+      ]
+    },
+    {
+      "text": "Every item carries its id, name, code, required flag, canonical unit, value type, category, and rank",
+      "marks": [
+        8
+      ]
+    },
+    {
+      "text": "Name matches outrank code matches, which outrank description matches",
+      "marks": [
+        11,
+        14
+      ]
+    },
+    {
+      "text": "Type-specific projections: categorical and boolean variables have no canonical unit",
+      "marks": [
+        9,
+        23
+      ]
+    },
+    {
+      "text": "Empty page with zero total items and no next page",
+      "marks": [
+        6,
+        10,
+        12,
+        13,
+        15,
+        16,
+        17,
+        18,
+        22
+      ]
+    }
+  ],
+  "exception_text": "No unhandled exception; the handler has no failure branch and always returns success",
+  "exception_marks": [],
+  "cases": [
+    {
+      "method": "SearchClinicalVariable_PrefixTerm_MatchesSameVariable_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SearchClinicalVariable_PrefixTerm_MatchesSameVariable_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "SearchClinicalVariable_PrefixTerm_MatchesSameVariable_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "SearchClinicalVariable_MaximumPageSize_ReturnsAllMatchesInOnePage_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "SearchClinicalVariable_MatchOnlyInDescription_ReturnsVariable_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SearchClinicalVariable_SoftDeletedVariable_IsExcluded_Success",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SearchClinicalVariable_LastPage_HasNoNext_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "SearchClinicalVariable_PrefixMatchOnName_ReturnsFullProjection_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SearchClinicalVariable_CategoricalVariable_ProjectsCategoricalShape_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SearchClinicalVariable_TermMatchesNothing_ReturnsEmptyPage_Success",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SearchClinicalVariable_NameMatchOutranksDescriptionMatch_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SearchClinicalVariable_NoUsableLexeme_ReturnsEmptyPage_Success",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SearchClinicalVariable_NoUsableLexeme_ReturnsEmptyPage_Success",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SearchClinicalVariable_SameTermInDifferentFields_RanksNameAboveCodeAboveDescription_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SearchClinicalVariable_SymbolOnlyTerm_ReturnsEmptyPage_Success",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SearchClinicalVariable_SymbolOnlyTerm_ReturnsEmptyPage_Success",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SearchClinicalVariable_SymbolOnlyTerm_ReturnsEmptyPage_Success",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SearchClinicalVariable_SymbolOnlyTerm_ReturnsEmptyPage_Success",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SearchClinicalVariable_AccentFoldedTerm_MatchesVietnameseData_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SearchClinicalVariable_AccentFoldedTerm_MatchesVietnameseData_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SearchClinicalVariable_SingleWordInSeveralDescriptions_ReturnsAllMatches_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SearchClinicalVariable_TermIsInsideNameButNotPrefix_ReturnsEmptyPage_Success",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SearchClinicalVariable_BooleanVariable_ProjectsBooleanShape_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SearchClinicalVariable_FirstPage_SplitsMatchesWithMetadata_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SearchClinicalVariable_MinimumPageSize_ReturnsOneItemPerPage_Success",
+      "type": "B",
+      "result": "P"
+    }
+  ]
+}

@@ -1,0 +1,335 @@
+{
+  "function_code": "UpdateSaga.HandleAsync",
+  "sheet_name": "UpdateSaga",
+  "lines_of_code": 332,
+  "requirement": "Orchestrate a profile update: normalize the email and start the account update, then upload the temporary avatar, update the doctor profile with the new media, and delete the replaced avatar; without compensation, any failure moves the saga to Failed with a reason, keeps the plaintext password out of saga state, and treats media cleanup as best effort.",
+  "preconditions": [
+    {
+      "text": "An update-profile saga is started with the account, doctor, and profile fields",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ]
+    },
+    {
+      "text": "An optional temporary avatar and password are supplied",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ]
+    },
+    {
+      "text": "The account update, avatar upload, profile update, or old-media deletion fails",
+      "marks": [
+        1,
+        2,
+        3,
+        11,
+        13,
+        14,
+        15,
+        16,
+        19
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "DoctorProfileUpdateFailure_Fails",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "DoctorProfileUpdated_WhenDeletionFails_Throws",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "DoctorProfileUpdated_WhenDeletionThrows_Throws",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "DoctorProfileUpdated_WithDifferentOldMedia_DeletesOldMedia",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "DoctorProfileUpdated_WithSameMediaId_DoesNotDeleteMedia",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "DoctorProfileUpdated_WithoutOldMedia_DoesNotDeleteMedia",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "StartAsync_CopiesTheTargetsIntoTheState",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "StartAsync_NormalizesTheEmail",
+      "marks": [
+        8
+      ]
+    },
+    {
+      "text": "StartAsync_WithNullPassword_KeepsTheCurrentPassword",
+      "marks": [
+        9
+      ]
+    },
+    {
+      "text": "StartAsync_WithPassword_DoesNotKeepThePasswordInTheState",
+      "marks": [
+        10
+      ]
+    },
+    {
+      "text": "UpdateAccountCompleted_AfterFailedUpload_DeletesTempAvatar",
+      "marks": [
+        11
+      ]
+    },
+    {
+      "text": "UpdateAccountCompleted_AfterSuccessfulUpload_DeletesTempAvatar",
+      "marks": [
+        12
+      ]
+    },
+    {
+      "text": "UpdateAccountCompleted_WhenUploadFails_FailsWithoutProfileUpdate",
+      "marks": [
+        13
+      ]
+    },
+    {
+      "text": "UpdateAccountCompleted_WhenUploadReturnsEmptyGuid_Fails",
+      "marks": [
+        14
+      ]
+    },
+    {
+      "text": "UpdateAccountCompleted_WhenUploadThrows_DoesNotThrowAndFails",
+      "marks": [
+        15
+      ]
+    },
+    {
+      "text": "UpdateAccountCompleted_WithMissingTempFile_FailsWithoutUpload",
+      "marks": [
+        16
+      ]
+    },
+    {
+      "text": "UpdateAccountCompleted_WithRealTempFile_UploadsAvatarAndLinksMedia",
+      "marks": [
+        17
+      ]
+    },
+    {
+      "text": "UpdateAccountCompleted_WithoutTempAvatar_SendsProfileOnlyUpdate",
+      "marks": [
+        18
+      ]
+    },
+    {
+      "text": "UpdateAccountFailure_FailsWithoutProfileUpdate",
+      "marks": [
+        19
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "The targets are copied into saga state, the email is normalized, and the account update is sent",
+      "marks": [
+        7,
+        8,
+        9,
+        10
+      ]
+    },
+    {
+      "text": "A real temporary avatar is uploaded, linked as media, and the temporary file is deleted",
+      "marks": [
+        11,
+        12,
+        17
+      ]
+    },
+    {
+      "text": "The profile update is sent with or without a new avatar, and replaces the old media only when it differs",
+      "marks": [
+        4,
+        5,
+        6,
+        18
+      ]
+    },
+    {
+      "text": "Account, upload, or profile failures move the saga to Failed with a reason and skip later steps",
+      "marks": [
+        1,
+        13,
+        14,
+        15,
+        16,
+        19
+      ]
+    },
+    {
+      "text": "A failed old-media deletion is reported as a failed step",
+      "marks": [
+        2,
+        3
+      ]
+    }
+  ],
+  "exception_text": "No unhandled exception; upload and deletion exceptions are captured as a failed step",
+  "exception_marks": [
+    2,
+    3,
+    15
+  ],
+  "cases": [
+    {
+      "method": "DoctorProfileUpdateFailure_Fails",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "DoctorProfileUpdated_WhenDeletionFails_Throws",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "DoctorProfileUpdated_WhenDeletionThrows_Throws",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "DoctorProfileUpdated_WithDifferentOldMedia_DeletesOldMedia",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "DoctorProfileUpdated_WithSameMediaId_DoesNotDeleteMedia",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "DoctorProfileUpdated_WithoutOldMedia_DoesNotDeleteMedia",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "StartAsync_CopiesTheTargetsIntoTheState",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "StartAsync_NormalizesTheEmail",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "StartAsync_WithNullPassword_KeepsTheCurrentPassword",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "StartAsync_WithPassword_DoesNotKeepThePasswordInTheState",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "UpdateAccountCompleted_AfterFailedUpload_DeletesTempAvatar",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdateAccountCompleted_AfterSuccessfulUpload_DeletesTempAvatar",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "UpdateAccountCompleted_WhenUploadFails_FailsWithoutProfileUpdate",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdateAccountCompleted_WhenUploadReturnsEmptyGuid_Fails",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdateAccountCompleted_WhenUploadThrows_DoesNotThrowAndFails",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdateAccountCompleted_WithMissingTempFile_FailsWithoutUpload",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdateAccountCompleted_WithRealTempFile_UploadsAvatarAndLinksMedia",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "UpdateAccountCompleted_WithoutTempAvatar_SendsProfileOnlyUpdate",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "UpdateAccountFailure_FailsWithoutProfileUpdate",
+      "type": "A",
+      "result": "P"
+    }
+  ]
+}

@@ -1,0 +1,60 @@
+{
+  "function_code": "CreateAntibioticHandler.HandleAsync",
+  "sheet_name": "CreateAntibioticHandler",
+  "lines_of_code": 43,
+  "requirement": "Create an antibiotic: the referenced antibiotic group must exist and must not be soft-deleted, then map the command (which also builds the standard dose), persist the antibiotic with its dosage, and return the new ID with Created status.",
+  "preconditions": [
+    {
+      "text": "A live antibiotic group exists for the requested group ID",
+      "marks": [1, 2]
+    },
+    {
+      "text": "The requested group ID does not match any live group",
+      "marks": [3, 4]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "Amoxicillin, Access classification, oral standard dose, live group",
+      "marks": [1]
+    },
+    {
+      "text": "Meropenem, Watch classification, intravenous standard dose, live group",
+      "marks": [2]
+    },
+    {
+      "text": "Ciprofloxacin with an unknown group ID",
+      "marks": [3]
+    },
+    {
+      "text": "Colistin with a soft-deleted group ID",
+      "marks": [4]
+    }
+  ],
+  "returns": [
+    {
+      "text": "Success with Created status and the new antibiotic ID",
+      "marks": [1, 2]
+    },
+    {
+      "text": "The antibiotic and its single standard dose are persisted with the requested fields",
+      "marks": [1, 2]
+    },
+    {
+      "text": "Failure with BadRequest and the 'Antibiotic group ID not exists' error",
+      "marks": [3, 4]
+    },
+    {
+      "text": "No antibiotic and no dosage are created when the group check fails",
+      "marks": [3]
+    }
+  ],
+  "exception_text": "No unhandled exception; a missing group is returned as a failed Result",
+  "exception_marks": [3, 4],
+  "cases": [
+    { "method": "CreateAntibiotic_Success", "type": "N", "result": "P" },
+    { "method": "CreateAntibiotic_Success", "type": "N", "result": "P" },
+    { "method": "CreateAntibiotic_UnknownGroup_Fail", "type": "A", "result": "P" },
+    { "method": "CreateAntibiotic_SoftDeletedGroup_Fail", "type": "A", "result": "P" }
+  ]
+}

@@ -1,0 +1,237 @@
+{
+  "function_code": "GetDoctorByIdQueryHandler.HandleAsync",
+  "sheet_name": "GetDoctorByIdQueryHandler",
+  "lines_of_code": 66,
+  "requirement": "Read one doctor or head-doctor profile by id: load it without tracking, map every profile field (including degrees, media, date of birth, and the derived role) into the DoctorResult, and return ResourceNotFound for an unknown, empty, or soft-deleted id.",
+  "preconditions": [
+    {
+      "text": "A doctor or head-doctor profile is stored for the requested id",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13
+      ]
+    },
+    {
+      "text": "The query carries the profile id",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13
+      ]
+    },
+    {
+      "text": "The id is unknown, empty, or belongs to a soft-deleted profile",
+      "marks": [
+        7,
+        11,
+        12,
+        13
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "HandleAsync_OnSuccess_ReturnsDataAndNoError",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "HandleAsync_WithDoctorWithDateOfBirth_ReturnsDateOfBirth",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "HandleAsync_WithDoctorWithMedia_ReturnsMediaId",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "HandleAsync_WithDoctorWithoutDateOfBirth_ReturnsNullDateOfBirth",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "HandleAsync_WithDoctorWithoutMedia_ReturnsNullMediaId",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "HandleAsync_WithDoctor_MapsDegrees",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "HandleAsync_WithEmptyId_ReturnsResourceNotFoundFailure",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "HandleAsync_WithExistingDoctor_ReturnsSuccessWithEveryFieldMapped",
+      "marks": [
+        8
+      ]
+    },
+    {
+      "text": "HandleAsync_WithExistingHeadDepartmentDoctor_ReturnsSuccessWithHeadRole",
+      "marks": [
+        9
+      ]
+    },
+    {
+      "text": "HandleAsync_WithHeadDepartmentDoctorId_ResolvesTheHeadAndNotTheDoctor",
+      "marks": [
+        10
+      ]
+    },
+    {
+      "text": "HandleAsync_WithSoftDeletedDoctor_ReturnsResourceNotFoundFailure",
+      "marks": [
+        11
+      ]
+    },
+    {
+      "text": "HandleAsync_WithSoftDeletedHeadDepartmentDoctor_ReturnsResourceNotFoundFailure",
+      "marks": [
+        12
+      ]
+    },
+    {
+      "text": "HandleAsync_WithUnknownId_ReturnsResourceNotFoundFailure",
+      "marks": [
+        13
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "The profile is mapped field by field, including degrees, media, and date of birth",
+      "marks": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        8,
+        10
+      ]
+    },
+    {
+      "text": "A head-doctor profile reports the HeadDepartmentDoctor role",
+      "marks": [
+        9
+      ]
+    },
+    {
+      "text": "Success carries the result with no error",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "Unknown, empty, or soft-deleted ids return ResourceNotFound",
+      "marks": [
+        7,
+        11,
+        12,
+        13
+      ]
+    }
+  ],
+  "exception_text": "No unhandled exception; missing profiles are returned as a failed Result",
+  "exception_marks": [],
+  "cases": [
+    {
+      "method": "HandleAsync_OnSuccess_ReturnsDataAndNoError",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithDoctorWithDateOfBirth_ReturnsDateOfBirth",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithDoctorWithMedia_ReturnsMediaId",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithDoctorWithoutDateOfBirth_ReturnsNullDateOfBirth",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithDoctorWithoutMedia_ReturnsNullMediaId",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithDoctor_MapsDegrees",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithEmptyId_ReturnsResourceNotFoundFailure",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithExistingDoctor_ReturnsSuccessWithEveryFieldMapped",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithExistingHeadDepartmentDoctor_ReturnsSuccessWithHeadRole",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithHeadDepartmentDoctorId_ResolvesTheHeadAndNotTheDoctor",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithSoftDeletedDoctor_ReturnsResourceNotFoundFailure",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithSoftDeletedHeadDepartmentDoctor_ReturnsResourceNotFoundFailure",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithUnknownId_ReturnsResourceNotFoundFailure",
+      "type": "A",
+      "result": "P"
+    }
+  ]
+}

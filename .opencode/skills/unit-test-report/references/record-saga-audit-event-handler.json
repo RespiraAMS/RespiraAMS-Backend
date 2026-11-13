@@ -1,0 +1,366 @@
+{
+  "function_code": "RecordSagaAuditEventHandler.HandleAsync",
+  "sheet_name": "RecordSagaAuditEventHandler",
+  "lines_of_code": 41,
+  "requirement": "Persist an incoming saga audit event exactly once: skip the write when an entry with the event id already exists, otherwise copy every audit field (id, occurrence time, actor, action, entity, correlation id, details) and save, letting the database enforce the JSON and column-length constraints; the same test class also exercises the audit-log search filter and pagination queries.",
+  "preconditions": [
+    {
+      "text": "The audit-log store is available and empty",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22
+      ]
+    },
+    {
+      "text": "The incoming event id is new or repeats an already stored id",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20
+      ]
+    },
+    {
+      "text": "A field is blank, null, or longer than its database column",
+      "marks": [
+        6,
+        7,
+        8,
+        9,
+        13,
+        15,
+        19
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "HandleAsync_DuplicateEvent_IsIdempotent",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "HandleAsync_PersistsAuditEvent",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "HandleAsync_PersistsEveryFieldOfTheEvent",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "HandleAsync_PreservesTheCorrelationId",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "HandleAsync_PreservesTheOccurredAtTimestampToMillisecondPrecision",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "HandleAsync_WithABlankAction_StoresItAsIs",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "HandleAsync_WithABlankActorRole_StoresItAsIs",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "HandleAsync_WithABlankDetailsJson_IsRejectedByTheJsonColumn",
+      "marks": [
+        8
+      ]
+    },
+    {
+      "text": "HandleAsync_WithABlankEntityType_StoresItAsIs",
+      "marks": [
+        9
+      ]
+    },
+    {
+      "text": "HandleAsync_WithADifferentEventId_StoresASeparateRow",
+      "marks": [
+        10
+      ]
+    },
+    {
+      "text": "HandleAsync_WithANewHandlerInstanceAndTheSameEventId_DoesNotDuplicateTheRow",
+      "marks": [
+        11
+      ]
+    },
+    {
+      "text": "HandleAsync_WithAnActionAtTheColumnLimit_StoresItInFull",
+      "marks": [
+        12
+      ]
+    },
+    {
+      "text": "HandleAsync_WithAnActionLongerThanTheColumnLimit_IsRejectedByTheDatabase",
+      "marks": [
+        13
+      ]
+    },
+    {
+      "text": "HandleAsync_WithAnActorRoleAtTheColumnLimit_StoresItInFull",
+      "marks": [
+        14
+      ]
+    },
+    {
+      "text": "HandleAsync_WithAnActorRoleLongerThanTheColumnLimit_IsRejectedByTheDatabase",
+      "marks": [
+        15
+      ]
+    },
+    {
+      "text": "HandleAsync_WithFiveDifferentEvents_StoresFiveRows",
+      "marks": [
+        16
+      ]
+    },
+    {
+      "text": "HandleAsync_WithFiveEventsSharingTheSameId_StoresExactlyOneRow",
+      "marks": [
+        17
+      ]
+    },
+    {
+      "text": "HandleAsync_WithNestedDetailsJson_RoundTripsSemantically",
+      "marks": [
+        18
+      ]
+    },
+    {
+      "text": "HandleAsync_WithNullActorAccountId_PersistsANullActor",
+      "marks": [
+        19
+      ]
+    },
+    {
+      "text": "HandleAsync_WithTheSameEventIdButDifferentContent_KeepsTheFirstRow",
+      "marks": [
+        20
+      ]
+    },
+    {
+      "text": "SearchHandler_AppliesFiltersAndPagination",
+      "marks": [
+        21
+      ]
+    },
+    {
+      "text": "SearchHandler_FindsTheRecordedRowByEntityType",
+      "marks": [
+        22
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "The audit entry is persisted with every field copied, including null actor/entity/correlation and nested details JSON",
+      "marks": [
+        2,
+        3,
+        4,
+        18,
+        19
+      ]
+    },
+    {
+      "text": "A repeated event id is ignored, so one row is kept even across handler instances",
+      "marks": [
+        1,
+        11,
+        17,
+        20
+      ]
+    },
+    {
+      "text": "Distinct event ids create separate rows, and five events persist as five rows",
+      "marks": [
+        10,
+        16
+      ]
+    },
+    {
+      "text": "Blank action, actor role, or entity type are stored verbatim; values at the column limit are stored in full",
+      "marks": [
+        6,
+        7,
+        9,
+        12,
+        14
+      ]
+    },
+    {
+      "text": "Occurrence time keeps millisecond precision, and search filters/pagination return the matching entries",
+      "marks": [
+        5,
+        21,
+        22
+      ]
+    }
+  ],
+  "exception_text": "DbUpdateException (PostgreSQL 22P02 or 22001) when blank details JSON or an over-length action/actor role violates the column constraint",
+  "exception_marks": [
+    8,
+    13,
+    15
+  ],
+  "cases": [
+    {
+      "method": "HandleAsync_DuplicateEvent_IsIdempotent",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_PersistsAuditEvent",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_PersistsEveryFieldOfTheEvent",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_PreservesTheCorrelationId",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_PreservesTheOccurredAtTimestampToMillisecondPrecision",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithABlankAction_StoresItAsIs",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithABlankActorRole_StoresItAsIs",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithABlankDetailsJson_IsRejectedByTheJsonColumn",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithABlankEntityType_StoresItAsIs",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithADifferentEventId_StoresASeparateRow",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithANewHandlerInstanceAndTheSameEventId_DoesNotDuplicateTheRow",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithAnActionAtTheColumnLimit_StoresItInFull",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithAnActionLongerThanTheColumnLimit_IsRejectedByTheDatabase",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithAnActorRoleAtTheColumnLimit_StoresItInFull",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithAnActorRoleLongerThanTheColumnLimit_IsRejectedByTheDatabase",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithFiveDifferentEvents_StoresFiveRows",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithFiveEventsSharingTheSameId_StoresExactlyOneRow",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithNestedDetailsJson_RoundTripsSemantically",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithNullActorAccountId_PersistsANullActor",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithTheSameEventIdButDifferentContent_KeepsTheFirstRow",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SearchHandler_AppliesFiltersAndPagination",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SearchHandler_FindsTheRecordedRowByEntityType",
+      "type": "N",
+      "result": "P"
+    }
+  ]
+}

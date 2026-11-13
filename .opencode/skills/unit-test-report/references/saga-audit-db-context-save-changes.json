@@ -1,0 +1,85 @@
+{
+  "function_code": "SagaAuditDbContext.SaveChangesAsync",
+  "sheet_name": "SagaAuditDbContext",
+  "lines_of_code": 26,
+  "requirement": "Saga audit persistence: map AuditLogEntry to the AuditLogs table with action, role, and entity-type length limits, a jsonb details column, and occurring/entity/actor indexes; SaveChangesAsync persists and reads back entries, and the database rejects duplicate ids.",
+  "preconditions": [
+    {
+      "text": "A PostgreSQL saga audit database with the AuditLogs table",
+      "marks": [
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "text": "An AuditLogEntry with a fixed id and JSON details is saved",
+      "marks": [
+        1,
+        2,
+        3
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "Model_ConfiguresAuditLogEntryTableColumnsAndIndexes",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "SaveChangesAsync_DuplicateId_ThrowsUniqueViolation",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "SaveChangesAsync_PersistsAndReadsBackAuditLogEntryWithJsonbDetails",
+      "marks": [
+        3
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "The model configures the table, column types, length limits, and indexes",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "An entry persists and reads back with its jsonb details intact",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "Saving a duplicate id raises a unique violation",
+      "marks": [
+        2
+      ]
+    }
+  ],
+  "exception_text": "DbUpdateException wrapping a PostgreSQL unique violation for a duplicate id",
+  "exception_marks": [
+    2
+  ],
+  "cases": [
+    {
+      "method": "Model_ConfiguresAuditLogEntryTableColumnsAndIndexes",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SaveChangesAsync_DuplicateId_ThrowsUniqueViolation",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SaveChangesAsync_PersistsAndReadsBackAuditLogEntryWithJsonbDetails",
+      "type": "N",
+      "result": "P"
+    }
+  ]
+}

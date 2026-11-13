@@ -1,0 +1,189 @@
+{
+  "function_code": "AuthDbContext.SaveChangesAsync",
+  "sheet_name": "AuthDbContext",
+  "lines_of_code": 100,
+  "requirement": "Authentication persistence: configure unique email and token-hash indexes, global soft-delete query filters, enum-to-string conversions, the Account-to-Token cascade, and the bootstrap admin seed, and normalize every modified DateTimeOffset to UTC before base.SaveChangesAsync persists the change.",
+  "preconditions": [
+    {
+      "text": "A PostgreSQL authentication database with migrations applied",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ]
+    },
+    {
+      "text": "Accounts, tokens, or blacklist tokens are seeded through SaveChangesAsync",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ]
+    },
+    {
+      "text": "A duplicate unique key, non-UTC offset, or soft-deleted row is present",
+      "marks": [
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "BlacklistToken_HasNoSoftDeleteFilter_RemainsVisibleEvenIfIsDeletedTrue",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "DeletingAccount_CascadeDeletesOwnedTokens",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "Migrations_SeedBootstrapAdminAccount",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "SaveChangesAsync_NormalizesNonUtcDateTimeOffsetsToUtc",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "SavingTwoAccountsWithSameEmail_ThrowsUniqueViolation",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "SavingTwoBlacklistTokensWithSameHashToken_ThrowsUniqueViolation",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "SavingTwoTokensWithSameHashToken_ThrowsUniqueViolation",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "SoftDeletedAccount_IsHiddenFromPlainQueries_AndVisibleWithIgnoreQueryFilters",
+      "marks": [
+        8
+      ]
+    },
+    {
+      "text": "SoftDeletedToken_IsHiddenFromPlainQueries_AndVisibleWithIgnoreQueryFilters",
+      "marks": [
+        9
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "SaveChangesAsync persists rows and normalizes DateTimeOffset values to UTC",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        8,
+        9
+      ]
+    },
+    {
+      "text": "Global query filters hide soft-deleted accounts and tokens while IgnoreQueryFilters reveals them",
+      "marks": [
+        8,
+        9
+      ]
+    },
+    {
+      "text": "Blacklist tokens have no soft-delete filter, and deleting an account cascades to its tokens",
+      "marks": [
+        1,
+        2
+      ]
+    },
+    {
+      "text": "The bootstrap admin account is present after migrations",
+      "marks": [
+        3
+      ]
+    }
+  ],
+  "exception_text": "DbUpdateException wrapping a PostgreSQL unique-violation when a duplicate email or token hash is saved",
+  "exception_marks": [
+    5,
+    6,
+    7
+  ],
+  "cases": [
+    {
+      "method": "BlacklistToken_HasNoSoftDeleteFilter_RemainsVisibleEvenIfIsDeletedTrue",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "DeletingAccount_CascadeDeletesOwnedTokens",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Migrations_SeedBootstrapAdminAccount",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SaveChangesAsync_NormalizesNonUtcDateTimeOffsetsToUtc",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SavingTwoAccountsWithSameEmail_ThrowsUniqueViolation",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SavingTwoBlacklistTokensWithSameHashToken_ThrowsUniqueViolation",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SavingTwoTokensWithSameHashToken_ThrowsUniqueViolation",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SoftDeletedAccount_IsHiddenFromPlainQueries_AndVisibleWithIgnoreQueryFilters",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SoftDeletedToken_IsHiddenFromPlainQueries_AndVisibleWithIgnoreQueryFilters",
+      "type": "N",
+      "result": "P"
+    }
+  ]
+}

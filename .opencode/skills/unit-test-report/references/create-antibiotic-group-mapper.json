@@ -1,0 +1,42 @@
+{
+  "function_code": "CreateAntibioticGroupMapper.Map",
+  "sheet_name": "CreateAntibioticGroupMapper",
+  "lines_of_code": 24,
+  "requirement": "Map a create-antibiotic-group command to a new AntibioticGroup model: copy the name and description, keep the parent ID as supplied (including null for a root group), let the entity generate its ID, and always report success.",
+  "preconditions": [
+    {
+      "text": "The mapper is constructed without dependencies",
+      "marks": [1, 2]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "Subgroup command (Penicillins) with a parent ID",
+      "marks": [1]
+    },
+    {
+      "text": "Root-group command (Beta-lactams) with a null parent ID",
+      "marks": [2]
+    }
+  ],
+  "returns": [
+    {
+      "text": "Success at ApplicationStatus.Success with a new model",
+      "marks": [1, 2]
+    },
+    {
+      "text": "Name and description copied from the command",
+      "marks": [1, 2]
+    },
+    {
+      "text": "Parent ID preserved as supplied (null stays null) and a generated non-empty ID",
+      "marks": [1, 2]
+    }
+  ],
+  "exception_text": "No unhandled exception; the mapper always returns a successful result",
+  "exception_marks": [],
+  "cases": [
+    { "method": "ToModel_WithParent_Success", "type": "N", "result": "P" },
+    { "method": "ToModel_RootGroup_KeepsNullParentId", "type": "B", "result": "P" }
+  ]
+}

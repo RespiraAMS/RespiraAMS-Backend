@@ -1,0 +1,41 @@
+{
+  "function_code": "SagaStateReader.Constructor",
+  "sheet_name": "SagaStateReader",
+  "lines_of_code": 76,
+  "requirement": "Saga state reader initialization: the reader requires Wolverine's database-backed message store and throws InvalidOperationException when the injected store is not database-backed, because it needs the store's schema and data source to read saga rows.",
+  "preconditions": [
+    {
+      "text": "A SagaStateReader is constructed with an IMessageStore",
+      "marks": [
+        1
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "Constructor_NonDatabaseBackedMessageStore_ThrowsInvalidOperationException",
+      "marks": [
+        1
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "A database-backed store is captured; a non-database-backed store is rejected",
+      "marks": [
+        1
+      ]
+    }
+  ],
+  "exception_text": "InvalidOperationException when the message store is not database-backed",
+  "exception_marks": [
+    1
+  ],
+  "cases": [
+    {
+      "method": "Constructor_NonDatabaseBackedMessageStore_ThrowsInvalidOperationException",
+      "type": "A",
+      "result": "P"
+    }
+  ]
+}

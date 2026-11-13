@@ -1,0 +1,120 @@
+{
+  "function_code": "GetClinicalVariablesHandler.HandleAsync",
+  "sheet_name": "GetClinicalVariablesHandler",
+  "lines_of_code": 23,
+  "requirement": "Return every live clinical variable as an id, name, and code item, sorted by name ascending and read without tracking; soft-deleted variables are excluded by the query filter.",
+  "preconditions": [
+    {
+      "text": "The clinical variable table contains the rows seeded for the case",
+      "marks": [
+        1,
+        2,
+        3,
+        4
+      ]
+    },
+    {
+      "text": "One of the seeded variables is soft-deleted",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "The table holds variables of every value type",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "The clinical variable table is empty",
+      "marks": [
+        4
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "Query with no parameters over three variables inserted out of order",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "Query with no parameters over live variables plus a soft-deleted one",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "Query with no parameters over boolean, numeric, and categorical variables",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "Query with no parameters on an empty database",
+      "marks": [
+        4
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "Success with ApplicationStatus.Success and a non-null result",
+      "marks": [
+        1,
+        2,
+        3,
+        4
+      ]
+    },
+    {
+      "text": "Variables sorted by name ascending, each carrying its id, name, and code",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "Soft-deleted variables are excluded from the list",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "The list is value-type agnostic and includes every subtype",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "An empty list is returned when no live variable exists",
+      "marks": [
+        4
+      ]
+    }
+  ],
+  "exception_text": "No unhandled exception; the read-only query has no failure branch",
+  "exception_marks": [],
+  "cases": [
+    {
+      "method": "GetClinicalVariables_ReturnsAllSortedByNameAscending_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "GetClinicalVariables_ExcludesSoftDeleted_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "GetClinicalVariables_AllValueTypesReturned_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "GetClinicalVariables_EmptyDatabase_ReturnsEmpty",
+      "type": "B",
+      "result": "P"
+    }
+  ]
+}

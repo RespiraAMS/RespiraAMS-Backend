@@ -1,0 +1,126 @@
+{
+  "function_code": "DeletePatientHandler.HandleAsync",
+  "sheet_name": "DeletePatientHandler",
+  "lines_of_code": 57,
+  "requirement": "Create a soft delete for a patient: the patient must exist and be live, must not have received any treatment plan, then the patient and all of its next-of-kin rows are soft-deleted in one transaction.",
+  "preconditions": [
+    {
+      "text": "A live patient exists for the target id",
+      "marks": [
+        3,
+        4,
+        5
+      ]
+    },
+    {
+      "text": "The patient has no treatment plan yet",
+      "marks": [
+        1,
+        2,
+        3,
+        5
+      ]
+    },
+    {
+      "text": "The patient is unknown, soft-deleted, or already treated",
+      "marks": [
+        1,
+        2,
+        4
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "DeletePatient SoftDeletedPatient Fail",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "DeletePatient UnknownId Fail",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "DeletePatient WithNextOfKins CascadeSoftDeletesOwnNextOfKins Success",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "DeletePatient WithTreatment Fail",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "DeletePatient WithoutTreatment SoftDeletesPatient Success",
+      "marks": [
+        5
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "Success with Deleted status; the patient is soft-deleted",
+      "marks": [
+        3,
+        5
+      ]
+    },
+    {
+      "text": "Every next of kin of the patient is soft-deleted in the same transaction",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "Failure with BadRequest for an unknown or already-deleted patient",
+      "marks": [
+        1,
+        2
+      ]
+    },
+    {
+      "text": "Failure with BadRequest when the patient already received treatment",
+      "marks": [
+        4
+      ]
+    }
+  ],
+  "exception_text": "No unhandled exception; every rejection is returned as a failed Result",
+  "exception_marks": [
+    1,
+    2,
+    4
+  ],
+  "cases": [
+    {
+      "method": "DeletePatient_SoftDeletedPatient_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "DeletePatient_UnknownId_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "DeletePatient_WithNextOfKins_CascadeSoftDeletesOwnNextOfKins_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "DeletePatient_WithTreatment_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "DeletePatient_WithoutTreatment_SoftDeletesPatient_Success",
+      "type": "N",
+      "result": "P"
+    }
+  ]
+}

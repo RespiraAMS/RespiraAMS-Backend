@@ -1,0 +1,340 @@
+{
+  "function_code": "SearchSagaAuditQueryHandler.HandleAsync",
+  "sheet_name": "SearchSagaAuditQueryHandler",
+  "lines_of_code": 67,
+  "requirement": "Search the central saga audit log: apply optional actor, action, entity type, entity id, from, and to filters, count the matches, order newest first, page the projection of every audit field, and return the items with pagination metadata (including empty and out-of-range pages).",
+  "preconditions": [
+    {
+      "text": "Audit log entries are stored in the saga audit database",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20
+      ]
+    },
+    {
+      "text": "The query carries optional filters and a pagination parameter",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20
+      ]
+    },
+    {
+      "text": "A filter matches nothing, the store is empty, or the page is past the end",
+      "marks": [
+        13,
+        18,
+        19
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "HandleAsync_CombinesFilters",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "HandleAsync_FiltersByAction",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "HandleAsync_FiltersByActorAccountId",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "HandleAsync_FiltersByEntityId",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "HandleAsync_FiltersByEntityType",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "HandleAsync_FiltersByFromDate",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "HandleAsync_FiltersByToDate",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "HandleAsync_LastPage_HasNoNextPage",
+      "marks": [
+        8
+      ]
+    },
+    {
+      "text": "HandleAsync_PaginatesTheResults",
+      "marks": [
+        9
+      ]
+    },
+    {
+      "text": "HandleAsync_ProjectsEveryFieldOfTheEntry",
+      "marks": [
+        10
+      ]
+    },
+    {
+      "text": "HandleAsync_ReturnsNewestEntryFirst",
+      "marks": [
+        11
+      ]
+    },
+    {
+      "text": "HandleAsync_SecondPage_ReturnsTheNextSlice",
+      "marks": [
+        12
+      ]
+    },
+    {
+      "text": "HandleAsync_WithAFilterThatMatchesNothing_ReturnsEmptyPage",
+      "marks": [
+        13
+      ]
+    },
+    {
+      "text": "HandleAsync_WithANullQuery_Throws",
+      "marks": [
+        14
+      ]
+    },
+    {
+      "text": "HandleAsync_WithBlankAction_IgnoresTheFilter",
+      "marks": [
+        15
+      ]
+    },
+    {
+      "text": "HandleAsync_WithBlankEntityType_IgnoresTheFilter",
+      "marks": [
+        16
+      ]
+    },
+    {
+      "text": "HandleAsync_WithEqualFromAndTo_IncludesTheBoundary",
+      "marks": [
+        17
+      ]
+    },
+    {
+      "text": "HandleAsync_WithNoEntries_ReturnsEmptyPage",
+      "marks": [
+        18
+      ]
+    },
+    {
+      "text": "HandleAsync_WithPageBeyondTheLastOne_ReturnsEmptyPage",
+      "marks": [
+        19
+      ]
+    },
+    {
+      "text": "HandleAsync_WithoutFilters_ReturnsEveryEntry",
+      "marks": [
+        20
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "Actor, action, entity type, entity id, from, and to filters select the matching rows",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ]
+    },
+    {
+      "text": "Blank action or entity type is ignored, and a missing filter returns every entry",
+      "marks": [
+        15,
+        16,
+        20
+      ]
+    },
+    {
+      "text": "Entries are projected field by field and returned newest first",
+      "marks": [
+        10,
+        11
+      ]
+    },
+    {
+      "text": "Pagination returns the requested slice with correct next/previous/page-count metadata",
+      "marks": [
+        8,
+        9,
+        12,
+        17,
+        19
+      ]
+    },
+    {
+      "text": "An empty store or a filter that matches nothing returns an empty page",
+      "marks": [
+        13,
+        18
+      ]
+    }
+  ],
+  "exception_text": "ArgumentNullException when the query is null",
+  "exception_marks": [
+    14
+  ],
+  "cases": [
+    {
+      "method": "HandleAsync_CombinesFilters",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_FiltersByAction",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_FiltersByActorAccountId",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_FiltersByEntityId",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_FiltersByEntityType",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_FiltersByFromDate",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_FiltersByToDate",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_LastPage_HasNoNextPage",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_PaginatesTheResults",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_ProjectsEveryFieldOfTheEntry",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_ReturnsNewestEntryFirst",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_SecondPage_ReturnsTheNextSlice",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithAFilterThatMatchesNothing_ReturnsEmptyPage",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithANullQuery_Throws",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithBlankAction_IgnoresTheFilter",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithBlankEntityType_IgnoresTheFilter",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithEqualFromAndTo_IncludesTheBoundary",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithNoEntries_ReturnsEmptyPage",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithPageBeyondTheLastOne_ReturnsEmptyPage",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithoutFilters_ReturnsEveryEntry",
+      "type": "N",
+      "result": "P"
+    }
+  ]
+}

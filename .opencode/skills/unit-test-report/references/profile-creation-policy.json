@@ -1,0 +1,186 @@
+{
+  "function_code": "ProfileCreationPolicy.CanCreate",
+  "sheet_name": "ProfileCreationPolicy",
+  "lines_of_code": 39,
+  "requirement": "Decide whether a caller role may create an account of the target role: Admin accounts can never be created through this flow, an Admin may create a medical regulation reviewer, head-of-department doctor, or doctor, a head-of-department doctor may create a doctor, and every other pairing is denied.",
+  "preconditions": [
+    {
+      "text": "The policy is a pure static function",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ]
+    },
+    {
+      "text": "The caller may create the target role",
+      "marks": [
+        2,
+        3,
+        4,
+        6
+      ]
+    },
+    {
+      "text": "The caller may not create the target role",
+      "marks": [
+        1,
+        5,
+        7,
+        8,
+        9
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "CanCreate ReturnsExpectedPermission (actor: Admin, target: Admin, expected: False)",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "CanCreate ReturnsExpectedPermission (actor: Admin, target: Doctor, expected: True)",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "CanCreate ReturnsExpectedPermission (actor: Admin, target: HeadDepartmentDoctor, expected: True)",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "CanCreate ReturnsExpectedPermission (actor: Admin, target: MedicalRegulationReviewer, expected: True)",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "CanCreate ReturnsExpectedPermission (actor: Doctor, target: Doctor, expected: False)",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "CanCreate ReturnsExpectedPermission (actor: HeadDepartmentDoctor, target: Doctor, expected: True)",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "CanCreate ReturnsExpectedPermission (actor: HeadDepartmentDoctor, target: HeadDepartmentDoctor, expected: False)",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "CanCreate ReturnsExpectedPermission (actor: HeadDepartmentDoctor, target: MedicalRegulationReviewer, expected: False)",
+      "marks": [
+        8
+      ]
+    },
+    {
+      "text": "CanCreate ReturnsExpectedPermission (actor: MedicalRegulationReviewer, target: Doctor, expected: False)",
+      "marks": [
+        9
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "True when the caller is allowed",
+      "marks": [
+        2,
+        3,
+        4,
+        6
+      ]
+    },
+    {
+      "text": "An Admin may create reviewer, head-of-department doctor, or doctor accounts",
+      "marks": [
+        2,
+        3,
+        4
+      ]
+    },
+    {
+      "text": "A head-of-department doctor may only create doctors",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "False when the target is Admin",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "False for every other role pairing",
+      "marks": [
+        5,
+        7,
+        8,
+        9
+      ]
+    }
+  ],
+  "exception_text": "No unhandled exception; the policy always returns a bool",
+  "exception_marks": [],
+  "cases": [
+    {
+      "method": "CanCreate_ReturnsExpectedPermission",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CanCreate_ReturnsExpectedPermission",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "CanCreate_ReturnsExpectedPermission",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "CanCreate_ReturnsExpectedPermission",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "CanCreate_ReturnsExpectedPermission",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CanCreate_ReturnsExpectedPermission",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "CanCreate_ReturnsExpectedPermission",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CanCreate_ReturnsExpectedPermission",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CanCreate_ReturnsExpectedPermission",
+      "type": "A",
+      "result": "P"
+    }
+  ]
+}

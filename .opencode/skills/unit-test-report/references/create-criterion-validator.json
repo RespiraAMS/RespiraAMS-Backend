@@ -1,0 +1,418 @@
+{
+  "function_code": "CreateCriterionValidator.Validate",
+  "sheet_name": "CreateCriterionValidator",
+  "lines_of_code": 17,
+  "requirement": "Validate a create-criterion command: the name must not be empty, and the formula must be exactly one complete shape (constant, variable, binary, unary, or ternary) with a defined operator and non-empty operands.",
+  "preconditions": [
+    {
+      "text": "Validation runs on an in-memory command without database access",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26
+      ]
+    },
+    {
+      "text": "The formula is one of the shapes the recursive validator walks",
+      "marks": [
+        1,
+        4,
+        5,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        21,
+        22,
+        23,
+        24,
+        26
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "Formula with no fields at all",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "Empty name with a valid boolean formula",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "Whitespace-only name with a valid boolean formula",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "Variable reference with Guid.Empty",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "Ternary formula without a condition",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "Female sex AND systolic blood pressure above 140 mmHg",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "Binary formula without a left operand",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "Binary formula without a right operand",
+      "marks": [
+        8
+      ]
+    },
+    {
+      "text": "Binary formula without an operator",
+      "marks": [
+        9
+      ]
+    },
+    {
+      "text": "Binary formula without a right operand and with an operator",
+      "marks": [
+        10
+      ]
+    },
+    {
+      "text": "Binary formula without a left operand and with an operator",
+      "marks": [
+        11
+      ]
+    },
+    {
+      "text": "Binary formula with operator 999",
+      "marks": [
+        12
+      ]
+    },
+    {
+      "text": "Formula mixing constant and binary shapes",
+      "marks": [
+        13
+      ]
+    },
+    {
+      "text": "Ternary formula with numeric branches",
+      "marks": [
+        14
+      ]
+    },
+    {
+      "text": "Boolean constant formula",
+      "marks": [
+        15
+      ]
+    },
+    {
+      "text": "Single-character criterion name 'H'",
+      "marks": [
+        16
+      ]
+    },
+    {
+      "text": "Reasonably long criterion name 'Hypertension crisis'",
+      "marks": [
+        17
+      ]
+    },
+    {
+      "text": "Longest criterion name 'Severe sepsis with organ dysfunction'",
+      "marks": [
+        18
+      ]
+    },
+    {
+      "text": "Unary formula",
+      "marks": [
+        19
+      ]
+    },
+    {
+      "text": "Numeric constant '0' (smallest non-empty constant)",
+      "marks": [
+        20
+      ]
+    },
+    {
+      "text": "Empty name with an empty formula",
+      "marks": [
+        21
+      ]
+    },
+    {
+      "text": "Whitespace-only name with an empty formula",
+      "marks": [
+        22
+      ]
+    },
+    {
+      "text": "Unary formula without an operand",
+      "marks": [
+        23
+      ]
+    },
+    {
+      "text": "Constant formula with an empty constant",
+      "marks": [
+        24
+      ]
+    },
+    {
+      "text": "Comparison of systolic blood pressure against a threshold",
+      "marks": [
+        25
+      ]
+    },
+    {
+      "text": "Ternary formula without an else branch",
+      "marks": [
+        26
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "No validation errors",
+      "marks": [
+        6,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        25
+      ]
+    },
+    {
+      "text": "Single validation error reported on Name",
+      "marks": [
+        2,
+        3
+      ]
+    },
+    {
+      "text": "Single validation error reported on Formula for an incomplete or mixed shape",
+      "marks": [
+        1,
+        4,
+        5,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        23,
+        24,
+        26
+      ]
+    },
+    {
+      "text": "Two violations reported when both the name and the formula are invalid",
+      "marks": [
+        21,
+        22
+      ]
+    }
+  ],
+  "exception_text": "No unhandled exception; invalid input is reported as validation errors",
+  "exception_marks": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    21,
+    22,
+    23,
+    24,
+    26
+  ],
+  "cases": [
+    {
+      "method": "CreateCriterion_EmptyFormula_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CreateCriterion_EmptyName_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CreateCriterion_EmptyName_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CreateCriterion_EmptyGuidVariable_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CreateCriterion_EmptyTernaryCondition_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CreateCriterion_NestedLogicalFormula_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "CreateCriterion_EmptyLeftOperand_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CreateCriterion_EmptyRightOperand_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CreateCriterion_BinaryFormulaMissingPart_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CreateCriterion_BinaryFormulaMissingPart_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CreateCriterion_BinaryFormulaMissingPart_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CreateCriterion_OperatorNotInEnum_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CreateCriterion_MixedShapeFormula_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CreateCriterion_TernaryFormula_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "CreateCriterion_BooleanConstantFormula_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "CreateCriterion_ValidName_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "CreateCriterion_ValidName_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "CreateCriterion_ValidName_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "CreateCriterion_UnaryFormula_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "CreateCriterion_NumericConstantBoundary_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "CreateCriterion_EmptyNameAndFormula_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CreateCriterion_EmptyNameAndFormula_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CreateCriterion_EmptyUnaryOperand_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CreateCriterion_EmptyConstant_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CreateCriterion_ComparisonFormula_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "CreateCriterion_TernaryFormulaMissingBranch_Fail",
+      "type": "A",
+      "result": "P"
+    }
+  ]
+}

@@ -1,0 +1,226 @@
+{
+  "function_code": "ClinicalAnalysis.ReportJson",
+  "sheet_name": "ClinicalAnalysisJson",
+  "lines_of_code": 15,
+  "requirement": "Keep the analysis payloads JSON-safe: serialise the report with camelCase property names, preserve the counters and the per-doctor/per-medicine breakdowns, round-trip the patient and treatment-plan id arrays (including empty arrays), and throw JsonException for malformed JSON.",
+  "preconditions": [
+    {
+      "text": "A ClinicalAnalysis is created with a JSON payload",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ]
+    },
+    {
+      "text": "The payload is serialised with the web/camelCase options",
+      "marks": [
+        3,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        12
+      ]
+    },
+    {
+      "text": "The JSON is empty or malformed",
+      "marks": [
+        1,
+        2,
+        4,
+        11
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "MalformedReportJson ThrowsJsonException",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "PatientIdsJson EmptyArrayDeserialisesToEmptyList",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "PatientIdsJson RoundTripsListOfGuids",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "ReportJson EmptyObjectDeserialisesWithoutThrowing",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "ReportJson PreservesAnalysisIdDoctorIdStartAndEnd",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "ReportJson PreservesCounters",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "ReportJson PreservesPerDoctorBreakdown",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "ReportJson PreservesPerMedicineBreakdown",
+      "marks": [
+        8
+      ]
+    },
+    {
+      "text": "ReportJson RoundTripsThroughJsonDocument",
+      "marks": [
+        9
+      ]
+    },
+    {
+      "text": "ReportJson UsesCamelCasePropertyNames",
+      "marks": [
+        10
+      ]
+    },
+    {
+      "text": "TreatmentPlanIdsJson EmptyArrayDeserialisesToEmptyList",
+      "marks": [
+        11
+      ]
+    },
+    {
+      "text": "TreatmentPlanIdsJson RoundTripsListOfGuids",
+      "marks": [
+        12
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "ReportJson uses camelCase property names and round-trips through JsonDocument",
+      "marks": [
+        9,
+        10
+      ]
+    },
+    {
+      "text": "The counters and the per-doctor/per-medicine breakdowns survive the round trip",
+      "marks": [
+        5,
+        6,
+        7,
+        8
+      ]
+    },
+    {
+      "text": "Patient and treatment-plan id arrays round-trip",
+      "marks": [
+        3,
+        12
+      ]
+    },
+    {
+      "text": "An empty object or empty array deserialises to the empty structure",
+      "marks": [
+        2,
+        4,
+        11
+      ]
+    },
+    {
+      "text": "Malformed JSON throws JsonException",
+      "marks": [
+        1
+      ]
+    }
+  ],
+  "exception_text": "JsonException is thrown for malformed JSON; everything else is a normal serialization",
+  "exception_marks": [
+    1
+  ],
+  "cases": [
+    {
+      "method": "MalformedReportJson_ThrowsJsonException",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "PatientIdsJson_EmptyArrayDeserialisesToEmptyList",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "PatientIdsJson_RoundTripsListOfGuids",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "ReportJson_EmptyObjectDeserialisesWithoutThrowing",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "ReportJson_PreservesAnalysisIdDoctorIdStartAndEnd",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "ReportJson_PreservesCounters",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "ReportJson_PreservesPerDoctorBreakdown",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "ReportJson_PreservesPerMedicineBreakdown",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "ReportJson_RoundTripsThroughJsonDocument",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "ReportJson_UsesCamelCasePropertyNames",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "TreatmentPlanIdsJson_EmptyArrayDeserialisesToEmptyList",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "TreatmentPlanIdsJson_RoundTripsListOfGuids",
+      "type": "N",
+      "result": "P"
+    }
+  ]
+}

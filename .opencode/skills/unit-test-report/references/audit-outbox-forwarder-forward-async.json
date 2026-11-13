@@ -1,0 +1,198 @@
+{
+  "function_code": "AuditOutboxForwarder.ForwardAsync",
+  "sheet_name": "AuditOutboxForwarder",
+  "lines_of_code": 96,
+  "requirement": "Forward the local audit outbox to the central saga queue: poll pending entries ordered by occurrence time in batches, publish the AuditEvent projection, mark successful rows forwarded and save them, leave failing rows pending for the next tick, and stop cleanly.",
+  "preconditions": [
+    {
+      "text": "An audit outbox table and a scoped audit event publisher are available",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ]
+    },
+    {
+      "text": "The outbox is empty, has pending rows, or contains already-forwarded rows",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ]
+    },
+    {
+      "text": "The publisher succeeds or throws",
+      "marks": [
+        7,
+        8
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "ForwardAsync_DoesNotPublishAnAlreadyForwardedEntry",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "ForwardAsync_PublishesEveryPendingEntry",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "ForwardAsync_PublishesTheAuditEventFactoryProjection",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "ForwardAsync_PublishesTheEntriesOrderedByOccurredAt",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "ForwardAsync_PublishesThePendingEntryAndMarksItForwarded",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "ForwardAsync_RetriesTheEntryOnTheNextTick",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "ForwardAsync_WhenThePublisherThrows_KeepsTheEarlierEntriesForwarded",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "ForwardAsync_WhenThePublisherThrows_LeavesTheEntryPending",
+      "marks": [
+        8
+      ]
+    },
+    {
+      "text": "ForwardAsync_WithAnEmptyOutbox_PublishesNothing",
+      "marks": [
+        9
+      ]
+    },
+    {
+      "text": "StopAsync_CompletesWithoutHanging",
+      "marks": [
+        10
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "Pending entries are published in occurrence order and marked forwarded",
+      "marks": [
+        2,
+        4,
+        5
+      ]
+    },
+    {
+      "text": "The published event is the AuditEventFactory projection",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "Already-forwarded entries and an empty outbox publish nothing",
+      "marks": [
+        1,
+        9
+      ]
+    },
+    {
+      "text": "A failed publish leaves that row and later rows pending for the next tick, while earlier rows stay forwarded",
+      "marks": [
+        6,
+        7,
+        8
+      ]
+    },
+    {
+      "text": "The hosted service stops without hanging",
+      "marks": [
+        10
+      ]
+    }
+  ],
+  "exception_text": "No unhandled exception; publisher failures are logged and retried on the next tick",
+  "exception_marks": [],
+  "cases": [
+    {
+      "method": "ForwardAsync_DoesNotPublishAnAlreadyForwardedEntry",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "ForwardAsync_PublishesEveryPendingEntry",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "ForwardAsync_PublishesTheAuditEventFactoryProjection",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "ForwardAsync_PublishesTheEntriesOrderedByOccurredAt",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "ForwardAsync_PublishesThePendingEntryAndMarksItForwarded",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "ForwardAsync_RetriesTheEntryOnTheNextTick",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "ForwardAsync_WhenThePublisherThrows_KeepsTheEarlierEntriesForwarded",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "ForwardAsync_WhenThePublisherThrows_LeavesTheEntryPending",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "ForwardAsync_WithAnEmptyOutbox_PublishesNothing",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "StopAsync_CompletesWithoutHanging",
+      "type": "N",
+      "result": "P"
+    }
+  ]
+}

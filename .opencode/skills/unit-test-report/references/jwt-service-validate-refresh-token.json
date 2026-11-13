@@ -1,0 +1,130 @@
+{
+  "function_code": "JwtService.ValidateRefreshToken",
+  "sheet_name": "JwtServiceRefreshToken",
+  "lines_of_code": 178,
+  "requirement": "Issue and validate HMAC-SHA512 refresh tokens: GenerateRefreshTokenAsync persists the SHA-256 hash with the refresh type and expiration, while ValidateRefreshToken verifies the signature and lifetime, finds the stored hash for the same account, rejects expired/missing tokens, and returns the account id and RoleType only for an active, non-deleted account.",
+  "preconditions": [
+    {
+      "text": "A JwtService backed by an AuthDbContext and a HashService",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ]
+    },
+    {
+      "text": "An account exists in the database and a refresh token was issued for it",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ]
+    },
+    {
+      "text": "The stored token is missing or expired, or the account is inactive or soft-deleted",
+      "marks": [
+        2,
+        3,
+        4,
+        5
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "GenerateRefreshTokenAsync_PersistsHashedRefreshTokenInDatabase",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "ValidateRefreshToken_InactiveAccount_ThrowsSecurityTokenException",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "ValidateRefreshToken_SoftDeletedAccount_ThrowsSecurityTokenException",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "ValidateRefreshToken_StoredTokenMarkedExpired_ThrowsSecurityTokenException",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "ValidateRefreshToken_TokenNotInDatabase_ThrowsSecurityTokenException",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "ValidateRefreshToken_ValidActiveAccountAndStoredToken_ReturnsAccountIdAndRole",
+      "marks": [
+        6
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "GenerateRefreshTokenAsync stores the SHA-256 hash with TokenType.RefreshToken and a future expiration",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "A valid stored token returns the account id and RoleType",
+      "marks": [
+        6
+      ]
+    }
+  ],
+  "exception_text": "SecurityTokenException when the token is missing or expired, or the account is inactive or soft-deleted",
+  "exception_marks": [
+    2,
+    3,
+    4,
+    5
+  ],
+  "cases": [
+    {
+      "method": "GenerateRefreshTokenAsync_PersistsHashedRefreshTokenInDatabase",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "ValidateRefreshToken_InactiveAccount_ThrowsSecurityTokenException",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "ValidateRefreshToken_SoftDeletedAccount_ThrowsSecurityTokenException",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "ValidateRefreshToken_StoredTokenMarkedExpired_ThrowsSecurityTokenException",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "ValidateRefreshToken_TokenNotInDatabase_ThrowsSecurityTokenException",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "ValidateRefreshToken_ValidActiveAccountAndStoredToken_ReturnsAccountIdAndRole",
+      "type": "N",
+      "result": "P"
+    }
+  ]
+}

@@ -1,0 +1,279 @@
+{
+  "function_code": "UpdatePatientHandler.HandleAsync",
+  "sheet_name": "UpdatePatientHandler",
+  "lines_of_code": 76,
+  "requirement": "Update a patient: the patient must exist and be live, the new medical record code must stay unique, and the new date of birth must satisfy the 16-year age rule; the free fields are always written, while date of birth, gender, height, and weight are only written when the patient has no treatment, and admission/discharge state is never touched.",
+  "preconditions": [
+    {
+      "text": "A live patient exists for the target id",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        11,
+        12,
+        13,
+        14
+      ]
+    },
+    {
+      "text": "The new medical record code is not used by another patient",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14
+      ]
+    },
+    {
+      "text": "The patient is at least 16 years old at the new date of birth",
+      "marks": [
+        1,
+        2,
+        3,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14
+      ]
+    },
+    {
+      "text": "The patient is unknown, soft-deleted, duplicated, or too young",
+      "marks": [
+        4,
+        5,
+        6,
+        8,
+        9,
+        10
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "UpdatePatient AgeAtBoundary16 UpdatesClinicalInformation Success (dob: 1/1/2010)",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "UpdatePatient AgeAtBoundary16 UpdatesClinicalInformation Success (dob: 11/10/2010)",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "UpdatePatient AgeAtBoundary16 UpdatesClinicalInformation Success (dob: 12/31/2010)",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "UpdatePatient DateOfBirthBelowAge16 Fail (dob: 11/10/2011)",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "UpdatePatient DateOfBirthBelowAge16 Fail (dob: 12/31/2011)",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "UpdatePatient DateOfBirthBelowAge16 Fail (dob: 7/22/2016)",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "UpdatePatient DischargedPatient DischargeAndOutcomeUntouched",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "UpdatePatient DuplicateMedicalRecordCode Fail",
+      "marks": [
+        8
+      ]
+    },
+    {
+      "text": "UpdatePatient SoftDeletedPatient Fail",
+      "marks": [
+        9
+      ]
+    },
+    {
+      "text": "UpdatePatient UnknownId Fail",
+      "marks": [
+        10
+      ]
+    },
+    {
+      "text": "UpdatePatient UpdatesOwnMedicalRecordCode Success",
+      "marks": [
+        11
+      ]
+    },
+    {
+      "text": "UpdatePatient WithTreatment KeepsClinicalInformationLocked",
+      "marks": [
+        12
+      ]
+    },
+    {
+      "text": "UpdatePatient WithoutTreatment NewDateOfBirthPersisted",
+      "marks": [
+        13
+      ]
+    },
+    {
+      "text": "UpdatePatient WithoutTreatment UpdatesAllMutableFields Success",
+      "marks": [
+        14
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "Success with Updated status and every mutable field persisted",
+      "marks": [
+        14
+      ]
+    },
+    {
+      "text": "Clinical information is written when the patient has no treatment",
+      "marks": [
+        1,
+        2,
+        3,
+        13,
+        14
+      ]
+    },
+    {
+      "text": "Clinical information, discharge, and outcome stay untouched once treated",
+      "marks": [
+        7,
+        12
+      ]
+    },
+    {
+      "text": "A patient may keep its own medical record code",
+      "marks": [
+        11
+      ]
+    },
+    {
+      "text": "Failure with BadRequest or BusinessRuleViolation for an unknown, deleted, duplicate, or under-age update",
+      "marks": [
+        4,
+        5,
+        6,
+        8,
+        9,
+        10
+      ]
+    }
+  ],
+  "exception_text": "No unhandled exception; every rejection is returned as a failed Result",
+  "exception_marks": [
+    4,
+    5,
+    6,
+    8,
+    9,
+    10
+  ],
+  "cases": [
+    {
+      "method": "UpdatePatient_AgeAtBoundary16_UpdatesClinicalInformation_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "UpdatePatient_AgeAtBoundary16_UpdatesClinicalInformation_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "UpdatePatient_AgeAtBoundary16_UpdatesClinicalInformation_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "UpdatePatient_DateOfBirthBelowAge16_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdatePatient_DateOfBirthBelowAge16_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdatePatient_DateOfBirthBelowAge16_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdatePatient_DischargedPatient_DischargeAndOutcomeUntouched",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "UpdatePatient_DuplicateMedicalRecordCode_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdatePatient_SoftDeletedPatient_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdatePatient_UnknownId_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdatePatient_UpdatesOwnMedicalRecordCode_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "UpdatePatient_WithTreatment_KeepsClinicalInformationLocked",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "UpdatePatient_WithoutTreatment_NewDateOfBirthPersisted",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "UpdatePatient_WithoutTreatment_UpdatesAllMutableFields_Success",
+      "type": "N",
+      "result": "P"
+    }
+  ]
+}

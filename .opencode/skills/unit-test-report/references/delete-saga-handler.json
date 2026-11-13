@@ -1,0 +1,245 @@
+{
+  "function_code": "DeleteSaga.HandleAsync",
+  "sheet_name": "DeleteSaga",
+  "lines_of_code": 214,
+  "requirement": "Orchestrate a profile deletion: copy the targets into saga state and soft-delete the doctor profile, then soft-delete the account, then delete the avatar media asset; without compensation, any failure moves the saga to Failed with a reason, treats 'already gone' as success, and foreign completion events are ignored by the NotFound handlers.",
+  "preconditions": [
+    {
+      "text": "A delete-profile saga is started with account, doctor, and media targets",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14
+      ]
+    },
+    {
+      "text": "The soft-delete and media services complete, fail, or report the profile already gone",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "NotFound_SoftDeleteCompleted_DoesNothing",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "NotFound_SoftDeleteDoctorCompleted_DoesNothing",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "NotFound_SoftDeleteDoctorFailure_DoesNothing",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "NotFound_SoftDeleteFailure_DoesNothing",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "SoftDeleteCompleted_WhenMediaDeletionFails_Fails",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "SoftDeleteCompleted_WhenMediaDeletionThrows_FailsWithoutThrowing",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "SoftDeleteCompleted_WithMedia_DeletesTheMediaAsset",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "SoftDeleteCompleted_WithoutMedia_SkipsTheMediaDeletion",
+      "marks": [
+        8
+      ]
+    },
+    {
+      "text": "SoftDeleteDoctorCompleted_SendsAccountSoftDelete",
+      "marks": [
+        9
+      ]
+    },
+    {
+      "text": "SoftDeleteDoctorFailure_DoesNotSendTheAccountSoftDelete",
+      "marks": [
+        10
+      ]
+    },
+    {
+      "text": "SoftDeleteDoctorFailure_FailsWithTheReason",
+      "marks": [
+        11
+      ]
+    },
+    {
+      "text": "SoftDeleteFailure_FailsWithTheReason",
+      "marks": [
+        12
+      ]
+    },
+    {
+      "text": "StartAsync_CopiesTheTargetsIntoTheState",
+      "marks": [
+        13
+      ]
+    },
+    {
+      "text": "StartAsync_SendsSoftDeleteDoctorCommandWithEveryTarget",
+      "marks": [
+        14
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "The targets are copied into saga state and the profile soft-delete command is sent",
+      "marks": [
+        13,
+        14
+      ]
+    },
+    {
+      "text": "A completed profile delete sends the account soft delete, then deletes the media when present",
+      "marks": [
+        7,
+        8,
+        9
+      ]
+    },
+    {
+      "text": "Profile and account failures move the saga to Failed with the reason and skip later steps",
+      "marks": [
+        3,
+        5,
+        6,
+        10,
+        11,
+        12
+      ]
+    },
+    {
+      "text": "Completion events for another saga are ignored",
+      "marks": [
+        1,
+        2,
+        3,
+        4
+      ]
+    }
+  ],
+  "exception_text": "No unhandled exception; media deletion exceptions are captured as a failed step",
+  "exception_marks": [
+    6
+  ],
+  "cases": [
+    {
+      "method": "NotFound_SoftDeleteCompleted_DoesNothing",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "NotFound_SoftDeleteDoctorCompleted_DoesNothing",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "NotFound_SoftDeleteDoctorFailure_DoesNothing",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "NotFound_SoftDeleteFailure_DoesNothing",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SoftDeleteCompleted_WhenMediaDeletionFails_Fails",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SoftDeleteCompleted_WhenMediaDeletionThrows_FailsWithoutThrowing",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SoftDeleteCompleted_WithMedia_DeletesTheMediaAsset",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SoftDeleteCompleted_WithoutMedia_SkipsTheMediaDeletion",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SoftDeleteDoctorCompleted_SendsAccountSoftDelete",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SoftDeleteDoctorFailure_DoesNotSendTheAccountSoftDelete",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SoftDeleteDoctorFailure_FailsWithTheReason",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SoftDeleteFailure_FailsWithTheReason",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "StartAsync_CopiesTheTargetsIntoTheState",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "StartAsync_SendsSoftDeleteDoctorCommandWithEveryTarget",
+      "type": "N",
+      "result": "P"
+    }
+  ]
+}

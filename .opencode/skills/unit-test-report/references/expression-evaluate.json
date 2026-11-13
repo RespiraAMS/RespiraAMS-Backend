@@ -1,0 +1,635 @@
+{
+  "function_code": "Expression.Evaluate",
+  "sheet_name": "Expression",
+  "lines_of_code": 310,
+  "requirement": "Evaluate an expression tree: arithmetic operators compute on numeric operands, comparison operators return a boolean, logical operators require boolean operands, a unary expression negates its boolean operand, a ternary expression requires a boolean condition and two branches of the same result type, and an invalid combination throws.",
+  "preconditions": [
+    {
+      "text": "The expression tree is built in memory from its operand and operator objects",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41
+      ]
+    },
+    {
+      "text": "The operands and operator produce a valid result type",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        38,
+        40,
+        41
+      ]
+    },
+    {
+      "text": "The operand/operator combination is invalid or divides by zero",
+      "marks": [
+        10,
+        11,
+        12,
+        13,
+        34,
+        35,
+        36,
+        37,
+        39
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "BinaryExpressionTest ComparisonExpression Success (op: Eq, left: False, right: False, expected: True)",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "BinaryExpressionTest ComparisonExpression Success (op: Eq, left: False, right: True, expected: False)",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "BinaryExpressionTest ComparisonExpression Success (op: Eq, left: True, right: False, expected: False)",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "BinaryExpressionTest ComparisonExpression Success (op: Eq, left: True, right: True, expected: True)",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "BinaryExpressionTest ComparisonExpression Success (op: Ne, left: False, right: False, expected: False)",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "BinaryExpressionTest ComparisonExpression Success (op: Ne, left: False, right: True, expected: True)",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "BinaryExpressionTest ComparisonExpression Success (op: Ne, left: True, right: False, expected: True)",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "BinaryExpressionTest ComparisonExpression Success (op: Ne, left: True, right: True, expected: False)",
+      "marks": [
+        8
+      ]
+    },
+    {
+      "text": "BinaryExpressionTest ComplexExpression Success",
+      "marks": [
+        9
+      ]
+    },
+    {
+      "text": "BinaryExpressionTest Fail DivisionByZero",
+      "marks": [
+        10
+      ]
+    },
+    {
+      "text": "BinaryExpressionTest LogicalWithNumericOperator Fail",
+      "marks": [
+        11
+      ]
+    },
+    {
+      "text": "BinaryExpressionTest NumericWithLogicalOperator Fail",
+      "marks": [
+        12
+      ]
+    },
+    {
+      "text": "BinaryExpressionTest OperandResultNotMatch Fail",
+      "marks": [
+        13
+      ]
+    },
+    {
+      "text": "BinaryExpressionTest SimpleArithmeticExpression Success (op: Add, left: 1, right: 2, expected: 3)",
+      "marks": [
+        14
+      ]
+    },
+    {
+      "text": "BinaryExpressionTest SimpleArithmeticExpression Success (op: Div, left: 1, right: 2, expected: 0.5)",
+      "marks": [
+        15
+      ]
+    },
+    {
+      "text": "BinaryExpressionTest SimpleArithmeticExpression Success (op: Mul, left: 1, right: 2, expected: 2)",
+      "marks": [
+        16
+      ]
+    },
+    {
+      "text": "BinaryExpressionTest SimpleArithmeticExpression Success (op: Sub, left: 1, right: 2, expected: -1)",
+      "marks": [
+        17
+      ]
+    },
+    {
+      "text": "BinaryExpressionTest SimpleComparisonExpression Success (op: Eq, left: 2, right: 1, expected: False)",
+      "marks": [
+        18
+      ]
+    },
+    {
+      "text": "BinaryExpressionTest SimpleComparisonExpression Success (op: Eq, left: 2, right: 2, expected: True)",
+      "marks": [
+        19
+      ]
+    },
+    {
+      "text": "BinaryExpressionTest SimpleComparisonExpression Success (op: Gt, left: 2, right: 1, expected: True)",
+      "marks": [
+        20
+      ]
+    },
+    {
+      "text": "BinaryExpressionTest SimpleComparisonExpression Success (op: Gt, left: 2, right: 2, expected: False)",
+      "marks": [
+        21
+      ]
+    },
+    {
+      "text": "BinaryExpressionTest SimpleComparisonExpression Success (op: Gt, left: 2, right: 3, expected: False)",
+      "marks": [
+        22
+      ]
+    },
+    {
+      "text": "BinaryExpressionTest SimpleComparisonExpression Success (op: Gte, left: 2, right: 1, expected: True)",
+      "marks": [
+        23
+      ]
+    },
+    {
+      "text": "BinaryExpressionTest SimpleComparisonExpression Success (op: Gte, left: 2, right: 2, expected: True)",
+      "marks": [
+        24
+      ]
+    },
+    {
+      "text": "BinaryExpressionTest SimpleComparisonExpression Success (op: Gte, left: 2, right: 3, expected: False)",
+      "marks": [
+        25
+      ]
+    },
+    {
+      "text": "BinaryExpressionTest SimpleComparisonExpression Success (op: Lt, left: 2, right: 1, expected: False)",
+      "marks": [
+        26
+      ]
+    },
+    {
+      "text": "BinaryExpressionTest SimpleComparisonExpression Success (op: Lt, left: 2, right: 2, expected: False)",
+      "marks": [
+        27
+      ]
+    },
+    {
+      "text": "BinaryExpressionTest SimpleComparisonExpression Success (op: Lt, left: 2, right: 3, expected: True)",
+      "marks": [
+        28
+      ]
+    },
+    {
+      "text": "BinaryExpressionTest SimpleComparisonExpression Success (op: Lte, left: 2, right: 1, expected: False)",
+      "marks": [
+        29
+      ]
+    },
+    {
+      "text": "BinaryExpressionTest SimpleComparisonExpression Success (op: Lte, left: 2, right: 2, expected: True)",
+      "marks": [
+        30
+      ]
+    },
+    {
+      "text": "BinaryExpressionTest SimpleComparisonExpression Success (op: Lte, left: 2, right: 3, expected: True)",
+      "marks": [
+        31
+      ]
+    },
+    {
+      "text": "BinaryExpressionTest SimpleComparisonExpression Success (op: Ne, left: 2, right: 1, expected: True)",
+      "marks": [
+        32
+      ]
+    },
+    {
+      "text": "BinaryExpressionTest SimpleComparisonExpression Success (op: Ne, left: 2, right: 2, expected: False)",
+      "marks": [
+        33
+      ]
+    },
+    {
+      "text": "TernaryExpressionTest NotBooleanCondition Fail",
+      "marks": [
+        34
+      ]
+    },
+    {
+      "text": "TernaryExpressionTest NotNumericIfTrue Fail (ifTrue: BooleanExpression { ResultType = Boolean }, ifFalse: BooleanExpression { ResultType = Boo...)",
+      "marks": [
+        35
+      ]
+    },
+    {
+      "text": "TernaryExpressionTest NotNumericIfTrue Fail (ifTrue: BooleanExpression { ResultType = Boolean }, ifFalse: NumericalExpression { ResultType = N...)",
+      "marks": [
+        36
+      ]
+    },
+    {
+      "text": "TernaryExpressionTest NotNumericIfTrue Fail (ifTrue: NumericalExpression { ResultType = Numeric }, ifFalse: BooleanExpression { ResultType = B...)",
+      "marks": [
+        37
+      ]
+    },
+    {
+      "text": "TernaryExpressionTest Success",
+      "marks": [
+        38
+      ]
+    },
+    {
+      "text": "UnaryExpressionTest Fail",
+      "marks": [
+        39
+      ]
+    },
+    {
+      "text": "UnaryExpressionTest Success (value: False)",
+      "marks": [
+        40
+      ]
+    },
+    {
+      "text": "UnaryExpressionTest Success (value: True)",
+      "marks": [
+        41
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "Arithmetic expression evaluates to the expected numeric result",
+      "marks": [
+        14,
+        15,
+        16,
+        17
+      ]
+    },
+    {
+      "text": "Comparison expression evaluates to the expected boolean result",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33
+      ]
+    },
+    {
+      "text": "Complex, unary, or ternary expression evaluates to the expected value",
+      "marks": [
+        9,
+        38,
+        40,
+        41
+      ]
+    },
+    {
+      "text": "ArgumentException is thrown for mismatched operand types, an invalid operator for the type, a non-boolean condition, or division by zero",
+      "marks": [
+        10,
+        11,
+        12,
+        13,
+        34,
+        35,
+        36,
+        37,
+        39
+      ]
+    }
+  ],
+  "exception_text": "ArgumentException is thrown when the operands or operator do not match the expression type, or when a division by zero is evaluated",
+  "exception_marks": [
+    10,
+    11,
+    12,
+    13,
+    34,
+    35,
+    36,
+    37,
+    39
+  ],
+  "cases": [
+    {
+      "method": "BinaryExpressionTest_ComparisonExpression_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "BinaryExpressionTest_ComparisonExpression_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "BinaryExpressionTest_ComparisonExpression_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "BinaryExpressionTest_ComparisonExpression_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "BinaryExpressionTest_ComparisonExpression_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "BinaryExpressionTest_ComparisonExpression_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "BinaryExpressionTest_ComparisonExpression_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "BinaryExpressionTest_ComparisonExpression_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "BinaryExpressionTest_ComplexExpression_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "BinaryExpressionTest_Fail_DivisionByZero",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "BinaryExpressionTest_LogicalWithNumericOperator_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "BinaryExpressionTest_NumericWithLogicalOperator_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "BinaryExpressionTest_OperandResultNotMatch_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "BinaryExpressionTest_SimpleArithmeticExpression_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "BinaryExpressionTest_SimpleArithmeticExpression_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "BinaryExpressionTest_SimpleArithmeticExpression_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "BinaryExpressionTest_SimpleArithmeticExpression_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "BinaryExpressionTest_SimpleComparisonExpression_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "BinaryExpressionTest_SimpleComparisonExpression_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "BinaryExpressionTest_SimpleComparisonExpression_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "BinaryExpressionTest_SimpleComparisonExpression_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "BinaryExpressionTest_SimpleComparisonExpression_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "BinaryExpressionTest_SimpleComparisonExpression_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "BinaryExpressionTest_SimpleComparisonExpression_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "BinaryExpressionTest_SimpleComparisonExpression_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "BinaryExpressionTest_SimpleComparisonExpression_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "BinaryExpressionTest_SimpleComparisonExpression_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "BinaryExpressionTest_SimpleComparisonExpression_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "BinaryExpressionTest_SimpleComparisonExpression_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "BinaryExpressionTest_SimpleComparisonExpression_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "BinaryExpressionTest_SimpleComparisonExpression_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "BinaryExpressionTest_SimpleComparisonExpression_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "BinaryExpressionTest_SimpleComparisonExpression_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "TernaryExpressionTest_NotBooleanCondition_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "TernaryExpressionTest_NotNumericIfTrue_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "TernaryExpressionTest_NotNumericIfTrue_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "TernaryExpressionTest_NotNumericIfTrue_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "TernaryExpressionTest_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "UnaryExpressionTest_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UnaryExpressionTest_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "UnaryExpressionTest_Success",
+      "type": "N",
+      "result": "P"
+    }
+  ]
+}

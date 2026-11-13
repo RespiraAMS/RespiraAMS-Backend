@@ -1,0 +1,91 @@
+{
+  "function_code": "DeleteDosageHandler.HandleAsync",
+  "sheet_name": "DeleteDosageHandler",
+  "lines_of_code": 66,
+  "requirement": "Soft delete one dosage of an antibiotic: the antibiotic must exist and own the dosage, the remaining dosages must still satisfy the antibiotic's dosage rules (at least one dose and one standard dose per route), then the dosage is stamped IsDeleted/DeletedAt and saved.",
+  "preconditions": [
+    {
+      "text": "A live antibiotic exists for the target ID and owns the requested dosage",
+      "marks": [1, 2, 6, 7]
+    },
+    {
+      "text": "The remaining dosages still satisfy the antibiotic dosage rules after the removal",
+      "marks": [1, 2]
+    },
+    {
+      "text": "A control antibiotic with its own live dosage exists",
+      "marks": [1]
+    },
+    {
+      "text": "The target antibiotic is unknown or already soft-deleted",
+      "marks": [3, 4]
+    },
+    {
+      "text": "The requested dosage ID belongs to a different antibiotic",
+      "marks": [5]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "Delete the renal-adjusted oral dose while the oral standard dose remains",
+      "marks": [1]
+    },
+    {
+      "text": "Delete one of two adjusted IV doses while the standard dose and the other range remain",
+      "marks": [2]
+    },
+    {
+      "text": "Delete request with an unknown antibiotic ID",
+      "marks": [3]
+    },
+    {
+      "text": "Delete request on an antibiotic that is already soft-deleted",
+      "marks": [4]
+    },
+    {
+      "text": "Delete request with a real dosage ID owned by another antibiotic",
+      "marks": [5]
+    },
+    {
+      "text": "Delete the only remaining dosage of the antibiotic",
+      "marks": [6]
+    },
+    {
+      "text": "Delete the oral standard dose while an oral adjusted dose remains",
+      "marks": [7]
+    }
+  ],
+  "returns": [
+    {
+      "text": "Success with Deleted status; the dosage is soft-deleted and hidden by the query filter",
+      "marks": [1, 2]
+    },
+    {
+      "text": "Other antibiotics and their dosages stay live",
+      "marks": [1, 2]
+    },
+    {
+      "text": "Failure with BadRequest when the antibiotic is missing, deleted, or does not own the dosage",
+      "marks": [3, 4, 5]
+    },
+    {
+      "text": "Failure with BusinessRuleViolation when the remaining dosages would break the dosage rules",
+      "marks": [6, 7]
+    },
+    {
+      "text": "Rejected deletions leave every dosage active and linked",
+      "marks": [5, 6, 7]
+    }
+  ],
+  "exception_text": "No unhandled exception; every rejection is returned as a failed Result",
+  "exception_marks": [3, 4, 5, 6, 7],
+  "cases": [
+    { "method": "DeleteDosage_AdjustedDose_Success", "type": "N", "result": "P" },
+    { "method": "DeleteDosage_OneAdjustedDoseAmongSeveral_Success", "type": "N", "result": "P" },
+    { "method": "DeleteDosage_AntibioticNotFound_Fail", "type": "A", "result": "P" },
+    { "method": "DeleteDosage_SoftDeletedAntibiotic_Fail", "type": "A", "result": "P" },
+    { "method": "DeleteDosage_DosageNotOwnedByAntibiotic_Fail", "type": "A", "result": "P" },
+    { "method": "DeleteDosage_LastRemainingDosage_Fail", "type": "A", "result": "P" },
+    { "method": "DeleteDosage_OnlyStandardDoseForRoute_Fail", "type": "A", "result": "P" }
+  ]
+}

@@ -1,0 +1,157 @@
+{
+  "function_code": "SearchAntibioticGroupHandler.HandleAsync",
+  "sheet_name": "SearchAntibioticGroupHandler",
+  "lines_of_code": 49,
+  "requirement": "Full-text search antibiotic groups: build a prefix tsquery from the search term, short-circuit to an empty first page when the term has no usable lexeme, otherwise rank matches by name (weight A) above description (weight B), project the parent name, and return the requested page.",
+  "preconditions": [
+    {
+      "text": "The antibiotic group table contains the rows seeded for the case",
+      "marks": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21]
+    },
+    {
+      "text": "The search term yields at least one usable lexeme",
+      "marks": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 20, 21]
+    },
+    {
+      "text": "Every word in the search term is a single character, so no lexeme survives",
+      "marks": [14, 15]
+    },
+    {
+      "text": "The search term consists only of symbols the prefix-query builder strips",
+      "marks": [16, 17, 18, 19]
+    },
+    {
+      "text": "The only group matching the term is soft-deleted",
+      "marks": [21]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "Search 'penicillin', page 1, size 10, over the beta-lactam hierarchy",
+      "marks": [1]
+    },
+    {
+      "text": "Search 'macrolide', page 1, size 10, over the beta-lactam hierarchy",
+      "marks": [2]
+    },
+    {
+      "text": "Search 'penicillin' (full word prefix), page 1, size 10",
+      "marks": [3]
+    },
+    {
+      "text": "Search 'peni' (shorter prefix), page 1, size 10",
+      "marks": [4]
+    },
+    {
+      "text": "Search '  penicillin  ' (padded term), page 1, size 10",
+      "marks": [5]
+    },
+    {
+      "text": "Search 'vancomycin' over a name match and a description match",
+      "marks": [6]
+    },
+    {
+      "text": "Search 'macrocyclic' over the beta-lactam hierarchy (description-only match)",
+      "marks": [7]
+    },
+    {
+      "text": "Search 'khang' (unaccented) over a Vietnamese group name",
+      "marks": [8]
+    },
+    {
+      "text": "Search 'kháng' (accented) over a Vietnamese group name",
+      "marks": [9]
+    },
+    {
+      "text": "Search 'antibiotic', page 1, size 2, over five matching groups",
+      "marks": [10]
+    },
+    {
+      "text": "Search 'antibiotic', page 3, size 2, over five matching groups",
+      "marks": [11]
+    },
+    {
+      "text": "Search 'antibiotic', page 1, size 1 (minimum page size)",
+      "marks": [12]
+    },
+    {
+      "text": "Search 'antibiotic', page 1, size 100 (maximum page size)",
+      "marks": [13]
+    },
+    {
+      "text": "Search 'a b', page 3, size 5",
+      "marks": [14]
+    },
+    {
+      "text": "Search 'x y z', page 3, size 5",
+      "marks": [15]
+    },
+    {
+      "text": "Search '&&', page 1, size 10",
+      "marks": [16]
+    },
+    {
+      "text": "Search '||', page 1, size 10",
+      "marks": [17]
+    },
+    {
+      "text": "Search '!!', page 1, size 10",
+      "marks": [18]
+    },
+    {
+      "text": "Search '((', page 1, size 10",
+      "marks": [19]
+    },
+    {
+      "text": "Search 'vancomycin' over the beta-lactam hierarchy (no seeded match)",
+      "marks": [20]
+    },
+    {
+      "text": "Search 'penicillin' when the only match is soft-deleted",
+      "marks": [21]
+    }
+  ],
+  "returns": [
+    {
+      "text": "Success with the requested page and its pagination metadata",
+      "marks": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
+    },
+    {
+      "text": "Name matches rank above description matches",
+      "marks": [6]
+    },
+    {
+      "text": "Subgroups carry the parent name; root groups report a null parent",
+      "marks": [1, 2]
+    },
+    {
+      "text": "Empty page with zero total items and no next page",
+      "marks": [14, 15, 16, 17, 18, 19, 20, 21]
+    }
+  ],
+  "exception_text": "No unhandled exception; the handler has no failure branch and always returns success",
+  "exception_marks": [],
+  "cases": [
+    { "method": "SearchAntibioticGroup_PrefixMatchOnName_ReturnsGroupWithParentName_Success", "type": "N", "result": "P" },
+    { "method": "SearchAntibioticGroup_RootGroupMatch_HasNoParent_Success", "type": "N", "result": "P" },
+    { "method": "SearchAntibioticGroup_PrefixOrPaddedTerm_MatchesSameGroup_Success", "type": "N", "result": "P" },
+    { "method": "SearchAntibioticGroup_PrefixOrPaddedTerm_MatchesSameGroup_Success", "type": "B", "result": "P" },
+    { "method": "SearchAntibioticGroup_PrefixOrPaddedTerm_MatchesSameGroup_Success", "type": "B", "result": "P" },
+    { "method": "SearchAntibioticGroup_NameMatchRanksAboveDescriptionMatch_Success", "type": "N", "result": "P" },
+    { "method": "SearchAntibioticGroup_MatchOnlyInDescription_ReturnsGroup_Success", "type": "N", "result": "P" },
+    { "method": "SearchAntibioticGroup_AccentFoldedTerm_MatchesVietnameseData_Success", "type": "N", "result": "P" },
+    { "method": "SearchAntibioticGroup_AccentFoldedTerm_MatchesVietnameseData_Success", "type": "N", "result": "P" },
+    { "method": "SearchAntibioticGroup_FirstPage_SplitsMatchesWithMetadata_Success", "type": "N", "result": "P" },
+    { "method": "SearchAntibioticGroup_LastPage_HasNoNext_Success", "type": "B", "result": "P" },
+    { "method": "SearchAntibioticGroup_MinimumPageSize_ReturnsOneItemPerPage_Success", "type": "B", "result": "P" },
+    { "method": "SearchAntibioticGroup_MaximumPageSize_ReturnsAllMatchesInOnePage_Success", "type": "B", "result": "P" },
+    { "method": "SearchAntibioticGroup_NoUsableLexeme_ReturnsEmptyPage_Success", "type": "A", "result": "P" },
+    { "method": "SearchAntibioticGroup_NoUsableLexeme_ReturnsEmptyPage_Success", "type": "A", "result": "P" },
+    { "method": "SearchAntibioticGroup_SymbolOnlyTerm_ReturnsEmptyPage_Success", "type": "A", "result": "P" },
+    { "method": "SearchAntibioticGroup_SymbolOnlyTerm_ReturnsEmptyPage_Success", "type": "A", "result": "P" },
+    { "method": "SearchAntibioticGroup_SymbolOnlyTerm_ReturnsEmptyPage_Success", "type": "A", "result": "P" },
+    { "method": "SearchAntibioticGroup_SymbolOnlyTerm_ReturnsEmptyPage_Success", "type": "A", "result": "P" },
+    { "method": "SearchAntibioticGroup_TermMatchesNothing_ReturnsEmptyPage_Success", "type": "A", "result": "P" },
+    { "method": "SearchAntibioticGroup_SoftDeletedGroup_IsExcluded_Success", "type": "A", "result": "P" }
+  ]
+}

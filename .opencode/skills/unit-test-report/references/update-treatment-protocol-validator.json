@@ -1,0 +1,396 @@
+{
+  "function_code": "UpdateTreatmentProtocolValidator.Validate",
+  "sheet_name": "UpdateTreatmentProtoValidator",
+  "lines_of_code": 36,
+  "requirement": "Validate an update-treatment-protocol command: the id must not be empty, the severity and treatment site must be defined enum members, at least one non-empty medicine composition must be supplied with non-empty antibiotic ids, pathogen and criterion ids must be non-empty, and the version and publisher must not be blank.",
+  "preconditions": [
+    {
+      "text": "Validation runs on an in-memory command without database access",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24
+      ]
+    },
+    {
+      "text": "The command carries the medicine, pathogen, and criterion ids seeded for the case",
+      "marks": [
+        1,
+        2,
+        7,
+        10,
+        11,
+        13,
+        14,
+        17,
+        22,
+        23,
+        24
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "Several Guid.Empty antibiotic ids",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "One empty medicine composition",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "Severity 0 (below the defined range)",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "Severity 4 (above the defined range)",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "Mild severity with the Outpatient treatment site",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "Severe severity with the IntensiveCareUnit treatment site",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "Single-character version and publisher",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "Treatment site -1 (below the defined range)",
+      "marks": [
+        8
+      ]
+    },
+    {
+      "text": "Treatment site 3 (above the defined range)",
+      "marks": [
+        9
+      ]
+    },
+    {
+      "text": "Guid.Empty as the pathogen id",
+      "marks": [
+        10
+      ]
+    },
+    {
+      "text": "No medicine composition at all",
+      "marks": [
+        11
+      ]
+    },
+    {
+      "text": "Every field invalid at once",
+      "marks": [
+        12
+      ]
+    },
+    {
+      "text": "Guid.Empty as an antibiotic id",
+      "marks": [
+        13
+      ]
+    },
+    {
+      "text": "Minimal protocol with one composition, version, and publisher",
+      "marks": [
+        14
+      ]
+    },
+    {
+      "text": "Guid.Empty as the protocol id",
+      "marks": [
+        15
+      ]
+    },
+    {
+      "text": "Guid.Empty as the criterion id",
+      "marks": [
+        16
+      ]
+    },
+    {
+      "text": "Full protocol with every relation populated",
+      "marks": [
+        17
+      ]
+    },
+    {
+      "text": "Empty version",
+      "marks": [
+        18
+      ]
+    },
+    {
+      "text": "Whitespace-only version",
+      "marks": [
+        19
+      ]
+    },
+    {
+      "text": "Empty publisher",
+      "marks": [
+        20
+      ]
+    },
+    {
+      "text": "Whitespace-only publisher",
+      "marks": [
+        21
+      ]
+    },
+    {
+      "text": "Valid update with a version-7 id",
+      "marks": [
+        22
+      ]
+    },
+    {
+      "text": "Valid update with GUID 00000000-0000-0000-0000-000000000001",
+      "marks": [
+        23
+      ]
+    },
+    {
+      "text": "Valid update with GUID ffffffff-ffff-ffff-ffff-ffffffffffff",
+      "marks": [
+        24
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "No validation errors",
+      "marks": [
+        7,
+        14,
+        17,
+        22,
+        23,
+        24
+      ]
+    },
+    {
+      "text": "Validation error reported on the id, severity, or treatment site",
+      "marks": [
+        3,
+        4,
+        8,
+        9,
+        15
+      ]
+    },
+    {
+      "text": "Validation error reported on the medicine compositions or their antibiotic ids",
+      "marks": [
+        1,
+        2,
+        11,
+        13
+      ]
+    },
+    {
+      "text": "Validation error reported on a pathogen or criterion id",
+      "marks": [
+        10,
+        16
+      ]
+    },
+    {
+      "text": "Validation error reported on the version or publisher",
+      "marks": [
+        18,
+        19,
+        20,
+        21
+      ]
+    }
+  ],
+  "exception_text": "No unhandled exception; invalid input is reported as validation errors",
+  "exception_marks": [
+    1,
+    2,
+    3,
+    4,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    15,
+    16,
+    18,
+    19,
+    20,
+    21,
+    5,
+    6,
+    7,
+    14,
+    17,
+    22,
+    23,
+    24
+  ],
+  "cases": [
+    {
+      "method": "UpdateTreatmentProtocol_MultipleEmptyAntibioticIds_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdateTreatmentProtocol_EmptyMedicineComposition_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdateTreatmentProtocol_InvalidSeverity_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdateTreatmentProtocol_InvalidSeverity_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdateTreatmentProtocol_EnumBoundaries_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "UpdateTreatmentProtocol_EnumBoundaries_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "UpdateTreatmentProtocol_SingleCharacterVersionAndPublisher_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "UpdateTreatmentProtocol_InvalidTreatmentSite_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdateTreatmentProtocol_InvalidTreatmentSite_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdateTreatmentProtocol_EmptyPathogenId_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdateTreatmentProtocol_NoMedicineComposition_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdateTreatmentProtocol_AllFieldsInvalid_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdateTreatmentProtocol_EmptyAntibioticId_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdateTreatmentProtocol_MinimalValues_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "UpdateTreatmentProtocol_EmptyId_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdateTreatmentProtocol_EmptyCriterionId_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdateTreatmentProtocol_FullValues_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "UpdateTreatmentProtocol_EmptyVersion_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdateTreatmentProtocol_EmptyVersion_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdateTreatmentProtocol_EmptyPublisher_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdateTreatmentProtocol_EmptyPublisher_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdateTreatmentProtocol_ValidId_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "UpdateTreatmentProtocol_ValidId_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "UpdateTreatmentProtocol_ValidId_Success",
+      "type": "B",
+      "result": "P"
+    }
+  ]
+}

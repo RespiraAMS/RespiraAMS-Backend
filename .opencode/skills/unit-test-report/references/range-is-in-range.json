@@ -1,0 +1,1038 @@
+{
+  "function_code": "Range.IsInRange",
+  "sheet_name": "Range",
+  "lines_of_code": 70,
+  "requirement": "Decide range predicates: whether a value lies inside a range given its inclusive/exclusive bounds, whether two ranges overlap (touching at a shared inclusive bound counts), and whether one range is contained in another; a null range never overlaps.",
+  "preconditions": [
+    {
+      "text": "The range and the value (or the second range) are built in memory",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60,
+        61,
+        62,
+        63,
+        64,
+        65,
+        66,
+        67,
+        68,
+        69,
+        70,
+        71,
+        72,
+        73,
+        74
+      ]
+    },
+    {
+      "text": "The boundary flags of every range are set for the case",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "IsInRange Success (range: > 10 và < 10, value: 10, expected: False)",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "IsInRange Success (range: > 10 và < 20, value: 10, expected: False)",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "IsInRange Success (range: > 10 và < 20, value: 10.01, expected: True)",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "IsInRange Success (range: > 10 và < 20, value: 19.99, expected: True)",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "IsInRange Success (range: > 10 và < 20, value: 20, expected: False)",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "IsInRange Success (range: > 10 và ≤ 10, value: 10, expected: True)",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "IsInRange Success (range: > 10 và ≤ 20, value: 10, expected: False)",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "IsInRange Success (range: > 10 và ≤ 20, value: 20, expected: True)",
+      "marks": [
+        8
+      ]
+    },
+    {
+      "text": "IsInRange Success (range: ≥ -20 và ≤ -10, value: -10, expected: True)",
+      "marks": [
+        9
+      ]
+    },
+    {
+      "text": "IsInRange Success (range: ≥ -20 và ≤ -10, value: -20, expected: True)",
+      "marks": [
+        10
+      ]
+    },
+    {
+      "text": "IsInRange Success (range: ≥ -20 và ≤ -10, value: -20.01, expected: False)",
+      "marks": [
+        11
+      ]
+    },
+    {
+      "text": "IsInRange Success (range: ≥ -20 và ≤ -10, value: -9.99, expected: False)",
+      "marks": [
+        12
+      ]
+    },
+    {
+      "text": "IsInRange Success (range: ≥ -79228162514264337593543950335, value: -79228162514264337593543950335, expected: True)",
+      "marks": [
+        13
+      ]
+    },
+    {
+      "text": "IsInRange Success (range: ≥ -79228162514264337593543950335, value: 0, expected: True)",
+      "marks": [
+        14
+      ]
+    },
+    {
+      "text": "IsInRange Success (range: ≥ -79228162514264337593543950335, value: 79228162514264337593543950335, expected: True)",
+      "marks": [
+        15
+      ]
+    },
+    {
+      "text": "IsInRange Success (range: ≥ 10 và < 10, value: 10, expected: True)",
+      "marks": [
+        16
+      ]
+    },
+    {
+      "text": "IsInRange Success (range: ≥ 10 và < 20, value: 10, expected: True)",
+      "marks": [
+        17
+      ]
+    },
+    {
+      "text": "IsInRange Success (range: ≥ 10 và < 20, value: 20, expected: False)",
+      "marks": [
+        18
+      ]
+    },
+    {
+      "text": "IsInRange Success (range: ≥ 10 và ≤ 10, value: 10, expected: True)",
+      "marks": [
+        19
+      ]
+    },
+    {
+      "text": "IsInRange Success (range: ≥ 10 và ≤ 10, value: 10.01, expected: False)",
+      "marks": [
+        20
+      ]
+    },
+    {
+      "text": "IsInRange Success (range: ≥ 10 và ≤ 10, value: 9.99, expected: False)",
+      "marks": [
+        21
+      ]
+    },
+    {
+      "text": "IsInRange Success (range: ≥ 10 và ≤ 20, value: 10, expected: True)",
+      "marks": [
+        22
+      ]
+    },
+    {
+      "text": "IsInRange Success (range: ≥ 10 và ≤ 20, value: 10.01, expected: True)",
+      "marks": [
+        23
+      ]
+    },
+    {
+      "text": "IsInRange Success (range: ≥ 10 và ≤ 20, value: 15, expected: True)",
+      "marks": [
+        24
+      ]
+    },
+    {
+      "text": "IsInRange Success (range: ≥ 10 và ≤ 20, value: 19.99, expected: True)",
+      "marks": [
+        25
+      ]
+    },
+    {
+      "text": "IsInRange Success (range: ≥ 10 và ≤ 20, value: 20, expected: True)",
+      "marks": [
+        26
+      ]
+    },
+    {
+      "text": "IsInRange Success (range: ≥ 10 và ≤ 20, value: 20.01, expected: False)",
+      "marks": [
+        27
+      ]
+    },
+    {
+      "text": "IsInRange Success (range: ≥ 10 và ≤ 20, value: 9.99, expected: False)",
+      "marks": [
+        28
+      ]
+    },
+    {
+      "text": "IsRangeContained Success (range1: > 10 và < 10, range2: > 10 và ≤ 20, expected: True)",
+      "marks": [
+        29
+      ]
+    },
+    {
+      "text": "IsRangeContained Success (range1: > 10 và < 20, range2: > 10 và < 20, expected: True)",
+      "marks": [
+        30
+      ]
+    },
+    {
+      "text": "IsRangeContained Success (range1: > 10 và < 20, range2: ≥ 10 và ≤ 20, expected: True)",
+      "marks": [
+        31
+      ]
+    },
+    {
+      "text": "IsRangeContained Success (range1: > 10 và ≤ 20, range2: > 10 và ≤ 30, expected: True)",
+      "marks": [
+        32
+      ]
+    },
+    {
+      "text": "IsRangeContained Success (range1: > 10 và ≤ 20, range2: > 10.01 và ≤ 30, expected: False)",
+      "marks": [
+        33
+      ]
+    },
+    {
+      "text": "IsRangeContained Success (range1: > 10 và ≤ 20, range2: ≥ 10 và ≤ 30, expected: True)",
+      "marks": [
+        34
+      ]
+    },
+    {
+      "text": "IsRangeContained Success (range1: ≥ -20 và ≤ -10, range2: > -20 và ≤ -5, expected: False)",
+      "marks": [
+        35
+      ]
+    },
+    {
+      "text": "IsRangeContained Success (range1: ≥ -20 và ≤ -10, range2: ≥ -25 và < -10, expected: False)",
+      "marks": [
+        36
+      ]
+    },
+    {
+      "text": "IsRangeContained Success (range1: ≥ -20 và ≤ -10, range2: ≥ -25 và ≤ -5, expected: True)",
+      "marks": [
+        37
+      ]
+    },
+    {
+      "text": "IsRangeContained Success (range1: ≥ -79228162514264337593543950335, range2: ≥ -79228162514264337593543950335, expected: True)",
+      "marks": [
+        38
+      ]
+    },
+    {
+      "text": "IsRangeContained Success (range1: ≥ 10 và < 20, range2: ≥ 0 và < 20, expected: True)",
+      "marks": [
+        39
+      ]
+    },
+    {
+      "text": "IsRangeContained Success (range1: ≥ 10 và < 20, range2: ≥ 0 và ≤ 20, expected: True)",
+      "marks": [
+        40
+      ]
+    },
+    {
+      "text": "IsRangeContained Success (range1: ≥ 10 và ≤ 10, range2: > 10 và ≤ 20, expected: False)",
+      "marks": [
+        41
+      ]
+    },
+    {
+      "text": "IsRangeContained Success (range1: ≥ 10 và ≤ 10, range2: ≥ 10 và ≤ 20, expected: True)",
+      "marks": [
+        42
+      ]
+    },
+    {
+      "text": "IsRangeContained Success (range1: ≥ 10 và ≤ 19.99, range2: ≥ 0 và < 19.99, expected: False)",
+      "marks": [
+        43
+      ]
+    },
+    {
+      "text": "IsRangeContained Success (range1: ≥ 10 và ≤ 20, range2: > 10 và < 20, expected: False)",
+      "marks": [
+        44
+      ]
+    },
+    {
+      "text": "IsRangeContained Success (range1: ≥ 10 và ≤ 20, range2: > 10 và ≤ 30, expected: False)",
+      "marks": [
+        45
+      ]
+    },
+    {
+      "text": "IsRangeContained Success (range1: ≥ 10 và ≤ 20, range2: > 9.99 và ≤ 30, expected: True)",
+      "marks": [
+        46
+      ]
+    },
+    {
+      "text": "IsRangeContained Success (range1: ≥ 10 và ≤ 20, range2: ≥ 0 và < 20, expected: False)",
+      "marks": [
+        47
+      ]
+    },
+    {
+      "text": "IsRangeContained Success (range1: ≥ 10 và ≤ 20, range2: ≥ 0 và < 20.01, expected: True)",
+      "marks": [
+        48
+      ]
+    },
+    {
+      "text": "IsRangeContained Success (range1: ≥ 10 và ≤ 20, range2: ≥ 0 và ≤ 19.99, expected: False)",
+      "marks": [
+        49
+      ]
+    },
+    {
+      "text": "IsRangeContained Success (range1: ≥ 10 và ≤ 20, range2: ≥ 0 và ≤ 20, expected: True)",
+      "marks": [
+        50
+      ]
+    },
+    {
+      "text": "IsRangeContained Success (range1: ≥ 10 và ≤ 20, range2: ≥ 0 và ≤ 20.01, expected: True)",
+      "marks": [
+        51
+      ]
+    },
+    {
+      "text": "IsRangeContained Success (range1: ≥ 10 và ≤ 20, range2: ≥ 10 và ≤ 20, expected: True)",
+      "marks": [
+        52
+      ]
+    },
+    {
+      "text": "IsRangeContained Success (range1: ≥ 10 và ≤ 20, range2: ≥ 10 và ≤ 30, expected: True)",
+      "marks": [
+        53
+      ]
+    },
+    {
+      "text": "IsRangeContained Success (range1: ≥ 10 và ≤ 20, range2: ≥ 10.01 và ≤ 30, expected: False)",
+      "marks": [
+        54
+      ]
+    },
+    {
+      "text": "IsRangeContained Success (range1: ≥ 10 và ≤ 20, range2: ≥ 12 và ≤ 18, expected: False)",
+      "marks": [
+        55
+      ]
+    },
+    {
+      "text": "IsRangeContained Success (range1: ≥ 10 và ≤ 20, range2: ≥ 9.99 và ≤ 30, expected: True)",
+      "marks": [
+        56
+      ]
+    },
+    {
+      "text": "IsRangeContained Success (range1: ≥ 5 và ≤ 25, range2: ≥ 10 và ≤ 20, expected: False)",
+      "marks": [
+        57
+      ]
+    },
+    {
+      "text": "IsRangeOverlapped NullRange ReturnsFalse",
+      "marks": [
+        58
+      ]
+    },
+    {
+      "text": "IsRangeOverlapped Success (range1: > 10 và ≤ 20, range2: ≥ 1 và ≤ 10, expected: False)",
+      "marks": [
+        59
+      ]
+    },
+    {
+      "text": "IsRangeOverlapped Success (range1: ≥ 10 và < 20, range2: > 20 và ≤ 30, expected: False)",
+      "marks": [
+        60
+      ]
+    },
+    {
+      "text": "IsRangeOverlapped Success (range1: ≥ 10 và < 20, range2: ≥ 20 và ≤ 30, expected: False)",
+      "marks": [
+        61
+      ]
+    },
+    {
+      "text": "IsRangeOverlapped Success (range1: ≥ 10 và ≤ 10, range2: > 10 và < 10, expected: False)",
+      "marks": [
+        62
+      ]
+    },
+    {
+      "text": "IsRangeOverlapped Success (range1: ≥ 10 và ≤ 10, range2: ≥ 10 và ≤ 10, expected: True)",
+      "marks": [
+        63
+      ]
+    },
+    {
+      "text": "IsRangeOverlapped Success (range1: ≥ 10 và ≤ 10, range2: ≥ 20 và ≤ 20, expected: False)",
+      "marks": [
+        64
+      ]
+    },
+    {
+      "text": "IsRangeOverlapped Success (range1: ≥ 10 và ≤ 20, range2: > 20 và ≤ 30, expected: False)",
+      "marks": [
+        65
+      ]
+    },
+    {
+      "text": "IsRangeOverlapped Success (range1: ≥ 10 và ≤ 20, range2: ≥ 1 và < 10, expected: False)",
+      "marks": [
+        66
+      ]
+    },
+    {
+      "text": "IsRangeOverlapped Success (range1: ≥ 10 và ≤ 20, range2: ≥ 1 và ≤ 10, expected: True)",
+      "marks": [
+        67
+      ]
+    },
+    {
+      "text": "IsRangeOverlapped Success (range1: ≥ 10 và ≤ 20, range2: ≥ 1 và ≤ 5, expected: False)",
+      "marks": [
+        68
+      ]
+    },
+    {
+      "text": "IsRangeOverlapped Success (range1: ≥ 10 và ≤ 20, range2: ≥ 10 và ≤ 20, expected: True)",
+      "marks": [
+        69
+      ]
+    },
+    {
+      "text": "IsRangeOverlapped Success (range1: ≥ 10 và ≤ 20, range2: ≥ 12 và ≤ 18, expected: True)",
+      "marks": [
+        70
+      ]
+    },
+    {
+      "text": "IsRangeOverlapped Success (range1: ≥ 10 và ≤ 20, range2: ≥ 15 và ≤ 25, expected: True)",
+      "marks": [
+        71
+      ]
+    },
+    {
+      "text": "IsRangeOverlapped Success (range1: ≥ 10 và ≤ 20, range2: ≥ 20 và ≤ 30, expected: True)",
+      "marks": [
+        72
+      ]
+    },
+    {
+      "text": "IsRangeOverlapped Success (range1: ≥ 10 và ≤ 20, range2: ≥ 21 và ≤ 30, expected: False)",
+      "marks": [
+        73
+      ]
+    },
+    {
+      "text": "IsRangeOverlapped Success (range1: ≥ 10 và ≤ 20, range2: ≥ 5 và ≤ 25, expected: True)",
+      "marks": [
+        74
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "True when the value lies inside the range",
+      "marks": [
+        3,
+        4,
+        6,
+        8,
+        9,
+        10,
+        13,
+        14,
+        15,
+        16,
+        17,
+        19,
+        22,
+        23,
+        24,
+        25,
+        26
+      ]
+    },
+    {
+      "text": "False when the value lies outside the range",
+      "marks": [
+        1,
+        2,
+        5,
+        7,
+        11,
+        12,
+        18,
+        20,
+        21,
+        27,
+        28
+      ]
+    },
+    {
+      "text": "Overlap verdict for two ranges, honouring inclusive and exclusive bounds",
+      "marks": [
+        58,
+        59,
+        60,
+        61,
+        62,
+        63,
+        64,
+        65,
+        66,
+        67,
+        68,
+        69,
+        70,
+        71,
+        72,
+        73,
+        74
+      ]
+    },
+    {
+      "text": "Containment verdict for two ranges, honouring inclusive and exclusive bounds",
+      "marks": [
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57
+      ]
+    }
+  ],
+  "exception_text": "No unhandled exception; a null range simply returns false for overlap",
+  "exception_marks": [
+    58
+  ],
+  "cases": [
+    {
+      "method": "IsInRange_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IsInRange_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IsInRange_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IsInRange_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IsInRange_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IsInRange_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IsInRange_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IsInRange_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IsInRange_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IsInRange_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IsInRange_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IsInRange_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IsInRange_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IsInRange_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IsInRange_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IsInRange_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IsInRange_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IsInRange_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IsInRange_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IsInRange_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IsInRange_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IsInRange_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IsInRange_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IsInRange_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IsInRange_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IsInRange_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IsInRange_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IsInRange_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IsRangeContained_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IsRangeContained_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IsRangeContained_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IsRangeContained_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IsRangeContained_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IsRangeContained_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IsRangeContained_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IsRangeContained_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IsRangeContained_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IsRangeContained_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IsRangeContained_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IsRangeContained_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IsRangeContained_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IsRangeContained_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IsRangeContained_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IsRangeContained_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IsRangeContained_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IsRangeContained_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IsRangeContained_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IsRangeContained_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IsRangeContained_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IsRangeContained_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IsRangeContained_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IsRangeContained_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IsRangeContained_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IsRangeContained_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IsRangeContained_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IsRangeContained_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IsRangeContained_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IsRangeOverlapped_NullRange_ReturnsFalse",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "IsRangeOverlapped_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IsRangeOverlapped_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IsRangeOverlapped_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IsRangeOverlapped_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IsRangeOverlapped_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IsRangeOverlapped_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IsRangeOverlapped_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IsRangeOverlapped_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IsRangeOverlapped_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IsRangeOverlapped_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IsRangeOverlapped_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IsRangeOverlapped_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IsRangeOverlapped_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IsRangeOverlapped_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IsRangeOverlapped_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IsRangeOverlapped_Success",
+      "type": "N",
+      "result": "P"
+    }
+  ]
+}

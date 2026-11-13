@@ -1,0 +1,291 @@
+{
+  "function_code": "GetPagedDoctorHandler.HandleAsync",
+  "sheet_name": "GetPagedDoctorHandler",
+  "lines_of_code": 114,
+  "requirement": "Return a paged doctor directory: filter doctors and head doctors by role, gender, academic title, and position, order by CreatedAt descending then id, page the combined projection, enrich account/media data, and wrap the page metadata and items in a Pagination.",
+  "preconditions": [
+    {
+      "text": "Doctors and head doctors are seeded in the database",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17
+      ]
+    },
+    {
+      "text": "The query carries a pagination parameter and an optional filter",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17
+      ]
+    },
+    {
+      "text": "No rows match or the requested page is past the end",
+      "marks": [
+        6,
+        10,
+        17
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "HandleAsync_ExcludesSoftDeletedProfiles",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "HandleAsync_OrdersByCreatedAtDescending",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "HandleAsync_PassesThePagedProfilesToTheEnricher",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "HandleAsync_ReturnsSuccessStatusCode",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "HandleAsync_WithAcademicTitleFilter_ReturnsOnlyMatchingAcademicTitle",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "HandleAsync_WithFilterMatchingNothing_ReturnsEmptyItems",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "HandleAsync_WithFirstPageOfFiveRows_ReturnsNextPageAndPageCount",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "HandleAsync_WithGenderFilter_ReturnsOnlyMatchingGender",
+      "marks": [
+        8
+      ]
+    },
+    {
+      "text": "HandleAsync_WithLastPage_ReturnsPreviousPageAndNoNextPage",
+      "marks": [
+        9
+      ]
+    },
+    {
+      "text": "HandleAsync_WithPageBeyondRange_ReturnsEmptyItems",
+      "marks": [
+        10
+      ]
+    },
+    {
+      "text": "HandleAsync_WithPositionFilter_ReturnsOnlyMatchingPosition",
+      "marks": [
+        11
+      ]
+    },
+    {
+      "text": "HandleAsync_WithRoleAndGenderFilter_ReturnsMatchingCombination",
+      "marks": [
+        12
+      ]
+    },
+    {
+      "text": "HandleAsync_WithRoleDoctor_ReturnsOnlyDoctors",
+      "marks": [
+        13
+      ]
+    },
+    {
+      "text": "HandleAsync_WithRoleHeadDepartmentDoctor_ReturnsOnlyHeadDepartmentDoctors",
+      "marks": [
+        14
+      ]
+    },
+    {
+      "text": "HandleAsync_WithSameCreatedAt_OrdersByIdAscending",
+      "marks": [
+        15
+      ]
+    },
+    {
+      "text": "HandleAsync_WithoutRoleFilter_ReturnsDoctorsAndHeadDepartmentDoctors",
+      "marks": [
+        16
+      ]
+    },
+    {
+      "text": "HandleAsync_WithoutRows_ReturnsEmptyItemsAndZeroMetadata",
+      "marks": [
+        17
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "Role, gender, academic-title, and position filters select only matching profiles",
+      "marks": [
+        5,
+        8,
+        11,
+        12,
+        13,
+        14,
+        16
+      ]
+    },
+    {
+      "text": "Profiles are ordered by CreatedAt descending and then id ascending",
+      "marks": [
+        2,
+        15
+      ]
+    },
+    {
+      "text": "Page metadata reports next/previous/page-count correctly, including empty and out-of-range pages",
+      "marks": [
+        6,
+        7,
+        9,
+        10,
+        17
+      ]
+    },
+    {
+      "text": "Soft-deleted profiles are excluded and the page is passed to the enricher",
+      "marks": [
+        1,
+        3
+      ]
+    }
+  ],
+  "exception_text": "No unhandled exception; empty or out-of-range pages return an empty item set",
+  "exception_marks": [],
+  "cases": [
+    {
+      "method": "HandleAsync_ExcludesSoftDeletedProfiles",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_OrdersByCreatedAtDescending",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_PassesThePagedProfilesToTheEnricher",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_ReturnsSuccessStatusCode",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithAcademicTitleFilter_ReturnsOnlyMatchingAcademicTitle",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithFilterMatchingNothing_ReturnsEmptyItems",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithFirstPageOfFiveRows_ReturnsNextPageAndPageCount",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithGenderFilter_ReturnsOnlyMatchingGender",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithLastPage_ReturnsPreviousPageAndNoNextPage",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithPageBeyondRange_ReturnsEmptyItems",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithPositionFilter_ReturnsOnlyMatchingPosition",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithRoleAndGenderFilter_ReturnsMatchingCombination",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithRoleDoctor_ReturnsOnlyDoctors",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithRoleHeadDepartmentDoctor_ReturnsOnlyHeadDepartmentDoctors",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithSameCreatedAt_OrdersByIdAscending",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithoutRoleFilter_ReturnsDoctorsAndHeadDepartmentDoctors",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithoutRows_ReturnsEmptyItemsAndZeroMetadata",
+      "type": "A",
+      "result": "P"
+    }
+  ]
+}

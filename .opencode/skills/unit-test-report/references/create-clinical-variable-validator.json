@@ -1,0 +1,539 @@
+{
+  "function_code": "CreateClinicalVariableValidator.Validate",
+  "sheet_name": "CreateClinicalVariableValidator",
+  "lines_of_code": 57,
+  "requirement": "Validate a create-clinical-variable command: code, name, and description must be non-empty, the value type and category must be defined enum members, ranges must satisfy the shared range rules and belong only to numeric variables, categorical variables need non-empty accepted values, and the optional prerequisite must be one valid formula.",
+  "preconditions": [
+    {
+      "text": "Validation runs on an in-memory command without database access",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34
+      ]
+    },
+    {
+      "text": "A numeric variable carries the ranges seeded for the case",
+      "marks": [
+        1,
+        12,
+        13,
+        16,
+        17,
+        21,
+        34
+      ]
+    },
+    {
+      "text": "A prerequisite formula is supplied and must satisfy the formula rules",
+      "marks": [
+        4,
+        18,
+        19,
+        20,
+        22,
+        30,
+        33
+      ]
+    },
+    {
+      "text": "A categorical variable carries the accepted values seeded for the case",
+      "marks": [
+        14,
+        27,
+        32
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "Accepted range with an unbounded upper limit (decimal.MaxValue)",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "Empty code",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "Whitespace-only code",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "Prerequisite referencing Guid.Empty as the variable",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "Category 999 (outside every defined member)",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "Accepted range with an empty unit",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "Accepted range with a whitespace-only unit",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "Empty description",
+      "marks": [
+        8
+      ]
+    },
+    {
+      "text": "Whitespace-only description",
+      "marks": [
+        9
+      ]
+    },
+    {
+      "text": "Normal range with an empty unit",
+      "marks": [
+        10
+      ]
+    },
+    {
+      "text": "Normal range with a whitespace-only unit",
+      "marks": [
+        11
+      ]
+    },
+    {
+      "text": "Exclusive range bounds with min below max",
+      "marks": [
+        12
+      ]
+    },
+    {
+      "text": "Normal range with min greater than max",
+      "marks": [
+        13
+      ]
+    },
+    {
+      "text": "Categorical variable with an empty accepted value",
+      "marks": [
+        14
+      ]
+    },
+    {
+      "text": "Value type 999 (outside every defined member)",
+      "marks": [
+        15
+      ]
+    },
+    {
+      "text": "Range without a unit (unit is optional)",
+      "marks": [
+        16
+      ]
+    },
+    {
+      "text": "Accepted range with min greater than max",
+      "marks": [
+        17
+      ]
+    },
+    {
+      "text": "Boolean variable with a bare variable prerequisite",
+      "marks": [
+        18
+      ]
+    },
+    {
+      "text": "Boolean variable with a binary formula prerequisite",
+      "marks": [
+        19
+      ]
+    },
+    {
+      "text": "Empty prerequisite formula",
+      "marks": [
+        20
+      ]
+    },
+    {
+      "text": "Numeric variable whose normal range sits inside the accepted range",
+      "marks": [
+        21
+      ]
+    },
+    {
+      "text": "Prerequisite whose nested formula is empty",
+      "marks": [
+        22
+      ]
+    },
+    {
+      "text": "Empty name",
+      "marks": [
+        23
+      ]
+    },
+    {
+      "text": "Whitespace-only name",
+      "marks": [
+        24
+      ]
+    },
+    {
+      "text": "Numeric value type with the Paraclinical category",
+      "marks": [
+        25
+      ]
+    },
+    {
+      "text": "Boolean value type with the PersonalInformation category",
+      "marks": [
+        26
+      ]
+    },
+    {
+      "text": "Categorical value type with the Clinical category",
+      "marks": [
+        27
+      ]
+    },
+    {
+      "text": "Boolean variable carrying a normal range",
+      "marks": [
+        28
+      ]
+    },
+    {
+      "text": "Categorical variable carrying a normal range",
+      "marks": [
+        29
+      ]
+    },
+    {
+      "text": "Prerequisite binary formula with operator 999",
+      "marks": [
+        30
+      ]
+    },
+    {
+      "text": "Numeric variable without an accepted range",
+      "marks": [
+        31
+      ]
+    },
+    {
+      "text": "Categorical variable without accepted values",
+      "marks": [
+        32
+      ]
+    },
+    {
+      "text": "Prerequisite formula mixing constant and binary shapes",
+      "marks": [
+        33
+      ]
+    },
+    {
+      "text": "Ranges with min equal to max (degenerate boundaries)",
+      "marks": [
+        34
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "No validation errors",
+      "marks": [
+        12,
+        18,
+        19,
+        21,
+        25,
+        26,
+        27
+      ]
+    },
+    {
+      "text": "Single validation error reported on Code, Name, or Description",
+      "marks": [
+        2,
+        3,
+        8,
+        9,
+        23,
+        24
+      ]
+    },
+    {
+      "text": "Single validation error reported on ValueType or Category",
+      "marks": [
+        5,
+        15
+      ]
+    },
+    {
+      "text": "Single validation error for a range rule (missing, unit, or min/max order)",
+      "marks": [
+        6,
+        7,
+        10,
+        11,
+        13,
+        17,
+        31
+      ]
+    },
+    {
+      "text": "Single validation error for the categorical or prerequisite rules",
+      "marks": [
+        4,
+        14,
+        20,
+        22,
+        30,
+        32
+      ]
+    }
+  ],
+  "exception_text": "No unhandled exception; invalid input is reported as validation errors",
+  "exception_marks": [
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    13,
+    14,
+    15,
+    17,
+    20,
+    22,
+    23,
+    24,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33
+  ],
+  "cases": [
+    {
+      "method": "CreateClinicalVariable_UnboundedUpperAcceptedRange_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "CreateClinicalVariable_EmptyCode_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CreateClinicalVariable_EmptyCode_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CreateClinicalVariable_EmptyGuidPrerequisiteVariable_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CreateClinicalVariable_CategoryNotInEnum_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CreateClinicalVariable_AcceptedRangeEmptyUnit_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CreateClinicalVariable_AcceptedRangeEmptyUnit_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CreateClinicalVariable_EmptyDescription_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CreateClinicalVariable_EmptyDescription_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CreateClinicalVariable_NormalRangeEmptyUnit_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CreateClinicalVariable_NormalRangeEmptyUnit_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CreateClinicalVariable_ExclusiveRangeBounds_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "CreateClinicalVariable_NormalRangeMinGreaterThanMax_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CreateClinicalVariable_CategoricalWithEmptyAcceptedValue_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CreateClinicalVariable_ValueTypeNotInEnum_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CreateClinicalVariable_NullRangeUnit_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "CreateClinicalVariable_AcceptedRangeMinGreaterThanMax_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CreateClinicalVariable_VariablePrerequisite_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "CreateClinicalVariable_BinaryPrerequisite_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "CreateClinicalVariable_EmptyPrerequisite_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CreateClinicalVariable_NumericWithNormalRangeInsideAcceptedRange_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "CreateClinicalVariable_EmptyNestedPrerequisite_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CreateClinicalVariable_EmptyName_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CreateClinicalVariable_EmptyName_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CreateClinicalVariable_ValidValueTypeAndCategory_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "CreateClinicalVariable_ValidValueTypeAndCategory_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "CreateClinicalVariable_ValidValueTypeAndCategory_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "CreateClinicalVariable_NonNumericWithNormalRange_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CreateClinicalVariable_NonNumericWithNormalRange_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CreateClinicalVariable_PrerequisiteOperatorNotInEnum_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CreateClinicalVariable_NumericWithoutAcceptedRange_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CreateClinicalVariable_CategoricalWithoutAcceptedValues_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CreateClinicalVariable_MixedShapePrerequisite_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CreateClinicalVariable_DegenerateRangeBoundaries_Success",
+      "type": "B",
+      "result": "P"
+    }
+  ]
+}

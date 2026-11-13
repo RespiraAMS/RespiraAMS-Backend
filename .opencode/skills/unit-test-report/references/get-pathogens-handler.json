@@ -1,0 +1,95 @@
+{
+  "function_code": "GetPathogensHandler.HandleAsync",
+  "sheet_name": "GetPathogensHandler",
+  "lines_of_code": 25,
+  "requirement": "Return every live pathogen as an id and name item, sorted by name ascending and read without tracking; soft-deleted pathogens are excluded by the query filter.",
+  "preconditions": [
+    {
+      "text": "The pathogen table contains the rows seeded for the case",
+      "marks": [
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "text": "One of the seeded pathogens is soft-deleted",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "The pathogen table is empty",
+      "marks": [
+        3
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "Query with no parameters over pathogens inserted out of order",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "Query with no parameters over live pathogens plus a soft-deleted one",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "Query with no parameters on an empty database",
+      "marks": [
+        3
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "Success with the pathogen list projected as id and name pairs",
+      "marks": [
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "text": "Pathogens sorted by name ascending",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "Soft-deleted pathogens are excluded",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "An empty list is returned when no live pathogen exists",
+      "marks": [
+        3
+      ]
+    }
+  ],
+  "exception_text": "No unhandled exception; the read-only query has no failure branch",
+  "exception_marks": [],
+  "cases": [
+    {
+      "method": "GetPathogens_EmptyDatabase_ReturnsEmpty",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "GetPathogens_ReturnsAllSortedByNameAscending_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "GetPathogens_ExcludesSoftDeletedPathogens_Success",
+      "type": "N",
+      "result": "P"
+    }
+  ]
+}

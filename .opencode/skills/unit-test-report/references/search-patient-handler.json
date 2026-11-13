@@ -1,0 +1,426 @@
+{
+  "function_code": "SearchPatientHandler.HandleAsync",
+  "sheet_name": "SearchPatientHandler",
+  "lines_of_code": 53,
+  "requirement": "Full-text search patients: build a prefix tsquery from the search term, short-circuit to an empty first page when the term has no usable lexeme, rank first-name matches above last-name matches above medical-record-code matches, project the summary, and return the requested page.",
+  "preconditions": [
+    {
+      "text": "The patient table contains the rows seeded for the case",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26
+      ]
+    },
+    {
+      "text": "The search term yields at least one usable lexeme",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        25,
+        26
+      ]
+    },
+    {
+      "text": "The term only matches a soft-deleted patient or nothing at all",
+      "marks": [
+        20,
+        26
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "SearchPatient AccentFoldedTerm MatchesVietnameseData Success (searchTerm: \"dang\", expectedFullName: \"Đặng Thị Minh Khuê\")",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "SearchPatient AccentFoldedTerm MatchesVietnameseData Success (searchTerm: \"huong\", expectedFullName: \"Phạm Thị Hương\")",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "SearchPatient AccentFoldedTerm MatchesVietnameseData Success (searchTerm: \"hương\", expectedFullName: \"Phạm Thị Hương\")",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "SearchPatient AccentFoldedTerm MatchesVietnameseData Success (searchTerm: \"đặng\", expectedFullName: \"Đặng Thị Minh Khuê\")",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "SearchPatient FirstNameMatchOutranksLastNameMatch Success",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "SearchPatient FirstPage SplitsMatchesWithMetadata Success",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "SearchPatient LastPage HasNoNext Success",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "SearchPatient MatchOnMedicalRecordCode ReturnsPatient Success",
+      "marks": [
+        8
+      ]
+    },
+    {
+      "text": "SearchPatient MaximumPageSize ReturnsAllMatchesInOnePage Success",
+      "marks": [
+        9
+      ]
+    },
+    {
+      "text": "SearchPatient MinimumPageSize ReturnsOneItemPerPage Success",
+      "marks": [
+        10
+      ]
+    },
+    {
+      "text": "SearchPatient MultiWordTerm RequiresEveryWordInLastName Success",
+      "marks": [
+        11
+      ]
+    },
+    {
+      "text": "SearchPatient NoUsableLexeme ReturnsEmptyPage Success (searchTerm: \"a b\")",
+      "marks": [
+        12
+      ]
+    },
+    {
+      "text": "SearchPatient NoUsableLexeme ReturnsEmptyPage Success (searchTerm: \"x y z\")",
+      "marks": [
+        13
+      ]
+    },
+    {
+      "text": "SearchPatient PrefixMatchOnFirstName ReturnsFullProjection Success",
+      "marks": [
+        14
+      ]
+    },
+    {
+      "text": "SearchPatient PrefixTerm MatchesSamePatient Success (searchTerm: \"Tùng\")",
+      "marks": [
+        15
+      ]
+    },
+    {
+      "text": "SearchPatient PrefixTerm MatchesSamePatient Success (searchTerm: \"tung\")",
+      "marks": [
+        16
+      ]
+    },
+    {
+      "text": "SearchPatient PrefixTerm MatchesSamePatient Success (searchTerm: \"tù\")",
+      "marks": [
+        17
+      ]
+    },
+    {
+      "text": "SearchPatient PrefixTerm MatchesSamePatient Success (searchTerm: \"tùng\")",
+      "marks": [
+        18
+      ]
+    },
+    {
+      "text": "SearchPatient SameTermInDifferentFields RanksFirstNameAboveLastNameAboveCode Success",
+      "marks": [
+        19
+      ]
+    },
+    {
+      "text": "SearchPatient SoftDeletedPatient IsExcluded Success",
+      "marks": [
+        20
+      ]
+    },
+    {
+      "text": "SearchPatient SymbolOnlyTerm ReturnsEmptyPage Success (searchTerm: \"!!\")",
+      "marks": [
+        21
+      ]
+    },
+    {
+      "text": "SearchPatient SymbolOnlyTerm ReturnsEmptyPage Success (searchTerm: \"&&\")",
+      "marks": [
+        22
+      ]
+    },
+    {
+      "text": "SearchPatient SymbolOnlyTerm ReturnsEmptyPage Success (searchTerm: \"((\")",
+      "marks": [
+        23
+      ]
+    },
+    {
+      "text": "SearchPatient SymbolOnlyTerm ReturnsEmptyPage Success (searchTerm: \"||\")",
+      "marks": [
+        24
+      ]
+    },
+    {
+      "text": "SearchPatient TermIsInsideNameButNotPrefix ReturnsEmptyPage Success",
+      "marks": [
+        25
+      ]
+    },
+    {
+      "text": "SearchPatient TermMatchesNothing ReturnsEmptyPage Success",
+      "marks": [
+        26
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "Success with the requested page and its metadata",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ]
+    },
+    {
+      "text": "First-name matches outrank last-name matches, which outrank code matches",
+      "marks": [
+        5,
+        19
+      ]
+    },
+    {
+      "text": "Accent folding and prefix matching find the same patient",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        15,
+        16,
+        17,
+        18
+      ]
+    },
+    {
+      "text": "Prefix-only matching, so infix terms never match",
+      "marks": [
+        25
+      ]
+    },
+    {
+      "text": "Empty page with zero total items",
+      "marks": [
+        12,
+        13,
+        20,
+        21,
+        22,
+        23,
+        24,
+        26
+      ]
+    }
+  ],
+  "exception_text": "No unhandled exception; the handler has no failure branch and always returns success",
+  "exception_marks": [],
+  "cases": [
+    {
+      "method": "SearchPatient_AccentFoldedTerm_MatchesVietnameseData_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SearchPatient_AccentFoldedTerm_MatchesVietnameseData_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SearchPatient_AccentFoldedTerm_MatchesVietnameseData_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SearchPatient_AccentFoldedTerm_MatchesVietnameseData_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SearchPatient_FirstNameMatchOutranksLastNameMatch_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SearchPatient_FirstPage_SplitsMatchesWithMetadata_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SearchPatient_LastPage_HasNoNext_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "SearchPatient_MatchOnMedicalRecordCode_ReturnsPatient_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SearchPatient_MaximumPageSize_ReturnsAllMatchesInOnePage_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "SearchPatient_MinimumPageSize_ReturnsOneItemPerPage_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "SearchPatient_MultiWordTerm_RequiresEveryWordInLastName_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SearchPatient_NoUsableLexeme_ReturnsEmptyPage_Success",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SearchPatient_NoUsableLexeme_ReturnsEmptyPage_Success",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SearchPatient_PrefixMatchOnFirstName_ReturnsFullProjection_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SearchPatient_PrefixTerm_MatchesSamePatient_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "SearchPatient_PrefixTerm_MatchesSamePatient_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "SearchPatient_PrefixTerm_MatchesSamePatient_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "SearchPatient_PrefixTerm_MatchesSamePatient_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SearchPatient_SameTermInDifferentFields_RanksFirstNameAboveLastNameAboveCode_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SearchPatient_SoftDeletedPatient_IsExcluded_Success",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SearchPatient_SymbolOnlyTerm_ReturnsEmptyPage_Success",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SearchPatient_SymbolOnlyTerm_ReturnsEmptyPage_Success",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SearchPatient_SymbolOnlyTerm_ReturnsEmptyPage_Success",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SearchPatient_SymbolOnlyTerm_ReturnsEmptyPage_Success",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SearchPatient_TermIsInsideNameButNotPrefix_ReturnsEmptyPage_Success",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SearchPatient_TermMatchesNothing_ReturnsEmptyPage_Success",
+      "type": "A",
+      "result": "P"
+    }
+  ]
+}

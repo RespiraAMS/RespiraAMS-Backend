@@ -1,0 +1,2860 @@
+{
+  "function_code": "DiagnoseService.Diagnose",
+  "sheet_name": "DiagnoseService",
+  "lines_of_code": 873,
+  "requirement": "Run the clinical diagnosis: validate the observation set against the clinical variables, assess severity and infection site from the metrics and risk factors, compute the eGFR when creatinine/age/gender are known, simulate the microbiological test against the antibiograms, and recommend the applicable treatment protocols.",
+  "preconditions": [
+    {
+      "text": "The clinical context (variables, pathogens, metrics, antibiograms, protocols) is built for the case",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60,
+        61,
+        62,
+        63,
+        64,
+        65,
+        66,
+        67,
+        68,
+        69,
+        70,
+        71,
+        72,
+        73,
+        74,
+        75,
+        76,
+        77,
+        78,
+        79,
+        80,
+        81,
+        82,
+        83,
+        84,
+        85,
+        86,
+        87,
+        88,
+        89,
+        90,
+        91,
+        92,
+        93,
+        94,
+        95,
+        96,
+        97,
+        98,
+        99,
+        100,
+        101,
+        102,
+        103,
+        104,
+        105,
+        106,
+        107,
+        108,
+        109,
+        110,
+        111,
+        112,
+        113,
+        114,
+        115,
+        116,
+        117,
+        118,
+        119,
+        120,
+        121,
+        122,
+        123,
+        124,
+        125,
+        126,
+        127,
+        128,
+        129,
+        130,
+        131,
+        132,
+        133,
+        134,
+        135,
+        136,
+        137,
+        138,
+        139,
+        140,
+        141,
+        142,
+        143,
+        144,
+        145,
+        146,
+        147,
+        148,
+        149,
+        150,
+        151,
+        152,
+        153,
+        154,
+        155,
+        156,
+        157,
+        158,
+        159,
+        160,
+        161,
+        162,
+        163,
+        164,
+        165,
+        166,
+        167,
+        168,
+        169,
+        170,
+        171,
+        172,
+        173,
+        174,
+        175,
+        176,
+        177,
+        178,
+        179,
+        180,
+        181,
+        182,
+        183,
+        184,
+        185,
+        186,
+        187,
+        188,
+        189,
+        190,
+        191,
+        192,
+        193,
+        194
+      ]
+    },
+    {
+      "text": "The observation set satisfies the required variables and value types",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        16,
+        17,
+        18,
+        19,
+        21,
+        22,
+        23,
+        28,
+        29,
+        30,
+        31,
+        32,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        54,
+        55,
+        57,
+        58,
+        59,
+        61,
+        62,
+        63,
+        67,
+        68,
+        69,
+        70,
+        71,
+        73,
+        75,
+        76,
+        77,
+        78,
+        79,
+        80,
+        81,
+        84,
+        85,
+        86,
+        87,
+        88,
+        93,
+        94,
+        95,
+        96,
+        97,
+        98,
+        99,
+        100,
+        101,
+        102,
+        106,
+        107,
+        108,
+        109,
+        110,
+        111,
+        112,
+        113,
+        114,
+        115,
+        116,
+        117,
+        118,
+        119,
+        120,
+        121,
+        122,
+        123,
+        124,
+        125,
+        126,
+        127,
+        128,
+        129,
+        130,
+        131,
+        133,
+        134,
+        135,
+        137,
+        138,
+        139,
+        140,
+        144,
+        145,
+        146,
+        147,
+        148,
+        149,
+        150,
+        151,
+        152,
+        164,
+        165,
+        166,
+        167,
+        168,
+        169,
+        170,
+        171,
+        172,
+        173,
+        174,
+        175,
+        189,
+        190,
+        191,
+        193,
+        194
+      ]
+    },
+    {
+      "text": "An observation, score input, or metric prerequisite is invalid",
+      "marks": [
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        20,
+        24,
+        25,
+        26,
+        27,
+        33,
+        34,
+        35,
+        36,
+        44,
+        51,
+        52,
+        53,
+        56,
+        60,
+        64,
+        65,
+        66,
+        72,
+        74,
+        82,
+        83,
+        89,
+        90,
+        91,
+        92,
+        103,
+        104,
+        105,
+        132,
+        136,
+        141,
+        142,
+        143,
+        153,
+        154,
+        155,
+        156,
+        157,
+        158,
+        159,
+        160,
+        161,
+        162,
+        163,
+        176,
+        177,
+        178,
+        179,
+        180,
+        181,
+        182,
+        183,
+        184,
+        185,
+        186,
+        187,
+        188,
+        192
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "AssessInfection NoRiskFactor Success (severity: Mild, treatmentSite: Outpatient)",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "AssessInfection NoRiskFactor Success (severity: Moderate, treatmentSite: Inpatient)",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "AssessInfection NoRiskFactor Success (severity: Severe, treatmentSite: Inpatient)",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "AssessInfection NoRiskFactor Success (severity: Severe, treatmentSite: IntensiveCareUnit)",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "AssessInfection WithRiskFactor NotInSuspected Success (observations: [ClinicalObservation { Variable = Respira.Clinical.Domain.Entities.BooleanClin...)",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "AssessInfection WithRiskFactor NotInSuspected Success (observations: [ClinicalObservation { Variable = Respira.Clinical.Domain.Entities.BooleanClin...)",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "AssessInfection WithRiskFactor NotInSuspected Success (observations: [ClinicalObservation { Variable = Respira.Clinical.Domain.Entities.BooleanClin...)",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "AssessInfection WithRiskFactor NotInSuspected Success (observations: [ClinicalObservation { Variable = Respira.Clinical.Domain.Entities.NumericClin...)",
+      "marks": [
+        8
+      ]
+    },
+    {
+      "text": "AssessInfection WithRiskFactor ScoreBelow50 NotReturn",
+      "marks": [
+        9
+      ]
+    },
+    {
+      "text": "CalculateEgfr InvalidAge Throws (age: -1)",
+      "marks": [
+        10
+      ]
+    },
+    {
+      "text": "CalculateEgfr InvalidAge Throws (age: -100)",
+      "marks": [
+        11
+      ]
+    },
+    {
+      "text": "CalculateEgfr InvalidAge Throws (age: 0)",
+      "marks": [
+        12
+      ]
+    },
+    {
+      "text": "CalculateEgfr InvalidScr Throws (scr: -1)",
+      "marks": [
+        13
+      ]
+    },
+    {
+      "text": "CalculateEgfr InvalidScr Throws (scr: -10.5)",
+      "marks": [
+        14
+      ]
+    },
+    {
+      "text": "CalculateEgfr InvalidScr Throws (scr: 0)",
+      "marks": [
+        15
+      ]
+    },
+    {
+      "text": "CalculateEgfr Success (age: 17, scr: 89, isFemale: False, isBlackAmerican: True, expected: 118.40000000000001)",
+      "marks": [
+        16
+      ]
+    },
+    {
+      "text": "CalculateEgfr Success (age: 30, scr: 115, isFemale: True, isBlackAmerican: False, expected: 48.100000000000001)",
+      "marks": [
+        17
+      ]
+    },
+    {
+      "text": "CalculateEgfr Success (age: 60, scr: 62, isFemale: True, isBlackAmerican: True, expected: 103.2)",
+      "marks": [
+        18
+      ]
+    },
+    {
+      "text": "CalculateEgfr Success (age: 80, scr: 200, isFemale: False, isBlackAmerican: False, expected: 28)",
+      "marks": [
+        19
+      ]
+    },
+    {
+      "text": "CalculateMetricsScore MajorMinorMetric Throw",
+      "marks": [
+        20
+      ]
+    },
+    {
+      "text": "CalculateMetricsScore Success (metricCode: \"CURB-65\", observations: [ClinicalObservation { Variable = Respira.Clinical.Doma...)",
+      "marks": [
+        21
+      ]
+    },
+    {
+      "text": "CalculateMetricsScore Success (metricCode: \"CURB-65\", observations: [ClinicalObservation { Variable = Respira.Clinical.Doma...)",
+      "marks": [
+        22
+      ]
+    },
+    {
+      "text": "CalculateMetricsScore Success (metricCode: \"PSI\", observations: [ClinicalObservation { Variable = Respira.Clinical.Domain.E...)",
+      "marks": [
+        23
+      ]
+    },
+    {
+      "text": "Crb65 InvalidScore Negative Throw (score: -1)",
+      "marks": [
+        24
+      ]
+    },
+    {
+      "text": "Crb65 InvalidScore Negative Throw (score: -10)",
+      "marks": [
+        25
+      ]
+    },
+    {
+      "text": "Crb65 InvalidScore UnexpectedValue Throw (score: 100)",
+      "marks": [
+        26
+      ]
+    },
+    {
+      "text": "Crb65 InvalidScore UnexpectedValue Throw (score: 5)",
+      "marks": [
+        27
+      ]
+    },
+    {
+      "text": "Crb65 Success (score: 0, severity: Mild, treatmentSite: Outpatient)",
+      "marks": [
+        28
+      ]
+    },
+    {
+      "text": "Crb65 Success (score: 1, severity: Moderate, treatmentSite: Inpatient)",
+      "marks": [
+        29
+      ]
+    },
+    {
+      "text": "Crb65 Success (score: 2, severity: Moderate, treatmentSite: Inpatient)",
+      "marks": [
+        30
+      ]
+    },
+    {
+      "text": "Crb65 Success (score: 3, severity: Severe, treatmentSite: Inpatient)",
+      "marks": [
+        31
+      ]
+    },
+    {
+      "text": "Crb65 Success (score: 4, severity: Severe, treatmentSite: IntensiveCareUnit)",
+      "marks": [
+        32
+      ]
+    },
+    {
+      "text": "Curb65 InvalidScore Negative Throw (score: -1)",
+      "marks": [
+        33
+      ]
+    },
+    {
+      "text": "Curb65 InvalidScore Negative Throw (score: -10)",
+      "marks": [
+        34
+      ]
+    },
+    {
+      "text": "Curb65 InvalidScore UnexpectedValue Throw (score: 200)",
+      "marks": [
+        35
+      ]
+    },
+    {
+      "text": "Curb65 InvalidScore UnexpectedValue Throw (score: 6)",
+      "marks": [
+        36
+      ]
+    },
+    {
+      "text": "Curb65 Success (score: 0, severity: Mild, treatmentSite: Outpatient)",
+      "marks": [
+        37
+      ]
+    },
+    {
+      "text": "Curb65 Success (score: 1, severity: Mild, treatmentSite: Outpatient)",
+      "marks": [
+        38
+      ]
+    },
+    {
+      "text": "Curb65 Success (score: 2, severity: Moderate, treatmentSite: Inpatient)",
+      "marks": [
+        39
+      ]
+    },
+    {
+      "text": "Curb65 Success (score: 3, severity: Severe, treatmentSite: Inpatient)",
+      "marks": [
+        40
+      ]
+    },
+    {
+      "text": "Curb65 Success (score: 4, severity: Severe, treatmentSite: IntensiveCareUnit)",
+      "marks": [
+        41
+      ]
+    },
+    {
+      "text": "Curb65 Success (score: 5, severity: Severe, treatmentSite: IntensiveCareUnit)",
+      "marks": [
+        42
+      ]
+    },
+    {
+      "text": "Diagnose AllMetricsAgreeMild Success",
+      "marks": [
+        43
+      ]
+    },
+    {
+      "text": "Diagnose AllVariablesProvided NoMissingVariables Success",
+      "marks": [
+        44
+      ]
+    },
+    {
+      "text": "Diagnose CriticalRiskFactor HeavySuspectedAndRemovedFromWorth Success",
+      "marks": [
+        45
+      ]
+    },
+    {
+      "text": "Diagnose EvidencesContainEveryMetricRuleAndRiskFactor Success",
+      "marks": [
+        46
+      ]
+    },
+    {
+      "text": "Diagnose HeavySuspectedPathogenNotInWorthList Success",
+      "marks": [
+        47
+      ]
+    },
+    {
+      "text": "Diagnose IdsaAtsMajorCriterion SelectsIcu Success",
+      "marks": [
+        48
+      ]
+    },
+    {
+      "text": "Diagnose IdsaAtsThreeMinorCriteria SelectsIcu Success",
+      "marks": [
+        49
+      ]
+    },
+    {
+      "text": "Diagnose MetricsDisagree SelectsHighestSeverity Success",
+      "marks": [
+        50
+      ]
+    },
+    {
+      "text": "Diagnose NoMetrics Failure",
+      "marks": [
+        51
+      ]
+    },
+    {
+      "text": "Diagnose NoRiskFactor WorthSuspectedNotEmpty Success",
+      "marks": [
+        52
+      ]
+    },
+    {
+      "text": "Diagnose NoSupportedMetric Failure",
+      "marks": [
+        53
+      ]
+    },
+    {
+      "text": "Diagnose NonCriticalRiskFactorsAtThreshold HeavySuspected Success",
+      "marks": [
+        54
+      ]
+    },
+    {
+      "text": "Diagnose NonCriticalRiskFactorsBelowThreshold NotHeavySuspected Success",
+      "marks": [
+        55
+      ]
+    },
+    {
+      "text": "Diagnose OptionalVariablesMissing ReportsMissingVariables Success",
+      "marks": [
+        56
+      ]
+    },
+    {
+      "text": "Diagnose PregnancyStatus Success (gender: \"FEMALE\", pregnant: False, expected: False)",
+      "marks": [
+        57
+      ]
+    },
+    {
+      "text": "Diagnose PregnancyStatus Success (gender: \"FEMALE\", pregnant: True, expected: True)",
+      "marks": [
+        58
+      ]
+    },
+    {
+      "text": "Diagnose PregnancyStatus Success (gender: \"MALE\", pregnant: False, expected: False)",
+      "marks": [
+        59
+      ]
+    },
+    {
+      "text": "Diagnose PregnancyVariableMissing NotPregnant Success",
+      "marks": [
+        60
+      ]
+    },
+    {
+      "text": "Diagnose PsiSevere SelectsIcu Success",
+      "marks": [
+        61
+      ]
+    },
+    {
+      "text": "Diagnose SevereInpatient Success",
+      "marks": [
+        62
+      ]
+    },
+    {
+      "text": "Diagnose UnsupportedMetric Ignored Success",
+      "marks": [
+        63
+      ]
+    },
+    {
+      "text": "Diagnose WithCreatinineMissingAge Throws",
+      "marks": [
+        64
+      ]
+    },
+    {
+      "text": "Diagnose WithCreatinineMissingBlackAmerican Throws",
+      "marks": [
+        65
+      ]
+    },
+    {
+      "text": "Diagnose WithCreatinineMissingGender Throws",
+      "marks": [
+        66
+      ]
+    },
+    {
+      "text": "Diagnose WithCreatinine CalculatesEgfr Success (age: 16, gender: \"MALE\", isBlackAmerican: False, creatine: 44, expected: 223)",
+      "marks": [
+        67
+      ]
+    },
+    {
+      "text": "Diagnose WithCreatinine CalculatesEgfr Success (age: 16, gender: \"MALE\", isBlackAmerican: False, creatine: 700, expected: 9.1999999999999993)",
+      "marks": [
+        68
+      ]
+    },
+    {
+      "text": "Diagnose WithCreatinine CalculatesEgfr Success (age: 72, gender: \"FEMALE\", isBlackAmerican: True, creatine: 88, expected: 66.400000000000006)",
+      "marks": [
+        69
+      ]
+    },
+    {
+      "text": "Diagnose WithCreatinine CalculatesEgfr Success (age: 72, gender: \"MALE\", isBlackAmerican: False, creatine: 88, expected: 73.799999999999997)",
+      "marks": [
+        70
+      ]
+    },
+    {
+      "text": "Diagnose WithLowercaseFemaleGender CalculatesFemaleEgfr Success",
+      "marks": [
+        71
+      ]
+    },
+    {
+      "text": "Diagnose WithoutCreatinine EgfrNull Success",
+      "marks": [
+        72
+      ]
+    },
+    {
+      "text": "GetMicrobiologicalTestResult ExactMatch ReturnsAntibiogram Success",
+      "marks": [
+        73
+      ]
+    },
+    {
+      "text": "GetMicrobiologicalTestResult InvalidMicCategory SkipsSample Success",
+      "marks": [
+        74
+      ]
+    },
+    {
+      "text": "GetMicrobiologicalTestResult MatchesMicCategory Success (micCategory: Intermediate)",
+      "marks": [
+        75
+      ]
+    },
+    {
+      "text": "GetMicrobiologicalTestResult MatchesMicCategory Success (micCategory: Resistant)",
+      "marks": [
+        76
+      ]
+    },
+    {
+      "text": "GetMicrobiologicalTestResult MatchesMicCategory Success (micCategory: Susceptible)",
+      "marks": [
+        77
+      ]
+    },
+    {
+      "text": "GetMicrobiologicalTestResult MixedSamples ReturnsOnlyMatched Success",
+      "marks": [
+        78
+      ]
+    },
+    {
+      "text": "GetMicrobiologicalTestResult MultipleSamples ReturnsInSampleOrder Success",
+      "marks": [
+        79
+      ]
+    },
+    {
+      "text": "GetMicrobiologicalTestResult NoAntibiogramForMicCategory SkipsSample Success",
+      "marks": [
+        80
+      ]
+    },
+    {
+      "text": "GetMicrobiologicalTestResult NoAntibiogramForPathogen SkipsSample Success",
+      "marks": [
+        81
+      ]
+    },
+    {
+      "text": "GetMicrobiologicalTestResult NoAntibiograms ReturnsEmpty Success",
+      "marks": [
+        82
+      ]
+    },
+    {
+      "text": "GetMicrobiologicalTestResult NoSamples ReturnsEmpty Success",
+      "marks": [
+        83
+      ]
+    },
+    {
+      "text": "IdsaAts NeedIcu Success (observations: [ClinicalObservation { Variable = Respira.Clinical.Domain.Entities.BooleanClin...)",
+      "marks": [
+        84
+      ]
+    },
+    {
+      "text": "IdsaAts NeedIcu Success (observations: [ClinicalObservation { Variable = Respira.Clinical.Domain.Entities.NumericClin...)",
+      "marks": [
+        85
+      ]
+    },
+    {
+      "text": "IdsaAts NeedIcu Success (observations: [ClinicalObservation { Variable = Respira.Clinical.Domain.Entities.NumericClin...)",
+      "marks": [
+        86
+      ]
+    },
+    {
+      "text": "IdsaAts NeedIcu Success (observations: [ClinicalObservation { Variable = Respira.Clinical.Domain.Entities.NumericClin...)",
+      "marks": [
+        87
+      ]
+    },
+    {
+      "text": "IdsaAts NoCriterionMatch DoNotNeedIcu Success",
+      "marks": [
+        88
+      ]
+    },
+    {
+      "text": "IdsaAts NotMajorMinorMetric Throw",
+      "marks": [
+        89
+      ]
+    },
+    {
+      "text": "IsAntibioticGroupHasCommonAncestor GroupNotInContext Failure (group1: AntibioticGroup { CreatedAt = 2026-11-10T13:34:46.8715309+00:00, DeletedAt = null, D...)",
+      "marks": [
+        90
+      ]
+    },
+    {
+      "text": "IsAntibioticGroupHasCommonAncestor GroupNotInContext Failure (group1: AntibioticGroup { CreatedAt = 2026-11-10T13:34:46.8811198+00:00, DeletedAt = null, D...)",
+      "marks": [
+        91
+      ]
+    },
+    {
+      "text": "IsAntibioticGroupHasCommonAncestor GroupNotInContext Failure (group1: AntibioticGroup { CreatedAt = 2026-11-10T13:34:46.8811246+00:00, DeletedAt = null, D...)",
+      "marks": [
+        92
+      ]
+    },
+    {
+      "text": "IsAntibioticGroupHasCommonAncestor Success (group1: AntibioticGroup { CreatedAt = 2026-11-10T13:34:46.8715047+00:00, DeletedAt = null, D...)",
+      "marks": [
+        93
+      ]
+    },
+    {
+      "text": "IsAntibioticGroupHasCommonAncestor Success (group1: AntibioticGroup { CreatedAt = 2026-11-10T13:34:46.8715309+00:00, DeletedAt = null, D...)",
+      "marks": [
+        94
+      ]
+    },
+    {
+      "text": "IsAntibioticGroupHasCommonAncestor Success (group1: AntibioticGroup { CreatedAt = 2026-11-10T13:34:46.8715324+00:00, DeletedAt = null, D...)",
+      "marks": [
+        95
+      ]
+    },
+    {
+      "text": "IsAntibioticGroupHasCommonAncestor Success (group1: AntibioticGroup { CreatedAt = 2026-11-10T13:34:46.8715335+00:00, DeletedAt = null, D...)",
+      "marks": [
+        96
+      ]
+    },
+    {
+      "text": "IsMedicineCombinationValid Success (antibioticNames: [\"Cefotaxim\", \"Amoxicillin\", \"Penicilin G (Benzylpenicillin)\"], expected: F...)",
+      "marks": [
+        97
+      ]
+    },
+    {
+      "text": "IsMedicineCombinationValid Success (antibioticNames: [\"Cefotaxim\", \"Ceftazidim\", \"Penicilin G (Benzylpenicillin)\"], expected: False)",
+      "marks": [
+        98
+      ]
+    },
+    {
+      "text": "IsMedicineCombinationValid Success (antibioticNames: [\"Cefotaxim\", \"Moxifloxacin\", \"Erythromycin\", \"Linezolid\"], expected: True)",
+      "marks": [
+        99
+      ]
+    },
+    {
+      "text": "IsMedicineCombinationValid Success (antibioticNames: [\"Cefotaxim\", \"Moxifloxacin\", \"Erythromycin\"], expected: True)",
+      "marks": [
+        100
+      ]
+    },
+    {
+      "text": "IsMedicineCombinationValid Success (antibioticNames: [\"Cefotaxim\", \"Moxifloxacin\"], expected: True)",
+      "marks": [
+        101
+      ]
+    },
+    {
+      "text": "IsMedicineCombinationValid Success (antibioticNames: [\"Cefotaxim\"], expected: True)",
+      "marks": [
+        102
+      ]
+    },
+    {
+      "text": "Psi InvalidScore Negative Throw (score: -1)",
+      "marks": [
+        103
+      ]
+    },
+    {
+      "text": "Psi InvalidScore Negative Throw (score: -132)",
+      "marks": [
+        104
+      ]
+    },
+    {
+      "text": "Psi InvalidScore Negative Throw (score: -67)",
+      "marks": [
+        105
+      ]
+    },
+    {
+      "text": "Psi Success (score: 0, severity: Mild, treatmentSite: Outpatient)",
+      "marks": [
+        106
+      ]
+    },
+    {
+      "text": "Psi Success (score: 1, severity: Mild, treatmentSite: Outpatient)",
+      "marks": [
+        107
+      ]
+    },
+    {
+      "text": "Psi Success (score: 100, severity: Severe, treatmentSite: Inpatient)",
+      "marks": [
+        108
+      ]
+    },
+    {
+      "text": "Psi Success (score: 100000, severity: Severe, treatmentSite: IntensiveCareUnit)",
+      "marks": [
+        109
+      ]
+    },
+    {
+      "text": "Psi Success (score: 129, severity: Severe, treatmentSite: Inpatient)",
+      "marks": [
+        110
+      ]
+    },
+    {
+      "text": "Psi Success (score: 130, severity: Severe, treatmentSite: Inpatient)",
+      "marks": [
+        111
+      ]
+    },
+    {
+      "text": "Psi Success (score: 131, severity: Severe, treatmentSite: IntensiveCareUnit)",
+      "marks": [
+        112
+      ]
+    },
+    {
+      "text": "Psi Success (score: 140, severity: Severe, treatmentSite: IntensiveCareUnit)",
+      "marks": [
+        113
+      ]
+    },
+    {
+      "text": "Psi Success (score: 150, severity: Severe, treatmentSite: IntensiveCareUnit)",
+      "marks": [
+        114
+      ]
+    },
+    {
+      "text": "Psi Success (score: 30, severity: Mild, treatmentSite: Outpatient)",
+      "marks": [
+        115
+      ]
+    },
+    {
+      "text": "Psi Success (score: 65, severity: Mild, treatmentSite: Outpatient)",
+      "marks": [
+        116
+      ]
+    },
+    {
+      "text": "Psi Success (score: 70, severity: Mild, treatmentSite: Outpatient)",
+      "marks": [
+        117
+      ]
+    },
+    {
+      "text": "Psi Success (score: 71, severity: Moderate, treatmentSite: Inpatient)",
+      "marks": [
+        118
+      ]
+    },
+    {
+      "text": "Psi Success (score: 80, severity: Moderate, treatmentSite: Inpatient)",
+      "marks": [
+        119
+      ]
+    },
+    {
+      "text": "Psi Success (score: 89, severity: Moderate, treatmentSite: Inpatient)",
+      "marks": [
+        120
+      ]
+    },
+    {
+      "text": "Psi Success (score: 90, severity: Moderate, treatmentSite: Inpatient)",
+      "marks": [
+        121
+      ]
+    },
+    {
+      "text": "Psi Success (score: 91, severity: Severe, treatmentSite: Inpatient)",
+      "marks": [
+        122
+      ]
+    },
+    {
+      "text": "RecommendTreatment AgeCriterionBoundary Success (age: 59, expectedCount: 0)",
+      "marks": [
+        123
+      ]
+    },
+    {
+      "text": "RecommendTreatment AgeCriterionBoundary Success (age: 60, expectedCount: 1)",
+      "marks": [
+        124
+      ]
+    },
+    {
+      "text": "RecommendTreatment AgeCriterionBoundary Success (age: 72, expectedCount: 1)",
+      "marks": [
+        125
+      ]
+    },
+    {
+      "text": "RecommendTreatment AllCriteriaMustMatch RemovesProtocol Success",
+      "marks": [
+        126
+      ]
+    },
+    {
+      "text": "RecommendTreatment AllRequiredPathogensMustBeHeavySuspected RemovesProtocol Success",
+      "marks": [
+        127
+      ]
+    },
+    {
+      "text": "RecommendTreatment AllTreatmentsAllergic RemovesProtocol Success",
+      "marks": [
+        128
+      ]
+    },
+    {
+      "text": "RecommendTreatment AllergicAntibioticInCombination RemovesWholeComposition Success",
+      "marks": [
+        129
+      ]
+    },
+    {
+      "text": "RecommendTreatment AllergicAntibiotic RemovesComposition Success",
+      "marks": [
+        130
+      ]
+    },
+    {
+      "text": "RecommendTreatment AllergyOnOneProtocol DoesNotAffectOther Success",
+      "marks": [
+        131
+      ]
+    },
+    {
+      "text": "RecommendTreatment CriterionVariableMissing RemovesProtocol Success",
+      "marks": [
+        132
+      ]
+    },
+    {
+      "text": "RecommendTreatment HeavySuspectedAtLeastTwo DropsSubsetProtocols Success",
+      "marks": [
+        133
+      ]
+    },
+    {
+      "text": "RecommendTreatment HeavySuspectedBelowTwo KeepsSubsetProtocols Success",
+      "marks": [
+        134
+      ]
+    },
+    {
+      "text": "RecommendTreatment HeavySuspectedDisjointProtocols KeepsBoth Success",
+      "marks": [
+        135
+      ]
+    },
+    {
+      "text": "RecommendTreatment InvalidDiagnosisSeverity Failure",
+      "marks": [
+        136
+      ]
+    },
+    {
+      "text": "RecommendTreatment MatchingSeverityAndSite ReturnsOnlyMatching Success",
+      "marks": [
+        137
+      ]
+    },
+    {
+      "text": "RecommendTreatment MixedAppliedProtocols KeepsOnlyApplied Success",
+      "marks": [
+        138
+      ]
+    },
+    {
+      "text": "RecommendTreatment MultipleAllergies RemovesAllMatchingCompositions Success",
+      "marks": [
+        139
+      ]
+    },
+    {
+      "text": "RecommendTreatment NoAllergy KeepsAllTreatments Success",
+      "marks": [
+        140
+      ]
+    },
+    {
+      "text": "RecommendTreatment NoProtocolForDiagnosis Failure",
+      "marks": [
+        141
+      ]
+    },
+    {
+      "text": "RecommendTreatment OnlyNonAppliedProtocolMatches Failure",
+      "marks": [
+        142
+      ]
+    },
+    {
+      "text": "RecommendTreatment ProtocolWithoutPathogens Kept Success",
+      "marks": [
+        143
+      ]
+    },
+    {
+      "text": "RecommendTreatment RequiredPathogenHeavySuspected KeepsProtocol Success",
+      "marks": [
+        144
+      ]
+    },
+    {
+      "text": "RecommendTreatment RequiredPathogenNotHeavySuspected RemovesProtocol Success",
+      "marks": [
+        145
+      ]
+    },
+    {
+      "text": "RecommendTreatment SeedProtocolCriteria IncludedOnlyWhenSatisfied Success (immunocompromised: False, expectedCount: 1)",
+      "marks": [
+        146
+      ]
+    },
+    {
+      "text": "RecommendTreatment SeedProtocolCriteria IncludedOnlyWhenSatisfied Success (immunocompromised: True, expectedCount: 2)",
+      "marks": [
+        147
+      ]
+    },
+    {
+      "text": "RecommendTreatment SeedProtocols ReturnsOnlyApplicable Success",
+      "marks": [
+        148
+      ]
+    },
+    {
+      "text": "ValidateObservations AllRequiredVariablesValid Success",
+      "marks": [
+        149
+      ]
+    },
+    {
+      "text": "ValidateObservations CategoricalValueIsNormalized Success (gender: \" FEMALE \")",
+      "marks": [
+        150
+      ]
+    },
+    {
+      "text": "ValidateObservations CategoricalValueIsNormalized Success (gender: \"Female\")",
+      "marks": [
+        151
+      ]
+    },
+    {
+      "text": "ValidateObservations CategoricalValueIsNormalized Success (gender: \"female\")",
+      "marks": [
+        152
+      ]
+    },
+    {
+      "text": "ValidateObservations InvalidBooleanValue Failure",
+      "marks": [
+        153
+      ]
+    },
+    {
+      "text": "ValidateObservations InvalidCategoricalValue Failure (value: \"\")",
+      "marks": [
+        154
+      ]
+    },
+    {
+      "text": "ValidateObservations InvalidCategoricalValue Failure (value: \"MALE FEMALE\")",
+      "marks": [
+        155
+      ]
+    },
+    {
+      "text": "ValidateObservations InvalidCategoricalValue Failure (value: \"NON-BINARY\")",
+      "marks": [
+        156
+      ]
+    },
+    {
+      "text": "ValidateObservations InvalidCategoricalValue Failure (value: \"UNKNOWN\")",
+      "marks": [
+        157
+      ]
+    },
+    {
+      "text": "ValidateObservations MissingRequiredVariable Failure (code: \"AGE\")",
+      "marks": [
+        158
+      ]
+    },
+    {
+      "text": "ValidateObservations MissingRequiredVariable Failure (code: \"GENDER\")",
+      "marks": [
+        159
+      ]
+    },
+    {
+      "text": "ValidateObservations MissingRequiredVariable Failure (code: \"PREGNANT-OR-LACTATING\")",
+      "marks": [
+        160
+      ]
+    },
+    {
+      "text": "ValidateObservations MissingRequiredVariable Failure (code: \"SBP\")",
+      "marks": [
+        161
+      ]
+    },
+    {
+      "text": "ValidateObservations MultipleInvalidValues Failure",
+      "marks": [
+        162
+      ]
+    },
+    {
+      "text": "ValidateObservations NoObservations Failure",
+      "marks": [
+        163
+      ]
+    },
+    {
+      "text": "ValidateObservations NumericValueAtBoundary Success (code: \"AGE\", value: 120)",
+      "marks": [
+        164
+      ]
+    },
+    {
+      "text": "ValidateObservations NumericValueAtBoundary Success (code: \"AGE\", value: 16)",
+      "marks": [
+        165
+      ]
+    },
+    {
+      "text": "ValidateObservations NumericValueAtBoundary Success (code: \"FIO2\", value: 100)",
+      "marks": [
+        166
+      ]
+    },
+    {
+      "text": "ValidateObservations NumericValueAtBoundary Success (code: \"FIO2\", value: 21)",
+      "marks": [
+        167
+      ]
+    },
+    {
+      "text": "ValidateObservations NumericValueAtBoundary Success (code: \"HEMATOCRIT\", value: 0)",
+      "marks": [
+        168
+      ]
+    },
+    {
+      "text": "ValidateObservations NumericValueAtBoundary Success (code: \"HEMATOCRIT\", value: 100)",
+      "marks": [
+        169
+      ]
+    },
+    {
+      "text": "ValidateObservations NumericValueAtBoundary Success (code: \"PH\", value: 0)",
+      "marks": [
+        170
+      ]
+    },
+    {
+      "text": "ValidateObservations NumericValueAtBoundary Success (code: \"PH\", value: 14)",
+      "marks": [
+        171
+      ]
+    },
+    {
+      "text": "ValidateObservations NumericValueAtBoundary Success (code: \"SPO2\", value: 0)",
+      "marks": [
+        172
+      ]
+    },
+    {
+      "text": "ValidateObservations NumericValueAtBoundary Success (code: \"SPO2\", value: 100)",
+      "marks": [
+        173
+      ]
+    },
+    {
+      "text": "ValidateObservations NumericValueAtBoundary Success (code: \"TEMPERATURE\", value: 30.100000000000001)",
+      "marks": [
+        174
+      ]
+    },
+    {
+      "text": "ValidateObservations NumericValueAtBoundary Success (code: \"WEIGHT\", value: 0.10000000000000001)",
+      "marks": [
+        175
+      ]
+    },
+    {
+      "text": "ValidateObservations NumericValueMissing Failure",
+      "marks": [
+        176
+      ]
+    },
+    {
+      "text": "ValidateObservations NumericValueOutOfRange Failure (code: \"AGE\", value: 15)",
+      "marks": [
+        177
+      ]
+    },
+    {
+      "text": "ValidateObservations NumericValueOutOfRange Failure (code: \"DBP\", value: 0)",
+      "marks": [
+        178
+      ]
+    },
+    {
+      "text": "ValidateObservations NumericValueOutOfRange Failure (code: \"FIO2\", value: 100.09999999999999)",
+      "marks": [
+        179
+      ]
+    },
+    {
+      "text": "ValidateObservations NumericValueOutOfRange Failure (code: \"FIO2\", value: 20)",
+      "marks": [
+        180
+      ]
+    },
+    {
+      "text": "ValidateObservations NumericValueOutOfRange Failure (code: \"HEMATOCRIT\", value: 101)",
+      "marks": [
+        181
+      ]
+    },
+    {
+      "text": "ValidateObservations NumericValueOutOfRange Failure (code: \"PH\", value: 14.1)",
+      "marks": [
+        182
+      ]
+    },
+    {
+      "text": "ValidateObservations NumericValueOutOfRange Failure (code: \"SPO2\", value: -1)",
+      "marks": [
+        183
+      ]
+    },
+    {
+      "text": "ValidateObservations NumericValueOutOfRange Failure (code: \"SPO2\", value: 101)",
+      "marks": [
+        184
+      ]
+    },
+    {
+      "text": "ValidateObservations NumericValueOutOfRange Failure (code: \"TEMPERATURE\", value: 30)",
+      "marks": [
+        185
+      ]
+    },
+    {
+      "text": "ValidateObservations NumericValueOutOfRange Failure (code: \"WEIGHT\", value: 0)",
+      "marks": [
+        186
+      ]
+    },
+    {
+      "text": "ValidateObservations OnlyOptionalVariables Failure",
+      "marks": [
+        187
+      ]
+    },
+    {
+      "text": "ValidateObservations PrerequisiteNotSatisfied Failure",
+      "marks": [
+        188
+      ]
+    },
+    {
+      "text": "ValidateObservations PrerequisiteSatisfied Success (pregnant: False, gender: \"FEMALE\")",
+      "marks": [
+        189
+      ]
+    },
+    {
+      "text": "ValidateObservations PrerequisiteSatisfied Success (pregnant: False, gender: \"MALE\")",
+      "marks": [
+        190
+      ]
+    },
+    {
+      "text": "ValidateObservations PrerequisiteSatisfied Success (pregnant: True, gender: \"FEMALE\")",
+      "marks": [
+        191
+      ]
+    },
+    {
+      "text": "ValidateObservations PrerequisiteVariableNotProvided Failure",
+      "marks": [
+        192
+      ]
+    },
+    {
+      "text": "ValidateObservations PrerequisiteWithLowercaseCategoricalValue Success",
+      "marks": [
+        193
+      ]
+    },
+    {
+      "text": "ValidateObservations WithOptionalVariablesValid Success",
+      "marks": [
+        194
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "Success with the assessed diagnosis result",
+      "marks": [
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60,
+        61,
+        62,
+        63,
+        64,
+        65,
+        66,
+        67,
+        68,
+        69,
+        70,
+        71,
+        72
+      ]
+    },
+    {
+      "text": "Observation validation accepts or rejects the set as expected",
+      "marks": [
+        149,
+        150,
+        151,
+        152,
+        153,
+        154,
+        155,
+        156,
+        157,
+        158,
+        159,
+        160,
+        161,
+        162,
+        163,
+        164,
+        165,
+        166,
+        167,
+        168,
+        169,
+        170,
+        171,
+        172,
+        173,
+        174,
+        175,
+        176,
+        177,
+        178,
+        179,
+        180,
+        181,
+        182,
+        183,
+        184,
+        185,
+        186,
+        187,
+        188,
+        189,
+        190,
+        191,
+        192,
+        193,
+        194
+      ]
+    },
+    {
+      "text": "Severity, metric score, eGFR, and risk-factor assessment compute the expected values",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        84,
+        85,
+        86,
+        87,
+        88,
+        89,
+        103,
+        104,
+        105,
+        106,
+        107,
+        108,
+        109,
+        110,
+        111,
+        112,
+        113,
+        114,
+        115,
+        116,
+        117,
+        118,
+        119,
+        120,
+        121,
+        122
+      ]
+    },
+    {
+      "text": "Microbiological results and treatment recommendations match the context",
+      "marks": [
+        73,
+        74,
+        75,
+        76,
+        77,
+        78,
+        79,
+        80,
+        81,
+        82,
+        83,
+        90,
+        91,
+        92,
+        93,
+        94,
+        95,
+        96,
+        97,
+        98,
+        99,
+        100,
+        101,
+        102,
+        123,
+        124,
+        125,
+        126,
+        127,
+        128,
+        129,
+        130,
+        131,
+        132,
+        133,
+        134,
+        135,
+        136,
+        137,
+        138,
+        139,
+        140,
+        141,
+        142,
+        143,
+        144,
+        145,
+        146,
+        147,
+        148
+      ]
+    },
+    {
+      "text": "Failure result or ArgumentException for an invalid observation, unsupported metric, or out-of-range score input",
+      "marks": [
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        20,
+        24,
+        25,
+        26,
+        27,
+        33,
+        34,
+        35,
+        36,
+        44,
+        51,
+        52,
+        53,
+        56,
+        60,
+        64,
+        65,
+        66,
+        72,
+        74,
+        82,
+        83,
+        89,
+        90,
+        91,
+        92,
+        103,
+        104,
+        105,
+        132,
+        136,
+        141,
+        142,
+        143,
+        153,
+        154,
+        155,
+        156,
+        157,
+        158,
+        159,
+        160,
+        161,
+        162,
+        163,
+        176,
+        177,
+        178,
+        179,
+        180,
+        181,
+        182,
+        183,
+        184,
+        185,
+        186,
+        187,
+        188,
+        192
+      ]
+    }
+  ],
+  "exception_text": "ArgumentException is thrown for out-of-range score inputs or invalid age/creatinine/gender combinations",
+  "exception_marks": [
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    20,
+    24,
+    25,
+    26,
+    27,
+    33,
+    34,
+    35,
+    36,
+    64,
+    65,
+    66,
+    89,
+    103,
+    104,
+    105
+  ],
+  "cases": [
+    {
+      "method": "AssessInfection_NoRiskFactor_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "AssessInfection_NoRiskFactor_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "AssessInfection_NoRiskFactor_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "AssessInfection_NoRiskFactor_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "AssessInfection_WithRiskFactor_NotInSuspected_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "AssessInfection_WithRiskFactor_NotInSuspected_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "AssessInfection_WithRiskFactor_NotInSuspected_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "AssessInfection_WithRiskFactor_NotInSuspected_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "AssessInfection_WithRiskFactor_ScoreBelow50_NotReturn",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "CalculateEgfr_InvalidAge_Throws",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CalculateEgfr_InvalidAge_Throws",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CalculateEgfr_InvalidAge_Throws",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CalculateEgfr_InvalidScr_Throws",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CalculateEgfr_InvalidScr_Throws",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CalculateEgfr_InvalidScr_Throws",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CalculateEgfr_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "CalculateEgfr_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "CalculateEgfr_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "CalculateEgfr_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "CalculateMetricsScore_MajorMinorMetric_Throw",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CalculateMetricsScore_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "CalculateMetricsScore_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "CalculateMetricsScore_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Crb65_InvalidScore_Negative_Throw",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Crb65_InvalidScore_Negative_Throw",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Crb65_InvalidScore_UnexpectedValue_Throw",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Crb65_InvalidScore_UnexpectedValue_Throw",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Crb65_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Crb65_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Crb65_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Crb65_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Crb65_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Curb65_InvalidScore_Negative_Throw",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Curb65_InvalidScore_Negative_Throw",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Curb65_InvalidScore_UnexpectedValue_Throw",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Curb65_InvalidScore_UnexpectedValue_Throw",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Curb65_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Curb65_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Curb65_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Curb65_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Curb65_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Curb65_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Diagnose_AllMetricsAgreeMild_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Diagnose_AllVariablesProvided_NoMissingVariables_Success",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Diagnose_CriticalRiskFactor_HeavySuspectedAndRemovedFromWorth_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Diagnose_EvidencesContainEveryMetricRuleAndRiskFactor_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Diagnose_HeavySuspectedPathogenNotInWorthList_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Diagnose_IdsaAtsMajorCriterion_SelectsIcu_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Diagnose_IdsaAtsThreeMinorCriteria_SelectsIcu_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Diagnose_MetricsDisagree_SelectsHighestSeverity_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Diagnose_NoMetrics_Failure",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Diagnose_NoRiskFactor_WorthSuspectedNotEmpty_Success",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Diagnose_NoSupportedMetric_Failure",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Diagnose_NonCriticalRiskFactorsAtThreshold_HeavySuspected_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Diagnose_NonCriticalRiskFactorsBelowThreshold_NotHeavySuspected_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Diagnose_OptionalVariablesMissing_ReportsMissingVariables_Success",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Diagnose_PregnancyStatus_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Diagnose_PregnancyStatus_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Diagnose_PregnancyStatus_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Diagnose_PregnancyVariableMissing_NotPregnant_Success",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Diagnose_PsiSevere_SelectsIcu_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Diagnose_SevereInpatient_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Diagnose_UnsupportedMetric_Ignored_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Diagnose_WithCreatinineMissingAge_Throws",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Diagnose_WithCreatinineMissingBlackAmerican_Throws",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Diagnose_WithCreatinineMissingGender_Throws",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Diagnose_WithCreatinine_CalculatesEgfr_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Diagnose_WithCreatinine_CalculatesEgfr_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Diagnose_WithCreatinine_CalculatesEgfr_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Diagnose_WithCreatinine_CalculatesEgfr_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Diagnose_WithLowercaseFemaleGender_CalculatesFemaleEgfr_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Diagnose_WithoutCreatinine_EgfrNull_Success",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "GetMicrobiologicalTestResult_ExactMatch_ReturnsAntibiogram_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "GetMicrobiologicalTestResult_InvalidMicCategory_SkipsSample_Success",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "GetMicrobiologicalTestResult_MatchesMicCategory_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "GetMicrobiologicalTestResult_MatchesMicCategory_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "GetMicrobiologicalTestResult_MatchesMicCategory_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "GetMicrobiologicalTestResult_MixedSamples_ReturnsOnlyMatched_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "GetMicrobiologicalTestResult_MultipleSamples_ReturnsInSampleOrder_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "GetMicrobiologicalTestResult_NoAntibiogramForMicCategory_SkipsSample_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "GetMicrobiologicalTestResult_NoAntibiogramForPathogen_SkipsSample_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "GetMicrobiologicalTestResult_NoAntibiograms_ReturnsEmpty_Success",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "GetMicrobiologicalTestResult_NoSamples_ReturnsEmpty_Success",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "IdsaAts_NeedIcu_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IdsaAts_NeedIcu_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IdsaAts_NeedIcu_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IdsaAts_NeedIcu_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IdsaAts_NoCriterionMatch_DoNotNeedIcu_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IdsaAts_NotMajorMinorMetric_Throw",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "IsAntibioticGroupHasCommonAncestor_GroupNotInContext_Failure",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "IsAntibioticGroupHasCommonAncestor_GroupNotInContext_Failure",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "IsAntibioticGroupHasCommonAncestor_GroupNotInContext_Failure",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "IsAntibioticGroupHasCommonAncestor_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IsAntibioticGroupHasCommonAncestor_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IsAntibioticGroupHasCommonAncestor_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IsAntibioticGroupHasCommonAncestor_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IsMedicineCombinationValid_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IsMedicineCombinationValid_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IsMedicineCombinationValid_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IsMedicineCombinationValid_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IsMedicineCombinationValid_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IsMedicineCombinationValid_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Psi_InvalidScore_Negative_Throw",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Psi_InvalidScore_Negative_Throw",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Psi_InvalidScore_Negative_Throw",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Psi_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Psi_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Psi_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Psi_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Psi_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Psi_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Psi_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Psi_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Psi_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Psi_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Psi_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Psi_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Psi_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Psi_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Psi_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Psi_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Psi_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "RecommendTreatment_AgeCriterionBoundary_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "RecommendTreatment_AgeCriterionBoundary_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "RecommendTreatment_AgeCriterionBoundary_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "RecommendTreatment_AllCriteriaMustMatch_RemovesProtocol_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "RecommendTreatment_AllRequiredPathogensMustBeHeavySuspected_RemovesProtocol_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "RecommendTreatment_AllTreatmentsAllergic_RemovesProtocol_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "RecommendTreatment_AllergicAntibioticInCombination_RemovesWholeComposition_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "RecommendTreatment_AllergicAntibiotic_RemovesComposition_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "RecommendTreatment_AllergyOnOneProtocol_DoesNotAffectOther_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "RecommendTreatment_CriterionVariableMissing_RemovesProtocol_Success",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "RecommendTreatment_HeavySuspectedAtLeastTwo_DropsSubsetProtocols_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "RecommendTreatment_HeavySuspectedBelowTwo_KeepsSubsetProtocols_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "RecommendTreatment_HeavySuspectedDisjointProtocols_KeepsBoth_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "RecommendTreatment_InvalidDiagnosisSeverity_Failure",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "RecommendTreatment_MatchingSeverityAndSite_ReturnsOnlyMatching_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "RecommendTreatment_MixedAppliedProtocols_KeepsOnlyApplied_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "RecommendTreatment_MultipleAllergies_RemovesAllMatchingCompositions_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "RecommendTreatment_NoAllergy_KeepsAllTreatments_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "RecommendTreatment_NoProtocolForDiagnosis_Failure",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "RecommendTreatment_OnlyNonAppliedProtocolMatches_Failure",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "RecommendTreatment_ProtocolWithoutPathogens_Kept_Success",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "RecommendTreatment_RequiredPathogenHeavySuspected_KeepsProtocol_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "RecommendTreatment_RequiredPathogenNotHeavySuspected_RemovesProtocol_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "RecommendTreatment_SeedProtocolCriteria_IncludedOnlyWhenSatisfied_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "RecommendTreatment_SeedProtocolCriteria_IncludedOnlyWhenSatisfied_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "RecommendTreatment_SeedProtocols_ReturnsOnlyApplicable_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "ValidateObservations_AllRequiredVariablesValid_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "ValidateObservations_CategoricalValueIsNormalized_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "ValidateObservations_CategoricalValueIsNormalized_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "ValidateObservations_CategoricalValueIsNormalized_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "ValidateObservations_InvalidBooleanValue_Failure",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "ValidateObservations_InvalidCategoricalValue_Failure",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "ValidateObservations_InvalidCategoricalValue_Failure",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "ValidateObservations_InvalidCategoricalValue_Failure",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "ValidateObservations_InvalidCategoricalValue_Failure",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "ValidateObservations_MissingRequiredVariable_Failure",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "ValidateObservations_MissingRequiredVariable_Failure",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "ValidateObservations_MissingRequiredVariable_Failure",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "ValidateObservations_MissingRequiredVariable_Failure",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "ValidateObservations_MultipleInvalidValues_Failure",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "ValidateObservations_NoObservations_Failure",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "ValidateObservations_NumericValueAtBoundary_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "ValidateObservations_NumericValueAtBoundary_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "ValidateObservations_NumericValueAtBoundary_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "ValidateObservations_NumericValueAtBoundary_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "ValidateObservations_NumericValueAtBoundary_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "ValidateObservations_NumericValueAtBoundary_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "ValidateObservations_NumericValueAtBoundary_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "ValidateObservations_NumericValueAtBoundary_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "ValidateObservations_NumericValueAtBoundary_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "ValidateObservations_NumericValueAtBoundary_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "ValidateObservations_NumericValueAtBoundary_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "ValidateObservations_NumericValueAtBoundary_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "ValidateObservations_NumericValueMissing_Failure",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "ValidateObservations_NumericValueOutOfRange_Failure",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "ValidateObservations_NumericValueOutOfRange_Failure",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "ValidateObservations_NumericValueOutOfRange_Failure",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "ValidateObservations_NumericValueOutOfRange_Failure",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "ValidateObservations_NumericValueOutOfRange_Failure",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "ValidateObservations_NumericValueOutOfRange_Failure",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "ValidateObservations_NumericValueOutOfRange_Failure",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "ValidateObservations_NumericValueOutOfRange_Failure",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "ValidateObservations_NumericValueOutOfRange_Failure",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "ValidateObservations_NumericValueOutOfRange_Failure",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "ValidateObservations_OnlyOptionalVariables_Failure",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "ValidateObservations_PrerequisiteNotSatisfied_Failure",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "ValidateObservations_PrerequisiteSatisfied_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "ValidateObservations_PrerequisiteSatisfied_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "ValidateObservations_PrerequisiteSatisfied_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "ValidateObservations_PrerequisiteVariableNotProvided_Failure",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "ValidateObservations_PrerequisiteWithLowercaseCategoricalValue_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "ValidateObservations_WithOptionalVariablesValid_Success",
+      "type": "N",
+      "result": "P"
+    }
+  ]
+}

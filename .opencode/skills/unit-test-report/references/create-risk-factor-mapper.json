@@ -1,0 +1,79 @@
+{
+  "function_code": "CreateRiskFactorMapper.Map",
+  "sheet_name": "CreateRiskFactorMapper",
+  "lines_of_code": 24,
+  "requirement": "Map a create-risk-factor command to a new RiskFactor model: copy the pathogen id, criterion id, and critical-factor flag, let the entity generate its id, and always report success without validating the referenced ids.",
+  "preconditions": [
+    {
+      "text": "The mapper is constructed without dependencies",
+      "marks": [
+        1,
+        2,
+        3
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "Command with a pathogen id, criterion id, and critical-factor flag",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "Command mapped through the dependency overload",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "Command whose ids are not present in the database",
+      "marks": [
+        3
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "Success at ApplicationStatus.Success with a new RiskFactor",
+      "marks": [
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "text": "The pathogen id, criterion id, and critical-factor flag are copied",
+      "marks": [
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "text": "No id existence check is performed by the mapper",
+      "marks": [
+        3
+      ]
+    }
+  ],
+  "exception_text": "No unhandled exception; the mapper always returns a successful result",
+  "exception_marks": [],
+  "cases": [
+    {
+      "method": "ToModel_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "ToModel_WithDependencies_IgnoresDependencies_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "ToModel_DoesNotValidateIds_Success",
+      "type": "N",
+      "result": "P"
+    }
+  ]
+}

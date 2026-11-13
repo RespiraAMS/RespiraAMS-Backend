@@ -1,0 +1,237 @@
+{
+  "function_code": "HashService.HashToken",
+  "sheet_name": "HashService",
+  "lines_of_code": 52,
+  "requirement": "Authentication hashing service: hash passwords with salted BCrypt and tokens with a deterministic uppercase SHA-256 hex digest, verify passwords and tokens in constant time, and reject null/empty arguments while treating malformed or mismatched hashes as a failed verification instead of an exception.",
+  "preconditions": [
+    {
+      "text": "A HashService instance is available",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13
+      ]
+    },
+    {
+      "text": "A password, raw token, or stored BCrypt/hex hash is supplied",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13
+      ]
+    },
+    {
+      "text": "An argument is null, empty, malformed, or does not match the stored hash",
+      "marks": [
+        1,
+        4,
+        6,
+        8,
+        9,
+        10,
+        12,
+        13
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "HashPassword_NullOrEmpty_ThrowsArgumentException",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "HashPassword_SamePasswordTwice_GeneratesSaltedDistinctHashes",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "HashPassword_ValidPassword_ReturnsNonEmptyBcryptHash",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "HashToken_NullOrEmpty_ThrowsArgumentException",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "HashToken_ValidToken_ReturnsDeterministic64CharHexSha256",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "VerifyPassword_MalformedSaltHash_CatchesSaltParseExceptionAndReturnsFalse",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "VerifyPassword_MatchingPassword_ReturnsTrue",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "VerifyPassword_NullOrEmptyArguments_ThrowsArgumentException",
+      "marks": [
+        8
+      ]
+    },
+    {
+      "text": "VerifyPassword_WrongPassword_ReturnsFalse",
+      "marks": [
+        9
+      ]
+    },
+    {
+      "text": "VerifyToken_MalformedHexHash_CatchesFormatExceptionAndReturnsFalse",
+      "marks": [
+        10
+      ]
+    },
+    {
+      "text": "VerifyToken_MatchingTokenAndHash_ReturnsTrue",
+      "marks": [
+        11
+      ]
+    },
+    {
+      "text": "VerifyToken_MismatchingToken_ReturnsFalse",
+      "marks": [
+        12
+      ]
+    },
+    {
+      "text": "VerifyToken_NullOrEmptyArguments_ThrowsArgumentException",
+      "marks": [
+        13
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "A BCrypt password hash and a deterministic 64-character uppercase hex SHA-256 token hash",
+      "marks": [
+        2,
+        3,
+        5
+      ]
+    },
+    {
+      "text": "Matching passwords and tokens verify as true",
+      "marks": [
+        7,
+        11
+      ]
+    },
+    {
+      "text": "Malformed, mismatched, or wrong credentials verify as false without throwing",
+      "marks": [
+        6,
+        9,
+        10,
+        12
+      ]
+    }
+  ],
+  "exception_text": "ArgumentNullException for null inputs and ArgumentException for empty inputs",
+  "exception_marks": [
+    1,
+    4,
+    8,
+    13
+  ],
+  "cases": [
+    {
+      "method": "HashPassword_NullOrEmpty_ThrowsArgumentException",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "HashPassword_SamePasswordTwice_GeneratesSaltedDistinctHashes",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HashPassword_ValidPassword_ReturnsNonEmptyBcryptHash",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HashToken_NullOrEmpty_ThrowsArgumentException",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "HashToken_ValidToken_ReturnsDeterministic64CharHexSha256",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "VerifyPassword_MalformedSaltHash_CatchesSaltParseExceptionAndReturnsFalse",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "VerifyPassword_MatchingPassword_ReturnsTrue",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "VerifyPassword_NullOrEmptyArguments_ThrowsArgumentException",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "VerifyPassword_WrongPassword_ReturnsFalse",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "VerifyToken_MalformedHexHash_CatchesFormatExceptionAndReturnsFalse",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "VerifyToken_MatchingTokenAndHash_ReturnsTrue",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "VerifyToken_MismatchingToken_ReturnsFalse",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "VerifyToken_NullOrEmptyArguments_ThrowsArgumentException",
+      "type": "A",
+      "result": "P"
+    }
+  ]
+}

@@ -1,0 +1,254 @@
+{
+  "function_code": "UpdateDoctorMediaIdCommandHandler.HandleAsync",
+  "sheet_name": "UpdateDoctorMediaIdHandler",
+  "lines_of_code": 92,
+  "requirement": "Link a media asset to a doctor or head-doctor profile: load the profile by id, store the new media id and updated timestamp, publish DoctorMediaUpdated, and publish DoctorMediaUpdateFailure when the profile is missing or the save fails.",
+  "preconditions": [
+    {
+      "text": "A doctor or head-doctor profile exists for the target id",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14
+      ]
+    },
+    {
+      "text": "The command carries the new media id and actor details",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14
+      ]
+    },
+    {
+      "text": "The profile is missing or the save throws",
+      "marks": [
+        4,
+        5,
+        6,
+        7
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "HandleAsync_ForHeadProfile_PublishesAuditEventWithHeadEntityType",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "HandleAsync_PublishesAuditEvent",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "HandleAsync_PublishesDoctorMediaUpdated",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "HandleAsync_WhenProfileNotFound_DoesNotPublishDoctorMediaUpdated",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "HandleAsync_WhenProfileNotFound_PublishesFailure",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "HandleAsync_WhenSaveFails_DoesNotPublishDoctorMediaUpdated",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "HandleAsync_WhenSaveFails_PublishesFailureWithExceptionMessage",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "HandleAsync_WithBlankActorRole_PublishesAuditEventWithSystemRole",
+      "marks": [
+        8
+      ]
+    },
+    {
+      "text": "HandleAsync_WithEmptyActorAccount_PublishesAuditEventWithoutActor",
+      "marks": [
+        9
+      ]
+    },
+    {
+      "text": "HandleAsync_WithEmptyMediaId_WritesEmptyGuidAsIs",
+      "marks": [
+        10
+      ]
+    },
+    {
+      "text": "HandleAsync_WithExistingMediaId_ReplacesItWithTheNewOne",
+      "marks": [
+        11
+      ]
+    },
+    {
+      "text": "HandleAsync_WithMediaId_LinksMediaToDoctorProfile",
+      "marks": [
+        12
+      ]
+    },
+    {
+      "text": "HandleAsync_WithMediaId_LinksMediaToHeadDepartmentDoctorProfile",
+      "marks": [
+        13
+      ]
+    },
+    {
+      "text": "HandleAsync_WithMediaId_UpdatesTimestamp",
+      "marks": [
+        14
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "The profile stores the new media id and a fresh UpdatedAt timestamp",
+      "marks": [
+        10,
+        11,
+        12,
+        13,
+        14
+      ]
+    },
+    {
+      "text": "DoctorMediaUpdated is published with the profile and media ids",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "A Doctor.ProfileMediaLinked audit event is published with the right entity type and actor fallbacks",
+      "marks": [
+        1,
+        2,
+        8,
+        9
+      ]
+    },
+    {
+      "text": "A missing profile or failed save publishes DoctorMediaUpdateFailure without a success event",
+      "marks": [
+        4,
+        5,
+        6,
+        7
+      ]
+    }
+  ],
+  "exception_text": "No unhandled exception; save failures become a DoctorMediaUpdateFailure message",
+  "exception_marks": [
+    6,
+    7
+  ],
+  "cases": [
+    {
+      "method": "HandleAsync_ForHeadProfile_PublishesAuditEventWithHeadEntityType",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_PublishesAuditEvent",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_PublishesDoctorMediaUpdated",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WhenProfileNotFound_DoesNotPublishDoctorMediaUpdated",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WhenProfileNotFound_PublishesFailure",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WhenSaveFails_DoesNotPublishDoctorMediaUpdated",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WhenSaveFails_PublishesFailureWithExceptionMessage",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithBlankActorRole_PublishesAuditEventWithSystemRole",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithEmptyActorAccount_PublishesAuditEventWithoutActor",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithEmptyMediaId_WritesEmptyGuidAsIs",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithExistingMediaId_ReplacesItWithTheNewOne",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithMediaId_LinksMediaToDoctorProfile",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithMediaId_LinksMediaToHeadDepartmentDoctorProfile",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithMediaId_UpdatesTimestamp",
+      "type": "N",
+      "result": "P"
+    }
+  ]
+}

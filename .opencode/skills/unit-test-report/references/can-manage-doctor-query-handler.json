@@ -1,0 +1,312 @@
+{
+  "function_code": "CanManageDoctorQueryHandler.HandleAsync",
+  "sheet_name": "CanManageDoctorQueryHandler",
+  "lines_of_code": 74,
+  "requirement": "Answer whether an actor may manage a doctor or head-doctor profile: resolve the profile by id and target account, allow admins, allow a doctor to manage itself, allow a head doctor to manage its own profile or a subordinate doctor, and return the profile media id together with a success status in every case.",
+  "preconditions": [
+    {
+      "text": "A doctor or head-doctor profile is stored for the target id and account",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18
+      ]
+    },
+    {
+      "text": "The query carries the actor account, actor role, and target account",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18
+      ]
+    },
+    {
+      "text": "The actor does not manage the profile or the profile is missing or soft-deleted",
+      "marks": [
+        4,
+        6,
+        7,
+        10,
+        11,
+        13,
+        16,
+        17,
+        18
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "HandleAsync_AlwaysReturnsSuccessStatusCode",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "HandleAsync_WithAdminActor_AllowsManagingADoctor",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "HandleAsync_WithAdminActor_AllowsManagingAHeadDepartmentDoctor",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "HandleAsync_WithDoctorActorAndDifferentAccount_DoesNotAllowManaging",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "HandleAsync_WithDoctorActorAndMatchingAccount_AllowsManagingItself",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "HandleAsync_WithDoctorActor_TargetingAHeadProfile_DoesNotAllowManaging",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "HandleAsync_WithEmptyActorRole_DoesNotAllowManaging",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "HandleAsync_WithHeadActor_AllowsManagingItsOwnHeadProfile",
+      "marks": [
+        8
+      ]
+    },
+    {
+      "text": "HandleAsync_WithHeadActor_AllowsManagingItsOwnSubordinateDoctor",
+      "marks": [
+        9
+      ]
+    },
+    {
+      "text": "HandleAsync_WithHeadActor_AndUnassignedDoctor_DoesNotAllowManaging",
+      "marks": [
+        10
+      ]
+    },
+    {
+      "text": "HandleAsync_WithHeadActor_ThatDoesNotManageTheDoctor_DoesNotAllowManaging",
+      "marks": [
+        11
+      ]
+    },
+    {
+      "text": "HandleAsync_WithHeadProfileThatHasMedia_ReturnsTheMediaId",
+      "marks": [
+        12
+      ]
+    },
+    {
+      "text": "HandleAsync_WithMismatchedTargetAccountId_DoesNotAllowManaging",
+      "marks": [
+        13
+      ]
+    },
+    {
+      "text": "HandleAsync_WithProfileThatHasMedia_ReturnsTheMediaId",
+      "marks": [
+        14
+      ]
+    },
+    {
+      "text": "HandleAsync_WithProfileWithoutMedia_ReturnsNullMediaId",
+      "marks": [
+        15
+      ]
+    },
+    {
+      "text": "HandleAsync_WithSoftDeletedDoctor_DoesNotAllowManaging",
+      "marks": [
+        16
+      ]
+    },
+    {
+      "text": "HandleAsync_WithUnknownDoctorId_DoesNotAllowManaging",
+      "marks": [
+        17
+      ]
+    },
+    {
+      "text": "HandleAsync_WithUnknownRole_DoesNotAllowManaging",
+      "marks": [
+        18
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "Admins, profile owners, and owning head doctors are allowed to manage",
+      "marks": [
+        2,
+        3,
+        5,
+        8,
+        9
+      ]
+    },
+    {
+      "text": "Other roles, mismatched accounts, missing profiles, and soft-deleted rows are not allowed",
+      "marks": [
+        4,
+        6,
+        7,
+        10,
+        11,
+        13,
+        16,
+        17,
+        18
+      ]
+    },
+    {
+      "text": "The result carries the profile media id when one exists and null otherwise",
+      "marks": [
+        12,
+        14,
+        15
+      ]
+    },
+    {
+      "text": "A success status is returned for every query",
+      "marks": [
+        1
+      ]
+    }
+  ],
+  "exception_text": "No unhandled exception; every query returns a successful Result",
+  "exception_marks": [],
+  "cases": [
+    {
+      "method": "HandleAsync_AlwaysReturnsSuccessStatusCode",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithAdminActor_AllowsManagingADoctor",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithAdminActor_AllowsManagingAHeadDepartmentDoctor",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithDoctorActorAndDifferentAccount_DoesNotAllowManaging",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithDoctorActorAndMatchingAccount_AllowsManagingItself",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithDoctorActor_TargetingAHeadProfile_DoesNotAllowManaging",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithEmptyActorRole_DoesNotAllowManaging",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithHeadActor_AllowsManagingItsOwnHeadProfile",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithHeadActor_AllowsManagingItsOwnSubordinateDoctor",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithHeadActor_AndUnassignedDoctor_DoesNotAllowManaging",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithHeadActor_ThatDoesNotManageTheDoctor_DoesNotAllowManaging",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithHeadProfileThatHasMedia_ReturnsTheMediaId",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithMismatchedTargetAccountId_DoesNotAllowManaging",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithProfileThatHasMedia_ReturnsTheMediaId",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithProfileWithoutMedia_ReturnsNullMediaId",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithSoftDeletedDoctor_DoesNotAllowManaging",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithUnknownDoctorId_DoesNotAllowManaging",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithUnknownRole_DoesNotAllowManaging",
+      "type": "A",
+      "result": "P"
+    }
+  ]
+}

@@ -1,0 +1,192 @@
+{
+  "function_code": "AuditLogEntry.Constructor",
+  "sheet_name": "AuditLogEntry",
+  "lines_of_code": 14,
+  "requirement": "Saga audit log entity defaults: a new entry has an empty id, default occurrence timestamp, empty actor role, action, and entity type, null actor/entity/correlation ids, an empty JSON object for details, and mutable properties; entries with the same id remain distinct objects.",
+  "preconditions": [
+    {
+      "text": "An AuditLogEntry is constructed with its parameterless constructor",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "AuditLogEntry_IsAClassWithAParameterlessConstructor",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "EveryProperty_CanBeAssignedAndReadBack",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "NewEntry_HasAnEmptyAction",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "NewEntry_HasAnEmptyActorRole",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "NewEntry_HasAnEmptyEntityType",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "NewEntry_HasAnEmptyId",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "NewEntry_HasAnEmptyJsonObjectAsDetails",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "NewEntry_HasNoActorAccountId",
+      "marks": [
+        8
+      ]
+    },
+    {
+      "text": "NewEntry_HasNoCorrelationId",
+      "marks": [
+        9
+      ]
+    },
+    {
+      "text": "NewEntry_HasNoEntityId",
+      "marks": [
+        10
+      ]
+    },
+    {
+      "text": "NewEntry_HasTheDefaultOccurrenceTimestamp",
+      "marks": [
+        11
+      ]
+    },
+    {
+      "text": "TwoEntriesWithTheSameId_AreStillDistinctObjects",
+      "marks": [
+        12
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "Id, actor, entity, correlation, and details start at their documented defaults",
+      "marks": [
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ]
+    },
+    {
+      "text": "Every property can be assigned and read back",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "The type is a class with a parameterless constructor and instances stay distinct",
+      "marks": [
+        1,
+        12
+      ]
+    }
+  ],
+  "exception_text": "No unhandled exception; entity initialization succeeds",
+  "exception_marks": [],
+  "cases": [
+    {
+      "method": "AuditLogEntry_IsAClassWithAParameterlessConstructor",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "EveryProperty_CanBeAssignedAndReadBack",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "NewEntry_HasAnEmptyAction",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "NewEntry_HasAnEmptyActorRole",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "NewEntry_HasAnEmptyEntityType",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "NewEntry_HasAnEmptyId",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "NewEntry_HasAnEmptyJsonObjectAsDetails",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "NewEntry_HasNoActorAccountId",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "NewEntry_HasNoCorrelationId",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "NewEntry_HasNoEntityId",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "NewEntry_HasTheDefaultOccurrenceTimestamp",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "TwoEntriesWithTheSameId_AreStillDistinctObjects",
+      "type": "N",
+      "result": "P"
+    }
+  ]
+}

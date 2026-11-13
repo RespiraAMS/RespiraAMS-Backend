@@ -1,0 +1,224 @@
+{
+  "function_code": "UpsertTreatmentPlanHandler.HandleAsync",
+  "sheet_name": "UpsertTreatmentPlanHandler",
+  "lines_of_code": 88,
+  "requirement": "Upsert the treatment plan of a confirmed diagnosis: the patient must exist; the plan is looked up by patient and diagnosis and created as InProgress when absent (Adhere or NotAdhere from the command flag); when found, a Closed plan is rejected and the existing plan is rewritten; the plan id is returned.",
+  "preconditions": [
+    {
+      "text": "The patient exists and is live",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        10
+      ]
+    },
+    {
+      "text": "The matching plan is absent, still InProgress, soft-deleted, or closed for another diagnosis",
+      "marks": [
+        1,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ]
+    },
+    {
+      "text": "The patient is unknown or soft-deleted, or the plan is closed",
+      "marks": [
+        2,
+        9,
+        11
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "UpsertTreatmentPlan ClosedPlanForDifferentDiagnosis CreatesNewPlan",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "UpsertTreatmentPlan ClosedPlan Fail",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "UpsertTreatmentPlan DifferentPatientSameDiagnosis CreatesSecondPlan",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "UpsertTreatmentPlan ExistingInProgressPlan UpdatesSamePlan",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "UpsertTreatmentPlan NewPlanAdhere CreatesPlan",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "UpsertTreatmentPlan NewPlanNotAdhereWithReason CreatesPlan",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "UpsertTreatmentPlan RawDiagnosis ForwardedVerbatim",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "UpsertTreatmentPlan SamePatientDifferentDiagnosis CreatesSecondPlan",
+      "marks": [
+        8
+      ]
+    },
+    {
+      "text": "UpsertTreatmentPlan SoftDeletedPatient Fail",
+      "marks": [
+        9
+      ]
+    },
+    {
+      "text": "UpsertTreatmentPlan SoftDeletedPlan CreatesNewPlan",
+      "marks": [
+        10
+      ]
+    },
+    {
+      "text": "UpsertTreatmentPlan UnknownPatient Fail",
+      "marks": [
+        11
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "Success with the created or updated plan id",
+      "marks": [
+        1,
+        3,
+        4,
+        5,
+        6,
+        8,
+        10
+      ]
+    },
+    {
+      "text": "A new plan is created when none matches the patient and diagnosis",
+      "marks": [
+        1,
+        3,
+        5,
+        6,
+        8,
+        10
+      ]
+    },
+    {
+      "text": "Diagnosis text is forwarded verbatim and the adherence state follows the command flag",
+      "marks": [
+        1,
+        5,
+        6,
+        7,
+        10
+      ]
+    },
+    {
+      "text": "Failure with BadRequest for an unknown or soft-deleted patient",
+      "marks": [
+        9,
+        11
+      ]
+    },
+    {
+      "text": "Failure with BadRequest when the matching plan is closed",
+      "marks": [
+        2
+      ]
+    }
+  ],
+  "exception_text": "No unhandled exception; every rejection is returned as a failed Result",
+  "exception_marks": [
+    2,
+    9,
+    11
+  ],
+  "cases": [
+    {
+      "method": "UpsertTreatmentPlan_ClosedPlanForDifferentDiagnosis_CreatesNewPlan",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "UpsertTreatmentPlan_ClosedPlan_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpsertTreatmentPlan_DifferentPatientSameDiagnosis_CreatesSecondPlan",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "UpsertTreatmentPlan_ExistingInProgressPlan_UpdatesSamePlan",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "UpsertTreatmentPlan_NewPlanAdhere_CreatesPlan",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "UpsertTreatmentPlan_NewPlanNotAdhereWithReason_CreatesPlan",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "UpsertTreatmentPlan_RawDiagnosis_ForwardedVerbatim",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "UpsertTreatmentPlan_SamePatientDifferentDiagnosis_CreatesSecondPlan",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "UpsertTreatmentPlan_SoftDeletedPatient_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpsertTreatmentPlan_SoftDeletedPlan_CreatesNewPlan",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "UpsertTreatmentPlan_UnknownPatient_Fail",
+      "type": "A",
+      "result": "P"
+    }
+  ]
+}

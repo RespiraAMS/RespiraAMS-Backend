@@ -1,0 +1,63 @@
+{
+  "function_code": "GetAntibioticByIdHandler.HandleAsync",
+  "sheet_name": "GetAntibioticByIdHandler",
+  "lines_of_code": 43,
+  "requirement": "Return one antibiotic as a read-only projection: its identity, group (with the parent name resolved through the navigation), classification, and dosages with their CrCl ranges; a missing ID is reported as ResourceNotFound.",
+  "preconditions": [
+    {
+      "text": "The requested antibiotic exists with a group, a parent chain, and its dosages",
+      "marks": [1]
+    },
+    {
+      "text": "The requested antibiotic sits directly in a root group",
+      "marks": [2]
+    },
+    {
+      "text": "The requested ID matches no live antibiotic",
+      "marks": [3]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "Query for Amoxicillin in the Penicillins subgroup with a standard and a renal-adjusted dose",
+      "marks": [1]
+    },
+    {
+      "text": "Query for Azithromycin in the root group Macrolides with one standard dose",
+      "marks": [2]
+    },
+    {
+      "text": "Query with an unknown antibiotic ID",
+      "marks": [3]
+    }
+  ],
+  "returns": [
+    {
+      "text": "Success with the identity, name, and classification of the antibiotic",
+      "marks": [1, 2]
+    },
+    {
+      "text": "The group projection carries the group fields and the parent name from the navigation",
+      "marks": [1]
+    },
+    {
+      "text": "A root group reports a null parent ID and a null parent name",
+      "marks": [2]
+    },
+    {
+      "text": "Dosages are projected with their route, dose text, and CrCl range",
+      "marks": [1, 2]
+    },
+    {
+      "text": "Failure with ResourceNotFound and the 'Antibiotic not found' error",
+      "marks": [3]
+    }
+  ],
+  "exception_text": "No unhandled exception; a missing antibiotic is returned as a failed Result",
+  "exception_marks": [3],
+  "cases": [
+    { "method": "GetAntibioticById_ReturnsFullGraph_Success", "type": "N", "result": "P" },
+    { "method": "GetAntibioticById_AntibioticInRootGroup_ParentNameIsNull_Success", "type": "B", "result": "P" },
+    { "method": "GetAntibioticById_AntibioticNotFound_Fail", "type": "A", "result": "P" }
+  ]
+}

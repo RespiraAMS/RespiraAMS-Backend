@@ -1,0 +1,84 @@
+{
+  "function_code": "CreateClinicalMetricHandler.HandleAsync",
+  "sheet_name": "CreateClinicalMetricHandler",
+  "lines_of_code": 45,
+  "requirement": "Create a clinical metric: reject a code already used by an applied, live metric, map the command into a rule-less applied metric, persist it, and return the new ID with Created status.",
+  "preconditions": [
+    {
+      "text": "No applied live metric holds the requested code",
+      "marks": [1, 2, 3, 4, 8]
+    },
+    {
+      "text": "An applied live metric already holds the requested code",
+      "marks": [5, 6, 7]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "Create the CURB-65 severity metric",
+      "marks": [1]
+    },
+    {
+      "text": "Create PSI while an in-use CURB-65 exists",
+      "marks": [2]
+    },
+    {
+      "text": "Create PSI while an existing PSI metric is switched off",
+      "marks": [3]
+    },
+    {
+      "text": "Create CURB-65 while a soft-deleted CURB-65 exists",
+      "marks": [4]
+    },
+    {
+      "text": "Create CURB-65 while an applied CURB-65 exists",
+      "marks": [5]
+    },
+    {
+      "text": "Create PSI while an applied PSI exists",
+      "marks": [6]
+    },
+    {
+      "text": "Create IDSA/ATS while an applied IDSA/ATS exists",
+      "marks": [7]
+    },
+    {
+      "text": "Create CURB-65 with a mapper that reports a mapping failure",
+      "marks": [8]
+    }
+  ],
+  "returns": [
+    {
+      "text": "Success with Created status and the new metric ID",
+      "marks": [1, 2, 3, 4]
+    },
+    {
+      "text": "The metric is persisted with every field, applied, and without rules",
+      "marks": [1, 2]
+    },
+    {
+      "text": "A code is only reserved while its metric is applied and live",
+      "marks": [3, 4]
+    },
+    {
+      "text": "Failure with BadRequest and the 'already exists and in used' error",
+      "marks": [5, 6, 7]
+    },
+    {
+      "text": "Failure with BadRequest from the mapper; nothing reaches the database",
+      "marks": [8]
+    }
+  ],
+  "exception_text": "No unhandled exception; every rejection is returned as a failed Result",
+  "exception_marks": [5, 6, 7, 8],
+  "cases": [
+    { "method": "CreateClinicalMetric_Success", "type": "N", "result": "P" },
+    { "method": "CreateClinicalMetric_ExistingDifferentCode_Success", "type": "B", "result": "P" },
+    { "method": "CreateClinicalMetric_SameCodeNotInUse_Success", "type": "B", "result": "P" },
+    { "method": "CreateClinicalMetric_SameCodeSoftDeleted_Success", "type": "B", "result": "P" },
+    { "method": "CreateClinicalMetric_DuplicateInUseCode_Fail", "type": "A", "result": "P" },
+    { "method": "CreateClinicalMetric_DuplicateInUseCode_Fail", "type": "A", "result": "P" },
+    { "method": "CreateClinicalMetric_DuplicateInUseCode_Fail", "type": "A", "result": "P" },
+    { "method": "CreateClinicalMetric_MappingFailure_Fail", "type": "A", "result": "P" }
+  ]
+}

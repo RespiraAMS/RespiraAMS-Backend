@@ -1,0 +1,155 @@
+{
+  "function_code": "UpdateClinicalMetricHandler.HandleAsync",
+  "sheet_name": "UpdateClinicalMetricHandler",
+  "lines_of_code": 42,
+  "requirement": "Update a clinical metric: the metric must exist and be live, then map the new name, description, version, publisher, and applied flag onto the tracked entity (the code is immutable), save it, and report Updated.",
+  "preconditions": [
+    {
+      "text": "A live clinical metric exists for the target id",
+      "marks": [
+        1,
+        5,
+        6
+      ]
+    },
+    {
+      "text": "The target id matches no live metric",
+      "marks": [
+        2,
+        4,
+        7
+      ]
+    },
+    {
+      "text": "The mapper reports a failure for the command",
+      "marks": [
+        3
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "Update the name, description, version, and publisher of a live metric",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "Update request with Guid.Empty",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "Update whose mapper reports a mapping failure",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "Update request with an unknown id",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "Switch the metric on (IsApplied = true)",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "Switch the metric off (IsApplied = false)",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "Update request for a metric that was soft deleted beforehand",
+      "marks": [
+        7
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "Success with Updated status; the mapped fields and UpdatedAt are persisted",
+      "marks": [
+        1,
+        5,
+        6
+      ]
+    },
+    {
+      "text": "The code stays unchanged because it is immutable after creation",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "The applied flag follows the command",
+      "marks": [
+        5,
+        6
+      ]
+    },
+    {
+      "text": "Failure with BadRequest and the 'Clinical metric not found' error",
+      "marks": [
+        2,
+        4,
+        7
+      ]
+    },
+    {
+      "text": "Failure from the mapper is forwarded and nothing is persisted",
+      "marks": [
+        3
+      ]
+    }
+  ],
+  "exception_text": "No unhandled exception; every rejection is returned as a failed Result",
+  "exception_marks": [
+    2,
+    3,
+    4,
+    7
+  ],
+  "cases": [
+    {
+      "method": "UpdateClinicalMetric_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "UpdateClinicalMetric_EmptyId_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdateClinicalMetric_MappingFailure_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdateClinicalMetric_UnknownId_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdateClinicalMetric_SwitchMetricOn_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "UpdateClinicalMetric_SwitchMetricOff_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "UpdateClinicalMetric_SoftDeletedMetric_Fail",
+      "type": "A",
+      "result": "P"
+    }
+  ]
+}

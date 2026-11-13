@@ -1,0 +1,436 @@
+{
+  "function_code": "GetUpdateStatusQueryHandler.HandleAsync",
+  "sheet_name": "GetUpdateStatusQueryHandler",
+  "lines_of_code": 52,
+  "requirement": "Read the in-flight update-profile saga: ask the saga state reader for the requested id once, return ResourceNotFound when no in-progress saga exists, and otherwise mirror the saga id, step (including updating account/profile, uploading avatar, and deleting old media), account, doctor, media, and failure reason into the status result.",
+  "preconditions": [
+    {
+      "text": "An update-profile saga state is stored for the requested id",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27
+      ]
+    },
+    {
+      "text": "The query carries the saga id and a cancellation token",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27
+      ]
+    },
+    {
+      "text": "The saga is missing, failed, or at one of the update steps",
+      "marks": [
+        1,
+        16,
+        19,
+        20,
+        24,
+        25,
+        26
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "HandleAsync_AFailedSagaWithoutAFailureReason_ReportsANullReason",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "HandleAsync_AsksTheReaderForTheExactSagaId",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "HandleAsync_AsksTheReaderForTheUpdateSagaType",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "HandleAsync_MirrorsEveryStep (step: Completed)",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "HandleAsync_MirrorsEveryStep (step: DeletingOldMedia)",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "HandleAsync_MirrorsEveryStep (step: Failed)",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "HandleAsync_MirrorsEveryStep (step: UpdatingAccount)",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "HandleAsync_MirrorsEveryStep (step: UpdatingProfile)",
+      "marks": [
+        8
+      ]
+    },
+    {
+      "text": "HandleAsync_MirrorsEveryStep (step: UploadingAvatar)",
+      "marks": [
+        9
+      ]
+    },
+    {
+      "text": "HandleAsync_MirrorsTheAccountId",
+      "marks": [
+        10
+      ]
+    },
+    {
+      "text": "HandleAsync_MirrorsTheDoctorId",
+      "marks": [
+        11
+      ]
+    },
+    {
+      "text": "HandleAsync_MirrorsTheMediaId",
+      "marks": [
+        12
+      ]
+    },
+    {
+      "text": "HandleAsync_PassesTheCancellationTokenToTheReader",
+      "marks": [
+        13
+      ]
+    },
+    {
+      "text": "HandleAsync_ReadsTheSagaExactlyOnce",
+      "marks": [
+        14
+      ]
+    },
+    {
+      "text": "HandleAsync_ReportsTheSagaIdOfTheSagaThatWasRead",
+      "marks": [
+        15
+      ]
+    },
+    {
+      "text": "HandleAsync_WhenTheSagaDoesNotExist_ReturnsResourceNotFound",
+      "marks": [
+        16
+      ]
+    },
+    {
+      "text": "HandleAsync_WhenTheSagaExists_MirrorsItsState",
+      "marks": [
+        17
+      ]
+    },
+    {
+      "text": "HandleAsync_WithACompletedSaga_ReportsCompleted",
+      "marks": [
+        18
+      ]
+    },
+    {
+      "text": "HandleAsync_WithADeletingOldMediaSaga_ReportsDeletingOldMedia",
+      "marks": [
+        19
+      ]
+    },
+    {
+      "text": "HandleAsync_WithAFailedSaga_ReportsFailed",
+      "marks": [
+        20
+      ]
+    },
+    {
+      "text": "HandleAsync_WithAFailureReason_ReportsThatReason",
+      "marks": [
+        21
+      ]
+    },
+    {
+      "text": "HandleAsync_WithANullQuery_Throws",
+      "marks": [
+        22
+      ]
+    },
+    {
+      "text": "HandleAsync_WithASagaIdDifferentFromTheQuery_ReportsTheSagaOwnId",
+      "marks": [
+        23
+      ]
+    },
+    {
+      "text": "HandleAsync_WithAnUpdatingAccountSaga_ReportsUpdatingAccount",
+      "marks": [
+        24
+      ]
+    },
+    {
+      "text": "HandleAsync_WithAnUpdatingProfileSaga_ReportsUpdatingProfile",
+      "marks": [
+        25
+      ]
+    },
+    {
+      "text": "HandleAsync_WithAnUploadingAvatarSaga_ReportsUploadingAvatar",
+      "marks": [
+        26
+      ]
+    },
+    {
+      "text": "HandleAsync_WithoutAFailureReason_KeepsItNull",
+      "marks": [
+        27
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "The reader is asked for the exact saga id and the update saga type, once",
+      "marks": [
+        2,
+        3,
+        13,
+        14
+      ]
+    },
+    {
+      "text": "Every saga field is mirrored, including the update/upload/deleting-old-media steps",
+      "marks": [
+        1,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        19,
+        21,
+        23,
+        24,
+        25,
+        26,
+        27
+      ]
+    },
+    {
+      "text": "Completed and failed steps are reported as stored",
+      "marks": [
+        1,
+        18,
+        20
+      ]
+    },
+    {
+      "text": "A missing saga returns ResourceNotFound",
+      "marks": [
+        16
+      ]
+    }
+  ],
+  "exception_text": "ArgumentNullException when the query is null",
+  "exception_marks": [
+    22
+  ],
+  "cases": [
+    {
+      "method": "HandleAsync_AFailedSagaWithoutAFailureReason_ReportsANullReason",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_AsksTheReaderForTheExactSagaId",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_AsksTheReaderForTheUpdateSagaType",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_MirrorsEveryStep",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_MirrorsEveryStep",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_MirrorsEveryStep",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_MirrorsEveryStep",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_MirrorsEveryStep",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_MirrorsEveryStep",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_MirrorsTheAccountId",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_MirrorsTheDoctorId",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_MirrorsTheMediaId",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_PassesTheCancellationTokenToTheReader",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_ReadsTheSagaExactlyOnce",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_ReportsTheSagaIdOfTheSagaThatWasRead",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WhenTheSagaDoesNotExist_ReturnsResourceNotFound",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WhenTheSagaExists_MirrorsItsState",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithACompletedSaga_ReportsCompleted",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithADeletingOldMediaSaga_ReportsDeletingOldMedia",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithAFailedSaga_ReportsFailed",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithAFailureReason_ReportsThatReason",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithANullQuery_Throws",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithASagaIdDifferentFromTheQuery_ReportsTheSagaOwnId",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithAnUpdatingAccountSaga_ReportsUpdatingAccount",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithAnUpdatingProfileSaga_ReportsUpdatingProfile",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithAnUploadingAvatarSaga_ReportsUploadingAvatar",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithoutAFailureReason_KeepsItNull",
+      "type": "N",
+      "result": "P"
+    }
+  ]
+}

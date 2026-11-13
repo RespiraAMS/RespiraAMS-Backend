@@ -1,0 +1,170 @@
+{
+  "function_code": "DischargePatientHandler.HandleAsync",
+  "sheet_name": "DischargePatientHandler",
+  "lines_of_code": 53,
+  "requirement": "Discharge a patient: the patient must exist and be live, must have received at least one treatment, and must not have been discharged before, then the discharge timestamp and treatment outcome are stored.",
+  "preconditions": [
+    {
+      "text": "A live patient exists for the target id",
+      "marks": [
+        1,
+        4,
+        5,
+        6,
+        7,
+        8
+      ]
+    },
+    {
+      "text": "The patient has at least one treatment and no discharge yet",
+      "marks": [
+        4,
+        5,
+        6,
+        7
+      ]
+    },
+    {
+      "text": "The patient is unknown, soft-deleted, untreated, or already discharged",
+      "marks": [
+        1,
+        2,
+        3,
+        8
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "DischargePatient AlreadyDischarged Fail",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "DischargePatient SoftDeletedPatient Fail",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "DischargePatient UnknownId Fail",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "DischargePatient WithTreatment SetsDischargeAndOutcome Success (outcome: Death)",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "DischargePatient WithTreatment SetsDischargeAndOutcome Success (outcome: InTreatment)",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "DischargePatient WithTreatment SetsDischargeAndOutcome Success (outcome: OutOfScope)",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "DischargePatient WithTreatment SetsDischargeAndOutcome Success (outcome: Recovered)",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "DischargePatient WithoutTreatment Fail",
+      "marks": [
+        8
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "Success with Updated status; the discharge timestamp and outcome are stored",
+      "marks": [
+        4,
+        5,
+        6,
+        7
+      ]
+    },
+    {
+      "text": "Every defined treatment outcome is accepted, including OutOfScope",
+      "marks": [
+        4,
+        5,
+        6,
+        7
+      ]
+    },
+    {
+      "text": "Failure with BadRequest for an unknown or already-discharged patient",
+      "marks": [
+        1,
+        3
+      ]
+    },
+    {
+      "text": "Failure with BadRequest when the patient has no treatment",
+      "marks": [
+        2,
+        8
+      ]
+    }
+  ],
+  "exception_text": "No unhandled exception; every rejection is returned as a failed Result",
+  "exception_marks": [
+    1,
+    2,
+    3,
+    8
+  ],
+  "cases": [
+    {
+      "method": "DischargePatient_AlreadyDischarged_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "DischargePatient_SoftDeletedPatient_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "DischargePatient_UnknownId_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "DischargePatient_WithTreatment_SetsDischargeAndOutcome_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "DischargePatient_WithTreatment_SetsDischargeAndOutcome_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "DischargePatient_WithTreatment_SetsDischargeAndOutcome_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "DischargePatient_WithTreatment_SetsDischargeAndOutcome_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "DischargePatient_WithoutTreatment_Fail",
+      "type": "A",
+      "result": "P"
+    }
+  ]
+}

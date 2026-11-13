@@ -1,0 +1,151 @@
+{
+  "function_code": "AddMetricRuleHandler.HandleAsync",
+  "sheet_name": "AddMetricRuleHandler",
+  "lines_of_code": 79,
+  "requirement": "Add one rule to a clinical metric: the metric and criterion must exist and be live, the criterion may not repeat within the metric, and the rule must match the metric's existing system (scoring vs major/minor); then map the formula against the clinical variables and persist the rule.",
+  "preconditions": [
+    {
+      "text": "The target clinical metric exists and is live",
+      "marks": [1, 2, 3, 4, 5, 6, 7, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]
+    },
+    {
+      "text": "The target criterion exists and is live",
+      "marks": [1, 2, 3, 4, 5, 6, 7, 8, 9, 12, 13, 14, 15, 16, 17, 18, 19]
+    },
+    {
+      "text": "The metric already carries one live rule of its system",
+      "marks": [5, 18, 19]
+    },
+    {
+      "text": "A live clinical variable exists for the score function",
+      "marks": [2]
+    },
+    {
+      "text": "A soft-deleted rule already reserves the criterion in the metric",
+      "marks": [7]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "Scoring rule with the constant score function 1",
+      "marks": [1]
+    },
+    {
+      "text": "Scoring rule with a ternary age-band formula referencing the AGE variable",
+      "marks": [2]
+    },
+    {
+      "text": "Major/minor rule with IsMajor = true",
+      "marks": [3]
+    },
+    {
+      "text": "Major/minor rule with IsMajor = false",
+      "marks": [4]
+    },
+    {
+      "text": "Second scoring rule on a metric that already has one",
+      "marks": [5]
+    },
+    {
+      "text": "Same criterion used by a different metric",
+      "marks": [6]
+    },
+    {
+      "text": "Criterion already reserved by a soft-deleted rule",
+      "marks": [7]
+    },
+    {
+      "text": "Add request with an unknown clinical metric ID",
+      "marks": [8]
+    },
+    {
+      "text": "Add request with a soft-deleted clinical metric ID",
+      "marks": [9]
+    },
+    {
+      "text": "Add request with an unknown criterion ID",
+      "marks": [10]
+    },
+    {
+      "text": "Add request with a soft-deleted criterion ID",
+      "marks": [11]
+    },
+    {
+      "text": "Criterion already used by a live rule in the metric",
+      "marks": [12]
+    },
+    {
+      "text": "Score function referencing an unknown clinical variable",
+      "marks": [13]
+    },
+    {
+      "text": "Score function referencing a soft-deleted clinical variable",
+      "marks": [14]
+    },
+    {
+      "text": "Score function adding a boolean constant to a number",
+      "marks": [15]
+    },
+    {
+      "text": "Command that sets both a score function and IsMajor",
+      "marks": [16]
+    },
+    {
+      "text": "Command that sets neither a score function nor IsMajor",
+      "marks": [17]
+    },
+    {
+      "text": "Major/minor rule added to an existing scoring metric",
+      "marks": [18]
+    },
+    {
+      "text": "Scoring rule added to an existing major/minor metric",
+      "marks": [19]
+    }
+  ],
+  "returns": [
+    {
+      "text": "Success with Created status and the new rule ID",
+      "marks": [1, 2, 3, 4, 5, 6, 7]
+    },
+    {
+      "text": "A ScoringRule is persisted with the mapped formula and turns the metric into a scoring system",
+      "marks": [1, 2, 5, 6, 7]
+    },
+    {
+      "text": "A MajorMinorRule is persisted with the requested flag and sets the metric system",
+      "marks": [3, 4]
+    },
+    {
+      "text": "Failure with BadRequest for a missing, deleted, duplicate, or unresolvable reference",
+      "marks": [8, 9, 10, 11, 12, 13, 14, 15]
+    },
+    {
+      "text": "Failure with BusinessRuleViolation when the rule type contradicts the metric system",
+      "marks": [18, 19]
+    }
+  ],
+  "exception_text": "ArgumentException is thrown when the command sets both or neither of the score function and major/minor flag; nothing is persisted",
+  "exception_marks": [16, 17],
+  "cases": [
+    { "method": "AddRule_ScoringRuleConstant_Success", "type": "N", "result": "P" },
+    { "method": "AddRule_ScoringRuleTernaryWithVariable_Success", "type": "N", "result": "P" },
+    { "method": "AddRule_MajorMinorRule_Success", "type": "B", "result": "P" },
+    { "method": "AddRule_MajorMinorRule_Success", "type": "B", "result": "P" },
+    { "method": "AddRule_SecondScoringRuleSameSystem_Success", "type": "N", "result": "P" },
+    { "method": "AddRule_SameCriterionInAnotherMetric_Success", "type": "N", "result": "P" },
+    { "method": "AddRule_SoftDeletedRuleDoesNotBlock_Success", "type": "N", "result": "P" },
+    { "method": "AddRule_UnknownMetric_Fail", "type": "A", "result": "P" },
+    { "method": "AddRule_SoftDeletedMetric_Fail", "type": "A", "result": "P" },
+    { "method": "AddRule_UnknownCriterion_Fail", "type": "A", "result": "P" },
+    { "method": "AddRule_SoftDeletedCriterion_Fail", "type": "A", "result": "P" },
+    { "method": "AddRule_DuplicateCriterion_Fail", "type": "A", "result": "P" },
+    { "method": "AddRule_UnknownVariableInScoreFunction_Fail", "type": "A", "result": "P" },
+    { "method": "AddRule_SoftDeletedVariableInScoreFunction_Fail", "type": "A", "result": "P" },
+    { "method": "AddRule_TypeInvalidFormulaOperands_Fail", "type": "A", "result": "P" },
+    { "method": "AddRule_BothScoreFunctionAndIsMajor_Throws", "type": "A", "result": "P" },
+    { "method": "AddRule_NeitherScoreFunctionNorIsMajor_Throws", "type": "A", "result": "P" },
+    { "method": "AddRule_MajorMinorRuleIntoScoringMetric_Fail", "type": "A", "result": "P" },
+    { "method": "AddRule_ScoringRuleIntoMajorMinorMetric_Fail", "type": "A", "result": "P" }
+  ]
+}

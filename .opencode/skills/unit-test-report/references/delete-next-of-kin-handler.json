@@ -1,0 +1,97 @@
+{
+  "function_code": "DeleteNextOfKinHandler.HandleAsync",
+  "sheet_name": "DeleteNextOfKinHandler",
+  "lines_of_code": 29,
+  "requirement": "Soft delete a next of kin by id: stamp IsDeleted/DeletedAt on the row only, leaving sibling next-of-kin rows and other patients untouched, and report an unknown or already-deleted id as not found.",
+  "preconditions": [
+    {
+      "text": "A live next of kin exists for the target id",
+      "marks": [
+        1,
+        4
+      ]
+    },
+    {
+      "text": "The target is unknown or already soft-deleted",
+      "marks": [
+        2,
+        3
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "DeleteNextOfKin LeavesSiblingsAndOtherPatientsUntouched Success",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "DeleteNextOfKin SoftDeletedKin Fail",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "DeleteNextOfKin UnknownId Fail",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "DeleteNextOfKin ValidKin SoftDeletesKin Success",
+      "marks": [
+        4
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "Success with Deleted status; the row is soft-deleted",
+      "marks": [
+        1,
+        4
+      ]
+    },
+    {
+      "text": "Sibling next-of-kin rows and other patients stay untouched",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "Failure with BadRequest for an unknown or already-deleted id",
+      "marks": [
+        2,
+        3
+      ]
+    }
+  ],
+  "exception_text": "No unhandled exception; a missing or already-deleted row is returned as a failed Result",
+  "exception_marks": [
+    2,
+    3
+  ],
+  "cases": [
+    {
+      "method": "DeleteNextOfKin_LeavesSiblingsAndOtherPatientsUntouched_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "DeleteNextOfKin_SoftDeletedKin_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "DeleteNextOfKin_UnknownId_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "DeleteNextOfKin_ValidKin_SoftDeletesKin_Success",
+      "type": "N",
+      "result": "P"
+    }
+  ]
+}

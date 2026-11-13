@@ -1,0 +1,222 @@
+{
+  "function_code": "UpdateCriterionMapper.Map",
+  "sheet_name": "UpdateCriterionMapper",
+  "lines_of_code": 39,
+  "requirement": "Apply an update-criterion command to the existing model: resolve the formula against the supplied variables, reject a non-boolean result, then rewrite the name, formula, and UpdatedAt while keeping the identity, state, and referencing rows.",
+  "preconditions": [
+    {
+      "text": "The mapper is constructed with a formula mapper",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ]
+    },
+    {
+      "text": "The clinical variables are supplied as mapper dependencies",
+      "marks": [
+        1,
+        2,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "Bare variable formula",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "Mapping through the dependency-less overload",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "Formula referencing an unknown variable",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "Dependencies that are not a list of clinical variables",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "Comparison of systolic blood pressure against a threshold",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "Formula that adds a boolean and a number",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "Formula with no fields at all",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "Nested logical formula",
+      "marks": [
+        8
+      ]
+    },
+    {
+      "text": "Purely numeric formula",
+      "marks": [
+        9
+      ]
+    },
+    {
+      "text": "Boolean constant formula",
+      "marks": [
+        10
+      ]
+    },
+    {
+      "text": "Update that changes the name and formula",
+      "marks": [
+        11
+      ]
+    },
+    {
+      "text": "Update that only rewrites the payload",
+      "marks": [
+        12
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "Success at ApplicationStatus.Success with the updated criterion",
+      "marks": [
+        1,
+        5,
+        8,
+        10,
+        11,
+        12
+      ]
+    },
+    {
+      "text": "The name and formula are replaced and UpdatedAt is refreshed",
+      "marks": [
+        10,
+        11
+      ]
+    },
+    {
+      "text": "Only non-leaf operands are parenthesised and variables are de-duplicated",
+      "marks": [
+        8
+      ]
+    },
+    {
+      "text": "The identity, soft-delete state, and referencing rows stay untouched",
+      "marks": [
+        12
+      ]
+    },
+    {
+      "text": "Failure with BadRequest when the formula cannot be resolved or is not boolean",
+      "marks": [
+        3,
+        6,
+        7,
+        9
+      ]
+    }
+  ],
+  "exception_text": "NotImplementedException from the dependency-less overload",
+  "exception_marks": [
+    2
+  ],
+  "cases": [
+    {
+      "method": "MapModel_Variable_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "MapModel_WithoutDependencies_ThrowsNotImplementedException",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "MapModel_UnknownVariable_Failure",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "MapModel_NonVariableListDependencies_Failure",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "MapModel_Comparison_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "MapModel_InvalidFormula_Failure",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "MapModel_EmptyFormula_Failure",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "MapModel_NestedLogical_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "MapModel_NonBooleanFormula_Failure",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "MapModel_BooleanConstant_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "MapModel_UpdatesNameAndTimestamp_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "MapModel_KeepsIdentityAndState_Success",
+      "type": "N",
+      "result": "P"
+    }
+  ]
+}

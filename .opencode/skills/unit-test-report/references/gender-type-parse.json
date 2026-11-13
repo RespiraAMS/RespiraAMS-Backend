@@ -1,0 +1,97 @@
+{
+  "function_code": "GenderType.Parse",
+  "sheet_name": "GenderType",
+  "lines_of_code": 14,
+  "requirement": "GenderType enum contract: Male and Female keep stable ordinals, parse and serialize round-trip through their names with the JSON string enum converter, and undefined ordinals are rejected.",
+  "preconditions": [
+    {
+      "text": "The GenderType enum is loaded",
+      "marks": [
+        1,
+        2,
+        3,
+        4
+      ]
+    },
+    {
+      "text": "A declared member or an undefined ordinal is supplied",
+      "marks": [
+        1,
+        2,
+        3,
+        4
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "GenderType_IsAnnotatedWithJsonStringEnumConverter",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "IsDefined_RejectsUndefinedOrdinal",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "ParseAndSerialize_RoundTripEveryMember (gender: Female, expectedName: \"Female\", expectedOrdinal: 1)",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "ParseAndSerialize_RoundTripEveryMember (gender: Male, expectedName: \"Male\", expectedOrdinal: 0)",
+      "marks": [
+        4
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "Male and Female round-trip through parse and JSON serialization",
+      "marks": [
+        3,
+        4
+      ]
+    },
+    {
+      "text": "The enum is annotated with JsonStringEnumConverter",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "Undefined ordinals are rejected",
+      "marks": [
+        2
+      ]
+    }
+  ],
+  "exception_text": "No unhandled exception; undefined ordinals are reported as false",
+  "exception_marks": [],
+  "cases": [
+    {
+      "method": "GenderType_IsAnnotatedWithJsonStringEnumConverter",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IsDefined_RejectsUndefinedOrdinal",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "ParseAndSerialize_RoundTripEveryMember",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "ParseAndSerialize_RoundTripEveryMember",
+      "type": "N",
+      "result": "P"
+    }
+  ]
+}

@@ -1,0 +1,282 @@
+{
+  "function_code": "AuditEventFactory.Create",
+  "sheet_name": "AuditEventFactory",
+  "lines_of_code": 46,
+  "requirement": "Map a local audit outbox row to the shared saga audit event: reuse the entry id as the event id for de-duplication, copy the actor, action, entity, and correlation fields, and build a details JSON containing operation, change set, changed fields, before/after snapshots, request path, and trace id, with blank snapshots becoming null.",
+  "preconditions": [
+    {
+      "text": "An AuditEntry row from a local outbox is supplied",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18
+      ]
+    },
+    {
+      "text": "The entry has normal or blank snapshot/change-field JSON",
+      "marks": [
+        1,
+        2,
+        3,
+        13,
+        18
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "Create_BlankAfterJson_ProducesANullAfterKey",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "Create_BlankBeforeJson_ProducesANullBeforeKey",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "Create_BlankChangedFieldsJson_ProducesANullChangedFieldsKey",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "Create_DetailsJsonContainsTheChangeSetId",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "Create_DetailsJsonContainsTheChangedFieldsAsJsonArray",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "Create_DetailsJsonContainsTheOperation",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "Create_DetailsJsonContainsTheParsedAfterSnapshot",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "Create_DetailsJsonContainsTheParsedBeforeSnapshot",
+      "marks": [
+        8
+      ]
+    },
+    {
+      "text": "Create_DetailsJsonContainsTheRequestPath",
+      "marks": [
+        9
+      ]
+    },
+    {
+      "text": "Create_DetailsJsonContainsTheTraceId",
+      "marks": [
+        10
+      ]
+    },
+    {
+      "text": "Create_DetailsJsonIsValidJsonThatRoundTrips",
+      "marks": [
+        11
+      ]
+    },
+    {
+      "text": "Create_EventIdIsTheEntryId_SoTheCentralStoreCanDeduplicate",
+      "marks": [
+        12
+      ]
+    },
+    {
+      "text": "Create_MapsTheAuditEntryOntoTheSharedEvent",
+      "marks": [
+        13
+      ]
+    },
+    {
+      "text": "Create_NullActorAccountId_StaysNull",
+      "marks": [
+        14
+      ]
+    },
+    {
+      "text": "Create_NullCorrelationId_StaysNull",
+      "marks": [
+        15
+      ]
+    },
+    {
+      "text": "Create_NullEntityId_StaysNull",
+      "marks": [
+        16
+      ]
+    },
+    {
+      "text": "Create_NullEntry_Throws",
+      "marks": [
+        17
+      ]
+    },
+    {
+      "text": "Create_WhitespaceBeforeJson_ProducesANullBeforeKey",
+      "marks": [
+        18
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "The event id is the entry id and the actor, action, entity, and correlation fields map across",
+      "marks": [
+        12,
+        13,
+        14,
+        15,
+        16
+      ]
+    },
+    {
+      "text": "Details JSON is valid and contains operation, change set, changed fields, before, after, path, and trace",
+      "marks": [
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ]
+    },
+    {
+      "text": "Parsed snapshots appear in details, and blank JSON becomes null",
+      "marks": [
+        1,
+        2,
+        3,
+        7,
+        8,
+        18
+      ]
+    }
+  ],
+  "exception_text": "ArgumentNullException when the entry is null",
+  "exception_marks": [
+    17
+  ],
+  "cases": [
+    {
+      "method": "Create_BlankAfterJson_ProducesANullAfterKey",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "Create_BlankBeforeJson_ProducesANullBeforeKey",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "Create_BlankChangedFieldsJson_ProducesANullChangedFieldsKey",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "Create_DetailsJsonContainsTheChangeSetId",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Create_DetailsJsonContainsTheChangedFieldsAsJsonArray",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Create_DetailsJsonContainsTheOperation",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Create_DetailsJsonContainsTheParsedAfterSnapshot",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Create_DetailsJsonContainsTheParsedBeforeSnapshot",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Create_DetailsJsonContainsTheRequestPath",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Create_DetailsJsonContainsTheTraceId",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Create_DetailsJsonIsValidJsonThatRoundTrips",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Create_EventIdIsTheEntryId_SoTheCentralStoreCanDeduplicate",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Create_MapsTheAuditEntryOntoTheSharedEvent",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Create_NullActorAccountId_StaysNull",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Create_NullCorrelationId_StaysNull",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Create_NullEntityId_StaysNull",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Create_NullEntry_Throws",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Create_WhitespaceBeforeJson_ProducesANullBeforeKey",
+      "type": "B",
+      "result": "P"
+    }
+  ]
+}

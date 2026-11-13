@@ -1,0 +1,215 @@
+{
+  "function_code": "FormulaSerializer.Serialize",
+  "sheet_name": "FormulaSerializer",
+  "lines_of_code": 101,
+  "requirement": "Serialize and deserialize a domain formula to and from JSONB: write a stable discriminator first, keep the variable payload minimal, and round-trip every formula kind, including deeply nested trees whose node order may be rearranged by JSONB.",
+  "preconditions": [
+    {
+      "text": "The formula tree is built in memory",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ]
+    },
+    {
+      "text": "The JSON payload carries a valid discriminator",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "Binary RoundTrips",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "BooleanConstant RoundTrips",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "CategoricalConstant RoundTrips",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "Deserialize DiscriminatorNotFirst StillDeserializes",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "Deserialize MissingDiscriminator Throws",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "Deserialize NestedNodesReorderedByJsonb StillDeserializes",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "NestedTree RoundTrips",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "NumericConstant RoundTrips",
+      "marks": [
+        8
+      ]
+    },
+    {
+      "text": "Serialize WritesDiscriminatorAndStableVariablePayload WithoutDerivedBloat",
+      "marks": [
+        9
+      ]
+    },
+    {
+      "text": "Ternary RoundTrips",
+      "marks": [
+        10
+      ]
+    },
+    {
+      "text": "Unary RoundTrips",
+      "marks": [
+        11
+      ]
+    },
+    {
+      "text": "Variable RoundTripsAsVariableRef",
+      "marks": [
+        12
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "The formula round-trips to an equivalent tree",
+      "marks": [
+        1,
+        2,
+        3,
+        7,
+        8,
+        10,
+        11,
+        12
+      ]
+    },
+    {
+      "text": "The serialized payload keeps the discriminator first and a minimal variable reference",
+      "marks": [
+        9
+      ]
+    },
+    {
+      "text": "Deserialization tolerates a reordered discriminator or JSONB node order",
+      "marks": [
+        4,
+        6
+      ]
+    },
+    {
+      "text": "ArgumentException is thrown when the discriminator is missing",
+      "marks": [
+        5
+      ]
+    }
+  ],
+  "exception_text": "ArgumentException is thrown when the JSON payload has no discriminator",
+  "exception_marks": [
+    5
+  ],
+  "cases": [
+    {
+      "method": "Binary_RoundTrips",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "BooleanConstant_RoundTrips",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "CategoricalConstant_RoundTrips",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Deserialize_DiscriminatorNotFirst_StillDeserializes",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Deserialize_MissingDiscriminator_Throws",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Deserialize_NestedNodesReorderedByJsonb_StillDeserializes",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "NestedTree_RoundTrips",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "NumericConstant_RoundTrips",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Serialize_WritesDiscriminatorAndStableVariablePayload_WithoutDerivedBloat",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Ternary_RoundTrips",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Unary_RoundTrips",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Variable_RoundTripsAsVariableRef",
+      "type": "N",
+      "result": "P"
+    }
+  ]
+}

@@ -1,0 +1,328 @@
+{
+  "function_code": "DiagnoseHandler.HandleAsync",
+  "sheet_name": "DiagnoseHandler",
+  "lines_of_code": 235,
+  "requirement": "Run the diagnosis flow for a clinical picture: load the live clinical context, resolve and type-check the observations, validate pathogen and allergy references, then delegate observation validation, severity/infection diagnosis, microbiology, and treatment recommendation to the diagnose service and map the whole result.",
+  "preconditions": [
+    {
+      "text": "The clinical context contains the variables, pathogens, antibiotics, and reference data seeded for the case",
+      "marks": [
+        1,
+        2,
+        4,
+        6,
+        7,
+        8,
+        10,
+        13,
+        14,
+        15,
+        16,
+        17
+      ]
+    },
+    {
+      "text": "Every referenced variable, pathogen, and antibiotic exists and is live",
+      "marks": [
+        1,
+        2,
+        4,
+        6,
+        7,
+        15,
+        16,
+        17
+      ]
+    },
+    {
+      "text": "The diagnose service returns a successful diagnosis, microbiology, and treatment result",
+      "marks": [
+        1,
+        2,
+        4,
+        6,
+        7,
+        10,
+        15,
+        16,
+        17
+      ]
+    },
+    {
+      "text": "A referenced entity is unknown or the observation value does not match its type",
+      "marks": [
+        3,
+        6,
+        8,
+        10,
+        12,
+        13,
+        14
+      ]
+    },
+    {
+      "text": "The diagnose service or its upstream stage returns a failure",
+      "marks": [
+        3,
+        5,
+        9,
+        11
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "Full clinical picture with observations, allergy, samples, infections, and history",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "NonRegisteredAntibiotic allergy carrying an other-allergy text",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "Observation set rejected by the service's internal validation",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "Request with no observation, sample, allergy antibiotic, infection, or history",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "Microbial test stage fails",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "Categorical observation with an empty value",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "Categorical observation with a whitespace-only value",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "Allergy listing an unknown antibiotic id",
+      "marks": [
+        8
+      ]
+    },
+    {
+      "text": "Severity and infection diagnosis stage fails",
+      "marks": [
+        9
+      ]
+    },
+    {
+      "text": "Numeric observation with a non-numeric value",
+      "marks": [
+        10
+      ]
+    },
+    {
+      "text": "Treatment recommendation stage fails",
+      "marks": [
+        11
+      ]
+    },
+    {
+      "text": "Microbial sample for an unknown pathogen",
+      "marks": [
+        12
+      ]
+    },
+    {
+      "text": "Observation for a variable that is not in the context",
+      "marks": [
+        13
+      ]
+    },
+    {
+      "text": "Boolean observation with a non-boolean value",
+      "marks": [
+        14
+      ]
+    },
+    {
+      "text": "Numeric observation at the lower body-temperature boundary (34.0)",
+      "marks": [
+        15
+      ]
+    },
+    {
+      "text": "Numeric observation inside the range (38.75)",
+      "marks": [
+        16
+      ]
+    },
+    {
+      "text": "Numeric observation at the upper body-temperature boundary (42.0)",
+      "marks": [
+        17
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "Success with the mapped diagnosis result",
+      "marks": [
+        1,
+        2,
+        4,
+        15,
+        16,
+        17
+      ]
+    },
+    {
+      "text": "Observations are parsed according to the variable type and the clinical picture is rebuilt from the context",
+      "marks": [
+        1,
+        2,
+        15,
+        16,
+        17
+      ]
+    },
+    {
+      "text": "Only applied metrics and treatment protocols take part and every result section is mapped",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "Failure with BadRequest for an unresolved reference or an invalid observation value",
+      "marks": [
+        6,
+        7,
+        8,
+        10,
+        12,
+        13,
+        14
+      ]
+    },
+    {
+      "text": "Failure carrying the upstream service status code",
+      "marks": [
+        3,
+        5,
+        9,
+        11
+      ]
+    }
+  ],
+  "exception_text": "No unhandled exception; every rejection is returned as a failed Result",
+  "exception_marks": [
+    3,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14
+  ],
+  "cases": [
+    {
+      "method": "Diagnose_FullClinicalPicture_MapsWholeResult_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Diagnose_NonRegisteredAntibioticAllergy_MapsOtherAllergy_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Diagnose_ObservationValidationFails_ReturnsServiceError",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Diagnose_NoObservationNoSampleAtAll_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "Diagnose_MicrobialTestFails_ReturnsServiceError",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Diagnose_CategoricalObservationWithBlankValue_Fails",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Diagnose_CategoricalObservationWithBlankValue_Fails",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Diagnose_AllergyWithUnknownAntibiotic_Fails",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Diagnose_SeverityAndInfectionDiagnosisFails_ReturnsServiceError",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Diagnose_NumericObservationWithNonNumericValue_Fails",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Diagnose_RecommendTreatmentFails_ReturnsServiceError",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Diagnose_MicrobialSampleWithUnknownPathogen_Fails",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Diagnose_ObservationVariableNotFound_Fails",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Diagnose_BooleanObservationWithNonBooleanValue_Fails",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Diagnose_NumericObservation_ParsesInvariantDecimal",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "Diagnose_NumericObservation_ParsesInvariantDecimal",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Diagnose_NumericObservation_ParsesInvariantDecimal",
+      "type": "B",
+      "result": "P"
+    }
+  ]
+}

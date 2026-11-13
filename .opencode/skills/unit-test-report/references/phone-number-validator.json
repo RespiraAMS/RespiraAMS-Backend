@@ -1,0 +1,267 @@
+{
+  "function_code": "PhoneNumberValidator.Validate",
+  "sheet_name": "PhoneNumberValidator",
+  "lines_of_code": 22,
+  "requirement": "Check a Vietnamese mobile phone number: accept a 3/5/7/8/9 network prefix followed by eight digits, with an optional 0, 84, or +84 country prefix; reject other prefixes, wrong lengths, and non-numeric input.",
+  "preconditions": [
+    {
+      "text": "The validator is a pure static function",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ]
+    },
+    {
+      "text": "The number is matched against ^(\\+84|84|0)(3|5|7|8|9)[0-9]{8}$",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "PhoneNumberValidator IsNotValid (phoneNumber: '01123456789')",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "PhoneNumberValidator IsNotValid (phoneNumber: '019123456789')",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "PhoneNumberValidator IsNotValid (phoneNumber: '02123456789')",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "PhoneNumberValidator IsNotValid (phoneNumber: '04123456789')",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "PhoneNumberValidator IsNotValid (phoneNumber: '06123456789')",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "PhoneNumberValidator IsNotValid (phoneNumber: '07123456789')",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "PhoneNumberValidator IsNotValid (phoneNumber: '8409123456789')",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "PhoneNumberValidator IsNotValid (phoneNumber: 'VN912345678')",
+      "marks": [
+        8
+      ]
+    },
+    {
+      "text": "PhoneNumberValidator IsValid (phoneNumber: '+84912345678')",
+      "marks": [
+        9
+      ]
+    },
+    {
+      "text": "PhoneNumberValidator IsValid (phoneNumber: '0312345678')",
+      "marks": [
+        10
+      ]
+    },
+    {
+      "text": "PhoneNumberValidator IsValid (phoneNumber: '0512345678')",
+      "marks": [
+        11
+      ]
+    },
+    {
+      "text": "PhoneNumberValidator IsValid (phoneNumber: '0712345678')",
+      "marks": [
+        12
+      ]
+    },
+    {
+      "text": "PhoneNumberValidator IsValid (phoneNumber: '0812345678')",
+      "marks": [
+        13
+      ]
+    },
+    {
+      "text": "PhoneNumberValidator IsValid (phoneNumber: '0912345678')",
+      "marks": [
+        14
+      ]
+    },
+    {
+      "text": "PhoneNumberValidator IsValid (phoneNumber: '84912345678')",
+      "marks": [
+        15
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "True for a valid 10-digit number with a 03/05/07/08/09 prefix",
+      "marks": [
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ]
+    },
+    {
+      "text": "True for the 84 and +84 country-code forms",
+      "marks": [
+        9,
+        15
+      ]
+    },
+    {
+      "text": "False for an unsupported prefix (01/02/04/06/07 with 11 digits)",
+      "marks": [
+        1,
+        3,
+        4,
+        5,
+        6
+      ]
+    },
+    {
+      "text": "False for a wrong length or a letter-bearing number",
+      "marks": [
+        2,
+        7,
+        8
+      ]
+    }
+  ],
+  "exception_text": "No unhandled exception; invalid input simply returns false",
+  "exception_marks": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ],
+  "cases": [
+    {
+      "method": "PhoneNumberValidator_IsNotValid",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "PhoneNumberValidator_IsNotValid",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "PhoneNumberValidator_IsNotValid",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "PhoneNumberValidator_IsNotValid",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "PhoneNumberValidator_IsNotValid",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "PhoneNumberValidator_IsNotValid",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "PhoneNumberValidator_IsNotValid",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "PhoneNumberValidator_IsNotValid",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "PhoneNumberValidator_IsValid",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "PhoneNumberValidator_IsValid",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "PhoneNumberValidator_IsValid",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "PhoneNumberValidator_IsValid",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "PhoneNumberValidator_IsValid",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "PhoneNumberValidator_IsValid",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "PhoneNumberValidator_IsValid",
+      "type": "N",
+      "result": "P"
+    }
+  ]
+}

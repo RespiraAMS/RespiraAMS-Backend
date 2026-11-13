@@ -1,0 +1,379 @@
+{
+  "function_code": "SearchClinicalMetricHandler.HandleAsync",
+  "sheet_name": "SearchClinicalMetricHandler",
+  "lines_of_code": 53,
+  "requirement": "Full-text search clinical metrics: build a prefix tsquery from the search term, short-circuit to an empty first page when the term has no usable lexeme, rank name matches above code matches above description matches, project every publication field, and return the requested page.",
+  "preconditions": [
+    {
+      "text": "The clinical metric table contains the rows seeded for the case",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22
+      ]
+    },
+    {
+      "text": "The search term yields at least one usable lexeme",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        9,
+        10,
+        13,
+        14,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22
+      ]
+    },
+    {
+      "text": "Every word in the search term is a single character, so no lexeme survives",
+      "marks": [
+        11,
+        12
+      ]
+    },
+    {
+      "text": "The search term consists only of symbols the prefix-query builder strips",
+      "marks": [
+        5,
+        6,
+        7,
+        8
+      ]
+    },
+    {
+      "text": "A soft-deleted metric shares the code of the live metric",
+      "marks": [
+        10
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "Search 'metric' over five metrics, two matching by name",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "Search 'metric', page 1, size 1 (minimum page size)",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "Search 'metric', page 3, size 2 (last page)",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "Search 'qsofa' (no seeded match)",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "Search '&&', page 1, size 10",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "Search '||', page 1, size 10",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "Search '!!', page 1, size 10",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "Search '((', page 1, size 10",
+      "marks": [
+        8
+      ]
+    },
+    {
+      "text": "Search 'idsa' over the five metrics",
+      "marks": [
+        9
+      ]
+    },
+    {
+      "text": "Search 'psi' when a soft-deleted copy shares the code",
+      "marks": [
+        10
+      ]
+    },
+    {
+      "text": "Search 'a b', page 3, size 5",
+      "marks": [
+        11
+      ]
+    },
+    {
+      "text": "Search 'x y z', page 3, size 5",
+      "marks": [
+        12
+      ]
+    },
+    {
+      "text": "Search 'blood urea' (description-only match)",
+      "marks": [
+        13
+      ]
+    },
+    {
+      "text": "Search 'sofa' with the term in the name, the code, and the description",
+      "marks": [
+        14
+      ]
+    },
+    {
+      "text": "Search 'metric', page 1, size 100 (maximum page size)",
+      "marks": [
+        15
+      ]
+    },
+    {
+      "text": "Search 'psi' (full code)",
+      "marks": [
+        16
+      ]
+    },
+    {
+      "text": "Search 'PSI' (upper case, folded by the respira_vi configuration)",
+      "marks": [
+        17
+      ]
+    },
+    {
+      "text": "Search 'ps' (shorter prefix)",
+      "marks": [
+        18
+      ]
+    },
+    {
+      "text": "Search 'tality' (infix, not a prefix)",
+      "marks": [
+        19
+      ]
+    },
+    {
+      "text": "Search 'metric', page 1, size 2",
+      "marks": [
+        20
+      ]
+    },
+    {
+      "text": "Search 'diem' (unaccented) over a Vietnamese metric name",
+      "marks": [
+        21
+      ]
+    },
+    {
+      "text": "Search 'điểm' (accented) over a Vietnamese metric name",
+      "marks": [
+        22
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "Success with the requested page and its pagination metadata",
+      "marks": [
+        1,
+        2,
+        3,
+        9,
+        10,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        20,
+        21,
+        22
+      ]
+    },
+    {
+      "text": "Every item carries its id, code, name, description, version, publisher, applied flag, and rank",
+      "marks": [
+        9
+      ]
+    },
+    {
+      "text": "Name matches outrank code matches, which outrank description matches",
+      "marks": [
+        1,
+        14
+      ]
+    },
+    {
+      "text": "Empty page with zero total items and no next page",
+      "marks": [
+        4,
+        5,
+        6,
+        7,
+        8,
+        11,
+        12,
+        19
+      ]
+    },
+    {
+      "text": "Matching is prefix-only and soft-deleted metrics never match",
+      "marks": [
+        10,
+        19
+      ]
+    }
+  ],
+  "exception_text": "No unhandled exception; the handler has no failure branch and always returns success",
+  "exception_marks": [],
+  "cases": [
+    {
+      "method": "SearchClinicalMetric_NameMatchOutranksDescriptionMatch_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SearchClinicalMetric_MinimumPageSize_ReturnsOneItemPerPage_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "SearchClinicalMetric_LastPage_HasNoNext_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "SearchClinicalMetric_TermMatchesNothing_ReturnsEmptyPage_Success",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SearchClinicalMetric_SymbolOnlyTerm_ReturnsEmptyPage_Success",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SearchClinicalMetric_SymbolOnlyTerm_ReturnsEmptyPage_Success",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SearchClinicalMetric_SymbolOnlyTerm_ReturnsEmptyPage_Success",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SearchClinicalMetric_SymbolOnlyTerm_ReturnsEmptyPage_Success",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SearchClinicalMetric_PrefixMatchOnName_ReturnsFullProjection_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SearchClinicalMetric_SoftDeletedMetric_IsExcluded_Success",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SearchClinicalMetric_NoUsableLexeme_ReturnsEmptyPage_Success",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SearchClinicalMetric_NoUsableLexeme_ReturnsEmptyPage_Success",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SearchClinicalMetric_MatchOnlyInDescription_ReturnsMetric_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SearchClinicalMetric_SameTermInDifferentFields_RanksNameAboveCodeAboveDescription_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SearchClinicalMetric_MaximumPageSize_ReturnsAllMatchesInOnePage_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "SearchClinicalMetric_PrefixTerm_MatchesSameMetric_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SearchClinicalMetric_PrefixTerm_MatchesSameMetric_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "SearchClinicalMetric_PrefixTerm_MatchesSameMetric_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "SearchClinicalMetric_TermIsInsideNameButNotPrefix_ReturnsEmptyPage_Success",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SearchClinicalMetric_FirstPage_SplitsMatchesWithMetadata_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SearchClinicalMetric_AccentFoldedTerm_MatchesVietnameseData_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SearchClinicalMetric_AccentFoldedTerm_MatchesVietnameseData_Success",
+      "type": "N",
+      "result": "P"
+    }
+  ]
+}

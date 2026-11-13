@@ -1,0 +1,153 @@
+{
+  "function_code": "DeleteTreatmentProtocolHandler.HandleAsync",
+  "sheet_name": "DeleteTreatmentProtocolHandler",
+  "lines_of_code": 48,
+  "requirement": "Soft delete a treatment protocol and cascade the soft delete to all of its treatments inside one transaction, leaving other rows untouched, and report an unknown or already-deleted id as not found.",
+  "preconditions": [
+    {
+      "text": "A live treatment protocol exists for the target id",
+      "marks": [
+        3,
+        4,
+        6,
+        7
+      ]
+    },
+    {
+      "text": "The protocol owns the treatments seeded for the case",
+      "marks": [
+        3,
+        4,
+        6
+      ]
+    },
+    {
+      "text": "The target id matches no live protocol, or it is already soft-deleted",
+      "marks": [
+        1,
+        2,
+        5
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "Second delete request for an already deleted protocol",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "Delete request with an unknown protocol id",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "Delete a protocol holding one treatment (Mild, Outpatient)",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "Delete a protocol holding one treatment (Severe, IntensiveCareUnit)",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "Delete request for a protocol that was soft deleted beforehand",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "Delete a protocol holding several treatments",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "Delete a protocol that has no treatment",
+      "marks": [
+        7
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "Success with Deleted status; the protocol is soft-deleted",
+      "marks": [
+        3,
+        4,
+        6,
+        7
+      ]
+    },
+    {
+      "text": "Every treatment of the protocol is soft-deleted in the same transaction",
+      "marks": [
+        3,
+        4,
+        6
+      ]
+    },
+    {
+      "text": "Other rows stay untouched",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "Failure with BadRequest and the 'Treatment protocol not found' error",
+      "marks": [
+        1,
+        2,
+        5
+      ]
+    }
+  ],
+  "exception_text": "No unhandled exception; a missing or already-deleted protocol is returned as a failed Result",
+  "exception_marks": [
+    1,
+    2,
+    5
+  ],
+  "cases": [
+    {
+      "method": "DeleteTreatmentProtocol_AlreadyDeleted_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "DeleteTreatmentProtocol_ProtocolNotFound_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "DeleteTreatmentProtocol_WithSingleTreatment_CascadesSoftDelete_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "DeleteTreatmentProtocol_WithSingleTreatment_CascadesSoftDelete_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "DeleteTreatmentProtocol_SoftDeletedProtocol_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "DeleteTreatmentProtocol_WithMultipleTreatments_CascadesSoftDelete_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "DeleteTreatmentProtocol_WithoutTreatments_Success",
+      "type": "B",
+      "result": "P"
+    }
+  ]
+}

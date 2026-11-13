@@ -1,0 +1,109 @@
+{
+  "function_code": "ClinicalRollbackService.Rollback",
+  "sheet_name": "ClinicalRollbackService",
+  "lines_of_code": 543,
+  "requirement": "Restore Clinical data from the change set written by one SaveChanges call: preview the scalar, owned-JSON, and many-to-many changes together with safety conflicts, then apply deletes, updates, and restores inside a transaction with audit capture suppressed, write a Clinical.AuditRollback entry, and refuse the rollback when current data differs from the audited after-state.",
+  "preconditions": [
+    {
+      "text": "A Clinical database contains audit change sets and their current rows",
+      "marks": [
+        1,
+        2,
+        3,
+        4
+      ]
+    },
+    {
+      "text": "The change set covers many-to-many relations, formulas, and owned ranges",
+      "marks": [
+        3,
+        4
+      ]
+    },
+    {
+      "text": "A stale row makes the change set unsafe to roll back",
+      "marks": [
+        2
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "DevelopmentAuditSeeder_SeedsAllRollbackScenariosCorrectly",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "Rollback_SuppressesIntermediateAuditEntriesAndDetectsStaleConflict",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "UpdateFormulaAndOwnedRange_RollbackRestoresSnapshots",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "UpdateManyToMany_RollbackRestoresRelationsAndTreatments",
+      "marks": [
+        4
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "Relations, treatments, formulas, and owned ranges are restored to the audited before-state",
+      "marks": [
+        3,
+        4
+      ]
+    },
+    {
+      "text": "The rollback writes one Clinical.AuditRollback entry while intermediate audit entries stay suppressed",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "A stale change set is reported as a conflict instead of overwriting newer data",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "Development audit seed data covers every rollback scenario",
+      "marks": [
+        1
+      ]
+    }
+  ],
+  "exception_text": "ClinicalRollbackConflictException when current data differs from the audited after-state",
+  "exception_marks": [
+    2
+  ],
+  "cases": [
+    {
+      "method": "DevelopmentAuditSeeder_SeedsAllRollbackScenariosCorrectly",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Rollback_SuppressesIntermediateAuditEntriesAndDetectsStaleConflict",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdateFormulaAndOwnedRange_RollbackRestoresSnapshots",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "UpdateManyToMany_RollbackRestoresRelationsAndTreatments",
+      "type": "N",
+      "result": "P"
+    }
+  ]
+}

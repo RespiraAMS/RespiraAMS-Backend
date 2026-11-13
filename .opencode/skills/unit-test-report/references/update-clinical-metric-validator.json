@@ -1,0 +1,255 @@
+{
+  "function_code": "UpdateClinicalMetricValidator.Validate",
+  "sheet_name": "UpdateClinicalMetricValidator",
+  "lines_of_code": 16,
+  "requirement": "Validate an update-clinical-metric command: the id, name, description, version, and publisher must all be non-empty; the code is not part of the command because it is immutable.",
+  "preconditions": [
+    {
+      "text": "Validation runs on an in-memory command without database access",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "Empty publisher",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "Whitespace-only publisher",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "Seeded CURB-65 metric fields",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "Seeded PSI metric fields",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "Seeded IDSA/ATS metric fields",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "Empty name",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "Whitespace-only name",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "Every required field empty",
+      "marks": [
+        8
+      ]
+    },
+    {
+      "text": "Every field padded with surrounding whitespace",
+      "marks": [
+        9
+      ]
+    },
+    {
+      "text": "Maximum GUID (ffffffff-ffff-ffff-ffff-ffffffffffff) as the id",
+      "marks": [
+        10
+      ]
+    },
+    {
+      "text": "Empty version",
+      "marks": [
+        11
+      ]
+    },
+    {
+      "text": "Whitespace-only version",
+      "marks": [
+        12
+      ]
+    },
+    {
+      "text": "Guid.Empty as the id",
+      "marks": [
+        13
+      ]
+    },
+    {
+      "text": "Minimal single-character values in every field",
+      "marks": [
+        14
+      ]
+    },
+    {
+      "text": "Empty description",
+      "marks": [
+        15
+      ]
+    },
+    {
+      "text": "Whitespace-only description",
+      "marks": [
+        16
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "No validation errors",
+      "marks": [
+        3,
+        4,
+        5,
+        9,
+        10,
+        14
+      ]
+    },
+    {
+      "text": "Single validation error reported on the one empty field or the id",
+      "marks": [
+        1,
+        2,
+        6,
+        7,
+        11,
+        12,
+        13,
+        15,
+        16
+      ]
+    },
+    {
+      "text": "Five violations reported for five empty fields",
+      "marks": [
+        8
+      ]
+    }
+  ],
+  "exception_text": "No unhandled exception; invalid input is reported as validation errors",
+  "exception_marks": [
+    1,
+    2,
+    6,
+    7,
+    8,
+    11,
+    12,
+    13,
+    15,
+    16
+  ],
+  "cases": [
+    {
+      "method": "UpdateClinicalMetric_EmptyPublisher_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdateClinicalMetric_EmptyPublisher_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdateClinicalMetric_SeededMetric_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "UpdateClinicalMetric_SeededMetric_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "UpdateClinicalMetric_SeededMetric_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "UpdateClinicalMetric_EmptyName_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdateClinicalMetric_EmptyName_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdateClinicalMetric_AllRequiredFieldsEmpty_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdateClinicalMetric_ValueWithSurroundingWhitespace_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "UpdateClinicalMetric_MaximumId_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "UpdateClinicalMetric_EmptyVersion_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdateClinicalMetric_EmptyVersion_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdateClinicalMetric_EmptyId_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdateClinicalMetric_MinimalValues_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "UpdateClinicalMetric_EmptyDescription_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdateClinicalMetric_EmptyDescription_Fail",
+      "type": "A",
+      "result": "P"
+    }
+  ]
+}

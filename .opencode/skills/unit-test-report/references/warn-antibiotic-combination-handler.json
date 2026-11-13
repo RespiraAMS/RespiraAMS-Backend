@@ -1,0 +1,292 @@
+{
+  "function_code": "WarnAntibioticCombinationHandler.HandleAsync",
+  "sheet_name": "WarnAntibioticComboHandler",
+  "lines_of_code": 72,
+  "requirement": "Tell the client whether a custom antibiotic combination needs a warning because two of its antibiotics share a group lineage: resolve every id against the live catalogue, ask the diagnose service whether the combination is valid, and invert that answer into the warning flag.",
+  "preconditions": [
+    {
+      "text": "The antibiotic catalogue contains the medicines seeded for the case",
+      "marks": [
+        1,
+        2,
+        3,
+        5,
+        6,
+        7,
+        9,
+        10,
+        11,
+        15
+      ]
+    },
+    {
+      "text": "Every provided antibiotic id resolves to a live catalogue entry",
+      "marks": [
+        1,
+        2,
+        3,
+        5,
+        6,
+        7,
+        9,
+        10,
+        11,
+        15
+      ]
+    },
+    {
+      "text": "The provided ids are distinct",
+      "marks": [
+        1,
+        2,
+        3,
+        5,
+        6,
+        7,
+        9,
+        10,
+        11,
+        15
+      ]
+    },
+    {
+      "text": "The diagnose service returns a successful combination verdict",
+      "marks": [
+        1,
+        2,
+        3,
+        5,
+        6,
+        7,
+        9,
+        10,
+        11,
+        15
+      ]
+    },
+    {
+      "text": "An id is unknown, retired, duplicated, or the service fails",
+      "marks": [
+        4,
+        8,
+        12,
+        13,
+        14
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "Three antibiotics whose shared lineage is not between the first two",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "Single antibiotic",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "Empty antibiotic list",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "Two entries resolving to the same antibiotic",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "Two beta-lactams that only meet at the third ancestor level",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "Three antibiotics from unrelated lineages",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "A parent group and its child group",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "A soft-deleted antibiotic",
+      "marks": [
+        8
+      ]
+    },
+    {
+      "text": "The same sibling beta-lactams in reversed order",
+      "marks": [
+        9
+      ]
+    },
+    {
+      "text": "Two aminopenicillins from the exact same group",
+      "marks": [
+        10
+      ]
+    },
+    {
+      "text": "Two antibiotics from unrelated lineages",
+      "marks": [
+        11
+      ]
+    },
+    {
+      "text": "An antibiotic list where no id resolves",
+      "marks": [
+        12
+      ]
+    },
+    {
+      "text": "Combination whose service call fails",
+      "marks": [
+        13
+      ]
+    },
+    {
+      "text": "One unknown and one known antibiotic",
+      "marks": [
+        14
+      ]
+    },
+    {
+      "text": "Two sibling beta-lactam sub-classes",
+      "marks": [
+        15
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "Success with NeedWarning = true when a lineage is shared",
+      "marks": [
+        1,
+        5,
+        7,
+        9,
+        10,
+        15
+      ]
+    },
+    {
+      "text": "Success with NeedWarning = false when no lineage is shared",
+      "marks": [
+        2,
+        3,
+        6,
+        11
+      ]
+    },
+    {
+      "text": "Failure with BadRequest when an id is unknown, retired, or duplicated",
+      "marks": [
+        4,
+        8,
+        12,
+        14
+      ]
+    },
+    {
+      "text": "Failure propagated unchanged from the diagnose service",
+      "marks": [
+        13
+      ]
+    }
+  ],
+  "exception_text": "No unhandled exception; every rejection is returned as a failed Result",
+  "exception_marks": [
+    4,
+    8,
+    12,
+    13,
+    14
+  ],
+  "cases": [
+    {
+      "method": "WarnAntibioticCombination_NonAdjacentSharedLineage_NeedWarning",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "WarnAntibioticCombination_SingleAntibiotic_NoWarning",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "WarnAntibioticCombination_EmptyAntibioticList_NoWarning",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "WarnAntibioticCombination_DuplicateAntibioticIds_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "WarnAntibioticCombination_DeepCommonAncestor_NeedWarning",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "WarnAntibioticCombination_ThreeUnrelatedLineages_NoWarning",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "WarnAntibioticCombination_ParentAndChildGroups_NeedWarning",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "WarnAntibioticCombination_RetiredAntibiotic_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "WarnAntibioticCombination_ReversedOrder_NeedWarning",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "WarnAntibioticCombination_SameGroup_NeedWarning",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "WarnAntibioticCombination_TwoUnrelatedLineages_NoWarning",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "WarnAntibioticCombination_AllAntibioticsUnknown_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "WarnAntibioticCombination_ServiceFails_PropagatesError",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "WarnAntibioticCombination_UnknownAntibiotic_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "WarnAntibioticCombination_SiblingGroups_NeedWarning",
+      "type": "N",
+      "result": "P"
+    }
+  ]
+}

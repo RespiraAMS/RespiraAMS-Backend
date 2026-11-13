@@ -1,0 +1,81 @@
+{
+  "function_code": "CreateAntibioticGroupValidator.Validate",
+  "sheet_name": "CreateAntibioticGroupValidator",
+  "lines_of_code": 21,
+  "requirement": "Validate a create-antibiotic-group command: the name and description must not be empty or whitespace, and the parent ID must be either null or a non-empty GUID.",
+  "preconditions": [
+    {
+      "text": "Validation runs on an in-memory command without database access",
+      "marks": [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "Name 'Beta-lactams' and a valid description, null parent",
+      "marks": [1]
+    },
+    {
+      "text": "Name 'Macrolides' and a valid description, null parent",
+      "marks": [2]
+    },
+    {
+      "text": "Name 'Penicillins' and a valid description with a version-7 parent ID",
+      "marks": [3]
+    },
+    {
+      "text": "Empty name and a valid description",
+      "marks": [4]
+    },
+    {
+      "text": "Whitespace-only name and a valid description",
+      "marks": [5]
+    },
+    {
+      "text": "Valid name and an empty description",
+      "marks": [6]
+    },
+    {
+      "text": "Valid name and a whitespace-only description",
+      "marks": [7]
+    },
+    {
+      "text": "Guid.Empty as the parent ID",
+      "marks": [8]
+    },
+    {
+      "text": "Empty name, empty description, and Guid.Empty parent",
+      "marks": [9]
+    }
+  ],
+  "returns": [
+    {
+      "text": "No validation errors",
+      "marks": [1, 2, 3]
+    },
+    {
+      "text": "Single validation error reported on Name or Description",
+      "marks": [4, 5, 6, 7]
+    },
+    {
+      "text": "Single validation error reported on ParentId",
+      "marks": [8]
+    },
+    {
+      "text": "Three violations reported for three invalid fields",
+      "marks": [9]
+    }
+  ],
+  "exception_text": "No unhandled exception; invalid input is reported as validation errors",
+  "exception_marks": [4, 5, 6, 7, 8, 9],
+  "cases": [
+    { "method": "CreateAntibioticGroup_Success", "type": "N", "result": "P" },
+    { "method": "CreateAntibioticGroup_Success", "type": "N", "result": "P" },
+    { "method": "CreateAntibioticGroup_WithParentId_Success", "type": "N", "result": "P" },
+    { "method": "CreateAntibioticGroup_Fail", "type": "A", "result": "P" },
+    { "method": "CreateAntibioticGroup_Fail", "type": "A", "result": "P" },
+    { "method": "CreateAntibioticGroup_Fail", "type": "A", "result": "P" },
+    { "method": "CreateAntibioticGroup_Fail", "type": "A", "result": "P" },
+    { "method": "CreateAntibioticGroup_EmptyParentId_Fail", "type": "A", "result": "P" },
+    { "method": "CreateAntibioticGroup_AllFieldsEmpty_Fail", "type": "A", "result": "P" }
+  ]
+}

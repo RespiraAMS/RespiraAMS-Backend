@@ -1,0 +1,406 @@
+{
+  "function_code": "SearchPathogenHandler.HandleAsync",
+  "sheet_name": "SearchPathogenHandler",
+  "lines_of_code": 48,
+  "requirement": "Full-text search pathogens: build a prefix tsquery, short-circuit to an empty first page when the term has no usable lexeme, rank name matches above description matches, project the atypical flag, and return the requested page.",
+  "preconditions": [
+    {
+      "text": "The pathogen table contains the rows seeded for the case",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24
+      ]
+    },
+    {
+      "text": "The search term yields at least one usable lexeme",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        17,
+        18,
+        19,
+        22,
+        23,
+        24
+      ]
+    },
+    {
+      "text": "Every word in the search term is a single character, so no lexeme survives",
+      "marks": [
+        20,
+        21
+      ]
+    },
+    {
+      "text": "The search term consists only of symbols the prefix-query builder strips",
+      "marks": [
+        13,
+        14,
+        15,
+        16
+      ]
+    },
+    {
+      "text": "A soft-deleted pathogen is the only match for the term",
+      "marks": [
+        22
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "Search 'bacteria' with the term in one name and another description",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "Search 'acute', page 1, size 1 (minimum page size)",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "Search 'streptococcus' (full name)",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "Search 'Streptococcus' (upper case, folded by the respira_vi configuration)",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "Search 'strepto' (shorter prefix)",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "Search 'truc' (unaccented) over a Vietnamese description",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "Search 'trực' (accented) over a Vietnamese description",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "Search 'khuan' (unaccented) over a Vietnamese description",
+      "marks": [
+        8
+      ]
+    },
+    {
+      "text": "Search 'khuẩn' (accented) over a Vietnamese description",
+      "marks": [
+        9
+      ]
+    },
+    {
+      "text": "Search for an atypical pathogen and inspect the flag",
+      "marks": [
+        10
+      ]
+    },
+    {
+      "text": "Search 'acute', page 1, size 2",
+      "marks": [
+        11
+      ]
+    },
+    {
+      "text": "Search 'norovirus' (no seeded match)",
+      "marks": [
+        12
+      ]
+    },
+    {
+      "text": "Search '&&', page 1, size 10",
+      "marks": [
+        13
+      ]
+    },
+    {
+      "text": "Search '||', page 1, size 10",
+      "marks": [
+        14
+      ]
+    },
+    {
+      "text": "Search '!!', page 1, size 10",
+      "marks": [
+        15
+      ]
+    },
+    {
+      "text": "Search '((', page 1, size 10",
+      "marks": [
+        16
+      ]
+    },
+    {
+      "text": "Search 'ureus' (infix, not a prefix)",
+      "marks": [
+        17
+      ]
+    },
+    {
+      "text": "Search 'streptococcus' with every projected field asserted",
+      "marks": [
+        18
+      ]
+    },
+    {
+      "text": "Search 'community acquired' (multi-word, description only)",
+      "marks": [
+        19
+      ]
+    },
+    {
+      "text": "Search 'a b', page 3, size 5",
+      "marks": [
+        20
+      ]
+    },
+    {
+      "text": "Search 'x y z', page 3, size 5",
+      "marks": [
+        21
+      ]
+    },
+    {
+      "text": "Search 'candida' when the only match is soft-deleted",
+      "marks": [
+        22
+      ]
+    },
+    {
+      "text": "Search 'acute', page 1, size 100 (maximum page size)",
+      "marks": [
+        23
+      ]
+    },
+    {
+      "text": "Search 'acute', page 3, size 2 (last page)",
+      "marks": [
+        24
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "Success with the requested page and its metadata",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        17,
+        18,
+        19,
+        23,
+        24
+      ]
+    },
+    {
+      "text": "Each item carries its id, name, description, atypical flag, and rank",
+      "marks": [
+        18
+      ]
+    },
+    {
+      "text": "Name matches outrank description matches",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "The atypical flag is projected as stored",
+      "marks": [
+        10
+      ]
+    },
+    {
+      "text": "An empty page with zero total items",
+      "marks": [
+        12,
+        13,
+        14,
+        15,
+        16,
+        20,
+        21,
+        22
+      ]
+    }
+  ],
+  "exception_text": "No unhandled exception; the handler has no failure branch and always returns success",
+  "exception_marks": [],
+  "cases": [
+    {
+      "method": "SearchPathogen_SameTermInNameAndDescription_RanksNameAboveDescription_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SearchPathogen_MinimumPageSize_ReturnsOneItemPerPage_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "SearchPathogen_PrefixTerm_MatchesSamePathogen_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SearchPathogen_PrefixTerm_MatchesSamePathogen_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "SearchPathogen_PrefixTerm_MatchesSamePathogen_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "SearchPathogen_AccentFoldedTerm_MatchesVietnameseData_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SearchPathogen_AccentFoldedTerm_MatchesVietnameseData_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SearchPathogen_AccentFoldedTerm_MatchesVietnameseData_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SearchPathogen_AccentFoldedTerm_MatchesVietnameseData_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SearchPathogen_AtypicalPathogen_ProjectsAtypicalFlag_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SearchPathogen_FirstPage_SplitsMatchesWithMetadata_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SearchPathogen_TermMatchesNothing_ReturnsEmptyPage_Success",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SearchPathogen_SymbolOnlyTerm_ReturnsEmptyPage_Success",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SearchPathogen_SymbolOnlyTerm_ReturnsEmptyPage_Success",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SearchPathogen_SymbolOnlyTerm_ReturnsEmptyPage_Success",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SearchPathogen_SymbolOnlyTerm_ReturnsEmptyPage_Success",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SearchPathogen_TermIsInsideNameButNotPrefix_ReturnsEmptyPage_Success",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SearchPathogen_PrefixMatchOnName_ReturnsFullProjection_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SearchPathogen_MultiWordTerm_RequiresEveryWordInDescription_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SearchPathogen_NoUsableLexeme_ReturnsEmptyPage_Success",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SearchPathogen_NoUsableLexeme_ReturnsEmptyPage_Success",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SearchPathogen_SoftDeletedPathogen_IsExcluded_Success",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SearchPathogen_MaximumPageSize_ReturnsAllMatchesInOnePage_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "SearchPathogen_LastPage_HasNoNext_Success",
+      "type": "B",
+      "result": "P"
+    }
+  ]
+}

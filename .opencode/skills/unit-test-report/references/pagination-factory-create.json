@@ -1,0 +1,233 @@
+{
+  "function_code": "PaginationFactory.Create",
+  "sheet_name": "PaginationFactory",
+  "lines_of_code": 25,
+  "requirement": "Map an IPagedList into the shared Pagination contract: copy the page number, page size, total count, page count, and next/previous flags into the metadata while keeping the item sequence unchanged, including empty, single-page, middle, and last-page lists.",
+  "preconditions": [
+    {
+      "text": "An IPagedList of items is supplied",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14
+      ]
+    },
+    {
+      "text": "The list is empty, single-page, middle, last, or not an exact multiple of the page size",
+      "marks": [
+        9,
+        10,
+        11,
+        12,
+        13,
+        14
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "Create_CarriesTheItemsOverUnchanged",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "Create_ReturnsAPaginationHoldingTheSameItemSequence",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "Create_UsesTheHasNextPageFlagOfThePagedList",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "Create_UsesTheHasPreviousPageFlagOfThePagedList",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "Create_UsesThePageCountOfThePagedList",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "Create_UsesThePageNumberOfThePagedList",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "Create_UsesThePageSizeOfThePagedList",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "Create_UsesTheTotalItemCountOfThePagedList",
+      "marks": [
+        8
+      ]
+    },
+    {
+      "text": "Create_WithATotalThatIsNotAMultipleOfThePageSize_KeepsThePageCountOfThePagedList",
+      "marks": [
+        9
+      ]
+    },
+    {
+      "text": "Create_WithEmptyPagedList_ReturnsEmptyItemsAndZeroedMetadata",
+      "marks": [
+        10
+      ]
+    },
+    {
+      "text": "Create_WithLastPage_ReportsHasPreviousPageAndNoNextPage",
+      "marks": [
+        11
+      ]
+    },
+    {
+      "text": "Create_WithMiddlePage_ReportsHasNextPageAndHasPreviousPage",
+      "marks": [
+        12
+      ]
+    },
+    {
+      "text": "Create_WithMorePages_ReportsHasNextPage",
+      "marks": [
+        13
+      ]
+    },
+    {
+      "text": "Create_WithSinglePage_ReportsNoNextAndNoPreviousPage",
+      "marks": [
+        14
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "The metadata copies the page number, size, total count, page count, and flags",
+      "marks": [
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        11,
+        12,
+        13
+      ]
+    },
+    {
+      "text": "The items are carried over unchanged in the same sequence",
+      "marks": [
+        1,
+        2
+      ]
+    },
+    {
+      "text": "Empty, single-page, middle, and last pages report the expected flags and metadata",
+      "marks": [
+        9,
+        10,
+        11,
+        12,
+        13,
+        14
+      ]
+    }
+  ],
+  "exception_text": "No unhandled exception; every paged list maps successfully",
+  "exception_marks": [],
+  "cases": [
+    {
+      "method": "Create_CarriesTheItemsOverUnchanged",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Create_ReturnsAPaginationHoldingTheSameItemSequence",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Create_UsesTheHasNextPageFlagOfThePagedList",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Create_UsesTheHasPreviousPageFlagOfThePagedList",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Create_UsesThePageCountOfThePagedList",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Create_UsesThePageNumberOfThePagedList",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Create_UsesThePageSizeOfThePagedList",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Create_UsesTheTotalItemCountOfThePagedList",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Create_WithATotalThatIsNotAMultipleOfThePageSize_KeepsThePageCountOfThePagedList",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "Create_WithEmptyPagedList_ReturnsEmptyItemsAndZeroedMetadata",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "Create_WithLastPage_ReportsHasPreviousPageAndNoNextPage",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "Create_WithMiddlePage_ReportsHasNextPageAndHasPreviousPage",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "Create_WithMorePages_ReportsHasNextPage",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "Create_WithSinglePage_ReportsNoNextAndNoPreviousPage",
+      "type": "B",
+      "result": "P"
+    }
+  ]
+}

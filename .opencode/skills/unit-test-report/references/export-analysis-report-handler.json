@@ -1,0 +1,303 @@
+{
+  "function_code": "ExportAnalysisReportExcelQueryHandler.HandleAsync",
+  "sheet_name": "ExportAnalysisReportHandler",
+  "lines_of_code": 68,
+  "requirement": "Export a stored analysis report as an Excel attachment: load and authorize the report, render it with the Excel writer, and return the content, the spreadsheet MIME type, and a unique file name carrying the analysis id and a timestamp.",
+  "preconditions": [
+    {
+      "text": "A stored analysis report exists for the target id",
+      "marks": [
+        1,
+        2,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        14,
+        15,
+        17
+      ]
+    },
+    {
+      "text": "The caller supplies a required doctor id or null",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17
+      ]
+    },
+    {
+      "text": "The stored JSON is invalid or the writer fails",
+      "marks": [
+        6,
+        7,
+        17
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "Export CarriesDoctorsAndMedicinesIntoTheWriter",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "Export ContentTypeConstant IsExcelSpreadsheetMimeType",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "Export EmptyId ReturnsBadRequest",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "Export ExistingReport FileNameContainsAnalysisIdAndXlsxExtension",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "Export ExistingReport ReturnsExcelFile",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "Export MalformedReportJson ReturnsServerError",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "Export NullReportJson ReturnsServerError",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "Export PassesTheStoredReportToTheWriter",
+      "marks": [
+        8
+      ]
+    },
+    {
+      "text": "Export RequiredDoctorIdDifferentFromReport ReturnsRestricted",
+      "marks": [
+        9
+      ]
+    },
+    {
+      "text": "Export RequiredDoctorIdMatchingReport Succeeds",
+      "marks": [
+        10
+      ]
+    },
+    {
+      "text": "Export RequiredDoctorIdNull Succeeds",
+      "marks": [
+        11
+      ]
+    },
+    {
+      "text": "Export SameAnalysisTwice ProducesDifferentFileNamesWithSameAnalysisId",
+      "marks": [
+        12
+      ]
+    },
+    {
+      "text": "Export SoftDeletedReport ReturnsNotFound",
+      "marks": [
+        13
+      ]
+    },
+    {
+      "text": "Export StoredDoctorIdNullButReportOwnedByOther ReturnsRestricted",
+      "marks": [
+        14
+      ]
+    },
+    {
+      "text": "Export SystemWideReport ReturnsNullDoctorId",
+      "marks": [
+        15
+      ]
+    },
+    {
+      "text": "Export UnknownId ReturnsNotFound",
+      "marks": [
+        16
+      ]
+    },
+    {
+      "text": "Export WriterFailure ReturnsServerError",
+      "marks": [
+        17
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "Success with the Excel content, the spreadsheet MIME type, and a file name containing the analysis id",
+      "marks": [
+        1,
+        2,
+        4,
+        5,
+        8,
+        12
+      ]
+    },
+    {
+      "text": "A null required doctor exports the system-wide report with a null doctor id",
+      "marks": [
+        11,
+        15
+      ]
+    },
+    {
+      "text": "A required doctor that matches the report exports successfully",
+      "marks": [
+        10
+      ]
+    },
+    {
+      "text": "NotFound for an unknown/soft-deleted report, BadRequest for an empty id, and Restricted when the required doctor differs",
+      "marks": [
+        3,
+        9,
+        13,
+        14,
+        16
+      ]
+    },
+    {
+      "text": "ServerError for null/malformed JSON or a writer failure",
+      "marks": [
+        6,
+        7,
+        17
+      ]
+    }
+  ],
+  "exception_text": "No unhandled exception; cancellation still propagates",
+  "exception_marks": [
+    3,
+    6,
+    7,
+    9,
+    13,
+    14,
+    16,
+    17
+  ],
+  "cases": [
+    {
+      "method": "Export_CarriesDoctorsAndMedicinesIntoTheWriter",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Export_ContentTypeConstant_IsExcelSpreadsheetMimeType",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Export_EmptyId_ReturnsBadRequest",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Export_ExistingReport_FileNameContainsAnalysisIdAndXlsxExtension",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Export_ExistingReport_ReturnsExcelFile",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Export_MalformedReportJson_ReturnsServerError",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Export_NullReportJson_ReturnsServerError",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Export_PassesTheStoredReportToTheWriter",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Export_RequiredDoctorIdDifferentFromReport_ReturnsRestricted",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Export_RequiredDoctorIdMatchingReport_Succeeds",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Export_RequiredDoctorIdNull_Succeeds",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Export_SameAnalysisTwice_ProducesDifferentFileNamesWithSameAnalysisId",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Export_SoftDeletedReport_ReturnsNotFound",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Export_StoredDoctorIdNullButReportOwnedByOther_ReturnsRestricted",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Export_SystemWideReport_ReturnsNullDoctorId",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Export_UnknownId_ReturnsNotFound",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Export_WriterFailure_ReturnsServerError",
+      "type": "A",
+      "result": "P"
+    }
+  ]
+}

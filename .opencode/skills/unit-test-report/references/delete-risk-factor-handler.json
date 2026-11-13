@@ -1,0 +1,151 @@
+{
+  "function_code": "DeleteRiskFactorHandler.HandleAsync",
+  "sheet_name": "DeleteRiskFactorHandler",
+  "lines_of_code": 29,
+  "requirement": "Soft delete a risk factor by id: stamp IsDeleted/DeletedAt on the link only, leaving its pathogen, criterion, and sibling risk factors live, and report an unknown or already-deleted id as not found.",
+  "preconditions": [
+    {
+      "text": "A live risk factor exists for the target id",
+      "marks": [
+        1,
+        2,
+        3,
+        6
+      ]
+    },
+    {
+      "text": "Sibling risk factors and the referenced pathogen and criterion exist",
+      "marks": [
+        2,
+        3
+      ]
+    },
+    {
+      "text": "The target id matches no live risk factor, or it is already soft-deleted",
+      "marks": [
+        4,
+        5,
+        7
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "Delete the only risk factor in the table",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "Delete a risk factor while a control row and its parents stay live",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "Delete one of two risk factors sharing the same pathogen",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "Delete request with Guid.Empty",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "Second delete request for an already deleted row",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "Delete the middle one of three risk factors",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "Delete request with an unknown id",
+      "marks": [
+        7
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "Success with Deleted status; the row is soft-deleted and hidden by the query filter",
+      "marks": [
+        1,
+        2,
+        3,
+        6
+      ]
+    },
+    {
+      "text": "The pathogen, criterion, and sibling risk factors stay untouched",
+      "marks": [
+        2,
+        3
+      ]
+    },
+    {
+      "text": "Failure with BadRequest and the 'Risk factor not found' error",
+      "marks": [
+        4,
+        5,
+        7
+      ]
+    },
+    {
+      "text": "A rejected delete never moves an existing deletion timestamp",
+      "marks": [
+        5
+      ]
+    }
+  ],
+  "exception_text": "No unhandled exception; a missing or already-deleted row is returned as a failed Result",
+  "exception_marks": [
+    4,
+    5,
+    7
+  ],
+  "cases": [
+    {
+      "method": "DeleteRiskFactor_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "DeleteRiskFactor_ParentsAndControlKept_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "DeleteRiskFactor_SamePathogenDifferentCriterion_Kept_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "DeleteRiskFactor_EmptyId_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "DeleteRiskFactor_AlreadyDeleted_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "DeleteRiskFactor_OneAmongSeveral_UpperBoundary_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "DeleteRiskFactor_UnknownId_Fail",
+      "type": "A",
+      "result": "P"
+    }
+  ]
+}

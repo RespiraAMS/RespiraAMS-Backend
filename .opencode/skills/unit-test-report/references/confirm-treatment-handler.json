@@ -1,0 +1,675 @@
+{
+  "function_code": "ConfirmTreatmentHandler.HandleAsync",
+  "sheet_name": "ConfirmTreatmentHandler",
+  "lines_of_code": 123,
+  "requirement": "Confirm the doctor's medicine pick against the client-supplied diagnosis: the diagnosis must be a JSON object with a non-empty id, every medicine must resolve to a live catalogue entry, a pick that does not match a protocol combination needs a non-blank reason, and the raw snapshot is then forwarded to the patient service as an upsert-treatment-plan command.",
+  "preconditions": [
+    {
+      "text": "The query carries a JSON object diagnosis with a non-empty diagnosis id",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        33,
+        34,
+        35,
+        36,
+        43
+      ]
+    },
+    {
+      "text": "Every medicine id resolves to a live catalogue entry",
+      "marks": [
+        2,
+        3,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        19,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        33,
+        34,
+        35,
+        36,
+        43
+      ]
+    },
+    {
+      "text": "The pick matches one protocol combination exactly (adherent)",
+      "marks": [
+        14,
+        21,
+        23,
+        24,
+        25,
+        26,
+        33,
+        35,
+        36,
+        43
+      ]
+    },
+    {
+      "text": "The pick does not match any protocol combination (non-adherent)",
+      "marks": [
+        2,
+        3,
+        5,
+        6,
+        7,
+        8,
+        9,
+        19,
+        22,
+        34
+      ]
+    },
+    {
+      "text": "The diagnosis shape is invalid or the upstream treatment-plan command fails",
+      "marks": [
+        10,
+        11,
+        12,
+        13,
+        15,
+        16,
+        17,
+        18,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "Two entries of the same antibiotic id in the medicine list",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "Non-adherent pick (carbapenem + glycopeptide) with a reason",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "Pick one medicine fewer than the protocol combination, no reason",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "Pick a medicine that exists but is soft-deleted",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "Non-adherent pick with an empty reason",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "Non-adherent pick with a single-space reason",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "Non-adherent pick with a three-space reason",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "Non-adherent pick with a tab-only reason",
+      "marks": [
+        8
+      ]
+    },
+    {
+      "text": "Non-adherent pick with a newline-only reason",
+      "marks": [
+        9
+      ]
+    },
+    {
+      "text": "Treatment-plan command fails with ResourceNotFound",
+      "marks": [
+        10
+      ]
+    },
+    {
+      "text": "Treatment-plan command fails with BusinessRuleViolation",
+      "marks": [
+        11
+      ]
+    },
+    {
+      "text": "Treatment-plan command fails with ServerError",
+      "marks": [
+        12
+      ]
+    },
+    {
+      "text": "Treatment-plan command fails with a timeout",
+      "marks": [
+        13
+      ]
+    },
+    {
+      "text": "Adherent cephalosporin + macrolide pick without a reason",
+      "marks": [
+        14
+      ]
+    },
+    {
+      "text": "Default (missing) diagnosis body",
+      "marks": [
+        15
+      ]
+    },
+    {
+      "text": "Diagnosis JSON object with no members",
+      "marks": [
+        16
+      ]
+    },
+    {
+      "text": "Diagnosis JSON with an empty diagnosis id",
+      "marks": [
+        17
+      ]
+    },
+    {
+      "text": "Diagnosis JSON with protocols but no diagnosis id",
+      "marks": [
+        18
+      ]
+    },
+    {
+      "text": "Pick one medicine more than the protocol combination, no reason",
+      "marks": [
+        19
+      ]
+    },
+    {
+      "text": "Medicine list containing an unknown id",
+      "marks": [
+        20
+      ]
+    },
+    {
+      "text": "Diagnosis whose protocol medicine combination is null, with a reason",
+      "marks": [
+        21
+      ]
+    },
+    {
+      "text": "Same number of medicines as the protocol but one id differs, no reason",
+      "marks": [
+        22
+      ]
+    },
+    {
+      "text": "Diagnosis whose protocol medicine combination is empty, with a reason",
+      "marks": [
+        23
+      ]
+    },
+    {
+      "text": "Diagnosis snapshot formatted with indentation",
+      "marks": [
+        24
+      ]
+    },
+    {
+      "text": "Diagnosis without any protocol, with a reason",
+      "marks": [
+        25
+      ]
+    },
+    {
+      "text": "Adherent pick that also supplies a reason",
+      "marks": [
+        26
+      ]
+    },
+    {
+      "text": "Diagnosis with a non-GUID diagnosis id",
+      "marks": [
+        27
+      ]
+    },
+    {
+      "text": "Diagnosis with a null diagnosis id",
+      "marks": [
+        28
+      ]
+    },
+    {
+      "text": "Diagnosis with a numeric diagnosis id",
+      "marks": [
+        29
+      ]
+    },
+    {
+      "text": "Diagnosis whose protocols value is not an array",
+      "marks": [
+        30
+      ]
+    },
+    {
+      "text": "Diagnosis whose protocol medicines value is a string",
+      "marks": [
+        31
+      ]
+    },
+    {
+      "text": "Diagnosis whose protocol medicines value is a nested array",
+      "marks": [
+        32
+      ]
+    },
+    {
+      "text": "Single-medicine protocol combination",
+      "marks": [
+        33
+      ]
+    },
+    {
+      "text": "Non-adherent pick without any reason",
+      "marks": [
+        34
+      ]
+    },
+    {
+      "text": "Diagnosis with an explicit null protocols value and a reason",
+      "marks": [
+        35
+      ]
+    },
+    {
+      "text": "Adherent pick in a different order",
+      "marks": [
+        36
+      ]
+    },
+    {
+      "text": "Diagnosis body that is an empty JSON array",
+      "marks": [
+        37
+      ]
+    },
+    {
+      "text": "Diagnosis body that is a JSON array holding a string",
+      "marks": [
+        38
+      ]
+    },
+    {
+      "text": "Diagnosis body that is a JSON string",
+      "marks": [
+        39
+      ]
+    },
+    {
+      "text": "Diagnosis body that is a JSON number",
+      "marks": [
+        40
+      ]
+    },
+    {
+      "text": "Diagnosis body that is a JSON boolean",
+      "marks": [
+        41
+      ]
+    },
+    {
+      "text": "Diagnosis body that is JSON null",
+      "marks": [
+        42
+      ]
+    },
+    {
+      "text": "Adherent pick found in a later protocol",
+      "marks": [
+        43
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "Success with the treatment plan forwarded to the patient service",
+      "marks": [
+        2,
+        14,
+        21,
+        23,
+        24,
+        25,
+        26,
+        33,
+        35,
+        36,
+        43
+      ]
+    },
+    {
+      "text": "The raw diagnosis snapshot is forwarded verbatim with the resolved medicine catalogue data and the adherence flag",
+      "marks": [
+        14,
+        24
+      ]
+    },
+    {
+      "text": "Failure with BadRequest when the diagnosis shape or id is invalid, or a medicine is unknown, retired, or duplicated",
+      "marks": [
+        1,
+        4,
+        15,
+        16,
+        17,
+        18,
+        20,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42
+      ]
+    },
+    {
+      "text": "Failure with BusinessRuleViolation when a non-adherent pick supplies no reason",
+      "marks": [
+        3,
+        5,
+        6,
+        7,
+        8,
+        9,
+        19,
+        22,
+        34
+      ]
+    },
+    {
+      "text": "Failure carrying the upstream status code when the treatment-plan command fails",
+      "marks": [
+        10,
+        11,
+        12,
+        13
+      ]
+    }
+  ],
+  "exception_text": "No unhandled exception; malformed JSON is caught and every rejection is returned as a failed Result",
+  "exception_marks": [],
+  "cases": [
+    {
+      "method": "ConfirmTreatment_DuplicateMedicine_Fails",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "ConfirmTreatment_NonAdherentWithReason_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "ConfirmTreatment_SubsetOfProtocolCombinationWithoutReason_Fails",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "ConfirmTreatment_RetiredMedicine_Fails",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "ConfirmTreatment_NonAdherentWithBlankReason_Fails",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "ConfirmTreatment_NonAdherentWithBlankReason_Fails",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "ConfirmTreatment_NonAdherentWithBlankReason_Fails",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "ConfirmTreatment_NonAdherentWithBlankReason_Fails",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "ConfirmTreatment_NonAdherentWithBlankReason_Fails",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "ConfirmTreatment_TreatmentPlanCreationFails_PropagatesError",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "ConfirmTreatment_TreatmentPlanCreationFails_PropagatesError",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "ConfirmTreatment_TreatmentPlanCreationFails_PropagatesError",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "ConfirmTreatment_TreatmentPlanCreationFails_PropagatesError",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "ConfirmTreatment_AdherentCombination_ForwardsTreatmentPlan_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "ConfirmTreatment_DefaultDiagnosis_Fails",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "ConfirmTreatment_MissingDiagnosisId_Fails",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "ConfirmTreatment_MissingDiagnosisId_Fails",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "ConfirmTreatment_MissingDiagnosisId_Fails",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "ConfirmTreatment_SupersetOfProtocolCombinationWithoutReason_Fails",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "ConfirmTreatment_UnknownMedicine_Fails",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "ConfirmTreatment_ProtocolWithNullMedicinesWithReason_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "ConfirmTreatment_SameCountButDifferentMedicineWithoutReason_Fails",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "ConfirmTreatment_ProtocolWithEmptyCombinationWithReason_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "ConfirmTreatment_RawDiagnosis_ForwardedVerbatim_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "ConfirmTreatment_DiagnosisWithoutProtocolsWithReason_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "ConfirmTreatment_AdherentCombinationWithReason_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "ConfirmTreatment_MalformedDiagnosis_Fails",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "ConfirmTreatment_MalformedDiagnosis_Fails",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "ConfirmTreatment_MalformedDiagnosis_Fails",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "ConfirmTreatment_MalformedDiagnosis_Fails",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "ConfirmTreatment_MalformedDiagnosis_Fails",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "ConfirmTreatment_MalformedDiagnosis_Fails",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "ConfirmTreatment_SingleMedicineCombination_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "ConfirmTreatment_NonAdherentWithoutReason_Fails",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "ConfirmTreatment_NullProtocolsWithReason_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "ConfirmTreatment_AdherentCombinationInDifferentOrder_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "ConfirmTreatment_NonObjectDiagnosis_Fails",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "ConfirmTreatment_NonObjectDiagnosis_Fails",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "ConfirmTreatment_NonObjectDiagnosis_Fails",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "ConfirmTreatment_NonObjectDiagnosis_Fails",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "ConfirmTreatment_NonObjectDiagnosis_Fails",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "ConfirmTreatment_NonObjectDiagnosis_Fails",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "ConfirmTreatment_AdherentCombinationInLaterProtocol_Success",
+      "type": "N",
+      "result": "P"
+    }
+  ]
+}

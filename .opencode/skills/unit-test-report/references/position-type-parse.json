@@ -1,0 +1,153 @@
+{
+  "function_code": "PositionType.Parse",
+  "sheet_name": "PositionType",
+  "lines_of_code": 26,
+  "requirement": "PositionType enum contract: StaffDoctor through Director keep ordinals 1-6, parse and serialize round-trip through their names with the JSON string enum converter, and zero or undefined ordinals are rejected.",
+  "preconditions": [
+    {
+      "text": "The PositionType enum is loaded",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ]
+    },
+    {
+      "text": "A declared position or an undefined/zero ordinal is supplied",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "IsDefined_RejectsZeroAndUndefinedOrdinals",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "ParseAndSerialize_RoundTripEveryMember (position: DepartmentDeputyHead, expectedName: \"DepartmentDeputyHead\", expectedOrdinal: 3)",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "ParseAndSerialize_RoundTripEveryMember (position: DeputyDirector, expectedName: \"DeputyDirector\", expectedOrdinal: 5)",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "ParseAndSerialize_RoundTripEveryMember (position: Director, expectedName: \"Director\", expectedOrdinal: 6)",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "ParseAndSerialize_RoundTripEveryMember (position: HeadOfDepartment, expectedName: \"HeadOfDepartment\", expectedOrdinal: 4)",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "ParseAndSerialize_RoundTripEveryMember (position: SeniorDoctor, expectedName: \"SeniorDoctor\", expectedOrdinal: 2)",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "ParseAndSerialize_RoundTripEveryMember (position: StaffDoctor, expectedName: \"StaffDoctor\", expectedOrdinal: 1)",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "PositionType_IsAnnotatedWithJsonStringEnumConverter",
+      "marks": [
+        8
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "Each declared position round-trips through parse and JSON serialization",
+      "marks": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ]
+    },
+    {
+      "text": "The enum is annotated with JsonStringEnumConverter",
+      "marks": [
+        8
+      ]
+    },
+    {
+      "text": "Zero and undefined ordinals are rejected",
+      "marks": [
+        1
+      ]
+    }
+  ],
+  "exception_text": "No unhandled exception; invalid ordinals are reported as false",
+  "exception_marks": [],
+  "cases": [
+    {
+      "method": "IsDefined_RejectsZeroAndUndefinedOrdinals",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "ParseAndSerialize_RoundTripEveryMember",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "ParseAndSerialize_RoundTripEveryMember",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "ParseAndSerialize_RoundTripEveryMember",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "ParseAndSerialize_RoundTripEveryMember",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "ParseAndSerialize_RoundTripEveryMember",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "ParseAndSerialize_RoundTripEveryMember",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "PositionType_IsAnnotatedWithJsonStringEnumConverter",
+      "type": "N",
+      "result": "P"
+    }
+  ]
+}

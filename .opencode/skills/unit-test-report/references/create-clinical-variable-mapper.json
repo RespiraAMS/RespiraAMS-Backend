@@ -1,0 +1,282 @@
+{
+  "function_code": "CreateClinicalVariableMapper.Map",
+  "sheet_name": "CreateClinicalVariableMapper",
+  "lines_of_code": 93,
+  "requirement": "Map a create-clinical-variable command to the right ClinicalVariable subtype: resolve the optional prerequisite formula against the supplied variables, build a Boolean, Numeric (with its ranges), or Categorical model, and sanitise the categorical accepted values.",
+  "preconditions": [
+    {
+      "text": "The mapper is constructed with a formula mapper",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16
+      ]
+    },
+    {
+      "text": "The clinical variables are supplied as mapper dependencies",
+      "marks": [
+        1,
+        2,
+        4,
+        8,
+        9,
+        11,
+        12,
+        14,
+        15,
+        16
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "Boolean variable with a bare variable reference as prerequisite",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "Numeric variable with accepted and normal ranges",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "Prerequisite formula whose binary operands have different result types",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "Empty prerequisite formula",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "Boolean variable without prerequisite",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "Numeric variable without an accepted range",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "Dependencies that are not a list of clinical variables",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "Prerequisite referencing an unknown variable",
+      "marks": [
+        8
+      ]
+    },
+    {
+      "text": "Boolean variable with a constant prerequisite",
+      "marks": [
+        9
+      ]
+    },
+    {
+      "text": "Command with value type 999",
+      "marks": [
+        10
+      ]
+    },
+    {
+      "text": "Numeric variable with exclusive and degenerate bounds (min == max)",
+      "marks": [
+        11
+      ]
+    },
+    {
+      "text": "Numeric variable without a normal range",
+      "marks": [
+        12
+      ]
+    },
+    {
+      "text": "Command mapped through the dependency-less overload",
+      "marks": [
+        13
+      ]
+    },
+    {
+      "text": "Categorical variable with accepted values needing sanitisation",
+      "marks": [
+        14
+      ]
+    },
+    {
+      "text": "Numeric variable with an unbounded upper accepted range",
+      "marks": [
+        15
+      ]
+    },
+    {
+      "text": "Boolean variable with a nested formula as prerequisite",
+      "marks": [
+        16
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "Success at ApplicationStatus.Success with the mapped model",
+      "marks": [
+        1,
+        2,
+        5,
+        9,
+        11,
+        12,
+        14,
+        15,
+        16
+      ]
+    },
+    {
+      "text": "The command fields and the resolved prerequisite are copied",
+      "marks": [
+        1,
+        2,
+        5,
+        9,
+        11,
+        12,
+        16
+      ]
+    },
+    {
+      "text": "Numeric ranges are carried over untouched, including degenerate and unbounded ones",
+      "marks": [
+        2,
+        11,
+        12,
+        15
+      ]
+    },
+    {
+      "text": "Categorical accepted values are sanitised to upper case with underscores",
+      "marks": [
+        14
+      ]
+    },
+    {
+      "text": "Failure with BadRequest when the prerequisite cannot be resolved",
+      "marks": [
+        3,
+        4,
+        8
+      ]
+    }
+  ],
+  "exception_text": "NotImplementedException from the dependency-less overload; ArgumentException for non-list dependencies, a numeric variable without an accepted range, or an undefined value type",
+  "exception_marks": [
+    6,
+    7,
+    10,
+    13
+  ],
+  "cases": [
+    {
+      "method": "ToModel_VariablePrerequisite_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "ToModel_NumericVariableWithRanges_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "ToModel_InvalidPrerequisiteFormula_Failure",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "ToModel_EmptyPrerequisite_Failure",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "ToModel_BooleanVariable_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "ToModel_NumericWithoutAcceptedRange_ThrowsArgumentException",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "ToModel_NonVariableListDependencies_ThrowsArgumentException",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "ToModel_UnknownPrerequisiteVariable_Failure",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "ToModel_ConstantPrerequisite_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "ToModel_InvalidValueType_ThrowsArgumentException",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "ToModel_NumericVariableWithExclusiveAndDegenerateRange_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "ToModel_NumericVariableWithoutNormalRange_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "ToModel_WithoutDependencies_ThrowsNotImplementedException",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "ToModel_CategoricalVariable_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "ToModel_NumericVariableWithUnboundedAcceptedRange_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "ToModel_NestedFormulaPrerequisite_Success",
+      "type": "N",
+      "result": "P"
+    }
+  ]
+}

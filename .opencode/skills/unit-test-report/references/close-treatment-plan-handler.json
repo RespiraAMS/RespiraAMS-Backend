@@ -1,0 +1,126 @@
+{
+  "function_code": "CloseTreatmentPlanHandler.HandleAsync",
+  "sheet_name": "CloseTreatmentPlanHandler",
+  "lines_of_code": 37,
+  "requirement": "Close a treatment plan: the plan must exist, be live, and not already be Closed, then its status becomes Closed, the supplied reason is stored verbatim, and the Updated status is returned.",
+  "preconditions": [
+    {
+      "text": "A live treatment plan exists for the target id",
+      "marks": [
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "text": "The plan is not already Closed",
+      "marks": [
+        2,
+        3,
+        4,
+        5
+      ]
+    },
+    {
+      "text": "The plan is unknown, soft-deleted, or already closed",
+      "marks": [
+        1,
+        4,
+        5
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "CloseTreatmentPlan AlreadyClosedPlan Fail",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "CloseTreatmentPlan InProgressPlan ClosesPlan",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "CloseTreatmentPlan ReasonStoredVerbatim Success",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "CloseTreatmentPlan SoftDeletedPlan Fail",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "CloseTreatmentPlan UnknownPlan Fail",
+      "marks": [
+        5
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "Success with Updated status; the plan is Closed",
+      "marks": [
+        2,
+        3
+      ]
+    },
+    {
+      "text": "The close reason is stored verbatim",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "Failure with BadRequest for an unknown or soft-deleted plan",
+      "marks": [
+        4,
+        5
+      ]
+    },
+    {
+      "text": "Failure with BadRequest when the plan is already closed",
+      "marks": [
+        1
+      ]
+    }
+  ],
+  "exception_text": "No unhandled exception; every rejection is returned as a failed Result",
+  "exception_marks": [
+    1,
+    4,
+    5
+  ],
+  "cases": [
+    {
+      "method": "CloseTreatmentPlan_AlreadyClosedPlan_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CloseTreatmentPlan_InProgressPlan_ClosesPlan",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "CloseTreatmentPlan_ReasonStoredVerbatim_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "CloseTreatmentPlan_SoftDeletedPlan_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CloseTreatmentPlan_UnknownPlan_Fail",
+      "type": "A",
+      "result": "P"
+    }
+  ]
+}

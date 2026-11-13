@@ -1,0 +1,328 @@
+{
+  "function_code": "DoctorProfileEnricher.EnrichAsync",
+  "sheet_name": "DoctorProfileEnricher",
+  "lines_of_code": 135,
+  "requirement": "Enrich paged or searched doctor profiles with account and media data: collect distinct account and media ids, query the account and media services through the message bus, copy email, phone, role, status, and avatar URL onto every matching item, and degrade gracefully when a lookup returns no data, fails, or throws.",
+  "preconditions": [
+    {
+      "text": "A sequence of doctor profile items is provided",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ]
+    },
+    {
+      "text": "Account and media summary services are reachable through the message bus",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ]
+    },
+    {
+      "text": "A lookup returns no data, fails, or throws",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "EnrichAsync_WhenAccountIsNotInTheResponse_LeavesAccountFieldsNull",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "EnrichAsync_WhenAccountLookupFails_ReturnsProfilesWithoutAccountData",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "EnrichAsync_WhenAccountLookupFails_StillEnrichesTheAvatar",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "EnrichAsync_WhenAccountLookupThrows_SwallowsTheException",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "EnrichAsync_WhenAccountResponseHasNoData_LeavesAccountFieldsNull",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "EnrichAsync_WhenMediaAssetIsNotInTheResponse_LeavesAvatarUrlNull",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "EnrichAsync_WhenMediaLookupFails_LeavesAvatarUrlNull",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "EnrichAsync_WhenMediaLookupThrows_SwallowsTheException",
+      "marks": [
+        8
+      ]
+    },
+    {
+      "text": "EnrichAsync_WithDistinctAccountIds_RequestsEachIdOnce",
+      "marks": [
+        9
+      ]
+    },
+    {
+      "text": "EnrichAsync_WithDistinctMediaIds_RequestsEachIdOnce",
+      "marks": [
+        10
+      ]
+    },
+    {
+      "text": "EnrichAsync_WithEmptyCollection_DoesNotInvokeBus",
+      "marks": [
+        11
+      ]
+    },
+    {
+      "text": "EnrichAsync_WithNullMediaId_ExcludesItFromTheMediaQuery",
+      "marks": [
+        12
+      ]
+    },
+    {
+      "text": "EnrichAsync_WithResolvedAccount_FillsAccountFields",
+      "marks": [
+        13
+      ]
+    },
+    {
+      "text": "EnrichAsync_WithResolvedMediaAsset_FillsAvatarUrl",
+      "marks": [
+        14
+      ]
+    },
+    {
+      "text": "EnrichAsync_WithSameItem_FillsAccountAndAvatarData",
+      "marks": [
+        15
+      ]
+    },
+    {
+      "text": "EnrichAsync_WithSharedAccountId_FillsEveryMatchingProfile",
+      "marks": [
+        16
+      ]
+    },
+    {
+      "text": "EnrichAsync_WithSharedAccountId_RequestsTheAccountIdOnlyOnce",
+      "marks": [
+        17
+      ]
+    },
+    {
+      "text": "EnrichAsync_WithSharedMediaId_FillsEveryMatchingProfile",
+      "marks": [
+        18
+      ]
+    },
+    {
+      "text": "EnrichAsync_WithoutMediaId_LeavesAvatarUrlNullAndSkipsMediaQuery",
+      "marks": [
+        19
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "Matching profiles receive email, phone, role, status, and avatar URL",
+      "marks": [
+        3,
+        13,
+        14,
+        15,
+        16,
+        18
+      ]
+    },
+    {
+      "text": "Distinct account and media ids are requested only once",
+      "marks": [
+        9,
+        10,
+        17
+      ]
+    },
+    {
+      "text": "Missing, failed, or throwing lookups leave the affected fields null without failing",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        19
+      ]
+    },
+    {
+      "text": "An empty collection returns without invoking the bus",
+      "marks": [
+        11
+      ]
+    }
+  ],
+  "exception_text": "No unhandled exception; lookup exceptions are logged and swallowed",
+  "exception_marks": [
+    4,
+    8
+  ],
+  "cases": [
+    {
+      "method": "EnrichAsync_WhenAccountIsNotInTheResponse_LeavesAccountFieldsNull",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "EnrichAsync_WhenAccountLookupFails_ReturnsProfilesWithoutAccountData",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "EnrichAsync_WhenAccountLookupFails_StillEnrichesTheAvatar",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "EnrichAsync_WhenAccountLookupThrows_SwallowsTheException",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "EnrichAsync_WhenAccountResponseHasNoData_LeavesAccountFieldsNull",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "EnrichAsync_WhenMediaAssetIsNotInTheResponse_LeavesAvatarUrlNull",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "EnrichAsync_WhenMediaLookupFails_LeavesAvatarUrlNull",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "EnrichAsync_WhenMediaLookupThrows_SwallowsTheException",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "EnrichAsync_WithDistinctAccountIds_RequestsEachIdOnce",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "EnrichAsync_WithDistinctMediaIds_RequestsEachIdOnce",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "EnrichAsync_WithEmptyCollection_DoesNotInvokeBus",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "EnrichAsync_WithNullMediaId_ExcludesItFromTheMediaQuery",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "EnrichAsync_WithResolvedAccount_FillsAccountFields",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "EnrichAsync_WithResolvedMediaAsset_FillsAvatarUrl",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "EnrichAsync_WithSameItem_FillsAccountAndAvatarData",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "EnrichAsync_WithSharedAccountId_FillsEveryMatchingProfile",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "EnrichAsync_WithSharedAccountId_RequestsTheAccountIdOnlyOnce",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "EnrichAsync_WithSharedMediaId_FillsEveryMatchingProfile",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "EnrichAsync_WithoutMediaId_LeavesAvatarUrlNullAndSkipsMediaQuery",
+      "type": "N",
+      "result": "P"
+    }
+  ]
+}

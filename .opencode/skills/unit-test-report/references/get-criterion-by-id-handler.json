@@ -1,0 +1,189 @@
+{
+  "function_code": "GetCriterionByIdHandler.HandleAsync",
+  "sheet_name": "GetCriterionByIdHandler",
+  "lines_of_code": 45,
+  "requirement": "Return one criterion as a read-only projection: its id, name, the human-readable formula string, and the structured formula DTO; a missing id is reported as ResourceNotFound and a mapper failure is propagated.",
+  "preconditions": [
+    {
+      "text": "The requested criterion exists and is live",
+      "marks": [
+        1,
+        2,
+        4,
+        7,
+        8,
+        9
+      ]
+    },
+    {
+      "text": "The stored formula is one of the shapes the formula mapper understands",
+      "marks": [
+        1,
+        2,
+        7,
+        8,
+        9
+      ]
+    },
+    {
+      "text": "The requested id matches no live criterion",
+      "marks": [
+        3,
+        5,
+        6
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "Query for one of two criteria that share a name",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "Query for a bare boolean constant criterion",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "Query for a criterion that was soft deleted beforehand",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "Query whose formula mapper reports a failure",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "Query with an unknown id",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "Query with Guid.Empty",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "Query for the nested CURB-65 formula (AGE >= 65) AND (SBP < 90)",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "Query for a comparison criterion with both formula representations",
+      "marks": [
+        8
+      ]
+    },
+    {
+      "text": "Query for a unary (negation) criterion",
+      "marks": [
+        9
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "Success with the criterion id, name, and rendered formula string",
+      "marks": [
+        1,
+        2,
+        7,
+        8,
+        9
+      ]
+    },
+    {
+      "text": "The structured formula DTO mirrors the stored tree and carries only the fields of its shape",
+      "marks": [
+        1,
+        2,
+        7,
+        8,
+        9
+      ]
+    },
+    {
+      "text": "Only non-leaf operands are parenthesised in the rendered string",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "Failure with ResourceNotFound and a null payload",
+      "marks": [
+        3,
+        5,
+        6
+      ]
+    },
+    {
+      "text": "Failure propagated unchanged from the formula mapper",
+      "marks": [
+        4
+      ]
+    }
+  ],
+  "exception_text": "No unhandled exception; a missing criterion or failing mapper is returned as a failed Result",
+  "exception_marks": [
+    3,
+    4,
+    5,
+    6
+  ],
+  "cases": [
+    {
+      "method": "GetCriterionById_DuplicateNames_ResolvedById_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "GetCriterionById_BooleanConstantFormula_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "GetCriterionById_SoftDeletedCriterion_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "GetCriterionById_MapperFailure_PropagatesError_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "GetCriterionById_UnknownId_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "GetCriterionById_EmptyId_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "GetCriterionById_NestedFormula_RenderedWithParentheses_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "GetCriterionById_ReturnsCriterion_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "GetCriterionById_UnaryFormula_Success",
+      "type": "N",
+      "result": "P"
+    }
+  ]
+}

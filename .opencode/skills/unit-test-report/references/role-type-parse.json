@@ -1,0 +1,142 @@
+{
+  "function_code": "RoleType.Parse",
+  "sheet_name": "RoleType",
+  "lines_of_code": 30,
+  "requirement": "Authentication RoleType enum contract: the four declared roles (Doctor, MedicalRegulationReviewer, Admin, HeadDepartmentDoctor) keep stable ordinals 0-3, parse and serialize round-trip through their names with the JSON string enum converter, and undefined ordinals are rejected by Enum.IsDefined.",
+  "preconditions": [
+    {
+      "text": "The RoleType enum is loaded from the Authentication.Domain assembly",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ]
+    },
+    {
+      "text": "A declared role member or an undefined ordinal is supplied",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "IsDefined_RejectsUndefinedOrdinal",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "ParseAndSerialize_RoundTripEveryMember (Admin)",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "ParseAndSerialize_RoundTripEveryMember (Doctor)",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "ParseAndSerialize_RoundTripEveryMember (HeadDepartmentDoctor)",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "ParseAndSerialize_RoundTripEveryMember (MedicalRegulationReviewer)",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "RoleType_HasFourDeclaredMembersWithStableOrdinals",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "RoleType_IsAnnotatedWithJsonStringEnumConverter",
+      "marks": [
+        7
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "Each declared member round-trips through Enum.Parse/ToString/JSON serialization to its name",
+      "marks": [
+        2,
+        3,
+        4,
+        5
+      ]
+    },
+    {
+      "text": "Four members with stable ordinals 0 through 3",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "The enum is annotated with JsonStringEnumConverter",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "Undefined ordinals (99 and -1) are not defined",
+      "marks": [
+        1
+      ]
+    }
+  ],
+  "exception_text": "No unhandled exception; undefined ordinals are reported as false by Enum.IsDefined",
+  "exception_marks": [],
+  "cases": [
+    {
+      "method": "IsDefined_RejectsUndefinedOrdinal",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "ParseAndSerialize_RoundTripEveryMember",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "ParseAndSerialize_RoundTripEveryMember",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "ParseAndSerialize_RoundTripEveryMember",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "ParseAndSerialize_RoundTripEveryMember",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "RoleType_HasFourDeclaredMembersWithStableOrdinals",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "RoleType_IsAnnotatedWithJsonStringEnumConverter",
+      "type": "N",
+      "result": "P"
+    }
+  ]
+}

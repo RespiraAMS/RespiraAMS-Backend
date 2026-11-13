@@ -1,0 +1,353 @@
+{
+  "function_code": "GetPagedAnalysisReportQueryHandler.HandleAsync",
+  "sheet_name": "GetPagedAnalysisReportHandler",
+  "lines_of_code": 134,
+  "requirement": "List analysis reports as a page: validate the pagination and created range, exclude soft-deleted rows, apply the optional doctor, created-from/to, and JSON/id search filters, then project the stored summary totals and return the page newest first.",
+  "preconditions": [
+    {
+      "text": "The analysis table holds the reports seeded for the case",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21
+      ]
+    },
+    {
+      "text": "The query supplies valid pagination and optional filters",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        10,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21
+      ]
+    },
+    {
+      "text": "The stored report JSON is corrupted",
+      "marks": [
+        1
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "GetPaged CorruptedReportJson ReturnsRowWithZeroTotals",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "GetPaged CreatedFromEqualToCreatedAt IncludesTheReport",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "GetPaged CreatedToEqualToCreatedAt ExcludesTheReport",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "GetPaged EmptyDoctorIdFilter IsIgnored",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "GetPaged ExcludesSoftDeletedReports",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "GetPaged FiltersByCreatedAtRange",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "GetPaged FiltersByDoctor",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "GetPaged InvalidCreatedRange ReturnsBadRequest",
+      "marks": [
+        8
+      ]
+    },
+    {
+      "text": "GetPaged InvalidPagination ReturnsBadRequest",
+      "marks": [
+        9
+      ]
+    },
+    {
+      "text": "GetPaged OrdersByCreatedAtThenByIdDescending",
+      "marks": [
+        10
+      ]
+    },
+    {
+      "text": "GetPaged PageSizeAboveLimit ReturnsBadRequest",
+      "marks": [
+        11
+      ]
+    },
+    {
+      "text": "GetPaged PageSizeOne ProducesOnePagePerRow",
+      "marks": [
+        12
+      ]
+    },
+    {
+      "text": "GetPaged ReadsTotalsFromStoredReportJsonAndDefaultsToZero",
+      "marks": [
+        13
+      ]
+    },
+    {
+      "text": "GetPaged ReturnsNewestFirstWithSummary",
+      "marks": [
+        14
+      ]
+    },
+    {
+      "text": "GetPaged SearchTermMatchesAnalysisId ReturnsMatchingReport",
+      "marks": [
+        15
+      ]
+    },
+    {
+      "text": "GetPaged SearchTermMatchesPatientIdsJson ReturnsMatchingReport",
+      "marks": [
+        16
+      ]
+    },
+    {
+      "text": "GetPaged SearchTermMatchesReportJson ReturnsMatchingReport",
+      "marks": [
+        17
+      ]
+    },
+    {
+      "text": "GetPaged SearchTermMatchesTreatmentPlanIdsJson ReturnsMatchingReport",
+      "marks": [
+        18
+      ]
+    },
+    {
+      "text": "GetPaged SearchTermWithoutMatch ReturnsEmptyPage",
+      "marks": [
+        19
+      ]
+    },
+    {
+      "text": "GetPaged SecondPage ReturnsRemainingItems",
+      "marks": [
+        20
+      ]
+    },
+    {
+      "text": "GetPaged WhitespaceOnlySearchTerm IsIgnored",
+      "marks": [
+        21
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "Newest-first page with the summary totals and paging metadata",
+      "marks": [
+        10,
+        13,
+        14,
+        20
+      ]
+    },
+    {
+      "text": "The doctor, created-range, and JSON/id search filters narrow the page, and blank filters are ignored",
+      "marks": [
+        4,
+        5,
+        6,
+        7,
+        15,
+        16,
+        17,
+        18,
+        19,
+        21
+      ]
+    },
+    {
+      "text": "Created-from is inclusive and created-to is exclusive; a page size of one yields one page per row",
+      "marks": [
+        2,
+        3,
+        12
+      ]
+    },
+    {
+      "text": "BadRequest for invalid pagination or an invalid created range",
+      "marks": [
+        8,
+        9,
+        11
+      ]
+    },
+    {
+      "text": "A corrupted report JSON still lists the row with zero totals",
+      "marks": [
+        1
+      ]
+    }
+  ],
+  "exception_text": "No unhandled exception; invalid input is returned as a failed Result",
+  "exception_marks": [
+    1,
+    8,
+    9,
+    11
+  ],
+  "cases": [
+    {
+      "method": "GetPaged_CorruptedReportJson_ReturnsRowWithZeroTotals",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "GetPaged_CreatedFromEqualToCreatedAt_IncludesTheReport",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "GetPaged_CreatedToEqualToCreatedAt_ExcludesTheReport",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "GetPaged_EmptyDoctorIdFilter_IsIgnored",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "GetPaged_ExcludesSoftDeletedReports",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "GetPaged_FiltersByCreatedAtRange",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "GetPaged_FiltersByDoctor",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "GetPaged_InvalidCreatedRange_ReturnsBadRequest",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "GetPaged_InvalidPagination_ReturnsBadRequest",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "GetPaged_OrdersByCreatedAtThenByIdDescending",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "GetPaged_PageSizeAboveLimit_ReturnsBadRequest",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "GetPaged_PageSizeOne_ProducesOnePagePerRow",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "GetPaged_ReadsTotalsFromStoredReportJsonAndDefaultsToZero",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "GetPaged_ReturnsNewestFirstWithSummary",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "GetPaged_SearchTermMatchesAnalysisId_ReturnsMatchingReport",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "GetPaged_SearchTermMatchesPatientIdsJson_ReturnsMatchingReport",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "GetPaged_SearchTermMatchesReportJson_ReturnsMatchingReport",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "GetPaged_SearchTermMatchesTreatmentPlanIdsJson_ReturnsMatchingReport",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "GetPaged_SearchTermWithoutMatch_ReturnsEmptyPage",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "GetPaged_SecondPage_ReturnsRemainingItems",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "GetPaged_WhitespaceOnlySearchTerm_IsIgnored",
+      "type": "N",
+      "result": "P"
+    }
+  ]
+}

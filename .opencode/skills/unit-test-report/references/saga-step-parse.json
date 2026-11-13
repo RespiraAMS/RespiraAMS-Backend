@@ -1,0 +1,236 @@
+{
+  "function_code": "SagaStep.Parse",
+  "sheet_name": "SagaStep",
+  "lines_of_code": 96,
+  "requirement": "Saga step enum contract across CreateStep, DeleteStep, and UpdateStep: each enum is a value type with its own namespace, keeps the declared members and ordinals, serializes and deserializes to its member names with the JSON string enum converter, and rejects undefined values while accepting every declared one.",
+  "preconditions": [
+    {
+      "text": "The CreateStep, DeleteStep, and UpdateStep enums are loaded",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "CreateStep_HasExactlyTheEightDeclaredMembers",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "CreateStep_KeepsItsMemberOrdinals",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "DeleteStep_HasExactlyTheFiveDeclaredMembers",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "DeleteStep_KeepsItsMemberOrdinals",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "EnumGetValues_ReturnsExactlyTheDeclaredMembers",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "EnumIsDefined_AcceptsEveryDeclaredValue",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "EnumIsDefined_RejectsAnUndefinedValue",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "EveryMemberOfEveryStep_RoundTripsThroughEnumParse",
+      "marks": [
+        8
+      ]
+    },
+    {
+      "text": "EveryMemberOfEveryStep_RoundTripsThroughEnumTryParseIgnoringCase",
+      "marks": [
+        9
+      ]
+    },
+    {
+      "text": "StepEnums_AreAnnotatedWithTheStringEnumConverter",
+      "marks": [
+        10
+      ]
+    },
+    {
+      "text": "StepEnums_AreValueTypesWithTheirOwnNamespaces",
+      "marks": [
+        11
+      ]
+    },
+    {
+      "text": "StepEnums_DeserialiseFromTheirNames",
+      "marks": [
+        12
+      ]
+    },
+    {
+      "text": "StepEnums_SerialiseToTheirNames",
+      "marks": [
+        13
+      ]
+    },
+    {
+      "text": "UpdateStep_HasExactlyTheSixDeclaredMembers",
+      "marks": [
+        14
+      ]
+    },
+    {
+      "text": "UpdateStep_KeepsItsMemberOrdinals",
+      "marks": [
+        15
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "Each enum exposes exactly its declared members with the expected ordinals",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        14,
+        15
+      ]
+    },
+    {
+      "text": "Every member round-trips through Enum.Parse/TryParse, serialization, and deserialization",
+      "marks": [
+        8,
+        9,
+        12,
+        13
+      ]
+    },
+    {
+      "text": "The enums are value types with their own namespaces and the string enum converter",
+      "marks": [
+        10,
+        11
+      ]
+    },
+    {
+      "text": "Declared values are defined and an undefined value is rejected",
+      "marks": [
+        6,
+        7
+      ]
+    }
+  ],
+  "exception_text": "No unhandled exception; undefined values are reported as false",
+  "exception_marks": [],
+  "cases": [
+    {
+      "method": "CreateStep_HasExactlyTheEightDeclaredMembers",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "CreateStep_KeepsItsMemberOrdinals",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "DeleteStep_HasExactlyTheFiveDeclaredMembers",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "DeleteStep_KeepsItsMemberOrdinals",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "EnumGetValues_ReturnsExactlyTheDeclaredMembers",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "EnumIsDefined_AcceptsEveryDeclaredValue",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "EnumIsDefined_RejectsAnUndefinedValue",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "EveryMemberOfEveryStep_RoundTripsThroughEnumParse",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "EveryMemberOfEveryStep_RoundTripsThroughEnumTryParseIgnoringCase",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "StepEnums_AreAnnotatedWithTheStringEnumConverter",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "StepEnums_AreValueTypesWithTheirOwnNamespaces",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "StepEnums_DeserialiseFromTheirNames",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "StepEnums_SerialiseToTheirNames",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "UpdateStep_HasExactlyTheSixDeclaredMembers",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "UpdateStep_KeepsItsMemberOrdinals",
+      "type": "N",
+      "result": "P"
+    }
+  ]
+}

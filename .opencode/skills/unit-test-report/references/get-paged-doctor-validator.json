@@ -1,0 +1,244 @@
+{
+  "function_code": "GetPagedDoctorValidator.Validate",
+  "sheet_name": "GetPagedDoctorValidator",
+  "lines_of_code": 13,
+  "requirement": "Validate the pagination parameter of a paged doctor query: page and size must be positive, size must not exceed the configured maximum, and minimum/maximum valid values are accepted without errors.",
+  "preconditions": [
+    {
+      "text": "A GetPagedDoctorQuery carries a PaginationParam",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ]
+    },
+    {
+      "text": "The page or size is at, below, or above the allowed range",
+      "marks": [
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "Validate_WithDefaultPagination_ReturnsNoErrors",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "Validate_WithInvalidPageAndSize_ReturnsTwoErrorsOnParam",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "Validate_WithMaximumSize_ReturnsNoErrors",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "Validate_WithMinimumSize_ReturnsNoErrors",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "Validate_WithNegativePageAndOversizedSize_ReturnsTwoErrorsOnParam",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "Validate_WithNegativePage_ReturnsErrorOnParam",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "Validate_WithPageZero_ReturnsErrorOnParam",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "Validate_WithSizeAboveMaximum_ReturnsErrorOnParam",
+      "marks": [
+        8
+      ]
+    },
+    {
+      "text": "Validate_WithSizeZero_ReturnsErrorOnParam",
+      "marks": [
+        9
+      ]
+    },
+    {
+      "text": "Validate_WithValidPageAndInvalidSize_ReturnsOnlyTheSizeError",
+      "marks": [
+        10
+      ]
+    },
+    {
+      "text": "Validate_WithValidPagination_ReturnsNoErrors (page: 1, size: 1)",
+      "marks": [
+        11
+      ]
+    },
+    {
+      "text": "Validate_WithValidPagination_ReturnsNoErrors (page: 1, size: 10)",
+      "marks": [
+        12
+      ]
+    },
+    {
+      "text": "Validate_WithValidPagination_ReturnsNoErrors (page: 1, size: 100)",
+      "marks": [
+        13
+      ]
+    },
+    {
+      "text": "Validate_WithValidPagination_ReturnsNoErrors (page: 2, size: 50)",
+      "marks": [
+        14
+      ]
+    },
+    {
+      "text": "Validate_WithValidPagination_ReturnsNoErrors (page: 7, size: 25)",
+      "marks": [
+        15
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "Valid default, minimum, maximum, and in-range pagination produces no errors",
+      "marks": [
+        1,
+        3,
+        4,
+        11,
+        12,
+        13,
+        14,
+        15
+      ]
+    },
+    {
+      "text": "A zero or negative page, a zero size, or an oversized size produces a Param error",
+      "marks": [
+        5,
+        6,
+        7,
+        8,
+        9
+      ]
+    },
+    {
+      "text": "Every invalid field is reported when several constraints fail together",
+      "marks": [
+        2,
+        5,
+        10
+      ]
+    }
+  ],
+  "exception_text": "No unhandled exception; validation returns error messages",
+  "exception_marks": [],
+  "cases": [
+    {
+      "method": "Validate_WithDefaultPagination_ReturnsNoErrors",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Validate_WithInvalidPageAndSize_ReturnsTwoErrorsOnParam",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Validate_WithMaximumSize_ReturnsNoErrors",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "Validate_WithMinimumSize_ReturnsNoErrors",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "Validate_WithNegativePageAndOversizedSize_ReturnsTwoErrorsOnParam",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Validate_WithNegativePage_ReturnsErrorOnParam",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Validate_WithPageZero_ReturnsErrorOnParam",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Validate_WithSizeAboveMaximum_ReturnsErrorOnParam",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Validate_WithSizeZero_ReturnsErrorOnParam",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Validate_WithValidPageAndInvalidSize_ReturnsOnlyTheSizeError",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Validate_WithValidPagination_ReturnsNoErrors",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Validate_WithValidPagination_ReturnsNoErrors",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Validate_WithValidPagination_ReturnsNoErrors",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Validate_WithValidPagination_ReturnsNoErrors",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Validate_WithValidPagination_ReturnsNoErrors",
+      "type": "N",
+      "result": "P"
+    }
+  ]
+}

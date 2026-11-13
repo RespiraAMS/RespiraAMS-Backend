@@ -1,0 +1,387 @@
+{
+  "function_code": "SoftDeleteDoctorCommandHandler.HandleAsync",
+  "sheet_name": "SoftDeleteDoctorHandler",
+  "lines_of_code": 151,
+  "requirement": "Soft-delete a doctor or head-of-department doctor profile: treat an already-missing profile as completed, enforce admin/owner/owning-head authorization, publish an authorization-denied audit event when management is not allowed, mark the profile deleted, and publish SoftDeleteDoctorCompleted plus a Doctor.ProfileSoftDeleted audit event.",
+  "preconditions": [
+    {
+      "text": "A live doctor or head-doctor profile exists for the target account",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23
+      ]
+    },
+    {
+      "text": "The actor is an admin, the profile owner, or the owning head doctor",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23
+      ]
+    },
+    {
+      "text": "The profile is already gone or the actor cannot manage it",
+      "marks": [
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18
+      ]
+    },
+    {
+      "text": "Saving the soft delete throws",
+      "marks": [
+        19,
+        20
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "HandleAsync_ByAdmin_AllowsActorAccountDifferentFromProfileAccount",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "HandleAsync_ByAdmin_SoftDeletesDoctorProfile",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "HandleAsync_ByAdmin_SoftDeletesHeadDepartmentDoctorProfile",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "HandleAsync_ByOwnerDoctor_SoftDeletesOwnProfile",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "HandleAsync_ByOwnerHeadDepartmentDoctor_SoftDeletesOwnHeadProfile",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "HandleAsync_ByOwningHeadDepartmentDoctor_SoftDeletesSubordinateDoctor",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "HandleAsync_ForHeadProfile_PublishesAuditEventWithHeadEntityType",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "HandleAsync_PublishesAuditEvent",
+      "marks": [
+        8
+      ]
+    },
+    {
+      "text": "HandleAsync_PublishesSoftDeleteDoctorCompleted",
+      "marks": [
+        9
+      ]
+    },
+    {
+      "text": "HandleAsync_WhenActorCannotManageProfile_DoesNotSoftDeleteProfile",
+      "marks": [
+        10
+      ]
+    },
+    {
+      "text": "HandleAsync_WhenActorCannotManageProfile_PublishesAuthorizationDeniedAuditEvent",
+      "marks": [
+        11
+      ]
+    },
+    {
+      "text": "HandleAsync_WhenActorCannotManageProfile_PublishesFailure",
+      "marks": [
+        12
+      ]
+    },
+    {
+      "text": "HandleAsync_WhenActorRoleIsUnknown_PublishesFailure",
+      "marks": [
+        13
+      ]
+    },
+    {
+      "text": "HandleAsync_WhenHeadActorTargetsAnotherHeadProfile_PublishesFailure",
+      "marks": [
+        14
+      ]
+    },
+    {
+      "text": "HandleAsync_WhenHeadActorTargetsUnmanagedDoctor_PublishesFailure",
+      "marks": [
+        15
+      ]
+    },
+    {
+      "text": "HandleAsync_WhenProfileNotFound_DoesNotPublishAuditEvent",
+      "marks": [
+        16
+      ]
+    },
+    {
+      "text": "HandleAsync_WhenProfileNotFound_DoesNotPublishFailure",
+      "marks": [
+        17
+      ]
+    },
+    {
+      "text": "HandleAsync_WhenProfileNotFound_PublishesCompleted",
+      "marks": [
+        18
+      ]
+    },
+    {
+      "text": "HandleAsync_WhenSaveFails_DoesNotPublishCompleted",
+      "marks": [
+        19
+      ]
+    },
+    {
+      "text": "HandleAsync_WhenSaveFails_PublishesFailureWithExceptionMessage",
+      "marks": [
+        20
+      ]
+    },
+    {
+      "text": "HandleAsync_WithBlankActorRole_PublishesAuditEventWithSystemRole",
+      "marks": [
+        21
+      ]
+    },
+    {
+      "text": "HandleAsync_WithBlankActorRole_SkipsAuthorizationCheck",
+      "marks": [
+        22
+      ]
+    },
+    {
+      "text": "HandleAsync_WithEmptyActorAccount_PublishesAuditEventWithoutActor",
+      "marks": [
+        23
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "The profile is flagged deleted and timestamped in the database",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ]
+    },
+    {
+      "text": "SoftDeleteDoctorCompleted is published, including for an already-missing profile",
+      "marks": [
+        9,
+        18
+      ]
+    },
+    {
+      "text": "An audit event records Doctor.ProfileSoftDeleted with the right entity type and actor fallbacks",
+      "marks": [
+        7,
+        8,
+        21,
+        23
+      ]
+    },
+    {
+      "text": "An unauthorized actor publishes a denial audit event and SoftDeleteDoctorFailure without deleting",
+      "marks": [
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ]
+    }
+  ],
+  "exception_text": "No unhandled exception; save failures become a SoftDeleteDoctorFailure message",
+  "exception_marks": [
+    19,
+    20
+  ],
+  "cases": [
+    {
+      "method": "HandleAsync_ByAdmin_AllowsActorAccountDifferentFromProfileAccount",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_ByAdmin_SoftDeletesDoctorProfile",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_ByAdmin_SoftDeletesHeadDepartmentDoctorProfile",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_ByOwnerDoctor_SoftDeletesOwnProfile",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_ByOwnerHeadDepartmentDoctor_SoftDeletesOwnHeadProfile",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_ByOwningHeadDepartmentDoctor_SoftDeletesSubordinateDoctor",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_ForHeadProfile_PublishesAuditEventWithHeadEntityType",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_PublishesAuditEvent",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_PublishesSoftDeleteDoctorCompleted",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WhenActorCannotManageProfile_DoesNotSoftDeleteProfile",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WhenActorCannotManageProfile_PublishesAuthorizationDeniedAuditEvent",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WhenActorCannotManageProfile_PublishesFailure",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WhenActorRoleIsUnknown_PublishesFailure",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WhenHeadActorTargetsAnotherHeadProfile_PublishesFailure",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WhenHeadActorTargetsUnmanagedDoctor_PublishesFailure",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WhenProfileNotFound_DoesNotPublishAuditEvent",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WhenProfileNotFound_DoesNotPublishFailure",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WhenProfileNotFound_PublishesCompleted",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WhenSaveFails_DoesNotPublishCompleted",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WhenSaveFails_PublishesFailureWithExceptionMessage",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithBlankActorRole_PublishesAuditEventWithSystemRole",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithBlankActorRole_SkipsAuthorizationCheck",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithEmptyActorAccount_PublishesAuditEventWithoutActor",
+      "type": "N",
+      "result": "P"
+    }
+  ]
+}

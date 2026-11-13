@@ -1,0 +1,538 @@
+{
+  "function_code": "CreateSaga.StartAsync",
+  "sheet_name": "CreateSaga",
+  "lines_of_code": 406,
+  "requirement": "Run the account-creation saga from start to terminal state: StartAsync copies the creator and profile input into saga state, normalises the email (trim + lower-case), keeps the plaintext password only in the outgoing CreateAccountCommand and sends it; the later steps create the doctor profile, upload and link the avatar (deleting the temp file), send the verification email, and either complete the flow or compensate by soft-deleting the created profile/account and recording the failure reason; soft-delete events that belong to another saga id are ignored.",
+  "preconditions": [
+    {
+      "text": "A saga instance holds the creator and profile state for the flow",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31
+      ]
+    },
+    {
+      "text": "The message bus, media client, and logger are mocked",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31
+      ]
+    },
+    {
+      "text": "The case covers the start, media/link, compensation, or terminal step (or an unrelated saga id)",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "Compensation WithDoctorId SendsSoftDeleteDoctorCommand",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "Compensation WithoutDoctorIdAndAccountId Fails",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "Compensation WithoutDoctorId SendsAccountSoftDelete",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "CreateAccountFailure FailsWithoutCompensation",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "DeleteSaga StartAsync BeginsWithDoctorProfileSoftDelete",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "DoctorMediaUpdateFailure Compensates",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "DoctorMediaUpdated SendsVerificationEmail",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "DoctorProfileCreated AfterFailedUpload DeletesTempAvatar",
+      "marks": [
+        8
+      ]
+    },
+    {
+      "text": "DoctorProfileCreated AfterSuccessfulUpload DeletesTempAvatar",
+      "marks": [
+        9
+      ]
+    },
+    {
+      "text": "DoctorProfileCreated WhenUploadFails Compensates",
+      "marks": [
+        10
+      ]
+    },
+    {
+      "text": "DoctorProfileCreated WhenUploadReturnsEmptyGuid Compensates",
+      "marks": [
+        11
+      ]
+    },
+    {
+      "text": "DoctorProfileCreated WhenUploadThrows DoesNotThrowAndCompensates",
+      "marks": [
+        12
+      ]
+    },
+    {
+      "text": "DoctorProfileCreated WithMissingTempAvatarFile DoesNotUploadAndCompensates",
+      "marks": [
+        13
+      ]
+    },
+    {
+      "text": "DoctorProfileCreated WithRealTempFile UploadsAvatarAndLinksMedia",
+      "marks": [
+        14
+      ]
+    },
+    {
+      "text": "DoctorProfileCreated WithWhitespaceTempAvatarPath DoesNotUploadAndCompensates",
+      "marks": [
+        15
+      ]
+    },
+    {
+      "text": "DoctorProfileCreated WithoutTempAvatarPath DoesNotUploadAndCompensates",
+      "marks": [
+        16
+      ]
+    },
+    {
+      "text": "DoctorProfileFailure Compensates",
+      "marks": [
+        17
+      ]
+    },
+    {
+      "text": "HeadDepartmentDoctorCreator IsAssignedToCreatedDoctor",
+      "marks": [
+        18
+      ]
+    },
+    {
+      "text": "MedicalRegulationReviewerAccountCreated SendsVerificationWithoutDoctorProfile",
+      "marks": [
+        19
+      ]
+    },
+    {
+      "text": "NotFound SoftDeleteCompleted DoesNothing",
+      "marks": [
+        20
+      ]
+    },
+    {
+      "text": "NotFound SoftDeleteDoctorCompleted DoesNothing",
+      "marks": [
+        21
+      ]
+    },
+    {
+      "text": "NotFound SoftDeleteDoctorFailure DoesNothing",
+      "marks": [
+        22
+      ]
+    },
+    {
+      "text": "NotFound SoftDeleteFailure DoesNothing",
+      "marks": [
+        23
+      ]
+    },
+    {
+      "text": "SendVerifyCompleted Completes",
+      "marks": [
+        24
+      ]
+    },
+    {
+      "text": "SendVerifyFailure Fails",
+      "marks": [
+        25
+      ]
+    },
+    {
+      "text": "SoftDeleteCompleted Fails",
+      "marks": [
+        26
+      ]
+    },
+    {
+      "text": "SoftDeleteDoctorCompleted SendsAccountSoftDelete",
+      "marks": [
+        27
+      ]
+    },
+    {
+      "text": "SoftDeleteDoctorFailure SendsAccountSoftDeleteAndAppendsReason",
+      "marks": [
+        28
+      ]
+    },
+    {
+      "text": "SoftDeleteFailure FailsAndAppendsReason",
+      "marks": [
+        29
+      ]
+    },
+    {
+      "text": "StartAsync NormalizesEmailAndDoesNotKeepPlaintextPasswordInState",
+      "marks": [
+        30
+      ]
+    },
+    {
+      "text": "UpdateSaga StartAsync SendsAccountUpdateAndKeepsPasswordOutOfState",
+      "marks": [
+        31
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "StartAsync copies the state, normalises the email, hides the password, and sends the create-account command",
+      "marks": [
+        5,
+        18,
+        19,
+        30,
+        31
+      ]
+    },
+    {
+      "text": "The avatar is uploaded, the media is linked, and the temp file is deleted",
+      "marks": [
+        9,
+        14
+      ]
+    },
+    {
+      "text": "Compensation soft-deletes the created profile/account and records the failure reason",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        6,
+        8,
+        10,
+        11,
+        12,
+        13,
+        15,
+        16,
+        17
+      ]
+    },
+    {
+      "text": "Verification is sent, the flow completes, or the failure is recorded with its reason",
+      "marks": [
+        24,
+        25,
+        26,
+        27,
+        28,
+        29
+      ]
+    },
+    {
+      "text": "Soft-delete events for another saga id are ignored without changing state",
+      "marks": [
+        20,
+        21,
+        22,
+        23
+      ]
+    }
+  ],
+  "exception_text": "No unhandled exception; failures are captured as the saga failure reason and compensated",
+  "exception_marks": [
+    1,
+    2,
+    3,
+    4,
+    6,
+    8,
+    10,
+    11,
+    12,
+    13,
+    15,
+    16,
+    17,
+    25,
+    26,
+    28,
+    29
+  ],
+  "cases": [
+    {
+      "method": "Compensation_WithDoctorId_SendsSoftDeleteDoctorCommand",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Compensation_WithoutDoctorIdAndAccountId_Fails",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Compensation_WithoutDoctorId_SendsAccountSoftDelete",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CreateAccountFailure_FailsWithoutCompensation",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "DeleteSaga_StartAsync_BeginsWithDoctorProfileSoftDelete",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "DoctorMediaUpdateFailure_Compensates",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "DoctorMediaUpdated_SendsVerificationEmail",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "DoctorProfileCreated_AfterFailedUpload_DeletesTempAvatar",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "DoctorProfileCreated_AfterSuccessfulUpload_DeletesTempAvatar",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "DoctorProfileCreated_WhenUploadFails_Compensates",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "DoctorProfileCreated_WhenUploadReturnsEmptyGuid_Compensates",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "DoctorProfileCreated_WhenUploadThrows_DoesNotThrowAndCompensates",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "DoctorProfileCreated_WithMissingTempAvatarFile_DoesNotUploadAndCompensates",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "DoctorProfileCreated_WithRealTempFile_UploadsAvatarAndLinksMedia",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "DoctorProfileCreated_WithWhitespaceTempAvatarPath_DoesNotUploadAndCompensates",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "DoctorProfileCreated_WithoutTempAvatarPath_DoesNotUploadAndCompensates",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "DoctorProfileFailure_Compensates",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "HeadDepartmentDoctorCreator_IsAssignedToCreatedDoctor",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "MedicalRegulationReviewerAccountCreated_SendsVerificationWithoutDoctorProfile",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "NotFound_SoftDeleteCompleted_DoesNothing",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "NotFound_SoftDeleteDoctorCompleted_DoesNothing",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "NotFound_SoftDeleteDoctorFailure_DoesNothing",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "NotFound_SoftDeleteFailure_DoesNothing",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "SendVerifyCompleted_Completes",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SendVerifyFailure_Fails",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SoftDeleteCompleted_Fails",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SoftDeleteDoctorCompleted_SendsAccountSoftDelete",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SoftDeleteDoctorFailure_SendsAccountSoftDeleteAndAppendsReason",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SoftDeleteFailure_FailsAndAppendsReason",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "StartAsync_NormalizesEmailAndDoesNotKeepPlaintextPasswordInState",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "UpdateSaga_StartAsync_SendsAccountUpdateAndKeepsPasswordOutOfState",
+      "type": "N",
+      "result": "P"
+    }
+  ]
+}

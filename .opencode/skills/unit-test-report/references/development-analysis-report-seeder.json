@@ -1,0 +1,266 @@
+{
+  "function_code": "DevelopmentAnalysisReportSeeder.SeedAnalysisReportsAsync",
+  "sheet_name": "DevelopmentAnalysisSeeder",
+  "lines_of_code": 215,
+  "requirement": "Development-only seeder that creates three deterministic Analysis reports (doctor, system-wide, and soft-deleted) with their JSON payloads, patient/treatment-plan id collections, and AuditLog entries written under the preferred ids, actor, change-set, and Analysis.ClinicalAnalysis action names; a second run is idempotent.",
+  "preconditions": [
+    {
+      "text": "The Analysis database is empty before the seeder runs",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ]
+    },
+    {
+      "text": "An IHost with an Analysis scope and audit logging is available",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ]
+    },
+    {
+      "text": "The seeder is invoked once, or twice for the idempotency check",
+      "marks": [
+        6
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "SeedAnalysisReports_AuditEntriesCarryTheActorOfTheirScope",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "SeedAnalysisReports_AuditEntriesCarryTheExpectedActionNames",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "SeedAnalysisReports_CreatesTheThreeReports",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "SeedAnalysisReports_DoctorReportBelongsToDoctorOne_AndSystemReportHasNoDoctor",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "SeedAnalysisReports_DoctorReportCarriesTheDoctorOneSummary",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "SeedAnalysisReports_IsIdempotent",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "SeedAnalysisReports_ReportJsonDeserialisesIntoAnalysisReportResult",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "SeedAnalysisReports_SeededIdCollectionsHaveTheExpectedSize",
+      "marks": [
+        8
+      ]
+    },
+    {
+      "text": "SeedAnalysisReports_SoftDeletedReportIsFlaggedAndTimestamped",
+      "marks": [
+        9
+      ]
+    },
+    {
+      "text": "SeedAnalysisReports_SoftDeletedReportIsHiddenByTheNotDeletedFilter",
+      "marks": [
+        10
+      ]
+    },
+    {
+      "text": "SeedAnalysisReports_SystemReportCarriesBothDoctorSummaries",
+      "marks": [
+        11
+      ]
+    },
+    {
+      "text": "SeedAnalysisReports_SystemReportHasTheExpectedCounters",
+      "marks": [
+        12
+      ]
+    },
+    {
+      "text": "SeedAnalysisReports_WritesDoctorReportAuditEntryWithThePreferredId",
+      "marks": [
+        13
+      ]
+    },
+    {
+      "text": "SeedAnalysisReports_WritesSoftDeleteAuditEntryWithThePreferredId",
+      "marks": [
+        14
+      ]
+    },
+    {
+      "text": "SeedAnalysisReports_WritesSystemReportAuditEntryWithThePreferredId",
+      "marks": [
+        15
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "Three reports with the doctor, system, and soft-deleted ids, owners, counters, and summaries",
+      "marks": [
+        3,
+        4,
+        5,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ]
+    },
+    {
+      "text": "Report JSON deserializes into AnalysisReportResult with the expected doctor and system counters",
+      "marks": [
+        5,
+        7,
+        11,
+        12
+      ]
+    },
+    {
+      "text": "Audit entries use the preferred ids and the scoped actor, with Analysis.ClinicalAnalysis action names",
+      "marks": [
+        1,
+        2,
+        13,
+        14,
+        15
+      ]
+    },
+    {
+      "text": "A second run leaves the three reports unchanged",
+      "marks": [
+        6
+      ]
+    }
+  ],
+  "exception_text": "No unhandled exception; seeding completes and the host scope is disposed cleanly",
+  "exception_marks": [],
+  "cases": [
+    {
+      "method": "SeedAnalysisReports_AuditEntriesCarryTheActorOfTheirScope",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SeedAnalysisReports_AuditEntriesCarryTheExpectedActionNames",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SeedAnalysisReports_CreatesTheThreeReports",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SeedAnalysisReports_DoctorReportBelongsToDoctorOne_AndSystemReportHasNoDoctor",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SeedAnalysisReports_DoctorReportCarriesTheDoctorOneSummary",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SeedAnalysisReports_IsIdempotent",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SeedAnalysisReports_ReportJsonDeserialisesIntoAnalysisReportResult",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SeedAnalysisReports_SeededIdCollectionsHaveTheExpectedSize",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SeedAnalysisReports_SoftDeletedReportIsFlaggedAndTimestamped",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SeedAnalysisReports_SoftDeletedReportIsHiddenByTheNotDeletedFilter",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SeedAnalysisReports_SystemReportCarriesBothDoctorSummaries",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SeedAnalysisReports_SystemReportHasTheExpectedCounters",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SeedAnalysisReports_WritesDoctorReportAuditEntryWithThePreferredId",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SeedAnalysisReports_WritesSoftDeleteAuditEntryWithThePreferredId",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SeedAnalysisReports_WritesSystemReportAuditEntryWithThePreferredId",
+      "type": "N",
+      "result": "P"
+    }
+  ]
+}

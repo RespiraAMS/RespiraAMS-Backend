@@ -1,0 +1,273 @@
+{
+  "function_code": "UpdateTreatmentProtocolHandler.HandleAsync",
+  "sheet_name": "UpdateTreatmentProtocolHandler",
+  "lines_of_code": 74,
+  "requirement": "Update a treatment protocol: the protocol, every medicine, pathogen, and criterion must exist and be live, each medicine composition must satisfy the antibiotic-combination rule, and only then are the protocol fields replaced and its relations re-linked.",
+  "preconditions": [
+    {
+      "text": "A live treatment protocol exists for the target id",
+      "marks": [
+        1,
+        2,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        14
+      ]
+    },
+    {
+      "text": "Every referenced antibiotic, pathogen, and criterion exists and is live",
+      "marks": [
+        4,
+        7,
+        8,
+        9,
+        14
+      ]
+    },
+    {
+      "text": "Each medicine composition uses antibiotics from different group lineages",
+      "marks": [
+        4,
+        7,
+        8,
+        9,
+        14
+      ]
+    },
+    {
+      "text": "The target or a referenced entity is unknown or soft-deleted",
+      "marks": [
+        1,
+        3,
+        5,
+        6,
+        10,
+        11,
+        12,
+        13
+      ]
+    },
+    {
+      "text": "A medicine composition shares a group lineage",
+      "marks": [
+        2
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "Update request for a soft-deleted protocol",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "Update whose composition has a common group ancestor",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "Update referencing a soft-deleted pathogen",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "Update whose composition uses antibiotics from different lineages",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "Update referencing a soft-deleted antibiotic",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "Update referencing an unknown pathogen",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "Update that replaces all pathogen, criterion, and treatment relations",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "Minimal single-composition update (Mild, Outpatient)",
+      "marks": [
+        8
+      ]
+    },
+    {
+      "text": "Minimal single-composition update (Severe, IntensiveCareUnit)",
+      "marks": [
+        9
+      ]
+    },
+    {
+      "text": "Update referencing a soft-deleted criterion",
+      "marks": [
+        10
+      ]
+    },
+    {
+      "text": "Update referencing an unknown antibiotic",
+      "marks": [
+        11
+      ]
+    },
+    {
+      "text": "Update referencing an unknown criterion",
+      "marks": [
+        12
+      ]
+    },
+    {
+      "text": "Update request with an unknown protocol id",
+      "marks": [
+        13
+      ]
+    },
+    {
+      "text": "Update with the same antibiotic repeated across compositions",
+      "marks": [
+        14
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "Success with Updated status; the protocol fields are persisted",
+      "marks": [
+        4,
+        7,
+        8,
+        9,
+        14
+      ]
+    },
+    {
+      "text": "The pathogen, criterion, and treatment relations are replaced with the requested sets",
+      "marks": [
+        7,
+        8,
+        9
+      ]
+    },
+    {
+      "text": "Failure with BadRequest when the protocol or a referenced entity is missing",
+      "marks": [
+        1,
+        3,
+        5,
+        6,
+        10,
+        11,
+        12,
+        13
+      ]
+    },
+    {
+      "text": "Failure with BusinessRuleViolation when a composition shares a group lineage",
+      "marks": [
+        2
+      ]
+    }
+  ],
+  "exception_text": "No unhandled exception; every rejection is returned as a failed Result",
+  "exception_marks": [
+    1,
+    2,
+    3,
+    5,
+    6,
+    10,
+    11,
+    12,
+    13
+  ],
+  "cases": [
+    {
+      "method": "UpdateTreatmentProtocol_SoftDeletedProtocol_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdateTreatmentProtocol_CombinationWithCommonAncestor_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdateTreatmentProtocol_SoftDeletedPathogen_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdateTreatmentProtocol_DifferentLineageCombination_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "UpdateTreatmentProtocol_SoftDeletedAntibiotic_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdateTreatmentProtocol_UnknownPathogen_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdateTreatmentProtocol_ReplacesAllRelations_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "UpdateTreatmentProtocol_MinimalRelations_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "UpdateTreatmentProtocol_MinimalRelations_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "UpdateTreatmentProtocol_SoftDeletedCriterion_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdateTreatmentProtocol_UnknownAntibiotic_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdateTreatmentProtocol_UnknownCriterion_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdateTreatmentProtocol_ProtocolNotFound_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdateTreatmentProtocol_DuplicateAntibioticAcrossCompositions_Success",
+      "type": "N",
+      "result": "P"
+    }
+  ]
+}

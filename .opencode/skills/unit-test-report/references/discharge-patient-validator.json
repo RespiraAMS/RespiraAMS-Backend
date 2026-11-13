@@ -1,0 +1,215 @@
+{
+  "function_code": "DischargePatientValidator.Validate",
+  "sheet_name": "DischargePatientValidator",
+  "lines_of_code": 13,
+  "requirement": "Validate a discharge-patient command: the patient id must not be empty and the treatment outcome must be a defined enum member.",
+  "preconditions": [
+    {
+      "text": "Validation runs on an in-memory command without database access",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ]
+    },
+    {
+      "text": "The command uses a defined outcome and a non-empty id",
+      "marks": [
+        2,
+        3,
+        4,
+        5,
+        7,
+        10,
+        11,
+        12
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "DischargePatient AllFieldsInvalid Fail",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "DischargePatient DefinedOutcome Success (outcome: Death)",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "DischargePatient DefinedOutcome Success (outcome: InTreatment)",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "DischargePatient DefinedOutcome Success (outcome: OutOfScope)",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "DischargePatient DefinedOutcome Success (outcome: Recovered)",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "DischargePatient EmptyId Fail",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "DischargePatient RealisticCommand Success",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "DischargePatient UndefinedOutcome Fail (outcome: -1)",
+      "marks": [
+        8
+      ]
+    },
+    {
+      "text": "DischargePatient UndefinedOutcome Fail (outcome: 4)",
+      "marks": [
+        9
+      ]
+    },
+    {
+      "text": "DischargePatient ValidId Success (id: 00000000-0000-0000-0000-000000000001)",
+      "marks": [
+        10
+      ]
+    },
+    {
+      "text": "DischargePatient ValidId Success (id: 01a1c5ab-1cad-7eb5-a625-c922e9d4eaa1)",
+      "marks": [
+        11
+      ]
+    },
+    {
+      "text": "DischargePatient ValidId Success (id: ffffffff-ffff-ffff-ffff-ffffffffffff)",
+      "marks": [
+        12
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "No validation errors",
+      "marks": [
+        2,
+        3,
+        4,
+        5,
+        7,
+        10,
+        11,
+        12
+      ]
+    },
+    {
+      "text": "Validation error reported on Id for an empty value",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "Validation error reported on Outcome for an undefined member",
+      "marks": [
+        8,
+        9
+      ]
+    },
+    {
+      "text": "Both violations reported together",
+      "marks": [
+        1
+      ]
+    }
+  ],
+  "exception_text": "No unhandled exception; invalid input is reported as validation errors",
+  "exception_marks": [
+    1,
+    6,
+    8,
+    9
+  ],
+  "cases": [
+    {
+      "method": "DischargePatient_AllFieldsInvalid_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "DischargePatient_DefinedOutcome_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "DischargePatient_DefinedOutcome_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "DischargePatient_DefinedOutcome_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "DischargePatient_DefinedOutcome_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "DischargePatient_EmptyId_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "DischargePatient_RealisticCommand_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "DischargePatient_UndefinedOutcome_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "DischargePatient_UndefinedOutcome_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "DischargePatient_ValidId_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "DischargePatient_ValidId_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "DischargePatient_ValidId_Success",
+      "type": "B",
+      "result": "P"
+    }
+  ]
+}

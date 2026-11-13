@@ -1,0 +1,197 @@
+{
+  "function_code": "EmailService.SendAsync",
+  "sheet_name": "EmailService",
+  "lines_of_code": 55,
+  "requirement": "SMTP email delivery: validate the recipient, subject, and HTML body before any connection, build a MIME message from the configured sender, connect/authenticate/send through the configured secure socket option, and log the delivery; null, empty, whitespace, or malformed inputs are rejected before connecting.",
+  "preconditions": [
+    {
+      "text": "An EmailService configured with SMTP options and a mocked logger",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ]
+    },
+    {
+      "text": "A recipient email, subject, and HTML body are supplied",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ]
+    },
+    {
+      "text": "At least one argument is null, empty, whitespace, or not a valid address",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "SendAsync_EmptyOrWhitespaceHtmlBody_ThrowsArgumentException (empty)",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "SendAsync_EmptyOrWhitespaceHtmlBody_ThrowsArgumentException (whitespace)",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "SendAsync_EmptyOrWhitespaceRecipientEmail_ThrowsArgumentException (empty)",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "SendAsync_EmptyOrWhitespaceRecipientEmail_ThrowsArgumentException (whitespace)",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "SendAsync_EmptyOrWhitespaceSubject_ThrowsArgumentException (empty)",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "SendAsync_EmptyOrWhitespaceSubject_ThrowsArgumentException (whitespace)",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "SendAsync_InvalidRecipientEmailFormat_ThrowsParseExceptionBeforeConnecting",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "SendAsync_NullHtmlBody_ThrowsArgumentNullException",
+      "marks": [
+        8
+      ]
+    },
+    {
+      "text": "SendAsync_NullRecipientEmail_ThrowsArgumentNullException",
+      "marks": [
+        9
+      ]
+    },
+    {
+      "text": "SendAsync_NullSubject_ThrowsArgumentNullException",
+      "marks": [
+        10
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "Argument validation fails fast and no SMTP connection is opened",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ]
+    }
+  ],
+  "exception_text": "ArgumentNullException for null values, ArgumentException for empty/whitespace values, and FormatException for a malformed recipient address",
+  "exception_marks": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ],
+  "cases": [
+    {
+      "method": "SendAsync_EmptyOrWhitespaceHtmlBody_ThrowsArgumentException",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SendAsync_EmptyOrWhitespaceHtmlBody_ThrowsArgumentException",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SendAsync_EmptyOrWhitespaceRecipientEmail_ThrowsArgumentException",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SendAsync_EmptyOrWhitespaceRecipientEmail_ThrowsArgumentException",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SendAsync_EmptyOrWhitespaceSubject_ThrowsArgumentException",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SendAsync_EmptyOrWhitespaceSubject_ThrowsArgumentException",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SendAsync_InvalidRecipientEmailFormat_ThrowsParseExceptionBeforeConnecting",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SendAsync_NullHtmlBody_ThrowsArgumentNullException",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SendAsync_NullRecipientEmail_ThrowsArgumentNullException",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SendAsync_NullSubject_ThrowsArgumentNullException",
+      "type": "A",
+      "result": "P"
+    }
+  ]
+}

@@ -1,0 +1,334 @@
+{
+  "function_code": "HttpContextAuditContextAccessor.GetCurrent",
+  "sheet_name": "HttpContextAuditContextAccessor",
+  "lines_of_code": 80,
+  "requirement": "Resolve the current audit context: prefer an explicit AuditContextScope, otherwise read the actor id and role from claims (with X-ID/X-Role gateway fallbacks), the correlation id from X-Correlation-ID/X-Request-ID, and the request path and trace id, truncating over-long roles/paths/traces and returning the system context when no HttpContext exists.",
+  "preconditions": [
+    {
+      "text": "An HttpContext with claims, headers, a request path, and a trace id",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21
+      ]
+    },
+    {
+      "text": "An audit context scope is active or absent",
+      "marks": [
+        1,
+        10
+      ]
+    },
+    {
+      "text": "A role/path is over the limit, a claim is duplicated, or no HttpContext exists",
+      "marks": [
+        8,
+        9,
+        13,
+        18
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "GetCurrent_AfterTheAuditContextScopeIsDisposed_RestoresThePreviousScope",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "GetCurrent_UsesTheRequestPath",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "GetCurrent_WithACorrelationIdHeader_UsesTheHeader",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "GetCurrent_WithANameIdentifierClaim_UsesTheClaimAsActor",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "GetCurrent_WithANonGuidIdHeader_LeavesTheActorUnresolved",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "GetCurrent_WithARoleClaim_UsesTheClaimAsRole",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "GetCurrent_WithASubjectClaim_UsesTheClaimAsActor",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "GetCurrent_WithAVeryLongPath_TruncatesIt",
+      "marks": [
+        8
+      ]
+    },
+    {
+      "text": "GetCurrent_WithAVeryLongRole_TruncatesIt",
+      "marks": [
+        9
+      ]
+    },
+    {
+      "text": "GetCurrent_WithAnAuditContextScope_OverridesTheHttpContext",
+      "marks": [
+        10
+      ]
+    },
+    {
+      "text": "GetCurrent_WithBothClaims_PrefersTheNameIdentifierClaim",
+      "marks": [
+        11
+      ]
+    },
+    {
+      "text": "GetCurrent_WithBothCorrelationHeaders_PrefersTheCorrelationIdHeader",
+      "marks": [
+        12
+      ]
+    },
+    {
+      "text": "GetCurrent_WithDuplicateRoleClaims_DeduplicatesThem",
+      "marks": [
+        13
+      ]
+    },
+    {
+      "text": "GetCurrent_WithMultipleRoleClaims_JoinsThemWithAComma",
+      "marks": [
+        14
+      ]
+    },
+    {
+      "text": "GetCurrent_WithMultipleRoleHeaderValues_UsesAllOfThem",
+      "marks": [
+        15
+      ]
+    },
+    {
+      "text": "GetCurrent_WithOnlyARequestIdHeader_UsesTheHeader",
+      "marks": [
+        16
+      ]
+    },
+    {
+      "text": "GetCurrent_WithRoleClaims_PrefersThemOverTheRoleHeader",
+      "marks": [
+        17
+      ]
+    },
+    {
+      "text": "GetCurrent_WithoutAnHttpContext_ReturnsTheSystemContext",
+      "marks": [
+        18
+      ]
+    },
+    {
+      "text": "GetCurrent_WithoutAnyRole_ReturnsUnknown",
+      "marks": [
+        19
+      ]
+    },
+    {
+      "text": "GetCurrent_WithoutClaims_UsesTheIdHeaderAsActor",
+      "marks": [
+        20
+      ]
+    },
+    {
+      "text": "GetCurrent_WithoutRoleClaims_UsesTheRoleHeader",
+      "marks": [
+        21
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "The actor comes from NameIdentifier, then sub, then the X-ID header",
+      "marks": [
+        4,
+        7,
+        11,
+        20
+      ]
+    },
+    {
+      "text": "The role comes from role claims, then X-Role, deduplicated/joined, or Unknown when absent",
+      "marks": [
+        6,
+        13,
+        14,
+        15,
+        17,
+        19,
+        21
+      ]
+    },
+    {
+      "text": "The correlation id comes from X-Correlation-ID, then X-Request-ID",
+      "marks": [
+        3,
+        12,
+        16
+      ]
+    },
+    {
+      "text": "The request path and trace id are captured and truncated to their limits",
+      "marks": [
+        2,
+        8,
+        9
+      ]
+    },
+    {
+      "text": "An explicit audit scope overrides the HttpContext and is restored after disposal; without an HttpContext the system context is returned",
+      "marks": [
+        1,
+        10,
+        18
+      ]
+    }
+  ],
+  "exception_text": "No unhandled exception; non-Guid header values leave the actor unresolved",
+  "exception_marks": [],
+  "cases": [
+    {
+      "method": "GetCurrent_AfterTheAuditContextScopeIsDisposed_RestoresThePreviousScope",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "GetCurrent_UsesTheRequestPath",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "GetCurrent_WithACorrelationIdHeader_UsesTheHeader",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "GetCurrent_WithANameIdentifierClaim_UsesTheClaimAsActor",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "GetCurrent_WithANonGuidIdHeader_LeavesTheActorUnresolved",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "GetCurrent_WithARoleClaim_UsesTheClaimAsRole",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "GetCurrent_WithASubjectClaim_UsesTheClaimAsActor",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "GetCurrent_WithAVeryLongPath_TruncatesIt",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "GetCurrent_WithAVeryLongRole_TruncatesIt",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "GetCurrent_WithAnAuditContextScope_OverridesTheHttpContext",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "GetCurrent_WithBothClaims_PrefersTheNameIdentifierClaim",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "GetCurrent_WithBothCorrelationHeaders_PrefersTheCorrelationIdHeader",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "GetCurrent_WithDuplicateRoleClaims_DeduplicatesThem",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "GetCurrent_WithMultipleRoleClaims_JoinsThemWithAComma",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "GetCurrent_WithMultipleRoleHeaderValues_UsesAllOfThem",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "GetCurrent_WithOnlyARequestIdHeader_UsesTheHeader",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "GetCurrent_WithRoleClaims_PrefersThemOverTheRoleHeader",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "GetCurrent_WithoutAnHttpContext_ReturnsTheSystemContext",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "GetCurrent_WithoutAnyRole_ReturnsUnknown",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "GetCurrent_WithoutClaims_UsesTheIdHeaderAsActor",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "GetCurrent_WithoutRoleClaims_UsesTheRoleHeader",
+      "type": "N",
+      "result": "P"
+    }
+  ]
+}

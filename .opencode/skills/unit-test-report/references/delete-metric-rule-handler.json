@@ -1,0 +1,164 @@
+{
+  "function_code": "DeleteMetricRuleHandler.HandleAsync",
+  "sheet_name": "DeleteMetricRuleHandler",
+  "lines_of_code": 29,
+  "requirement": "Soft delete one metric rule: load the live rule by id, stamp IsDeleted/DeletedAt without touching its metric, criterion, or sibling rules, and report an unknown or already-deleted id as not found.",
+  "preconditions": [
+    {
+      "text": "A live metric rule exists for the target id",
+      "marks": [
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "text": "The rule is a scoring rule or a major/minor rule",
+      "marks": [
+        1,
+        2
+      ]
+    },
+    {
+      "text": "Two sibling rules of the same metric exist",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "The target id matches no live rule",
+      "marks": [
+        4,
+        5,
+        6,
+        7
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "Delete a scoring rule of the CURB-65 metric",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "Delete a major/minor rule of the IDSA/ATS metric",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "Delete the middle one of three rules on the same metric",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "Delete request with an unknown id",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "Delete request with Guid.Empty",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "Second delete request for an already deleted rule",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "Delete request for a rule that was soft deleted beforehand",
+      "marks": [
+        7
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "Success with Deleted status; the rule keeps its payload and gains a deletion timestamp",
+      "marks": [
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "text": "The metric and criterion of the rule stay live",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "Sibling rules of the same metric stay untouched",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "Failure with BadRequest and the 'Metric rule does not exist' error",
+      "marks": [
+        4,
+        5,
+        6,
+        7
+      ]
+    },
+    {
+      "text": "A rejected delete never moves an existing deletion timestamp",
+      "marks": [
+        6,
+        7
+      ]
+    }
+  ],
+  "exception_text": "No unhandled exception; a missing or already-deleted rule is returned as a failed Result",
+  "exception_marks": [
+    4,
+    5,
+    6,
+    7
+  ],
+  "cases": [
+    {
+      "method": "DeleteRule_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "DeleteRule_MajorMinorRule_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "DeleteRule_OneAmongSeveral_UpperBoundary_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "DeleteRule_UnknownId_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "DeleteRule_EmptyId_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "DeleteRule_AlreadyDeleted_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "DeleteRule_SoftDeletedRule_Fail",
+      "type": "A",
+      "result": "P"
+    }
+  ]
+}

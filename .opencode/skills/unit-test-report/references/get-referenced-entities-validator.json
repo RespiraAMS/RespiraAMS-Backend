@@ -1,0 +1,85 @@
+{
+  "function_code": "GetReferencedEntitiesValidator.Validate",
+  "sheet_name": "GetReferencedEntitiesValidator",
+  "lines_of_code": 14,
+  "requirement": "Validate a get-referenced-entities query: the criterion id must not be empty.",
+  "preconditions": [
+    {
+      "text": "Validation runs on an in-memory query without database access",
+      "marks": [
+        1,
+        2,
+        3,
+        4
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "Query with Guid.Empty",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "Query with a random version-7 GUID",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "Query with another random GUID",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "Query with GUID ffffffff-ffff-ffff-ffff-ffffffffffff (maximum boundary)",
+      "marks": [
+        4
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "Single validation error reported on Id",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "No validation errors",
+      "marks": [
+        2,
+        3,
+        4
+      ]
+    }
+  ],
+  "exception_text": "No unhandled exception; an empty id is reported as a validation error",
+  "exception_marks": [
+    1
+  ],
+  "cases": [
+    {
+      "method": "GetReferencedEntities_EmptyId_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "GetReferencedEntities_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "GetReferencedEntities_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "GetReferencedEntities_Success",
+      "type": "B",
+      "result": "P"
+    }
+  ]
+}

@@ -1,0 +1,419 @@
+{
+  "function_code": "GetCreateStatusQueryHandler.HandleAsync",
+  "sheet_name": "GetCreateStatusQueryHandler",
+  "lines_of_code": 52,
+  "requirement": "Read the in-flight create-profile saga: ask the saga state reader for the requested saga id exactly once, return ResourceNotFound when the saga row is gone or absent, and otherwise mirror the saga id, step, account, doctor, media, and failure reason into the status result.",
+  "preconditions": [
+    {
+      "text": "A create-profile saga state is stored for the requested id",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26
+      ]
+    },
+    {
+      "text": "The query carries the saga id and a cancellation token",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26
+      ]
+    },
+    {
+      "text": "The saga is missing, failed, or compensating",
+      "marks": [
+        1,
+        18,
+        20,
+        22
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "HandleAsync_AFailedSagaWithoutAFailureReason_ReportsANullReason",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "HandleAsync_AsksTheReaderForTheCreateSagaType",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "HandleAsync_AsksTheReaderForTheExactSagaId",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "HandleAsync_MirrorsEveryStep (step: Compensating)",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "HandleAsync_MirrorsEveryStep (step: Completed)",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "HandleAsync_MirrorsEveryStep (step: CreatingAccount)",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "HandleAsync_MirrorsEveryStep (step: CreatingMedia)",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "HandleAsync_MirrorsEveryStep (step: CreatingProfile)",
+      "marks": [
+        8
+      ]
+    },
+    {
+      "text": "HandleAsync_MirrorsEveryStep (step: Failed)",
+      "marks": [
+        9
+      ]
+    },
+    {
+      "text": "HandleAsync_MirrorsEveryStep (step: LinkingMedia)",
+      "marks": [
+        10
+      ]
+    },
+    {
+      "text": "HandleAsync_MirrorsEveryStep (step: SendingVerificationEmail)",
+      "marks": [
+        11
+      ]
+    },
+    {
+      "text": "HandleAsync_MirrorsTheAccountId",
+      "marks": [
+        12
+      ]
+    },
+    {
+      "text": "HandleAsync_MirrorsTheDoctorId",
+      "marks": [
+        13
+      ]
+    },
+    {
+      "text": "HandleAsync_MirrorsTheMediaId",
+      "marks": [
+        14
+      ]
+    },
+    {
+      "text": "HandleAsync_PassesTheCancellationTokenToTheReader",
+      "marks": [
+        15
+      ]
+    },
+    {
+      "text": "HandleAsync_ReadsTheSagaExactlyOnce",
+      "marks": [
+        16
+      ]
+    },
+    {
+      "text": "HandleAsync_ReportsTheSagaIdOfTheSagaThatWasRead",
+      "marks": [
+        17
+      ]
+    },
+    {
+      "text": "HandleAsync_WhenTheSagaDoesNotExist_ReturnsResourceNotFound",
+      "marks": [
+        18
+      ]
+    },
+    {
+      "text": "HandleAsync_WhenTheSagaExists_MirrorsItsState",
+      "marks": [
+        19
+      ]
+    },
+    {
+      "text": "HandleAsync_WithACompensatingSaga_ReportsCompensating",
+      "marks": [
+        20
+      ]
+    },
+    {
+      "text": "HandleAsync_WithACompletedSaga_ReportsCompleted",
+      "marks": [
+        21
+      ]
+    },
+    {
+      "text": "HandleAsync_WithAFailedSaga_ReportsFailed",
+      "marks": [
+        22
+      ]
+    },
+    {
+      "text": "HandleAsync_WithAFailureReason_ReportsThatReason",
+      "marks": [
+        23
+      ]
+    },
+    {
+      "text": "HandleAsync_WithANullQuery_Throws",
+      "marks": [
+        24
+      ]
+    },
+    {
+      "text": "HandleAsync_WithASagaIdDifferentFromTheQuery_ReportsTheSagaOwnId",
+      "marks": [
+        25
+      ]
+    },
+    {
+      "text": "HandleAsync_WithoutAFailureReason_KeepsItNull",
+      "marks": [
+        26
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "The reader is asked for the exact saga id and the create saga type, exactly once",
+      "marks": [
+        2,
+        3,
+        15,
+        16
+      ]
+    },
+    {
+      "text": "Every saga field is mirrored: saga id, step, account, doctor, media, and failure reason",
+      "marks": [
+        1,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        23,
+        25,
+        26
+      ]
+    },
+    {
+      "text": "Completed, failed, and compensating steps are reported as stored",
+      "marks": [
+        1,
+        20,
+        21,
+        22
+      ]
+    },
+    {
+      "text": "A missing saga returns ResourceNotFound",
+      "marks": [
+        18
+      ]
+    }
+  ],
+  "exception_text": "ArgumentNullException when the query is null",
+  "exception_marks": [
+    24
+  ],
+  "cases": [
+    {
+      "method": "HandleAsync_AFailedSagaWithoutAFailureReason_ReportsANullReason",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_AsksTheReaderForTheCreateSagaType",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_AsksTheReaderForTheExactSagaId",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_MirrorsEveryStep",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_MirrorsEveryStep",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_MirrorsEveryStep",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_MirrorsEveryStep",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_MirrorsEveryStep",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_MirrorsEveryStep",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_MirrorsEveryStep",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_MirrorsEveryStep",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_MirrorsTheAccountId",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_MirrorsTheDoctorId",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_MirrorsTheMediaId",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_PassesTheCancellationTokenToTheReader",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_ReadsTheSagaExactlyOnce",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_ReportsTheSagaIdOfTheSagaThatWasRead",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WhenTheSagaDoesNotExist_ReturnsResourceNotFound",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WhenTheSagaExists_MirrorsItsState",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithACompensatingSaga_ReportsCompensating",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithACompletedSaga_ReportsCompleted",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithAFailedSaga_ReportsFailed",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithAFailureReason_ReportsThatReason",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithANullQuery_Throws",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithASagaIdDifferentFromTheQuery_ReportsTheSagaOwnId",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithoutAFailureReason_KeepsItNull",
+      "type": "N",
+      "result": "P"
+    }
+  ]
+}

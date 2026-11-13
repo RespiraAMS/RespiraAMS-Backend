@@ -1,0 +1,846 @@
+{
+  "function_code": "FormulaModelMapper.Map",
+  "sheet_name": "FormulaModelMapper",
+  "lines_of_code": 105,
+  "requirement": "Map a domain Formula to its FormulaDto wire shape: project each of the six formula kinds to the constant, variable, binary, unary, or ternary fields, keep numeric constants culture-invariant, and throw for an unknown formula type.",
+  "preconditions": [
+    {
+      "text": "The mapper is constructed without dependencies",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55
+      ]
+    },
+    {
+      "text": "The source is one of the six known formula kinds",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "Categorical constant formula",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "Categorical variable formula",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "Boolean constant true",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "Boolean constant false",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "Unary formula",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "Unary formula over a variable",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "Boolean constant true mapped directly",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "Boolean constant false mapped directly",
+      "marks": [
+        8
+      ]
+    },
+    {
+      "text": "Unknown formula type nested in a ternary condition",
+      "marks": [
+        9
+      ]
+    },
+    {
+      "text": "Categorical constant 'SEVERE'",
+      "marks": [
+        10
+      ]
+    },
+    {
+      "text": "Categorical constant 'A+'",
+      "marks": [
+        11
+      ]
+    },
+    {
+      "text": "Categorical constant 'Stage 3B'",
+      "marks": [
+        12
+      ]
+    },
+    {
+      "text": "Numeric constant '0'",
+      "marks": [
+        13
+      ]
+    },
+    {
+      "text": "Numeric constant '20'",
+      "marks": [
+        14
+      ]
+    },
+    {
+      "text": "Numeric constant '1.2'",
+      "marks": [
+        15
+      ]
+    },
+    {
+      "text": "Numeric constant '6.5'",
+      "marks": [
+        16
+      ]
+    },
+    {
+      "text": "Numeric constant '-2.5'",
+      "marks": [
+        17
+      ]
+    },
+    {
+      "text": "Numeric constant '4.0'",
+      "marks": [
+        18
+      ]
+    },
+    {
+      "text": "Unknown formula type nested in a binary operand",
+      "marks": [
+        19
+      ]
+    },
+    {
+      "text": "Numeric constant under the de-DE culture",
+      "marks": [
+        20
+      ]
+    },
+    {
+      "text": "Numeric constant under the fr-FR culture",
+      "marks": [
+        21
+      ]
+    },
+    {
+      "text": "Numeric constant under the vi-VN culture",
+      "marks": [
+        22
+      ]
+    },
+    {
+      "text": "Boolean variable formula",
+      "marks": [
+        23
+      ]
+    },
+    {
+      "text": "Binary formula round trip",
+      "marks": [
+        24
+      ]
+    },
+    {
+      "text": "Ternary formula",
+      "marks": [
+        25
+      ]
+    },
+    {
+      "text": "Unary formula over a nested operand",
+      "marks": [
+        26
+      ]
+    },
+    {
+      "text": "Categorical constant that looks numeric",
+      "marks": [
+        27
+      ]
+    },
+    {
+      "text": "Categorical constant empty string",
+      "marks": [
+        28
+      ]
+    },
+    {
+      "text": "Binary numeric operator Add",
+      "marks": [
+        29
+      ]
+    },
+    {
+      "text": "Binary numeric operator Sub",
+      "marks": [
+        30
+      ]
+    },
+    {
+      "text": "Binary numeric operator Mul",
+      "marks": [
+        31
+      ]
+    },
+    {
+      "text": "Binary numeric operator Div",
+      "marks": [
+        32
+      ]
+    },
+    {
+      "text": "Binary numeric operator Gt",
+      "marks": [
+        33
+      ]
+    },
+    {
+      "text": "Binary numeric operator Lt",
+      "marks": [
+        34
+      ]
+    },
+    {
+      "text": "Binary numeric operator Gte",
+      "marks": [
+        35
+      ]
+    },
+    {
+      "text": "Binary numeric operator Lte",
+      "marks": [
+        36
+      ]
+    },
+    {
+      "text": "Binary numeric operator Eq",
+      "marks": [
+        37
+      ]
+    },
+    {
+      "text": "Binary numeric operator Ne",
+      "marks": [
+        38
+      ]
+    },
+    {
+      "text": "Numeric variable formula",
+      "marks": [
+        39
+      ]
+    },
+    {
+      "text": "Ternary formula round trip",
+      "marks": [
+        40
+      ]
+    },
+    {
+      "text": "Numeric constant '0' round trip",
+      "marks": [
+        41
+      ]
+    },
+    {
+      "text": "Numeric constant '1.2' round trip",
+      "marks": [
+        42
+      ]
+    },
+    {
+      "text": "Numeric constant '6.5' round trip",
+      "marks": [
+        43
+      ]
+    },
+    {
+      "text": "Numeric constant '-2.5' round trip",
+      "marks": [
+        44
+      ]
+    },
+    {
+      "text": "Numeric constant '4.0' round trip",
+      "marks": [
+        45
+      ]
+    },
+    {
+      "text": "Unknown formula type",
+      "marks": [
+        46
+      ]
+    },
+    {
+      "text": "Numeric constant at decimal.MinValue",
+      "marks": [
+        47
+      ]
+    },
+    {
+      "text": "Deeply nested formula round trip",
+      "marks": [
+        48
+      ]
+    },
+    {
+      "text": "Binary logical operator And",
+      "marks": [
+        49
+      ]
+    },
+    {
+      "text": "Binary logical operator Or",
+      "marks": [
+        50
+      ]
+    },
+    {
+      "text": "Numeric constant at decimal.MaxValue",
+      "marks": [
+        51
+      ]
+    },
+    {
+      "text": "Variable formula round trip",
+      "marks": [
+        52
+      ]
+    },
+    {
+      "text": "Ternary formula with variable branches",
+      "marks": [
+        53
+      ]
+    },
+    {
+      "text": "Binary formula with nested children",
+      "marks": [
+        54
+      ]
+    },
+    {
+      "text": "Deeply nested formula",
+      "marks": [
+        55
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "Success with the DTO tree mirroring the source formula",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55
+      ]
+    },
+    {
+      "text": "Constants keep their exact value and numeric output is culture-invariant",
+      "marks": [
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        20,
+        21,
+        22,
+        41,
+        42,
+        43,
+        44,
+        45,
+        47,
+        51
+      ]
+    },
+    {
+      "text": "Categorical values are never retyped, even numeric-looking or empty ones",
+      "marks": [
+        10,
+        11,
+        12,
+        27,
+        28
+      ]
+    },
+    {
+      "text": "Ternary DTOs carry the Ternary operator plus condition and both branches",
+      "marks": [
+        25,
+        40,
+        53
+      ]
+    },
+    {
+      "text": "ArgumentException is thrown for an unknown formula type",
+      "marks": [
+        9,
+        19,
+        46
+      ]
+    }
+  ],
+  "exception_text": "ArgumentException is thrown when the source or a nested source is an unknown formula type",
+  "exception_marks": [
+    9,
+    19,
+    46
+  ],
+  "cases": [
+    {
+      "method": "RoundTrip_CategoricalConstant_PreservesFormula",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Map_CategoricalVariable_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "RoundTrip_BooleanConstant_PreservesFormula",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "RoundTrip_BooleanConstant_PreservesFormula",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "RoundTrip_Unary_PreservesFormula",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Map_Unary_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Map_BooleanConstant_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Map_BooleanConstant_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Map_UnknownFormulaTypeNestedInTernary_ThrowsArgumentException",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Map_CategoricalConstant_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Map_CategoricalConstant_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Map_CategoricalConstant_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Map_NumericConstant_RealisticValue_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Map_NumericConstant_RealisticValue_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Map_NumericConstant_RealisticValue_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Map_NumericConstant_RealisticValue_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Map_NumericConstant_RealisticValue_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Map_NumericConstant_RealisticValue_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Map_UnknownFormulaTypeNestedInBinary_ThrowsArgumentException",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Map_NumericConstant_IsCultureInvariant_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Map_NumericConstant_IsCultureInvariant_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Map_NumericConstant_IsCultureInvariant_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Map_BooleanVariable_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "RoundTrip_Binary_PreservesFormula",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Map_Ternary_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Map_UnaryNestedOperand_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Map_CategoricalConstantLookingNumeric_IsNotRetyped",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "Map_CategoricalConstantEmptyString_Preserved",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "Map_BinaryNumericOperator_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Map_BinaryNumericOperator_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Map_BinaryNumericOperator_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Map_BinaryNumericOperator_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Map_BinaryNumericOperator_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Map_BinaryNumericOperator_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Map_BinaryNumericOperator_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Map_BinaryNumericOperator_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Map_BinaryNumericOperator_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Map_BinaryNumericOperator_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Map_NumericVariable_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "RoundTrip_Ternary_PreservesFormula",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "RoundTrip_NumericConstant_PreservesFormula",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "RoundTrip_NumericConstant_PreservesFormula",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "RoundTrip_NumericConstant_PreservesFormula",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "RoundTrip_NumericConstant_PreservesFormula",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "RoundTrip_NumericConstant_PreservesFormula",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Map_UnknownFormulaType_ThrowsArgumentException",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Map_NumericConstant_MinValue_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "RoundTrip_DeeplyNested_PreservesFormula",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Map_BinaryLogicalOperator_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Map_BinaryLogicalOperator_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Map_NumericConstant_MaxValue_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "RoundTrip_Variable_PreservesFormula",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Map_TernaryVariableBranches_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Map_BinaryNestedChildren_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Map_DeeplyNestedFormula_Success",
+      "type": "N",
+      "result": "P"
+    }
+  ]
+}

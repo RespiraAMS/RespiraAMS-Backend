@@ -1,0 +1,287 @@
+{
+  "function_code": "DoctorDbContext.SaveChangesAsync",
+  "sheet_name": "DoctorDbContext",
+  "lines_of_code": 93,
+  "requirement": "Doctor persistence: configure soft-delete query filters, unique account indexes, enum conversions, the head-doctor foreign key, and a database-generated accent-insensitive search vector; SaveChangesAsync normalizes DateTimeOffset values to UTC and the database enforces unique accounts, cascade behaviour, and array columns.",
+  "preconditions": [
+    {
+      "text": "A PostgreSQL doctor database with migrations applied",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16
+      ]
+    },
+    {
+      "text": "Doctors, head doctors, degrees, patients, and search vectors are seeded",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16
+      ]
+    },
+    {
+      "text": "A duplicate account id or a head doctor with subordinates is saved",
+      "marks": [
+        2,
+        10,
+        11
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "Degrees_RoundTripThroughTheIntegerArrayColumn",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "DeletingAHeadDepartmentDoctorThatStillHasSubordinates_IsRejectedByTheForeignKey",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "Doctor_CanReferenceItsHeadDepartmentDoctor",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "IgnoreQueryFilters_BringsTheSoftDeletedRowsBack",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "Patients_RoundTripThroughTheUuidArrayColumn",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "SaveChangesAsync_NormalizesCreatedAtToUtc",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "SaveChangesAsync_NormalizesDateOfBirthToUtc",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "SaveChangesAsync_NormalizesUpdatedAtToUtc",
+      "marks": [
+        8
+      ]
+    },
+    {
+      "text": "SavingADoctor_PersistsEveryMappedField",
+      "marks": [
+        9
+      ]
+    },
+    {
+      "text": "SavingTwoDoctorsWithTheSameAccountId_ThrowsADbUpdateException",
+      "marks": [
+        10
+      ]
+    },
+    {
+      "text": "SavingTwoHeadDepartmentDoctorsWithTheSameAccountId_ThrowsADbUpdateException",
+      "marks": [
+        11
+      ]
+    },
+    {
+      "text": "SearchVector_ContainsTheLastNameAndTheCitizenIdentificationNumber",
+      "marks": [
+        12
+      ]
+    },
+    {
+      "text": "SearchVector_IsAccentInsensitive",
+      "marks": [
+        13
+      ]
+    },
+    {
+      "text": "SearchVector_IsPopulatedByTheDatabase",
+      "marks": [
+        14
+      ]
+    },
+    {
+      "text": "SoftDeletedDoctor_IsHiddenFromPlainQueries",
+      "marks": [
+        15
+      ]
+    },
+    {
+      "text": "SoftDeletedHeadDepartmentDoctor_IsHiddenFromPlainQueries",
+      "marks": [
+        16
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "Soft-deleted doctors and head doctors are hidden by query filters and visible with IgnoreQueryFilters",
+      "marks": [
+        4,
+        15,
+        16
+      ]
+    },
+    {
+      "text": "CreatedAt, UpdatedAt, and DateOfBirth are normalized to UTC",
+      "marks": [
+        6,
+        7,
+        8
+      ]
+    },
+    {
+      "text": "The generated search vector contains the last name and citizen id and ignores accents",
+      "marks": [
+        12,
+        13,
+        14
+      ]
+    },
+    {
+      "text": "Duplicate account ids fail and a head doctor with subordinates cannot be deleted",
+      "marks": [
+        2,
+        10,
+        11
+      ]
+    },
+    {
+      "text": "Degrees, patients, the head-doctor link, and every mapped field round-trip",
+      "marks": [
+        1,
+        3,
+        5,
+        9
+      ]
+    }
+  ],
+  "exception_text": "DbUpdateException for duplicate account ids or a foreign-key violation",
+  "exception_marks": [
+    2,
+    10,
+    11
+  ],
+  "cases": [
+    {
+      "method": "Degrees_RoundTripThroughTheIntegerArrayColumn",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "DeletingAHeadDepartmentDoctorThatStillHasSubordinates_IsRejectedByTheForeignKey",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Doctor_CanReferenceItsHeadDepartmentDoctor",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IgnoreQueryFilters_BringsTheSoftDeletedRowsBack",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Patients_RoundTripThroughTheUuidArrayColumn",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SaveChangesAsync_NormalizesCreatedAtToUtc",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SaveChangesAsync_NormalizesDateOfBirthToUtc",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SaveChangesAsync_NormalizesUpdatedAtToUtc",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SavingADoctor_PersistsEveryMappedField",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SavingTwoDoctorsWithTheSameAccountId_ThrowsADbUpdateException",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SavingTwoHeadDepartmentDoctorsWithTheSameAccountId_ThrowsADbUpdateException",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SearchVector_ContainsTheLastNameAndTheCitizenIdentificationNumber",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SearchVector_IsAccentInsensitive",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SearchVector_IsPopulatedByTheDatabase",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SoftDeletedDoctor_IsHiddenFromPlainQueries",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SoftDeletedHeadDepartmentDoctor_IsHiddenFromPlainQueries",
+      "type": "N",
+      "result": "P"
+    }
+  ]
+}

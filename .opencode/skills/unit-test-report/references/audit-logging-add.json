@@ -1,0 +1,239 @@
+{
+  "function_code": "AuditLoggingExtension.AddAuditLogging",
+  "sheet_name": "AuditLoggingExtension",
+  "lines_of_code": 22,
+  "requirement": "Register the audit actor plumbing: add the HTTP context accessor and register the audit context accessor as a singleton so a pooled DbContext can resolve it from the root provider.",
+  "preconditions": [
+    {
+      "text": "A service collection with audit logging registered",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13
+      ]
+    },
+    {
+      "text": "The container is built and services are resolved from a scope or the root provider",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13
+      ]
+    },
+    {
+      "text": "An audit context scope is opened for the scope-behaviour cases",
+      "marks": [
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "Accessor WithoutHttpContext FallsBackToSystemContext",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "AddAuditLogging DbContextAndAccessor AreResolvableFromScope",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "AddAuditLogging PooledDbContext CanBeResolvedFromScope",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "AddAuditLogging RegistersAuditContextAccessor AsSingleton",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "AddAuditLogging RegistersAuditContextAccessor ResolvableFromRootProvider",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "AddAuditLogging RegistersHttpContextAccessor",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "AuditContextScope Begin Dispose RestoresThePreviousScope",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "AuditContextScope Begin OverridesAccessorResult",
+      "marks": [
+        8
+      ]
+    },
+    {
+      "text": "AuditContextScope Begin WithPreferredChangeSetId ExposesIt",
+      "marks": [
+        9
+      ]
+    },
+    {
+      "text": "AuditContextScope Current IsNullWhenNoScopeIsActive",
+      "marks": [
+        10
+      ]
+    },
+    {
+      "text": "AuditContextScope Handle DisposeTwice IsSafe",
+      "marks": [
+        11
+      ]
+    },
+    {
+      "text": "AuditContextScope PreferredChangeSetId IsNullWhenNoScopeIsActive",
+      "marks": [
+        12
+      ]
+    },
+    {
+      "text": "AuditContext WithNullActorAccountId IsAccepted",
+      "marks": [
+        13
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "The audit context accessor is a singleton and the DbContext resolves from a scope and the root provider",
+      "marks": [
+        2,
+        3,
+        4,
+        5,
+        6
+      ]
+    },
+    {
+      "text": "Opening a scope overrides the current context, exposes the preferred change-set id, and restores the previous scope on dispose",
+      "marks": [
+        7,
+        8,
+        9
+      ]
+    },
+    {
+      "text": "No active scope yields a null context and preferred id; a null actor is accepted and double dispose is safe",
+      "marks": [
+        10,
+        11,
+        12,
+        13
+      ]
+    },
+    {
+      "text": "A request without an HTTP context falls back to the system audit context",
+      "marks": [
+        1
+      ]
+    }
+  ],
+  "exception_text": "No unhandled exception; a missing HttpContext is tolerated",
+  "exception_marks": [],
+  "cases": [
+    {
+      "method": "Accessor_WithoutHttpContext_FallsBackToSystemContext",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "AddAuditLogging_DbContextAndAccessor_AreResolvableFromScope",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "AddAuditLogging_PooledDbContext_CanBeResolvedFromScope",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "AddAuditLogging_RegistersAuditContextAccessor_AsSingleton",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "AddAuditLogging_RegistersAuditContextAccessor_ResolvableFromRootProvider",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "AddAuditLogging_RegistersHttpContextAccessor",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "AuditContextScope_Begin_Dispose_RestoresThePreviousScope",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "AuditContextScope_Begin_OverridesAccessorResult",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "AuditContextScope_Begin_WithPreferredChangeSetId_ExposesIt",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "AuditContextScope_Current_IsNullWhenNoScopeIsActive",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "AuditContextScope_Handle_DisposeTwice_IsSafe",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "AuditContextScope_PreferredChangeSetId_IsNullWhenNoScopeIsActive",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "AuditContext_WithNullActorAccountId_IsAccepted",
+      "type": "B",
+      "result": "P"
+    }
+  ]
+}

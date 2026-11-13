@@ -1,0 +1,144 @@
+{
+  "function_code": "GetPagedPathogensHandler.HandleAsync",
+  "sheet_name": "GetPagedPathogensHandler",
+  "lines_of_code": 41,
+  "requirement": "Return a page of pathogens ordered by creation time descending with the optional atypical flag filter, projecting the id, name, description, and atypical flag inside the pagination metadata.",
+  "preconditions": [
+    {
+      "text": "Five live pathogens are seeded one minute apart",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ]
+    },
+    {
+      "text": "The atypical filter matches at least one seeded pathogen",
+      "marks": [
+        3,
+        4
+      ]
+    },
+    {
+      "text": "The atypical filter matches no seeded pathogen",
+      "marks": [
+        2
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "No filter, page 2, size 2 (middle page)",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "Atypical filter with a value that matches nothing",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "Atypical filter true",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "Atypical filter false",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "No filter, page 3, size 2 (last partial page)",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "No filter, page 1, size 2",
+      "marks": [
+        6
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "Success with the requested page and its metadata",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ]
+    },
+    {
+      "text": "Items ordered by CreatedAt descending",
+      "marks": [
+        1,
+        5,
+        6
+      ]
+    },
+    {
+      "text": "Each item carries its id, name, description, and atypical flag",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "The atypical filter narrows the page to the matching flag",
+      "marks": [
+        3,
+        4
+      ]
+    },
+    {
+      "text": "An empty page with zero total items when the filter matches nothing",
+      "marks": [
+        2
+      ]
+    }
+  ],
+  "exception_text": "No unhandled exception; the read-only query has no failure branch",
+  "exception_marks": [],
+  "cases": [
+    {
+      "method": "GetPagedPathogens_MiddlePage_HasBothNeighbors_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "GetPagedPathogens_FilterMatchesNothing_ReturnsEmpty",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "GetPagedPathogens_FilterIsAtypical_ReturnOnlyThatPathogen_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "GetPagedPathogens_FilterIsAtypical_ReturnOnlyThatPathogen_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "GetPagedPathogens_LastPartialPage_HasNoNext_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "GetPagedPathogens_NoFilter_FirstPageNewestFirst_Success",
+      "type": "N",
+      "result": "P"
+    }
+  ]
+}

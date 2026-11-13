@@ -1,0 +1,84 @@
+{
+  "function_code": "UpdatePathogenHandler.HandleAsync",
+  "sheet_name": "UpdatePathogenHandler",
+  "lines_of_code": 41,
+  "requirement": "Update a pathogen: load the live record, map the new name, description, and atypical flag onto it, save it, and report Updated; an unknown id is reported as not found.",
+  "preconditions": [
+    {
+      "text": "A live pathogen exists for the target id",
+      "marks": [
+        1,
+        2
+      ]
+    },
+    {
+      "text": "The target id matches no live pathogen",
+      "marks": [
+        3
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "Rename to 'Streptococcus pneumoniae' with a new description and atypical flag true",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "Rename to 'Haemophilus influenzae' with a new description and atypical flag false",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "Update request with an unknown pathogen id",
+      "marks": [
+        3
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "Success with Updated status; the new fields are persisted",
+      "marks": [
+        1,
+        2
+      ]
+    },
+    {
+      "text": "The atypical flag follows the command",
+      "marks": [
+        1,
+        2
+      ]
+    },
+    {
+      "text": "Failure with BadRequest and the 'Pathogen ID not found' error",
+      "marks": [
+        3
+      ]
+    }
+  ],
+  "exception_text": "No unhandled exception; a missing pathogen is returned as a failed Result",
+  "exception_marks": [
+    3
+  ],
+  "cases": [
+    {
+      "method": "UpdatePathogen_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "UpdatePathogen_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "UpdatePathogen_PathogenNotFound_Fail",
+      "type": "A",
+      "result": "P"
+    }
+  ]
+}

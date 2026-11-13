@@ -1,0 +1,241 @@
+{
+  "function_code": "AnalysisDbContext.SaveChangesAsync",
+  "sheet_name": "AnalysisDbContext",
+  "lines_of_code": 31,
+  "requirement": "Persist Analysis aggregate changes through the auditable DbContext: configure the clinical_analyses mapping (jsonb payload columns and a CreatedAt index), expose the shared audit_entries table, and let SaveChangesAsync write Created/Updated/SoftDeleted/Deleted audit entries that share a change-set id per call.",
+  "preconditions": [
+    {
+      "text": "A PostgreSQL test database has the Analysis schema and audit_entries table",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13
+      ]
+    },
+    {
+      "text": "The context is built from the fixture connection string or a validated DI scope",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13
+      ]
+    },
+    {
+      "text": "A ClinicalAnalysis is added, updated, soft-deleted, or hard-deleted before SaveChangesAsync",
+      "marks": [
+        1,
+        2,
+        3,
+        9,
+        10,
+        11,
+        12,
+        13
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "AuditEntriesOfOneSaveChangesCall_ShareTheSameChangeSetId",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "AuditEntry_CarriesTheEntityIdAndEntityType",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "AuditEntry_ListsTheChangedFields",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "Context_CanBeResolvedFromScope_WithAuditLoggingAndValidateScopes",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "Context_ExposesTheSharedAuditEntriesTable",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "Context_IsAnAuditableDbContext",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "CreatedAtIndex_Exists",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "JsonPayloadColumns_AreStoredAsJsonb",
+      "marks": [
+        8
+      ]
+    },
+    {
+      "text": "SaveChanges_CreatingAnalysis_WritesACreatedAuditEntry",
+      "marks": [
+        9
+      ]
+    },
+    {
+      "text": "SaveChanges_HardDeletingReport_WritesADeletedAuditEntry",
+      "marks": [
+        10
+      ]
+    },
+    {
+      "text": "SaveChanges_SoftDeletingReport_WritesASoftDeletedAuditEntry",
+      "marks": [
+        11
+      ]
+    },
+    {
+      "text": "SaveChanges_UpdatingReport_WritesAnUpdatedAuditEntry",
+      "marks": [
+        12
+      ]
+    },
+    {
+      "text": "TwoSeparateSaveChangesCalls_ProduceDifferentChangeSetIds",
+      "marks": [
+        13
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "Created, Updated, SoftDeleted, and Deleted audit entries with the expected action, operation, entity id, and entity type",
+      "marks": [
+        2,
+        3,
+        9,
+        10,
+        11,
+        12
+      ]
+    },
+    {
+      "text": "One change-set id per SaveChangesAsync call, shared by its audit entries and distinct across calls",
+      "marks": [
+        1,
+        13
+      ]
+    },
+    {
+      "text": "The model exposes the audit_entries table, three jsonb payload columns, and the CreatedAt index",
+      "marks": [
+        5,
+        7,
+        8
+      ]
+    },
+    {
+      "text": "The context derives from AuditableDbContext and resolves from a scoped provider with audit logging",
+      "marks": [
+        4,
+        6
+      ]
+    }
+  ],
+  "exception_text": "No unhandled exception; every SaveChangesAsync call completes and returns the affected row count",
+  "exception_marks": [],
+  "cases": [
+    {
+      "method": "AuditEntriesOfOneSaveChangesCall_ShareTheSameChangeSetId",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "AuditEntry_CarriesTheEntityIdAndEntityType",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "AuditEntry_ListsTheChangedFields",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Context_CanBeResolvedFromScope_WithAuditLoggingAndValidateScopes",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Context_ExposesTheSharedAuditEntriesTable",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Context_IsAnAuditableDbContext",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "CreatedAtIndex_Exists",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "JsonPayloadColumns_AreStoredAsJsonb",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SaveChanges_CreatingAnalysis_WritesACreatedAuditEntry",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SaveChanges_HardDeletingReport_WritesADeletedAuditEntry",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SaveChanges_SoftDeletingReport_WritesASoftDeletedAuditEntry",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SaveChanges_UpdatingReport_WritesAnUpdatedAuditEntry",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "TwoSeparateSaveChangesCalls_ProduceDifferentChangeSetIds",
+      "type": "N",
+      "result": "P"
+    }
+  ]
+}

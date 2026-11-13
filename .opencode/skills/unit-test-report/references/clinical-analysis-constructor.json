@@ -1,0 +1,243 @@
+{
+  "function_code": "ClinicalAnalysis.Constructor",
+  "sheet_name": "ClinicalAnalysis",
+  "lines_of_code": 15,
+  "requirement": "Create a clinical analysis entity: derive from the shared base (UUIDv7 id, created/updated timestamps, not soft-deleted), default the JSON payloads to empty arrays/object and the optional doctor/medicine to null, and allow every property to be assigned.",
+  "preconditions": [
+    {
+      "text": "A new ClinicalAnalysis instance is created",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14
+      ]
+    },
+    {
+      "text": "The base defaults and JSON payload defaults are observed",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "Analysis CanCarryDoctorMedicineStartAndEnd",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "Analysis DerivesFromServiceDefaultsBase",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "Analysis IdIsStableWhenAssignedExplicitly",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "Analysis JsonPayloadsCanBeOverwritten",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "NewAnalysis CreatedAtAndUpdatedAtDefaultToNow",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "NewAnalysis DoctorIdDefaultsToNull",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "NewAnalysis HasNonEmptyUuidV7Id",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "NewAnalysis IsDeletedDefaultsToFalseAndDeletedAtDefaultsToNull",
+      "marks": [
+        8
+      ]
+    },
+    {
+      "text": "NewAnalysis MedicineIdDefaultsToNull",
+      "marks": [
+        9
+      ]
+    },
+    {
+      "text": "NewAnalysis PatientIdsJsonDefaultsToEmptyArray",
+      "marks": [
+        10
+      ]
+    },
+    {
+      "text": "NewAnalysis ReportJsonDefaultsToEmptyObject",
+      "marks": [
+        11
+      ]
+    },
+    {
+      "text": "NewAnalysis StartAndEndDefaultToDefaultDateTimeOffset",
+      "marks": [
+        12
+      ]
+    },
+    {
+      "text": "NewAnalysis TreatmentPlanIdsJsonDefaultsToEmptyArray",
+      "marks": [
+        13
+      ]
+    },
+    {
+      "text": "TwoAnalysesCreatedBackToBack GetDifferentIds",
+      "marks": [
+        14
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "Derives from Base with a non-empty UUIDv7 id and timestamps close to now",
+      "marks": [
+        2,
+        5,
+        7,
+        14
+      ]
+    },
+    {
+      "text": "PatientIds, TreatmentPlanIds, and ReportJson default to [] , [] , and {}",
+      "marks": [
+        10,
+        11,
+        13
+      ]
+    },
+    {
+      "text": "Optional doctor/medicine, window, and soft-delete fields default as documented and can be overwritten",
+      "marks": [
+        1,
+        4,
+        6,
+        8,
+        9,
+        12
+      ]
+    },
+    {
+      "text": "An explicitly assigned id is stable and two attempts get different ids",
+      "marks": [
+        3,
+        14
+      ]
+    }
+  ],
+  "exception_text": "No unhandled exception; the entity always constructs with its defaults",
+  "exception_marks": [],
+  "cases": [
+    {
+      "method": "Analysis_CanCarryDoctorMedicineStartAndEnd",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Analysis_DerivesFromServiceDefaultsBase",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Analysis_IdIsStableWhenAssignedExplicitly",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Analysis_JsonPayloadsCanBeOverwritten",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "NewAnalysis_CreatedAtAndUpdatedAtDefaultToNow",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "NewAnalysis_DoctorIdDefaultsToNull",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "NewAnalysis_HasNonEmptyUuidV7Id",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "NewAnalysis_IsDeletedDefaultsToFalseAndDeletedAtDefaultsToNull",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "NewAnalysis_MedicineIdDefaultsToNull",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "NewAnalysis_PatientIdsJsonDefaultsToEmptyArray",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "NewAnalysis_ReportJsonDefaultsToEmptyObject",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "NewAnalysis_StartAndEndDefaultToDefaultDateTimeOffset",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "NewAnalysis_TreatmentPlanIdsJsonDefaultsToEmptyArray",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "TwoAnalysesCreatedBackToBack_GetDifferentIds",
+      "type": "N",
+      "result": "P"
+    }
+  ]
+}

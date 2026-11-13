@@ -1,0 +1,117 @@
+{
+  "function_code": "CreateAntibiogramHandler.HandleAsync",
+  "sheet_name": "CreateAntibiogramHandler",
+  "lines_of_code": 66,
+  "requirement": "Create a susceptibility result for a pathogen: reject unknown or soft-deleted pathogens and antibiotics, enforce one antibiogram per pathogen and MIC category, map the command, link the tested antibiotics, and persist the result.",
+  "preconditions": [
+    {
+      "text": "A live pathogen exists for the requested pathogen ID",
+      "marks": [1, 2, 3, 4, 7, 8, 9, 10, 11, 12, 13]
+    },
+    {
+      "text": "Every requested antibiotic exists and is not soft-deleted",
+      "marks": [1, 2, 3, 4, 5, 6, 10, 11, 12, 13]
+    },
+    {
+      "text": "No live antibiogram exists for the pathogen and MIC pair",
+      "marks": [1, 2, 3, 4, 11, 12, 13]
+    },
+    {
+      "text": "A live antibiogram already exists for the pathogen and MIC pair",
+      "marks": [10]
+    },
+    {
+      "text": "A soft-deleted antibiogram exists for the pathogen and MIC pair",
+      "marks": [13]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "Single antibiotic and MIC Susceptible (lowest enum member)",
+      "marks": [1]
+    },
+    {
+      "text": "Single antibiotic and MIC Resistant (highest enum member)",
+      "marks": [2]
+    },
+    {
+      "text": "Three antibiotics from different groups and MIC Intermediate",
+      "marks": [3]
+    },
+    {
+      "text": "Two beta-lactams sharing the same group lineage",
+      "marks": [4]
+    },
+    {
+      "text": "Unknown pathogen ID and one valid antibiotic",
+      "marks": [5]
+    },
+    {
+      "text": "Soft-deleted pathogen ID and one valid antibiotic",
+      "marks": [6]
+    },
+    {
+      "text": "One valid and one unknown antibiotic ID",
+      "marks": [7]
+    },
+    {
+      "text": "Two unknown antibiotic IDs and no valid antibiotic",
+      "marks": [8]
+    },
+    {
+      "text": "Soft-deleted antibiotic ID",
+      "marks": [9]
+    },
+    {
+      "text": "Same pathogen and MIC as an existing live antibiogram",
+      "marks": [10]
+    },
+    {
+      "text": "Same pathogen with a different MIC category",
+      "marks": [11]
+    },
+    {
+      "text": "Different pathogen with the same MIC category",
+      "marks": [12]
+    },
+    {
+      "text": "Same pathogen and MIC as a soft-deleted antibiogram",
+      "marks": [13]
+    }
+  ],
+  "returns": [
+    {
+      "text": "Success with Created status and the new antibiogram ID",
+      "marks": [1, 2, 3, 4, 11, 12, 13]
+    },
+    {
+      "text": "Failure with BadRequest and the 'Pathogen not found' error",
+      "marks": [5, 6]
+    },
+    {
+      "text": "Failure with BadRequest and the 'Not all antibiotic exist' error",
+      "marks": [7, 8, 9]
+    },
+    {
+      "text": "Failure with BusinessRuleViolation and no persisted antibiogram",
+      "marks": [10]
+    }
+  ],
+  "exception_text": "No unhandled exception; every failure is returned as a failed Result",
+  "exception_marks": [5, 6, 7, 8, 9, 10],
+  "cases": [
+    { "method": "CreateAntibiogram_MinimalValues_Success", "type": "B", "result": "P" },
+    { "method": "CreateAntibiogram_MinimalValues_Success", "type": "B", "result": "P" },
+    { "method": "CreateAntibiogram_MultipleAntibiotics_Success", "type": "N", "result": "P" },
+    { "method": "CreateAntibiogram_SameLineageAntibiotics_Success", "type": "N", "result": "P" },
+    { "method": "CreateAntibiogram_UnknownPathogen_Fail", "type": "A", "result": "P" },
+    { "method": "CreateAntibiogram_SoftDeletedPathogen_Fail", "type": "A", "result": "P" },
+    { "method": "CreateAntibiogram_UnknownAntibiotic_Fail", "type": "A", "result": "P" },
+    { "method": "CreateAntibiogram_AllAntibioticsUnknown_Fail", "type": "B", "result": "P" },
+    { "method": "CreateAntibiogram_SoftDeletedAntibiotic_Fail", "type": "A", "result": "P" },
+    { "method": "CreateAntibiogram_DuplicatePathogenAndMic_Fail", "type": "A", "result": "P" },
+    { "method": "CreateAntibiogram_SamePathogenDifferentMic_Success", "type": "N", "result": "P" },
+    { "method": "CreateAntibiogram_DifferentPathogenSameMic_Success", "type": "N", "result": "P" },
+    { "method": "CreateAntibiogram_SoftDeletedConflict_Success", "type": "N", "result": "P" }
+  ]
+}

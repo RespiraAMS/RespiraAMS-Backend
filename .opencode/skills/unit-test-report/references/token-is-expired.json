@@ -1,0 +1,127 @@
+{
+  "function_code": "Token.IsExpired",
+  "sheet_name": "Token",
+  "lines_of_code": 33,
+  "requirement": "Authentication Token entity behavior: a token is expired when its ExpirationDate is before the current UTC time, a null expiration is treated as not expired, and a newly constructed token gets the ServiceDefaults UUID v7 identifier and audit defaults, null navigation/expiration, and refresh-token defaults.",
+  "preconditions": [
+    {
+      "text": "A Token is constructed with a HashToken",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ]
+    },
+    {
+      "text": "ExpirationDate is in the past, in the future, or null",
+      "marks": [
+        1,
+        2,
+        3
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "IsExpired_ReturnsFalse_WhenExpirationDateIsInTheFuture",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "IsExpired_ReturnsFalse_WhenExpirationDateIsNull",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "IsExpired_ReturnsTrue_WhenExpirationDateIsInThePast",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "NewToken_HasNonEmptyUuidV7IdAndAuditDefaults",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "NewToken_NavigationAndExpirationDefaultToNull",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "Token_CanReferenceOwningAccountAndAllProperties",
+      "marks": [
+        6
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "IsExpired returns true only when the expiration date is in the past",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "A future expiration is not expired, and a null expiration is treated as not expired",
+      "marks": [
+        1,
+        2
+      ]
+    },
+    {
+      "text": "New tokens get a UUID v7 id, UTC audit timestamps, and null navigation/expiration",
+      "marks": [
+        4,
+        5
+      ]
+    },
+    {
+      "text": "A token can reference its owning account and every property round-trips",
+      "marks": [
+        6
+      ]
+    }
+  ],
+  "exception_text": "No unhandled exception; a null expiration date is compared without throwing",
+  "exception_marks": [],
+  "cases": [
+    {
+      "method": "IsExpired_ReturnsFalse_WhenExpirationDateIsInTheFuture",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IsExpired_ReturnsFalse_WhenExpirationDateIsNull",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "IsExpired_ReturnsTrue_WhenExpirationDateIsInThePast",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "NewToken_HasNonEmptyUuidV7IdAndAuditDefaults",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "NewToken_NavigationAndExpirationDefaultToNull",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Token_CanReferenceOwningAccountAndAllProperties",
+      "type": "N",
+      "result": "P"
+    }
+  ]
+}

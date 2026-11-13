@@ -1,0 +1,60 @@
+{
+  "function_code": "CreateAntibioticGroupHandler.HandleAsync",
+  "sheet_name": "CreateAntibioticGroupHandler",
+  "lines_of_code": 46,
+  "requirement": "Create an antibiotic group: when a parent ID is supplied the parent must exist and must not be soft-deleted, otherwise the command is rejected; then map the command, persist the new group, and return its generated ID with Created status.",
+  "preconditions": [
+    {
+      "text": "A live parent antibiotic group exists for the requested parent ID",
+      "marks": [2]
+    },
+    {
+      "text": "The requested parent ID does not match any live antibiotic group",
+      "marks": [3, 4]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "Root group (Beta-lactams) with a null parent ID",
+      "marks": [1]
+    },
+    {
+      "text": "Subgroup (Penicillins) with the ID of an existing parent",
+      "marks": [2]
+    },
+    {
+      "text": "Subgroup (Cephalosporins) with an unknown parent ID",
+      "marks": [3]
+    },
+    {
+      "text": "Subgroup (Gentamicin subgroup) with a soft-deleted parent ID",
+      "marks": [4]
+    }
+  ],
+  "returns": [
+    {
+      "text": "Success with Created status and the new group ID",
+      "marks": [1, 2]
+    },
+    {
+      "text": "The group is persisted with the requested name, description, and parent ID",
+      "marks": [1, 2]
+    },
+    {
+      "text": "Failure with BadRequest and the 'Antibiotic group parent ID not found' error",
+      "marks": [3, 4]
+    },
+    {
+      "text": "No group is created when the parent check fails",
+      "marks": [3, 4]
+    }
+  ],
+  "exception_text": "No unhandled exception; a missing parent is returned as a failed Result",
+  "exception_marks": [3, 4],
+  "cases": [
+    { "method": "CreateAntibioticGroup_RootGroupWithoutParent_Success", "type": "N", "result": "P" },
+    { "method": "CreateAntibioticGroup_SubGroupWithExistingParent_Success", "type": "N", "result": "P" },
+    { "method": "CreateAntibioticGroup_UnknownParent_Fail", "type": "A", "result": "P" },
+    { "method": "CreateAntibioticGroup_SoftDeletedParent_Fail", "type": "A", "result": "P" }
+  ]
+}

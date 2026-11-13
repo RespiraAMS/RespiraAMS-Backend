@@ -1,0 +1,202 @@
+{
+  "function_code": "CreatePatientHandler.HandleAsync",
+  "sheet_name": "CreatePatientHandler",
+  "lines_of_code": 48,
+  "requirement": "Create a patient: the medical record code must be unique, the command is mapped (which normalises the names and applies defaults), and the patient must be at least 15 years old, then the row is persisted and its id returned with Created status.",
+  "preconditions": [
+    {
+      "text": "No patient already uses the requested medical record code",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        9,
+        10
+      ]
+    },
+    {
+      "text": "The patient is at least 15 years old",
+      "marks": [
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ]
+    },
+    {
+      "text": "The medical record code is taken or the patient is too young",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        8
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "CreatePatient Below16Years Failure (dob: 10/22/2011)",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "CreatePatient Below16Years Failure (dob: 11/10/2011)",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "CreatePatient Below16Years Failure (dob: 11/9/2011)",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "CreatePatient Below16Years Failure (dob: 7/22/2016)",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "CreatePatient BodyMeasurements PersistedExactly (height: 156.80000000000001, weight: 48.899999999999999)",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "CreatePatient BodyMeasurements PersistedExactly (height: 215.5, weight: 183.40000000000001)",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "CreatePatient BodyMeasurements PersistedExactly (height: 46.5, weight: 2.3999999999999999)",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "CreatePatient DuplicateMedicalRecordCode Falure",
+      "marks": [
+        8
+      ]
+    },
+    {
+      "text": "CreatePatient MessyNames AreNormalized",
+      "marks": [
+        9
+      ]
+    },
+    {
+      "text": "CreatePatient ValidCommand Success",
+      "marks": [
+        10
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "Success with Created status and the new patient id",
+      "marks": [
+        10
+      ]
+    },
+    {
+      "text": "Messy names are normalised before saving",
+      "marks": [
+        9
+      ]
+    },
+    {
+      "text": "Body measurements are persisted exactly as supplied",
+      "marks": [
+        5,
+        6,
+        7
+      ]
+    },
+    {
+      "text": "Failure with BadRequest for a duplicate medical record code",
+      "marks": [
+        8
+      ]
+    },
+    {
+      "text": "Failure with BusinessRuleViolation when the patient is under 15",
+      "marks": [
+        1,
+        2,
+        3,
+        4
+      ]
+    }
+  ],
+  "exception_text": "No unhandled exception; every rejection is returned as a failed Result",
+  "exception_marks": [
+    1,
+    2,
+    3,
+    4,
+    8
+  ],
+  "cases": [
+    {
+      "method": "CreatePatient_Below16Years_Failure",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CreatePatient_Below16Years_Failure",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CreatePatient_Below16Years_Failure",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CreatePatient_Below16Years_Failure",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CreatePatient_BodyMeasurements_PersistedExactly",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "CreatePatient_BodyMeasurements_PersistedExactly",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "CreatePatient_BodyMeasurements_PersistedExactly",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "CreatePatient_DuplicateMedicalRecordCode_Falure",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CreatePatient_MessyNames_AreNormalized",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "CreatePatient_ValidCommand_Success",
+      "type": "N",
+      "result": "P"
+    }
+  ]
+}

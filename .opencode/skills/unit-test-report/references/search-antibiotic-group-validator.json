@@ -1,0 +1,211 @@
+{
+  "function_code": "SearchAntibioticGroupValidator.Validate",
+  "sheet_name": "SearchAntibioticGroupValidator",
+  "lines_of_code": 14,
+  "requirement": "Validate a search-antibiotic-group query: the pagination parameters must satisfy page >= 1 and 1 <= size <= 100, and the search term must be at least two characters after trimming and contain only letters, digits, hyphens, or spaces.",
+  "preconditions": [
+    {
+      "text": "Validation runs on an in-memory query without database access",
+      "marks": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31]
+    },
+    {
+      "text": "The pagination parameters are within the valid range",
+      "marks": [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31]
+    },
+    {
+      "text": "The search term satisfies both the length and character-set rules",
+      "marks": [6, 7, 8, 9, 15, 16, 17, 18, 19, 20, 21, 22]
+    },
+    {
+      "text": "The trimmed search term is shorter than two characters",
+      "marks": [10, 11, 12, 13, 14, 23, 24, 25, 26, 27]
+    },
+    {
+      "text": "The search term contains a forbidden character",
+      "marks": [10, 11, 12, 13, 14, 28, 29, 30, 31]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "Page 0, size 10, search term 'penicillin'",
+      "marks": [1]
+    },
+    {
+      "text": "Page -3, size 10, search term 'penicillin'",
+      "marks": [2]
+    },
+    {
+      "text": "Page 1, size 0, search term 'penicillin'",
+      "marks": [3]
+    },
+    {
+      "text": "Page 1, size -20, search term 'penicillin'",
+      "marks": [4]
+    },
+    {
+      "text": "Page 1, size 101, search term 'penicillin'",
+      "marks": [5]
+    },
+    {
+      "text": "Page 1, size 1 (smallest allowed values)",
+      "marks": [6]
+    },
+    {
+      "text": "Page 1, size 10 (default values)",
+      "marks": [7]
+    },
+    {
+      "text": "Page 1, size 100 (largest allowed size)",
+      "marks": [8]
+    },
+    {
+      "text": "Page 7, size 50",
+      "marks": [9]
+    },
+    {
+      "text": "Page 0, size 10, search term 'beta&lactam'",
+      "marks": [10]
+    },
+    {
+      "text": "Search term '!' (single forbidden character)",
+      "marks": [11]
+    },
+    {
+      "text": "Search term '%' (single forbidden character)",
+      "marks": [12]
+    },
+    {
+      "text": "Search term '&' (single forbidden character)",
+      "marks": [13]
+    },
+    {
+      "text": "Search term ' @ ' (forbidden character with padding)",
+      "marks": [14]
+    },
+    {
+      "text": "Search term 'ab' (lower boundary of the trimmed length)",
+      "marks": [15]
+    },
+    {
+      "text": "Search term '12' (digits)",
+      "marks": [16]
+    },
+    {
+      "text": "Search term 'penicillin' (single word)",
+      "marks": [17]
+    },
+    {
+      "text": "Search term 'beta-lactam' (hyphen allowed)",
+      "marks": [18]
+    },
+    {
+      "text": "Search term 'beta lactam' (multi-word)",
+      "marks": [19]
+    },
+    {
+      "text": "Search term '  ab  ' (padding ignored by the length rule)",
+      "marks": [20]
+    },
+    {
+      "text": "Search term 'Azithromycin500' (letters and digits)",
+      "marks": [21]
+    },
+    {
+      "text": "Search term 'Kháng' (accented Unicode letters)",
+      "marks": [22]
+    },
+    {
+      "text": "Search term '' (empty)",
+      "marks": [23]
+    },
+    {
+      "text": "Search term 'a' (one character)",
+      "marks": [24]
+    },
+    {
+      "text": "Search term ' ' (single space)",
+      "marks": [25]
+    },
+    {
+      "text": "Search term '   ' (three spaces)",
+      "marks": [26]
+    },
+    {
+      "text": "Search term '  a  ' (one character with padding)",
+      "marks": [27]
+    },
+    {
+      "text": "Search term 'beta&lactam' (ampersand)",
+      "marks": [28]
+    },
+    {
+      "text": "Search term '50%' (percent sign)",
+      "marks": [29]
+    },
+    {
+      "text": "Search term 'covid-19!' (exclamation mark)",
+      "marks": [30]
+    },
+    {
+      "text": "Search term 'ab_cd' (underscore)",
+      "marks": [31]
+    }
+  ],
+  "returns": [
+    {
+      "text": "No validation errors",
+      "marks": [6, 7, 8, 9, 15, 16, 17, 18, 19, 20, 21, 22]
+    },
+    {
+      "text": "Single validation error reported on Param",
+      "marks": [1, 2, 3, 4, 5]
+    },
+    {
+      "text": "Single validation error reported on SearchTerm",
+      "marks": [23, 24, 25, 26, 27, 28, 29, 30, 31]
+    },
+    {
+      "text": "Two errors on SearchTerm: too short and forbidden character",
+      "marks": [11, 12, 13, 14]
+    },
+    {
+      "text": "Two errors: one on Param and one on SearchTerm",
+      "marks": [10]
+    }
+  ],
+  "exception_text": "No unhandled exception; invalid input is reported as validation errors",
+  "exception_marks": [1, 2, 3, 4, 5, 10, 11, 12, 13, 14, 23, 24, 25, 26, 27, 28, 29, 30, 31],
+  "cases": [
+    { "method": "SearchAntibioticGroup_InvalidPaginationParam_Fail", "type": "A", "result": "P" },
+    { "method": "SearchAntibioticGroup_InvalidPaginationParam_Fail", "type": "A", "result": "P" },
+    { "method": "SearchAntibioticGroup_InvalidPaginationParam_Fail", "type": "A", "result": "P" },
+    { "method": "SearchAntibioticGroup_InvalidPaginationParam_Fail", "type": "A", "result": "P" },
+    { "method": "SearchAntibioticGroup_InvalidPaginationParam_Fail", "type": "A", "result": "P" },
+    { "method": "SearchAntibioticGroup_ValidPaginationParam_Success", "type": "B", "result": "P" },
+    { "method": "SearchAntibioticGroup_ValidPaginationParam_Success", "type": "N", "result": "P" },
+    { "method": "SearchAntibioticGroup_ValidPaginationParam_Success", "type": "B", "result": "P" },
+    { "method": "SearchAntibioticGroup_ValidPaginationParam_Success", "type": "N", "result": "P" },
+    { "method": "SearchAntibioticGroup_InvalidSearchTermAndPaginationParam_Fail", "type": "A", "result": "P" },
+    { "method": "SearchAntibioticGroup_SearchTermTooShortAndForbiddenCharacter_Fail", "type": "A", "result": "P" },
+    { "method": "SearchAntibioticGroup_SearchTermTooShortAndForbiddenCharacter_Fail", "type": "A", "result": "P" },
+    { "method": "SearchAntibioticGroup_SearchTermTooShortAndForbiddenCharacter_Fail", "type": "A", "result": "P" },
+    { "method": "SearchAntibioticGroup_SearchTermTooShortAndForbiddenCharacter_Fail", "type": "A", "result": "P" },
+    { "method": "SearchAntibioticGroup_ValidSearchTerm_Success", "type": "B", "result": "P" },
+    { "method": "SearchAntibioticGroup_ValidSearchTerm_Success", "type": "N", "result": "P" },
+    { "method": "SearchAntibioticGroup_ValidSearchTerm_Success", "type": "N", "result": "P" },
+    { "method": "SearchAntibioticGroup_ValidSearchTerm_Success", "type": "N", "result": "P" },
+    { "method": "SearchAntibioticGroup_ValidSearchTerm_Success", "type": "N", "result": "P" },
+    { "method": "SearchAntibioticGroup_ValidSearchTerm_Success", "type": "B", "result": "P" },
+    { "method": "SearchAntibioticGroup_ValidSearchTerm_Success", "type": "N", "result": "P" },
+    { "method": "SearchAntibioticGroup_ValidSearchTerm_Success", "type": "N", "result": "P" },
+    { "method": "SearchAntibioticGroup_SearchTermTooShort_Fail", "type": "A", "result": "P" },
+    { "method": "SearchAntibioticGroup_SearchTermTooShort_Fail", "type": "A", "result": "P" },
+    { "method": "SearchAntibioticGroup_SearchTermTooShort_Fail", "type": "A", "result": "P" },
+    { "method": "SearchAntibioticGroup_SearchTermTooShort_Fail", "type": "A", "result": "P" },
+    { "method": "SearchAntibioticGroup_SearchTermTooShort_Fail", "type": "A", "result": "P" },
+    { "method": "SearchAntibioticGroup_SearchTermWithForbiddenCharacter_Fail", "type": "A", "result": "P" },
+    { "method": "SearchAntibioticGroup_SearchTermWithForbiddenCharacter_Fail", "type": "A", "result": "P" },
+    { "method": "SearchAntibioticGroup_SearchTermWithForbiddenCharacter_Fail", "type": "A", "result": "P" },
+    { "method": "SearchAntibioticGroup_SearchTermWithForbiddenCharacter_Fail", "type": "A", "result": "P" }
+  ]
+}

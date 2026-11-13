@@ -1,0 +1,529 @@
+{
+  "function_code": "MediaClient.UploadAvatarAsync",
+  "sheet_name": "MediaClient",
+  "lines_of_code": 257,
+  "requirement": "Media service client: upload an avatar as multipart content (file name, actor id and role, escaped folder) and delete an asset with the actor in the query string; parse the result JSON with fallbacks, map failures to BadRequest or ThirdPartyServiceFailure, keep cancellation propagating, and treat timeouts, unreachable hosts, and non-JSON bodies as failed results instead of exceptions.",
+  "preconditions": [
+    {
+      "text": "A MediaClient backed by a stub HTTP handler and an HttpClient",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32
+      ]
+    },
+    {
+      "text": "The operation is an avatar upload or an asset delete",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32
+      ]
+    },
+    {
+      "text": "The service returns success, a failure body, invalid JSON, times out, or is unreachable",
+      "marks": [
+        3,
+        6,
+        8,
+        11,
+        12,
+        14,
+        16,
+        17,
+        18,
+        19,
+        30,
+        31
+      ]
+    },
+    {
+      "text": "The caller supplies a null stream, a blank file name or media id, or cancels",
+      "marks": [
+        1,
+        4,
+        13,
+        15,
+        20,
+        32
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "DeleteAssetAsync_CancelledToken_PropagatesTheCancellation",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "DeleteAssetAsync_DeletesTheAssetWithTheActorInTheQueryString",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "DeleteAssetAsync_EmptyBodyWithAFailureStatus_FailsAndMentionsTheStatusCode",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "DeleteAssetAsync_EmptyMediaId_FailsWithBadRequest",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "DeleteAssetAsync_EscapesTheActorRoleInTheQueryString",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "DeleteAssetAsync_FailureBody_FailsWithTheErrorDescription",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "DeleteAssetAsync_NoContentResponse_SucceedsWithTheRequestedMediaId",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "DeleteAssetAsync_NonJsonBody_Fails",
+      "marks": [
+        8
+      ]
+    },
+    {
+      "text": "DeleteAssetAsync_SuccessBodyWithoutData_ReturnsTheRequestedMediaId",
+      "marks": [
+        9
+      ]
+    },
+    {
+      "text": "DeleteAssetAsync_SuccessBody_ReturnsTheIdentifierFromTheBody",
+      "marks": [
+        10
+      ]
+    },
+    {
+      "text": "DeleteAssetAsync_TimeoutWithoutCancellation_FailsAsAThirdPartyFailure",
+      "marks": [
+        11
+      ]
+    },
+    {
+      "text": "DeleteAssetAsync_UnreachableMediaService_FailsWithTheUnreachableMessage",
+      "marks": [
+        12
+      ]
+    },
+    {
+      "text": "UploadAvatarAsync_CancelledToken_PropagatesTheCancellation",
+      "marks": [
+        13
+      ]
+    },
+    {
+      "text": "UploadAvatarAsync_EmptyBody_FailsAndMentionsTheStatusCode",
+      "marks": [
+        14
+      ]
+    },
+    {
+      "text": "UploadAvatarAsync_EmptyFileName_FailsWithBadRequest",
+      "marks": [
+        15
+      ]
+    },
+    {
+      "text": "UploadAvatarAsync_FailureBodyWithoutAnError_FallsBackToTheRawBody",
+      "marks": [
+        16
+      ]
+    },
+    {
+      "text": "UploadAvatarAsync_FailureBody_FailsWithTheErrorDescription",
+      "marks": [
+        17
+      ]
+    },
+    {
+      "text": "UploadAvatarAsync_NonJsonBody_FailsWithAnUnexpectedResponse",
+      "marks": [
+        18
+      ]
+    },
+    {
+      "text": "UploadAvatarAsync_NonSuccessStatusCode_IsMentionedInTheFailureMessage",
+      "marks": [
+        19
+      ]
+    },
+    {
+      "text": "UploadAvatarAsync_NullContent_Throws",
+      "marks": [
+        20
+      ]
+    },
+    {
+      "text": "UploadAvatarAsync_OmitsTheActorAccountIdWhenThereIsNoActor",
+      "marks": [
+        21
+      ]
+    },
+    {
+      "text": "UploadAvatarAsync_PostsToTheMediaAssetsEndpointWithAnEscapedFolder",
+      "marks": [
+        22
+      ]
+    },
+    {
+      "text": "UploadAvatarAsync_SagaSuccessStatusCode_IsASuccess",
+      "marks": [
+        23
+      ]
+    },
+    {
+      "text": "UploadAvatarAsync_SendsAMultipartBodyContainingTheFileName",
+      "marks": [
+        24
+      ]
+    },
+    {
+      "text": "UploadAvatarAsync_SendsTheActorAccountIdWhenOneIsGiven",
+      "marks": [
+        25
+      ]
+    },
+    {
+      "text": "UploadAvatarAsync_SendsTheActorRole",
+      "marks": [
+        26
+      ]
+    },
+    {
+      "text": "UploadAvatarAsync_SuccessBodyWithANonGuidData_FallsBackToAnEmptyIdentifier",
+      "marks": [
+        27
+      ]
+    },
+    {
+      "text": "UploadAvatarAsync_SuccessBodyWithoutData_FallsBackToAnEmptyIdentifier",
+      "marks": [
+        28
+      ]
+    },
+    {
+      "text": "UploadAvatarAsync_SuccessfulResponse_ReturnsTheReturnedIdentifier",
+      "marks": [
+        29
+      ]
+    },
+    {
+      "text": "UploadAvatarAsync_TimeoutWithoutCancellation_FailsAsAThirdPartyFailure",
+      "marks": [
+        30
+      ]
+    },
+    {
+      "text": "UploadAvatarAsync_UnreachableMediaService_FailsWithTheUnreachableMessage",
+      "marks": [
+        31
+      ]
+    },
+    {
+      "text": "UploadAvatarAsync_WhitespaceFileName_FailsWithBadRequest",
+      "marks": [
+        32
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "A successful upload returns the media id and posts the multipart file, actor, and escaped folder",
+      "marks": [
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        29
+      ]
+    },
+    {
+      "text": "A successful delete returns the identifier from the body or falls back to the requested id",
+      "marks": [
+        2,
+        5,
+        7,
+        9,
+        10
+      ]
+    },
+    {
+      "text": "Blank names, null content, empty bodies, non-JSON bodies, and non-success statuses return failed results",
+      "marks": [
+        3,
+        4,
+        6,
+        8,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        32
+      ]
+    },
+    {
+      "text": "Unreachable hosts and timeouts return ThirdPartyServiceFailure messages",
+      "marks": [
+        11,
+        12,
+        30,
+        31
+      ]
+    },
+    {
+      "text": "Cancellation propagates as an exception instead of a failed result",
+      "marks": [
+        1,
+        13
+      ]
+    }
+  ],
+  "exception_text": "OperationCanceledException when the caller cancels; ArgumentNullException for null content",
+  "exception_marks": [
+    1,
+    13,
+    20
+  ],
+  "cases": [
+    {
+      "method": "DeleteAssetAsync_CancelledToken_PropagatesTheCancellation",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "DeleteAssetAsync_DeletesTheAssetWithTheActorInTheQueryString",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "DeleteAssetAsync_EmptyBodyWithAFailureStatus_FailsAndMentionsTheStatusCode",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "DeleteAssetAsync_EmptyMediaId_FailsWithBadRequest",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "DeleteAssetAsync_EscapesTheActorRoleInTheQueryString",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "DeleteAssetAsync_FailureBody_FailsWithTheErrorDescription",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "DeleteAssetAsync_NoContentResponse_SucceedsWithTheRequestedMediaId",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "DeleteAssetAsync_NonJsonBody_Fails",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "DeleteAssetAsync_SuccessBodyWithoutData_ReturnsTheRequestedMediaId",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "DeleteAssetAsync_SuccessBody_ReturnsTheIdentifierFromTheBody",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "DeleteAssetAsync_TimeoutWithoutCancellation_FailsAsAThirdPartyFailure",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "DeleteAssetAsync_UnreachableMediaService_FailsWithTheUnreachableMessage",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UploadAvatarAsync_CancelledToken_PropagatesTheCancellation",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UploadAvatarAsync_EmptyBody_FailsAndMentionsTheStatusCode",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UploadAvatarAsync_EmptyFileName_FailsWithBadRequest",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UploadAvatarAsync_FailureBodyWithoutAnError_FallsBackToTheRawBody",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UploadAvatarAsync_FailureBody_FailsWithTheErrorDescription",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UploadAvatarAsync_NonJsonBody_FailsWithAnUnexpectedResponse",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UploadAvatarAsync_NonSuccessStatusCode_IsMentionedInTheFailureMessage",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UploadAvatarAsync_NullContent_Throws",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UploadAvatarAsync_OmitsTheActorAccountIdWhenThereIsNoActor",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "UploadAvatarAsync_PostsToTheMediaAssetsEndpointWithAnEscapedFolder",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "UploadAvatarAsync_SagaSuccessStatusCode_IsASuccess",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "UploadAvatarAsync_SendsAMultipartBodyContainingTheFileName",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "UploadAvatarAsync_SendsTheActorAccountIdWhenOneIsGiven",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "UploadAvatarAsync_SendsTheActorRole",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "UploadAvatarAsync_SuccessBodyWithANonGuidData_FallsBackToAnEmptyIdentifier",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "UploadAvatarAsync_SuccessBodyWithoutData_FallsBackToAnEmptyIdentifier",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "UploadAvatarAsync_SuccessfulResponse_ReturnsTheReturnedIdentifier",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "UploadAvatarAsync_TimeoutWithoutCancellation_FailsAsAThirdPartyFailure",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UploadAvatarAsync_UnreachableMediaService_FailsWithTheUnreachableMessage",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UploadAvatarAsync_WhitespaceFileName_FailsWithBadRequest",
+      "type": "A",
+      "result": "P"
+    }
+  ]
+}

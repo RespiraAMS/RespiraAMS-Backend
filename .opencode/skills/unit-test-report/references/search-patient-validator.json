@@ -1,0 +1,497 @@
+{
+  "function_code": "SearchPatientValidator.Validate",
+  "sheet_name": "SearchPatientValidator",
+  "lines_of_code": 14,
+  "requirement": "Validate a search-patient query: the pagination parameters must satisfy page >= 1 and 1 <= size <= 100, and the search term must be at least two characters after trimming and contain only letters, digits, hyphens, or spaces.",
+  "preconditions": [
+    {
+      "text": "Validation runs on an in-memory query without database access",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30
+      ]
+    },
+    {
+      "text": "The pagination parameters are within the valid range",
+      "marks": [
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30
+      ]
+    },
+    {
+      "text": "The search term satisfies both the length and character-set rules",
+      "marks": [
+        25,
+        26,
+        27,
+        28,
+        29,
+        30
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "SearchPatient InvalidPaginationParam Fail (page: -3, size: 10)",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "SearchPatient InvalidPaginationParam Fail (page: 0, size: 10)",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "SearchPatient InvalidPaginationParam Fail (page: 1, size: -20)",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "SearchPatient InvalidPaginationParam Fail (page: 1, size: 0)",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "SearchPatient InvalidPaginationParam Fail (page: 1, size: 101)",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "SearchPatient InvalidSearchTermAndPaginationParam Fail",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "SearchPatient SearchTermTooShortAndForbiddenCharacter Fail (searchTerm: \" @ \")",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "SearchPatient SearchTermTooShortAndForbiddenCharacter Fail (searchTerm: \"!\")",
+      "marks": [
+        8
+      ]
+    },
+    {
+      "text": "SearchPatient SearchTermTooShortAndForbiddenCharacter Fail (searchTerm: \"%\")",
+      "marks": [
+        9
+      ]
+    },
+    {
+      "text": "SearchPatient SearchTermTooShortAndForbiddenCharacter Fail (searchTerm: \"&\")",
+      "marks": [
+        10
+      ]
+    },
+    {
+      "text": "SearchPatient SearchTermTooShort Fail (searchTerm: \" \")",
+      "marks": [
+        11
+      ]
+    },
+    {
+      "text": "SearchPatient SearchTermTooShort Fail (searchTerm: \" a \")",
+      "marks": [
+        12
+      ]
+    },
+    {
+      "text": "SearchPatient SearchTermTooShort Fail (searchTerm: \" \")",
+      "marks": [
+        13
+      ]
+    },
+    {
+      "text": "SearchPatient SearchTermTooShort Fail (searchTerm: \"\")",
+      "marks": [
+        14
+      ]
+    },
+    {
+      "text": "SearchPatient SearchTermTooShort Fail (searchTerm: \"a\")",
+      "marks": [
+        15
+      ]
+    },
+    {
+      "text": "SearchPatient SearchTermWithForbiddenCharacter Fail (searchTerm: \"50%\")",
+      "marks": [
+        16
+      ]
+    },
+    {
+      "text": "SearchPatient SearchTermWithForbiddenCharacter Fail (searchTerm: \"ab_cd\")",
+      "marks": [
+        17
+      ]
+    },
+    {
+      "text": "SearchPatient SearchTermWithForbiddenCharacter Fail (searchTerm: \"bn-2026-006044!\")",
+      "marks": [
+        18
+      ]
+    },
+    {
+      "text": "SearchPatient SearchTermWithForbiddenCharacter Fail (searchTerm: \"bn/2026\")",
+      "marks": [
+        19
+      ]
+    },
+    {
+      "text": "SearchPatient SearchTermWithForbiddenCharacter Fail (searchTerm: \"hoàng&minh\")",
+      "marks": [
+        20
+      ]
+    },
+    {
+      "text": "SearchPatient ValidPaginationParam Success (page: 1, size: 1)",
+      "marks": [
+        21
+      ]
+    },
+    {
+      "text": "SearchPatient ValidPaginationParam Success (page: 1, size: 10)",
+      "marks": [
+        22
+      ]
+    },
+    {
+      "text": "SearchPatient ValidPaginationParam Success (page: 1, size: 100)",
+      "marks": [
+        23
+      ]
+    },
+    {
+      "text": "SearchPatient ValidPaginationParam Success (page: 7, size: 50)",
+      "marks": [
+        24
+      ]
+    },
+    {
+      "text": "SearchPatient ValidSearchTerm Success (searchTerm: \" ab \")",
+      "marks": [
+        25
+      ]
+    },
+    {
+      "text": "SearchPatient ValidSearchTerm Success (searchTerm: \"ab\")",
+      "marks": [
+        26
+      ]
+    },
+    {
+      "text": "SearchPatient ValidSearchTerm Success (searchTerm: \"bn-2026-006044\")",
+      "marks": [
+        27
+      ]
+    },
+    {
+      "text": "SearchPatient ValidSearchTerm Success (searchTerm: \"hoàng minh\")",
+      "marks": [
+        28
+      ]
+    },
+    {
+      "text": "SearchPatient ValidSearchTerm Success (searchTerm: \"tung\")",
+      "marks": [
+        29
+      ]
+    },
+    {
+      "text": "SearchPatient ValidSearchTerm Success (searchTerm: \"Đặng\")",
+      "marks": [
+        30
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "No validation errors",
+      "marks": [
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30
+      ]
+    },
+    {
+      "text": "Single validation error reported on Param",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ]
+    },
+    {
+      "text": "Single validation error reported on SearchTerm",
+      "marks": [
+        11,
+        12,
+        13,
+        14,
+        15
+      ]
+    },
+    {
+      "text": "Single validation error for a forbidden character",
+      "marks": [
+        16,
+        17,
+        18,
+        19,
+        20
+      ]
+    },
+    {
+      "text": "Two errors on SearchTerm, or one on Param plus one on SearchTerm",
+      "marks": [
+        6,
+        7,
+        8,
+        9,
+        10
+      ]
+    }
+  ],
+  "exception_text": "No unhandled exception; invalid input is reported as validation errors",
+  "exception_marks": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20
+  ],
+  "cases": [
+    {
+      "method": "SearchPatient_InvalidPaginationParam_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SearchPatient_InvalidPaginationParam_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SearchPatient_InvalidPaginationParam_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SearchPatient_InvalidPaginationParam_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SearchPatient_InvalidPaginationParam_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SearchPatient_InvalidSearchTermAndPaginationParam_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SearchPatient_SearchTermTooShortAndForbiddenCharacter_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SearchPatient_SearchTermTooShortAndForbiddenCharacter_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SearchPatient_SearchTermTooShortAndForbiddenCharacter_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SearchPatient_SearchTermTooShortAndForbiddenCharacter_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SearchPatient_SearchTermTooShort_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SearchPatient_SearchTermTooShort_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SearchPatient_SearchTermTooShort_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SearchPatient_SearchTermTooShort_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SearchPatient_SearchTermTooShort_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SearchPatient_SearchTermWithForbiddenCharacter_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SearchPatient_SearchTermWithForbiddenCharacter_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SearchPatient_SearchTermWithForbiddenCharacter_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SearchPatient_SearchTermWithForbiddenCharacter_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SearchPatient_SearchTermWithForbiddenCharacter_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "SearchPatient_ValidPaginationParam_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "SearchPatient_ValidPaginationParam_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SearchPatient_ValidPaginationParam_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "SearchPatient_ValidPaginationParam_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SearchPatient_ValidSearchTerm_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "SearchPatient_ValidSearchTerm_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "SearchPatient_ValidSearchTerm_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SearchPatient_ValidSearchTerm_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SearchPatient_ValidSearchTerm_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "SearchPatient_ValidSearchTerm_Success",
+      "type": "N",
+      "result": "P"
+    }
+  ]
+}

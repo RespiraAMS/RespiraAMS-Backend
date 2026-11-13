@@ -1,0 +1,214 @@
+{
+  "function_code": "GetClinicalVariableByIdHandler.HandleAsync",
+  "sheet_name": "GetClinicalVariableByIdHandler",
+  "lines_of_code": 71,
+  "requirement": "Return one clinical variable as a read-only projection: identity, type, unit, required flag, category, the rendered prerequisite formula, and the type-specific payload (numeric ranges, categorical accepted values); a missing id is reported as ResourceNotFound.",
+  "preconditions": [
+    {
+      "text": "The requested clinical variable exists and is live",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        6,
+        8,
+        9,
+        11
+      ]
+    },
+    {
+      "text": "The variable carries the type-specific payload or prerequisite seeded for the case",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        6,
+        8,
+        9,
+        11
+      ]
+    },
+    {
+      "text": "The requested id matches no live variable",
+      "marks": [
+        5,
+        7,
+        10
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "Query for a categorical variable with accepted values",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "Query for a numeric variable with an accepted and a normal range",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "Query for a boolean variable without prerequisite",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "Query for a numeric variable with an unbounded accepted range",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "Query with Guid.Empty",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "Query for a numeric variable without a normal range",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "Query for a variable that was soft deleted beforehand",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "Query for a variable whose prerequisite is a bare variable reference",
+      "marks": [
+        8
+      ]
+    },
+    {
+      "text": "Query for a variable with a nested prerequisite formula",
+      "marks": [
+        9
+      ]
+    },
+    {
+      "text": "Query with an unknown id",
+      "marks": [
+        10
+      ]
+    },
+    {
+      "text": "Query for a variable whose prerequisite is a binary expression",
+      "marks": [
+        11
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "Success with the identity, type, unit, required flag, category, and rendered prerequisite",
+      "marks": [
+        1,
+        2,
+        3,
+        8,
+        9,
+        11
+      ]
+    },
+    {
+      "text": "Numeric variables project both ranges, including an absent normal range",
+      "marks": [
+        2,
+        4,
+        6
+      ]
+    },
+    {
+      "text": "Categorical variables project their accepted values and no ranges",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "Boolean variables project neither type-specific payload",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "Failure with ResourceNotFound and a null payload",
+      "marks": [
+        5,
+        7,
+        10
+      ]
+    }
+  ],
+  "exception_text": "No unhandled exception; a missing or soft-deleted variable is returned as a failed Result",
+  "exception_marks": [
+    5,
+    7,
+    10
+  ],
+  "cases": [
+    {
+      "method": "GetClinicalVariableById_CategoricalVariable_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "GetClinicalVariableById_NumericVariable_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "GetClinicalVariableById_BooleanVariableWithoutPrerequisite_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "GetClinicalVariableById_NumericVariableUnboundedAcceptedRange_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "GetClinicalVariableById_EmptyId_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "GetClinicalVariableById_NumericVariableWithoutNormalRange_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "GetClinicalVariableById_SoftDeletedVariable_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "GetClinicalVariableById_VariablePrerequisite_RenderedAsVariableCode_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "GetClinicalVariableById_NestedPrerequisite_RenderedWithParentheses_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "GetClinicalVariableById_UnknownId_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "GetClinicalVariableById_BinaryPrerequisite_RenderedAsExpression_Success",
+      "type": "N",
+      "result": "P"
+    }
+  ]
+}

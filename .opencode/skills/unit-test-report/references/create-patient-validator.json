@@ -1,0 +1,609 @@
+{
+  "function_code": "CreatePatientValidator.Validate",
+  "sheet_name": "CreatePatientValidator",
+  "lines_of_code": 46,
+  "requirement": "Validate a create-patient command: the names, phone, medical record code, address, and city must not be empty, the gender must be a defined enum member, height and weight must be greater than 0, the date of birth must not be in the future, and the health insurance card must be ten numeric characters.",
+  "preconditions": [
+    {
+      "text": "Validation runs on an in-memory command without database access",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39
+      ]
+    },
+    {
+      "text": "Every supplied field satisfies its rule",
+      "marks": [
+        2,
+        3,
+        4,
+        5,
+        19,
+        20,
+        29,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "CreatePatient AllFieldsInvalid Fail",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "CreatePatient DateOfBirthInPast Success",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "CreatePatient DateOfBirthToday Success",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "CreatePatient DefinedGender Success (gender: Female)",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "CreatePatient DefinedGender Success (gender: Male)",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "CreatePatient EmptyInsuranceCard Fail",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "CreatePatient EmptyRequiredField Fail (property: \"Address\", value: \" \")",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "CreatePatient EmptyRequiredField Fail (property: \"Address\", value: \"\")",
+      "marks": [
+        8
+      ]
+    },
+    {
+      "text": "CreatePatient EmptyRequiredField Fail (property: \"City\", value: \" \")",
+      "marks": [
+        9
+      ]
+    },
+    {
+      "text": "CreatePatient EmptyRequiredField Fail (property: \"City\", value: \"\")",
+      "marks": [
+        10
+      ]
+    },
+    {
+      "text": "CreatePatient EmptyRequiredField Fail (property: \"FirstName\", value: \" \")",
+      "marks": [
+        11
+      ]
+    },
+    {
+      "text": "CreatePatient EmptyRequiredField Fail (property: \"FirstName\", value: \"\")",
+      "marks": [
+        12
+      ]
+    },
+    {
+      "text": "CreatePatient EmptyRequiredField Fail (property: \"LastName\", value: \" \")",
+      "marks": [
+        13
+      ]
+    },
+    {
+      "text": "CreatePatient EmptyRequiredField Fail (property: \"LastName\", value: \"\")",
+      "marks": [
+        14
+      ]
+    },
+    {
+      "text": "CreatePatient EmptyRequiredField Fail (property: \"MedicalRecordCode\", value: \" \")",
+      "marks": [
+        15
+      ]
+    },
+    {
+      "text": "CreatePatient EmptyRequiredField Fail (property: \"MedicalRecordCode\", value: \"\")",
+      "marks": [
+        16
+      ]
+    },
+    {
+      "text": "CreatePatient EmptyRequiredField Fail (property: \"PhoneNumber\", value: \" \")",
+      "marks": [
+        17
+      ]
+    },
+    {
+      "text": "CreatePatient EmptyRequiredField Fail (property: \"PhoneNumber\", value: \"\")",
+      "marks": [
+        18
+      ]
+    },
+    {
+      "text": "CreatePatient InsuranceCardOfTenCharacters Success (card: \"7016382459\")",
+      "marks": [
+        19
+      ]
+    },
+    {
+      "text": "CreatePatient InsuranceCardOfTenCharacters Success (card: \"8816372045\")",
+      "marks": [
+        20
+      ]
+    },
+    {
+      "text": "CreatePatient InsuranceCardWrongLength Fail (card: \"881637204\")",
+      "marks": [
+        21
+      ]
+    },
+    {
+      "text": "CreatePatient InsuranceCardWrongLength Fail (card: \"88163720451\")",
+      "marks": [
+        22
+      ]
+    },
+    {
+      "text": "CreatePatient InsuranceCardWrongLength Fail (card: \"881637204512345\")",
+      "marks": [
+        23
+      ]
+    },
+    {
+      "text": "CreatePatient InvalidHeight Fail (height: -0.01)",
+      "marks": [
+        24
+      ]
+    },
+    {
+      "text": "CreatePatient InvalidHeight Fail (height: 0)",
+      "marks": [
+        25
+      ]
+    },
+    {
+      "text": "CreatePatient InvalidWeight Fail (weight: -0.01)",
+      "marks": [
+        26
+      ]
+    },
+    {
+      "text": "CreatePatient InvalidWeight Fail (weight: 0)",
+      "marks": [
+        27
+      ]
+    },
+    {
+      "text": "CreatePatient NonNumericInsuranceCard Fail",
+      "marks": [
+        28
+      ]
+    },
+    {
+      "text": "CreatePatient RealisticCommand Success",
+      "marks": [
+        29
+      ]
+    },
+    {
+      "text": "CreatePatient UndefinedGender Fail (gender: -1)",
+      "marks": [
+        30
+      ]
+    },
+    {
+      "text": "CreatePatient UndefinedGender Fail (gender: 2)",
+      "marks": [
+        31
+      ]
+    },
+    {
+      "text": "CreatePatient ValidHeight Success (height: 0.01)",
+      "marks": [
+        32
+      ]
+    },
+    {
+      "text": "CreatePatient ValidHeight Success (height: 156.8)",
+      "marks": [
+        33
+      ]
+    },
+    {
+      "text": "CreatePatient ValidHeight Success (height: 215.5)",
+      "marks": [
+        34
+      ]
+    },
+    {
+      "text": "CreatePatient ValidWeight Success (weight: 0.01)",
+      "marks": [
+        35
+      ]
+    },
+    {
+      "text": "CreatePatient ValidWeight Success (weight: 0.5)",
+      "marks": [
+        36
+      ]
+    },
+    {
+      "text": "CreatePatient ValidWeight Success (weight: 183.4)",
+      "marks": [
+        37
+      ]
+    },
+    {
+      "text": "CreatePatient ValidWeight Success (weight: 48.9)",
+      "marks": [
+        38
+      ]
+    },
+    {
+      "text": "CreatePatient WhitespaceInsuranceCard Fail",
+      "marks": [
+        39
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "No validation errors",
+      "marks": [
+        2,
+        3,
+        4,
+        5,
+        19,
+        20,
+        29,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38
+      ]
+    },
+    {
+      "text": "Validation error reported on Gender, Height, Weight, or DateOfBirth",
+      "marks": [
+        4,
+        5,
+        24,
+        25,
+        26,
+        27,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38
+      ]
+    },
+    {
+      "text": "Validation error reported on HealthInsuranceCard",
+      "marks": [
+        6,
+        19,
+        20,
+        21,
+        22,
+        23,
+        28,
+        39
+      ]
+    },
+    {
+      "text": "Validation error reported on a required text field",
+      "marks": [
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18
+      ]
+    },
+    {
+      "text": "Multiple violations reported when the whole command is invalid",
+      "marks": [
+        1
+      ]
+    }
+  ],
+  "exception_text": "No unhandled exception; invalid input is reported as validation errors",
+  "exception_marks": [
+    1,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    30,
+    31,
+    39
+  ],
+  "cases": [
+    {
+      "method": "CreatePatient_AllFieldsInvalid_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CreatePatient_DateOfBirthInPast_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "CreatePatient_DateOfBirthToday_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "CreatePatient_DefinedGender_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "CreatePatient_DefinedGender_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "CreatePatient_EmptyInsuranceCard_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CreatePatient_EmptyRequiredField_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CreatePatient_EmptyRequiredField_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CreatePatient_EmptyRequiredField_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CreatePatient_EmptyRequiredField_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CreatePatient_EmptyRequiredField_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CreatePatient_EmptyRequiredField_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CreatePatient_EmptyRequiredField_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CreatePatient_EmptyRequiredField_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CreatePatient_EmptyRequiredField_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CreatePatient_EmptyRequiredField_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CreatePatient_EmptyRequiredField_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CreatePatient_EmptyRequiredField_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CreatePatient_InsuranceCardOfTenCharacters_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "CreatePatient_InsuranceCardOfTenCharacters_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "CreatePatient_InsuranceCardWrongLength_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CreatePatient_InsuranceCardWrongLength_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CreatePatient_InsuranceCardWrongLength_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CreatePatient_InvalidHeight_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CreatePatient_InvalidHeight_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CreatePatient_InvalidWeight_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CreatePatient_InvalidWeight_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CreatePatient_NonNumericInsuranceCard_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CreatePatient_RealisticCommand_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "CreatePatient_UndefinedGender_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CreatePatient_UndefinedGender_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CreatePatient_ValidHeight_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "CreatePatient_ValidHeight_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "CreatePatient_ValidHeight_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "CreatePatient_ValidWeight_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "CreatePatient_ValidWeight_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "CreatePatient_ValidWeight_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "CreatePatient_ValidWeight_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "CreatePatient_WhitespaceInsuranceCard_Fail",
+      "type": "A",
+      "result": "P"
+    }
+  ]
+}

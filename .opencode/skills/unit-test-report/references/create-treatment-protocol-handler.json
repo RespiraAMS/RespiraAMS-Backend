@@ -1,0 +1,242 @@
+{
+  "function_code": "CreateTreatmentProtocolHandler.HandleAsync",
+  "sheet_name": "CreateTreatmentProtocolHandler",
+  "lines_of_code": 127,
+  "requirement": "Create a treatment protocol: every medicine, pathogen, and criterion id must resolve to a live row, each medicine composition must be accepted by the antibiotic-combination rule, then the protocol and its treatments are linked and persisted.",
+  "preconditions": [
+    {
+      "text": "Every referenced antibiotic, pathogen, and criterion exists and is live",
+      "marks": [
+        1,
+        5,
+        8,
+        12,
+        13
+      ]
+    },
+    {
+      "text": "Each medicine composition uses antibiotics from different group lineages",
+      "marks": [
+        1,
+        5,
+        8,
+        12,
+        13
+      ]
+    },
+    {
+      "text": "One referenced antibiotic, pathogen, or criterion is unknown or soft-deleted",
+      "marks": [
+        2,
+        3,
+        6,
+        7,
+        9,
+        10,
+        11
+      ]
+    },
+    {
+      "text": "A medicine composition shares a group lineage",
+      "marks": [
+        4
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "Protocol whose composition uses antibiotics from different lineages",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "Protocol referencing a soft-deleted pathogen",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "Protocol referencing an unknown antibiotic",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "Protocol whose composition has a common group ancestor",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "Protocol with several compositions referencing every relation",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "Protocol referencing a soft-deleted antibiotic",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "Protocol referencing a soft-deleted criterion",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "Same antibiotic repeated across two compositions",
+      "marks": [
+        8
+      ]
+    },
+    {
+      "text": "Protocol whose antibiotics are all unknown",
+      "marks": [
+        9
+      ]
+    },
+    {
+      "text": "Protocol referencing an unknown criterion",
+      "marks": [
+        10
+      ]
+    },
+    {
+      "text": "Protocol referencing an unknown pathogen",
+      "marks": [
+        11
+      ]
+    },
+    {
+      "text": "Minimal single-composition protocol (Mild, Outpatient)",
+      "marks": [
+        12
+      ]
+    },
+    {
+      "text": "Minimal single-composition protocol (Severe, IntensiveCareUnit)",
+      "marks": [
+        13
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "Success with the new protocol id and its treatments persisted",
+      "marks": [
+        1,
+        5,
+        8,
+        12,
+        13
+      ]
+    },
+    {
+      "text": "The protocol starts empty and the pathogen/criterion relations are linked after mapping",
+      "marks": [
+        1,
+        5,
+        8
+      ]
+    },
+    {
+      "text": "Failure with BadRequest when an antibiotic, pathogen, or criterion does not exist",
+      "marks": [
+        2,
+        3,
+        6,
+        7,
+        9,
+        10,
+        11
+      ]
+    },
+    {
+      "text": "Failure with BusinessRuleViolation when a composition shares a group lineage",
+      "marks": [
+        4
+      ]
+    }
+  ],
+  "exception_text": "No unhandled exception; every rejection is returned as a failed Result",
+  "exception_marks": [
+    2,
+    3,
+    4,
+    6,
+    7,
+    9,
+    10,
+    11
+  ],
+  "cases": [
+    {
+      "method": "CreateTreatmentProtocol_DifferentLineageCombination_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "CreateTreatmentProtocol_SoftDeletedPathogen_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CreateTreatmentProtocol_UnknownAntibiotic_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CreateTreatmentProtocol_CombinationWithCommonAncestor_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CreateTreatmentProtocol_MultipleCompositionsWithAllRelations_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "CreateTreatmentProtocol_SoftDeletedAntibiotic_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CreateTreatmentProtocol_SoftDeletedCriterion_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CreateTreatmentProtocol_DuplicateAntibioticAcrossCompositions_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "CreateTreatmentProtocol_AllAntibioticsUnknown_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CreateTreatmentProtocol_UnknownCriterion_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CreateTreatmentProtocol_UnknownPathogen_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CreateTreatmentProtocol_MinimalComposition_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "CreateTreatmentProtocol_MinimalComposition_Success",
+      "type": "B",
+      "result": "P"
+    }
+  ]
+}

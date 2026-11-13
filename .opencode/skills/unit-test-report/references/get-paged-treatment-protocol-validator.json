@@ -1,0 +1,231 @@
+{
+  "function_code": "GetPagedTreatmentProtocolValidator.Validate",
+  "sheet_name": "GetPagedTreatmentProtoValidator",
+  "lines_of_code": 13,
+  "requirement": "Validate the pagination parameters of a paged-treatment-protocol query: page must be at least 1 and size must be between 1 and 100; the optional filter is not validated.",
+  "preconditions": [
+    {
+      "text": "Validation runs on an in-memory query without database access",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13
+      ]
+    },
+    {
+      "text": "The pagination parameters are outside the valid range",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ]
+    },
+    {
+      "text": "The pagination parameters are inside the valid range",
+      "marks": [
+        8,
+        9,
+        10,
+        11,
+        12,
+        13
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "Page 0, size 10 (page below the minimum)",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "Page -3, size 10 (negative page)",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "Page int.MinValue, size 10 (smallest possible page)",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "Page 1, size 0 (size below the minimum)",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "Page 1, size -20 (negative size)",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "Page 1, size 101 (size above the maximum)",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "Page 1, size int.MaxValue (largest possible size)",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "Page 1, size 10 with a populated filter",
+      "marks": [
+        8
+      ]
+    },
+    {
+      "text": "Page 1, size 1 (smallest allowed values)",
+      "marks": [
+        9
+      ]
+    },
+    {
+      "text": "Page 1, size 10 (default values)",
+      "marks": [
+        10
+      ]
+    },
+    {
+      "text": "Page 1, size 100 (largest allowed size)",
+      "marks": [
+        11
+      ]
+    },
+    {
+      "text": "Page 7, size 50",
+      "marks": [
+        12
+      ]
+    },
+    {
+      "text": "Page int.MaxValue, size 1 (largest possible page)",
+      "marks": [
+        13
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "No validation errors",
+      "marks": [
+        8,
+        9,
+        10,
+        11,
+        12,
+        13
+      ]
+    },
+    {
+      "text": "Single validation error reported on Param",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ]
+    }
+  ],
+  "exception_text": "No unhandled exception; invalid pagination is reported as a validation error",
+  "exception_marks": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ],
+  "cases": [
+    {
+      "method": "GetPagedTreatmentProtocol_InvalidParam_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "GetPagedTreatmentProtocol_InvalidParam_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "GetPagedTreatmentProtocol_InvalidParam_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "GetPagedTreatmentProtocol_InvalidParam_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "GetPagedTreatmentProtocol_InvalidParam_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "GetPagedTreatmentProtocol_InvalidParam_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "GetPagedTreatmentProtocol_InvalidParam_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "GetPagedTreatmentProtocol_WithFilter_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "GetPagedTreatmentProtocol_ValidParam_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "GetPagedTreatmentProtocol_ValidParam_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "GetPagedTreatmentProtocol_ValidParam_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "GetPagedTreatmentProtocol_ValidParam_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "GetPagedTreatmentProtocol_ValidParam_Success",
+      "type": "B",
+      "result": "P"
+    }
+  ]
+}

@@ -1,0 +1,504 @@
+{
+  "function_code": "UpdateClinicalVariableHandler.HandleAsync",
+  "sheet_name": "UpdateClinicalVariableHandler",
+  "lines_of_code": 85,
+  "requirement": "Update a clinical variable: the variable must exist and be live, the command value type must match the stored TPH type, range units are forced to the canonical unit, the mapper resolves the prerequisite, and a numeric normal range must stay inside the accepted range before saving.",
+  "preconditions": [
+    {
+      "text": "A live clinical variable exists for the target id",
+      "marks": [
+        1,
+        3,
+        4,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29
+      ]
+    },
+    {
+      "text": "The command value type matches the stored variable type",
+      "marks": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28
+      ]
+    },
+    {
+      "text": "The normal range is contained in the accepted range",
+      "marks": [
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ]
+    },
+    {
+      "text": "The prerequisite formula references only live variables",
+      "marks": [
+        3,
+        6,
+        13,
+        14,
+        24,
+        25,
+        27
+      ]
+    },
+    {
+      "text": "The numeric variable carries an accepted range",
+      "marks": [
+        4,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        26
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "Update whose command value type differs from the stored type",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "Update request with an unknown id",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "Update that removes the prerequisite",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "Numeric update without a normal range",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "Update request for a variable that was soft deleted beforehand",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "Update that adds a prerequisite",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "Numeric ranges equal on both sides (>=90 and <=140)",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "Normal range strictly inside a wider accepted range (0-300)",
+      "marks": [
+        8
+      ]
+    },
+    {
+      "text": "Exclusive normal bounds inside inclusive accepted bounds",
+      "marks": [
+        9
+      ]
+    },
+    {
+      "text": "Exclusive bounds on both ranges at the same limits",
+      "marks": [
+        10
+      ]
+    },
+    {
+      "text": "Accepted range without upper limit and a normal range inside it",
+      "marks": [
+        11
+      ]
+    },
+    {
+      "text": "Degenerate ranges with min equal to max (140)",
+      "marks": [
+        12
+      ]
+    },
+    {
+      "text": "Update whose prerequisite variable is soft-deleted",
+      "marks": [
+        13
+      ]
+    },
+    {
+      "text": "Empty prerequisite formula",
+      "marks": [
+        14
+      ]
+    },
+    {
+      "text": "Update request with Guid.Empty",
+      "marks": [
+        15
+      ]
+    },
+    {
+      "text": "Numeric update without an accepted range",
+      "marks": [
+        16
+      ]
+    },
+    {
+      "text": "Normal range below the accepted lower bound (85 vs 90)",
+      "marks": [
+        17
+      ]
+    },
+    {
+      "text": "Normal range above the accepted upper bound (145 vs 140)",
+      "marks": [
+        18
+      ]
+    },
+    {
+      "text": "Accepted lower bound exclusive while the normal range includes it",
+      "marks": [
+        19
+      ]
+    },
+    {
+      "text": "Accepted upper bound exclusive while the normal range includes it",
+      "marks": [
+        20
+      ]
+    },
+    {
+      "text": "Normal range entirely above the accepted range (301-320 vs 0-300)",
+      "marks": [
+        21
+      ]
+    },
+    {
+      "text": "Update that supplies wrong range units",
+      "marks": [
+        22
+      ]
+    },
+    {
+      "text": "Update of a categorical variable's accepted values",
+      "marks": [
+        23
+      ]
+    },
+    {
+      "text": "Update whose prerequisite references an unknown variable",
+      "marks": [
+        24
+      ]
+    },
+    {
+      "text": "Update that replaces the prerequisite with another live variable",
+      "marks": [
+        25
+      ]
+    },
+    {
+      "text": "Numeric update with an unbounded upper accepted range",
+      "marks": [
+        26
+      ]
+    },
+    {
+      "text": "Prerequisite with binary operands of different result types",
+      "marks": [
+        27
+      ]
+    },
+    {
+      "text": "Update of a boolean variable",
+      "marks": [
+        28
+      ]
+    },
+    {
+      "text": "Update whose command value type contradicts the stored type",
+      "marks": [
+        29
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "Success with Updated status; the mapped fields and prerequisite are persisted",
+      "marks": [
+        3,
+        4,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        22,
+        23,
+        25,
+        26,
+        28
+      ]
+    },
+    {
+      "text": "Range units are forced to the canonical unit",
+      "marks": [
+        22
+      ]
+    },
+    {
+      "text": "Numeric normal ranges remain contained in the accepted range",
+      "marks": [
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        26
+      ]
+    },
+    {
+      "text": "Failure with BusinessRuleViolation for a value-type change",
+      "marks": [
+        1,
+        29
+      ]
+    },
+    {
+      "text": "Failure with BadRequest for a missing, deleted, or unresolved reference, or a range outside the accepted range",
+      "marks": [
+        2,
+        5,
+        13,
+        14,
+        15,
+        17,
+        18,
+        19,
+        20,
+        21,
+        24,
+        27
+      ]
+    }
+  ],
+  "exception_text": "ArgumentException is thrown when a numeric variable is updated without an accepted range; nothing is persisted",
+  "exception_marks": [
+    16
+  ],
+  "cases": [
+    {
+      "method": "UpdateClinicalVariable_InvalidValueType_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdateClinicalVariable_UnknownId_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdateClinicalVariable_RemovePrerequisite_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "UpdateClinicalVariable_NumericWithoutNormalRange_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "UpdateClinicalVariable_SoftDeletedVariable_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdateClinicalVariable_AddPrerequisite_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "UpdateClinicalVariable_NormalRangeWithinAcceptedRange_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "UpdateClinicalVariable_NormalRangeWithinAcceptedRange_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "UpdateClinicalVariable_NormalRangeWithinAcceptedRange_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "UpdateClinicalVariable_NormalRangeWithinAcceptedRange_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "UpdateClinicalVariable_NormalRangeWithinAcceptedRange_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "UpdateClinicalVariable_NormalRangeWithinAcceptedRange_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "UpdateClinicalVariable_SoftDeletedPrerequisiteVariable_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdateClinicalVariable_EmptyPrerequisite_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdateClinicalVariable_EmptyId_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdateClinicalVariable_NumericWithoutAcceptedRange_Throws",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdateClinicalVariable_NormalRangeOutsideAcceptedRange_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdateClinicalVariable_NormalRangeOutsideAcceptedRange_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdateClinicalVariable_NormalRangeOutsideAcceptedRange_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdateClinicalVariable_NormalRangeOutsideAcceptedRange_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdateClinicalVariable_NormalRangeOutsideAcceptedRange_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdateClinicalVariable_NumericRangeUnitsForcedToCanonicalUnit_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "UpdateClinicalVariable_CategoricalVariable_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "UpdateClinicalVariable_UnknownPrerequisiteVariable_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdateClinicalVariable_ChangePrerequisite_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "UpdateClinicalVariable_NumericUnboundedAcceptedRange_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "UpdateClinicalVariable_InvalidPrerequisiteFormula_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdateClinicalVariable_BooleanVariable_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "UpdateClinicalVariable_ValueTypeMismatch_Fail",
+      "type": "A",
+      "result": "P"
+    }
+  ]
+}

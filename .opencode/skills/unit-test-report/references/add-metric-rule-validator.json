@@ -1,0 +1,129 @@
+{
+  "function_code": "AddMetricRuleValidator.Validate",
+  "sheet_name": "AddMetricRuleValidator",
+  "lines_of_code": 21,
+  "requirement": "Validate an add-metric-rule command: the metric and criterion IDs must not be empty, exactly one of the score function and major/minor flag must be set, and a supplied score function must satisfy the recursive formula rules.",
+  "preconditions": [
+    {
+      "text": "Validation runs on an in-memory command without database access",
+      "marks": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]
+    },
+    {
+      "text": "A score function is supplied and must satisfy the formula rules",
+      "marks": [1, 2, 3, 6, 7, 8, 11, 13, 14, 15, 16]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "Scoring rule with the constant score function 1",
+      "marks": [1]
+    },
+    {
+      "text": "Scoring rule whose score function is a bare variable reference",
+      "marks": [2]
+    },
+    {
+      "text": "Scoring rule with a nested ternary age-band formula",
+      "marks": [3]
+    },
+    {
+      "text": "Major/minor rule with IsMajor = true",
+      "marks": [4]
+    },
+    {
+      "text": "Major/minor rule with IsMajor = false",
+      "marks": [5]
+    },
+    {
+      "text": "Valid command with a version-7 metric and criterion ID",
+      "marks": [6]
+    },
+    {
+      "text": "Valid command with GUID 00000000-0000-0000-0000-000000000001 (near-empty boundary)",
+      "marks": [7]
+    },
+    {
+      "text": "Valid command with GUID ffffffff-ffff-ffff-ffff-ffffffffffff (maximum boundary)",
+      "marks": [8]
+    },
+    {
+      "text": "Guid.Empty as the clinical metric ID",
+      "marks": [9]
+    },
+    {
+      "text": "Guid.Empty as the criterion ID",
+      "marks": [10]
+    },
+    {
+      "text": "Command that sets both a score function and IsMajor",
+      "marks": [11]
+    },
+    {
+      "text": "Command that sets neither a score function nor IsMajor",
+      "marks": [12]
+    },
+    {
+      "text": "Score function with no fields at all",
+      "marks": [13]
+    },
+    {
+      "text": "Binary formula with a left operand and operator but no right operand",
+      "marks": [14]
+    },
+    {
+      "text": "Score function referencing Guid.Empty as the variable",
+      "marks": [15]
+    },
+    {
+      "text": "Binary formula with operator 999 (outside every defined member)",
+      "marks": [16]
+    },
+    {
+      "text": "Empty metric and criterion IDs with neither score function nor flag",
+      "marks": [17]
+    }
+  ],
+  "returns": [
+    {
+      "text": "No validation errors",
+      "marks": [1, 2, 3, 4, 5, 6, 7, 8]
+    },
+    {
+      "text": "Single validation error reported on ClinicalMetricId or CriterionId",
+      "marks": [9, 10]
+    },
+    {
+      "text": "Single error on the command itself for the exclusivity rule",
+      "marks": [11, 12]
+    },
+    {
+      "text": "Single error reported on ScoreFunction for an unusable formula",
+      "marks": [13, 14, 15, 16]
+    },
+    {
+      "text": "Three violations reported for the empty IDs and the exclusivity rule",
+      "marks": [17]
+    }
+  ],
+  "exception_text": "No unhandled exception; invalid input is reported as validation errors",
+  "exception_marks": [9, 10, 11, 12, 13, 14, 15, 16, 17],
+  "cases": [
+    { "method": "AddRule_ScoringRuleConstant_Success", "type": "N", "result": "P" },
+    { "method": "AddRule_ScoringRuleVariable_Success", "type": "N", "result": "P" },
+    { "method": "AddRule_ScoringRuleNestedTernary_Success", "type": "N", "result": "P" },
+    { "method": "AddRule_MajorMinorRule_Success", "type": "B", "result": "P" },
+    { "method": "AddRule_MajorMinorRule_Success", "type": "B", "result": "P" },
+    { "method": "AddRule_ValidIds_Success", "type": "N", "result": "P" },
+    { "method": "AddRule_ValidIds_Success", "type": "B", "result": "P" },
+    { "method": "AddRule_ValidIds_Success", "type": "B", "result": "P" },
+    { "method": "AddRule_EmptyClinicalMetricId_Fail", "type": "A", "result": "P" },
+    { "method": "AddRule_EmptyCriterionId_Fail", "type": "A", "result": "P" },
+    { "method": "AddRule_BothScoreFunctionAndIsMajor_Fail", "type": "A", "result": "P" },
+    { "method": "AddRule_NeitherScoreFunctionNorIsMajor_Fail", "type": "A", "result": "P" },
+    { "method": "AddRule_EmptyScoreFunction_Fail", "type": "A", "result": "P" },
+    { "method": "AddRule_IncompleteBinaryFormula_Fail", "type": "A", "result": "P" },
+    { "method": "AddRule_EmptyVariableGuid_Fail", "type": "A", "result": "P" },
+    { "method": "AddRule_InvalidOperatorEnum_Fail", "type": "A", "result": "P" },
+    { "method": "AddRule_AllInvalid_Fail", "type": "A", "result": "P" }
+  ]
+}

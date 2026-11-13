@@ -1,0 +1,215 @@
+{
+  "function_code": "GetPagedPatientValidator.Validate",
+  "sheet_name": "GetPagedPatientValidator",
+  "lines_of_code": 19,
+  "requirement": "Validate a paged-patient query: the pagination parameters must satisfy page >= 1 and 1 <= size <= 100, and when both age bounds are supplied the minimum must not exceed the maximum.",
+  "preconditions": [
+    {
+      "text": "Validation runs on an in-memory query without database access",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ]
+    },
+    {
+      "text": "The pagination and age bounds are consistent",
+      "marks": [
+        4,
+        6,
+        7,
+        9,
+        10,
+        11,
+        12
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "GetPagedPatient AllFieldsInvalid Fail",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "GetPagedPatient InvalidSize Fail (size: 0)",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "GetPagedPatient InvalidSize Fail (size: 101)",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "GetPagedPatient MinAgeEqualsMaxAge Success",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "GetPagedPatient MinAgeGreaterThanMaxAge Fail",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "GetPagedPatient NullFilter Success",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "GetPagedPatient OnlyOneAgeBoundSet Success",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "GetPagedPatient PageZero Fail",
+      "marks": [
+        8
+      ]
+    },
+    {
+      "text": "GetPagedPatient RealisticQuery Success",
+      "marks": [
+        9
+      ]
+    },
+    {
+      "text": "GetPagedPatient ValidPagination Success (page: 1, size: 1)",
+      "marks": [
+        10
+      ]
+    },
+    {
+      "text": "GetPagedPatient ValidPagination Success (page: 1, size: 100)",
+      "marks": [
+        11
+      ]
+    },
+    {
+      "text": "GetPagedPatient ValidPagination Success (page: 999, size: 10)",
+      "marks": [
+        12
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "No validation errors",
+      "marks": [
+        4,
+        6,
+        7,
+        9,
+        10,
+        11,
+        12
+      ]
+    },
+    {
+      "text": "Validation error reported on the pagination parameters",
+      "marks": [
+        2,
+        3,
+        8
+      ]
+    },
+    {
+      "text": "Validation error reported on the age bounds",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "Multiple violations reported when several fields are invalid",
+      "marks": [
+        1
+      ]
+    }
+  ],
+  "exception_text": "No unhandled exception; invalid input is reported as validation errors",
+  "exception_marks": [
+    1,
+    2,
+    3,
+    5,
+    8
+  ],
+  "cases": [
+    {
+      "method": "GetPagedPatient_AllFieldsInvalid_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "GetPagedPatient_InvalidSize_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "GetPagedPatient_InvalidSize_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "GetPagedPatient_MinAgeEqualsMaxAge_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "GetPagedPatient_MinAgeGreaterThanMaxAge_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "GetPagedPatient_NullFilter_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "GetPagedPatient_OnlyOneAgeBoundSet_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "GetPagedPatient_PageZero_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "GetPagedPatient_RealisticQuery_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "GetPagedPatient_ValidPagination_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "GetPagedPatient_ValidPagination_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "GetPagedPatient_ValidPagination_Success",
+      "type": "N",
+      "result": "P"
+    }
+  ]
+}

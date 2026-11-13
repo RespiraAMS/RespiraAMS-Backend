@@ -1,0 +1,281 @@
+{
+  "function_code": "UpdateRiskFactorHandler.HandleAsync",
+  "sheet_name": "UpdateRiskFactorHandler",
+  "lines_of_code": 67,
+  "requirement": "Update a risk factor: the target, the new pathogen, and the new criterion must exist and be live, the new pathogen/criterion pair must not be held by another live row, then map the ids and critical-factor flag, save, and report Updated.",
+  "preconditions": [
+    {
+      "text": "A live risk factor exists for the target id",
+      "marks": [
+        1,
+        2,
+        3,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14
+      ]
+    },
+    {
+      "text": "The requested pathogen exists and is live",
+      "marks": [
+        1,
+        6,
+        7,
+        8,
+        9,
+        11,
+        13
+      ]
+    },
+    {
+      "text": "The requested criterion exists and is live",
+      "marks": [
+        1,
+        6,
+        7,
+        9,
+        10,
+        11,
+        13
+      ]
+    },
+    {
+      "text": "No other live row holds the requested pair",
+      "marks": [
+        1,
+        6,
+        7,
+        8,
+        10,
+        11,
+        13
+      ]
+    },
+    {
+      "text": "The target id matches no live row or the target is soft-deleted",
+      "marks": [
+        2,
+        4,
+        5
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "No-op update keeping the same pair with the critical flag cleared",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "Update request for a soft-deleted risk factor",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "Update to a pair already held by another live row",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "Update request with Guid.Empty",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "Update request with an unknown id",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "Update while a control row and its parents stay live",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "Full re-point to a different pathogen and criterion",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "Update that changes only the pathogen",
+      "marks": [
+        8
+      ]
+    },
+    {
+      "text": "Update to an unknown criterion",
+      "marks": [
+        9
+      ]
+    },
+    {
+      "text": "Update to an unknown pathogen",
+      "marks": [
+        10
+      ]
+    },
+    {
+      "text": "Update that changes only the criterion",
+      "marks": [
+        11
+      ]
+    },
+    {
+      "text": "Update to a soft-deleted criterion",
+      "marks": [
+        12
+      ]
+    },
+    {
+      "text": "Update that changes only the critical-factor flag",
+      "marks": [
+        13
+      ]
+    },
+    {
+      "text": "Update to a soft-deleted pathogen",
+      "marks": [
+        14
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "Success with Updated status; the pair and flag are persisted and UpdatedAt refreshed",
+      "marks": [
+        1,
+        6,
+        7,
+        8,
+        11,
+        13
+      ]
+    },
+    {
+      "text": "A no-op update of the row's own pair stays legal",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "Other rows and the referenced pathogen and criterion stay untouched",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "Failure with BadRequest for a missing or deleted target, pathogen, or criterion",
+      "marks": [
+        2,
+        4,
+        5,
+        9,
+        10,
+        12,
+        14
+      ]
+    },
+    {
+      "text": "Failure with BadRequest when another live row holds the requested pair",
+      "marks": [
+        3
+      ]
+    }
+  ],
+  "exception_text": "No unhandled exception; every rejection is returned as a failed Result",
+  "exception_marks": [
+    2,
+    3,
+    4,
+    5,
+    9,
+    10,
+    12,
+    14
+  ],
+  "cases": [
+    {
+      "method": "UpdateRiskFactor_SamePairUpdate_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "UpdateRiskFactor_SoftDeletedTarget_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdateRiskFactor_DuplicatePair_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdateRiskFactor_EmptyId_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdateRiskFactor_UnknownId_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdateRiskFactor_OtherRowsAndParentsUntouched_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "UpdateRiskFactor_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "UpdateRiskFactor_OnlyPathogenChanged_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "UpdateRiskFactor_UnknownCriterion_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdateRiskFactor_UnknownPathogen_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdateRiskFactor_OnlyCriterionChanged_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "UpdateRiskFactor_SoftDeletedCriterion_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdateRiskFactor_OnlyIsCriticalFactorChanged_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "UpdateRiskFactor_SoftDeletedPathogen_Fail",
+      "type": "A",
+      "result": "P"
+    }
+  ]
+}

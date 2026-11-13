@@ -1,0 +1,349 @@
+{
+  "function_code": "UpdateClinicalVariableMapper.Map",
+  "sheet_name": "UpdateClinicalVariableMapper",
+  "lines_of_code": 83,
+  "requirement": "Apply an update-clinical-variable command to the existing model of the same type: resolve the prerequisite formula against the supplied variables, copy the mutable fields, replace the type-specific payload (ranges or accepted values), keep the identity, code, and state, and report success.",
+  "preconditions": [
+    {
+      "text": "The mapper is constructed with a formula mapper",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20
+      ]
+    },
+    {
+      "text": "The clinical variables are supplied as mapper dependencies",
+      "marks": [
+        1,
+        2,
+        4,
+        5,
+        6,
+        9,
+        10,
+        11,
+        12,
+        13,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "Boolean variable with a constant prerequisite",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "Empty prerequisite formula",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "Mapping through the dependency-less overload",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "Prerequisite with binary operands of different result types",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "Numeric update without a normal range",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "Boolean variable with a bare variable prerequisite",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "Model with an undefined value type",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "Numeric update without an accepted range",
+      "marks": [
+        8
+      ]
+    },
+    {
+      "text": "Categorical update with accepted values needing sanitisation",
+      "marks": [
+        9
+      ]
+    },
+    {
+      "text": "Numeric update with an unbounded upper accepted range",
+      "marks": [
+        10
+      ]
+    },
+    {
+      "text": "Update that clears the prerequisite with null",
+      "marks": [
+        11
+      ]
+    },
+    {
+      "text": "Update that changes every mutable field",
+      "marks": [
+        12
+      ]
+    },
+    {
+      "text": "Prerequisite referencing an unknown variable",
+      "marks": [
+        13
+      ]
+    },
+    {
+      "text": "Dependencies that are not a list of clinical variables",
+      "marks": [
+        14
+      ]
+    },
+    {
+      "text": "Boolean update without prerequisite",
+      "marks": [
+        15
+      ]
+    },
+    {
+      "text": "Boolean variable with a nested formula prerequisite",
+      "marks": [
+        16
+      ]
+    },
+    {
+      "text": "Numeric update with accepted and normal ranges",
+      "marks": [
+        17
+      ]
+    },
+    {
+      "text": "Categorical update with accepted values",
+      "marks": [
+        18
+      ]
+    },
+    {
+      "text": "Update that tries to change the code",
+      "marks": [
+        19
+      ]
+    },
+    {
+      "text": "Numeric update with exclusive and degenerate bounds (min == max)",
+      "marks": [
+        20
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "Success at ApplicationStatus.Success with the updated model",
+      "marks": [
+        1,
+        5,
+        6,
+        9,
+        10,
+        11,
+        12,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20
+      ]
+    },
+    {
+      "text": "Name, description, unit, required flag, category, and prerequisite are overwritten",
+      "marks": [
+        1,
+        5,
+        6,
+        9,
+        10,
+        11,
+        12,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20
+      ]
+    },
+    {
+      "text": "The type-specific payload is replaced: numeric ranges or categorical accepted values",
+      "marks": [
+        5,
+        9,
+        10,
+        17,
+        18,
+        20
+      ]
+    },
+    {
+      "text": "The identity, code, and deletion state stay untouched",
+      "marks": [
+        12,
+        19
+      ]
+    },
+    {
+      "text": "Failure with BadRequest when the prerequisite cannot be resolved",
+      "marks": [
+        2,
+        4,
+        13
+      ]
+    }
+  ],
+  "exception_text": "NotImplementedException from the dependency-less overload; ArgumentException for non-list dependencies, an undefined model type, or a numeric variable without an accepted range",
+  "exception_marks": [
+    3,
+    7,
+    8,
+    14
+  ],
+  "cases": [
+    {
+      "method": "MapModel_ConstantPrerequisite_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "MapModel_EmptyPrerequisite_Failure",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "MapModel_WithoutDependencies_ThrowsNotImplementedException",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "MapModel_InvalidPrerequisiteFormula_Failure",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "MapModel_NumericVariableWithoutNormalRange_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "MapModel_VariablePrerequisite_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "MapModel_InvalidModelValueType_ThrowsArgumentException",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "MapModel_NumericWithoutAcceptedRange_ThrowsArgumentException",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "MapModel_CategoricalAcceptedValues_AreSanitized_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "MapModel_NumericVariableWithUnboundedAcceptedRange_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "MapModel_NullPrerequisite_ClearsIt_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "MapModel_KeepsIdentityAndState_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "MapModel_UnknownPrerequisiteVariable_Failure",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "MapModel_NonVariableListDependencies_ThrowsArgumentException",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "MapModel_BooleanVariable_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "MapModel_NestedFormulaPrerequisite_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "MapModel_NumericVariableWithRanges_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "MapModel_CategoricalVariable_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "MapModel_CodeImmutableAfterUpdate_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "MapModel_NumericVariableWithExclusiveAndDegenerateRange_Success",
+      "type": "B",
+      "result": "P"
+    }
+  ]
+}

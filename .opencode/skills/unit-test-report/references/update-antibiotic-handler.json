@@ -1,0 +1,78 @@
+{
+  "function_code": "UpdateAntibioticHandler.HandleAsync",
+  "sheet_name": "UpdateAntibioticHandler",
+  "lines_of_code": 49,
+  "requirement": "Update an antibiotic: the target antibiotic and the requested antibiotic group must both exist and must not be soft-deleted, then map the new name, group, and classification onto the tracked entity, save it, and report Updated.",
+  "preconditions": [
+    {
+      "text": "A live antibiotic exists for the target ID",
+      "marks": [1, 2, 3, 5, 6]
+    },
+    {
+      "text": "A live antibiotic group exists for the requested group ID",
+      "marks": [1, 2, 3]
+    },
+    {
+      "text": "The requested group ID matches no live group",
+      "marks": [5, 6]
+    },
+    {
+      "text": "The target ID matches no live antibiotic",
+      "marks": [4]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "Rename Amoxicillin to 'Co-amoxiclav' with classification AccessWatch",
+      "marks": [1]
+    },
+    {
+      "text": "Rename Amoxicillin to 'Piperacillin-tazobactam' with classification Watch",
+      "marks": [2]
+    },
+    {
+      "text": "Move Azithromycin from Beta-lactams to the existing Macrolides group",
+      "marks": [3]
+    },
+    {
+      "text": "Update request with an unknown antibiotic ID",
+      "marks": [4]
+    },
+    {
+      "text": "Update request with an unknown group ID",
+      "marks": [5]
+    },
+    {
+      "text": "Update request with a soft-deleted group ID",
+      "marks": [6]
+    }
+  ],
+  "returns": [
+    {
+      "text": "Success with Updated status; name, group, and classification are persisted",
+      "marks": [1, 2, 3]
+    },
+    {
+      "text": "UpdatedAt is refreshed on every successful update",
+      "marks": [1, 2]
+    },
+    {
+      "text": "Failure with BadRequest and the 'Antibiotic group ID not exists' error; target untouched",
+      "marks": [5, 6]
+    },
+    {
+      "text": "Failure with BadRequest and the 'Antibiotic not found' error",
+      "marks": [4]
+    }
+  ],
+  "exception_text": "No unhandled exception; every rejection is returned as a failed Result",
+  "exception_marks": [4, 5, 6],
+  "cases": [
+    { "method": "UpdateAntibiotic_Success", "type": "N", "result": "P" },
+    { "method": "UpdateAntibiotic_Success", "type": "N", "result": "P" },
+    { "method": "UpdateAntibiotic_MoveToAnotherExistingGroup_Success", "type": "N", "result": "P" },
+    { "method": "UpdateAntibiotic_AntibioticNotFound_Fail", "type": "A", "result": "P" },
+    { "method": "UpdateAntibiotic_UnknownGroup_Fail", "type": "A", "result": "P" },
+    { "method": "UpdateAntibiotic_SoftDeletedGroup_Fail", "type": "A", "result": "P" }
+  ]
+}

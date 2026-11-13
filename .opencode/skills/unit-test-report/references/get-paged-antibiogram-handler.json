@@ -1,0 +1,133 @@
+{
+  "function_code": "GetPagedAntibiogramHandler.HandleAsync",
+  "sheet_name": "GetPagedAntibiogramHandler",
+  "lines_of_code": 54,
+  "requirement": "Return a page of antibiograms ordered by creation time: apply the optional pathogen and MIC filters, exclude soft-deleted rows, project the pathogen and tested antibiotics, and wrap the result with pagination metadata.",
+  "preconditions": [
+    {
+      "text": "Five live antibiograms exist, created one minute apart",
+      "marks": [1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]
+    },
+    {
+      "text": "One additional antibiogram is soft-deleted",
+      "marks": [1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 13, 16, 17]
+    },
+    {
+      "text": "Three pathogens and six antibiotic groups are seeded",
+      "marks": [1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 13, 16, 17]
+    },
+    {
+      "text": "The database is empty",
+      "marks": [7]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "No filter, page 1, size 2",
+      "marks": [1]
+    },
+    {
+      "text": "No filter, page 2, size 2",
+      "marks": [2]
+    },
+    {
+      "text": "No filter, page 3, size 2 (last partial page)",
+      "marks": [3]
+    },
+    {
+      "text": "No filter, page 4, size 2 (one past the last page)",
+      "marks": [4]
+    },
+    {
+      "text": "No filter, size 1 (minimum page size); pages 1, 5 and 6",
+      "marks": [5]
+    },
+    {
+      "text": "No filter, page 1, size 100 (maximum page size)",
+      "marks": [6]
+    },
+    {
+      "text": "No filter, page 1, size 10 on an empty database",
+      "marks": [7]
+    },
+    {
+      "text": "Empty filter object, page 1, size 10",
+      "marks": [8]
+    },
+    {
+      "text": "Pathogen filter for Streptococcus pneumoniae, size 100",
+      "marks": [9]
+    },
+    {
+      "text": "MIC filter Susceptible, size 100",
+      "marks": [10]
+    },
+    {
+      "text": "MIC filter Intermediate, size 100",
+      "marks": [11]
+    },
+    {
+      "text": "MIC filter Resistant, size 100",
+      "marks": [12]
+    },
+    {
+      "text": "Pathogen and MIC filters combined (pneumococcus and Resistant)",
+      "marks": [13]
+    },
+    {
+      "text": "Filter with an unknown pathogen ID",
+      "marks": [14]
+    },
+    {
+      "text": "Filter for Mycoplasma pneumoniae and Resistant (no match)",
+      "marks": [15]
+    },
+    {
+      "text": "No filter, page 1, size 100, inspect the projected pathogen and antibiotics",
+      "marks": [16]
+    },
+    {
+      "text": "No filter, page 1, size 100, inspect the soft-deleted row",
+      "marks": [17]
+    }
+  ],
+  "returns": [
+    {
+      "text": "Success with the requested page and its pagination metadata",
+      "marks": [1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 13, 16, 17]
+    },
+    {
+      "text": "Success with an empty page and zero total items",
+      "marks": [7, 14, 15]
+    },
+    {
+      "text": "Items ordered by CreatedAt descending",
+      "marks": [1, 2, 3, 5, 8, 9, 10, 11, 12, 13, 16, 17]
+    },
+    {
+      "text": "Each item carries its pathogen, MIC category, and antibiotic details",
+      "marks": [16]
+    }
+  ],
+  "exception_text": "No unhandled exception; the read-only query has no failure branch",
+  "exception_marks": [],
+  "cases": [
+    { "method": "GetPagedAntibiogram_NoFilter_FirstPageNewestFirst_Success", "type": "N", "result": "P" },
+    { "method": "GetPagedAntibiogram_MiddlePage_HasBothNeighbors_Success", "type": "N", "result": "P" },
+    { "method": "GetPagedAntibiogram_LastPartialPage_HasNoNext_Success", "type": "B", "result": "P" },
+    { "method": "GetPagedAntibiogram_PageBeyondRange_ReturnsNoItems", "type": "B", "result": "P" },
+    { "method": "GetPagedAntibiogram_MinimumPageSize_WalksOneItemPerPage_Success", "type": "B", "result": "P" },
+    { "method": "GetPagedAntibiogram_MaxPageSize_AllItemsFitOnFirstPage_Success", "type": "B", "result": "P" },
+    { "method": "GetPagedAntibiogram_EmptyDatabase_ReturnsEmptySuccess", "type": "B", "result": "P" },
+    { "method": "GetPagedAntibiogram_EmptyFilterObject_ReturnsAll_Success", "type": "N", "result": "P" },
+    { "method": "GetPagedAntibiogram_PathogenFilter_ReturnsOnlyThatPathogen_Success", "type": "N", "result": "P" },
+    { "method": "GetPagedAntibiogram_MicCategoryFilter_ReturnsOnlyThatCategory_Success", "type": "N", "result": "P" },
+    { "method": "GetPagedAntibiogram_MicCategoryFilter_ReturnsOnlyThatCategory_Success", "type": "N", "result": "P" },
+    { "method": "GetPagedAntibiogram_MicCategoryFilter_ReturnsOnlyThatCategory_Success", "type": "N", "result": "P" },
+    { "method": "GetPagedAntibiogram_CombinedFilters_AppliedTogether_Success", "type": "N", "result": "P" },
+    { "method": "GetPagedAntibiogram_UnknownPathogenId_ReturnsEmpty", "type": "A", "result": "P" },
+    { "method": "GetPagedAntibiogram_FilterMatchesNothing_ReturnsEmpty", "type": "A", "result": "P" },
+    { "method": "GetPagedAntibiogram_ProjectsPathogenAndAntibiotics_Success", "type": "N", "result": "P" },
+    { "method": "GetPagedAntibiogram_ExcludesSoftDeleted_Success", "type": "N", "result": "P" }
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "function_code": "GetAntibioticGroupsHandler.HandleAsync",
+  "sheet_name": "GetAntibioticGroupsHandler",
+  "lines_of_code": 25,
+  "requirement": "Return every live antibiotic group as an ID and name pair, sorted by name ascending and read without tracking; soft-deleted groups are excluded by the query filter.",
+  "preconditions": [
+    {
+      "text": "The antibiotic group table contains the rows seeded for the case",
+      "marks": [1, 2, 3]
+    },
+    {
+      "text": "One of the seeded rows is soft-deleted",
+      "marks": [2]
+    },
+    {
+      "text": "The antibiotic group table is empty",
+      "marks": [3]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "Query with no parameters over three root groups inserted out of order",
+      "marks": [1]
+    },
+    {
+      "text": "Query with no parameters over one live and one soft-deleted group",
+      "marks": [2]
+    },
+    {
+      "text": "Query with no parameters on an empty database",
+      "marks": [3]
+    }
+  ],
+  "returns": [
+    {
+      "text": "Success with ApplicationStatus.Success and a non-null result",
+      "marks": [1, 2, 3]
+    },
+    {
+      "text": "Groups sorted by name ascending, each carrying its own ID",
+      "marks": [1]
+    },
+    {
+      "text": "Soft-deleted groups are excluded from the list",
+      "marks": [2]
+    },
+    {
+      "text": "An empty list is returned when no live group exists",
+      "marks": [3]
+    }
+  ],
+  "exception_text": "No unhandled exception; the read-only query has no failure branch",
+  "exception_marks": [],
+  "cases": [
+    { "method": "GetAntibioticGroups_ReturnsAllSortedByNameAscending_Success", "type": "N", "result": "P" },
+    { "method": "GetAntibioticGroups_ExcludesSoftDeletedGroups_Success", "type": "N", "result": "P" },
+    { "method": "GetAntibioticGroups_EmptyDatabase_ReturnsEmpty", "type": "B", "result": "P" }
+  ]
+}

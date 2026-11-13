@@ -1,0 +1,182 @@
+{
+  "function_code": "CreateCriterionMapper.Map",
+  "sheet_name": "CreateCriterionMapper",
+  "lines_of_code": 41,
+  "requirement": "Map a create-criterion command to a Criterion: resolve the formula against the supplied clinical variables, reject a non-boolean result, and build the entity with its name and formula.",
+  "preconditions": [
+    {
+      "text": "The mapper is constructed with a formula mapper",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ]
+    },
+    {
+      "text": "The clinical variables are supplied as mapper dependencies",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        9
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "Formula that adds a boolean and a numeric operand",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "Bare variable formula for female sex",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "Mapping through the dependency-less overload",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "Female sex AND systolic blood pressure above 140 mmHg",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "Comparison of systolic blood pressure against a threshold",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "Formula with no fields at all",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "Boolean constant formula",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "Dependencies that are not a list of clinical variables",
+      "marks": [
+        8
+      ]
+    },
+    {
+      "text": "Formula referencing an unknown variable",
+      "marks": [
+        9
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "Success at ApplicationStatus.Success with a new Criterion",
+      "marks": [
+        2,
+        4,
+        5,
+        7
+      ]
+    },
+    {
+      "text": "The name and resolved formula are copied and an id is generated",
+      "marks": [
+        2,
+        4,
+        5,
+        7
+      ]
+    },
+    {
+      "text": "Nested operands keep their parenthesised rendering and variables are de-duplicated",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "Failure with BadRequest when the formula is empty, unknown, or non-boolean",
+      "marks": [
+        1,
+        6,
+        9
+      ]
+    },
+    {
+      "text": "Failure with BadRequest when the dependencies are not a variable list",
+      "marks": [
+        8
+      ]
+    }
+  ],
+  "exception_text": "NotImplementedException from the dependency-less overload",
+  "exception_marks": [
+    3
+  ],
+  "cases": [
+    {
+      "method": "ToModel_InvalidFormula_Failure",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "ToModel_Variable_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "ToModel_WithoutDependencies_ThrowsNotImplementedException",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "ToModel_NestedLogical_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "ToModel_Comparison_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "ToModel_EmptyFormula_Failure",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "ToModel_BooleanConstant_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "ToModel_NonVariableListDependencies_Failure",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "ToModel_UnknownVariable_Failure",
+      "type": "A",
+      "result": "P"
+    }
+  ]
+}

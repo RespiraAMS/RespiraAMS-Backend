@@ -1,0 +1,63 @@
+{
+  "function_code": "DeleteAntibioticHandler.HandleAsync",
+  "sheet_name": "DeleteAntibioticHandler",
+  "lines_of_code": 42,
+  "requirement": "Soft delete an antibiotic and cascade the soft delete to every dosage that belongs to it inside one transaction, leaving other antibiotics and their dosages untouched, and report an unknown ID as not found.",
+  "preconditions": [
+    {
+      "text": "A live antibiotic exists for the target ID",
+      "marks": [1, 2]
+    },
+    {
+      "text": "Two dosages belong to the target antibiotic and one live control antibiotic exists",
+      "marks": [1]
+    },
+    {
+      "text": "The target antibiotic has no dosage",
+      "marks": [2]
+    },
+    {
+      "text": "The target ID matches no live antibiotic",
+      "marks": [3]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "Delete request for an antibiotic with two dosages",
+      "marks": [1]
+    },
+    {
+      "text": "Delete request for an antibiotic with no dosage",
+      "marks": [2]
+    },
+    {
+      "text": "Delete request with an unknown antibiotic ID",
+      "marks": [3]
+    }
+  ],
+  "returns": [
+    {
+      "text": "Success with Deleted status; IsDeleted and DeletedAt are set on the antibiotic",
+      "marks": [1, 2]
+    },
+    {
+      "text": "Every dosage of the deleted antibiotic is soft-deleted in the same transaction",
+      "marks": [1]
+    },
+    {
+      "text": "Other antibiotics and their dosages stay live",
+      "marks": [1, 2]
+    },
+    {
+      "text": "Failure with BadRequest and the 'Antibiotic not found' error; nothing is deleted",
+      "marks": [3]
+    }
+  ],
+  "exception_text": "No unhandled exception; a missing antibiotic is returned as a failed Result",
+  "exception_marks": [3],
+  "cases": [
+    { "method": "DeleteAntibiotic_WithDosages_CascadesSoftDelete_Success", "type": "N", "result": "P" },
+    { "method": "DeleteAntibiotic_NoDosages_Success", "type": "B", "result": "P" },
+    { "method": "DeleteAntibiotic_AntibioticNotFound_Fail", "type": "A", "result": "P" }
+  ]
+}

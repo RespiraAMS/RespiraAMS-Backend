@@ -1,0 +1,151 @@
+{
+  "function_code": "Account.Constructor",
+  "sheet_name": "Account",
+  "lines_of_code": 32,
+  "requirement": "Authentication Account entity initialization: every new account receives a non-empty UUID v7 identifier, UTC audit timestamps, a not-soft-deleted state, an empty token collection, and mutable email, password hash, phone, role, email-confirmation, and status properties inherited from the ServiceDefaults base entity.",
+  "preconditions": [
+    {
+      "text": "An Account is constructed with the required email, password hash, phone, role, and status",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ]
+    },
+    {
+      "text": "The ServiceDefaults Base entity is referenced",
+      "marks": [
+        3
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "Account_PropertiesCanBeAssignedAndMutated",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "Account_TokensCollectionCanCarryIssuedTokens",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "NewAccount_DerivesFromServiceDefaultsBase",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "NewAccount_HasANonEmptyUuidV7Identifier",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "NewAccount_HasCreatedAtAndUpdatedAtCloseToNow",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "NewAccount_HasEmptyTokensCollectionByDefault",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "NewAccount_IsNotSoftDeletedAndHasNoDeletedAt",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "TwoAccountsCreatedBackToBack_GetDifferentIds",
+      "marks": [
+        8
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "A non-empty UUID v7 id, distinct for accounts created back to back",
+      "marks": [
+        4,
+        8
+      ]
+    },
+    {
+      "text": "UTC CreatedAt/UpdatedAt timestamps and a not-soft-deleted row with no DeletedAt",
+      "marks": [
+        5,
+        7
+      ]
+    },
+    {
+      "text": "An entity derived from Base with an empty Tokens collection by default",
+      "marks": [
+        3,
+        6
+      ]
+    },
+    {
+      "text": "All required properties can be assigned, mutated, and read back; the collection accepts issued tokens",
+      "marks": [
+        1,
+        2
+      ]
+    }
+  ],
+  "exception_text": "No unhandled exception; entity initialization and property assignment succeed",
+  "exception_marks": [],
+  "cases": [
+    {
+      "method": "Account_PropertiesCanBeAssignedAndMutated",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Account_TokensCollectionCanCarryIssuedTokens",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "NewAccount_DerivesFromServiceDefaultsBase",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "NewAccount_HasANonEmptyUuidV7Identifier",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "NewAccount_HasCreatedAtAndUpdatedAtCloseToNow",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "NewAccount_HasEmptyTokensCollectionByDefault",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "NewAccount_IsNotSoftDeletedAndHasNoDeletedAt",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "TwoAccountsCreatedBackToBack_GetDifferentIds",
+      "type": "N",
+      "result": "P"
+    }
+  ]
+}

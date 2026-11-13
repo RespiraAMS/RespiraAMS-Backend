@@ -1,0 +1,103 @@
+{
+  "function_code": "ClinicalMetric.IsScoringMetric",
+  "sheet_name": "ClinicalMetric",
+  "lines_of_code": 62,
+  "requirement": "Report whether a clinical metric is a scoring system: true when every rule is a scoring rule, false when every rule is a major/minor rule or when the metric has no rule, and an ArgumentException when the rule types are mixed.",
+  "preconditions": [
+    {
+      "text": "The metric rule collection is built in memory",
+      "marks": [
+        1,
+        2,
+        3,
+        4
+      ]
+    },
+    {
+      "text": "Every rule of the metric is of the same kind, or the collection is empty",
+      "marks": [
+        1,
+        2,
+        3
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "AllMajorMinorRules IsMajorMinorMetricOnly",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "AllScoringRules IsScoringMetricOnly",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "EmptyRules BelongsToNeitherSystem",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "MixedRuleTypes Throws",
+      "marks": [
+        4
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "True when all rules are scoring rules",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "False when all rules are major/minor rules",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "False when the metric has no rule",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "ArgumentException is thrown for a mixed rule collection",
+      "marks": [
+        4
+      ]
+    }
+  ],
+  "exception_text": "ArgumentException is thrown when the metric mixes scoring and major/minor rules",
+  "exception_marks": [
+    4
+  ],
+  "cases": [
+    {
+      "method": "AllMajorMinorRules_IsMajorMinorMetricOnly",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "AllScoringRules_IsScoringMetricOnly",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "EmptyRules_BelongsToNeitherSystem",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "MixedRuleTypes_Throws",
+      "type": "A",
+      "result": "P"
+    }
+  ]
+}

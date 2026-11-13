@@ -1,0 +1,265 @@
+{
+  "function_code": "ProfileRole.Parse",
+  "sheet_name": "ProfileRole",
+  "lines_of_code": 15,
+  "requirement": "ProfileRole enum contract: Doctor and HeadDepartmentDoctor keep ordinals 0 and 1, round-trip through Parse/TryParse/ToString and JSON serialization, expose exactly the two declared members, and reject undefined members.",
+  "preconditions": [
+    {
+      "text": "The ProfileRole enum is loaded",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16
+      ]
+    },
+    {
+      "text": "A declared member or an undefined member is supplied",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "Deserialize_ReadsBackTheJsonStringOfEveryMember",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "GetValues_ReturnsExactlyTheDeclaredMembers",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "IsDefined_AcceptsEveryDeclaredMember (role: Doctor)",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "IsDefined_AcceptsEveryDeclaredMember (role: HeadDepartmentDoctor)",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "IsDefined_RejectsAnUndefinedMember",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "Parse_RoundTripsEveryMember (role: Doctor)",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "Parse_RoundTripsEveryMember (role: HeadDepartmentDoctor)",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "ProfileRole_DoctorHasOrdinalZero",
+      "marks": [
+        8
+      ]
+    },
+    {
+      "text": "ProfileRole_HasExactlyTwoMembers",
+      "marks": [
+        9
+      ]
+    },
+    {
+      "text": "ProfileRole_HeadDepartmentDoctorHasOrdinalOne",
+      "marks": [
+        10
+      ]
+    },
+    {
+      "text": "Serialize_WritesTheJsonStringOfTheDoctorMember",
+      "marks": [
+        11
+      ]
+    },
+    {
+      "text": "Serialize_WritesTheJsonStringOfTheHeadDepartmentDoctorMember",
+      "marks": [
+        12
+      ]
+    },
+    {
+      "text": "ToString_ReturnsTheMemberName (role: Doctor, expected: \"Doctor\")",
+      "marks": [
+        13
+      ]
+    },
+    {
+      "text": "ToString_ReturnsTheMemberName (role: HeadDepartmentDoctor, expected: \"HeadDepartmentDoctor\")",
+      "marks": [
+        14
+      ]
+    },
+    {
+      "text": "TryParse_RoundTripsEveryMember (role: Doctor)",
+      "marks": [
+        15
+      ]
+    },
+    {
+      "text": "TryParse_RoundTripsEveryMember (role: HeadDepartmentDoctor)",
+      "marks": [
+        16
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "Parse, TryParse, ToString, and JSON serialization round-trip both members",
+      "marks": [
+        1,
+        6,
+        7,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16
+      ]
+    },
+    {
+      "text": "Exactly two members exist with ordinals 0 and 1",
+      "marks": [
+        2,
+        8,
+        9,
+        10
+      ]
+    },
+    {
+      "text": "Every declared member is defined and an undefined member is rejected",
+      "marks": [
+        3,
+        4,
+        5
+      ]
+    }
+  ],
+  "exception_text": "No unhandled exception; undefined members are reported as false",
+  "exception_marks": [],
+  "cases": [
+    {
+      "method": "Deserialize_ReadsBackTheJsonStringOfEveryMember",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "GetValues_ReturnsExactlyTheDeclaredMembers",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IsDefined_AcceptsEveryDeclaredMember",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IsDefined_AcceptsEveryDeclaredMember",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "IsDefined_RejectsAnUndefinedMember",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Parse_RoundTripsEveryMember",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Parse_RoundTripsEveryMember",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "ProfileRole_DoctorHasOrdinalZero",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "ProfileRole_HasExactlyTwoMembers",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "ProfileRole_HeadDepartmentDoctorHasOrdinalOne",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Serialize_WritesTheJsonStringOfTheDoctorMember",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Serialize_WritesTheJsonStringOfTheHeadDepartmentDoctorMember",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "ToString_ReturnsTheMemberName",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "ToString_ReturnsTheMemberName",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "TryParse_RoundTripsEveryMember",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "TryParse_RoundTripsEveryMember",
+      "type": "N",
+      "result": "P"
+    }
+  ]
+}

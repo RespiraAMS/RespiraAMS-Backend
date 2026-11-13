@@ -1,0 +1,598 @@
+{
+  "function_code": "FormulaValidator.Validate",
+  "sheet_name": "FormulaValidator",
+  "lines_of_code": 124,
+  "requirement": "Validate a FormulaDto recursively: the node must not be empty, it must be exactly one shape (constant, variable, binary, unary, or ternary) with all of that shape's parts present and every other field null, its operator must be a defined enum member, and constants must be non-empty while variables must not be Guid.Empty.",
+  "preconditions": [
+    {
+      "text": "Validation runs on an in-memory DTO without database access",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39
+      ]
+    },
+    {
+      "text": "The node is exactly one complete formula shape",
+      "marks": [
+        9,
+        16,
+        20,
+        21,
+        22,
+        23,
+        32,
+        34,
+        35,
+        36,
+        37,
+        38
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "Formula whose nested child is empty",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "Ternary with a condition but no branches",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "Ternary with a condition and ifTrue but no ifFalse",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "Ternary with both branches but no condition",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "Nested child with operator 999",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "Nested child mixing constant and binary fields",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "Several children invalid at once",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "Formula mixing unary and ternary fields",
+      "marks": [
+        8
+      ]
+    },
+    {
+      "text": "Deeply nested valid formula",
+      "marks": [
+        9
+      ]
+    },
+    {
+      "text": "Binary with an operator but no operands",
+      "marks": [
+        10
+      ]
+    },
+    {
+      "text": "Binary with a left operand only",
+      "marks": [
+        11
+      ]
+    },
+    {
+      "text": "Binary with a right operand only",
+      "marks": [
+        12
+      ]
+    },
+    {
+      "text": "Binary with both operands but no operator",
+      "marks": [
+        13
+      ]
+    },
+    {
+      "text": "Binary with an operator and left operand only",
+      "marks": [
+        14
+      ]
+    },
+    {
+      "text": "Binary with an operator and right operand only",
+      "marks": [
+        15
+      ]
+    },
+    {
+      "text": "Complete unary formula",
+      "marks": [
+        16
+      ]
+    },
+    {
+      "text": "Formula mixing constant and variable fields",
+      "marks": [
+        17
+      ]
+    },
+    {
+      "text": "Operator 14 (outside every defined member)",
+      "marks": [
+        18
+      ]
+    },
+    {
+      "text": "Operator -1 (below the defined range)",
+      "marks": [
+        19
+      ]
+    },
+    {
+      "text": "Bare variable formula",
+      "marks": [
+        20
+      ]
+    },
+    {
+      "text": "Binary formula with operator Add",
+      "marks": [
+        21
+      ]
+    },
+    {
+      "text": "Binary formula with operator Gt",
+      "marks": [
+        22
+      ]
+    },
+    {
+      "text": "Binary formula with operator Ternary",
+      "marks": [
+        23
+      ]
+    },
+    {
+      "text": "Formula with no fields at all",
+      "marks": [
+        24
+      ]
+    },
+    {
+      "text": "Nested empty constant in the left operand",
+      "marks": [
+        25
+      ]
+    },
+    {
+      "text": "Nested empty constant in the right operand",
+      "marks": [
+        26
+      ]
+    },
+    {
+      "text": "Nested empty constant in the unary operand",
+      "marks": [
+        27
+      ]
+    },
+    {
+      "text": "Nested empty constant in the ternary condition",
+      "marks": [
+        28
+      ]
+    },
+    {
+      "text": "Nested empty constant in the ifTrue branch",
+      "marks": [
+        29
+      ]
+    },
+    {
+      "text": "Nested empty constant in the ifFalse branch",
+      "marks": [
+        30
+      ]
+    },
+    {
+      "text": "Deeply nested empty constant",
+      "marks": [
+        31
+      ]
+    },
+    {
+      "text": "Complete ternary formula",
+      "marks": [
+        32
+      ]
+    },
+    {
+      "text": "Variable reference with Guid.Empty",
+      "marks": [
+        33
+      ]
+    },
+    {
+      "text": "Constant 'A'",
+      "marks": [
+        34
+      ]
+    },
+    {
+      "text": "Constant ' ' (single space)",
+      "marks": [
+        35
+      ]
+    },
+    {
+      "text": "Constant 'SEVERE'",
+      "marks": [
+        36
+      ]
+    },
+    {
+      "text": "Constant '3.5'",
+      "marks": [
+        37
+      ]
+    },
+    {
+      "text": "Constant 'true'",
+      "marks": [
+        38
+      ]
+    },
+    {
+      "text": "Constant empty string",
+      "marks": [
+        39
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "No validation errors",
+      "marks": [
+        9,
+        16,
+        20,
+        21,
+        22,
+        23,
+        32,
+        34,
+        35,
+        36,
+        37,
+        38
+      ]
+    },
+    {
+      "text": "Single validation error for an empty, incomplete, or mixed-shape node",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        6,
+        8,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        17,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31
+      ]
+    },
+    {
+      "text": "Validation error reported on Operator for an undefined member",
+      "marks": [
+        5,
+        18,
+        19
+      ]
+    },
+    {
+      "text": "Validation error reported on Constant for an empty string, or on Variable for Guid.Empty",
+      "marks": [
+        33,
+        39
+      ]
+    },
+    {
+      "text": "Several violations reported when several nested children are invalid",
+      "marks": [
+        7
+      ]
+    }
+  ],
+  "exception_text": "No unhandled exception; invalid input is reported as validation errors",
+  "exception_marks": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    17,
+    18,
+    19,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    33,
+    39
+  ],
+  "cases": [
+    {
+      "method": "Validate_NestedEmptyFormula_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Validate_IncompleteTernary_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Validate_IncompleteTernary_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Validate_IncompleteTernary_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Validate_NestedOperatorNotInEnum_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Validate_NestedMixedShapes_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Validate_MultipleChildrenInvalid_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Validate_MixedUnaryAndTernary_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Validate_DeeplyNested_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Validate_IncompleteBinary_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Validate_IncompleteBinary_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Validate_IncompleteBinary_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Validate_IncompleteBinary_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Validate_IncompleteBinary_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Validate_IncompleteBinary_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Validate_Unary_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Validate_MixedConstantAndVariable_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Validate_OperatorNotInEnum_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Validate_OperatorNotInEnum_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Validate_Variable_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Validate_Binary_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Validate_Binary_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Validate_Binary_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Validate_EmptyFormula_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Validate_NestedEmptyConstant_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Validate_NestedEmptyConstant_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Validate_NestedEmptyConstant_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Validate_NestedEmptyConstant_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Validate_NestedEmptyConstant_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Validate_NestedEmptyConstant_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Validate_DeeplyNestedEmptyConstant_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Validate_Ternary_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Validate_EmptyGuidVariable_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Validate_Constant_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Validate_Constant_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "Validate_Constant_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Validate_Constant_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Validate_Constant_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Validate_EmptyConstant_Fail",
+      "type": "A",
+      "result": "P"
+    }
+  ]
+}

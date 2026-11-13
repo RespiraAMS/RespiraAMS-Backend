@@ -1,0 +1,154 @@
+{
+  "function_code": "NameNormalizer.Normalize",
+  "sheet_name": "NameNormalizer",
+  "lines_of_code": 15,
+  "requirement": "Normalise a person name to the Vietnamese display style: trim the input, collapse internal whitespace runs into single spaces, and title-case each word (first letter upper-case, remaining letters lower-case).",
+  "preconditions": [
+    {
+      "text": "The normalizer is a pure static function",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ]
+    },
+    {
+      "text": "The supplied name has mixed case and loose whitespace",
+      "marks": [
+        1,
+        2,
+        3,
+        6,
+        7,
+        8
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "NameNormaize Success (name: 'JOHN DOE JR', expected: 'John Doe Jr')",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "NameNormaize Success (name: 'JOHN DOE', expected: 'John Doe')",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "NameNormaize Success (name: 'JOHN', expected: 'John')",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "NameNormaize Success (name: 'John', expected: 'John')",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "NameNormaize Success (name: 'jOHN', expected: 'John')",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "NameNormaize Success (name: 'jOhn dOe jR', expected: 'John Doe Jr')",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "NameNormaize Success (name: 'john doe', expected: 'John Doe')",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "NameNormaize Success (name: 'john', expected: 'John')",
+      "marks": [
+        8
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "The normalised name equals the expected title-cased value",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ]
+    },
+    {
+      "text": "Single-word names keep only the first letter upper-case",
+      "marks": []
+    },
+    {
+      "text": "Every word is title-cased and extra spaces are collapsed",
+      "marks": [
+        1,
+        2,
+        6,
+        7
+      ]
+    }
+  ],
+  "exception_text": "No unhandled exception; the normalizer always returns a string",
+  "exception_marks": [],
+  "cases": [
+    {
+      "method": "NameNormaize_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "NameNormaize_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "NameNormaize_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "NameNormaize_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "NameNormaize_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "NameNormaize_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "NameNormaize_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "NameNormaize_Success",
+      "type": "N",
+      "result": "P"
+    }
+  ]
+}

@@ -1,0 +1,310 @@
+{
+  "function_code": "AuditSnapshot.Apply",
+  "sheet_name": "AuditSnapshot",
+  "lines_of_code": 427,
+  "requirement": "Apply an audit snapshot to an entity: deserialize the JSON object, restore writable properties by name while ignoring $metadata, read-only, and unknown properties, support replace and mutate modes, keep a non-nullable value unchanged when the snapshot is null, and return the applied property names.",
+  "preconditions": [
+    {
+      "text": "An entity instance and a JSON snapshot are supplied",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18
+      ]
+    },
+    {
+      "text": "The snapshot has normal, null, unknown, $metadata, or read-only properties",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18
+      ]
+    },
+    {
+      "text": "The entity or snapshot is null",
+      "marks": [
+        14,
+        15,
+        16
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "Apply_IgnoresPropertiesThatDoNotExistOnTheEntity",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "Apply_IgnoresPropertiesThatStartWithADollarSign",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "Apply_IgnoresReadOnlyProperties",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "Apply_NullValueOnANonNullableValueTypeProperty_LeavesTheValueUnchanged",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "Apply_RestoresABoolProperty",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "Apply_RestoresADateTimeOffsetProperty",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "Apply_RestoresAGuidProperty",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "Apply_RestoresANullablePropertyFromAValue",
+      "marks": [
+        8
+      ]
+    },
+    {
+      "text": "Apply_RestoresANullablePropertyFromNull",
+      "marks": [
+        9
+      ]
+    },
+    {
+      "text": "Apply_RestoresAStringProperty",
+      "marks": [
+        10
+      ]
+    },
+    {
+      "text": "Apply_RestoresAnEntityFromTheDatabaseSnapshot",
+      "marks": [
+        11
+      ]
+    },
+    {
+      "text": "Apply_RestoresAnIntProperty",
+      "marks": [
+        12
+      ]
+    },
+    {
+      "text": "Apply_ReturnsTheAppliedPropertyNames",
+      "marks": [
+        13
+      ]
+    },
+    {
+      "text": "Apply_ThrowsForANullEntity",
+      "marks": [
+        14
+      ]
+    },
+    {
+      "text": "Apply_ThrowsWhenTheSnapshotIsNotAJsonObject (snapshot: \"123\")",
+      "marks": [
+        15
+      ]
+    },
+    {
+      "text": "Apply_ThrowsWhenTheSnapshotIsNotAJsonObject (snapshot: \"[]\")",
+      "marks": [
+        16
+      ]
+    },
+    {
+      "text": "Apply_WithMutateInsteadOfReplace_MutatesTheExistingInstance",
+      "marks": [
+        17
+      ]
+    },
+    {
+      "text": "Apply_WithoutOptions_UsesTheSharedSnapshotOptions",
+      "marks": [
+        18
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "String, bool, int, Guid, and DateTimeOffset properties are restored",
+      "marks": [
+        5,
+        6,
+        7,
+        10,
+        12
+      ]
+    },
+    {
+      "text": "Nullable properties restore from a value or from null",
+      "marks": [
+        8,
+        9
+      ]
+    },
+    {
+      "text": "Mutate mode updates the existing instance and the applied property names are returned",
+      "marks": [
+        13,
+        17
+      ]
+    },
+    {
+      "text": "Unknown, $metadata, and read-only properties are ignored; a null into a non-nullable value type leaves it unchanged",
+      "marks": [
+        1,
+        2,
+        4
+      ]
+    },
+    {
+      "text": "The shared snapshot options are used when none are supplied",
+      "marks": [
+        18
+      ]
+    }
+  ],
+  "exception_text": "ArgumentNullException for a null entity and JsonException when the snapshot is not a JSON object",
+  "exception_marks": [
+    14,
+    15,
+    16
+  ],
+  "cases": [
+    {
+      "method": "Apply_IgnoresPropertiesThatDoNotExistOnTheEntity",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "Apply_IgnoresPropertiesThatStartWithADollarSign",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "Apply_IgnoresReadOnlyProperties",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "Apply_NullValueOnANonNullableValueTypeProperty_LeavesTheValueUnchanged",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Apply_RestoresABoolProperty",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Apply_RestoresADateTimeOffsetProperty",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Apply_RestoresAGuidProperty",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Apply_RestoresANullablePropertyFromAValue",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Apply_RestoresANullablePropertyFromNull",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "Apply_RestoresAStringProperty",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Apply_RestoresAnEntityFromTheDatabaseSnapshot",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Apply_RestoresAnIntProperty",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Apply_ReturnsTheAppliedPropertyNames",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Apply_ThrowsForANullEntity",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Apply_ThrowsWhenTheSnapshotIsNotAJsonObject",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Apply_ThrowsWhenTheSnapshotIsNotAJsonObject",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "Apply_WithMutateInsteadOfReplace_MutatesTheExistingInstance",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "Apply_WithoutOptions_UsesTheSharedSnapshotOptions",
+      "type": "N",
+      "result": "P"
+    }
+  ]
+}

@@ -1,0 +1,403 @@
+{
+  "function_code": "CreateClinicalVariableHandler.HandleAsync",
+  "sheet_name": "CreateClinicalVariableHandler",
+  "lines_of_code": 62,
+  "requirement": "Create a clinical variable: load the live variables as formula dependencies, force every range unit to the canonical unit, map the command (which validates the prerequisite), and for numeric variables reject a normal range that is not contained in the accepted range before persisting.",
+  "preconditions": [
+    {
+      "text": "The clinical variable table contains the prerequisite variables seeded for the case",
+      "marks": [
+        1,
+        4,
+        6,
+        16
+      ]
+    },
+    {
+      "text": "A numeric variable is created with an accepted range",
+      "marks": [
+        2,
+        3,
+        8,
+        9,
+        10,
+        11,
+        12,
+        18,
+        19,
+        20,
+        21,
+        22
+      ]
+    },
+    {
+      "text": "The normal range must be contained in the accepted range",
+      "marks": [
+        8,
+        9,
+        10,
+        11,
+        12,
+        18,
+        19,
+        20,
+        21,
+        22
+      ]
+    },
+    {
+      "text": "The prerequisite formula references only live variables",
+      "marks": [
+        1,
+        4,
+        5,
+        15
+      ]
+    },
+    {
+      "text": "The command carries a defined ClinicalValueType member",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "Numeric variable whose prerequisite variable is soft-deleted",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "Numeric variable with an accepted range and a normal range (wrong units supplied)",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "Numeric variable without a normal range",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "Prerequisite referencing an unknown variable",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "Prerequisite formula whose binary operands have different result types",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "Prerequisite as a binary formula over a live variable",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "Numeric variable without an accepted range",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "Normal range below the accepted lower bound (>=85 vs >=90)",
+      "marks": [
+        8
+      ]
+    },
+    {
+      "text": "Normal range above the accepted upper bound (<=145 vs <=140)",
+      "marks": [
+        9
+      ]
+    },
+    {
+      "text": "Accepted lower bound exclusive while the normal range includes it",
+      "marks": [
+        10
+      ]
+    },
+    {
+      "text": "Accepted upper bound exclusive while the normal range includes it",
+      "marks": [
+        11
+      ]
+    },
+    {
+      "text": "Normal range entirely above the accepted range (301-320 vs 0-300)",
+      "marks": [
+        12
+      ]
+    },
+    {
+      "text": "Categorical variable with accepted values needing sanitisation",
+      "marks": [
+        13
+      ]
+    },
+    {
+      "text": "Value type 999 (outside every defined member)",
+      "marks": [
+        14
+      ]
+    },
+    {
+      "text": "Empty prerequisite formula",
+      "marks": [
+        15
+      ]
+    },
+    {
+      "text": "Prerequisite as a bare reference to a live variable",
+      "marks": [
+        16
+      ]
+    },
+    {
+      "text": "Boolean variable",
+      "marks": [
+        17
+      ]
+    },
+    {
+      "text": "Normal range equal to the accepted range",
+      "marks": [
+        18
+      ]
+    },
+    {
+      "text": "Normal range strictly inside the accepted range",
+      "marks": [
+        19
+      ]
+    },
+    {
+      "text": "Exclusive normal bounds inside inclusive accepted bounds",
+      "marks": [
+        20
+      ]
+    },
+    {
+      "text": "Exclusive bounds on both ranges at the same limits",
+      "marks": [
+        21
+      ]
+    },
+    {
+      "text": "Accepted range without upper limit and a normal range inside it",
+      "marks": [
+        22
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "Success with Created status and the new variable id",
+      "marks": [
+        2,
+        3,
+        6,
+        13,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22
+      ]
+    },
+    {
+      "text": "Ranges and prerequisite are persisted; range units are forced to the canonical unit",
+      "marks": [
+        2,
+        3,
+        6,
+        18,
+        19,
+        20,
+        21,
+        22
+      ]
+    },
+    {
+      "text": "Categorical accepted values are sanitised to upper case with underscores",
+      "marks": [
+        13
+      ]
+    },
+    {
+      "text": "Failure with BadRequest for an unknown, deleted, or invalid prerequisite, or a normal range outside the accepted range",
+      "marks": [
+        1,
+        4,
+        5,
+        8,
+        9,
+        10,
+        11,
+        12,
+        15
+      ]
+    },
+    {
+      "text": "Nothing is persisted when the command is rejected",
+      "marks": [
+        1,
+        4,
+        5,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        14,
+        15
+      ]
+    }
+  ],
+  "exception_text": "ArgumentException is thrown for a numeric variable without an accepted range or an undefined value type; nothing is persisted",
+  "exception_marks": [
+    7,
+    14
+  ],
+  "cases": [
+    {
+      "method": "CreateClinicalVariable_SoftDeletedPrerequisiteVariable_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CreateClinicalVariable_NumericVariableWithNormalRange_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "CreateClinicalVariable_NumericVariableWithoutNormalRange_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "CreateClinicalVariable_UnknownPrerequisiteVariable_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CreateClinicalVariable_InvalidPrerequisiteFormula_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CreateClinicalVariable_WithPrerequisiteBinaryFormula_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "CreateClinicalVariable_NumericWithoutAcceptedRange_Throws",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CreateClinicalVariable_NormalRangeOutsideAcceptedRange_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CreateClinicalVariable_NormalRangeOutsideAcceptedRange_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CreateClinicalVariable_NormalRangeOutsideAcceptedRange_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CreateClinicalVariable_NormalRangeOutsideAcceptedRange_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CreateClinicalVariable_NormalRangeOutsideAcceptedRange_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CreateClinicalVariable_CategoricalVariable_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "CreateClinicalVariable_InvalidValueType_Throws",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CreateClinicalVariable_EmptyPrerequisite_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CreateClinicalVariable_WithPrerequisiteVariable_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "CreateClinicalVariable_BooleanVariable_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "CreateClinicalVariable_NormalRangeWithinAcceptedRange_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "CreateClinicalVariable_NormalRangeWithinAcceptedRange_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "CreateClinicalVariable_NormalRangeWithinAcceptedRange_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "CreateClinicalVariable_NormalRangeWithinAcceptedRange_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "CreateClinicalVariable_NormalRangeWithinAcceptedRange_Success",
+      "type": "B",
+      "result": "P"
+    }
+  ]
+}

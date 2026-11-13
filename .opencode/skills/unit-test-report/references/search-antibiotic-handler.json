@@ -1,0 +1,152 @@
+{
+  "function_code": "SearchAntibioticHandler.HandleAsync",
+  "sheet_name": "SearchAntibioticHandler",
+  "lines_of_code": 50,
+  "requirement": "Full-text search antibiotics by name: build a prefix tsquery, short-circuit to an empty first page when the term has no usable lexeme, rank matches, project the group and classification, and return the requested page.",
+  "preconditions": [
+    {
+      "text": "The antibiotic table contains the rows seeded for the case",
+      "marks": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+    },
+    {
+      "text": "The search term yields at least one usable lexeme",
+      "marks": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 18, 19, 20]
+    },
+    {
+      "text": "Every word in the search term is a single character, so no lexeme survives",
+      "marks": [12, 13]
+    },
+    {
+      "text": "The search term consists only of symbols the prefix-query builder strips",
+      "marks": [14, 15, 16, 17]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "Search 'amox' over Amoxicillin in the Beta-lactams group",
+      "marks": [1]
+    },
+    {
+      "text": "Search 'amoxicillin' (full word)",
+      "marks": [2]
+    },
+    {
+      "text": "Search 'amoxi' (shorter prefix)",
+      "marks": [3]
+    },
+    {
+      "text": "Search 'AMOX' (upper case, folded by the respira_vi configuration)",
+      "marks": [4]
+    },
+    {
+      "text": "Search 'az' over Azithromycin and Aztreonam in different groups",
+      "marks": [5]
+    },
+    {
+      "text": "Search 'cef' over five cephalosporins in the same group",
+      "marks": [6]
+    },
+    {
+      "text": "Search 'cef' and inspect the rank ordering",
+      "marks": [7]
+    },
+    {
+      "text": "Search 'cef', page 1, size 2",
+      "marks": [8]
+    },
+    {
+      "text": "Search 'cef', page 3, size 2 (last page)",
+      "marks": [9]
+    },
+    {
+      "text": "Search 'cef', page 1, size 1 (minimum page size)",
+      "marks": [10]
+    },
+    {
+      "text": "Search 'cef', page 1, size 100 (maximum page size)",
+      "marks": [11]
+    },
+    {
+      "text": "Search 'a b', page 3, size 5",
+      "marks": [12]
+    },
+    {
+      "text": "Search 'x y z', page 3, size 5",
+      "marks": [13]
+    },
+    {
+      "text": "Search '&&', page 1, size 10",
+      "marks": [14]
+    },
+    {
+      "text": "Search '||', page 1, size 10",
+      "marks": [15]
+    },
+    {
+      "text": "Search '!!', page 1, size 10",
+      "marks": [16]
+    },
+    {
+      "text": "Search '((', page 1, size 10",
+      "marks": [17]
+    },
+    {
+      "text": "Search 'vancomycin' over the cephalosporins (no seeded match)",
+      "marks": [18]
+    },
+    {
+      "text": "Search 'mycin' over Azithromycin (infix, not a prefix)",
+      "marks": [19]
+    },
+    {
+      "text": "Search 'amox' when the only match is soft-deleted",
+      "marks": [20]
+    }
+  ],
+  "returns": [
+    {
+      "text": "Success with the requested page and its pagination metadata",
+      "marks": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+    },
+    {
+      "text": "Each item carries its group ID, group name, and classification",
+      "marks": [1, 5, 6]
+    },
+    {
+      "text": "Items are ordered by rank descending",
+      "marks": [7]
+    },
+    {
+      "text": "Empty page with zero total items and no next page",
+      "marks": [12, 13, 14, 15, 16, 17, 18]
+    },
+    {
+      "text": "Matching is prefix-only, so infix terms and soft-deleted rows never match",
+      "marks": [19, 20]
+    }
+  ],
+  "exception_text": "No unhandled exception; the handler has no failure branch and always returns success",
+  "exception_marks": [],
+  "cases": [
+    { "method": "SearchAntibiotic_PrefixMatchOnName_ReturnsAntibioticWithGroupAndClassification_Success", "type": "N", "result": "P" },
+    { "method": "SearchAntibiotic_PrefixTerm_MatchesSameAntibiotic_Success", "type": "N", "result": "P" },
+    { "method": "SearchAntibiotic_PrefixTerm_MatchesSameAntibiotic_Success", "type": "B", "result": "P" },
+    { "method": "SearchAntibiotic_PrefixTerm_MatchesSameAntibiotic_Success", "type": "B", "result": "P" },
+    { "method": "SearchAntibiotic_MatchesInDifferentGroups_ProjectsEachGroup_Success", "type": "N", "result": "P" },
+    { "method": "SearchAntibiotic_MatchesInSameGroup_CarriesGroupAndClassification_Success", "type": "N", "result": "P" },
+    { "method": "SearchAntibiotic_Matches_OrderedByRankDescending_Success", "type": "N", "result": "P" },
+    { "method": "SearchAntibiotic_FirstPage_SplitsMatchesWithMetadata_Success", "type": "N", "result": "P" },
+    { "method": "SearchAntibiotic_LastPage_HasNoNext_Success", "type": "B", "result": "P" },
+    { "method": "SearchAntibiotic_MinimumPageSize_ReturnsOneItemPerPage_Success", "type": "B", "result": "P" },
+    { "method": "SearchAntibiotic_MaximumPageSize_ReturnsAllMatchesInOnePage_Success", "type": "B", "result": "P" },
+    { "method": "SearchAntibiotic_NoUsableLexeme_ReturnsEmptyPage_Success", "type": "A", "result": "P" },
+    { "method": "SearchAntibiotic_NoUsableLexeme_ReturnsEmptyPage_Success", "type": "A", "result": "P" },
+    { "method": "SearchAntibiotic_SymbolOnlyTerm_ReturnsEmptyPage_Success", "type": "A", "result": "P" },
+    { "method": "SearchAntibiotic_SymbolOnlyTerm_ReturnsEmptyPage_Success", "type": "A", "result": "P" },
+    { "method": "SearchAntibiotic_SymbolOnlyTerm_ReturnsEmptyPage_Success", "type": "A", "result": "P" },
+    { "method": "SearchAntibiotic_SymbolOnlyTerm_ReturnsEmptyPage_Success", "type": "A", "result": "P" },
+    { "method": "SearchAntibiotic_TermMatchesNothing_ReturnsEmptyPage_Success", "type": "A", "result": "P" },
+    { "method": "SearchAntibiotic_TermIsInsideNameButNotPrefix_ReturnsEmptyPage_Success", "type": "A", "result": "P" },
+    { "method": "SearchAntibiotic_SoftDeletedAntibiotic_IsExcluded_Success", "type": "A", "result": "P" }
+  ]
+}

@@ -1,0 +1,139 @@
+{
+  "function_code": "UpdateNextOfKinHandler.HandleAsync",
+  "sheet_name": "UpdateNextOfKinHandler",
+  "lines_of_code": 54,
+  "requirement": "Update a next of kin: the row must exist and be live, the requested phone number must not already be used by another next of kin of the same patient (keeping its own number is allowed), then the command is mapped and the Updated status is returned.",
+  "preconditions": [
+    {
+      "text": "A live next of kin exists for the target id",
+      "marks": [
+        1,
+        2,
+        3,
+        6
+      ]
+    },
+    {
+      "text": "No other next of kin of the same patient uses the requested phone number",
+      "marks": [
+        2,
+        3,
+        4,
+        5,
+        6
+      ]
+    },
+    {
+      "text": "The kin is unknown or soft-deleted, or the phone belongs to a sibling",
+      "marks": [
+        1,
+        4,
+        5
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "UpdateNextOfKin DuplicatePhoneNumberSamePatient Fail",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "UpdateNextOfKin KeepOwnPhoneNumber Updated Success",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "UpdateNextOfKin PhoneUsedByKinOfAnotherPatient Updated Success",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "UpdateNextOfKin SoftDeletedKin Fail",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "UpdateNextOfKin UnknownId Fail",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "UpdateNextOfKin ValidUpdate Updated Success",
+      "marks": [
+        6
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "Success with Updated status and the command fields persisted",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "A kin may keep its own phone number, and another patient may reuse it",
+      "marks": [
+        2,
+        3
+      ]
+    },
+    {
+      "text": "Failure with BadRequest for an unknown or soft-deleted kin",
+      "marks": [
+        4,
+        5
+      ]
+    },
+    {
+      "text": "Failure with BadRequest when a sibling already uses the phone number",
+      "marks": [
+        1
+      ]
+    }
+  ],
+  "exception_text": "No unhandled exception; every rejection is returned as a failed Result",
+  "exception_marks": [
+    1,
+    4,
+    5
+  ],
+  "cases": [
+    {
+      "method": "UpdateNextOfKin_DuplicatePhoneNumberSamePatient_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdateNextOfKin_KeepOwnPhoneNumber_Updated_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "UpdateNextOfKin_PhoneUsedByKinOfAnotherPatient_Updated_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "UpdateNextOfKin_SoftDeletedKin_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdateNextOfKin_UnknownId_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "UpdateNextOfKin_ValidUpdate_Updated_Success",
+      "type": "N",
+      "result": "P"
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "function_code": "UpdateAntibioticGroupHandler.HandleAsync",
+  "sheet_name": "UpdateAntibioticGroupHandler",
+  "lines_of_code": 52,
+  "requirement": "Update an antibiotic group: when a parent ID is supplied it must exist and must not be soft-deleted, the target group must exist, then map the new name, description, and parent onto the tracked entity, save it, and report Updated.",
+  "preconditions": [
+    {
+      "text": "A live antibiotic group exists for the target ID",
+      "marks": [1, 2, 3, 5, 6]
+    },
+    {
+      "text": "The requested parent ID matches a live group",
+      "marks": [3]
+    },
+    {
+      "text": "The requested parent ID matches no live group",
+      "marks": [5, 6]
+    },
+    {
+      "text": "The target ID matches no live group",
+      "marks": [4]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "Root group renamed to 'Aminoglycosides' with a new description and a null parent",
+      "marks": [1]
+    },
+    {
+      "text": "Root group renamed to 'Glycopeptides' with a new description and a null parent",
+      "marks": [2]
+    },
+    {
+      "text": "Standalone group reparented under an existing root group",
+      "marks": [3]
+    },
+    {
+      "text": "Update request with an unknown group ID",
+      "marks": [4]
+    },
+    {
+      "text": "Update request with an unknown parent ID",
+      "marks": [5]
+    },
+    {
+      "text": "Update request with a soft-deleted parent ID",
+      "marks": [6]
+    }
+  ],
+  "returns": [
+    {
+      "text": "Success with Updated status; name, description, and parent are persisted",
+      "marks": [1, 2, 3]
+    },
+    {
+      "text": "UpdatedAt is refreshed on every successful update",
+      "marks": [1, 2]
+    },
+    {
+      "text": "Failure with BadRequest and the 'parent ID not found' error; target untouched",
+      "marks": [5, 6]
+    },
+    {
+      "text": "Failure with BadRequest and the 'Antibiotic group not found' error",
+      "marks": [4]
+    }
+  ],
+  "exception_text": "No unhandled exception; every rejection is returned as a failed Result",
+  "exception_marks": [4, 5, 6],
+  "cases": [
+    { "method": "UpdateAntibioticGroup_RootGroup_Success", "type": "N", "result": "P" },
+    { "method": "UpdateAntibioticGroup_RootGroup_Success", "type": "N", "result": "P" },
+    { "method": "UpdateAntibioticGroup_ReparentUnderExistingGroup_Success", "type": "N", "result": "P" },
+    { "method": "UpdateAntibioticGroup_GroupNotFound_Fail", "type": "A", "result": "P" },
+    { "method": "UpdateAntibioticGroup_UnknownParent_Fail", "type": "A", "result": "P" },
+    { "method": "UpdateAntibioticGroup_SoftDeletedParent_Fail", "type": "A", "result": "P" }
+  ]
+}

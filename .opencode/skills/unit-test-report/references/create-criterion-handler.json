@@ -1,0 +1,241 @@
+{
+  "function_code": "CreateCriterionHandler.HandleAsync",
+  "sheet_name": "CreateCriterionHandler",
+  "lines_of_code": 47,
+  "requirement": "Create a criterion from a boolean formula: load the live clinical variables, map the formula (rejecting an unresolvable or non-boolean result), persist the criterion, and return its id; duplicate name and formula pairs are allowed on purpose.",
+  "preconditions": [
+    {
+      "text": "The clinical variables referenced by the formula exist and are live",
+      "marks": [
+        1,
+        5,
+        6,
+        7,
+        8,
+        9,
+        11,
+        13
+      ]
+    },
+    {
+      "text": "The formula resolves to a boolean value",
+      "marks": [
+        1,
+        5,
+        6,
+        7,
+        8,
+        9,
+        11,
+        13
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "C reactive protein above the 10 mg/L threshold",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "Formula referencing a soft-deleted variable",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "Formula referencing an unknown variable",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "Purely numeric formula",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "Systolic blood pressure above threshold 0 (lower boundary)",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "Systolic blood pressure above threshold 90",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "Systolic blood pressure above threshold 140",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "Systolic blood pressure above threshold 300 (upper boundary)",
+      "marks": [
+        8
+      ]
+    },
+    {
+      "text": "Female sex AND systolic blood pressure above 140 mmHg",
+      "marks": [
+        9
+      ]
+    },
+    {
+      "text": "Formula whose binary operands have different result types",
+      "marks": [
+        10
+      ]
+    },
+    {
+      "text": "Criterion that duplicates an existing name and formula",
+      "marks": [
+        11
+      ]
+    },
+    {
+      "text": "Formula with no fields at all",
+      "marks": [
+        12
+      ]
+    },
+    {
+      "text": "Boolean constant formula",
+      "marks": [
+        13
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "Success with the new criterion id",
+      "marks": [
+        1,
+        5,
+        6,
+        7,
+        8,
+        9,
+        11,
+        13
+      ]
+    },
+    {
+      "text": "The criterion is persisted with its name and resolved formula",
+      "marks": [
+        1,
+        5,
+        6,
+        7,
+        8,
+        9,
+        13
+      ]
+    },
+    {
+      "text": "The threshold survives the JSONB round trip exactly as supplied",
+      "marks": [
+        5,
+        6,
+        7,
+        8
+      ]
+    },
+    {
+      "text": "Two identical criteria are stored as independent rows",
+      "marks": [
+        11
+      ]
+    },
+    {
+      "text": "Failure with BadRequest when the formula cannot be resolved or is not boolean",
+      "marks": [
+        2,
+        3,
+        4,
+        10,
+        12
+      ]
+    }
+  ],
+  "exception_text": "No unhandled exception; an unresolvable formula is returned as a failed Result",
+  "exception_marks": [
+    2,
+    3,
+    4,
+    10,
+    12
+  ],
+  "cases": [
+    {
+      "method": "CreateCriterion_NumericRealisticThreshold_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "CreateCriterion_SoftDeletedVariable_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CreateCriterion_UnknownVariable_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CreateCriterion_NonBooleanFormula_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CreateCriterion_NumericBoundaryFormula_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "CreateCriterion_NumericBoundaryFormula_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "CreateCriterion_NumericBoundaryFormula_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "CreateCriterion_NumericBoundaryFormula_Success",
+      "type": "B",
+      "result": "P"
+    },
+    {
+      "method": "CreateCriterion_LogicalFormula_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "CreateCriterion_InvalidFormula_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CreateCriterion_DuplicateNameAndFormula_Success",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "CreateCriterion_EmptyFormula_Fail",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "CreateCriterion_BooleanConstant_Success",
+      "type": "N",
+      "result": "P"
+    }
+  ]
+}

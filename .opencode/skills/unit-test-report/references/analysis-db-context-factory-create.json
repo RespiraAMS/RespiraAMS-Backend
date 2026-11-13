@@ -1,0 +1,39 @@
+{
+  "function_code": "AnalysisDbContextFactory.CreateDbContext",
+  "sheet_name": "AnalysisDbContextFactory",
+  "lines_of_code": 16,
+  "requirement": "Design-time factory for the Analysis module: build Npgsql options for the analysis database and return an AnalysisDbContext that exposes the ClinicalAnalysis mapping over the clinical_analyses table.",
+  "preconditions": [
+    {
+      "text": "The factory is constructed directly without a dependency injection container",
+      "marks": [
+        1
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "CreateDbContext_ReturnsConfiguredAnalysisDbContext",
+      "marks": [
+        1
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "An AnalysisDbContext configured with the Npgsql provider and the clinical_analyses table",
+      "marks": [
+        1
+      ]
+    }
+  ],
+  "exception_text": "No unhandled exception; design-time option creation succeeds",
+  "exception_marks": [],
+  "cases": [
+    {
+      "method": "CreateDbContext_ReturnsConfiguredAnalysisDbContext",
+      "type": "N",
+      "result": "P"
+    }
+  ]
+}

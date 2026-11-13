@@ -1,0 +1,434 @@
+{
+  "function_code": "UpdateDoctorProfileCommandHandler.HandleAsync",
+  "sheet_name": "UpdateDoctorProfileHandler",
+  "lines_of_code": 194,
+  "requirement": "Update a doctor or head-doctor profile: load it by id, ensure it belongs to the command account, enforce admin/owner/owning-head authorization, replace the profile fields and optionally the media id, publish DoctorProfileUpdated with the previous media id, and publish DoctorProfileUpdateFailure plus a denial audit event on the failure paths.",
+  "preconditions": [
+    {
+      "text": "A live doctor or head-doctor profile exists for the target id",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26
+      ]
+    },
+    {
+      "text": "The profile belongs to the command account and the actor may manage it",
+      "marks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26
+      ]
+    },
+    {
+      "text": "The profile is missing, owned by another account, or the actor is not authorized",
+      "marks": [
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        22
+      ]
+    },
+    {
+      "text": "Saving the update throws",
+      "marks": [
+        20,
+        21
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "text": "HandleAsync_ByAdmin_PublishesDoctorProfileUpdated",
+      "marks": [
+        1
+      ]
+    },
+    {
+      "text": "HandleAsync_ByAdmin_UpdatesEveryProfileField",
+      "marks": [
+        2
+      ]
+    },
+    {
+      "text": "HandleAsync_ByAdmin_UpdatesTimestamp",
+      "marks": [
+        3
+      ]
+    },
+    {
+      "text": "HandleAsync_ByOwnerDoctor_UpdatesProfile",
+      "marks": [
+        4
+      ]
+    },
+    {
+      "text": "HandleAsync_ByOwnerHeadDepartmentDoctor_UpdatesProfile",
+      "marks": [
+        5
+      ]
+    },
+    {
+      "text": "HandleAsync_ByOwningHeadDepartmentDoctor_UpdatesSubordinateDoctor",
+      "marks": [
+        6
+      ]
+    },
+    {
+      "text": "HandleAsync_PublishesAuditEvent",
+      "marks": [
+        7
+      ]
+    },
+    {
+      "text": "HandleAsync_UpdatesHeadDepartmentDoctorProfile",
+      "marks": [
+        8
+      ]
+    },
+    {
+      "text": "HandleAsync_WhenActorCannotManageProfile_DoesNotModifyProfile",
+      "marks": [
+        9
+      ]
+    },
+    {
+      "text": "HandleAsync_WhenActorCannotManageProfile_PublishesAuthorizationDeniedAuditEvent",
+      "marks": [
+        10
+      ]
+    },
+    {
+      "text": "HandleAsync_WhenActorCannotManageProfile_PublishesFailure",
+      "marks": [
+        11
+      ]
+    },
+    {
+      "text": "HandleAsync_WhenActorIsAnotherHeadDepartmentDoctor_PublishesFailure",
+      "marks": [
+        12
+      ]
+    },
+    {
+      "text": "HandleAsync_WhenActorRoleIsEmpty_PublishesFailure",
+      "marks": [
+        13
+      ]
+    },
+    {
+      "text": "HandleAsync_WhenActorRoleIsUnknown_PublishesFailure",
+      "marks": [
+        14
+      ]
+    },
+    {
+      "text": "HandleAsync_WhenHeadActorTargetsHeadProfile_PublishesFailure",
+      "marks": [
+        15
+      ]
+    },
+    {
+      "text": "HandleAsync_WhenProfileBelongsToAnotherAccount_DoesNotModifyProfile",
+      "marks": [
+        16
+      ]
+    },
+    {
+      "text": "HandleAsync_WhenProfileBelongsToAnotherAccount_PublishesFailure",
+      "marks": [
+        17
+      ]
+    },
+    {
+      "text": "HandleAsync_WhenProfileNotFound_DoesNotPublishUpdated",
+      "marks": [
+        18
+      ]
+    },
+    {
+      "text": "HandleAsync_WhenProfileNotFound_PublishesFailure",
+      "marks": [
+        19
+      ]
+    },
+    {
+      "text": "HandleAsync_WhenSaveFails_DoesNotPublishUpdated",
+      "marks": [
+        20
+      ]
+    },
+    {
+      "text": "HandleAsync_WhenSaveFails_PublishesFailureWithExceptionMessage",
+      "marks": [
+        21
+      ]
+    },
+    {
+      "text": "HandleAsync_WithBlankActorRole_IsDenied",
+      "marks": [
+        22
+      ]
+    },
+    {
+      "text": "HandleAsync_WithEmptyActorAccount_PublishesAuditEventWithoutActor",
+      "marks": [
+        23
+      ]
+    },
+    {
+      "text": "HandleAsync_WithNewMediaId_LinksNewMediaAndReportsPreviousOne",
+      "marks": [
+        24
+      ]
+    },
+    {
+      "text": "HandleAsync_WithoutNewMediaId_KeepsExistingMedia",
+      "marks": [
+        25
+      ]
+    },
+    {
+      "text": "HandleAsync_WithoutNewMediaId_ReportsEmptyOldMediaId",
+      "marks": [
+        26
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "text": "Every profile field and the updated timestamp are persisted",
+      "marks": [
+        2,
+        3,
+        4,
+        5,
+        8
+      ]
+    },
+    {
+      "text": "DoctorProfileUpdated reports the new media id and the previous one, or keeps the existing media",
+      "marks": [
+        1,
+        24,
+        25,
+        26
+      ]
+    },
+    {
+      "text": "A Doctor.ProfileUpdated audit event lists the changed fields and actor fallbacks",
+      "marks": [
+        7,
+        23
+      ]
+    },
+    {
+      "text": "Missing, foreign-owned, or unauthorized updates publish a failure and leave the profile unchanged",
+      "marks": [
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        22
+      ]
+    }
+  ],
+  "exception_text": "No unhandled exception; save failures become a DoctorProfileUpdateFailure message",
+  "exception_marks": [
+    20,
+    21
+  ],
+  "cases": [
+    {
+      "method": "HandleAsync_ByAdmin_PublishesDoctorProfileUpdated",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_ByAdmin_UpdatesEveryProfileField",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_ByAdmin_UpdatesTimestamp",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_ByOwnerDoctor_UpdatesProfile",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_ByOwnerHeadDepartmentDoctor_UpdatesProfile",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_ByOwningHeadDepartmentDoctor_UpdatesSubordinateDoctor",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_PublishesAuditEvent",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_UpdatesHeadDepartmentDoctorProfile",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WhenActorCannotManageProfile_DoesNotModifyProfile",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WhenActorCannotManageProfile_PublishesAuthorizationDeniedAuditEvent",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WhenActorCannotManageProfile_PublishesFailure",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WhenActorIsAnotherHeadDepartmentDoctor_PublishesFailure",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WhenActorRoleIsEmpty_PublishesFailure",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WhenActorRoleIsUnknown_PublishesFailure",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WhenHeadActorTargetsHeadProfile_PublishesFailure",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WhenProfileBelongsToAnotherAccount_DoesNotModifyProfile",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WhenProfileBelongsToAnotherAccount_PublishesFailure",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WhenProfileNotFound_DoesNotPublishUpdated",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WhenProfileNotFound_PublishesFailure",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WhenSaveFails_DoesNotPublishUpdated",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WhenSaveFails_PublishesFailureWithExceptionMessage",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithBlankActorRole_IsDenied",
+      "type": "A",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithEmptyActorAccount_PublishesAuditEventWithoutActor",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithNewMediaId_LinksNewMediaAndReportsPreviousOne",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithoutNewMediaId_KeepsExistingMedia",
+      "type": "N",
+      "result": "P"
+    },
+    {
+      "method": "HandleAsync_WithoutNewMediaId_ReportsEmptyOldMediaId",
+      "type": "N",
+      "result": "P"
+    }
+  ]
+}
