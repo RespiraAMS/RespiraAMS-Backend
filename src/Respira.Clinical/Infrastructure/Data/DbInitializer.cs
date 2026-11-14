@@ -31,7 +31,29 @@ namespace Respira.Clinical.Infrastructure.Data
                 return;
             }
 
-            var seedData = await DataSeeder.LoadAsync(options.Value.FilePath);
+            if (string.IsNullOrWhiteSpace(options.Value.FilePath))
+            {
+                logger.LogWarning("No seed data file is configured, skip seeding");
+                return;
+            }
+
+            SeedData seedData;
+
+            try
+            {
+                seedData = await DataSeeder.LoadAsync(options.Value.FilePath);
+            }
+            catch (Exception exception)
+            {
+                // The seed data is optional: a missing or broken file is reported and
+                // the service keeps running without the clinical reference data.
+                logger.LogError(
+                    exception,
+                    "Unable to load the seed data file {FilePath}, skip seeding",
+                    options.Value.FilePath
+                );
+                return;
+            }
 
             await context.ClinicalVariables.AddRangeAsync(seedData.ClinicalVariables);
             await context.Criteria.AddRangeAsync(seedData.Criteria);

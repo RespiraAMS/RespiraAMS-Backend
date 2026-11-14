@@ -1,21 +1,27 @@
 using Microsoft.EntityFrameworkCore;
 using Respira.Patient.Application.Contracts.Data;
 using Respira.Patient.Domain.Enums;
+using Respira.ServiceDefaults.Contracts.CQRS;
 using Respira.ServiceDefaults.Contracts.Messages.Patients;
+using Respira.ServiceDefaults.Contracts.Results;
 
 namespace Respira.Patient.Application.Features.Patients.GetPatientsByDoctor;
 
 /// <summary>Returns patients with matching closed treatment plans in the requested period.</summary>
 public sealed class GetPatientsByDoctorHandler(IDbContext context)
+    : IQueryHandler<GetPatientsByDoctorQuery, Result<PatientsByDoctorResult>>
 {
-    public async Task<PatientsByDoctorResult> HandleAsync(
+    public async Task<Result<PatientsByDoctorResult>> HandleAsync(
         GetPatientsByDoctorQuery query,
         CancellationToken cancellationToken = default
     )
     {
         if (query.DoctorId == Guid.Empty || query.End <= query.Start)
         {
-            return new PatientsByDoctorResult();
+            return Result<PatientsByDoctorResult>.Success(
+                ApplicationStatus.Success,
+                new PatientsByDoctorResult()
+            );
         }
 
         var start = query.Start.ToUniversalTime();
@@ -90,10 +96,13 @@ public sealed class GetPatientsByDoctorHandler(IDbContext context)
             })
             .ToList();
 
-        return new PatientsByDoctorResult
-        {
-            Patients = resultPatients,
-        };
+        return Result<PatientsByDoctorResult>.Success(
+            ApplicationStatus.Success,
+            new PatientsByDoctorResult
+            {
+                Patients = resultPatients,
+            }
+        );
     }
 
 }

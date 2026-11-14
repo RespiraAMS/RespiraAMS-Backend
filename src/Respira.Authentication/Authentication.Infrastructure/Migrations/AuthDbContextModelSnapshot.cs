@@ -22,7 +22,7 @@ namespace Authentication.Infrastructure.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Authentication.Domain.Entities.Account", b =>
+            modelBuilder.Entity("Respira.Authentication.Domain.Entities.Account", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -86,7 +86,7 @@ namespace Authentication.Infrastructure.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Authentication.Domain.Entities.BlacklistToken", b =>
+            modelBuilder.Entity("Respira.Authentication.Domain.Entities.BlacklistToken", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -125,7 +125,7 @@ namespace Authentication.Infrastructure.Migrations
                     b.ToTable("BlacklistTokens");
                 });
 
-            modelBuilder.Entity("Authentication.Domain.Entities.Token", b =>
+            modelBuilder.Entity("Respira.Authentication.Domain.Entities.Token", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -171,9 +171,9 @@ namespace Authentication.Infrastructure.Migrations
                     b.ToTable("Tokens");
                 });
 
-            modelBuilder.Entity("Authentication.Domain.Entities.Token", b =>
+            modelBuilder.Entity("Respira.Authentication.Domain.Entities.Token", b =>
                 {
-                    b.HasOne("Authentication.Domain.Entities.Account", "Account")
+                    b.HasOne("Respira.Authentication.Domain.Entities.Account", "Account")
                         .WithMany("Tokens")
                         .HasForeignKey("AccountId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -182,7 +182,7 @@ namespace Authentication.Infrastructure.Migrations
                     b.Navigation("Account");
                 });
 
-            modelBuilder.Entity("Authentication.Domain.Entities.Account", b =>
+            modelBuilder.Entity("Respira.Authentication.Domain.Entities.Account", b =>
                 {
                     b.Navigation("Tokens");
                 });

@@ -37,13 +37,13 @@ namespace Respira.Saga.API.Models
 
         public string LastName { get; set; } = string.Empty;
 
-        public List<DegreeType> Degrees { get; set; } = [];
+        public List<DegreeType>? Degrees { get; set; } = [];
 
-        public AcademicTitle AcademicTitle { get; set; }
+        public AcademicTitle? AcademicTitle { get; set; }
 
-        public PositionType Position { get; set; }
+        public PositionType? Position { get; set; }
 
-        public GenderType Gender { get; set; }
+        public GenderType? Gender { get; set; }
 
         public string CitizenIdentificationNumber { get; set; } = string.Empty;
 

@@ -42,7 +42,7 @@ public sealed class CreateAnalysisReportCommandHandler(IMessageBus bus, IAnalysi
 
         var start = command.Start.ToUniversalTime();
         var end = command.End.ToUniversalTime();
-        var source = await bus.InvokeAsync<PatientsByDoctorResult>(
+        var sourceResult = await bus.InvokeAsync<Result<PatientsByDoctorResult>>(
             new GetPatientsByDoctorQuery
             {
                 DoctorId = command.DoctorId,
@@ -52,6 +52,7 @@ public sealed class CreateAnalysisReportCommandHandler(IMessageBus bus, IAnalysi
             cancellationToken
         );
 
+        var source = sourceResult?.IsSuccess() == true ? sourceResult.Data : null;
         if (source?.Patients is null)
         {
             return Result<AnalysisReportResult>.Failure(

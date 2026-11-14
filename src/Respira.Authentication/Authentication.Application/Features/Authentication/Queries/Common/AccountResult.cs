@@ -1,7 +1,11 @@
 using Respira.Authentication.Domain.Enums;
 
-namespace Respira.Authentication.Application.Features.Authentication.Queries.Search.Result
+namespace Respira.Authentication.Application.Features.Authentication.Queries.Common
 {
+    /// <summary>
+    /// Account data exposed by the read endpoints. The password hash and the tokens
+    /// of the account are never part of it.
+    /// </summary>
     public record AccountResult
     {
         /// <summary>

@@ -25,4 +25,10 @@
         <ProjectReference Include="../Authentication.Domain/Respira.Authentication.Domain.csproj" />
         <ProjectReference Include="../Authentication.Application/Respira.Authentication.Application.csproj" />
     </ItemGroup>
+
+    <ItemGroup>
+        <None Update="Data\seed-accounts.jsonc">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
 </Project>

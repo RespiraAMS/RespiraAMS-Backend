@@ -64,6 +64,22 @@ namespace Respira.Saga.Application.Features.Delete.Commands
             AccountId = command.AccountId;
             DoctorId = command.DoctorId;
             MediaId = command.MediaId;
+
+            if (DoctorId == Guid.Empty)
+            {
+                Step = DeleteStep.DeletingAccount;
+                await bus.SendAsync(
+                    new SoftDeleteCommand
+                    {
+                        SagaId = SagaId,
+                        AccountId = AccountId,
+                        ActorAccountId = ActorAccountId,
+                        ActorRole = ActorRole,
+                    }
+                );
+                return;
+            }
+
             Step = DeleteStep.DeletingProfile;
 
             await bus.SendAsync(

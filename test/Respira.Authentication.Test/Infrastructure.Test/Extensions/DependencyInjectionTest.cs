@@ -67,7 +67,7 @@ public class DependencyInjectionTest
                 {
                     Issuer = "issuer",
                     Audience = "audience",
-                    SecretKey = "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
+                    Secret = "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
                     AccessTokenExpires = 15,
                     RefreshTokenExpires = 7,
                 }

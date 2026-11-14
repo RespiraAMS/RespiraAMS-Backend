@@ -163,7 +163,6 @@ namespace Respira.Clinical.DI
                 var options = provider.GetRequiredService<IOptions<SeedDataOptions>>();
                 var logger = provider.GetRequiredService<ILogger<DbInitializer>>();
                 await DbInitializer.InitializeAsync(context, options, logger);
-                await DevelopmentAuditSeeder.SeedAuditDemoDataAsync(context, logger);
             }
         }
 

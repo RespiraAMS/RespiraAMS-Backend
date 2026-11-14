@@ -57,13 +57,6 @@ namespace Respira.Saga.API.Controllers
                     .ToApiResponse();
             }
 
-            if (payload.DoctorId == Guid.Empty)
-            {
-                return Result<Guid>
-                    .Failure(new ApplicationError(ApplicationStatus.BadRequest, "Profile id is required"))
-                    .ToApiResponse();
-            }
-
             var callerId =
                 User.FindFirstValue(ClaimTypes.NameIdentifier) ?? User.FindFirstValue("sub");
             var sagaId = Guid.CreateVersion7();
@@ -79,11 +72,19 @@ namespace Respira.Saga.API.Controllers
                             : null,
                         ActorRole = User.FindFirstValue(ClaimTypes.Role) ?? "Unknown",
                         Action = "Authorization.ProfileDeleteDenied",
-                        EntityType = "DoctorProfile",
-                        EntityId = payload.DoctorId,
+                        EntityType = payload.DoctorId == Guid.Empty ? "Account" : "DoctorProfile",
+                        EntityId = payload.DoctorId == Guid.Empty ? payload.AccountId : payload.DoctorId,
                     }
                 );
-                return Forbid();
+                return StatusCode(
+                    StatusCodes.Status403Forbidden,
+                    Result<Guid>.Failure(
+                        new ApplicationError(
+                            ApplicationStatus.SagaRestricted,
+                            "You do not have permission to delete this profile"
+                        )
+                    )
+                );
             }
 
             var command = new StartDeleteCommand
@@ -115,6 +116,15 @@ namespace Respira.Saga.API.Controllers
         )
         {
             var actorRole = User.FindFirstValue(ClaimTypes.Role);
+            if (payload.DoctorId == Guid.Empty)
+            {
+                return new DoctorManagementAuthorization
+                {
+                    Allowed = string.Equals(actorRole, "Admin", StringComparison.OrdinalIgnoreCase),
+                    MediaId = null,
+                };
+            }
+
             var actorAccountId = Guid.TryParse(
                 User.FindFirstValue(ClaimTypes.NameIdentifier) ?? User.FindFirstValue("sub"),
                 out var parsedActorId

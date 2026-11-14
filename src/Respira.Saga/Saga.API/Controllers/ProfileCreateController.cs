@@ -4,6 +4,7 @@ using Asp.Versioning;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Respira.Authentication.Domain.Enums;
+using Respira.Doctor.Domain.Enums;
 using Respira.Saga.API.Models;
 using Respira.Saga.Application.Features.Create.Commands;
 using Respira.Saga.Application.Features.Create.Queries;
@@ -53,17 +54,20 @@ namespace Respira.Saga.API.Controllers
         [ProducesResponseType(typeof(Result<Guid>), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(Result<Guid>), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Start(
-            [FromForm]
-            string request,
-            [FromForm]
-                IFormFile? avatar,
+            [FromForm] string request,
+            [FromForm] IFormFile? avatar,
             CancellationToken cancellationToken
         )
         {
             if (string.IsNullOrWhiteSpace(request))
             {
                 return Result<Guid>
-                    .Failure(new ApplicationError(ApplicationStatus.BadRequest, "A 'request' part is required"))
+                    .Failure(
+                        new ApplicationError(
+                            ApplicationStatus.BadRequest,
+                            "A 'request' part is required"
+                        )
+                    )
                     .ToApiResponse();
             }
 
@@ -92,7 +96,10 @@ namespace Respira.Saga.API.Controllers
             {
                 return Result<Guid>
                     .Failure(
-                        new ApplicationError(ApplicationStatus.BadRequest, "The 'request' part is empty")
+                        new ApplicationError(
+                            ApplicationStatus.BadRequest,
+                            "The 'request' part is empty"
+                        )
                     )
                     .ToApiResponse();
             }
@@ -110,27 +117,29 @@ namespace Respira.Saga.API.Controllers
 
             if (callerRole is null)
             {
-                return Result<Guid>
-                    .Failure(
+                return StatusCode(
+                    StatusCodes.Status401Unauthorized,
+                    Result<Guid>.Failure(
                         new ApplicationError(
                             ApplicationStatus.SagaUnauthorized,
                             "The caller role is missing from the access token"
                         )
                     )
-                    .ToApiResponse();
+                );
             }
 
             var creatorAccountId = ResolveCallerAccountId();
             if (callerRole == RoleType.HeadDepartmentDoctor && creatorAccountId == Guid.Empty)
             {
-                return Result<Guid>
-                    .Failure(
+                return StatusCode(
+                    StatusCodes.Status401Unauthorized,
+                    Result<Guid>.Failure(
                         new ApplicationError(
                             ApplicationStatus.SagaUnauthorized,
                             "The caller account id is missing from the access token"
                         )
                     )
-                    .ToApiResponse();
+                );
             }
 
             if (!ProfileCreationPolicy.CanCreate(callerRole.Value, payload.Role))
@@ -147,31 +156,41 @@ namespace Respira.Saga.API.Controllers
                         ),
                     }
                 );
-                return Result<Guid>
-                    .Failure(
+                return StatusCode(
+                    StatusCodes.Status403Forbidden,
+                    Result<Guid>.Failure(
                         new ApplicationError(
                             ApplicationStatus.SagaRestricted,
                             $"A {callerRole.Value} account cannot create a {payload.Role} account"
                         )
                     )
-                    .ToApiResponse();
+                );
             }
 
             // A medical regulation reviewer is an account-only role, so it has no profile and needs no avatar.
-            var requiresProfile =
-                payload.Role is RoleType.Doctor or RoleType.HeadDepartmentDoctor;
+            var requiresProfile = payload.Role is RoleType.Doctor or RoleType.HeadDepartmentDoctor;
 
             if (requiresProfile && (avatar is null || avatar.Length == 0))
             {
                 return Result<Guid>
-                    .Failure(new ApplicationError(ApplicationStatus.BadRequest, "An 'avatar' file is required"))
+                    .Failure(
+                        new ApplicationError(
+                            ApplicationStatus.BadRequest,
+                            "An 'avatar' file is required"
+                        )
+                    )
                     .ToApiResponse();
             }
 
             if (avatar?.Length > 5 * 1024 * 1024)
             {
                 return Result<Guid>
-                    .Failure(new ApplicationError(ApplicationStatus.BadRequest, "Avatar must be 5 MB or smaller"))
+                    .Failure(
+                        new ApplicationError(
+                            ApplicationStatus.BadRequest,
+                            "Avatar must be 5 MB or smaller"
+                        )
+                    )
                     .ToApiResponse();
             }
 
@@ -211,15 +230,15 @@ namespace Respira.Saga.API.Controllers
                 Password = payload.Password,
                 Phone = payload.Phone,
                 Role = payload.Role,
-                FirstName = payload.FirstName,
-                LastName = payload.LastName,
-                Degrees = payload.Degrees,
-                AcademicTitle = payload.AcademicTitle,
+                FirstName = payload.FirstName ?? string.Empty,
+                LastName = payload.LastName ?? string.Empty,
+                Degrees = payload.Degrees ?? [],
+                AcademicTitle = payload.AcademicTitle ?? AcademicTitle.None,
                 Position = payload.Position,
-                Gender = payload.Gender,
-                CitizenIdentificationNumber = payload.CitizenIdentificationNumber,
+                Gender = payload.Gender ?? GenderType.Male,
+                CitizenIdentificationNumber = payload.CitizenIdentificationNumber ?? string.Empty,
                 DateOfBirth = payload.DateOfBirth,
-                Address = payload.Address,
+                Address = payload.Address ?? string.Empty,
                 TempAvatarPath = tempAvatarPath,
             };
 
@@ -245,10 +264,7 @@ namespace Respira.Saga.API.Controllers
         [HttpGet("{sagaId:guid}")]
         [ProducesResponseType(typeof(Result<CreateStatusResult>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(Result<CreateStatusResult>), StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetStatus(
-            Guid sagaId,
-            CancellationToken cancellationToken
-        )
+        public async Task<IActionResult> GetStatus(Guid sagaId, CancellationToken cancellationToken)
         {
             var result = await bus.InvokeAsync<Result<CreateStatusResult>>(
                 new GetCreateStatusQuery { SagaId = sagaId },
@@ -325,17 +341,17 @@ namespace Respira.Saga.API.Controllers
                 return "Address is required";
             }
 
-            if (!Enum.IsDefined(payload.Gender))
+            if (payload.Gender is null || !Enum.IsDefined(payload.Gender.Value))
             {
                 return $"Unknown gender '{payload.Gender}'";
             }
 
-            if (!Enum.IsDefined(payload.Position))
+            if (payload.Position is null || !Enum.IsDefined(payload.Position.Value))
             {
                 return $"Unknown position '{payload.Position}'";
             }
 
-            if (!Enum.IsDefined(payload.AcademicTitle))
+            if (payload.AcademicTitle is null || !Enum.IsDefined(payload.AcademicTitle.Value))
             {
                 return $"Unknown academic title '{payload.AcademicTitle}'";
             }

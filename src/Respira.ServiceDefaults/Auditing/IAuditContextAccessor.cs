@@ -18,8 +18,8 @@ public interface IAuditContextAccessor
 }
 
 /// <summary>
-/// Ambient override for <see cref="AuditContext"/> used by background jobs or
-/// development seeders when no HTTP request is active.
+/// Ambient override for <see cref="AuditContext"/> used by background jobs when no
+/// HTTP request is active.
 /// </summary>
 public static class AuditContextScope
 {

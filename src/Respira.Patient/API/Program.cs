@@ -76,9 +76,4 @@ if (!app.Environment.IsDevelopment())
 }
 app.ApplyMigrations(app.Environment.IsDevelopment());
 
-if (app.Environment.IsDevelopment())
-{
-    await app.SeedAnalysisDataAsync();
-}
-
 await app.RunAsync();

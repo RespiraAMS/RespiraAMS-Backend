@@ -53,7 +53,7 @@ namespace Respira.Saga.Application.Features.Update.Commands
 
         public AcademicTitle AcademicTitle { get; set; }
 
-        public PositionType Position { get; set; }
+        public PositionType? Position { get; set; }
 
         public GenderType Gender { get; set; }
 
@@ -131,6 +131,13 @@ namespace Respira.Saga.Application.Features.Update.Commands
             CancellationToken cancellationToken
         )
         {
+            // Account-only update (e.g. MedicalRegulationReviewer) has no doctor profile or avatar.
+            if (DoctorId == Guid.Empty)
+            {
+                Complete(UpdateStep.Completed);
+                return;
+            }
+
             if (string.IsNullOrWhiteSpace(TempAvatarPath))
             {
                 await SendProfileUpdateAsync(bus, Guid.Empty);
@@ -319,7 +326,7 @@ namespace Respira.Saga.Application.Features.Update.Commands
                     LastName = LastName,
                     Degrees = Degrees,
                     AcademicTitle = AcademicTitle,
-                    Position = Position,
+                    Position = Position ?? PositionType.StaffDoctor,
                     Gender = Gender,
                     CitizenIdentificationNumber = CitizenIdentificationNumber,
                     DateOfBirth = DateOfBirth,

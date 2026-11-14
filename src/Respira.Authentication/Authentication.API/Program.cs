@@ -1,4 +1,6 @@
+using FluentValidation;
 using Wolverine;
+using Wolverine.FluentValidation;
 using Wolverine.Postgresql;
 using Wolverine.RabbitMQ;
 using ZiggyCreatures.Caching.Fusion;
@@ -13,6 +15,7 @@ using Respira.Authentication.Application.Features.Accounts.Commands.SoftDelete.E
 using Respira.Authentication.Application.Features.Accounts.Commands.Update.Events;
 using Respira.Authentication.Application.Features.Authentication.Commands.Login;
 using Respira.Authentication.Application.Features.Authentication.Commands.SendVerify.Events;
+using Respira.Authentication.Application.Features.Authentication.Queries.GetList;
 using Respira.Authentication.Infrastructure.Extensions;
 using Respira.Authentication.Infrastructure.Persistence;
 using Respira.ServiceDefaults.Contracts.Messages.Audit;
@@ -21,9 +24,11 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddApiVersion();
+builder.Services.AddCustomErrorHandling();
+builder.Services.AddScoped<IValidator<GetListAccountQuery>, GetListAccountValidator>();
 builder.Services
     .AddOptions<JwtOption>()
-    .BindConfiguration("Jwt")
+    .BindConfiguration(JwtOption.SectionName)
     .ValidateDataAnnotations()
     .ValidateOnStart();
 builder.Services
@@ -34,6 +39,11 @@ builder.Services
 builder.Services
     .AddOptions<EmailVerificationOption>()
     .BindConfiguration(EmailVerificationOption.SectionName)
+    .ValidateDataAnnotations()
+    .ValidateOnStart();
+builder.Services
+    .AddOptions<PasswordResetOption>()
+    .BindConfiguration(PasswordResetOption.SectionName)
     .ValidateDataAnnotations()
     .ValidateOnStart();
 
@@ -63,6 +73,7 @@ builder.Host.UseWolverine(options =>
     options.RestoreV5Defaults();
     options.UseRuntimeCompilation();
     options.Discovery.IncludeAssembly(typeof(LoginCommand).Assembly);
+    options.UseFluentValidation(RegistrationBehavior.ExplicitRegistration);
 
     // Durable inbox/outbox on PostgreSQL: incoming saga commands survive a restart and
     // are retried instead of being lost with the process.
@@ -116,6 +127,8 @@ else
     app.UseHttpsRedirection();
 }
 
+app.UseCustomErrorHandling();
+app.UseClaimsPropagation();
 app.MapControllers();
 
 await app.RunAsync();

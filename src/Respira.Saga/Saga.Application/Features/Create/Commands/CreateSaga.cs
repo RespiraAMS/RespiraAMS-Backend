@@ -63,7 +63,7 @@ namespace Respira.Saga.Application.Features.Create.Commands
 
         public AcademicTitle AcademicTitle { get; set; }
 
-        public PositionType Position { get; set; }
+        public PositionType? Position { get; set; }
 
         public GenderType Gender { get; set; }
 
@@ -160,7 +160,7 @@ namespace Respira.Saga.Application.Features.Create.Commands
                     LastName = LastName,
                     Degrees = Degrees,
                     AcademicTitle = AcademicTitle,
-                    Position = Position,
+                    Position = Position ?? PositionType.StaffDoctor,
                     Gender = Gender,
                     CitizenIdentificationNumber = CitizenIdentificationNumber,
                     DateOfBirth = DateOfBirth,

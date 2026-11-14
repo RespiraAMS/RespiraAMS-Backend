@@ -55,6 +55,69 @@ aspire run
 # feature you want to use does not require any configuration.
 ```
 
+### Configuration
+
+The AppHost holds every setting the services share, so there is a single place to
+look at and to change:
+
+- `src/Respira.AppHost/appsettings.json` holds the shared configuration:
+  - `Parameters` holds the secrets. They are injected as parameters, so the
+    Aspire dashboard masks them.
+  - `Shared` holds the settings themselves, grouped per configuration section
+    (`Jwt`, `Email`, `EmailVerification`, `PasswordReset`, `R2`, ...). The AppHost
+    forwards them to the services as environment variables, so a service reads them
+    from its own configuration like any other value.
+- Every service keeps only its own `appsettings.json` (logging, allowed hosts,
+  connection strings and, for the gateway, the reverse proxy routes).
+
+The secrets are meant to be replaced per developer, so they never reach the
+repository. They are stored as [user
+secrets](https://learn.microsoft.com/aspnet/core/security/app-secrets) of the
+AppHost project:
+
+```bash
+cd src/Respira.AppHost
+
+dotnet user-secrets set "Parameters:jwt-secret" "<a long random secret>"
+dotnet user-secrets set "Parameters:email-user-name" "<your smtp user>"
+dotnet user-secrets set "Parameters:email-password" "<your smtp password>"
+dotnet user-secrets set "Parameters:r2-access-key" "<your r2 access key>"
+dotnet user-secrets set "Parameters:r2-secret-key" "<your r2 secret key>"
+```
+
+The values committed in `appsettings.json` are development placeholders
+(`change-me`). The JWT secret is used by the authentication service to sign the
+tokens and by the gateway, the analysis and the saga services to validate them, so
+they all share the same one.
+
+### Seed data
+
+The seed data is applied by EF Core, through the migrations:
+
+- The accounts of the authentication service are described in
+  `src/Respira.Authentication/Authentication.Infrastructure/Data/seed-accounts.jsonc`
+  and turned into model seed data when the EF Core model is built. A change to the
+  file requires a new migration:
+
+  ```bash
+  dotnet ef migrations add <name> \
+    --project src/Respira.Authentication/Authentication.Infrastructure \
+    --startup-project src/Respira.Authentication/Authentication.Infrastructure \
+    --namespace Authentication.Infrastructure.Migrations \
+    --output-dir Migrations
+  ```
+
+  The file holds the BCrypt hash of the password, never the password itself. The
+  seeded administrator signs in with `admin@respira.ams` / `Admin@123`. The file is
+  optional: without it the model simply holds no seed data and the services still
+  start.
+
+- The clinical reference data (variables, criteria, metrics, pathogens,
+  suspected causes, antibiotic groups, antibiotics and treatment protocols) lives in
+  `src/Respira.Clinical/Infrastructure/Data/seed-data.jsonc` and is loaded when the
+  clinical database is still empty. A missing or broken file is reported in the
+  logs and the service keeps running without it.
+
 ## Development setup
 
 ### SonarQube setup
@@ -121,3 +184,44 @@ open docs/test-report/index.html
 Some distinctive features in this project has some special rules that is applied
 for all services, so it's recommended to refer to the `docs` directory and read
 the rules first
+
+## Authentication
+
+The authentication service exposes the session and account endpoints under `/api/v1/auth`:
+
+```http
+GET  /api/v1/auth/accounts?page=1&size=10&role=MedicalRegulationReviewer&status=Active&isEmailConfirmed=true
+POST /api/v1/auth/login
+POST /api/v1/auth/logout
+POST /api/v1/auth/refresh
+POST /api/v1/auth/email-verification
+POST /api/v1/auth/email-verification/confirm
+```
+
+`GET /api/v1/auth/accounts` lists the accounts page by page and accepts optional
+`role` (`Doctor`, `HeadDepartmentDoctor`, `MedicalRegulationReviewer`, `Admin`),
+`status` (`Active`, `Inactive`), and `isEmailConfirmed` (`true`, `false`) filters.
+The endpoint requires `Admin` or `HeadDepartmentDoctor` authorization (`Admin` may
+view any role, while `HeadDepartmentDoctor` is scoped to `Doctor` accounts).
+
+A user who forgot its password resets it by email. The first endpoint issues a
+single-use token and mails a link that carries it, the second one consumes the
+token and stores the new password:
+
+```http
+POST /api/v1/auth/forgot-password          { "email": "doctor@respira.ams" }
+POST /api/v1/auth/forgot-password/confirm  { "token": "<token from the link>",
+                                             "newPassword": "<new password>",
+                                             "confirmPassword": "<new password>" }
+```
+
+The link points at the `PasswordReset:ResetUrl` of the AppHost configuration and
+carries the token as a `token` query parameter. Only the SHA-256 hash of the token
+is stored, the raw one only travels by email. The token expires after
+`PasswordReset:TokenExpiresHours` hours and only the newest one stays valid, so a
+reset link can be used once. A password has to be at least 8 characters long and
+contain a letter and a digit.
+
+Changing the password revokes every refresh token of the account, so the sessions
+opened with the previous password cannot be used anymore. The user signs in again
+with the new one.

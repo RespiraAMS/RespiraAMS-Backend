@@ -1,6 +1,8 @@
+using Respira.ServiceDefaults.Contracts.CQRS;
+
 namespace Respira.ServiceDefaults.Contracts.Messages.Patients;
 
-public sealed record GetPatientsByDoctorQuery
+public sealed record GetPatientsByDoctorQuery : IQuery
 {
     public Guid? DoctorId { get; init; }
     public DateTimeOffset Start { get; init; }

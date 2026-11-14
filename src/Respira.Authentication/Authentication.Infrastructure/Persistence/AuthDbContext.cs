@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Respira.Authentication.Application.Contracts.Data;
 using Respira.Authentication.Domain.Entities;
 using Respira.Authentication.Domain.Enums;
+using Respira.Authentication.Infrastructure.Data;
 
 namespace Respira.Authentication.Infrastructure.Persistence
 {
@@ -60,41 +61,26 @@ namespace Respira.Authentication.Infrastructure.Persistence
             modelBuilder.Entity<BlacklistToken>().HasIndex(x => x.HashToken).IsUnique();
             modelBuilder.Entity<BlacklistToken>().HasIndex(x => x.ExpirationDate);
 
-            SeedAdminAccount(modelBuilder);
+            SeedAccounts(modelBuilder);
         }
 
         /// <summary>
-        /// Seeds a bootstrap administrator account so the medical regulation reviewer/admin flows (e.g. the
-        /// Create/Update/Delete saga endpoints) can be exercised without first registering an
-        /// account out-of-band. Idempotent: the row is keyed by a fixed Id, so re-running the
-        /// migration only ever touches this one record.
+        /// Seeds the accounts described by the JSON seed data file. EF Core turns them
+        /// into model seed data, so they are applied by the migrations together with
+        /// the schema and can be changed with a new migration. The file is optional:
+        /// when it is not deployed, the model simply holds no seed data.
         /// </summary>
         /// <param name="modelBuilder">Model builder.</param>
-        private void SeedAdminAccount(ModelBuilder modelBuilder)
+        private static void SeedAccounts(ModelBuilder modelBuilder)
         {
-            const string adminEmail = "admin@respira.ams";
-            var adminId = Guid.Parse("11111111-1111-1111-1111-111111111111");
+            var accounts = AccountSeedDataLoader.Load(AccountSeedDataLoader.DefaultFilePath);
 
-            modelBuilder
-                .Entity<Account>()
-                .HasData(
-                    new Account
-                    {
-                        Id = adminId,
-                        Email = adminEmail,
-                        // BCrypt hash of "Admin@123" (work factor 12), generated with BCrypt.Net-Next.
-                        HashPassword =
-                            "$2a$12$RYGvxowi6VHTYi6qMXQ7ROTagbu9XS58dlqtQdSjp1AMWQ1T6dR4C",
-                        Phone = "0000000000",
-                        Role = RoleType.Admin,
-                        IsEmailConfirmed = true,
-                        Status = StatusType.Active,
-                        CreatedAt = new DateTimeOffset(2025, 1, 1, 0, 0, 0, TimeSpan.Zero),
-                        UpdatedAt = new DateTimeOffset(2025, 1, 1, 0, 0, 0, TimeSpan.Zero),
-                        IsDeleted = false,
-                        DeletedAt = null,
-                    }
-                );
+            if (accounts.Count == 0)
+            {
+                return;
+            }
+
+            modelBuilder.Entity<Account>().HasData(accounts.ToArray());
         }
     }
 }

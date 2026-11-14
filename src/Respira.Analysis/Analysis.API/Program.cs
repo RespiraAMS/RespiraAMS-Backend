@@ -80,7 +80,6 @@ await using (var scope = app.Services.CreateAsyncScope())
 if (app.Environment.IsDevelopment())
 {
     app.UseApiDocumentation();
-    await app.SeedAnalysisReportsAsync();
 }
 
 app.UseCustomErrorHandling();

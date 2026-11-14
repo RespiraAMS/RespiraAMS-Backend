@@ -1,3 +1,5 @@
+using Respira.AppHost;
+
 var builder = DistributedApplication.CreateBuilder(args);
 
 // Kubernetes settings
@@ -8,10 +10,19 @@ var cache = builder.AddRedis("cache").WithRedisInsight();
 var postgres = builder.AddPostgres("postgres").WithPgWeb().WithPgAdmin().WithDataVolume();
 var rabbitmq = builder.AddRabbitMQ("rabbitmq").WithManagementPlugin();
 
-// Auth service parameters (values come from AppHost config: Parameters:* section)
-var jwtSecret = builder.AddParameter("jwt-secret");
-var jwtIssuer = builder.AddParameter("jwt-issuer");
-var jwtAudience = builder.AddParameter("jwt-audience");
+// Shared configuration
+// Every setting the services share lives in the AppHost configuration
+// (src/Respira.AppHost/appsettings.json) and is handed over to the services as
+// environment variables. The secrets are parameters, so every developer can replace
+// them without touching the repository:
+//   dotnet user-secrets set "Parameters:jwt-secret" "<your secret>"
+// (run in the src/Respira.AppHost folder).
+var shared = builder.Configuration.GetSection("Shared");
+var jwtSecret = builder.AddParameter("jwt-secret", secret: true);
+var emailUserName = builder.AddParameter("email-user-name", secret: true);
+var emailPassword = builder.AddParameter("email-password", secret: true);
+var r2AccessKey = builder.AddParameter("r2-access-key", secret: true);
+var r2SecretKey = builder.AddParameter("r2-secret-key", secret: true);
 
 // Clinical service
 var clinicalDb = postgres.AddDatabase("clinicalDb");
@@ -21,7 +32,8 @@ var clinicalService = builder
     .WithReference(cache)
     .WaitFor(cache)
     .WithReference(rabbitmq)
-    .WaitFor(rabbitmq);
+    .WaitFor(rabbitmq)
+    .WithSharedConfiguration(shared, "ClinicalSeedData", "SeedData");
 
 // Patient service
 var patientDb = postgres.AddDatabase("patientDb");
@@ -40,8 +52,7 @@ var analysisService = builder
     .WithReference(analysisDb)
     .WithReference(rabbitmq)
     .WithEnvironment("Jwt__Secret", jwtSecret)
-    .WithEnvironment("Jwt__Issuer", jwtIssuer)
-    .WithEnvironment("Jwt__Audience", jwtAudience)
+    .WithSharedConfiguration(shared, "Jwt")
     .WaitFor(analysisDb)
     .WaitFor(rabbitmq);
 
@@ -52,11 +63,13 @@ var authService = builder
     .WithReference(authDb)
     .WithReference(rabbitmq)
     .WithReference(cache)
-    .WithEnvironment("Jwt__SecretKey", jwtSecret)
-    .WithEnvironment("Jwt__Issuer", jwtIssuer)
-    .WithEnvironment("Jwt__Audience", jwtAudience)
-    .WithEnvironment("Jwt__AccessTokenExpires", "60")
-    .WithEnvironment("Jwt__RefreshTokenExpires", "7")
+    .WithEnvironment("Jwt__Secret", jwtSecret)
+    .WithEnvironment("Email__UserName", emailUserName)
+    .WithEnvironment("Email__Password", emailPassword)
+    .WithSharedConfiguration(shared, "Jwt")
+    .WithSharedConfiguration(shared, "Email")
+    .WithSharedConfiguration(shared, "EmailVerification")
+    .WithSharedConfiguration(shared, "PasswordReset")
     .WaitFor(authDb)
     .WaitFor(rabbitmq)
     .WaitFor(cache);
@@ -68,6 +81,9 @@ var mediaService = builder
     .WithReference(mediaDb)
     .WithReference(rabbitmq)
     .WithReference(cache)
+    .WithEnvironment("R2__AccessKey", r2AccessKey)
+    .WithEnvironment("R2__SecretKey", r2SecretKey)
+    .WithSharedConfiguration(shared, "R2")
     .WaitFor(mediaDb)
     .WaitFor(rabbitmq)
     .WaitFor(cache);
@@ -94,8 +110,7 @@ var sagaService = builder
     .WithReference(cache)
     .WithEnvironment("Media__BaseUrl", mediaService.GetEndpoint("http"))
     .WithEnvironment("Jwt__Secret", jwtSecret)
-    .WithEnvironment("Jwt__Issuer", jwtIssuer)
-    .WithEnvironment("Jwt__Audience", jwtAudience)
+    .WithSharedConfiguration(shared, "Jwt")
     .WaitFor(sagaDb)
     .WaitFor(rabbitmq)
     .WaitFor(cache)
@@ -112,8 +127,7 @@ var gateway = builder
     .WithReference(doctorService)
     .WithReference(sagaService)
     .WithEnvironment("Jwt__Secret", jwtSecret)
-    .WithEnvironment("Jwt__Issuer", jwtIssuer)
-    .WithEnvironment("Jwt__Audience", jwtAudience)
+    .WithSharedConfiguration(shared, "Jwt")
     .WithExternalHttpEndpoints();
 clinicalService.WithReference(gateway).WaitFor(gateway);
 patientService.WithReference(gateway).WaitFor(gateway);

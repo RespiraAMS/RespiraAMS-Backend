@@ -164,7 +164,7 @@ public class CreateAnalysisReportCommandHandlerTest
     {
         var bus = new Mock<IMessageBus>();
         bus.Setup(b =>
-                b.InvokeAsync<PatientsByDoctorResult>(
+                b.InvokeAsync<Result<PatientsByDoctorResult>>(
                     It.IsAny<GetPatientsByDoctorQuery>(),
                     It.IsAny<CancellationToken>(),
                     It.IsAny<TimeSpan?>()
@@ -797,14 +797,17 @@ public class CreateAnalysisReportCommandHandlerTest
     private static Mock<IMessageBus> CreateBus(PatientsByDoctorResult? result)
     {
         var bus = new Mock<IMessageBus>();
+        var wrappedResult = result is null
+            ? null
+            : Result<PatientsByDoctorResult>.Success(ApplicationStatus.Success, result);
         bus.Setup(b =>
-                b.InvokeAsync<PatientsByDoctorResult>(
+                b.InvokeAsync<Result<PatientsByDoctorResult>>(
                     It.IsAny<GetPatientsByDoctorQuery>(),
                     It.IsAny<CancellationToken>(),
                     It.IsAny<TimeSpan?>()
                 )
             )
-            .ReturnsAsync(result!);
+            .ReturnsAsync(wrappedResult!);
         return bus;
     }
 

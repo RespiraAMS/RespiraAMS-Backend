@@ -42,7 +42,7 @@ namespace Respira.Saga.Application.Features.Create.Commands
 
         public AcademicTitle AcademicTitle { get; set; }
 
-        public PositionType Position { get; set; }
+        public PositionType? Position { get; set; }
 
         public GenderType Gender { get; set; }
 

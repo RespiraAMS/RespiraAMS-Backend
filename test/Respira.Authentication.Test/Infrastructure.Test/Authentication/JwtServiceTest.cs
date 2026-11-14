@@ -16,7 +16,7 @@ namespace Respira.Authentication.Infrastructure.Test.Authentication;
 
 public class JwtServiceAccessTokenTest
 {
-    private const string SecretKey =
+    private const string SigningKey =
         "super-secret-jwt-signing-key-with-at-least-64-bytes-for-hmac-sha512-security!!";
     private const string Issuer = "respira-auth-test";
     private const string Audience = "respira-clients-test";
@@ -29,7 +29,7 @@ public class JwtServiceAccessTokenTest
         {
             Issuer = Issuer,
             Audience = Audience,
-            SecretKey = SecretKey,
+            Secret = SigningKey,
             AccessTokenExpires = accessTokenMinutes,
             RefreshTokenExpires = refreshTokenDays,
         };
@@ -111,7 +111,7 @@ public class JwtServiceAccessTokenTest
         {
             Issuer = Issuer,
             Audience = Audience,
-            SecretKey = "different-secret-signing-key-with-at-least-64-bytes-for-hmac-sha512-security!!",
+            Secret = "different-secret-signing-key-with-at-least-64-bytes-for-hmac-sha512-security!!",
             AccessTokenExpires = 15,
             RefreshTokenExpires = 7,
         };
@@ -130,7 +130,7 @@ public class JwtServiceAccessTokenTest
         {
             Issuer = "wrong-issuer",
             Audience = Audience,
-            SecretKey = SecretKey,
+            Secret = SigningKey,
             AccessTokenExpires = 15,
             RefreshTokenExpires = 7,
         };
@@ -149,7 +149,7 @@ public class JwtServiceAccessTokenTest
         {
             Issuer = Issuer,
             Audience = "wrong-audience",
-            SecretKey = SecretKey,
+            Secret = SigningKey,
             AccessTokenExpires = 15,
             RefreshTokenExpires = 7,
         };
@@ -192,7 +192,7 @@ public class JwtServiceAccessTokenTest
     private static string MintCustomToken(IEnumerable<Claim> claims)
     {
         var credentials = new SigningCredentials(
-            new SymmetricSecurityKey(Encoding.UTF8.GetBytes(SecretKey)),
+            new SymmetricSecurityKey(Encoding.UTF8.GetBytes(SigningKey)),
             SecurityAlgorithms.HmacSha256
         );
         var jwt = new JwtSecurityToken(
@@ -208,7 +208,7 @@ public class JwtServiceAccessTokenTest
 
 public sealed class JwtServiceRefreshTokenTest : IClassFixture<PostgresFixture>, IAsyncLifetime
 {
-    private const string SecretKey =
+    private const string SigningKey =
         "super-secret-jwt-signing-key-with-at-least-64-bytes-for-hmac-sha512-security!!";
     private const string Issuer = "respira-auth-test";
     private const string Audience = "respira-clients-test";
@@ -245,7 +245,7 @@ public sealed class JwtServiceRefreshTokenTest : IClassFixture<PostgresFixture>,
                 {
                     Issuer = Issuer,
                     Audience = Audience,
-                    SecretKey = SecretKey,
+                    Secret = SigningKey,
                     AccessTokenExpires = 15,
                     RefreshTokenExpires = refreshTokenDays,
                 }

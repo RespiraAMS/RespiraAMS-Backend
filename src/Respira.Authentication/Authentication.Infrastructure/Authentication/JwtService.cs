@@ -36,7 +36,7 @@ namespace Respira.Authentication.Infrastructure.Authentication
             };
 
             var securityKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(_jwtOption.SecretKey)
+                Encoding.UTF8.GetBytes(_jwtOption.Secret)
             );
             var signingCredentials = new SigningCredentials(
                 securityKey,
@@ -68,7 +68,7 @@ namespace Respira.Authentication.Infrastructure.Authentication
             };
 
             var securityKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(_jwtOption.SecretKey)
+                Encoding.UTF8.GetBytes(_jwtOption.Secret)
             );
             var signingCredentials = new SigningCredentials(
                 securityKey,
@@ -102,7 +102,7 @@ namespace Respira.Authentication.Infrastructure.Authentication
         public Task<(string, RoleType)> ValidateAccessToken(string token)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.UTF8.GetBytes(_jwtOption.SecretKey);
+            var key = Encoding.UTF8.GetBytes(_jwtOption.Secret);
 
             var validationParameters = new TokenValidationParameters
             {
@@ -134,7 +134,7 @@ namespace Respira.Authentication.Infrastructure.Authentication
         public async Task<(string, RoleType)> ValidateRefreshToken(string token)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.UTF8.GetBytes(_jwtOption.SecretKey);
+            var key = Encoding.UTF8.GetBytes(_jwtOption.Secret);
 
             var validationParameters = new TokenValidationParameters
             {

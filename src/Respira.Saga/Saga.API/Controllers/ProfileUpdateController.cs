@@ -3,6 +3,7 @@ using System.Security.Claims;
 using Asp.Versioning;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Respira.Doctor.Domain.Enums;
 using Respira.Saga.API.Models;
 using Respira.Saga.Application.Features.Update.Commands;
 using Respira.Saga.Application.Features.Update.Queries;
@@ -97,6 +98,15 @@ namespace Respira.Saga.API.Controllers
                     .ToApiResponse();
             }
 
+            var invalidField = Validate(payload);
+
+            if (invalidField is not null)
+            {
+                return Result<Guid>
+                    .Failure(new ApplicationError(ApplicationStatus.BadRequest, invalidField))
+                    .ToApiResponse();
+            }
+
             if (!await CanManageDoctorAsync(payload, cancellationToken))
             {
                 await bus.PublishAsync(
@@ -108,25 +118,24 @@ namespace Respira.Saga.API.Controllers
                         ) ? deniedActorId : null,
                         ActorRole = User.FindFirstValue(ClaimTypes.Role) ?? "Unknown",
                         Action = "Authorization.ProfileUpdateDenied",
-                        EntityType = "DoctorProfile",
-                        EntityId = payload.DoctorId,
+                        EntityType = payload.DoctorId == Guid.Empty ? "Account" : "DoctorProfile",
+                        EntityId = payload.DoctorId == Guid.Empty ? payload.AccountId : payload.DoctorId,
                     }
                 );
-                return Forbid();
-            }
-
-            var invalidField = Validate(payload);
-
-            if (invalidField is not null)
-            {
-                return Result<Guid>
-                    .Failure(new ApplicationError(ApplicationStatus.BadRequest, invalidField))
-                    .ToApiResponse();
+                return StatusCode(
+                    StatusCodes.Status403Forbidden,
+                    Result<Guid>.Failure(
+                        new ApplicationError(
+                            ApplicationStatus.SagaRestricted,
+                            "You do not have permission to update this profile"
+                        )
+                    )
+                );
             }
 
             var sagaId = Guid.CreateVersion7();
             string? tempAvatarPath = null;
-            if (avatar?.Length > 0)
+            if (payload.DoctorId != Guid.Empty && avatar?.Length > 0)
             {
                 if (avatar.Length > 5 * 1024 * 1024)
                 {
@@ -186,15 +195,15 @@ namespace Respira.Saga.API.Controllers
             Email = payload.Email,
             Phone = payload.Phone,
             Password = string.IsNullOrWhiteSpace(payload.Password) ? null : payload.Password,
-            FirstName = payload.FirstName,
-            LastName = payload.LastName,
-            Degrees = payload.Degrees,
-            AcademicTitle = payload.AcademicTitle,
+            FirstName = payload.FirstName ?? string.Empty,
+            LastName = payload.LastName ?? string.Empty,
+            Degrees = payload.Degrees ?? [],
+            AcademicTitle = payload.AcademicTitle ?? AcademicTitle.None,
             Position = payload.Position,
-            Gender = payload.Gender,
-            CitizenIdentificationNumber = payload.CitizenIdentificationNumber,
+            Gender = payload.Gender ?? GenderType.Male,
+            CitizenIdentificationNumber = payload.CitizenIdentificationNumber ?? string.Empty,
             DateOfBirth = payload.DateOfBirth,
-            Address = payload.Address,
+            Address = payload.Address ?? string.Empty,
             TempAvatarPath = tempAvatarPath,
         };
 
@@ -230,11 +239,6 @@ namespace Respira.Saga.API.Controllers
                 return "Account id is required";
             }
 
-            if (payload.DoctorId == Guid.Empty)
-            {
-                return "Profile id is required";
-            }
-
             if (string.IsNullOrWhiteSpace(payload.Email))
             {
                 return "Email is required";
@@ -243,6 +247,12 @@ namespace Respira.Saga.API.Controllers
             if (string.IsNullOrWhiteSpace(payload.Phone))
             {
                 return "Phone is required";
+            }
+
+            // Account-only update (e.g. MedicalRegulationReviewer) has no doctor profile.
+            if (payload.DoctorId == Guid.Empty)
+            {
+                return null;
             }
 
             if (string.IsNullOrWhiteSpace(payload.FirstName))
@@ -265,17 +275,17 @@ namespace Respira.Saga.API.Controllers
                 return "Address is required";
             }
 
-            if (!Enum.IsDefined(payload.Gender))
+            if (payload.Gender is null || !Enum.IsDefined(payload.Gender.Value))
             {
                 return $"Unknown gender '{payload.Gender}'";
             }
 
-            if (!Enum.IsDefined(payload.Position))
+            if (payload.Position is null || !Enum.IsDefined(payload.Position.Value))
             {
                 return $"Unknown position '{payload.Position}'";
             }
 
-            if (!Enum.IsDefined(payload.AcademicTitle))
+            if (payload.AcademicTitle is null || !Enum.IsDefined(payload.AcademicTitle.Value))
             {
                 return $"Unknown academic title '{payload.AcademicTitle}'";
             }
@@ -289,6 +299,11 @@ namespace Respira.Saga.API.Controllers
         )
         {
             var actorRole = User.FindFirstValue(ClaimTypes.Role);
+            if (payload.DoctorId == Guid.Empty)
+            {
+                return string.Equals(actorRole, "Admin", StringComparison.OrdinalIgnoreCase);
+            }
+
             var actorAccountId = Guid.TryParse(
                 User.FindFirstValue(ClaimTypes.NameIdentifier) ?? User.FindFirstValue("sub"),
                 out var parsedActorId
