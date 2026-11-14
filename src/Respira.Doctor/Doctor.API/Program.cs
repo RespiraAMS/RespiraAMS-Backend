@@ -68,6 +68,8 @@ if (app.Environment.IsDevelopment())
     app.UseApiDocumentation();
 }
 
+app.UseClaimsPropagation();
+
 app.UseHttpsRedirection();
 
 app.MapControllers();

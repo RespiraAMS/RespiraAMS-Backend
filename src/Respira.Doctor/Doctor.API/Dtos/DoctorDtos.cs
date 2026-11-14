@@ -61,4 +61,43 @@ namespace Respira.Doctor.API.Dtos
             };
         }
     }
+
+    public record GetSubordinateDoctorsRequestDto
+    {
+        /// <summary>Pagination parameter: page index.</summary>
+        public int Page { get; set; } = 1;
+
+        /// <summary>Pagination parameter: page size.</summary>
+        public int Size { get; set; } = 10;
+
+        /// <summary>Profile gender.</summary>
+        public GenderType? Gender { get; set; }
+
+        /// <summary>Academic title.</summary>
+        public AcademicTitle? AcademicTitle { get; set; }
+
+        /// <summary>Hospital position.</summary>
+        public PositionType? Position { get; set; }
+
+        /// <summary>Optional free text search for subordinate doctor.</summary>
+        public string? SearchTerm { get; set; }
+
+        public Respira.Doctor.Application.Features.Doctors.Queries.GetSubordinates.GetSubordinateDoctorsQuery ToQuery(
+            Guid headDoctorAccountId
+        )
+        {
+            return new Respira.Doctor.Application.Features.Doctors.Queries.GetSubordinates.GetSubordinateDoctorsQuery
+            {
+                HeadDoctorAccountId = headDoctorAccountId,
+                Param = new PaginationParam { Page = Page, Size = Size },
+                Filter = new Respira.Doctor.Application.Features.Doctors.Queries.GetSubordinates.SubordinateDoctorFilter
+                {
+                    Gender = Gender,
+                    AcademicTitle = AcademicTitle,
+                    Position = Position,
+                    SearchTerm = SearchTerm,
+                },
+            };
+        }
+    }
 }

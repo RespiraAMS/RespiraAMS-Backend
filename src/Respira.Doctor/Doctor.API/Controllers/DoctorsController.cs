@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Asp.Versioning;
 using Microsoft.AspNetCore.Mvc;
 using Respira.Doctor.API.Dtos;
@@ -18,8 +19,8 @@ namespace Respira.Doctor.API.Controllers
     public class DoctorsController(IMessageBus bus) : ControllerBase
     {
         /// <summary>
-        /// Retrieves a paged list of doctor and head of department doctor profiles,
-        /// optionally filtered by role, gender, academic title or hospital position.
+        /// Retrieves a paged list of doctor and head of department doctor profiles.
+        /// Restricted to Admin only.
         /// </summary>
         /// <param name="req">Pagination and filter parameters.</param>
         /// <param name="cancellationToken">Request cancellation token.</param>
@@ -35,8 +36,43 @@ namespace Respira.Doctor.API.Controllers
             CancellationToken cancellationToken
         )
         {
+            if (!TryAuthorizeAdmin(out var failureResult))
+            {
+                return failureResult!;
+            }
+
             var result = await bus.InvokeAsync<Result<Pagination<PagedDoctorItem>>>(
                 req.ToQuery(),
+                cancellationToken
+            );
+
+            return result.ToApiResponse();
+        }
+
+        /// <summary>
+        /// Retrieves a paged list of subordinate doctor profiles managed by the calling head of department doctor.
+        /// </summary>
+        /// <param name="req">Pagination and filter parameters.</param>
+        /// <param name="cancellationToken">Request cancellation token.</param>
+        /// <returns>A paged list of subordinate doctor profiles enriched with account and media data.</returns>
+        [HttpGet("subordinates")]
+        [ProducesResponseType(typeof(Result<Pagination<PagedDoctorItem>>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Result), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(Result), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(Result), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(Result), StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetSubordinates(
+            [FromQuery] GetSubordinateDoctorsRequestDto req,
+            CancellationToken cancellationToken
+        )
+        {
+            if (!TryResolveHeadDoctorCaller(out var headDoctorAccountId, out var failureResult))
+            {
+                return failureResult!;
+            }
+
+            var result = await bus.InvokeAsync<Result<Pagination<PagedDoctorItem>>>(
+                req.ToQuery(headDoctorAccountId),
                 cancellationToken
             );
 
@@ -90,6 +126,75 @@ namespace Respira.Doctor.API.Controllers
             );
 
             return result.ToApiResponse();
+        }
+
+        private bool TryAuthorizeAdmin(out IActionResult? failureResult)
+        {
+            var role = User.FindFirstValue(ClaimTypes.Role)
+                ?? Request.Headers["X-Role"].FirstOrDefault();
+
+            if (string.IsNullOrWhiteSpace(role))
+            {
+                failureResult = StatusCode(
+                    StatusCodes.Status401Unauthorized,
+                    Result.Failure(new ApplicationError(ApplicationStatus.Unauthorized, "Missing authentication credentials"))
+                );
+                return false;
+            }
+
+            if (!role.Equals("Admin", StringComparison.OrdinalIgnoreCase))
+            {
+                failureResult = StatusCode(
+                    StatusCodes.Status403Forbidden,
+                    Result.Failure(new ApplicationError(ApplicationStatus.Restricted, "Forbidden: Only Admin can access the full doctor and head department doctor list"))
+                );
+                return false;
+            }
+
+            failureResult = null;
+            return true;
+        }
+
+        private bool TryResolveHeadDoctorCaller(out Guid accountId, out IActionResult? failureResult)
+        {
+            var role = User.FindFirstValue(ClaimTypes.Role)
+                ?? Request.Headers["X-Role"].FirstOrDefault();
+
+            if (string.IsNullOrWhiteSpace(role))
+            {
+                failureResult = StatusCode(
+                    StatusCodes.Status401Unauthorized,
+                    Result.Failure(new ApplicationError(ApplicationStatus.Unauthorized, "Missing authentication credentials"))
+                );
+                accountId = Guid.Empty;
+                return false;
+            }
+
+            if (!role.Equals("HeadDepartmentDoctor", StringComparison.OrdinalIgnoreCase))
+            {
+                failureResult = StatusCode(
+                    StatusCodes.Status403Forbidden,
+                    Result.Failure(new ApplicationError(ApplicationStatus.Restricted, "Forbidden: Only HeadDepartmentDoctor can access subordinate doctors"))
+                );
+                accountId = Guid.Empty;
+                return false;
+            }
+
+            var idStr = User.FindFirstValue(ClaimTypes.NameIdentifier)
+                ?? User.FindFirstValue("sub")
+                ?? Request.Headers["X-ID"].FirstOrDefault();
+
+            if (!Guid.TryParse(idStr, out accountId) || accountId == Guid.Empty)
+            {
+                failureResult = StatusCode(
+                    StatusCodes.Status401Unauthorized,
+                    Result.Failure(new ApplicationError(ApplicationStatus.Unauthorized, "Missing or invalid account identifier"))
+                );
+                return false;
+            }
+
+            failureResult = null;
+            return true;
         }
     }
 }

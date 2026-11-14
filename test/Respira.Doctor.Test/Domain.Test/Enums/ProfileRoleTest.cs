@@ -103,5 +103,31 @@ namespace Respira.Doctor.Domain.Test.Enums
                 JsonSerializer.Deserialize<ProfileRole>("\"HeadDepartmentDoctor\"")
             );
         }
+
+        [Theory]
+        [InlineData("doctor", ProfileRole.Doctor)]
+        [InlineData("Doctor", ProfileRole.Doctor)]
+        [InlineData("headdoctor", ProfileRole.HeadDepartmentDoctor)]
+        [InlineData("HeadDoctor", ProfileRole.HeadDepartmentDoctor)]
+        [InlineData("head_doctor", ProfileRole.HeadDepartmentDoctor)]
+        [InlineData("head-doctor", ProfileRole.HeadDepartmentDoctor)]
+        [InlineData("HeadDepartmentDoctor", ProfileRole.HeadDepartmentDoctor)]
+        [InlineData("headdepartmentdoctor", ProfileRole.HeadDepartmentDoctor)]
+        [InlineData("HeadOfDepartment", ProfileRole.HeadDepartmentDoctor)]
+        public void TypeConverter_ConvertsVariousRoleAliases(string input, ProfileRole expected)
+        {
+            var converter = System.ComponentModel.TypeDescriptor.GetConverter(typeof(ProfileRole));
+            Assert.True(converter.CanConvertFrom(typeof(string)));
+
+            var result = converter.ConvertFrom(input);
+            Assert.Equal(expected, result);
+        }
+
+        [Fact]
+        public void TypeConverter_RejectsInvalidString()
+        {
+            var converter = System.ComponentModel.TypeDescriptor.GetConverter(typeof(ProfileRole));
+            Assert.Throws<FormatException>(() => converter.ConvertFrom("invalid_role"));
+        }
     }
 }
