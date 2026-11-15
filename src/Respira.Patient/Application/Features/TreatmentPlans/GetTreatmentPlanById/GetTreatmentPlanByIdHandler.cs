@@ -24,7 +24,7 @@ namespace Respira.Patient.Application.Features.TreatmentPlans.GetTreatmentPlanBy
                     Status = x.Status,
                     CloseReason = x.CloseReason
                 })
-                .FirstOrDefaultAsync(x => x.Id == query.Id);
+                .FirstOrDefaultAsync(x => x.Id == query.Id, cancellationToken);
             return plan is null ?
                 Result<TreatmentPlanResult>.Failure(new ApplicationError(ApplicationStatus.ResourceNotFound, "Treatment plan not found")) :
                 Result<TreatmentPlanResult>.Success(ApplicationStatus.Success, plan);

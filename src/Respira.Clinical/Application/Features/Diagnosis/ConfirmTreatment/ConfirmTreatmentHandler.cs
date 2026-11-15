@@ -107,7 +107,7 @@ namespace Respira.Clinical.Application.Features.Diagnosis.ConfirmTreatment
                 Diagnosis = query.Diagnosis.GetRawText(),
                 Medicines = [.. medicines.Select(x => new AntibioticQuery(x.Id, x.Name, x.Classification))],
                 ReasonForMedicineChoice = query.ReasonForMedicineChoice
-            });
+            }, cancellation: cancellationToken);
 
             if (result.IsFailure())
             {

@@ -9,7 +9,7 @@ namespace Respira.Clinical.API.Middlewares
         {
             context.Response.StatusCode = ApplicationStatus.ToHttpStatusCode(result.StatusCode);
             context.Response.ContentType = "application/json";
-            await context.Response.WriteAsJsonAsync(result);
+            await context.Response.WriteAsJsonAsync(result, context.RequestAborted);
         }
 
         private const string DoctorRole = "Doctor";

@@ -23,7 +23,7 @@ namespace Respira.Clinical.API.Dtos
         /// what gets forwarded to the patient service.
         /// </para>
         /// </summary>
-        public JsonElement Diagnosis { get; set; }
+        public required JsonElement Diagnosis { get; set; }
 
         public required List<Guid> Medicines { get; set; }
 

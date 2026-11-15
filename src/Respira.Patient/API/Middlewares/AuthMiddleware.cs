@@ -8,7 +8,7 @@ namespace Respira.Patient.API.Middlewares
         {
             context.Response.StatusCode = ApplicationStatus.ToHttpStatusCode(result.StatusCode);
             context.Response.ContentType = "application/json";
-            await context.Response.WriteAsJsonAsync(result);
+            await context.Response.WriteAsJsonAsync(result, context.RequestAborted);
         }
 
         private static async Task ForbiddenAccess(HttpContext context)
