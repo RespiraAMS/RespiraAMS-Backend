@@ -128,6 +128,7 @@ var gateway = builder
     .WithReference(sagaService)
     .WithEnvironment("Jwt__Secret", jwtSecret)
     .WithSharedConfiguration(shared, "Jwt")
+    .WithSharedConfiguration(shared, "CORS")
     .WithExternalHttpEndpoints();
 clinicalService.WithReference(gateway).WaitFor(gateway);
 patientService.WithReference(gateway).WaitFor(gateway);

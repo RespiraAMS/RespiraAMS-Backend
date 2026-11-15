@@ -89,16 +89,12 @@ builder.Host.UseWolverine(opts =>
     opts.Durability.Mode = DurabilityMode.Balanced;
 });
 
-builder.Services.AddCors(options => options.AddDefaultPolicy(policy => policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseApiDocumentation();
-    // This is used for the internal HTML tool -> may migrate to a more robust solution
-    app.UseCors(policy => policy.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
 }
 
 if (!app.Environment.IsDevelopment())

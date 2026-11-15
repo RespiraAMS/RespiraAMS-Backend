@@ -87,8 +87,8 @@ dotnet user-secrets set "Parameters:r2-secret-key" "<your r2 secret key>"
 
 The values committed in `appsettings.json` are development placeholders
 (`change-me`). The JWT secret is used by the authentication service to sign the
-tokens and by the gateway, the analysis and the saga services to validate them, so
-they all share the same one.
+tokens and by the gateway, the analysis and the saga services to validate them,
+so they all share the same one.
 
 ### Seed data
 
@@ -108,15 +108,17 @@ The seed data is applied by EF Core, through the migrations:
   ```
 
   The file holds the BCrypt hash of the password, never the password itself. The
-  seeded administrator signs in with `admin@respira.ams` / `Admin@123`. The file is
-  optional: without it the model simply holds no seed data and the services still
+  seeded administrator signs in with `admin@respira.ams` / `Admin@123`. The file
+  is optional: without it the model simply holds no seed data and the services still
   start.
 
 - The clinical reference data (variables, criteria, metrics, pathogens,
-  suspected causes, antibiotic groups, antibiotics and treatment protocols) lives in
-  `src/Respira.Clinical/Infrastructure/Data/seed-data.jsonc` and is loaded when the
-  clinical database is still empty. A missing or broken file is reported in the
-  logs and the service keeps running without it.
+  suspected causes, antibiotic groups, antibiotics and treatment protocols) lives
+  in `src/Respira.Clinical/Infrastructure/Data/seed-data.jsonc` and is loaded
+  when the clinical database is still empty. A missing or broken file is
+  reported in the logs and the service keeps running without it.
+
+> [NOTE]: all the seed data is for development, not actual deployed data
 
 ## Development setup
 
@@ -181,47 +183,6 @@ open docs/test-report/index.html
 
 ### Development notes
 
-Some distinctive features in this project has some special rules that is applied
-for all services, so it's recommended to refer to the `docs` directory and read
-the rules first
-
-## Authentication
-
-The authentication service exposes the session and account endpoints under `/api/v1/auth`:
-
-```http
-GET  /api/v1/auth/accounts?page=1&size=10&role=MedicalRegulationReviewer&status=Active&isEmailConfirmed=true
-POST /api/v1/auth/login
-POST /api/v1/auth/logout
-POST /api/v1/auth/refresh
-POST /api/v1/auth/email-verification
-POST /api/v1/auth/email-verification/confirm
-```
-
-`GET /api/v1/auth/accounts` lists the accounts page by page and accepts optional
-`role` (`Doctor`, `HeadDepartmentDoctor`, `MedicalRegulationReviewer`, `Admin`),
-`status` (`Active`, `Inactive`), and `isEmailConfirmed` (`true`, `false`) filters.
-The endpoint requires `Admin` or `HeadDepartmentDoctor` authorization (`Admin` may
-view any role, while `HeadDepartmentDoctor` is scoped to `Doctor` accounts).
-
-A user who forgot its password resets it by email. The first endpoint issues a
-single-use token and mails a link that carries it, the second one consumes the
-token and stores the new password:
-
-```http
-POST /api/v1/auth/forgot-password          { "email": "doctor@respira.ams" }
-POST /api/v1/auth/forgot-password/confirm  { "token": "<token from the link>",
-                                             "newPassword": "<new password>",
-                                             "confirmPassword": "<new password>" }
-```
-
-The link points at the `PasswordReset:ResetUrl` of the AppHost configuration and
-carries the token as a `token` query parameter. Only the SHA-256 hash of the token
-is stored, the raw one only travels by email. The token expires after
-`PasswordReset:TokenExpiresHours` hours and only the newest one stays valid, so a
-reset link can be used once. A password has to be at least 8 characters long and
-contain a letter and a digit.
-
-Changing the password revokes every refresh token of the account, so the sessions
-opened with the previous password cannot be used anymore. The user signs in again
-with the new one.
+Some distinctive features in this project has some special rules/notes, so it's
+recommended to refer to the `docs` directory and read the rules first, whether
+you are the developer or consumer of this project

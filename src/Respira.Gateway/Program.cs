@@ -12,8 +12,8 @@ builder.AddServiceDefaults();
 
 builder.Services.AddOpenApi();
 
-var jwtSecret =
-    builder.Configuration["Jwt:Secret"]
+// Get JWT configuration
+var jwtSecret = builder.Configuration["Jwt:Secret"]
     ?? throw new InvalidOperationException("Jwt:Secret is not configured");
 var jwtIssuer = builder.Configuration["Jwt:Issuer"] ?? "Respira";
 var jwtAudience = builder.Configuration["Jwt:Audience"] ?? "Respira";
@@ -34,19 +34,27 @@ builder
             ClockSkew = TimeSpan.Zero,
         };
     });
-builder.Services.AddAuthorization(options =>
-{
-    options.AddPolicy(
-        "AdminOnly",
-        policy => policy.RequireAuthenticatedUser().RequireRole("Admin")
-    );
-});
+builder.Services.AddAuthorizationBuilder()
+    .AddPolicy("AdminOnly", policy => policy.RequireAuthenticatedUser().RequireRole("Admin"));
+
+// Get CORS configuration
+var origins = builder.Configuration.GetSection("CORS:AllowedOrigins").Get<string[]>()
+    ?? throw new InvalidOperationException("CORS allowed origins is not configured");
+var methods = builder.Configuration.GetSection("CORS:AllowedMethods").Get<string[]>()
+    ?? throw new InvalidOperationException("CORS allowed methods is not configured");
+// Cannot use empty list for headers, since custom header like X-ID, X-Role, X-Email
+// will be blocked, which result in auth failure
+var headers = builder.Configuration.GetSection("CORS:AllowedHeaders").Get<string[]>()
+    ?? throw new InvalidOperationException("CORS allowed headers is not configured");
 
 builder.Services.AddCors(options =>
 {
-    options.AddDefaultPolicy(policy =>
-        _ = policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()
-    );
+    options.AddPolicy("RespiraAMS-CORS-policy", policy =>
+    {
+        policy.WithOrigins(origins);
+        policy.WithMethods(methods);
+        policy.WithHeaders(headers);
+    });
 });
 
 builder.Services.AddRateLimiter(options =>
@@ -110,7 +118,11 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
-    app.UseCors(policy => policy.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
+    app.UseCors(policy => policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+}
+else
+{
+    app.UseCors("RespiraAMS-CORS-policy");
 }
 
 app.UseHttpsRedirection();
