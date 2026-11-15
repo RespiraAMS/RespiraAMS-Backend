@@ -2,6 +2,7 @@ using System.Security.Claims;
 using Asp.Versioning;
 using Microsoft.AspNetCore.Mvc;
 using Respira.Doctor.API.Dtos;
+using Respira.Doctor.Application.Features.Doctors.Queries.GetByAccountId;
 using Respira.Doctor.Application.Features.Doctors.Queries.GetById;
 using Respira.Doctor.Application.Features.Doctors.Queries.GetById.Result;
 using Respira.Doctor.Application.Features.Doctors.Queries.GetPagedDoctor;
@@ -106,6 +107,30 @@ namespace Respira.Doctor.API.Controllers
         }
 
         /// <summary>
+        /// Retrieves the currently authenticated doctor or head of department doctor profile.
+        /// </summary>
+        /// <param name="cancellationToken">Request cancellation token.</param>
+        /// <returns>The profile of the authenticated doctor, or unauthorized/not-found failure.</returns>
+        [HttpGet("me")]
+        [ProducesResponseType(typeof(Result<DoctorResult>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Result), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(Result<DoctorResult>), StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetCurrentDoctor(CancellationToken cancellationToken)
+        {
+            if (!TryResolveCallerAccountId(out var accountId, out var failureResult))
+            {
+                return failureResult!;
+            }
+
+            var result = await bus.InvokeAsync<Result<DoctorResult>>(
+                new GetDoctorByAccountIdQuery { AccountId = accountId },
+                cancellationToken
+            );
+
+            return result.ToApiResponse();
+        }
+
+        /// <summary>
         /// Retrieves a single doctor or head of department doctor profile by its
         /// identifier.
         /// </summary>
@@ -180,6 +205,11 @@ namespace Respira.Doctor.API.Controllers
                 return false;
             }
 
+            return TryResolveCallerAccountId(out accountId, out failureResult);
+        }
+
+        private bool TryResolveCallerAccountId(out Guid accountId, out IActionResult? failureResult)
+        {
             var idStr = User.FindFirstValue(ClaimTypes.NameIdentifier)
                 ?? User.FindFirstValue("sub")
                 ?? Request.Headers["X-ID"].FirstOrDefault();
@@ -190,6 +220,7 @@ namespace Respira.Doctor.API.Controllers
                     StatusCodes.Status401Unauthorized,
                     Result.Failure(new ApplicationError(ApplicationStatus.Unauthorized, "Missing or invalid account identifier"))
                 );
+                accountId = Guid.Empty;
                 return false;
             }
 
