@@ -34,10 +34,7 @@ namespace Respira.Authentication.Application.Features.Authentication.Queries.Get
 
             if (query.CallerRole is not null)
             {
-                if (
-                    query.CallerRole
-                    is not (RoleType.Admin or RoleType.HeadDepartmentDoctor)
-                )
+                if (query.CallerRole is not (RoleType.Admin or RoleType.HeadDepartmentDoctor))
                 {
                     return Result<Pagination<AccountResult>>.Failure(
                         new ApplicationError(
@@ -63,9 +60,7 @@ namespace Respira.Authentication.Application.Features.Authentication.Queries.Get
             }
 
             var effectiveRole =
-                query.CallerRole == RoleType.HeadDepartmentDoctor
-                    ? RoleType.Doctor
-                    : filter.Role;
+                query.CallerRole == RoleType.HeadDepartmentDoctor ? RoleType.Doctor : filter.Role;
 
             var cacheKey =
                 $"auth:accounts:list:role:{effectiveRole?.ToString() ?? "all"}:status:{filter.Status?.ToString() ?? "all"}:confirmed:{filter.IsEmailConfirmed?.ToString() ?? "all"}:page:{paginationParam.Page}:size:{paginationParam.Size}";
@@ -105,8 +100,8 @@ namespace Respira.Authentication.Application.Features.Authentication.Queries.Get
 
             if (filter.IsEmailConfirmed is not null)
             {
-                accountsQuery = accountsQuery.Where(
-                    account => account.IsEmailConfirmed == filter.IsEmailConfirmed
+                accountsQuery = accountsQuery.Where(account =>
+                    account.IsEmailConfirmed == filter.IsEmailConfirmed
                 );
             }
 
@@ -121,6 +116,7 @@ namespace Respira.Authentication.Application.Features.Authentication.Queries.Get
                     Role = account.Role,
                     IsEmailConfirmed = account.IsEmailConfirmed,
                     Status = account.Status,
+                    IsDeleted = account.IsDeleted,
                 })
                 .ToPagedListAsync(
                     paginationParam.Page,
