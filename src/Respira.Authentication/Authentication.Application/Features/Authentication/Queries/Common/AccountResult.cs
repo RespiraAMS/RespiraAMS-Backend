@@ -27,5 +27,7 @@ namespace Respira.Authentication.Application.Features.Authentication.Queries.Com
 
         /// <summary>Account status (Active / Inactive)</summary>
         public StatusType Status { get; set; }
+
+        public bool IsDeleted { get; set; }
     }
 }
