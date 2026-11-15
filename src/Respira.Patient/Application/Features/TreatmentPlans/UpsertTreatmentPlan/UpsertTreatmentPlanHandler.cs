@@ -26,12 +26,26 @@ namespace Respira.Patient.Application.Features.TreatmentPlans.UpsertTreatmentPla
             logger.LogInformation("Start upsert treatment plan");
 
             // Check if patient ID exists
-            if (!await context.Patients.AnyAsync(x => x.Id == command.PatientId, cancellationToken))
+            var patient = await context.Patients
+                .FirstOrDefaultAsync(x => x.Id == command.PatientId, cancellationToken);
+            if (patient is null)
             {
                 logger.LogDebug("Patient not found: {PatientId}", command.PatientId);
                 return Result<UpsertTreatmentPlanResult>.Failure(new ApplicationError(
                     ApplicationStatus.BadRequest,
                     "Patient not found"));
+            }
+
+            if (patient.TreatmentOutcome != TreatmentOutcome.InTreatment)
+            {
+                logger.LogDebug("Patient is not in treatment anymore: {Detail}", new
+                {
+                    PatientId = patient.Id,
+                    Outcome = patient.TreatmentOutcome
+                });
+                return Result<UpsertTreatmentPlanResult>.Failure(new ApplicationError(
+                    ApplicationStatus.BusinessRuleViolation,
+                    "Patient treatment already end, cannot create/update treatment plan anymore"));
             }
 
             // Get treatment plan by patient ID and diagnosis ID

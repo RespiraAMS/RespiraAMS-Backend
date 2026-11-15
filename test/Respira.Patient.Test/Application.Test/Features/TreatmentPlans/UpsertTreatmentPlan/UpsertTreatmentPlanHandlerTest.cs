@@ -58,7 +58,9 @@ namespace Respira.Patient.Application.Test.Features.TreatmentPlans.UpsertTreatme
         private sealed record PatientSeed(
             Domain.Entities.Patient Main,
             Domain.Entities.Patient Other,
-            Domain.Entities.Patient Removed);
+            Domain.Entities.Patient Removed,
+            Domain.Entities.Patient Finish);
+
 
         private static Domain.Entities.Patient Patient(
             string firstName,
@@ -72,6 +74,7 @@ namespace Respira.Patient.Application.Test.Features.TreatmentPlans.UpsertTreatme
             decimal weight,
             string address,
             string city,
+            TreatmentOutcome outcome = TreatmentOutcome.InTreatment,
             bool softDeleted = false)
         {
             return new Domain.Entities.Patient
@@ -88,7 +91,7 @@ namespace Respira.Patient.Application.Test.Features.TreatmentPlans.UpsertTreatme
                 Address = address,
                 City = city,
                 Admission = SeedCreatedAt,
-                TreatmentOutcome = TreatmentOutcome.InTreatment,
+                TreatmentOutcome = outcome,
                 IsDeleted = softDeleted,
                 DeletedAt = softDeleted ? SeedDeletedAt : null,
             };
@@ -137,12 +140,27 @@ namespace Respira.Patient.Application.Test.Features.TreatmentPlans.UpsertTreatme
                 "18 Lý Thái Tổ, quận Hoàn Kiếm",
                 "Hà Nội",
                 softDeleted: true);
+            var finish = Patient(
+                "La",
+                "Quốc Tài",
+                "0907835412",
+                "BN-2026-007315",
+                "8816372059",
+                new DateOnly(1976, 11, 2),
+                Gender.Male,
+                154.7m,
+                57.8m,
+                "18 Lý Thái Tổ, quận Hoàn Kiếm",
+                "Hà Nội",
+                outcome: TreatmentOutcome.Death,
+                softDeleted: true
+            );
 
             await context.Patients.AddRangeAsync(
                 [main, other, removed], TestContext.Current.CancellationToken);
             await context.SaveChangesAsync(TestContext.Current.CancellationToken);
 
-            return new PatientSeed(main, other, removed);
+            return new PatientSeed(main, other, removed, finish);
         }
 
         private async Task<TreatmentPlan> SeedPlanAsync(
@@ -590,6 +608,21 @@ namespace Respira.Patient.Application.Test.Features.TreatmentPlans.UpsertTreatme
             AssertFailure(result);
 
             // Nothing is written when the patient does not exist
+            Assert.Equal(0, await CountPlansAsync());
+        }
+
+        [Fact]
+        public async Task UpsertTreatmentPlan_PatientAlreadyFinishTreatment_Fail()
+        {
+            var patients = await SeedPatientsAsync();
+            var command = CreateCommand(
+                patients.Finish.Id,
+                Guid.CreateVersion7(),
+                Guid.CreateVersion7());
+            var result = await _handler.HandleAsync(
+                command, TestContext.Current.CancellationToken);
+
+            AssertFailure(result);
             Assert.Equal(0, await CountPlansAsync());
         }
 
