@@ -26,21 +26,24 @@ namespace Respira.Saga.Application.Features.Create.Commands
     /// email. A medical regulation reviewer account has no profile, so it goes straight to the verification email.
     /// </summary>
     /// <remarks>
+    /// <para>
     /// Wolverine requires saga types to have a public parameterless constructor, so every
     /// dependency is passed as a handler method parameter instead. The saga id member is
     /// <see cref="SagaId"/>, which matches the <c>SagaId</c> property carried by every wire
     /// message, so each event can locate this instance.
-    ///
+    /// </para>
+    /// <para>
     /// The handler that starts the flow must be named <c>Start*</c>; every other step uses
     /// <c>Handle*</c>.
-    ///
-    /// The soft delete events are shared with <see cref="Features.Delete.Commands.DeleteSaga"/>,
+    /// </para>
+    /// <para>
+    /// The soft delete events are shared with <see cref="Delete.Commands.DeleteSaga"/>,
     /// so with <c>MultipleHandlerBehavior.Separated</c> every saga receives them. The static
     /// <c>NotFound</c> methods below absorb the ones that belong to another saga's id.
+    /// </para>
     /// </remarks>
     public class CreateSaga : Wolverine.Saga
     {
-        // ---------------------------------------------------------------- identity
         /// <summary>Identifier shared with every command and event of this flow.</summary>
         public Guid SagaId { get; set; }
 
@@ -48,7 +51,6 @@ namespace Respira.Saga.Application.Features.Create.Commands
 
         public RoleType CreatorRole { get; set; }
 
-        // -------------------------------------------------------- profile creation input
         public string Email { get; set; } = string.Empty;
 
         public string Phone { get; set; } = string.Empty;
@@ -123,10 +125,6 @@ namespace Respira.Saga.Application.Features.Create.Commands
             );
         }
 
-        // =====================================================================
-        // Step 2 — create the doctor/head of department doctor profile
-        // =====================================================================
-
         public async Task HandleAsync(CreateAccountCompleted message, IMessageBus bus)
         {
             AccountId = message.AccountId;
@@ -176,10 +174,6 @@ namespace Respira.Saga.Application.Features.Create.Commands
             return Task.CompletedTask;
         }
 
-        // =====================================================================
-        // Step 3 — upload the avatar, then link it to the profile
-        // =====================================================================
-
         public async Task HandleAsync(
             DoctorProfileCreated message,
             IMessageBus bus,
@@ -198,7 +192,10 @@ namespace Respira.Saga.Application.Features.Create.Commands
                 if (string.IsNullOrWhiteSpace(TempAvatarPath) || !File.Exists(TempAvatarPath))
                 {
                     upload = Result<Guid>.Failure(
-                        new ApplicationError(ApplicationStatus.BadRequest, "The avatar file is missing")
+                        new ApplicationError(
+                            ApplicationStatus.BadRequest,
+                            "The avatar file is missing"
+                        )
                     );
                 }
                 else
@@ -219,7 +216,10 @@ namespace Respira.Saga.Application.Features.Create.Commands
                 // Never throw out of a saga handler: a blind retry would upload the file twice.
                 logger.LogError(exception, "{SagaId} Uploading the avatar failed", SagaId);
                 upload = Result<Guid>.Failure(
-                    new ApplicationError(ApplicationStatus.ThirdPartyServiceFailure, exception.Message)
+                    new ApplicationError(
+                        ApplicationStatus.ThirdPartyServiceFailure,
+                        exception.Message
+                    )
                 );
             }
             finally

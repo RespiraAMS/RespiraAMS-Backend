@@ -60,3 +60,30 @@ public sealed class ClinicalRollbackConflictException(ClinicalRollbackPreview pr
 {
     public ClinicalRollbackPreview Preview { get; } = preview;
 }
+
+public sealed record ClinicalRollbackRangePreview(
+    DateTimeOffset From,
+    DateTimeOffset To,
+    int TotalChangeSets,
+    IReadOnlyList<ClinicalRollbackPreview> ChangeSetPreviews,
+    IReadOnlyList<ClinicalRollbackChange> AllChanges,
+    IReadOnlyList<ClinicalRollbackConflict> AllConflicts
+)
+{
+    public bool CanApply => AllConflicts.Count == 0;
+}
+
+public sealed record ClinicalRollbackRangeResult(
+    DateTimeOffset From,
+    DateTimeOffset To,
+    int ChangeSetsRolledBack,
+    int TotalChangesApplied,
+    Guid RollbackAuditEntryId,
+    DateTimeOffset CompletedAt
+);
+
+public sealed class ClinicalRollbackRangeConflictException(ClinicalRollbackRangePreview preview)
+    : Exception("One or more change sets in the range cannot be rolled back due to conflicts")
+{
+    public ClinicalRollbackRangePreview Preview { get; } = preview;
+}

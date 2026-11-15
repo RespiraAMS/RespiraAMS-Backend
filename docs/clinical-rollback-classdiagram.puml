@@ -1,0 +1,241 @@
+@startuml Clinical_Audit_Rollback_ClassDiagram
+skinparam style strictuml
+skinparam classAttributeIconSize 0
+skinparam BoxPadding 10
+skinparam ParticipantPadding 10
+skinparam Shadowing false
+skinparam RoundCorner 6
+skinparam DefaultFontSize 12
+skinparam ClassBorderColor #333333
+skinparam PackageBorderColor #666666
+skinparam PackageBackgroundColor #FAFAFA
+
+package "API Layer (Respira.Clinical.API)" {
+    class ClinicalAuditController <<ControllerBase>> {
+        - rollbackService: IClinicalRollbackService
+        + Get(id: Guid, ct: CancellationToken): Task<IActionResult>
+        + Preview(id: Guid, ct: CancellationToken): Task<IActionResult>
+        + Rollback(id: Guid, ct: CancellationToken): Task<IActionResult>
+        + PreviewRange(body: RollbackRangeRequestDto?, from: DateTimeOffset?, to: DateTimeOffset?, entityType: string?, ct: CancellationToken): Task<IActionResult>
+        + RollbackRange(body: RollbackRangeRequestDto?, from: DateTimeOffset?, to: DateTimeOffset?, entityType: string?, ct: CancellationToken): Task<IActionResult>
+    }
+
+    class RollbackRangeRequestDto <<record>> {
+        + From: DateTimeOffset?
+        + To: DateTimeOffset?
+        + EntityType: string?
+    }
+}
+
+package "Application Layer (Respira.Clinical.Application)" {
+    interface IClinicalRollbackService <<Interface>> {
+        + GetAsync(auditEntryId: Guid, ct: CancellationToken): Task<ClinicalAuditEntryResult?>
+        + PreviewAsync(auditEntryId: Guid, ct: CancellationToken): Task<ClinicalRollbackPreview?>
+        + ApplyAsync(auditEntryId: Guid, ct: CancellationToken): Task<ClinicalRollbackResult?>
+        + PreviewRangeAsync(from: DateTimeOffset, to: DateTimeOffset, entityType: string?, ct: CancellationToken): Task<ClinicalRollbackRangePreview>
+        + ApplyRangeAsync(from: DateTimeOffset, to: DateTimeOffset, entityType: string?, ct: CancellationToken): Task<ClinicalRollbackRangeResult>
+    }
+
+    class ClinicalRollbackPreview <<record>> {
+        + AuditEntryId: Guid
+        + ChangeSetId: Guid
+        + Action: string
+        + OccurredAt: DateTimeOffset
+        + Changes: IReadOnlyList<ClinicalRollbackChange>
+        + Conflicts: IReadOnlyList<ClinicalRollbackConflict>
+        + CanApply: bool <<get>>
+    }
+
+    class ClinicalRollbackChange <<record>> {
+        + EntityType: string
+        + EntityId: Guid?
+        + Operation: string
+        + Description: string
+        + CurrentJson: string?
+        + TargetJson: string?
+        + IsJoinTable: bool
+    }
+
+    class ClinicalRollbackConflict <<record>> {
+        + EntityType: string
+        + EntityId: Guid?
+        + Reason: string
+    }
+
+    class ClinicalRollbackResult <<record>> {
+        + AuditEntryId: Guid
+        + ChangeSetId: Guid
+        + ChangesApplied: int
+        + RollbackAuditEntryId: Guid
+        + CompletedAt: DateTimeOffset
+    }
+
+    class ClinicalRollbackRangePreview <<record>> {
+        + From: DateTimeOffset
+        + To: DateTimeOffset
+        + TotalChangeSets: int
+        + ChangeSetPreviews: IReadOnlyList<ClinicalRollbackPreview>
+        + AllChanges: IReadOnlyList<ClinicalRollbackChange>
+        + AllConflicts: IReadOnlyList<ClinicalRollbackConflict>
+        + CanApply: bool <<get>>
+    }
+
+    class ClinicalRollbackRangeResult <<record>> {
+        + From: DateTimeOffset
+        + To: DateTimeOffset
+        + ChangeSetsRolledBack: int
+        + TotalChangesApplied: int
+        + RollbackAuditEntryId: Guid
+        + CompletedAt: DateTimeOffset
+    }
+
+    class ClinicalAuditEntryResult <<record>> {
+        + Id: Guid
+        + ChangeSetId: Guid
+        + OccurredAt: DateTimeOffset
+        + ActorAccountId: Guid?
+        + ActorRole: string
+        + Action: string
+        + EntityType: string
+        + EntityId: Guid?
+        + CorrelationId: Guid?
+        + Operation: string
+        + BeforeJson: string?
+        + AfterJson: string?
+        + ChangedFieldsJson: string
+        + RequestPath: string?
+        + TraceId: string?
+        + ForwardedAt: DateTimeOffset?
+    }
+
+    class ClinicalRollbackConflictException <<Exception>> {
+        + Preview: ClinicalRollbackPreview
+    }
+
+    class ClinicalRollbackRangeConflictException <<Exception>> {
+        + Preview: ClinicalRollbackRangePreview
+    }
+}
+
+package "Infrastructure Layer (Respira.Clinical.Infrastructure)" {
+    class ClinicalRollbackService {
+        - db: ClinicalDbContext
+        - auditContextAccessor: IAuditContextAccessor
+        - logger: ILogger<ClinicalRollbackService>
+        - {static} LoadEntityCoreMethod: MethodInfo
+        - {static} EntityLoaders: ConcurrentDictionary<Type, Func<...>>
+        + GetAsync(auditEntryId: Guid, ct: CancellationToken): Task<ClinicalAuditEntryResult?>
+        + PreviewAsync(auditEntryId: Guid, ct: CancellationToken): Task<ClinicalRollbackPreview?>
+        + ApplyAsync(auditEntryId: Guid, ct: CancellationToken): Task<ClinicalRollbackResult?>
+        + PreviewRangeAsync(from: DateTimeOffset, to: DateTimeOffset, entityType: string?, ct: CancellationToken): Task<ClinicalRollbackRangePreview>
+        + ApplyRangeAsync(from: DateTimeOffset, to: DateTimeOffset, entityType: string?, ct: CancellationToken): Task<ClinicalRollbackRangeResult>
+        - ApplyChangeSetRollbackCoreAsync(changeSet: IReadOnlyList<AuditEntry>, ct: CancellationToken): Task
+        - GetChangeSetIdsInRangeAsync(from: DateTimeOffset, to: DateTimeOffset, entityType: string?, ct: CancellationToken): Task<IReadOnlyList<Guid>>
+        - LoadFullChangeSetByIdAsync(changeSetId: Guid, ct: CancellationToken): Task<IReadOnlyList<AuditEntry>>
+        - LoadChangeSetAsync(entry: AuditEntry, ct: CancellationToken): Task<IReadOnlyList<AuditEntry>>
+        - BuildPreviewAsync(root: AuditEntry, changeSet: IReadOnlyList<AuditEntry>, ct: CancellationToken): Task<ClinicalRollbackPreview>
+        - PreviewJoinAsync(entry: AuditEntry, conflicts: List<ClinicalRollbackConflict>, changes: List<ClinicalRollbackChange>, ct: CancellationToken): Task
+        - ApplyUpdateAsync(entry: AuditEntry, ct: CancellationToken): Task
+        - RestoreEntityAsync(entry: AuditEntry, ct: CancellationToken): Task
+        - RemoveEntityAsync(entry: AuditEntry, ct: CancellationToken): Task
+        - LoadEntityAsync(entityType: string, id: Guid, ct: CancellationToken): Task<object?>
+        - {static} LoadEntityCore<TEntity>(db: ClinicalDbContext, id: Guid, ct: CancellationToken): Task<object?>
+        - ResolveEntityType(entityType: string): IEntityType?
+        - {static} JsonEquals(left: string?, right: string?): bool
+        - {static} RemoveReferenceIds(node: JsonNode?): void
+        - {static} Map(entry: AuditEntry): ClinicalAuditEntryResult
+    }
+
+    class ClinicalDbContext {
+        + ClinicalVariables: DbSet<ClinicalVariable>
+        + Criteria: DbSet<Criterion>
+        + Pathogens: DbSet<Pathogen>
+        + RiskFactors: DbSet<RiskFactor>
+        + ClinicalMetrics: DbSet<ClinicalMetric>
+        + MetricRules: DbSet<MetricRule>
+        + Antibiotics: DbSet<Antibiotic>
+        + AntibioticGroups: DbSet<AntibioticGroup>
+        + Dosages: DbSet<Dosage>
+        + TreatmentProtocols: DbSet<TreatmentProtocol>
+        + Antibiograms: DbSet<Antibiogram>
+        + ExecuteInTransactionAsync(action: Func<Task>, ct: CancellationToken): Task
+        + AttachStub<T>(id: Guid): T
+    }
+}
+
+package "ServiceDefaults & Core Auditing (Respira.ServiceDefaults.Auditing)" {
+    abstract class AuditableDbContext <<DbContext>> {
+        - serviceName: string
+        - auditContextAccessor: IAuditContextAccessor?
+        + AuditEntries: DbSet<AuditEntry>
+        + SuppressAuditCapture(): IDisposable
+        + SaveChangesAsync(ct: CancellationToken): Task<int>
+        # OnModelCreating(modelBuilder: ModelBuilder): void
+    }
+
+    class AuditEntry {
+        + Id: Guid
+        + ChangeSetId: Guid
+        + OccurredAt: DateTimeOffset
+        + ActorAccountId: Guid?
+        + ActorRole: string
+        + Action: string
+        + EntityType: string
+        + EntityId: Guid?
+        + CorrelationId: Guid?
+        + Operation: string
+        + BeforeJson: string?
+        + AfterJson: string?
+        + ChangedFieldsJson: string
+        + RequestPath: string?
+        + TraceId: string?
+        + ForwardedAt: DateTimeOffset?
+    }
+
+    interface IAuditContextAccessor <<Interface>> {
+        + GetCurrent(): AuditContext
+    }
+
+    class AuditContext <<record>> {
+        + ActorAccountId: Guid?
+        + ActorRole: string
+        + CorrelationId: Guid?
+        + RequestPath: string?
+        + TraceId: string?
+        + {static} System: AuditContext
+    }
+
+    class AuditOutboxForwarder <<BackgroundService>> {
+        - dbContextFactory: IDbContextFactory<TContext>
+        - publisher: IAuditEventPublisher
+        - logger: ILogger<AuditOutboxForwarder>
+        # ExecuteAsync(stoppingToken: CancellationToken): Task
+    }
+}
+
+' Relationships & Associations
+ClinicalAuditController --> IClinicalRollbackService : "delegates requests"
+ClinicalAuditController ..> RollbackRangeRequestDto : "uses as body"
+
+ClinicalRollbackService ..|> IClinicalRollbackService : "implements"
+ClinicalRollbackService --> ClinicalDbContext : "reads/writes data & transactions"
+ClinicalRollbackService --> IAuditContextAccessor : "gets actor/trace context"
+ClinicalRollbackService ..> ClinicalRollbackConflictException : "throws when single conflict"
+ClinicalRollbackService ..> ClinicalRollbackRangeConflictException : "throws when range conflict"
+
+ClinicalRollbackPreview *-- "0..*" ClinicalRollbackChange : "contains"
+ClinicalRollbackPreview *-- "0..*" ClinicalRollbackConflict : "contains"
+
+ClinicalRollbackRangePreview o-- "0..*" ClinicalRollbackPreview : "aggregates"
+ClinicalRollbackRangePreview *-- "0..*" ClinicalRollbackChange : "all changes"
+ClinicalRollbackRangePreview *-- "0..*" ClinicalRollbackConflict : "all conflicts"
+
+ClinicalRollbackConflictException --> ClinicalRollbackPreview : "encapsulates"
+ClinicalRollbackRangeConflictException --> ClinicalRollbackRangePreview : "encapsulates"
+
+ClinicalDbContext --|> AuditableDbContext : "inherits"
+AuditableDbContext *-- "0..*" AuditEntry : "manages persistency"
+IAuditContextAccessor ..> AuditContext : "returns"
+AuditOutboxForwarder ..> AuditEntry : "polls & forwards"
+
+@enduml

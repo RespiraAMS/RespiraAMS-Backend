@@ -25,6 +25,24 @@ POST /api/v1/clinical/audit-logs/{id}/rollback/preview
 POST /api/v1/clinical/audit-logs/{id}/rollback
 ```
 
+For batch rollback across a time range (`from` - `to`), use the range rollback endpoints:
+
+```http
+POST /api/v1/clinical/audit-logs/rollback/range/preview
+POST /api/v1/clinical/audit-logs/rollback/range
+```
+
+Request payload (JSON) or query parameters:
+```json
+{
+  "from": "2026-11-01T00:00:00Z",
+  "to": "2026-11-15T23:59:59Z",
+  "entityType": "Antibiotic"
+}
+```
+
+Range rollback executes change sets in reverse chronological order (LIFO) within an atomic transaction. The preview endpoint simulates the rollback sequence to verify cascading state changes without altering database records. If any change set encounters a conflict, the rollback is aborted and returns `409 Conflict`. Successful range rollbacks write a `Clinical.AuditRollbackRange` audit entry.
+
 The endpoints require the `Admin` role. The gateway authenticates the caller
 and forwards identity headers; ServiceDefaults turns those headers into claims,
 then Clinical authorization applies its service-specific role rules. Review the

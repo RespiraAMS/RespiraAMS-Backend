@@ -85,42 +85,7 @@ public sealed class ClinicalRollbackService(
                     if (preview.Conflicts.Count > 0)
                         throw new ClinicalRollbackConflictException(preview);
 
-                    var joins = changeSet.Where(JoinTableRollbackHelper.IsJoinEntry).ToList();
-                    var entities = changeSet
-                        .Where(item => !JoinTableRollbackHelper.IsJoinEntry(item))
-                        .ToList();
-
-                    var joinDeletes = joins.Where(item => item.Operation == "Created").ToList();
-                    var joinInserts = joins.Where(item => item.Operation == "Deleted").ToList();
-                    var entityDeletes = entities.Where(item => item.Operation == "Created").ToList();
-                    var entityRestores = entities.Where(item => item.Operation == "Deleted").ToList();
-                    var entityUpdates = entities
-                        .Where(item => item.Operation is "Updated" or "SoftDeleted" or "Restored")
-                        .ToList();
-
-                    foreach (var join in joinDeletes)
-                        await JoinTableRollbackHelper.DeleteRowAsync(db, join, ct);
-
-                    foreach (var item in entityDeletes)
-                        await RemoveEntityAsync(item, ct);
-
-                    if (entityDeletes.Count > 0)
-                        await db.SaveChangesAsync(ct);
-
-                    foreach (var item in entityUpdates)
-                        await ApplyUpdateAsync(item, ct);
-
-                    if (entityUpdates.Count > 0)
-                        await db.SaveChangesAsync(ct);
-
-                    foreach (var item in entityRestores)
-                        await RestoreEntityAsync(item, ct);
-
-                    if (entityRestores.Count > 0)
-                        await db.SaveChangesAsync(ct);
-
-                    foreach (var join in joinInserts)
-                        await JoinTableRollbackHelper.InsertRowAsync(db, join, ct);
+                    await ApplyChangeSetRollbackCoreAsync(changeSet, ct);
 
                     var auditContext = auditContextAccessor.GetCurrent();
                     var rollbackAudit = new AuditEntry
@@ -170,11 +135,285 @@ public sealed class ClinicalRollbackService(
                 catch
                 {
                     await transaction.RollbackAsync(ct);
+                    db.ChangeTracker.Clear();
                     throw;
                 }
             },
             cancellationToken
         );
+    }
+
+    public async Task<ClinicalRollbackRangePreview> PreviewRangeAsync(
+        DateTimeOffset from,
+        DateTimeOffset to,
+        string? entityType = null,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var changeSetIds = await GetChangeSetIdsInRangeAsync(from, to, entityType, cancellationToken);
+        if (changeSetIds.Count == 0)
+        {
+            return new ClinicalRollbackRangePreview(from, to, 0, [], [], []);
+        }
+
+        var strategy = db.Database.CreateExecutionStrategy();
+        return await strategy.ExecuteAsync(
+            async ct =>
+            {
+                await using var transaction = await db.Database.BeginTransactionAsync(ct);
+                using var _ = db.SuppressAuditCapture();
+
+                try
+                {
+                    var changeSetPreviews = new List<ClinicalRollbackPreview>();
+                    var allChanges = new List<ClinicalRollbackChange>();
+                    var allConflicts = new List<ClinicalRollbackConflict>();
+
+                    foreach (var changeSetId in changeSetIds)
+                    {
+                        var changeSet = await LoadFullChangeSetByIdAsync(changeSetId, ct);
+                        if (changeSet.Count == 0)
+                            continue;
+
+                        var root = changeSet[0];
+                        var preview = await BuildPreviewAsync(root, changeSet, ct);
+                        changeSetPreviews.Add(preview);
+                        allChanges.AddRange(preview.Changes);
+                        allConflicts.AddRange(preview.Conflicts);
+
+                        if (preview.Conflicts.Count == 0)
+                        {
+                            await ApplyChangeSetRollbackCoreAsync(changeSet, ct);
+                        }
+                    }
+
+                    return new ClinicalRollbackRangePreview(
+                        from,
+                        to,
+                        changeSetPreviews.Count,
+                        changeSetPreviews,
+                        allChanges,
+                        allConflicts
+                    );
+                }
+                finally
+                {
+                    await transaction.RollbackAsync(ct);
+                    db.ChangeTracker.Clear();
+                }
+            },
+            cancellationToken
+        );
+    }
+
+    public async Task<ClinicalRollbackRangeResult> ApplyRangeAsync(
+        DateTimeOffset from,
+        DateTimeOffset to,
+        string? entityType = null,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var changeSetIds = await GetChangeSetIdsInRangeAsync(from, to, entityType, cancellationToken);
+        if (changeSetIds.Count == 0)
+        {
+            return new ClinicalRollbackRangeResult(
+                from,
+                to,
+                0,
+                0,
+                Guid.Empty,
+                DateTimeOffset.UtcNow
+            );
+        }
+
+        var strategy = db.Database.CreateExecutionStrategy();
+        return await strategy.ExecuteAsync(
+            async ct =>
+            {
+                await using var transaction = await db.Database.BeginTransactionAsync(ct);
+                using var _ = db.SuppressAuditCapture();
+
+                try
+                {
+                    var changeSetPreviews = new List<ClinicalRollbackPreview>();
+                    var allChanges = new List<ClinicalRollbackChange>();
+                    var allConflicts = new List<ClinicalRollbackConflict>();
+                    var changeSetsToApply = new List<IReadOnlyList<AuditEntry>>();
+
+                    foreach (var changeSetId in changeSetIds)
+                    {
+                        var changeSet = await LoadFullChangeSetByIdAsync(changeSetId, ct);
+                        if (changeSet.Count == 0)
+                            continue;
+
+                        var root = changeSet[0];
+                        var preview = await BuildPreviewAsync(root, changeSet, ct);
+                        changeSetPreviews.Add(preview);
+                        allChanges.AddRange(preview.Changes);
+                        allConflicts.AddRange(preview.Conflicts);
+
+                        if (preview.Conflicts.Count > 0)
+                        {
+                            var rangePreview = new ClinicalRollbackRangePreview(
+                                from,
+                                to,
+                                changeSetPreviews.Count,
+                                changeSetPreviews,
+                                allChanges,
+                                allConflicts
+                            );
+                            throw new ClinicalRollbackRangeConflictException(rangePreview);
+                        }
+
+                        await ApplyChangeSetRollbackCoreAsync(changeSet, ct);
+                        changeSetsToApply.Add(changeSet);
+                    }
+
+                    var auditContext = auditContextAccessor.GetCurrent();
+                    var rollbackAudit = new AuditEntry
+                    {
+                        Id = Guid.CreateVersion7(),
+                        ChangeSetId = Guid.CreateVersion7(),
+                        OccurredAt = DateTimeOffset.UtcNow,
+                        ActorAccountId = auditContext.ActorAccountId,
+                        ActorRole = auditContext.ActorRole,
+                        Action = "Clinical.AuditRollbackRange",
+                        EntityType = "AuditRollbackRange",
+                        EntityId = null,
+                        CorrelationId = auditContext.CorrelationId,
+                        Operation = "Rollback",
+                        BeforeJson = JsonSerializer.Serialize(
+                            new
+                            {
+                                from,
+                                to,
+                                entityType,
+                                changeSets = changeSetsToApply.Count,
+                                changes = allChanges.Count,
+                            },
+                            AuditSnapshot.Options
+                        ),
+                        ChangedFieldsJson = "[]",
+                        RequestPath = auditContext.RequestPath,
+                        TraceId = auditContext.TraceId,
+                    };
+
+                    db.AuditEntries.Add(rollbackAudit);
+                    await db.SaveChangesAsync(ct);
+                    await transaction.CommitAsync(ct);
+
+                    logger.LogInformation(
+                        "Rolled back Clinical audit range from {From} to {To} with {ChangeSetCount} change sets and {ChangeCount} changes",
+                        from,
+                        to,
+                        changeSetsToApply.Count,
+                        allChanges.Count
+                    );
+
+                    return new ClinicalRollbackRangeResult(
+                        from,
+                        to,
+                        changeSetsToApply.Count,
+                        allChanges.Count,
+                        rollbackAudit.Id,
+                        rollbackAudit.OccurredAt
+                    );
+                }
+                catch
+                {
+                    await transaction.RollbackAsync(ct);
+                    db.ChangeTracker.Clear();
+                    throw;
+                }
+            },
+            cancellationToken
+        );
+    }
+
+    private async Task ApplyChangeSetRollbackCoreAsync(
+        IReadOnlyList<AuditEntry> changeSet,
+        CancellationToken ct
+    )
+    {
+        var joins = changeSet.Where(JoinTableRollbackHelper.IsJoinEntry).ToList();
+        var entities = changeSet
+            .Where(item => !JoinTableRollbackHelper.IsJoinEntry(item))
+            .ToList();
+
+        var joinDeletes = joins.Where(item => item.Operation == "Created").ToList();
+        var joinInserts = joins.Where(item => item.Operation == "Deleted").ToList();
+        var entityDeletes = entities.Where(item => item.Operation == "Created").ToList();
+        var entityRestores = entities.Where(item => item.Operation == "Deleted").ToList();
+        var entityUpdates = entities
+            .Where(item => item.Operation is "Updated" or "SoftDeleted" or "Restored")
+            .ToList();
+
+        foreach (var join in joinDeletes)
+            await JoinTableRollbackHelper.DeleteRowAsync(db, join, ct);
+
+        foreach (var item in entityDeletes)
+            await RemoveEntityAsync(item, ct);
+
+        if (entityDeletes.Count > 0)
+            await db.SaveChangesAsync(ct);
+
+        foreach (var item in entityUpdates)
+            await ApplyUpdateAsync(item, ct);
+
+        if (entityUpdates.Count > 0)
+            await db.SaveChangesAsync(ct);
+
+        foreach (var item in entityRestores)
+            await RestoreEntityAsync(item, ct);
+
+        if (entityRestores.Count > 0)
+            await db.SaveChangesAsync(ct);
+
+        foreach (var join in joinInserts)
+            await JoinTableRollbackHelper.InsertRowAsync(db, join, ct);
+    }
+
+    private async Task<IReadOnlyList<Guid>> GetChangeSetIdsInRangeAsync(
+        DateTimeOffset from,
+        DateTimeOffset to,
+        string? entityType,
+        CancellationToken cancellationToken
+    )
+    {
+        var query = db.AuditEntries.AsNoTracking()
+            .Where(entry => entry.OccurredAt >= from && entry.OccurredAt <= to)
+            .Where(entry => entry.Operation != "Rollback");
+
+        if (!string.IsNullOrWhiteSpace(entityType))
+        {
+            query = query.Where(entry =>
+                entry.EntityType == entityType
+                || entry.EntityType.EndsWith("." + entityType, StringComparison.Ordinal)
+            );
+        }
+
+        var entries = await query
+            .Select(e => new { e.Id, e.ChangeSetId, e.OccurredAt })
+            .ToListAsync(cancellationToken);
+
+        return entries
+            .GroupBy(e => e.ChangeSetId == Guid.Empty ? e.Id : e.ChangeSetId)
+            .OrderByDescending(g => g.Max(e => e.OccurredAt))
+            .ThenByDescending(g => g.Key)
+            .Select(g => g.Key)
+            .ToList();
+    }
+
+    private async Task<IReadOnlyList<AuditEntry>> LoadFullChangeSetByIdAsync(
+        Guid changeSetId,
+        CancellationToken cancellationToken
+    )
+    {
+        return await db.AuditEntries.AsNoTracking()
+            .Where(item => item.ChangeSetId == changeSetId || (item.ChangeSetId == Guid.Empty && item.Id == changeSetId))
+            .OrderBy(item => item.OccurredAt)
+            .ThenBy(item => item.Id)
+            .ToListAsync(cancellationToken);
     }
 
     private async Task<IReadOnlyList<AuditEntry>> LoadChangeSetAsync(

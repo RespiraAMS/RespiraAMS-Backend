@@ -16,4 +16,18 @@ public interface IClinicalRollbackService
         Guid auditEntryId,
         CancellationToken cancellationToken = default
     );
+
+    Task<ClinicalRollbackRangePreview> PreviewRangeAsync(
+        DateTimeOffset from,
+        DateTimeOffset to,
+        string? entityType = null,
+        CancellationToken cancellationToken = default
+    );
+
+    Task<ClinicalRollbackRangeResult> ApplyRangeAsync(
+        DateTimeOffset from,
+        DateTimeOffset to,
+        string? entityType = null,
+        CancellationToken cancellationToken = default
+    );
 }
