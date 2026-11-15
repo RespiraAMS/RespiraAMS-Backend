@@ -47,3 +47,12 @@ public record GetListAccountRequestDto
         };
     }
 }
+
+/// <summary>
+/// Request payload to change an account's status (Active/Inactive).
+/// </summary>
+public record ChangeAccountStatusRequestDto
+{
+    /// <summary>The target status: Active (unlock) or Inactive (lock).</summary>
+    public required StatusType Status { get; set; }
+}

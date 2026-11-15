@@ -3,6 +3,7 @@ using Asp.Versioning;
 using Microsoft.AspNetCore.Mvc;
 using Respira.Authentication.API.Dtos;
 using Respira.Authentication.Application.Contracts.Authentication;
+using Respira.Authentication.Application.Features.Accounts.Commands.ChangeStatus;
 using Respira.Authentication.Application.Features.Authentication.Commands.ForgotPassword;
 using Respira.Authentication.Application.Features.Authentication.Commands.Login;
 using Respira.Authentication.Application.Features.Authentication.Commands.Login.Result;
@@ -178,12 +179,126 @@ public sealed class AuthenticationController(IMessageBus bus, IJwtService jwtSer
         return result.ToApiResponse();
     }
 
+    /// <summary>Updates the status (Active/Inactive) of an account. Restricted to Admin.</summary>
+    [HttpPatch("accounts/{id:guid}/status")]
+    [ProducesResponseType(typeof(Result<AccountResult>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(Result<AccountResult>), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(Result<AccountResult>), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(Result<AccountResult>), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(Result<AccountResult>), StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> ChangeStatus(
+        Guid id,
+        [FromBody] ChangeAccountStatusRequestDto request,
+        CancellationToken cancellationToken
+    )
+    {
+        if (request is null)
+        {
+            return StatusCode(
+                StatusCodes.Status400BadRequest,
+                Result<AccountResult>.Failure(
+                    new ApplicationError(ApplicationStatus.BadRequest, "A request body is required")
+                )
+            );
+        }
+
+        return await ExecuteChangeStatusAsync(id, request.Status, cancellationToken);
+    }
+
+    /// <summary>Locks an account (sets status to Inactive and revokes refresh tokens). Restricted to Admin.</summary>
+    [HttpPost("accounts/{id:guid}/lock")]
+    [ProducesResponseType(typeof(Result<AccountResult>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(Result<AccountResult>), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(Result<AccountResult>), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(Result<AccountResult>), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(Result<AccountResult>), StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> LockAccount(
+        Guid id,
+        CancellationToken cancellationToken
+    )
+    {
+        return await ExecuteChangeStatusAsync(id, StatusType.Inactive, cancellationToken);
+    }
+
+    /// <summary>Unlocks an account (sets status to Active). Restricted to Admin.</summary>
+    [HttpPost("accounts/{id:guid}/unlock")]
+    [ProducesResponseType(typeof(Result<AccountResult>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(Result<AccountResult>), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(Result<AccountResult>), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(Result<AccountResult>), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(Result<AccountResult>), StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> UnlockAccount(
+        Guid id,
+        CancellationToken cancellationToken
+    )
+    {
+        return await ExecuteChangeStatusAsync(id, StatusType.Active, cancellationToken);
+    }
+
+    private async Task<IActionResult> ExecuteChangeStatusAsync(
+        Guid id,
+        StatusType targetStatus,
+        CancellationToken cancellationToken
+    )
+    {
+        var (callerId, callerRole) = await ResolveCallerInfoAsync();
+        if (callerRole is null)
+        {
+            return StatusCode(
+                StatusCodes.Status401Unauthorized,
+                Result<AccountResult>.Failure(
+                    new ApplicationError(ApplicationStatus.Unauthorized, "Unauthorized access")
+                )
+            );
+        }
+
+        if (callerRole != RoleType.Admin)
+        {
+            return StatusCode(
+                StatusCodes.Status403Forbidden,
+                Result<AccountResult>.Failure(
+                    new ApplicationError(
+                        ApplicationStatus.Restricted,
+                        "Forbidden: Only Admin can change account status"
+                    )
+                )
+            );
+        }
+
+        var command = new ChangeAccountStatusCommand
+        {
+            TargetAccountId = id,
+            Status = targetStatus,
+            ActorAccountId = callerId,
+            ActorRole = callerRole.ToString(),
+        };
+
+        var result = await bus.InvokeAsync<Result<AccountResult>>(command, cancellationToken);
+        return result.ToApiResponse();
+    }
+
     private async Task<RoleType?> ResolveCallerRoleAsync()
     {
-        var roleClaim = User.FindFirstValue(ClaimTypes.Role);
-        if (Enum.TryParse<RoleType>(roleClaim, ignoreCase: true, out var propagatedRole))
+        var (_, role) = await ResolveCallerInfoAsync();
+        return role;
+    }
+
+    private async Task<(Guid? AccountId, RoleType? Role)> ResolveCallerInfoAsync()
+    {
+        var roleClaim = User.FindFirstValue(ClaimTypes.Role)
+            ?? Request.Headers["X-Role"].FirstOrDefault();
+        var idClaim = User.FindFirstValue(ClaimTypes.NameIdentifier)
+            ?? User.FindFirstValue("sub")
+            ?? Request.Headers["X-ID"].FirstOrDefault();
+
+        Guid? callerId = Guid.TryParse(idClaim, out var parsedId) ? parsedId : null;
+        RoleType? callerRole = Enum.TryParse<RoleType>(roleClaim, ignoreCase: true, out var propagatedRole)
+            ? propagatedRole
+            : null;
+
+        if (callerRole is not null && callerId.HasValue)
         {
-            return propagatedRole;
+            return (callerId, callerRole);
         }
 
         var authorization = Request?.Headers.Authorization.FirstOrDefault();
@@ -197,16 +312,18 @@ public sealed class AuthenticationController(IMessageBus bus, IJwtService jwtSer
             {
                 try
                 {
-                    var (_, roleType) = await jwtService.ValidateAccessToken(token);
-                    return roleType;
+                    var (validatedAccountId, validatedRoleType) = await jwtService.ValidateAccessToken(token);
+                    callerId ??= Guid.TryParse(validatedAccountId, out var accId) ? accId : null;
+                    callerRole ??= validatedRoleType;
+                    return (callerId, callerRole);
                 }
                 catch
                 {
-                    return null;
+                    return (null, null);
                 }
             }
         }
 
-        return null;
+        return (callerId, callerRole);
     }
 }

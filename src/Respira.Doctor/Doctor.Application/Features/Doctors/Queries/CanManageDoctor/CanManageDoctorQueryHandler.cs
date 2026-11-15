@@ -35,7 +35,11 @@ namespace Respira.Doctor.Application.Features.Doctors.Queries.CanManageDoctor
 
                 return Result<DoctorManagementAuthorization>.Success(
                     ApplicationStatus.Success,
-                    new DoctorManagementAuthorization { Allowed = allowed, MediaId = doctor.MediaId }
+                    new DoctorManagementAuthorization
+                    {
+                        Allowed = allowed,
+                        MediaId = doctor.MediaId,
+                    }
                 );
             }
 
@@ -48,10 +52,13 @@ namespace Respira.Doctor.Application.Features.Doctors.Queries.CanManageDoctor
                 ApplicationStatus.Success,
                 new DoctorManagementAuthorization
                 {
-                    Allowed = headDepartmentDoctor is not null
-                        && (query.ActorRole == "Admin"
+                    Allowed =
+                        headDepartmentDoctor is not null
+                        && (
+                            query.ActorRole == "Admin"
                             || query.ActorRole == "HeadDepartmentDoctor"
-                                && headDepartmentDoctor.AccountId == query.ActorAccountId),
+                                && headDepartmentDoctor.AccountId == query.ActorAccountId
+                        ),
                     MediaId = headDepartmentDoctor?.MediaId,
                 }
             );
@@ -63,8 +70,8 @@ namespace Respira.Doctor.Application.Features.Doctors.Queries.CanManageDoctor
             CancellationToken cancellationToken
         )
         {
-            var headId = await dbContext.HeadDepartmentDoctors
-                .Where(item => item.AccountId == actorAccountId)
+            var headId = await dbContext
+                .HeadDepartmentDoctors.Where(item => item.AccountId == actorAccountId)
                 .Select(item => (Guid?)item.Id)
                 .FirstOrDefaultAsync(cancellationToken);
 

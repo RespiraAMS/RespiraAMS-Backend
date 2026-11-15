@@ -10,6 +10,7 @@ using Respira.Authentication.Application.Contracts.Authentication;
 using Respira.Authentication.Application.Contracts.Data;
 using Respira.Authentication.Application.Contracts.Email;
 using Respira.Authentication.Application.Contracts.Messaging;
+using Respira.Authentication.Application.Features.Accounts.Commands.ChangeStatus;
 using Respira.Authentication.Application.Features.Accounts.Commands.Create.Events;
 using Respira.Authentication.Application.Features.Accounts.Commands.SoftDelete.Events;
 using Respira.Authentication.Application.Features.Accounts.Commands.Update.Events;
@@ -26,6 +27,7 @@ builder.Services.AddControllers();
 builder.Services.AddApiVersion();
 builder.Services.AddCustomErrorHandling();
 builder.Services.AddScoped<IValidator<GetListAccountQuery>, GetListAccountValidator>();
+builder.Services.AddScoped<IValidator<ChangeAccountStatusCommand>, ChangeAccountStatusValidator>();
 builder.Services
     .AddOptions<JwtOption>()
     .BindConfiguration(JwtOption.SectionName)
