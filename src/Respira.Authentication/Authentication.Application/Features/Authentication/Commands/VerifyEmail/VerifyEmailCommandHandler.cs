@@ -45,7 +45,8 @@ namespace Respira.Authentication.Application.Features.Authentication.Commands.Ve
 
             var tokenHash = hashService.HashToken(command.Token.Trim());
             var verificationToken = await dbContext
-                .Tokens.Where(x =>
+                .Tokens.AsNoTracking()
+                .Where(x =>
                     x.HashToken == tokenHash
                     && x.TokenType == TokenType.EmailVerificationToken
                     && (x.ExpirationDate == null || x.ExpirationDate > DateTimeOffset.UtcNow)
@@ -62,7 +63,8 @@ namespace Respira.Authentication.Application.Features.Authentication.Commands.Ve
             }
 
             var account = await dbContext
-                .Accounts.Where(x =>
+                .Accounts.AsNoTracking()
+                .Where(x =>
                     x.Id == verificationToken.AccountId
                     && x.Status == StatusType.Active
                     && !x.IsDeleted
@@ -83,14 +85,11 @@ namespace Respira.Authentication.Application.Features.Authentication.Commands.Ve
 
             // Single-use: every outstanding verification token dies with this attempt,
             // including any older ones a previous SendVerify left behind.
-            var verificationTokens = await dbContext
-                .Tokens.Where(x =>
-                    x.AccountId == account.Id && x.TokenType == TokenType.EmailVerificationToken
-                )
-                .ToListAsync(cancellationToken);
-
-            dbContext.Tokens.RemoveRange(verificationTokens);
-
+            //
+            // The flag is written before the token is claimed and the claim is a set-based
+            // DELETE instead of a tracked Remove, so two concurrent requests carrying the
+            // same token both end up on the same state: the loser affects 0 rows and is
+            // treated as "already consumed" instead of throwing DbUpdateConcurrencyException.
             if (account.IsEmailConfirmed)
             {
                 // Re-opening an already confirmed link (page reload, second click)
@@ -102,12 +101,38 @@ namespace Respira.Authentication.Application.Features.Authentication.Commands.Ve
             }
             else
             {
-                account.IsEmailConfirmed = true;
-                account.UpdatedAt = DateTimeOffset.UtcNow;
+                var confirmedAt = DateTimeOffset.UtcNow;
+                await dbContext
+                    .Accounts.Where(x => x.Id == account.Id)
+                    .ExecuteUpdateAsync(
+                        setters =>
+                            setters
+                                .SetProperty(x => x.IsEmailConfirmed, true)
+                                .SetProperty(x => x.UpdatedAt, confirmedAt),
+                        cancellationToken
+                    );
+
                 logger.LogInformation("Email address {Email} verified", account.Email);
             }
 
-            await dbContext.SaveChangesAsync(cancellationToken);
+            var consumed = await dbContext
+                .Tokens.Where(x => x.Id == verificationToken.Id)
+                .ExecuteDeleteAsync(cancellationToken);
+
+            if (consumed == 0)
+            {
+                logger.LogInformation(
+                    "Verification token for {Email} was already consumed by a concurrent request",
+                    account.Email
+                );
+            }
+
+            // Burn every other verification token the account still holds.
+            await dbContext
+                .Tokens.Where(x =>
+                    x.AccountId == account.Id && x.TokenType == TokenType.EmailVerificationToken
+                )
+                .ExecuteDeleteAsync(cancellationToken);
 
             // The cached account copies still carry the previous confirmation flag.
             await cacheService.RemoveAsync(

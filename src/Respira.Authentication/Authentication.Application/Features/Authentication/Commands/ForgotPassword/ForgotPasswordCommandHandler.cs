@@ -149,15 +149,19 @@ namespace Respira.Authentication.Application.Features.Authentication.Commands.Fo
             };
 
             // Only the newest token stays live: whatever was issued before is invalidated.
-            var previousTokens = await dbContext
-                .Tokens.Where(t =>
-                    t.AccountId == account.Id && t.TokenType == TokenType.PasswordResetToken
-                )
-                .ToListAsync(cancellationToken);
-
-            dbContext.Tokens.RemoveRange(previousTokens);
+            // The replacement is persisted first and the older rows are removed with a
+            // set-based DELETE afterwards, so a concurrent request that already removed
+            // them affects 0 rows instead of throwing DbUpdateConcurrencyException.
             await dbContext.Tokens.AddAsync(resetToken, cancellationToken);
             await dbContext.SaveChangesAsync(cancellationToken);
+
+            await dbContext
+                .Tokens.Where(t =>
+                    t.AccountId == account.Id
+                    && t.TokenType == TokenType.PasswordResetToken
+                    && t.Id != resetToken.Id
+                )
+                .ExecuteDeleteAsync(cancellationToken);
 
             var link = BuildResetLink(option.ResetUrl, rawToken);
 
@@ -180,8 +184,9 @@ namespace Respira.Authentication.Application.Features.Authentication.Commands.Fo
                     account.Email
                 );
 
-                dbContext.Tokens.Remove(resetToken);
-                await dbContext.SaveChangesAsync(CancellationToken.None);
+                await dbContext
+                    .Tokens.Where(t => t.Id == resetToken.Id)
+                    .ExecuteDeleteAsync(CancellationToken.None);
 
                 return Failure(
                     ApplicationStatus.ThirdPartyServiceFailure,

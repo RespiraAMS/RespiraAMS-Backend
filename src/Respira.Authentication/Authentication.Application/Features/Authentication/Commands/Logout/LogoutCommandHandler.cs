@@ -28,7 +28,8 @@ namespace Respira.Authentication.Application.Features.Authentication.Commands.Lo
         {
             var refreshTokenHash = hashService.HashToken(command.RefreshToken);
             var isTokenExist = await dbContext
-                .Tokens.Where(x => x.HashToken == refreshTokenHash)
+                .Tokens.AsNoTracking()
+                .Where(x => x.HashToken == refreshTokenHash)
                 .FirstOrDefaultAsync(cancellationToken);
 
             if (isTokenExist is null)
@@ -39,22 +40,42 @@ namespace Respira.Authentication.Application.Features.Authentication.Commands.Lo
                 );
             }
 
-            var account = await dbContext.Accounts.FirstOrDefaultAsync(
-                a => a.Id == isTokenExist.AccountId && !a.IsDeleted,
-                cancellationToken
-            );
+            var account = await dbContext
+                .Accounts.AsNoTracking()
+                .FirstOrDefaultAsync(
+                    a => a.Id == isTokenExist.AccountId && !a.IsDeleted,
+                    cancellationToken
+                );
 
-            var blacklistToken = new BlacklistToken()
+            // Claim the token with a set-based DELETE. When a concurrent refresh/logout
+            // already revoked it the statement affects 0 rows, which is the same end state:
+            // logging out twice is a success.
+            var consumed = await dbContext
+                .Tokens.Where(x => x.Id == isTokenExist.Id)
+                .ExecuteDeleteAsync(cancellationToken);
+
+            if (consumed == 0)
             {
-                HashToken = hashService.HashToken(command.RefreshToken),
-                Reason = "Logout",
-                ExpirationDate = DateTimeOffset.UtcNow.AddDays(jwtOption.Value.RefreshTokenExpires),
-            };
+                logger.LogInformation(
+                    "Refresh token for account {AccountId} was already revoked by a concurrent request",
+                    isTokenExist.AccountId
+                );
+            }
+            else
+            {
+                dbContext.BlacklistTokens.Add(
+                    new BlacklistToken
+                    {
+                        HashToken = refreshTokenHash,
+                        Reason = "Logout",
+                        ExpirationDate = DateTimeOffset.UtcNow.AddDays(
+                            jwtOption.Value.RefreshTokenExpires
+                        ),
+                    }
+                );
 
-            dbContext.Tokens.Remove(isTokenExist);
-            dbContext.BlacklistTokens.Add(blacklistToken);
-
-            await dbContext.SaveChangesAsync(cancellationToken);
+                await dbContext.SaveChangesAsync(cancellationToken);
+            }
 
             if (account is not null)
             {

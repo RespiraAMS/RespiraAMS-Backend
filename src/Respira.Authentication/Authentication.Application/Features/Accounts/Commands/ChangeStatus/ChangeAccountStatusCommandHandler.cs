@@ -81,16 +81,19 @@ namespace Respira.Authentication.Application.Features.Accounts.Commands.ChangeSt
                 account.UpdatedAt = DateTime.UtcNow;
 
                 // When locking (Inactive), revoke all active refresh tokens for this account
+                var hasRefreshTokens = false;
                 if (command.Status == StatusType.Inactive)
                 {
                     var refreshTokens = await dbContext
-                        .Tokens.Where(x =>
+                        .Tokens.AsNoTracking()
+                        .Where(x =>
                             x.AccountId == account.Id && x.TokenType == TokenType.RefreshToken
                         )
                         .ToListAsync(cancellationToken);
 
                     if (refreshTokens.Count > 0)
                     {
+                        hasRefreshTokens = true;
                         var expirationDate = DateTimeOffset.UtcNow.AddDays(jwtOption.Value.RefreshTokenExpires);
                         foreach (var refreshToken in refreshTokens)
                         {
@@ -103,12 +106,22 @@ namespace Respira.Authentication.Application.Features.Accounts.Commands.ChangeSt
                                 }
                             );
                         }
-
-                        dbContext.Tokens.RemoveRange(refreshTokens);
                     }
                 }
 
                 await dbContext.SaveChangesAsync(cancellationToken);
+
+                if (hasRefreshTokens)
+                {
+                    // Set-based DELETE: a request that already revoked these rows affects
+                    // 0 rows instead of throwing DbUpdateConcurrencyException. The account
+                    // is already Inactive, so its sessions are rejected regardless.
+                    await dbContext
+                        .Tokens.Where(x =>
+                            x.AccountId == account.Id && x.TokenType == TokenType.RefreshToken
+                        )
+                        .ExecuteDeleteAsync(cancellationToken);
+                }
 
                 // Clear cached entries for this account
                 await cacheService.RemoveAsync(

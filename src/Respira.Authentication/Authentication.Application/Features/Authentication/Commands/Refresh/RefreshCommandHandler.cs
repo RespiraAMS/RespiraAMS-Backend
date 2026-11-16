@@ -42,7 +42,8 @@ namespace Respira.Authentication.Application.Features.Authentication.Commands.Re
 
             var refreshTokenHash = hashService.HashToken(command.RefreshToken);
             var refreshToken = await dbContext
-                .Tokens.Where(x =>
+                .Tokens.AsNoTracking()
+                .Where(x =>
                     x.HashToken == refreshTokenHash
                     && x.TokenType == TokenType.RefreshToken
                     && (x.ExpirationDate == null || x.ExpirationDate > DateTimeOffset.UtcNow)
@@ -63,7 +64,8 @@ namespace Respira.Authentication.Application.Features.Authentication.Commands.Re
             if (user is null)
             {
                 user = await dbContext
-                    .Accounts.Where(x =>
+                    .Accounts.AsNoTracking()
+                    .Where(x =>
                         x.Id == refreshToken.AccountId
                         && x.Status == StatusType.Active
                         && !x.IsDeleted
@@ -92,10 +94,30 @@ namespace Respira.Authentication.Application.Features.Authentication.Commands.Re
                 );
             }
 
-            var accessToken = jwtService.GenerateAccessToken(user);
-            var newRefreshToken = await jwtService.GenerateRefreshTokenAsync(user);
+            // Claim the presented token before issuing the replacement. A concurrent refresh
+            // that already rotated it affects 0 rows and is rejected, so the same refresh
+            // token can never be redeemed twice and no tracked delete can throw
+            // DbUpdateConcurrencyException.
+            var consumed = await dbContext
+                .Tokens.Where(x => x.Id == refreshToken.Id)
+                .ExecuteDeleteAsync(cancellationToken);
 
-            dbContext.Tokens.Remove(refreshToken);
+            if (consumed == 0)
+            {
+                logger.LogWarning(
+                    "Refresh token for account {AccountId} was already rotated by a concurrent request",
+                    refreshToken.AccountId
+                );
+                return Result<RefreshResult>.Failure(
+                    new ApplicationError(
+                        ApplicationStatus.Unauthorized,
+                        "Invalid or expired refresh token"
+                    )
+                );
+            }
+
+            var accessToken = jwtService.GenerateAccessToken(user);
+
             await dbContext.BlacklistTokens.AddAsync(
                 new BlacklistToken()
                 {
@@ -106,7 +128,8 @@ namespace Respira.Authentication.Application.Features.Authentication.Commands.Re
                 cancellationToken
             );
 
-            await dbContext.SaveChangesAsync(cancellationToken);
+            // Persists the blacklist entry together with the replacement token.
+            var newRefreshToken = await jwtService.GenerateRefreshTokenAsync(user);
 
             await cacheService.RemoveAsync(accountCacheKey, cancellationToken);
             await cacheService.RemoveAsync(

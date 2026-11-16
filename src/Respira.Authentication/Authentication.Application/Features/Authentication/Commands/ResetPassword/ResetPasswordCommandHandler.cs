@@ -66,7 +66,8 @@ namespace Respira.Authentication.Application.Features.Authentication.Commands.Re
 
             var tokenHash = hashService.HashToken(command.Token.Trim());
             var resetToken = await dbContext
-                .Tokens.Where(x =>
+                .Tokens.AsNoTracking()
+                .Where(x =>
                     x.HashToken == tokenHash
                     && x.TokenType == TokenType.PasswordResetToken
                     && (x.ExpirationDate == null || x.ExpirationDate > DateTimeOffset.UtcNow)
@@ -83,7 +84,8 @@ namespace Respira.Authentication.Application.Features.Authentication.Commands.Re
             }
 
             var account = await dbContext
-                .Accounts.Where(x =>
+                .Accounts.AsNoTracking()
+                .Where(x =>
                     x.Id == resetToken.AccountId
                     && x.Status == StatusType.Active
                     && !x.IsDeleted
@@ -102,21 +104,43 @@ namespace Respira.Authentication.Application.Features.Authentication.Commands.Re
                 );
             }
 
-            account.HashPassword = hashService.HashPassword(command.NewPassword);
-            account.UpdatedAt = DateTimeOffset.UtcNow;
+            // Single-use: claim the token with a set-based DELETE before touching the
+            // account. Two concurrent resets carrying the same token cannot both win:
+            // the loser affects 0 rows and is rejected instead of throwing
+            // DbUpdateConcurrencyException.
+            var consumed = await dbContext
+                .Tokens.Where(x => x.Id == resetToken.Id)
+                .ExecuteDeleteAsync(cancellationToken);
 
-            // Single-use: every outstanding reset token dies with this attempt.
-            var resetTokens = await dbContext
-                .Tokens.Where(x =>
-                    x.AccountId == account.Id && x.TokenType == TokenType.PasswordResetToken
-                )
-                .ToListAsync(cancellationToken);
+            if (consumed == 0)
+            {
+                logger.LogWarning(
+                    "Password reset token for account {AccountId} was already consumed by a concurrent request",
+                    account.Id
+                );
+                return Failure(
+                    ApplicationStatus.Unauthorized,
+                    "Invalid or expired password reset token"
+                );
+            }
 
-            dbContext.Tokens.RemoveRange(resetTokens);
+            var newPasswordHash = hashService.HashPassword(command.NewPassword);
+            var updatedAt = DateTimeOffset.UtcNow;
+
+            await dbContext
+                .Accounts.Where(x => x.Id == account.Id)
+                .ExecuteUpdateAsync(
+                    setters =>
+                        setters
+                            .SetProperty(x => x.HashPassword, newPasswordHash)
+                            .SetProperty(x => x.UpdatedAt, updatedAt),
+                    cancellationToken
+                );
 
             // The password changed, so the sessions opened with the old one are revoked.
             var refreshTokens = await dbContext
-                .Tokens.Where(x =>
+                .Tokens.AsNoTracking()
+                .Where(x =>
                     x.AccountId == account.Id && x.TokenType == TokenType.RefreshToken
                 )
                 .ToListAsync(cancellationToken);
@@ -134,9 +158,22 @@ namespace Respira.Authentication.Application.Features.Authentication.Commands.Re
                 );
             }
 
-            dbContext.Tokens.RemoveRange(refreshTokens);
-
             await dbContext.SaveChangesAsync(cancellationToken);
+
+            // Set-based DELETEs keep a concurrent request that already removed these rows
+            // from throwing; the refresh tokens are revoked and the remaining reset tokens
+            // are burned as part of the same single-use flow.
+            await dbContext
+                .Tokens.Where(x =>
+                    x.AccountId == account.Id && x.TokenType == TokenType.RefreshToken
+                )
+                .ExecuteDeleteAsync(cancellationToken);
+
+            await dbContext
+                .Tokens.Where(x =>
+                    x.AccountId == account.Id && x.TokenType == TokenType.PasswordResetToken
+                )
+                .ExecuteDeleteAsync(cancellationToken);
 
             // The cached account copies still carry the previous password hash.
             await cacheService.RemoveAsync(

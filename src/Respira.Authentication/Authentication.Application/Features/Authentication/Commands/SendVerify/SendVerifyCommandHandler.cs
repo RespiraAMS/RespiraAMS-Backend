@@ -187,16 +187,19 @@ namespace Respira.Authentication.Application.Features.Authentication.Commands.Se
             };
 
             // Only the newest token stays live: whatever was issued before is invalidated.
-            var previousTokens = await dbContext
+            // The replacement is persisted first and the older rows are removed with a
+            // set-based DELETE afterwards, so a concurrent request that already removed
+            // them affects 0 rows instead of throwing DbUpdateConcurrencyException.
+            await dbContext.Tokens.AddAsync(verificationToken, cancellationToken);
+            await dbContext.SaveChangesAsync(cancellationToken);
+
+            await dbContext
                 .Tokens.Where(t =>
                     t.AccountId == account.Id
                     && t.TokenType == TokenType.EmailVerificationToken
+                    && t.Id != verificationToken.Id
                 )
-                .ToListAsync(cancellationToken);
-
-            dbContext.Tokens.RemoveRange(previousTokens);
-            await dbContext.Tokens.AddAsync(verificationToken, cancellationToken);
-            await dbContext.SaveChangesAsync(cancellationToken);
+                .ExecuteDeleteAsync(cancellationToken);
 
             var link = BuildConfirmLink(option.ConfirmUrl, rawToken);
 
@@ -219,8 +222,9 @@ namespace Respira.Authentication.Application.Features.Authentication.Commands.Se
                     account.Email
                 );
 
-                dbContext.Tokens.Remove(verificationToken);
-                await dbContext.SaveChangesAsync(CancellationToken.None);
+                await dbContext
+                    .Tokens.Where(t => t.Id == verificationToken.Id)
+                    .ExecuteDeleteAsync(CancellationToken.None);
 
                 return Failure(
                     ApplicationStatus.ThirdPartyServiceFailure,
