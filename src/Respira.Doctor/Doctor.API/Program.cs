@@ -70,7 +70,12 @@ if (app.Environment.IsDevelopment())
 
 app.UseClaimsPropagation();
 
-app.UseHttpsRedirection();
+// The gateway calls the service over HTTP, so redirecting in development would
+// answer 307 and drop the identity headers (X-ID, X-Role) the gateway injected.
+if (!app.Environment.IsDevelopment())
+{
+    app.UseHttpsRedirection();
+}
 
 app.MapControllers();
 
