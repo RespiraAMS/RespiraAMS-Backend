@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Respira.Doctor.Application.Contracts.Data;
+using Respira.Doctor.Application.Contracts.Enrichment;
 using Respira.Doctor.Application.Features.Doctors.Queries.GetById.Result;
 using Respira.Doctor.Domain.Entities;
 using Respira.Doctor.Domain.Enums;
@@ -14,6 +15,7 @@ namespace Respira.Doctor.Application.Features.Doctors.Queries.GetByAccountId
     public class GetDoctorByAccountIdQueryHandler(
         IDoctorDbContext dbContext,
         IMessageBus bus,
+        IDoctorProfileEnricher enricher,
         ILogger<GetDoctorByAccountIdQueryHandler> logger
     ) : IQueryHandler<GetDoctorByAccountIdQuery, Result<DoctorResult>>
     {
@@ -80,6 +82,10 @@ namespace Respira.Doctor.Application.Features.Doctors.Queries.GetByAccountId
             };
 
             await EnrichAccountAsync(result, cancellationToken);
+            result.AvatarUrl = await enricher.ResolveAvatarUrlAsync(
+                profile.MediaId,
+                cancellationToken
+            );
 
             return Result<DoctorResult>.Success(ApplicationStatus.Success, result);
         }

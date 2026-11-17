@@ -278,5 +278,10 @@ public sealed class GetSubordinateDoctorsHandlerTest : IClassFixture<PostgresFix
 
             return Task.CompletedTask;
         }
+
+        public Task<string?> ResolveAvatarUrlAsync(
+            Guid? mediaId,
+            CancellationToken cancellationToken = default
+        ) => Task.FromResult<string?>(null);
     }
 }

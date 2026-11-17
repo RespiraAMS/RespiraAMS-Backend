@@ -500,5 +500,13 @@ public sealed class GetPagedDoctorHandlerTest : IClassFixture<PostgresFixture>, 
 
             return Task.CompletedTask;
         }
+
+        public Task<string?> ResolveAvatarUrlAsync(
+            Guid? mediaId,
+            CancellationToken cancellationToken = default
+        ) =>
+            Task.FromResult(
+                mediaId.HasValue ? $"https://media.test/{mediaId.Value}" : null
+            );
     }
 }

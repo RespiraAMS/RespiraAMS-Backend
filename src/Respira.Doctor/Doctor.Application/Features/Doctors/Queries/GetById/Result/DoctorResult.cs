@@ -44,6 +44,9 @@ namespace Respira.Doctor.Application.Features.Doctors.Queries.GetById.Result
         /// <summary>Avatar media identifier (if linked)</summary>
         public Guid? MediaId { get; set; }
 
+        /// <summary>Avatar URL resolved from the media service, if available</summary>
+        public string? AvatarUrl { get; set; }
+
         /// <summary>Profile creation timestamp</summary>
         public DateTimeOffset CreatedAt { get; set; }
 

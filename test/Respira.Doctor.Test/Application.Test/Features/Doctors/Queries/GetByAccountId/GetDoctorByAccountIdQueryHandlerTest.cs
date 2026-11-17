@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moq;
+using Respira.Doctor.Application.Contracts.Enrichment;
 using Respira.Doctor.Application.Features.Doctors.Queries.GetByAccountId;
 using Respira.Doctor.Application.Features.Doctors.Queries.GetById.Result;
 using Respira.Doctor.Domain.Enums;
@@ -175,6 +176,48 @@ public sealed class GetDoctorByAccountIdQueryHandlerTest : IClassFixture<Postgre
         Assert.Null(data.Email);
     }
 
+    [Fact]
+    public async Task HandleAsync_WithLinkedMedia_ReturnsResolvedAvatarUrl()
+    {
+        var accountId = Guid.CreateVersion7();
+        var mediaId = Guid.CreateVersion7();
+        await SeedDoctorAsync(
+            TestData.DoctorFactory.CreateDoctor(accountId: accountId, mediaId: mediaId)
+        );
+
+        var enricherMock = new Mock<IDoctorProfileEnricher>();
+        enricherMock
+            .Setup(e =>
+                e.ResolveAvatarUrlAsync(mediaId, It.IsAny<CancellationToken>())
+            )
+            .ReturnsAsync("https://cdn.hospital.vn/avatar.png");
+
+        var result = await HandleAsync(accountId, enricher: enricherMock.Object);
+
+        Assert.True(result.IsSuccess());
+        var data = Assert.IsType<DoctorResult>(result.Data);
+        Assert.Equal("https://cdn.hospital.vn/avatar.png", data.AvatarUrl);
+        enricherMock.Verify(
+            e => e.ResolveAvatarUrlAsync(mediaId, It.IsAny<CancellationToken>()),
+            Times.Once
+        );
+    }
+
+    [Fact]
+    public async Task HandleAsync_WithoutMedia_ReturnsNullAvatarUrl()
+    {
+        var accountId = Guid.CreateVersion7();
+        await SeedDoctorAsync(
+            TestData.DoctorFactory.CreateDoctor(accountId: accountId, mediaId: null)
+        );
+
+        var result = await HandleAsync(accountId);
+
+        Assert.True(result.IsSuccess());
+        var data = Assert.IsType<DoctorResult>(result.Data);
+        Assert.Null(data.AvatarUrl);
+    }
+
     #endregion
 
     #region Not found / Validation
@@ -208,6 +251,7 @@ public sealed class GetDoctorByAccountIdQueryHandlerTest : IClassFixture<Postgre
         var handler = new GetDoctorByAccountIdQueryHandler(
             context,
             Mock.Of<IMessageBus>(),
+            CreateEnricher(),
             Mock.Of<ILogger<GetDoctorByAccountIdQueryHandler>>()
         );
 
@@ -220,12 +264,17 @@ public sealed class GetDoctorByAccountIdQueryHandlerTest : IClassFixture<Postgre
 
     #region Helpers
 
-    private async Task<Result<DoctorResult>> HandleAsync(Guid accountId, IMessageBus? bus = null)
+    private async Task<Result<DoctorResult>> HandleAsync(
+        Guid accountId,
+        IMessageBus? bus = null,
+        IDoctorProfileEnricher? enricher = null
+    )
     {
         await using var context = new DoctorDbContext(_options);
         var handler = new GetDoctorByAccountIdQueryHandler(
             context,
             bus ?? Mock.Of<IMessageBus>(),
+            enricher ?? CreateEnricher(),
             Mock.Of<ILogger<GetDoctorByAccountIdQueryHandler>>()
         );
 
@@ -233,6 +282,17 @@ public sealed class GetDoctorByAccountIdQueryHandlerTest : IClassFixture<Postgre
             new GetDoctorByAccountIdQuery { AccountId = accountId },
             TestContext.Current.CancellationToken
         );
+    }
+
+    private static IDoctorProfileEnricher CreateEnricher(string? avatarUrl = null)
+    {
+        var mock = new Mock<IDoctorProfileEnricher>();
+        mock.Setup(e =>
+                e.ResolveAvatarUrlAsync(It.IsAny<Guid?>(), It.IsAny<CancellationToken>())
+            )
+            .ReturnsAsync(avatarUrl);
+
+        return mock.Object;
     }
 
     private async Task<DoctorEntity> SeedDoctorAsync(DoctorEntity entity)

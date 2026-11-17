@@ -428,6 +428,91 @@ public sealed class DoctorProfileEnricherTest
 
     #endregion
 
+    #region Single profile avatar
+
+    [Fact]
+    public async Task ResolveAvatarUrlAsync_WithResolvedMediaAsset_ReturnsUrl()
+    {
+        var mediaId = Guid.CreateVersion7();
+        SetupMediaAssets(
+            Result<List<MediaAssetSummary>>.Success(
+                ApplicationStatus.Success,
+                [BuildMediaAsset(mediaId)]
+            )
+        );
+
+        var url = await _enricher.ResolveAvatarUrlAsync(
+            mediaId,
+            TestContext.Current.CancellationToken
+        );
+
+        Assert.Equal("https://cdn.hospital.vn/avatar.png", url);
+        Assert.Equal(mediaId, Assert.Single(GetMediaQuery().MediaIds));
+    }
+
+    [Fact]
+    public async Task ResolveAvatarUrlAsync_WithoutMediaId_ReturnsNullAndSkipsMediaQuery()
+    {
+        var url = await _enricher.ResolveAvatarUrlAsync(
+            null,
+            TestContext.Current.CancellationToken
+        );
+
+        Assert.Null(url);
+        Assert.Empty(MediaQueryInvocations());
+    }
+
+    [Fact]
+    public async Task ResolveAvatarUrlAsync_WhenMediaAssetIsNotInTheResponse_ReturnsNull()
+    {
+        var mediaId = Guid.CreateVersion7();
+        SetupMediaAssets(
+            Result<List<MediaAssetSummary>>.Success(
+                ApplicationStatus.Success,
+                [BuildMediaAsset(Guid.CreateVersion7())]
+            )
+        );
+
+        var url = await _enricher.ResolveAvatarUrlAsync(
+            mediaId,
+            TestContext.Current.CancellationToken
+        );
+
+        Assert.Null(url);
+    }
+
+    [Fact]
+    public async Task ResolveAvatarUrlAsync_WhenMediaLookupFails_ReturnsNull()
+    {
+        SetupMediaAssets(
+            Result<List<MediaAssetSummary>>.Failure(
+                new ApplicationError(ApplicationStatus.ServerError, "boom")
+            )
+        );
+
+        var url = await _enricher.ResolveAvatarUrlAsync(
+            Guid.CreateVersion7(),
+            TestContext.Current.CancellationToken
+        );
+
+        Assert.Null(url);
+    }
+
+    [Fact]
+    public async Task ResolveAvatarUrlAsync_WhenMediaLookupThrows_ReturnsNull()
+    {
+        SetupMediaAssetsToThrow(new InvalidOperationException("bus unavailable"));
+
+        var url = await _enricher.ResolveAvatarUrlAsync(
+            Guid.CreateVersion7(),
+            TestContext.Current.CancellationToken
+        );
+
+        Assert.Null(url);
+    }
+
+    #endregion
+
     #region Bus helpers
 
     private void SetupAccounts(Result<List<AccountSummary>> result) =>

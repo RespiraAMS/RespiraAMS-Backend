@@ -56,6 +56,21 @@ namespace Respira.Doctor.Application.Features.Doctors.Common
             }
         }
 
+        public async Task<string?> ResolveAvatarUrlAsync(
+            Guid? mediaId,
+            CancellationToken cancellationToken = default
+        )
+        {
+            if (mediaId is not Guid id)
+            {
+                return null;
+            }
+
+            var mediaAssets = await LoadMediaAssetsAsync([id], cancellationToken);
+
+            return mediaAssets.TryGetValue(id, out var mediaAsset) ? mediaAsset.Url : null;
+        }
+
         private async Task<Dictionary<Guid, AccountSummary>> LoadAccountsAsync(
             Guid[] accountIds,
             CancellationToken cancellationToken

@@ -331,5 +331,10 @@ public sealed class SearchDoctorHandlerTest : IClassFixture<PostgresFixture>, IA
             CallCount++;
             return Task.CompletedTask;
         }
+
+        public Task<string?> ResolveAvatarUrlAsync(
+            Guid? mediaId,
+            CancellationToken cancellationToken = default
+        ) => Task.FromResult<string?>(null);
     }
 }

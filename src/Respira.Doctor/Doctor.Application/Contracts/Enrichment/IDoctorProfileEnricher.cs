@@ -12,5 +12,15 @@ namespace Respira.Doctor.Application.Contracts.Enrichment
             IEnumerable<DoctorProfileItem> profiles,
             CancellationToken cancellationToken = default
         );
+
+        /// <summary>
+        /// Resolves the accessible URL of a media asset, for single-profile queries
+        /// that do not use <see cref="DoctorProfileItem"/>.
+        /// </summary>
+        /// <returns>The media URL, or <c>null</c> when the asset cannot be resolved.</returns>
+        Task<string?> ResolveAvatarUrlAsync(
+            Guid? mediaId,
+            CancellationToken cancellationToken = default
+        );
     }
 }
