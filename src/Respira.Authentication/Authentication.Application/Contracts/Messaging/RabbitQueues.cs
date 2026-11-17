@@ -1,0 +1,18 @@
+namespace Respira.Authentication.Application.Contracts.Messaging
+{
+    /// <summary>
+    /// RabbitMQ queue names used by the create saga. Every participating service keeps
+    /// its own copy of these constants and pairs its message contracts via <c>[MessageIdentity]</c>.
+    /// </summary>
+    public static class RabbitQueues
+    {
+        /// <summary>Queue this service listens on for commands sent by the saga.</summary>
+        public const string AuthCommands = "respira.auth.commands";
+
+        /// <summary>Queue the saga listens on for completion/failure events.</summary>
+        public const string SagaEvents = "respira.saga.events";
+
+        /// <summary>Queue this service listens on for account lookup queries.</summary>
+        public const string AuthQueries = "respira.auth.queries";
+    }
+}

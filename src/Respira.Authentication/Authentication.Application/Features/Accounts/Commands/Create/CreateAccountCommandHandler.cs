@@ -1,0 +1,134 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using Respira.Authentication.Application.Contracts.Authentication;
+using Respira.Authentication.Application.Contracts.Cache;
+using Respira.Authentication.Application.Contracts.Data;
+using Respira.Authentication.Application.Features.Accounts.Commands.Create.Events;
+using Respira.Authentication.Domain.Entities;
+using Respira.ServiceDefaults.Contracts.CQRS;
+using Respira.ServiceDefaults.Contracts.Messages.Audit;
+using Wolverine;
+
+namespace Respira.Authentication.Application.Features.Accounts.Commands.Create
+{
+    /// <summary>
+    /// Creates the account for the create saga. The handler is idempotent from the
+    /// saga's point of view: every outcome (already exists, persistence failure) is
+    /// reported as an event so the saga can decide, and the handler never throws for a
+    /// business rule violation.
+    /// </summary>
+    public class CreateAccountCommandHandler(
+        IMessageBus bus,
+        IAuthDbContext dbContext,
+        ILogger<CreateAccountCommandHandler> logger,
+        ICacheService cacheService,
+        IHashService hashService
+    ) : ICommandHandler<CreateAccountCommand>
+    {
+        /// <summary>Same cache entry shape as login/refresh/SendVerify (account by email).</summary>
+        private static readonly TimeSpan AccountCacheExpiration = TimeSpan.FromMinutes(5);
+
+        public async Task HandleAsync(
+            CreateAccountCommand command,
+            CancellationToken cancellationToken = default
+        )
+        {
+            ArgumentNullException.ThrowIfNull(command);
+
+            // The verification email lookup (and login) compare against the lowercased
+            // address, so the account must be stored the same way.
+            var email = command.Email.Trim().ToLowerInvariant();
+
+            var existingAccount = await dbContext
+                .Accounts.IgnoreQueryFilters()
+                .FirstOrDefaultAsync(x => x.Email == email, cancellationToken);
+
+            if (existingAccount is not null)
+            {
+                if (!existingAccount.IsDeleted)
+                {
+                    logger.LogInformation(
+                        "{SagaId} Account {Email} already exists",
+                        command.SagaId,
+                        email
+                    );
+
+                    await bus.PublishAsync(
+                        new CreateAccountFailure(command.SagaId, "Account already exists")
+                    );
+                    return;
+                }
+
+                // Remove the previously soft-deleted account with the same email so the
+                // unique index on Email allows recreating the profile.
+                dbContext.Accounts.Remove(existingAccount);
+            }
+
+            var account = new Account
+            {
+                Email = email,
+                HashPassword = hashService.HashPassword(command.Password),
+                Phone = command.Phone,
+                Role = command.Role,
+                Status = command.Status,
+            };
+
+            dbContext.Accounts.Add(account);
+
+            try
+            {
+                await dbContext.SaveChangesAsync(cancellationToken);
+            }
+            catch (DbUpdateException exception)
+            {
+                // Unique index on Email lost a race against a concurrent registration.
+                logger.LogWarning(
+                    exception,
+                    "{SagaId} Persisting account {Email} conflicted with an existing row",
+                    command.SagaId,
+                    email
+                );
+
+                await bus.PublishAsync(
+                    new CreateAccountFailure(command.SagaId, "Account already exists")
+                );
+                return;
+            }
+
+            await cacheService.SetAsync(
+                $"auth:account:email:{email}",
+                account,
+                AccountCacheExpiration,
+                cancellationToken
+            );
+
+            await bus.PublishAsync(
+                new AuditEvent
+                {
+                    ActorAccountId =
+                        command.ActorAccountId == Guid.Empty ? null : command.ActorAccountId,
+                    ActorRole = string.IsNullOrWhiteSpace(command.ActorRole)
+                        ? "System"
+                        : command.ActorRole,
+                    Action = "Authentication.AccountCreated",
+                    EntityType = "Account",
+                    EntityId = account.Id,
+                    CorrelationId = command.SagaId,
+                    DetailsJson = System.Text.Json.JsonSerializer.Serialize(
+                        new { account.Role, account.Status }
+                    ),
+                }
+            );
+
+            logger.LogInformation(
+                "{SagaId} Account {AccountId} created",
+                command.SagaId,
+                account.Id
+            );
+
+            await bus.PublishAsync(
+                new CreateAccountCompleted { SagaId = command.SagaId, AccountId = account.Id }
+            );
+        }
+    }
+}

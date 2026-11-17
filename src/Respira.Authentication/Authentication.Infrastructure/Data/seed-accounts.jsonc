@@ -1,0 +1,18 @@
+{
+    "accounts": [
+        {
+            "id": "11111111-1111-1111-1111-111111111111",
+            "email": "admin@respira.ams",
+            // BCrypt hash (work factor 12) of the clear text password "Admin@123".
+            // Generate a new one with: dotnet script / BCrypt.Net.BCrypt.HashPassword("your-password", 12)
+            "passwordHash": "$2a$12$RYGvxowi6VHTYi6qMXQ7ROTagbu9XS58dlqtQdSjp1AMWQ1T6dR4C",
+            "phone": "0000000000",
+            "role": "Admin",
+            "status": "Active",
+            "isEmailConfirmed": true,
+            "isDeleted": false,
+            "createdAt": "2025-01-01T00:00:00Z",
+            "updatedAt": "2025-01-01T00:00:00Z"
+        }
+    ]
+}

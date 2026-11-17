@@ -1,6 +1,9 @@
 {
-  "appHost": {
-    "path": "src/Respira.AppHost/Respira.AppHost.csproj"
-  },
-  "channel": "stable"
+    "appHost": {
+        "path": "src/Respira.AppHost/Respira.AppHost.csproj"
+    },
+    "channel": "stable",
+    "test": {
+        "runner": "Microsoft.Testing.Platform"
+    }
 }

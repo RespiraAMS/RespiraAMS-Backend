@@ -1,0 +1,164 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using Respira.Authentication.Application.Contracts.Authentication;
+using Respira.Authentication.Application.Contracts.Cache;
+using Respira.Authentication.Application.Contracts.Data;
+using Respira.Authentication.Domain.Enums;
+using Respira.ServiceDefaults.Contracts.CQRS;
+using Respira.ServiceDefaults.Contracts.Results;
+using Respira.ServiceDefaults.Contracts.Messages.Audit;
+using Wolverine;
+
+namespace Respira.Authentication.Application.Features.Authentication.Commands.VerifyEmail
+{
+    /// <summary>
+    /// Consumes a single-use email verification token and flags the owning account
+    /// as confirmed. Only the SHA-256 hash of the token is compared, mirroring the
+    /// way SendVerify stores it.
+    /// </summary>
+    public class VerifyEmailCommandHandler(
+        IAuthDbContext dbContext,
+        IHashService hashService,
+        ICacheService cacheService,
+        ILogger<VerifyEmailCommandHandler> logger,
+        IMessageBus bus
+    ) : ICommandHandler<VerifyEmailCommand, Result<bool>>
+    {
+        /// <summary>
+        /// Validates the raw token, marks the account's address as confirmed, and
+        /// burns every verification token the account holds.
+        /// </summary>
+        /// <param name="command">The verification request containing the raw token.</param>
+        /// <param name="cancellationToken">Token used to cancel database operations.</param>
+        /// <returns>True when the address is confirmed, otherwise a failure result.</returns>
+        public async Task<Result<bool>> HandleAsync(
+            VerifyEmailCommand command,
+            CancellationToken cancellationToken = default
+        )
+        {
+            ArgumentNullException.ThrowIfNull(command);
+
+            if (string.IsNullOrWhiteSpace(command.Token))
+            {
+                return Failure(ApplicationStatus.BadRequest, "A verification token is required");
+            }
+
+            var tokenHash = hashService.HashToken(command.Token.Trim());
+            var verificationToken = await dbContext
+                .Tokens.AsNoTracking()
+                .Where(x =>
+                    x.HashToken == tokenHash
+                    && x.TokenType == TokenType.EmailVerificationToken
+                    && (x.ExpirationDate == null || x.ExpirationDate > DateTimeOffset.UtcNow)
+                )
+                .FirstOrDefaultAsync(cancellationToken);
+
+            if (verificationToken is null)
+            {
+                logger.LogWarning("Verification attempt used an invalid or expired token");
+                return Failure(
+                    ApplicationStatus.Unauthorized,
+                    "Invalid or expired verification token"
+                );
+            }
+
+            var account = await dbContext
+                .Accounts.AsNoTracking()
+                .Where(x =>
+                    x.Id == verificationToken.AccountId
+                    && x.Status == StatusType.Active
+                    && !x.IsDeleted
+                )
+                .FirstOrDefaultAsync(cancellationToken);
+
+            if (account is null)
+            {
+                logger.LogWarning(
+                    "Verification attempt rejected because account {AccountId} is unavailable",
+                    verificationToken.AccountId
+                );
+                return Failure(
+                    ApplicationStatus.Unauthorized,
+                    "Invalid or expired verification token"
+                );
+            }
+
+            // Single-use: every outstanding verification token dies with this attempt,
+            // including any older ones a previous SendVerify left behind.
+            //
+            // The flag is written before the token is claimed and the claim is a set-based
+            // DELETE instead of a tracked Remove, so two concurrent requests carrying the
+            // same token both end up on the same state: the loser affects 0 rows and is
+            // treated as "already consumed" instead of throwing DbUpdateConcurrencyException.
+            if (account.IsEmailConfirmed)
+            {
+                // Re-opening an already confirmed link (page reload, second click)
+                // reaches the same end state, so it is reported as a success.
+                logger.LogInformation(
+                    "Verification token for the already confirmed address {Email} consumed",
+                    account.Email
+                );
+            }
+            else
+            {
+                var confirmedAt = DateTimeOffset.UtcNow;
+                await dbContext
+                    .Accounts.Where(x => x.Id == account.Id)
+                    .ExecuteUpdateAsync(
+                        setters =>
+                            setters
+                                .SetProperty(x => x.IsEmailConfirmed, true)
+                                .SetProperty(x => x.UpdatedAt, confirmedAt),
+                        cancellationToken
+                    );
+
+                logger.LogInformation("Email address {Email} verified", account.Email);
+            }
+
+            var consumed = await dbContext
+                .Tokens.Where(x => x.Id == verificationToken.Id)
+                .ExecuteDeleteAsync(cancellationToken);
+
+            if (consumed == 0)
+            {
+                logger.LogInformation(
+                    "Verification token for {Email} was already consumed by a concurrent request",
+                    account.Email
+                );
+            }
+
+            // Burn every other verification token the account still holds.
+            await dbContext
+                .Tokens.Where(x =>
+                    x.AccountId == account.Id && x.TokenType == TokenType.EmailVerificationToken
+                )
+                .ExecuteDeleteAsync(cancellationToken);
+
+            // The cached account copies still carry the previous confirmation flag.
+            await cacheService.RemoveAsync(
+                $"auth:account:email:{account.Email.ToLowerInvariant()}",
+                cancellationToken
+            );
+
+            await bus.PublishAsync(new AuditEvent
+            {
+                ActorAccountId = account.Id,
+                ActorRole = account.Role.ToString(),
+                Action = "Authentication.EmailVerified",
+                EntityType = "Account",
+                EntityId = account.Id,
+            });
+            await cacheService.RemoveAsync(
+                $"auth:account:id:{account.Id}",
+                cancellationToken
+            );
+
+            return Result<bool>.Success(ApplicationStatus.Success, true);
+        }
+
+        private static Result<bool> Failure(string statusCode, string description)
+        {
+            return Result<bool>.Failure(new ApplicationError(statusCode, description));
+        }
+    }
+}

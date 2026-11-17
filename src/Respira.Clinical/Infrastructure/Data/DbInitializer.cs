@@ -1,0 +1,72 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+
+namespace Respira.Clinical.Infrastructure.Data
+{
+    public class DbInitializer
+    {
+        private static async Task<bool> HasAnyData(ClinicalDbContext context)
+        {
+            return await context.ClinicalVariables.AnyAsync() ||
+                await context.Criteria.AnyAsync() ||
+                await context.ClinicalMetrics.AnyAsync() ||
+                await context.Pathogens.AnyAsync() ||
+                await context.RiskFactors.AnyAsync() ||
+                await context.SuspectedCauses.AnyAsync() ||
+                await context.AntibioticGroups.AnyAsync() ||
+                await context.Antibiotics.AnyAsync() ||
+                await context.Treatments.AnyAsync() ||
+                await context.TreatmentProtocols.AnyAsync() ||
+                await context.Antibiograms.AnyAsync();
+        }
+
+        public static async Task InitializeAsync(ClinicalDbContext context, IOptions<SeedDataOptions> options, ILogger<DbInitializer> logger)
+        {
+            await context.Database.MigrateAsync();
+
+            if (await HasAnyData(context))
+            {
+                logger.LogInformation("Database has data, skip seeding");
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(options.Value.FilePath))
+            {
+                logger.LogWarning("No seed data file is configured, skip seeding");
+                return;
+            }
+
+            SeedData seedData;
+
+            try
+            {
+                seedData = await DataSeeder.LoadAsync(options.Value.FilePath);
+            }
+            catch (Exception exception)
+            {
+                // The seed data is optional: a missing or broken file is reported and
+                // the service keeps running without the clinical reference data.
+                logger.LogError(
+                    exception,
+                    "Unable to load the seed data file {FilePath}, skip seeding",
+                    options.Value.FilePath
+                );
+                return;
+            }
+
+            await context.ClinicalVariables.AddRangeAsync(seedData.ClinicalVariables);
+            await context.Criteria.AddRangeAsync(seedData.Criteria);
+            await context.ClinicalMetrics.AddRangeAsync(seedData.ClinicalMetrics);
+            await context.Pathogens.AddRangeAsync(seedData.Pathogens);
+            await context.RiskFactors.AddRangeAsync(seedData.RiskFactors);
+            await context.SuspectedCauses.AddRangeAsync(seedData.SuspectedCauses);
+            await context.AntibioticGroups.AddRangeAsync(seedData.AntibioticGroups);
+            await context.Antibiotics.AddRangeAsync(seedData.Antibiotics);
+            await context.TreatmentProtocols.AddRangeAsync(seedData.Treatments);
+
+            var count = await context.SaveChangesAsync();
+            logger.LogInformation("Seeded {Count} records into database", count);
+        }
+    }
+}

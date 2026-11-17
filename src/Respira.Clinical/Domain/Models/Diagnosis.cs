@@ -1,0 +1,63 @@
+using Respira.Clinical.Domain.Entities;
+using Respira.Clinical.Domain.Enums;
+
+namespace Respira.Clinical.Domain.Models
+{
+    public record Diagnosis
+    {
+        /// <summary>
+        /// Final severity diagnosis
+        /// </summary>
+        public required Severity Severity { get; set; }
+
+        /// <summary>
+        /// Final treatment site diagnosis
+        /// </summary>
+        public required TreatmentSite TreatmentSite { get; set; }
+
+        /// <summary>
+        /// The list of invidual diagnosis result of severity metric
+        /// </summary>
+        public required IEnumerable<MetricsSeverityDiagnosis> MetricsSeverityDiagnosis { get; set; }
+
+        /// <summary>
+        /// This is the list of heavily suspected pathogens, based on risk factors.
+        /// This list may be empty if no risk factors are met.
+        /// If this list is not empty, then both engine and doctor should focus more
+        /// on this list than the <see cref="WorthSuspected"/> list
+        /// </summary>
+        public required IEnumerable<Pathogen> HeavySuspected { get; set; }
+
+        /// <summary>
+        /// This list contains pathogens that are worth considering, based on diagnosis
+        /// of severity and treatment site. Since the only 2 criteria to judge is severity
+        /// and treatment site based on experience, this may not be accurate as
+        /// <see cref="HeavySuspected"/> list
+        /// As long as data exists, this list should be non-empty
+        /// </summary>
+        public required IEnumerable<Pathogen> WorthSuspected { get; set; }
+
+        /// <summary>
+        /// Evidences for the diagnosis result
+        /// </summary>
+        public required IEnumerable<Evidence> Evidences { get; set; }
+
+        /// <summary>
+        /// The list of missing variables when diagnosis is performed
+        /// </summary>
+        public required IEnumerable<ClinicalVariable> MissingVariables { get; set; }
+
+        /// <summary>
+        /// True if patient is pregnant or in lactation phase. This is important
+        /// because some antibiotic may have negative effect on pregnant or lactating woman,
+        /// so the final result MUST avoid them.
+        /// </summary>
+        public required bool IsPatientPregnantOrInLactationPhase { get; set; }
+
+        /// <summary>
+        /// Patient's eGFR. The value is null if not enough information is
+        /// provided for calculation
+        /// </summary>
+        public double? Egfr { get; set; }
+    }
+}

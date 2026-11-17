@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <!-- Enable XML documentation export -->
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <!-- Optional: Suppress compiler warnings for missing comments -->
+        <NoWarn>$(NoWarn);1591</NoWarn>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="../Domain/Respira.Clinical.Domain.csproj" />
+        <ProjectReference Include="../Infrastructure/Respira.Clinical.Infrastructure.csproj" />
+        <ProjectReference Include="../Application/Respira.Clinical.Application.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <RuntimeHostConfigurationOption Include="System.Text.Json.Serialization.RespectNullableAnnotationsDefault" Value="true" />
+    </ItemGroup>
+</Project>

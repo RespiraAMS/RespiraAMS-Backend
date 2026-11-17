@@ -1,0 +1,159 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using Respira.Authentication.Application.Contracts.Authentication;
+using Respira.Authentication.Application.Contracts.Cache;
+using Respira.Authentication.Application.Contracts.Data;
+using Respira.Authentication.Application.Features.Authentication.Commands.Refresh.Result;
+using Respira.Authentication.Domain.Entities;
+using Respira.Authentication.Domain.Enums;
+using Respira.ServiceDefaults.Contracts.CQRS;
+using Respira.ServiceDefaults.Contracts.Results;
+using Respira.ServiceDefaults.Contracts.Messages.Audit;
+using Wolverine;
+
+namespace Respira.Authentication.Application.Features.Authentication.Commands.Refresh
+{
+    /// <summary>
+    /// Rotates a valid refresh token and issues a replacement token pair for its active account.
+    /// </summary>
+    public class RefreshCommandHandler(
+        IAuthDbContext dbContext,
+        IJwtService jwtService,
+        IHashService hashService,
+        ILogger<RefreshCommandHandler> logger,
+        ICacheService cacheService,
+        IMessageBus bus
+    ) : ICommandHandler<RefreshCommand, Result<RefreshResult>>
+    {
+        private static readonly TimeSpan CacheExpiration = TimeSpan.FromMinutes(5);
+
+        /// <summary>
+        /// Validates the persisted refresh token, invalidates it, and returns a newly issued token pair.
+        /// </summary>
+        /// <param name="command">The refresh request containing the raw refresh token.</param>
+        /// <param name="cancellationToken">Token used to cancel database operations.</param>
+        /// <returns>A replacement access/refresh token pair, or an unauthorized result.</returns>
+        public async Task<Result<RefreshResult>> HandleAsync(
+            RefreshCommand command,
+            CancellationToken cancellationToken = default
+        )
+        {
+            ArgumentNullException.ThrowIfNull(command);
+
+            var refreshTokenHash = hashService.HashToken(command.RefreshToken);
+            var refreshToken = await dbContext
+                .Tokens.AsNoTracking()
+                .Where(x =>
+                    x.HashToken == refreshTokenHash
+                    && x.TokenType == TokenType.RefreshToken
+                    && (x.ExpirationDate == null || x.ExpirationDate > DateTimeOffset.UtcNow)
+                )
+                .FirstOrDefaultAsync(cancellationToken);
+
+            if (refreshToken is null)
+            {
+                logger.LogWarning("Refresh attempt used an invalid or expired refresh token");
+                return Result<RefreshResult>.Failure(
+                    new ApplicationError(ApplicationStatus.Unauthorized, "Invalid or expired refresh token")
+                );
+            }
+
+            var accountCacheKey = $"auth:account:id:{refreshToken.AccountId}";
+            var user = await cacheService.GetAsync<Account>(accountCacheKey, cancellationToken);
+
+            if (user is null)
+            {
+                user = await dbContext
+                    .Accounts.AsNoTracking()
+                    .Where(x =>
+                        x.Id == refreshToken.AccountId
+                        && x.Status == StatusType.Active
+                        && !x.IsDeleted
+                    )
+                    .FirstOrDefaultAsync(cancellationToken);
+
+                if (user is not null)
+                {
+                    await cacheService.SetAsync(
+                        accountCacheKey,
+                        user,
+                        CacheExpiration,
+                        cancellationToken
+                    );
+                }
+            }
+
+            if (user is null)
+            {
+                logger.LogWarning(
+                    "Refresh attempt rejected because account {AccountId} is unavailable",
+                    refreshToken.AccountId
+                );
+                return Result<RefreshResult>.Failure(
+                    new ApplicationError(ApplicationStatus.Unauthorized, "Invalid or expired refresh token")
+                );
+            }
+
+            // Claim the presented token before issuing the replacement. A concurrent refresh
+            // that already rotated it affects 0 rows and is rejected, so the same refresh
+            // token can never be redeemed twice and no tracked delete can throw
+            // DbUpdateConcurrencyException.
+            var consumed = await dbContext
+                .Tokens.Where(x => x.Id == refreshToken.Id)
+                .ExecuteDeleteAsync(cancellationToken);
+
+            if (consumed == 0)
+            {
+                logger.LogWarning(
+                    "Refresh token for account {AccountId} was already rotated by a concurrent request",
+                    refreshToken.AccountId
+                );
+                return Result<RefreshResult>.Failure(
+                    new ApplicationError(
+                        ApplicationStatus.Unauthorized,
+                        "Invalid or expired refresh token"
+                    )
+                );
+            }
+
+            var accessToken = jwtService.GenerateAccessToken(user);
+
+            await dbContext.BlacklistTokens.AddAsync(
+                new BlacklistToken()
+                {
+                    HashToken = refreshToken.HashToken,
+                    Reason = "Refresh token rotation",
+                    ExpirationDate = refreshToken.ExpirationDate,
+                },
+                cancellationToken
+            );
+
+            // Persists the blacklist entry together with the replacement token.
+            var newRefreshToken = await jwtService.GenerateRefreshTokenAsync(user);
+
+            await cacheService.RemoveAsync(accountCacheKey, cancellationToken);
+            await cacheService.RemoveAsync(
+                $"auth:account:email:{user.Email.ToLowerInvariant()}",
+                cancellationToken
+            );
+
+            await bus.PublishAsync(new AuditEvent
+            {
+                ActorAccountId = user.Id,
+                ActorRole = user.Role.ToString(),
+                Action = "Authentication.RefreshTokenRotated",
+                EntityType = "Account",
+                EntityId = user.Id,
+            });
+
+            return Result<RefreshResult>.Success(
+                statusCode: ApplicationStatus.Success,
+                data: new RefreshResult()
+                {
+                    AccessToken = accessToken,
+                    RefreshToken = newRefreshToken,
+                }
+            );
+        }
+    }
+}

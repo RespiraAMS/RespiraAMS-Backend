@@ -1,0 +1,21 @@
+using Respira.ServiceDefaults.Contracts.CQRS;
+using Wolverine.Attributes;
+
+namespace Respira.Saga.Application.Contracts.Messages.Authentication.SoftDelete
+{
+    /// <summary>
+    /// Soft-deletes an account. Used by the create saga as the compensation for
+    /// every step that failed after the account was created.
+    /// </summary>
+    [MessageIdentity("soft-delete-command")]
+    public record SoftDeleteCommand : ICommand
+    {
+        /// <summary>Identifier of the create saga requesting the compensation</summary>
+        public Guid SagaId { get; set; }
+        public Guid ActorAccountId { get; set; }
+        public string ActorRole { get; set; } = string.Empty;
+
+        /// <summary>Account to soft-delete</summary>
+        public Guid AccountId { get; set; }
+    }
+}

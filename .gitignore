@@ -3,6 +3,9 @@
 ##
 ## Get latest from `dotnet new gitignore`
 
+# Ignore sonarqube
+.sonarqube/
+
 # Ignore AI agent config files
 opencode.json
 

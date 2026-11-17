@@ -1,0 +1,14 @@
+using Respira.ServiceDefaults.Contracts.Results;
+
+namespace Respira.Clinical.Application.Contracts.Mappers
+{
+    /// <summary>
+    /// Generic mapper interface
+    /// </summary>
+    /// <typeparam name="TSource">source type</typeparam>
+    /// <typeparam name="TDest">destination type</typeparam>
+    public interface IMapper<in TSource, TDest>
+    {
+        Result<TDest> Map(TSource source, object? dependencies = null);
+    }
+}

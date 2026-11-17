@@ -1,0 +1,23 @@
+using Wolverine.Attributes;
+
+namespace Respira.Saga.Application.Contracts.Messages.Authentication.Events
+{
+    /// <summary>
+    /// Published when the verification email could not be issued or delivered.
+    /// </summary>
+    [MessageIdentity("send-verify-failure")]
+    public record SendVerifyFailure
+    {
+        public SendVerifyFailure(Guid sagaId, string reason)
+        {
+            SagaId = sagaId;
+            Reason = reason;
+        }
+
+        /// <summary>Identifier of the create saga waiting for this event</summary>
+        public Guid SagaId { get; set; }
+
+        /// <summary>Why the verification email was not sent</summary>
+        public string? Reason { get; set; }
+    }
+}
