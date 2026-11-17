@@ -7,12 +7,12 @@ namespace Respira.Saga.API.Models
     public record DeleteProfileRequest
     {
         /// <summary>Account to soft delete.</summary>
-        public Guid AccountId { get; set; }
+        public required Guid AccountId { get; set; }
 
         /// <summary>Doctor/manager profile to soft delete.</summary>
-        public Guid DoctorId { get; set; }
+        public required Guid DoctorId { get; set; }
 
         /// <summary>Media asset of the avatar to delete; empty when there is none.</summary>
-        public Guid MediaId { get; set; }
+        public required Guid MediaId { get; set; }
     }
 }

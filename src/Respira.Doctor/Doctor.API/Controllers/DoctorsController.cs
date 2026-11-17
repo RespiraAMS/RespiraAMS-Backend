@@ -34,10 +34,11 @@ namespace Respira.Doctor.API.Controllers
         [ProducesResponseType(typeof(Result), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetPaged(
             [FromQuery] GetPagedDoctorRequestDto req,
+            [FromHeader(Name = "X-Role")] string? xrole,
             CancellationToken cancellationToken
         )
         {
-            if (!TryAuthorizeAdmin(out var failureResult))
+            if (!TryAuthorizeAdmin(out var failureResult, xrole))
             {
                 return failureResult!;
             }
@@ -64,10 +65,11 @@ namespace Respira.Doctor.API.Controllers
         [ProducesResponseType(typeof(Result), StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetSubordinates(
             [FromQuery] GetSubordinateDoctorsRequestDto req,
+            [FromHeader(Name = "X-Role")] string? xrole,
             CancellationToken cancellationToken
         )
         {
-            if (!TryResolveHeadDoctorCaller(out var headDoctorAccountId, out var failureResult))
+            if (!TryResolveHeadDoctorCaller(out var headDoctorAccountId, out var failureResult, xrole))
             {
                 return failureResult!;
             }
@@ -153,10 +155,11 @@ namespace Respira.Doctor.API.Controllers
             return result.ToApiResponse();
         }
 
-        private bool TryAuthorizeAdmin(out IActionResult? failureResult)
+        private bool TryAuthorizeAdmin(out IActionResult? failureResult, string? xrole)
         {
             var role = User.FindFirstValue(ClaimTypes.Role)
-                ?? Request.Headers["X-Role"].FirstOrDefault();
+                // ?? Request.Headers["X-Role"].FirstOrDefault();
+                ?? xrole;
 
             if (string.IsNullOrWhiteSpace(role))
             {
@@ -180,10 +183,11 @@ namespace Respira.Doctor.API.Controllers
             return true;
         }
 
-        private bool TryResolveHeadDoctorCaller(out Guid accountId, out IActionResult? failureResult)
+        private bool TryResolveHeadDoctorCaller(out Guid accountId, out IActionResult? failureResult, string? xrole)
         {
             var role = User.FindFirstValue(ClaimTypes.Role)
-                ?? Request.Headers["X-Role"].FirstOrDefault();
+                ?? xrole;
+            // ?? Request.Headers["X-Role"].FirstOrDefault();
 
             if (string.IsNullOrWhiteSpace(role))
             {

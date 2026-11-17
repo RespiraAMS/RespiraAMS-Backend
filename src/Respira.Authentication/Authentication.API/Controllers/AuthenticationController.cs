@@ -40,10 +40,11 @@ public sealed class AuthenticationController(IMessageBus bus, IJwtService jwtSer
     [ProducesResponseType(typeof(Result<Pagination<AccountResult>>), StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> GetList(
         [FromQuery] GetListAccountRequestDto request,
-        CancellationToken cancellationToken
-    )
+        [FromHeader(Name = "X-Role")] string? xrole,
+        [FromHeader(Name = "X-ID")] string? xid,
+        CancellationToken cancellationToken)
     {
-        var callerRole = await ResolveCallerRoleAsync();
+        var callerRole = await ResolveCallerRoleAsync(xrole, xid);
         if (callerRole is null)
         {
             return StatusCode(
@@ -189,8 +190,9 @@ public sealed class AuthenticationController(IMessageBus bus, IJwtService jwtSer
     public async Task<IActionResult> ChangeStatus(
         Guid id,
         [FromBody] ChangeAccountStatusRequestDto request,
-        CancellationToken cancellationToken
-    )
+        [FromHeader(Name = "X-Role")] string? xrole,
+        [FromHeader(Name = "X-ID")] string? xid,
+        CancellationToken cancellationToken)
     {
         if (request is null)
         {
@@ -202,7 +204,7 @@ public sealed class AuthenticationController(IMessageBus bus, IJwtService jwtSer
             );
         }
 
-        return await ExecuteChangeStatusAsync(id, request.Status, cancellationToken);
+        return await ExecuteChangeStatusAsync(id, xrole, xid, request.Status, cancellationToken);
     }
 
     /// <summary>Locks an account (sets status to Inactive and revokes refresh tokens). Restricted to Admin.</summary>
@@ -214,10 +216,11 @@ public sealed class AuthenticationController(IMessageBus bus, IJwtService jwtSer
     [ProducesResponseType(typeof(Result<AccountResult>), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> LockAccount(
         Guid id,
-        CancellationToken cancellationToken
-    )
+        [FromHeader(Name = "X-Role")] string? xrole,
+        [FromHeader(Name = "X-ID")] string? xid,
+        CancellationToken cancellationToken)
     {
-        return await ExecuteChangeStatusAsync(id, StatusType.Inactive, cancellationToken);
+        return await ExecuteChangeStatusAsync(id, xrole, xid, StatusType.Inactive, cancellationToken);
     }
 
     /// <summary>Unlocks an account (sets status to Active). Restricted to Admin.</summary>
@@ -229,19 +232,22 @@ public sealed class AuthenticationController(IMessageBus bus, IJwtService jwtSer
     [ProducesResponseType(typeof(Result<AccountResult>), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> UnlockAccount(
         Guid id,
-        CancellationToken cancellationToken
-    )
+        [FromHeader(Name = "X-Role")] string? xrole,
+        [FromHeader(Name = "X-ID")] string? xid,
+        CancellationToken cancellationToken)
     {
-        return await ExecuteChangeStatusAsync(id, StatusType.Active, cancellationToken);
+        return await ExecuteChangeStatusAsync(id, xrole, xid, StatusType.Active, cancellationToken);
     }
 
     private async Task<IActionResult> ExecuteChangeStatusAsync(
         Guid id,
+        string? xrole,
+        string? xid,
         StatusType targetStatus,
         CancellationToken cancellationToken
     )
     {
-        var (callerId, callerRole) = await ResolveCallerInfoAsync();
+        var (callerId, callerRole) = await ResolveCallerInfoAsync(xrole, xid);
         if (callerRole is null)
         {
             return StatusCode(
@@ -277,19 +283,21 @@ public sealed class AuthenticationController(IMessageBus bus, IJwtService jwtSer
         return result.ToApiResponse();
     }
 
-    private async Task<RoleType?> ResolveCallerRoleAsync()
+    private async Task<RoleType?> ResolveCallerRoleAsync(string? xrole, string? xid)
     {
-        var (_, role) = await ResolveCallerInfoAsync();
+        var (_, role) = await ResolveCallerInfoAsync(xrole, xid);
         return role;
     }
 
-    private async Task<(Guid? AccountId, RoleType? Role)> ResolveCallerInfoAsync()
+    private async Task<(Guid? AccountId, RoleType? Role)> ResolveCallerInfoAsync(string? xrole, string? xid)
     {
         var roleClaim = User.FindFirstValue(ClaimTypes.Role)
-            ?? Request.Headers["X-Role"].FirstOrDefault();
+            // ?? Request.Headers["X-Role"].FirstOrDefault();
+            ?? xrole;
         var idClaim = User.FindFirstValue(ClaimTypes.NameIdentifier)
             ?? User.FindFirstValue("sub")
-            ?? Request.Headers["X-ID"].FirstOrDefault();
+            // ?? Request.Headers["X-ID"].FirstOrDefault();
+            ?? xid;
 
         Guid? callerId = Guid.TryParse(idClaim, out var parsedId) ? parsedId : null;
         RoleType? callerRole = Enum.TryParse<RoleType>(roleClaim, ignoreCase: true, out var propagatedRole)
