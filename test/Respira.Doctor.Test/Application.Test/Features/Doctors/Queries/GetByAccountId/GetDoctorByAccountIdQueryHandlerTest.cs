@@ -5,7 +5,9 @@ using Respira.Doctor.Application.Features.Doctors.Queries.GetByAccountId;
 using Respira.Doctor.Application.Features.Doctors.Queries.GetById.Result;
 using Respira.Doctor.Domain.Enums;
 using Respira.Doctor.Infrastructure.Persistence;
+using Respira.ServiceDefaults.Contracts.Messages.Accounts;
 using Respira.ServiceDefaults.Contracts.Results;
+using Wolverine;
 using DoctorEntity = Respira.Doctor.Domain.Entities.Doctor;
 
 namespace Respira.Doctor.Application.Test.Features.Doctors.Queries.GetByAccountId;
@@ -107,6 +109,72 @@ public sealed class GetDoctorByAccountIdQueryHandlerTest : IClassFixture<Postgre
         Assert.Equal(ProfileRole.HeadDepartmentDoctor, data.Role);
     }
 
+    [Fact]
+    public async Task HandleAsync_WithExistingDoctor_EnrichesPhoneAndEmailFromAuth()
+    {
+        var accountId = Guid.CreateVersion7();
+        var doctor = await SeedDoctorAsync(
+            TestData.DoctorFactory.CreateDoctor(accountId: accountId)
+        );
+
+        var busMock = new Mock<IMessageBus>();
+        busMock
+            .Setup(b => b.InvokeAsync<Result<List<AccountSummary>>>(
+                It.Is<GetAccountsByIdsQuery>(q => q.AccountIds.Contains(accountId)),
+                It.IsAny<CancellationToken>(),
+                It.IsAny<TimeSpan?>()
+            ))
+            .ReturnsAsync(
+                Result<List<AccountSummary>>.Success(
+                    ApplicationStatus.Success,
+                    [
+                        new AccountSummary
+                        {
+                            Id = accountId,
+                            Email = "doctor@respira.com",
+                            Phone = "0987654321",
+                            Role = "Doctor",
+                            Status = "Active",
+                        },
+                    ]
+                )
+            );
+
+        var result = await HandleAsync(accountId, busMock.Object);
+
+        Assert.True(result.IsSuccess());
+        var data = Assert.IsType<DoctorResult>(result.Data);
+        Assert.Equal(doctor.Id, data.Id);
+        Assert.Equal("0987654321", data.Phone);
+        Assert.Equal("doctor@respira.com", data.Email);
+    }
+
+    [Fact]
+    public async Task HandleAsync_WhenAuthFails_StillReturnsDoctorProfileWithNullPhoneAndEmail()
+    {
+        var accountId = Guid.CreateVersion7();
+        var doctor = await SeedDoctorAsync(
+            TestData.DoctorFactory.CreateDoctor(accountId: accountId)
+        );
+
+        var busMock = new Mock<IMessageBus>();
+        busMock
+            .Setup(b => b.InvokeAsync<Result<List<AccountSummary>>>(
+                It.IsAny<GetAccountsByIdsQuery>(),
+                It.IsAny<CancellationToken>(),
+                It.IsAny<TimeSpan?>()
+            ))
+            .ThrowsAsync(new InvalidOperationException("Auth service unavailable"));
+
+        var result = await HandleAsync(accountId, busMock.Object);
+
+        Assert.True(result.IsSuccess());
+        var data = Assert.IsType<DoctorResult>(result.Data);
+        Assert.Equal(doctor.Id, data.Id);
+        Assert.Null(data.Phone);
+        Assert.Null(data.Email);
+    }
+
     #endregion
 
     #region Not found / Validation
@@ -139,21 +207,25 @@ public sealed class GetDoctorByAccountIdQueryHandlerTest : IClassFixture<Postgre
         await using var context = new DoctorDbContext(_options);
         var handler = new GetDoctorByAccountIdQueryHandler(
             context,
+            Mock.Of<IMessageBus>(),
             Mock.Of<ILogger<GetDoctorByAccountIdQueryHandler>>()
         );
 
-        await Assert.ThrowsAsync<ArgumentNullException>(() => handler.HandleAsync(null!));
+        await Assert.ThrowsAsync<ArgumentNullException>(() =>
+            handler.HandleAsync(null!, TestContext.Current.CancellationToken)
+        );
     }
 
     #endregion
 
     #region Helpers
 
-    private async Task<Result<DoctorResult>> HandleAsync(Guid accountId)
+    private async Task<Result<DoctorResult>> HandleAsync(Guid accountId, IMessageBus? bus = null)
     {
         await using var context = new DoctorDbContext(_options);
         var handler = new GetDoctorByAccountIdQueryHandler(
             context,
+            bus ?? Mock.Of<IMessageBus>(),
             Mock.Of<ILogger<GetDoctorByAccountIdQueryHandler>>()
         );
 

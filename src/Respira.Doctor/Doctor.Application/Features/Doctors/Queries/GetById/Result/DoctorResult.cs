@@ -46,5 +46,11 @@ namespace Respira.Doctor.Application.Features.Doctors.Queries.GetById.Result
 
         /// <summary>Profile creation timestamp</summary>
         public DateTimeOffset CreatedAt { get; set; }
+
+        /// <summary>Contact phone number resolved from the authentication service</summary>
+        public string? Phone { get; set; }
+
+        /// <summary>Email used as login identifier resolved from the authentication service</summary>
+        public string? Email { get; set; }
     }
 }
