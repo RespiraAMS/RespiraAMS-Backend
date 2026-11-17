@@ -118,10 +118,6 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
-    app.UseCors(policy => policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
-}
-else
-{
     app.UseCors("RespiraAMS-CORS-policy");
 }
 
