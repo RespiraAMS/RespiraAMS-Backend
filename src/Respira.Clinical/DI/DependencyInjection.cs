@@ -154,16 +154,15 @@ namespace Respira.Clinical.DI
 
         public static async Task SeedData(this WebApplication app)
         {
-            // Only seed data in dev environment
-            if (app.Environment.IsDevelopment())
-            {
-                using var scope = app.Services.CreateScope();
-                var provider = scope.ServiceProvider;
-                var context = provider.GetRequiredService<ClinicalDbContext>();
-                var options = provider.GetRequiredService<IOptions<SeedDataOptions>>();
-                var logger = provider.GetRequiredService<ILogger<DbInitializer>>();
-                await DbInitializer.InitializeAsync(context, options, logger);
-            }
+            // Seed data can run on both dev and prod environment,
+            // since this service only deal with clinical knowledge,
+            // which is non-sensitive data
+            using var scope = app.Services.CreateScope();
+            var provider = scope.ServiceProvider;
+            var context = provider.GetRequiredService<ClinicalDbContext>();
+            var options = provider.GetRequiredService<IOptions<SeedDataOptions>>();
+            var logger = provider.GetRequiredService<ILogger<DbInitializer>>();
+            await DbInitializer.InitializeAsync(context, options, logger);
         }
 
         # endregion
