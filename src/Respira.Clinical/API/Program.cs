@@ -82,7 +82,7 @@ builder.Host.UseWolverine(opts =>
     // Setup queue
     opts.UseRabbitMqUsingNamedConnection("rabbitmq").AutoProvision();
 
-    opts.ListenToRabbitQueue(Queues.DiagnoseQueue);
+    // opts.ListenToRabbitQueue(Queues.DiagnoseQueue);
     opts.PublishMessage<UpsertTreatmentPlanCommand>().ToRabbitQueue(Queues.DiagnoseQueue);
     opts.PublishMessage<AuditEvent>().ToRabbitQueue(AuditQueues.Events);
 
