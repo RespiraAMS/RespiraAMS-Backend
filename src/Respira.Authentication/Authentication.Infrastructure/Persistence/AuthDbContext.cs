@@ -1,8 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Respira.Authentication.Application.Contracts.Data;
 using Respira.Authentication.Domain.Entities;
-using Respira.Authentication.Domain.Enums;
-using Respira.Authentication.Infrastructure.Data;
 
 namespace Respira.Authentication.Infrastructure.Persistence
 {
@@ -60,27 +58,6 @@ namespace Respira.Authentication.Infrastructure.Persistence
 
             modelBuilder.Entity<BlacklistToken>().HasIndex(x => x.HashToken).IsUnique();
             modelBuilder.Entity<BlacklistToken>().HasIndex(x => x.ExpirationDate);
-
-            SeedAccounts(modelBuilder);
-        }
-
-        /// <summary>
-        /// Seeds the accounts described by the JSON seed data file. EF Core turns them
-        /// into model seed data, so they are applied by the migrations together with
-        /// the schema and can be changed with a new migration. The file is optional:
-        /// when it is not deployed, the model simply holds no seed data.
-        /// </summary>
-        /// <param name="modelBuilder">Model builder.</param>
-        private static void SeedAccounts(ModelBuilder modelBuilder)
-        {
-            var accounts = AccountSeedDataLoader.Load(AccountSeedDataLoader.DefaultFilePath);
-
-            if (accounts.Count == 0)
-            {
-                return;
-            }
-
-            modelBuilder.Entity<Account>().HasData(accounts.ToArray());
         }
     }
 }

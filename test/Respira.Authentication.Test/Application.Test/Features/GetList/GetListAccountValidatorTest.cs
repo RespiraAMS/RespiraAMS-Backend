@@ -2,7 +2,7 @@ using Respira.Authentication.Application.Features.Authentication.Queries.GetList
 using Respira.Authentication.Domain.Enums;
 using Respira.ServiceDefaults.Contracts.Pagination;
 
-namespace Respira.Authentication.Infrastructure.Test.Features.GetList;
+namespace Respira.Authentication.Application.Test.Features.GetList;
 
 public sealed class GetListAccountValidatorTest
 {

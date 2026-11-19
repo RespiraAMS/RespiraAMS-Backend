@@ -1,7 +1,7 @@
 using Respira.Authentication.Application.Features.Accounts.Commands.ChangeStatus;
 using Respira.Authentication.Domain.Enums;
 
-namespace Respira.Authentication.Infrastructure.Test.Features.ChangeStatus;
+namespace Respira.Authentication.Application.Test.Features.ChangeStatus;
 
 public sealed class ChangeAccountStatusValidatorTest
 {

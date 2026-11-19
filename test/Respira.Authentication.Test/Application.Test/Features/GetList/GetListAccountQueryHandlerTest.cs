@@ -10,14 +10,10 @@ using Respira.Authentication.Infrastructure.Persistence;
 using Respira.ServiceDefaults.Contracts.Pagination;
 using Respira.ServiceDefaults.Contracts.Results;
 
-namespace Respira.Authentication.Infrastructure.Test.Features.GetList;
+namespace Respira.Authentication.Application.Test.Features.GetList;
 
 public sealed class GetListAccountQueryHandlerTest : IClassFixture<PostgresFixture>, IAsyncLifetime
 {
-    private static readonly Guid BootstrapAdminId = Guid.Parse(
-        "11111111-1111-1111-1111-111111111111"
-    );
-
     private readonly DbContextOptions<AuthDbContext> _options;
     private readonly AuthDbContext _context;
     private readonly Mock<ICacheService> _cacheServiceMock = new();
@@ -40,7 +36,6 @@ public sealed class GetListAccountQueryHandlerTest : IClassFixture<PostgresFixtu
             .ExecuteDeleteAsync(TestContext.Current.CancellationToken);
         await _context
             .Accounts.IgnoreQueryFilters()
-            .Where(x => x.Id != BootstrapAdminId)
             .ExecuteDeleteAsync(TestContext.Current.CancellationToken);
     }
 
@@ -155,17 +150,17 @@ public sealed class GetListAccountQueryHandlerTest : IClassFixture<PostgresFixtu
 
         Assert.True(result.IsSuccess());
         Assert.NotNull(result.Data);
-        Assert.Equal(4, result.Data!.Metadata.TotalItemCount);
+        Assert.Equal(3, result.Data.Metadata.TotalItemCount);
         Assert.Equal(
-            [reviewer.Id, hod.Id, doctor.Id, BootstrapAdminId],
-            result.Data.Items.Select(x => x.Id).ToArray()
+            [reviewer.Id, hod.Id, doctor.Id],
+            [.. result.Data.Items.Select(x => x.Id)]
         );
 
         _cacheServiceMock.Verify(
             x =>
                 x.SetAsync(
                     "auth:accounts:list:role:all:status:all:confirmed:all:page:1:size:10",
-                    It.Is<Pagination<AccountResult>>(p => p.Metadata.TotalItemCount == 4),
+                    It.Is<Pagination<AccountResult>>(p => p.Metadata.TotalItemCount == 3),
                     TimeSpan.FromMinutes(2),
                     It.IsAny<CancellationToken>()
                 ),
@@ -217,7 +212,7 @@ public sealed class GetListAccountQueryHandlerTest : IClassFixture<PostgresFixtu
 
         Assert.True(result.IsSuccess());
         Assert.NotNull(result.Data);
-        Assert.NotEmpty(result.Data!.Items);
+        Assert.NotEmpty(result.Data.Items);
         Assert.All(result.Data.Items, item => Assert.Equal(filterRole, item.Role));
 
         var expectedCacheKey =
@@ -416,14 +411,14 @@ public sealed class GetListAccountQueryHandlerTest : IClassFixture<PostgresFixtu
         );
 
         Assert.True(page1.IsSuccess());
-        Assert.Equal([hod3.Id, hod2.Id], page1.Data!.Items.Select(x => x.Id).ToArray());
+        Assert.Equal([hod3.Id, hod2.Id], [.. page1.Data!.Items.Select(x => x.Id)]);
         Assert.Equal(3, page1.Data.Metadata.TotalItemCount);
         Assert.Equal(2, page1.Data.Metadata.PageCount);
         Assert.False(page1.Data.Metadata.HasPreviousPage);
         Assert.True(page1.Data.Metadata.HasNextPage);
 
         Assert.True(page2.IsSuccess());
-        Assert.Equal([hod1.Id], page2.Data!.Items.Select(x => x.Id).ToArray());
+        Assert.Equal([hod1.Id], [.. page2.Data!.Items.Select(x => x.Id)]);
         Assert.True(page2.Data.Metadata.HasPreviousPage);
         Assert.False(page2.Data.Metadata.HasNextPage);
     }
