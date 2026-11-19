@@ -2,7 +2,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using Moq;
-using Respira.Authentication.Application.Contracts.Authentication;
 using Respira.Authentication.Application.Contracts.Cache;
 using Respira.Authentication.Application.Contracts.Email;
 using Respira.Authentication.Application.Features.Authentication.Commands.ForgotPassword;
@@ -14,7 +13,7 @@ using Respira.ServiceDefaults.Contracts.Messages.Audit;
 using Respira.ServiceDefaults.Contracts.Results;
 using Wolverine;
 
-namespace Respira.Authentication.Infrastructure.Test.Features.ForgotPassword;
+namespace Respira.Authentication.Application.Test.Features.ForgotPassword;
 
 public sealed class ForgotPasswordCommandHandlerTest
     : IClassFixture<PostgresFixture>,
@@ -201,7 +200,7 @@ public sealed class ForgotPasswordCommandHandlerTest
             )
             .ToListAsync(TestContext.Current.CancellationToken);
 
-        Assert.Single(tokens);
+        _ = Assert.Single(tokens);
         Assert.NotEqual(oldResetToken.HashToken, tokens[0].HashToken);
 
         _cacheServiceMock.Verify(

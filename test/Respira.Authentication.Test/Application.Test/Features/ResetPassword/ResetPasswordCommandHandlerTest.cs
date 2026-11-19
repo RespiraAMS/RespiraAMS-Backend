@@ -13,7 +13,7 @@ using Respira.ServiceDefaults.Contracts.Messages.Audit;
 using Respira.ServiceDefaults.Contracts.Results;
 using Wolverine;
 
-namespace Respira.Authentication.Infrastructure.Test.Features.ResetPassword;
+namespace Respira.Authentication.Application.Test.Features.ResetPassword;
 
 public sealed class ResetPasswordCommandHandlerTest
     : IClassFixture<PostgresFixture>,
@@ -265,7 +265,7 @@ public sealed class ResetPasswordCommandHandlerTest
                 TestContext.Current.CancellationToken
             );
         Assert.NotNull(blacklisted);
-        Assert.Equal("Password reset", blacklisted!.Reason);
+        Assert.Equal("Password reset", blacklisted.Reason);
 
         _cacheServiceMock.Verify(
             x =>

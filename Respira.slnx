@@ -38,11 +38,19 @@
         <Project Path="src/Respira.Clinical/Domain/Respira.Clinical.Domain.csproj" />
         <Project Path="src/Respira.Clinical/Infrastructure/Respira.Clinical.Infrastructure.csproj" />
     </Folder>
+    <Folder Name="/src/Respira.Analysis/">
+        <Project Path="src/Respira.Analysis/Analysis.API/Respira.Analysis.API.csproj" />
+        <Project Path="src/Respira.Analysis/Analysis.Application/Respira.Analysis.Application.csproj" />
+        <Project Path="src/Respira.Analysis/Analysis.Domain/Respira.Analysis.Domain.csproj" />
+        <Project Path="src/Respira.Analysis/Analysis.Infrastructure/Respira.Analysis.Infrastructure.csproj" />
+    </Folder>  
+
 
     <Folder Name="/test/" />
     <Folder Name="/test/Respira.Authentication.Test/">
         <Project Path="test/Respira.Authentication.Test/Domain.Test/Respira.Authentication.Domain.Test.csproj" />
         <Project Path="test/Respira.Authentication.Test/Infrastructure.Test/Respira.Authentication.Infrastructure.Test.csproj" />
+        <Project Path="test/Respira.Authentication.Test/Application.Test/Respira.Authentication.Application.Test.csproj" />
     </Folder>
     <Folder Name="/test/Respira.Clinical.Test/">
         <Project Path="test/Respira.Clinical.Test/Application.Test/Respira.Clinical.Application.Test.csproj" />
@@ -71,10 +79,6 @@
         <Project Path="test/Respira.Analysis.Test/Domain.Test/Respira.Analysis.Domain.Test.csproj" />
         <Project Path="test/Respira.Analysis.Test/Infrastructure.Test/Respira.Analysis.Infrastructure.Test.csproj" />
     </Folder>
-    <Project Path="src/Respira.Analysis/Analysis.API/Respira.Analysis.API.csproj" />
-    <Project Path="src/Respira.Analysis/Analysis.Application/Respira.Analysis.Application.csproj" />
-    <Project Path="src/Respira.Analysis/Analysis.Domain/Respira.Analysis.Domain.csproj" />
-    <Project Path="src/Respira.Analysis/Analysis.Infrastructure/Respira.Analysis.Infrastructure.csproj" />
 
     <Project Path="src/Respira.AppHost/Respira.AppHost.csproj" />
     <Project Path="src/Respira.Gateway/Respira.Gateway.csproj" />
