@@ -155,6 +155,15 @@ namespace Respira.Doctor.API.Controllers
             return result.ToApiResponse();
         }
 
+        [HttpGet("accounts/{id:guid}")]
+        public async Task<IActionResult> GetByAccountId(Guid id, CancellationToken cancellationToken)
+        {
+            var result = await bus.InvokeAsync<Result<DoctorResult>>(
+                new GetDoctorByAccountIdQuery { AccountId = id },
+                cancellationToken);
+            return result.ToApiResponse();
+        }
+
         private bool TryAuthorizeAdmin(out IActionResult? failureResult, string? xrole)
         {
             var role = User.FindFirstValue(ClaimTypes.Role)
