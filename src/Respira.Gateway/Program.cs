@@ -1,8 +1,9 @@
-using System.Security.Claims;
 using System.Text;
 using System.Threading.RateLimiting;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
+using Respira.Gateway.Identity;
 using Respira.ServiceDefaults.Extensions;
 using Yarp.ReverseProxy.Transforms;
 
@@ -34,7 +35,14 @@ builder
             ClockSkew = TimeSpan.Zero,
         };
     });
-builder.Services.AddAuthorizationBuilder()
+// The gateway owns authentication: every proxied route requires a validated token
+// unless its route configuration opts out with the "Anonymous" policy. Downstream
+// services then only have to apply their role matrix.
+builder
+    .Services.AddAuthorizationBuilder()
+    .SetFallbackPolicy(
+        new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build()
+    )
     .AddPolicy("AdminOnly", policy => policy.RequireAuthenticatedUser().RequireRole("Admin"));
 
 // Get CORS configuration
@@ -91,25 +99,13 @@ builder
     )
     .AddTransforms(transformBuilderContext =>
     {
-        transformBuilderContext.AddRequestTransform(async context =>
+        // Discard any identity headers sent by the client and rebuild them from the
+        // validated principal. The downstream services trust these headers, so the
+        // gateway must be their only author.
+        transformBuilderContext.AddRequestTransform(context =>
         {
-            var user = context.HttpContext.User;
-            if (user.Identity?.IsAuthenticated == true)
-            {
-                var userId =
-                    user.FindFirstValue(ClaimTypes.NameIdentifier)
-                    ?? user.FindFirstValue("sub")
-                    ?? user.FindFirstValue("X-ID");
-                var email = user.FindFirstValue(ClaimTypes.Email) ?? user.FindFirstValue("email");
-                var role = user.FindFirstValue(ClaimTypes.Role);
-
-                if (!string.IsNullOrEmpty(userId))
-                    context.ProxyRequest.Headers.TryAddWithoutValidation("X-ID", userId);
-                if (!string.IsNullOrEmpty(email))
-                    context.ProxyRequest.Headers.TryAddWithoutValidation("X-Email", email);
-                if (!string.IsNullOrEmpty(role))
-                    context.ProxyRequest.Headers.TryAddWithoutValidation("X-Role", role);
-            }
+            GatewayIdentityHeaders.Apply(context.HttpContext.User, context.ProxyRequest.Headers);
+            return ValueTask.CompletedTask;
         });
     });
 
@@ -117,17 +113,23 @@ var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
-    app.UseCors("RespiraAMS-CORS-policy");
+    app.MapOpenApi().AllowAnonymous();
 }
 
 app.UseHttpsRedirection();
+
+// CORS has to run before authentication: browser preflights carry no credentials,
+// so they must be answered even though every proxied route requires a token.
+app.UseCors("RespiraAMS-CORS-policy");
+
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseCors();
 app.UseRateLimiter();
 
 app.MapReverseProxy();
 app.MapDefaultEndpoints();
 
 await app.RunAsync();
+
+/// <summary>Entry point type exposed so the integration tests can host the gateway.</summary>
+public partial class Program;

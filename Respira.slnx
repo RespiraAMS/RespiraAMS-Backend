@@ -74,6 +74,9 @@
     <Folder Name="/test/Respira.ServiceDefaults.Test/">
         <Project Path="test/Respira.ServiceDefaults.Test/Application.Test/Respira.ServiceDefaults.Application.Test.csproj" />
     </Folder>
+    <Folder Name="/test/Respira.Gateway.Test/">
+        <Project Path="test/Respira.Gateway.Test/Application.Test/Respira.Gateway.Application.Test.csproj" />
+    </Folder>
     <Folder Name="/test/Respira.Analysis.Test/">
         <Project Path="test/Respira.Analysis.Test/Application.Test/Respira.Analysis.Application.Test.csproj" />
         <Project Path="test/Respira.Analysis.Test/Domain.Test/Respira.Analysis.Domain.Test.csproj" />
