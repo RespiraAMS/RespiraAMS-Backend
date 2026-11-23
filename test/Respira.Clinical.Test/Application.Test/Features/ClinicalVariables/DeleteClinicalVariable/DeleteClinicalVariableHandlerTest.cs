@@ -313,6 +313,40 @@ namespace Respira.Clinical.Application.Test.Features.ClinicalVariables.DeleteCli
             Assert.False((await LoadCriterionAsync(liveCriterion.Id)).IsDeleted);
         }
 
+        [Fact]
+        public async Task DeleteClinicalVariable_ReferencedByOwnPrerequisite_Success()
+        {
+            // Business rule: another variable's prerequisite formula uses this variable
+            var female = CreateBooleanVariable(
+                "FEMALE", "Female sex", "Whether the patient is female",
+                ClinicalVariableCategory.PersonalInformation);
+            var pregnantOrLactating = CreateBooleanVariable(
+                "PREGNANT-OR-LACTATING",
+                "Pregnant or lactating",
+                "Whether the patient is currently pregnant or lactating",
+                ClinicalVariableCategory.PersonalInformation);
+
+            pregnantOrLactating.Prerequisite = new BinaryFormula(
+                new UnaryFormula(new VariableFormula(pregnantOrLactating)),
+                new VariableFormula(female),
+                ExpressionOperator.Or);
+
+            await SeedAsync(female, pregnantOrLactating);
+
+            var result = await _handler.HandleAsync(
+                new DeleteClinicalVariableCommand { Id = pregnantOrLactating.Id },
+                TestContext.Current.CancellationToken);
+
+            Assert.True(result.IsSuccess());
+            Assert.Null(result.Error);
+            Assert.Equal(ApplicationStatus.Deleted, result.StatusCode);
+
+            // Nothing may be soft deleted and the prerequisite must stay untouched
+            Assert.Equal(1, await CountSoftDeletedVariablesAsync());
+            var deleted = await LoadVariableAsync(pregnantOrLactating.Id);
+            Assert.True(deleted.IsDeleted);
+        }
+
         #endregion
 
         #region Fail path

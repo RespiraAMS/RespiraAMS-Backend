@@ -21,9 +21,11 @@ namespace Respira.Clinical.Application.Features.ClinicalVariables.DeleteClinical
             }
 
             // Business rule: if this variable is being used somewhere else,
-            // forbid delete to keep data integrity
+            // forbid delete to keep data integrity.
+            // Note that, if the variable reference itself and nowhere else, 
+            // then it's safe to delete
             var variables = await context.ClinicalVariables.ToListAsync(cancellationToken);
-            if (variables.Any(x => x.Prerequisite?.Variables.Select(v => v.Id).Contains(command.Id) == true))
+            if (variables.Any(x => x.Id != command.Id && x.Prerequisite?.Variables.Select(v => v.Id).Contains(command.Id) == true))
             {
                 return Result.Failure(new ApplicationError(
                     ApplicationStatus.BusinessRuleViolation,
